@@ -8,14 +8,51 @@ use App\Http\Requests\UpdateContractorRegistrationRequest;
 
 use App\Models\District;
 use App\Models\Collection;
-
+use DataTables;
 use Illuminate\Http\Request;
 
 class ContractorRegistrationController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
+        $defer = ($defer = $request->query('defer') ?? 0) >= 0 && $defer <= 3 ? $defer : 0;
+        $approved = $request->query('approved', null);
+
+        $registrations = ContractorRegistration::query();
+
+        if ($approved !== null) {
+            $defer = null;
+        } elseif ($defer !== null) {
+            $approved = null;
+        }
+
+        if ($defer !== null) {
+            $registrations->where('defer_status', $defer)->where('approval_status', 0);
+        }
+
+        if ($approved !== null) {
+            $registrations->where('approval_status', $approved);
+        }
+        if ($request->ajax()) {
+
+            $data = ContractorRegistration::query();
+
+            return Datatables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('action', function($row) {
+                        return view('cont_registrations.partials.buttons', compact('row'))->render();
+                    })
+                    ->editColumn('created_at', function($row) {
+                        return $row->created_at->diffForHumans();
+                    })
+                    ->editColumn('updated_at', function($row) {
+                        return $row->updated_at->diffForHumans();
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+        }
+          
         return view('cont_registrations.index');
     }
 

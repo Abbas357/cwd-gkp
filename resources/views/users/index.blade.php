@@ -26,26 +26,12 @@
         </ul>
     </div>
 
-    <table id="registrations-datatable" class="table table-striped table-hover">
+    <table id="users-datatable" class="table table-striped table-hover">
         <thead>
             <tr>
                 <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Contractor Name</th>
+                <th scope="col" class="p-3">Name</th>
                 <th scope="col" class="p-3">Email</th>
-                <th scope="col" class="p-3">Mobile Number</th>
-                <th scope="col" class="p-3">CNIC</th>
-                <th scope="col" class="p-3">District</th>
-                <th scope="col" class="p-3">Address</th>
-                <th scope="col" class="p-3">Category Applied</th>
-                <th scope="col" class="p-3">Owner Name</th>
-                <th scope="col" class="p-3">PEC Number</th>
-                <th scope="col" class="p-3">PEC Category</th>
-                <th scope="col" class="p-3">FBR NTN</th>
-                <th scope="col" class="p-3">KPRA Registration</th>
-                <th scope="col" class="p-3">Registration Limited</th>
-                <th scope="col" class="p-3">Terms Accepted</th>
-                <th scope="col" class="p-3">Defer Status</th>
-                <th scope="col" class="p-3">Approval Status</th>
                 <th scope="col" class="p-3">Created At</th>
                 <th scope="col" class="p-3">Updated At</th>
                 <th scope="col" class="p-3">Actions</th>
@@ -60,54 +46,26 @@
         <script src="{{ asset('js/datatables.min.js') }}"></script>
         <script>
             $(function() {
-                var table = $('#registrations-datatable').DataTable({
+                var table = $('#users-datatable').DataTable({
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        url: "{{ route('registrations.index') }}",
+                        url: "{{ route('users.index') }}",
                         error: function(jqXHR, textStatus, errorThrown) {
-                            $("#registrations-datatable").removeClass("data-table-loading");
+                            $("#users-datatable").removeClass("data-table-loading");
                             console.log("An error occurred while loading data: " + errorThrown);
                         },
                     },
                     columns: [{
-                        data: "id"
+                        data: 'id'
                     }, {
-                        data: "contractor_name"
+                        data: 'name'
                     }, {
-                        data: "email"
+                        data: 'email'
                     }, {
-                        data: "mobile_number"
+                        data: 'created_at'
                     }, {
-                        data: "cnic"
-                    }, {
-                        data: "district"
-                    }, {
-                        data: "address"
-                    }, {
-                        data: "category_applied"
-                    }, {
-                        data: "owner_name"
-                    }, {
-                        data: "pec_number"
-                    }, {
-                        data: "pec_category"
-                    }, {
-                        data: "fbr_ntn"
-                    }, {
-                        data: "kpra_reg_no"
-                    }, {
-                        data: "is_limited"
-                    }, {
-                        data: "is_agreed"
-                    }, {
-                        data: "defer_status"
-                    }, {
-                        data: "approval_status"
-                    }, {
-                        data: "created_at"
-                    }, {
-                        data: "updated_at"
+                        data: 'updated_at'
                     }, {
                         data: 'action',
                         orderable: false,
@@ -170,124 +128,16 @@
                         },
                     },
                     columnDefs: [{
-                        targets: [0, 2, 3, 6, 11, 12, 13, 14, 15, 16],
+                        targets: [4],
                         visible: false
                     }, ],
                     fnPreDrawCallback() {
-                        $("#registrations-datatable").addClass("data-table-loading");
+                        $("#users-datatable").addClass("data-table-loading");
                     },
                     fnDrawCallback() {
-                        $("#registrations-datatable").removeClass("data-table-loading");
+                        $("#users-datatable").removeClass("data-table-loading");
                     }
                 });
-
-                $("#registrations-datatable").on('click', '.defer-btn', function() {
-                    var registrationId = $(this).data("id");
-                    if (confirm("Are you sure you want to defer?")) {
-                        $.ajax({
-                            url: "{{ route('registrations.defer', ':id') }}".replace(':id',
-                                registrationId),
-                            type: "PATCH",
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            success: function(result) {
-                                if (result.success) {
-                                    $("#registrations-datatable").DataTable().ajax.reload();
-                                }
-                            },
-                        });
-                    }
-                });
-
-
-                $("#registrations-datatable").on('click', '.approve-btn', function() {
-                    var registrationId = $(this).data("id");
-                    if (confirm("Are you sure you want to approve?")) {
-                        $.ajax({
-                            url: "{{ route('registrations.approve', ':id') }}".replace(':id',
-                                registrationId),
-                            type: "PATCH",
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            success: function(result) {
-                                if (result.success) {
-                                    $("#registrations-datatable").DataTable().ajax.reload();
-                                }
-                            },
-                        });
-                    }
-                });
-
-
-                function updateDataTableURL(deferValue, approvalValue) {
-                    let queryParams = "?defer=" + deferValue;
-                    if (approvalValue !== undefined) {
-                        queryParams += "&approved=" + approvalValue;
-                    }
-                    registrationsData = "{{ route('registrations.index') }}" + queryParams;
-                    table.ajax.url(registrationsData).load();
-                }
-
-                function activateTab(tabId) {
-                    $('.nav-tabs a[href="' + tabId + '"]').tab('show');
-                    $('.tab-pane').removeClass('active show');
-                    $(tabId).addClass('active show');
-                }
-
-                function getDeferValueFromHash(hash) {
-                    switch (hash) {
-                        case '#deferred1':
-                            return 1;
-                        case '#deferred2':
-                            return 2;
-                        case '#deferred3':
-                            return 3;
-                        case '#approved':
-                            return undefined;
-                        default:
-                            return 0;
-                    }
-                }
-
-                $('.nav-tabs a').on('click', function() {
-                    let href = $(this).attr('href');
-                    window.location.hash = href;
-                });
-
-                let initialTab = window.location.hash || '#not-deferred';
-                let initialDeferValue = getDeferValueFromHash(initialTab);
-
-                if (initialTab === '#approved') {
-                    updateDataTableURL(undefined, 1);
-                } else {
-                    updateDataTableURL(initialDeferValue);
-                }
-
-                activateTab(initialTab);
-
-                $("#tab-defer0").on("click", function() {
-                    updateDataTableURL(0);
-                });
-
-                $("#tab-defer1").on("click", function() {
-                    updateDataTableURL(1);
-                });
-
-                $("#tab-defer2").on("click", function() {
-                    updateDataTableURL(2);
-                });
-
-                $("#tab-defer3").on("click", function() {
-                    updateDataTableURL(3);
-                });
-
-                $("#tab-approved").on("click", function() {
-                    updateDataTableURL(undefined, 1);
-                });
-
-
             });
         </script>
     @endpush

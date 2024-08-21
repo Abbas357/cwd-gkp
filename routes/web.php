@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ContractorRegistrationController;
 use App\Http\Controllers\CollectionController;
 use Illuminate\Support\Facades\Route;
@@ -21,10 +22,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::middleware('auth')->prefix('users')->group(function () {
+    Route::get('/', [UserController::class, 'index'])->name('users.index');
+    Route::get('/{user}', [UserController::class, 'show'])->name('users.show');
+    Route::get('/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::patch('/{user}', [UserController::class, 'update'])->name('users.update');
+});
+
 Route::middleware('auth')->prefix('registrations')->group(function () {
     Route::get('/', [ContractorRegistrationController::class, 'index'])->name('registrations.index');
 
-    Route::get('/data', [ContractorRegistrationController::class, 'data'])->name('registrations.data');
+    // Route::get('/data', [ContractorRegistrationController::class, 'data'])->name('registrations.data');
     
     Route::patch('/defer/{ContractorRegistration}', [ContractorRegistrationController::class, 'defer'])->name('registrations.defer');
     Route::patch('/approve/{ContractorRegistration}', [ContractorRegistrationController::class, 'approve'])->name('registrations.approve');
