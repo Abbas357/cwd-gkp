@@ -65,7 +65,10 @@
                     serverSide: true,
                     ajax: {
                         url: "{{ route('registrations.index') }}",
-                        error: function(jqXHR, textStatus, errorThrown) {
+                        data(d) {
+                            console.log(d)
+                        },
+                        error(jqXHR, textStatus, errorThrown) {
                             $("#registrations-datatable").removeClass("data-table-loading");
                             console.log("An error occurred while loading data: " + errorThrown);
                         },
@@ -73,52 +76,36 @@
                     order: [
                         [17, 'desc']
                     ],
-                    columns: [{
-                        data: "id"
-                    }, {
-                        data: "contractor_name"
-                    }, {
-                        data: "email"
-                    }, {
-                        data: "mobile_number"
-                    }, {
-                        data: "cnic"
-                    }, {
-                        data: "district"
-                    }, {
-                        data: "address"
-                    }, {
-                        data: "category_applied"
-                    }, {
-                        data: "owner_name"
-                    }, {
-                        data: "pec_number"
-                    }, {
-                        data: "pec_category"
-                    }, {
-                        data: "fbr_ntn"
-                    }, {
-                        data: "kpra_reg_no"
-                    }, {
-                        data: "is_limited"
-                    }, {
-                        data: "is_agreed"
-                    }, {
-                        data: "defer_status"
-                    }, {
-                        data: "approval_status"
-                    }, {
-                        data: "created_at"
-                    }, {
-                        data: "updated_at"
-                    }, {
-                        data: 'action',
-                        orderable: false,
-                        searchable: false
-                    }, ],
+                    columns: [
+                        { data: "id", searchBuilderType: "num" },
+                        { data: "contractor_name", searchBuilderType: "string" },
+                        { data: "email", searchBuilderType: "string" },
+                        { data: "mobile_number", searchBuilderType: "string" },
+                        { data: "cnic", searchBuilderType: "string" },
+                        { data: "district", searchBuilderType: "string" },
+                        { data: "address", searchBuilderType: "string" },
+                        { data: "category_applied", searchBuilderType: "string" },
+                        { data: "owner_name", searchBuilderType: "string" },
+                        { data: "pec_number", searchBuilderType: "string" },
+                        { data: "pec_category", searchBuilderType: "string" },
+                        { data: "fbr_ntn", searchBuilderType: "string" },
+                        { data: "kpra_reg_no", searchBuilderType: "string" },
+                        { data: "is_limited", searchBuilderType: "string" },
+                        { data: "is_agreed", searchBuilderType: "string" },
+                        { data: "defer_status", searchBuilderType: "string" },
+                        { data: "approval_status", searchBuilderType: "string" },
+                        { data: "created_at", searchBuilderType: "date" },
+                        { data: "updated_at", searchBuilderType: "date" },
+                        {
+                            data: 'action',
+                            orderable: false,
+                            searchable: false,
+                            type: "html"
+                        }
+                    ],
                     language: {
                         searchBuilder: {
-                            button: '<span class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="text-gray-600 dark-text-gray-300 mr-1" height="20px" viewBox="0 0 24 24" width="20px" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg> Filter</span>'
+                            button: '<span class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="text-gray-600 dark-text-gray-300 mr-1" height="20px" viewBox="0 0 24 24" width="20px" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg> &nbsp; Filter</span>'
                         }
                     },
                     layout: {
@@ -215,7 +202,6 @@
                         });
                     }
                 });
-
 
                 $("#registrations-datatable").on('click', '.approve-btn', function() {
                     var registrationId = $(this).data("id");

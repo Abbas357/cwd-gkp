@@ -1089,6 +1089,18 @@ div.dt-container .dt-paging .dt-paging-button.current {
   border: 1px solid #555 !important;
 }
 
+div.dt-container .btn-secondary {
+  background-color: #0086e6;
+}
+
+div.dt-container .btn-secondary:focus {
+  background-color: #00497e;
+}
+
+div.dt-container .btn-secondary:hover {
+  background-color: #00497e;
+}
+
 .data-table-loading {
   position: relative;
   overflow: hidden;
@@ -1098,7 +1110,7 @@ div.dt-container .dt-paging .dt-paging-button.current {
       height: 100%;
       position: absolute;
       top: 0;
-      backdrop-filter: drop-shadow(1px)
+      backdrop-filter: drop-shadow(1px);
       left: 0;
       z-index: 999;
       background-color: rgba(180, 180, 180, 0.2);
@@ -1161,3 +1173,63 @@ div.dt-container .dt-paging .dt-paging-button.current {
 .nav-link.active {
   background-color: transparent !important;
 }
+
+
+div.dtsb-searchBuilder div.dtsb-titleRow {
+	 height: 40px;
+}
+ div.dtsb-searchBuilder div.dtsb-titleRow div.dtsb-title {
+	 padding-top: 10px;
+}
+ div.dtsb-searchBuilder div.dtsb-group button.dtsb-clearGroup {
+	 margin-right: 8px;
+}
+ div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria .form-select {
+	 width: auto;
+	 display: inline-block;
+	 padding-right: 30px !important;
+}
+ div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria select.dtsb-condition {
+	 border-color: #28a745;
+}
+ div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria select.dtsb-data {
+	 border-color: #dc3545;
+}
+ div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria select.dtsb-value, div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria input.dtsb-value {
+	 border-color: #007bff;
+}
+ div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria .form-control {
+	 display: inline-block;
+	 font-size: 1em;
+}
+ div.dtsb-searchBuilder div.dtsb-group div.dtsb-logicContainer {
+	 border-radius: 4px;
+	 display: flex;
+	 flex-direction: row;
+	 flex-wrap: wrap;
+	 justify-content: flex-start;
+	 align-content: flex-start;
+	 align-items: flex-start;
+	 margin-top: 10px;
+	 overflow: hidden;
+}
+ div.dtsb-searchBuilder div.dtsb-group div.dtsb-logicContainer button.dtsb-logic {
+	 border: none;
+	 border-radius: 0px;
+	 flex-grow: 1;
+	 flex-shrink: 0;
+	 flex-basis: 3em;
+	 margin: 0px;
+	 padding: 0.375rem 0.7rem;
+}
+ div.dtsb-searchBuilder div.dtsb-group div.dtsb-logicContainer button.dtsb-clearGroup {
+	 border: none;
+	 border-radius: 0px;
+	 width: 2em;
+	 margin: 0px;
+}
+ div.dt-button-collection div.dtsb-searchBuilder {
+	 padding-left: 10px;
+	 padding-right: 10px;
+}
+ 
