@@ -1090,15 +1090,22 @@ div.dt-container .dt-paging .dt-paging-button.current {
 }
 
 div.dt-container .btn-secondary {
-  background-color: #0086e6;
+  opacity: .9;
+  border: none;
 }
 
 div.dt-container .btn-secondary:focus {
-  background-color: #00497e;
+  background-color: #ccc;
+  border: none;
 }
 
 div.dt-container .btn-secondary:hover {
-  background-color: #00497e;
+  background-color: #ccc;
+  border: none;
+}
+
+div.dt-container div.dropdown-menu .btn-secondary {
+  opacity: .9;
 }
 
 .data-table-loading {
@@ -1173,7 +1180,6 @@ div.dt-container .btn-secondary:hover {
 .nav-link.active {
   background-color: transparent !important;
 }
-
 
 div.dtsb-searchBuilder div.dtsb-titleRow {
 	 height: 40px;
