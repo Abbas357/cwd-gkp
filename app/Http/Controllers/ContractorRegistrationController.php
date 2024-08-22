@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateContractorRegistrationRequest;
 use App\Models\District;
 use App\Models\Collection;
 use DataTables;
+use App\SearchBuilder;
 use Illuminate\Http\Request;
 
 class ContractorRegistrationController extends Controller
@@ -34,23 +35,28 @@ class ContractorRegistrationController extends Controller
         if ($approved !== null) {
             $registrations->where('approval_status', $approved);
         }
+
+        $mapColumns = [];
+
         if ($request->ajax()) {
 
-            $data = ContractorRegistration::query();
-
-            return Datatables::of($data)
-                    ->addIndexColumn()
-                    ->addColumn('action', function($row) {
-                        return view('cont_registrations.partials.buttons', compact('row'))->render();
-                    })
-                    ->editColumn('created_at', function($row) {
-                        return $row->created_at->diffForHumans();
-                    })
-                    ->editColumn('updated_at', function($row) {
-                        return $row->updated_at->diffForHumans();
-                    })
-                    ->rawColumns(['action'])
-                    ->make(true);
+            return Datatables::of($registrations)
+                ->addIndexColumn()
+                ->addColumn('action', function($row) {
+                    return view('cont_registrations.partials.buttons', compact('row'))->render();
+                })
+                ->editColumn('created_at', function($row) {
+                    return $row->created_at->diffForHumans();
+                })
+                ->editColumn('updated_at', function($row) {
+                    return $row->updated_at->diffForHumans();
+                })
+                ->filter(function ($query) use ($request) {
+                    $sb = new SearchBuilder($request, $query);
+                    $query = $sb->build();
+                })
+                ->rawColumns(['action'])
+                ->toJson();
         }
           
         return view('cont_registrations.index');

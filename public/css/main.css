@@ -1092,16 +1092,16 @@ div.dt-container .dt-paging .dt-paging-button.current {
 .data-table-loading {
   position: relative;
   overflow: hidden;
-
   &::before {
       content: "";
       width: 100%;
       height: 100%;
       position: absolute;
       top: 0;
+      backdrop-filter: drop-shadow(1px)
       left: 0;
       z-index: 999;
-      background-color: rgba(180, 180, 180, 0.4);
+      background-color: rgba(180, 180, 180, 0.2);
   }
 
   &::after {
