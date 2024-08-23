@@ -65,9 +65,6 @@
                     serverSide: true,
                     ajax: {
                         url: "{{ route('registrations.index') }}",
-                        data(d) {
-                            console.log(d)
-                        },
                         error(jqXHR, textStatus, errorThrown) {
                             $("#registrations-datatable").removeClass("data-table-loading");
                             console.log("An error occurred while loading data: " + errorThrown);
@@ -105,6 +102,11 @@
                     ],
                     language: {
                         searchBuilder: {
+                            title: {
+                                0: 'Custom Filteration', 
+                                _: 'Custom Filteration (%d)'
+                            },
+                            clearAll: 'Clear All Filters',
                             button: '<span class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="text-gray-600 dark-text-gray-300 mr-1" height="20px" viewBox="0 0 24 24" width="20px" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg> &nbsp; Filter</span>'
                         }
                     },
@@ -147,7 +149,8 @@
                                 }, {
                                     extend: 'searchBuilder',
                                     config: {
-                                        depthLimit: 2
+                                        depthLimit: 2,
+                                        
                                     },
                                 },
                                 {

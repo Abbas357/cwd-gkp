@@ -14,7 +14,6 @@ use Illuminate\Http\Request;
 
 class ContractorRegistrationController extends Controller
 {
-
     public function index(Request $request)
     {
         $defer = ($defer = $request->query('defer') ?? 0) >= 0 && $defer <= 3 ? $defer : 0;
@@ -35,8 +34,6 @@ class ContractorRegistrationController extends Controller
         if ($approved !== null) {
             $registrations->where('approval_status', $approved);
         }
-
-        $mapColumns = [];
 
         if ($request->ajax()) {
 
