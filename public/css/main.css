@@ -1209,9 +1209,8 @@ div.dt-container {
   .dataTables_length select,
   .dataTables_filter select,
   .dt-buttons .dropdown-menu {
-    opacity: 1 !important;
     transform: translateY(-5px);
-    transition: all 0.1s ease-in;
+    transition: none !important;
   } 
 
   select, input {

@@ -23,13 +23,12 @@
 
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/bootstrap-extended.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/main.css') }}" rel="stylesheet">
     <link href="{{ asset('css/dark-theme.css') }}" rel="stylesheet">
     <link href="{{ asset('css/semi-dark.css') }}" rel="stylesheet">
     <link href="{{ asset('css/bordered-theme.css') }}" rel="stylesheet">
     <link href="{{ asset('css/responsive.css') }}" rel="stylesheet">
-
     @stack('style')
+    <link href="{{ asset('css/main.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -93,9 +92,8 @@
     <script src="{{ asset('plugins/perfect-scrollbar/js/perfect-scrollbar.js') }}"></script>
     <script src="{{ asset('plugins/metismenu/metisMenu.min.js') }}"></script>
     <script src="{{ asset('plugins/simplebar/js/simplebar.min.js') }}"></script>
-    <script src="{{ asset('js/main.js') }}"></script>
-
     @stack('script')
+    <script src="{{ asset('js/main.js') }}"></script>
 </body>
 
 </html>
