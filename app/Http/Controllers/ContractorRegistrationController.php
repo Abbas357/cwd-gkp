@@ -36,8 +36,7 @@ class ContractorRegistrationController extends Controller
         }
 
         if ($request->ajax()) {
-
-            return Datatables::of($registrations)
+            $dataTable = Datatables::of($registrations)
                 ->addIndexColumn()
                 ->addColumn('action', function($row) {
                     return view('cont_registrations.partials.buttons', compact('row'))->render();
@@ -48,12 +47,22 @@ class ContractorRegistrationController extends Controller
                 ->editColumn('updated_at', function($row) {
                     return $row->updated_at->diffForHumans();
                 })
-                ->filter(function ($query) use ($request) {
-                    $sb = new SearchBuilder($request, $query);
-                    $query = $sb->build();
+                ->editColumn('approval_status', function($row) {
+                    return $row->approval_status === 1 ? 'Approved' : 'Not Approved';
                 })
-                ->rawColumns(['action'])
-                ->toJson();
+                ->editColumn('defer_status', function($row) {
+                    return $row->defer_status === 0 ? 'Not Deffered' : ($row->defer_status === 1 ? 'First time deffered' : ($row->defer_status === 2 ? '2nd time deffered' : '3rd time deffered') );
+                })
+                ->rawColumns(['action']);
+        
+            if (!$request->input('search.value') && $request->has('searchBuilder')) {
+                $dataTable->filter(function ($query) use ($request) {
+                    $sb = new SearchBuilder($request, $query);
+                    $sb->build();
+                });
+            }
+        
+            return $dataTable->toJson();
         }
           
         return view('cont_registrations.index');

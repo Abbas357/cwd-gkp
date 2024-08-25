@@ -15,7 +15,7 @@
                             <h2 class="mb-0">$9,568</h2>
                         </div>
                         <div class="">
-                            <p class="dash-lable d-flex align-items-center gap-1 rounded mb-0 bg-danger text-danger bg-opacity-10"><span class="material-icons-outlined fs-6">arrow_downward</span>8.6%</p>
+                            <p class="dash-lable d-flex align-items-center gap-1 rounded mb-0 bg-danger text-danger bg-opacity-10"><span class="material-symbols-outlined fs-6">arrow_downward</span>8.6%</p>
                         </div>
                     </div>
                     <p class="mb-0">Average Weekly Sales</p>
@@ -29,7 +29,7 @@
                     <div class="d-flex align-items-center justify-content-around flex-wrap gap-4 p-4">
                         <div class="d-flex flex-column align-items-center justify-content-center gap-2">
                             <a href="javascript:;" class="mb-2 wh-48 bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="material-icons-outlined">shopping_cart</i>
+                                <i class="material-symbols-outlined">shopping_cart</i>
                             </a>
                             <h3 class="mb-0">85,246</h3>
                             <p class="mb-0">Orders</p>
@@ -37,7 +37,7 @@
                         <div class="vr"></div>
                         <div class="d-flex flex-column align-items-center justify-content-center gap-2">
                             <a href="javascript:;" class="mb-2 wh-48 bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="material-icons-outlined">print</i>
+                                <i class="material-symbols-outlined">print</i>
                             </a>
                             <h3 class="mb-0">$96,147</h3>
                             <p class="mb-0">Income</p>
@@ -45,7 +45,7 @@
                         <div class="vr"></div>
                         <div class="d-flex flex-column align-items-center justify-content-center gap-2">
                             <a href="javascript:;" class="mb-2 wh-48 bg-danger bg-opacity-10 text-danger rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="material-icons-outlined">notifications</i>
+                                <i class="material-symbols-outlined">notifications</i>
                             </a>
                             <h3 class="mb-0">846</h3>
                             <p class="mb-0">Notifications</p>
@@ -54,7 +54,7 @@
 
                         <div class="d-flex flex-column align-items-center justify-content-center gap-2">
                             <a href="javascript:;" class="mb-2 wh-48 bg-info bg-opacity-10 text-info rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="material-icons-outlined">payment</i>
+                                <i class="material-symbols-outlined">payment</i>
                             </a>
                             <h3 class="mb-0">$84,472</h3>
                             <p class="mb-0">Payment</p>
@@ -81,7 +81,7 @@
                                         </div>
                                         <div class="dropdown">
                                             <a href="javascript:;" class="dropdown-toggle-nocaret options dropdown-toggle" data-bs-toggle="dropdown">
-                                                <span class="material-icons-outlined fs-5">more_vert</span>
+                                                <span class="material-symbols-outlined fs-5">more_vert</span>
                                             </a>
                                             <ul class="dropdown-menu">
                                                 <li><a class="dropdown-item" href="javascript:;">Action</a></li>
@@ -109,7 +109,7 @@
                                         </div>
                                         <div class="dropdown">
                                             <a href="javascript:;" class="dropdown-toggle-nocaret options dropdown-toggle" data-bs-toggle="dropdown">
-                                                <span class="material-icons-outlined fs-5">more_vert</span>
+                                                <span class="material-symbols-outlined fs-5">more_vert</span>
                                             </a>
                                             <ul class="dropdown-menu">
                                                 <li><a class="dropdown-item" href="javascript:;">Action</a></li>
@@ -135,7 +135,7 @@
                                             <h2 class="mb-0">$65,129</h2>
                                         </div>
                                         <div class="">
-                                            <p class="dash-lable d-flex align-items-center gap-1 rounded mb-0 bg-success text-success bg-opacity-10"><span class="material-icons-outlined fs-6">arrow_upward</span>8.6%</p>
+                                            <p class="dash-lable d-flex align-items-center gap-1 rounded mb-0 bg-success text-success bg-opacity-10"><span class="material-symbols-outlined fs-6">arrow_upward</span>8.6%</p>
                                         </div>
                                     </div>
                                     <p class="mb-0">Sales This Year</p>
@@ -164,7 +164,7 @@
                         </div>
                         <div class="dropdown">
                             <a href="javascript:;" class="dropdown-toggle-nocaret options dropdown-toggle" data-bs-toggle="dropdown">
-                                <span class="material-icons-outlined fs-5">more_vert</span>
+                                <span class="material-symbols-outlined fs-5">more_vert</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="javascript:;">Action</a></li>
@@ -217,7 +217,7 @@
                         </div>
                         <div class="dropdown">
                             <a href="javascript:;" class="dropdown-toggle-nocaret options dropdown-toggle" data-bs-toggle="dropdown">
-                                <span class="material-icons-outlined fs-5">more_vert</span>
+                                <span class="material-symbols-outlined fs-5">more_vert</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="javascript:;">Action</a></li>
@@ -360,7 +360,7 @@
                         </div>
                         <div class="dropdown">
                             <a href="javascript:;" class="dropdown-toggle-nocaret options dropdown-toggle" data-bs-toggle="dropdown">
-                                <span class="material-icons-outlined fs-5">more_vert</span>
+                                <span class="material-symbols-outlined fs-5">more_vert</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="javascript:;">Action</a></li>
@@ -497,7 +497,7 @@
                         </div>
                         <div class="dropdown">
                             <a href="javascript:;" class="dropdown-toggle-nocaret options dropdown-toggle" data-bs-toggle="dropdown">
-                                <span class="material-icons-outlined fs-5">more_vert</span>
+                                <span class="material-symbols-outlined fs-5">more_vert</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="javascript:;">Action</a></li>
@@ -510,7 +510,7 @@
                         <div class="d-flex flex-column gap-4">
                             <div class="d-flex align-items-center gap-3">
                                 <div class="wh-48 d-flex align-items-center justify-content-center bg-danger rounded-circle">
-                                    <span class="material-icons-outlined text-white">shopping_cart</span>
+                                    <span class="material-symbols-outlined text-white">shopping_cart</span>
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-0 fw-bold">Online Purchase</h6>
@@ -522,7 +522,7 @@
                             </div>
                             <div class="d-flex align-items-center gap-3">
                                 <div class="wh-48 d-flex align-items-center justify-content-center rounded-circle bg-primary">
-                                    <span class="material-icons-outlined text-white">monetization_on</span>
+                                    <span class="material-symbols-outlined text-white">monetization_on</span>
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-0">Bank Transfer</h6>
@@ -534,7 +534,7 @@
                             </div>
                             <div class="d-flex align-items-center gap-3">
                                 <div class="wh-48 d-flex align-items-center justify-content-center rounded-circle bg-success">
-                                    <span class="material-icons-outlined text-white">credit_card</span>
+                                    <span class="material-symbols-outlined text-white">credit_card</span>
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-0">Credit Card</h6>
@@ -546,7 +546,7 @@
                             </div>
                             <div class="d-flex align-items-center gap-3">
                                 <div class="wh-48 d-flex align-items-center justify-content-center rounded-circle bg-purple">
-                                    <span class="material-icons-outlined text-white">account_balance</span>
+                                    <span class="material-symbols-outlined text-white">account_balance</span>
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-0">Laptop Payment</h6>
@@ -558,7 +558,7 @@
                             </div>
                             <div class="d-flex align-items-center gap-3">
                                 <div class="wh-48 d-flex align-items-center justify-content-center rounded-circle bg-orange">
-                                    <span class="material-icons-outlined text-white">savings</span>
+                                    <span class="material-symbols-outlined text-white">savings</span>
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-0">Template Payment</h6>
@@ -570,7 +570,7 @@
                             </div>
                             <div class="d-flex align-items-center gap-3">
                                 <div class="wh-48 d-flex align-items-center justify-content-center rounded-circle bg-info">
-                                    <span class="material-icons-outlined text-white">paid</span>
+                                    <span class="material-symbols-outlined text-white">paid</span>
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-0">iPhone Purchase</h6>
@@ -582,7 +582,7 @@
                             </div>
                             <div class="d-flex align-items-center gap-3">
                                 <div class="wh-48 d-flex align-items-center justify-content-center rounded-circle bg-pink">
-                                    <span class="material-icons-outlined text-white">card_giftcard</span>
+                                    <span class="material-symbols-outlined text-white">card_giftcard</span>
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-0">Account Credit</h6>
@@ -607,7 +607,7 @@
                         </div>
                         <div class="dropdown">
                             <a href="javascript:;" class="dropdown-toggle-nocaret options dropdown-toggle" data-bs-toggle="dropdown">
-                                <span class="material-icons-outlined fs-5">more_vert</span>
+                                <span class="material-symbols-outlined fs-5">more_vert</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="javascript:;">Action</a></li>

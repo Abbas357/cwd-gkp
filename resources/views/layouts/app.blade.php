@@ -19,16 +19,17 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Material+Icons+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/bootstrap-extended.css') }}" rel="stylesheet">
     <link href="{{ asset('css/dark-theme.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/main.css') }}" rel="stylesheet">
     <link href="{{ asset('css/semi-dark.css') }}" rel="stylesheet">
     <link href="{{ asset('css/bordered-theme.css') }}" rel="stylesheet">
     <link href="{{ asset('css/responsive.css') }}" rel="stylesheet">
     @stack('style')
-    <link href="{{ asset('css/main.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -92,8 +93,9 @@
     <script src="{{ asset('plugins/perfect-scrollbar/js/perfect-scrollbar.js') }}"></script>
     <script src="{{ asset('plugins/metismenu/metisMenu.min.js') }}"></script>
     <script src="{{ asset('plugins/simplebar/js/simplebar.min.js') }}"></script>
-    @stack('script')
     <script src="{{ asset('js/main.js') }}"></script>
+    @stack('script')
+    <script src="{{ asset('js/custom.js') }}"></script>
 </body>
 
 </html>
