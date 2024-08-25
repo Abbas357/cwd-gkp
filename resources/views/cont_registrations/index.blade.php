@@ -62,7 +62,7 @@
         <script src="{{ asset('plugins/sweetalert2@11.js') }}"></script>
         
         <script>
-            $(function() {
+            $(document).ready(function() {
                 var table = initDataTable('#registrations-datatable', {
                     ajaxUrl: "{{ route('registrations.index') }}",
                     columns: [
@@ -105,7 +105,7 @@
                     const url =  "{{ route('registrations.defer', ':id') }}".replace(':id', registrationId);
                     confirmAction('Do you want to defer this registration?').then((result) => {
                         if (result.isConfirmed) {
-                            fetchRequest(url, 'PATCH').then(success => {
+                            actionRequest(url, 'PATCH').then(success => {
                                 if (success) $("#registrations-datatable").DataTable().ajax.reload();
                             });
                         }
@@ -119,7 +119,7 @@
                     confirmAction('Do you want to approve this registration?').then((result) => {
                         if (result.isConfirmed) {
                             if (result.isConfirmed) {
-                                fetchRequest(url, 'PATCH').then(success => {
+                                actionRequest(url, 'PATCH').then(success => {
                                     if (success) $("#registrations-datatable").DataTable().ajax.reload();
                                 });
                             }
@@ -128,80 +128,32 @@
                 });
 
 
-                function updateDataTableURL(deferValue, approvalValue) {
-                    let queryParams = "?defer=" + deferValue;
-                    if (approvalValue !== undefined) {
-                        queryParams += "&approved=" + approvalValue;
-                    }
-                    registrationsData = "{{ route('registrations.index') }}" + queryParams;
-                    table.ajax.url(registrationsData).load();
-                }
-
-                function activateTab(tabId) {
-                    $('.nav-tabs a[href="' + tabId + '"]').tab('show');
-                    $('.tab-pane').removeClass('active show');
-                    $(tabId).addClass('active show');
-                }
-
-                function getDeferValueFromHash(hash) {
-                    switch (hash) {
-                        case '#deferred1':
-                            return 1;
-                        case '#deferred2':
-                            return 2;
-                        case '#deferred3':
-                            return 3;
-                        case '#approved':
-                            return undefined;
-                        default:
-                            return 0;
-                    }
-                }
-
-                $('.nav-tabs a').on('click', function() {
-                    let href = $(this).attr('href');
-                    window.location.hash = href;
+                tabHashNavigation({
+                    table: table,
+                    dataTableUrl: "{{ route('registrations.index') }}",
+                    tabToHashMap: {
+                        "#tab-defer0": '#not-deferred',
+                        "#tab-defer1": '#deferred1',
+                        "#tab-defer2": '#deferred2',
+                        "#tab-defer3": '#deferred3',
+                        "#tab-approved": '#approved',
+                    },
+                    hashToParamsMap: {
+                        '#not-deferred': { defer: 0 },
+                        '#deferred1': { defer: 1 },
+                        '#deferred2': { defer: 2 },
+                        '#deferred3': { defer: 3 },
+                        '#approved': { approved: 1 },
+                    },   
+                    defaultHash: '#not-deferred'
                 });
-
-                let initialTab = window.location.hash || '#not-deferred';
-                let initialDeferValue = getDeferValueFromHash(initialTab);
-
-                if (initialTab === '#approved') {
-                    updateDataTableURL(undefined, 1);
-                } else {
-                    updateDataTableURL(initialDeferValue);
-                }
-
-                activateTab(initialTab);
-
-                $("#tab-defer0").on("click", function() {
-                    updateDataTableURL(0);
-                });
-
-                $("#tab-defer1").on("click", function() {
-                    updateDataTableURL(1);
-                });
-
-                $("#tab-defer2").on("click", function() {
-                    updateDataTableURL(2);
-                });
-
-                $("#tab-defer3").on("click", function() {
-                    updateDataTableURL(3);
-                });
-
-                $("#tab-approved").on("click", function() {
-                    updateDataTableURL(undefined, 1);
-                });
-
-            });
-
-            $(document).ready(function() {
+            
                 $('#registrations-datatable').colResizable(
                 { 
                     liveDrag: true,
                     resizeMode:'overflow',
                     postbackSafe:true,
+                    useLocalStorage: true,
                     gripInnerHtml: "<div class='grip'></div>",
                     draggingClass:"dragging",
                 });

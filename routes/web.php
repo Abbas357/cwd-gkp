@@ -24,19 +24,18 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('users.index');
+    Route::get('/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/', [UserController::class, 'store'])->name('users.store');
     Route::get('/{user}', [UserController::class, 'show'])->name('users.show');
     Route::get('/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::patch('/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 });
 
 Route::middleware('auth')->prefix('registrations')->group(function () {
-    Route::get('/', [ContractorRegistrationController::class, 'index'])->name('registrations.index');
-
-    // Route::get('/data', [ContractorRegistrationController::class, 'data'])->name('registrations.data');
-    
+    Route::get('/', [ContractorRegistrationController::class, 'index'])->name('registrations.index');    
     Route::patch('/defer/{ContractorRegistration}', [ContractorRegistrationController::class, 'defer'])->name('registrations.defer');
     Route::patch('/approve/{ContractorRegistration}', [ContractorRegistrationController::class, 'approve'])->name('registrations.approve');
-    
     Route::get('/{ContractorRegistration}', [ContractorRegistrationController::class, 'show'])->name('registrations.show');
     Route::get('/{ContractorRegistration}/edit', [ContractorRegistrationController::class, 'edit'])->name('registrations.edit');
     Route::patch('/{ContractorRegistration}', [ContractorRegistrationController::class, 'update'])->name('registrations.update');
@@ -47,7 +46,5 @@ Route::middleware('auth')->prefix('collections')->group(function () {
     Route::post('/', [CollectionController::class, 'store'])->name('collections.store');
     Route::delete('/{collection}', [CollectionController::class, 'destroy'])->name('collections.destroy');
 });
-
-
 
 require __DIR__.'/auth.php';

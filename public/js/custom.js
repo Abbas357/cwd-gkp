@@ -1,3 +1,13 @@
+function previewImage(event, previewId) {
+    var reader = new FileReader();
+    reader.onload = function() {
+        var output = document.getElementById(previewId);
+        output.src = reader.result;
+        output.style.display = 'block';
+    };
+    reader.readAsDataURL(event.target.files[0]);
+}
+
 function showMessage(type, message, options = {}) {
     Swal.fire({
         position: "top-end",
@@ -25,7 +35,7 @@ function confirmAction(
     });
 }
 
-function fetchRequest(
+function actionRequest(
     url,
     method = "GET",
     data = {},
@@ -65,6 +75,32 @@ function fetchRequest(
             return false;
         });
 }
+
+function fetchRequest(url, method = "GET", data = {}) {
+    return fetch(url, {
+        method: method,
+        headers: {
+            "X-CSRF-TOKEN": document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content"),
+            "Content-Type": "application/json",
+        },
+        body: method !== "GET" ? JSON.stringify(data) : null,
+    })
+    .then((response) => response.json())
+    .then((result) => {
+        if (result.success) {
+            return result.data;
+        } else {
+            throw new Error(result.error || "An unexpected error occurred");
+        }
+    })
+    .catch((error) => {
+        console.error("Fetch error:", error);
+        throw error;
+    });
+}
+
 
 function initDataTable(selector, options = {}) {
     const exportButtons = [
@@ -191,7 +227,7 @@ function initDataTable(selector, options = {}) {
                             ).then((res) => {
                                 if (res.isConfirmed) {
                                     dt.state.clear();
-                                    sessionStorage.removeItem(selector.replace('#', ''));
+                                    localStorage.removeItem(selector.replace('#', ''));
                                     window.location.reload();
                                 }
                             });
@@ -225,4 +261,54 @@ function initDataTable(selector, options = {}) {
 
     const finalOptions = $.extend(true, {}, defaultOptions, options);
     return $(selector).DataTable(finalOptions);
+}
+
+function tabHashNavigation(config) {
+    const {
+        table,
+        dataTableUrl,
+        hashToParamsMap,
+        tabToHashMap,
+        defaultHash
+    } = config;
+
+    function buildQueryParams(params) {
+        if (!params) return '';
+        const queryParams = Object.entries(params)
+            .filter(([key, value]) => value !== undefined)
+            .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+            .join('&');
+        return queryParams ? '?' + queryParams : '';
+    }
+
+    function updateDataTableURL(params) {
+        let queryParams = buildQueryParams(params);
+        let tableData = dataTableUrl + queryParams;
+        table.ajax.url(tableData).load();
+    }
+
+    function activateTab(tabId) {
+        $('.nav-tabs a[href="' + tabId + '"]').tab('show');
+        $('.tab-pane').removeClass('active show');
+        $(tabId).addClass('active show');
+    }
+
+    $('.nav-tabs a').on('click', function() {
+        let href = $(this).attr('href');
+        window.location.hash = href;
+    });
+
+    let initialTab = window.location.hash || defaultHash;
+    let initialParams = hashToParamsMap[initialTab] || {};
+
+    updateDataTableURL(initialParams);
+    activateTab(initialTab);
+
+    Object.keys(tabToHashMap).forEach(function(tabSelector) {
+        $(tabSelector).on('click', function() {
+            let hash = tabToHashMap[tabSelector];
+            let params = hashToParamsMap[hash] || {};
+            updateDataTableURL(params);
+        });
+    });
 }

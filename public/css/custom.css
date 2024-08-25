@@ -68,12 +68,13 @@
   .action-btns span {
     cursor: pointer;
     border-radius: 5px;
-    background-color: #eee;
-    padding: 5px;
-    margin-bottom: 2px;
+    padding: 2px;
+    gap: 2px;
+    user-select: none;
   }
+  
   .action-btns span:hover {
-    background-color: #ddd;
+    filter:brightness(150%);
   }
   
   .nav-link {
@@ -111,6 +112,11 @@
       text-align: center;
       vertical-align: middle;
     }
+    
+    table thead th {
+      text-align: center;
+    }
+
     input, div.dt-container select {
       margin-left: 5px !important;
       min-width: 60px !important;

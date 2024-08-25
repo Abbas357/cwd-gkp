@@ -150,7 +150,7 @@
                                         <div class="row mb-3">
                                             <div class="col-md-6">
                                                 <label for="pre_enlistment">In Case of already enlisted in Provincial Department / Organization / Board</label>
-                                                <select class="form-select form-select-sm" data-placeholder="Choose" id="small-bootstrap-class-multiple-field" multiple name="pre_enlistment[]">
+                                                <select class="form-select form-select-sm" data-placeholder="Choose" id="pre_enlistment" multiple name="pre_enlistment[]">
                                                     @foreach ($cat['provincial_entities'] as $entities)
                                                     <option value="{{ $entities->name }}">{{ $entities->name }}</option>
                                                     @endforeach
@@ -281,88 +281,85 @@
 
     @push("script")
     <script src="{{ asset('plugins/select2/js/select2.min.js') }}"></script>
-    <script src="{{ asset('plugins/select2/js/select2-custom.js') }}"></script>
     <script src="{{ asset('plugins/jquery-mask/jquery.mask.min.js') }}"></script>
     <script>
-        $('#mobile_number').mask('0000-0000000', {
-            placeholder: "____-_______"
-        });
-        $('#cnic').mask('00000-0000000-0', {
-            placeholder: "_____-_______-_"
-        });
-
-        document.getElementById('pec_number').addEventListener('input', function() {
-            let pecNumber = this.value;
-            let feedbackElement = document.getElementById('pec_number_feedback');
-            let loaderElement = document.getElementById('checking_loader');
-            let submitButton = document.getElementById('submitBtn');
-
-            if (pecNumber) {
-                loaderElement.style.display = 'inline-block';
-                feedbackElement.textContent = '';
-                feedbackElement.classList.remove('text-danger', 'text-success');
-
-                fetch("{{ route('check.pec.number') }}", {
-                        method: 'POST'
-                        , headers: {
-                            'Content-Type': 'application/json'
-                            , 'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        }
-                        , body: JSON.stringify({
-                            pec_number: pecNumber
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        loaderElement.style.display = 'none';
-                        if (data.unique) {
-                            feedbackElement.textContent = 'PEC Number is available for registration';
-                            feedbackElement.classList.add('text-success');
-                            submitButton.disabled = false;
-                        } else {
-                            feedbackElement.textContent = 'You have already applied.';
-                            feedbackElement.classList.add('text-danger');
-                            submitButton.disabled = true;
-                        }
-                    })
-                    .catch(error => {
-                        loaderElement.style.display = 'none';
-                        console.error('Error:', error);
-                    });
-            } else {
-                feedbackElement.textContent = '';
-                loaderElement.style.display = 'none';
-                submitButton.disabled = false;
-            }
-        });
-
-        (function() {
-            'use strict'
+        $(document).ready(function() {
 
             var forms = document.querySelectorAll('.needs-validation')
 
-            Array.prototype.slice.call(forms)
-                .forEach(function(form) {
-                    form.addEventListener('submit', function(event) {
-                        if (!form.checkValidity()) {
-                            event.preventDefault()
-                            event.stopPropagation()
-                        }
+            Array.prototype.slice.call(forms).forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
 
-                        form.classList.add('was-validated')
-                    }, false)
-                })
-        })();
+                    form.classList.add('was-validated')
+                }, false)
+            })
 
-        function previewImage(event, previewId) {
-            var reader = new FileReader();
-            reader.onload = function() {
-                var output = document.getElementById(previewId);
-                output.src = reader.result;
-                output.style.display = 'block';
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        }
+            $('#mobile_number').mask('0000-0000000', {
+                placeholder: "____-_______"
+            });
+
+            $('#cnic').mask('00000-0000000-0', {
+                placeholder: "_____-_______-_"
+            });
+
+            $('#pre_enlistment').select2( {
+                theme: "bootstrap-5",
+                width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+                placeholder: $( this ).data( 'placeholder' ),
+                closeOnSelect: false,
+                dropdownParent: $('#pre_enlistment').parent(),
+            } );
+
+            document.getElementById('pec_number').addEventListener('input', function() {
+                let pecNumber = this.value;
+                let feedbackElement = document.getElementById('pec_number_feedback');
+                let loaderElement = document.getElementById('checking_loader');
+                let submitButton = document.getElementById('submitBtn');
+
+                if (pecNumber) {
+                    loaderElement.style.display = 'inline-block';
+                    feedbackElement.textContent = '';
+                    feedbackElement.classList.remove('text-danger', 'text-success');
+
+                    fetch("{{ route('check.pec.number') }}", {
+                            method: 'POST'
+                            , headers: {
+                                'Content-Type': 'application/json'
+                                , 'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
+                            , body: JSON.stringify({
+                                pec_number: pecNumber
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            loaderElement.style.display = 'none';
+                            if (data.unique) {
+                                feedbackElement.textContent = 'PEC Number is available for registration';
+                                feedbackElement.classList.add('text-success');
+                                submitButton.disabled = false;
+                            } else {
+                                feedbackElement.textContent = 'You have already applied.';
+                                feedbackElement.classList.add('text-danger');
+                                submitButton.disabled = true;
+                            }
+                        })
+                        .catch(error => {
+                            loaderElement.style.display = 'none';
+                            console.error('Error:', error);
+                        });
+                } else {
+                    feedbackElement.textContent = '';
+                    loaderElement.style.display = 'none';
+                    submitButton.disabled = false;
+                }
+            });
+
+        });
 
     </script>
     @endpush

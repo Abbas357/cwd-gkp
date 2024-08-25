@@ -9,7 +9,6 @@ use App\Http\Requests\UpdateContractorRegistrationRequest;
 use App\Models\District;
 use App\Models\Collection;
 use DataTables;
-use App\SearchBuilder;
 use Illuminate\Http\Request;
 
 class ContractorRegistrationController extends Controller
@@ -57,7 +56,7 @@ class ContractorRegistrationController extends Controller
         
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
                 $dataTable->filter(function ($query) use ($request) {
-                    $sb = new SearchBuilder($request, $query);
+                    $sb = new \App\SearchBuilder($request, $query);
                     $sb->build();
                 });
             }
@@ -66,70 +65,6 @@ class ContractorRegistrationController extends Controller
         }
           
         return view('cont_registrations.index');
-    }
-
-    public function data(Request $request)
-    {
-        $defer = ($defer = $request->query('defer') ?? 0) >= 0 && $defer <= 3 ? $defer : 0;
-        $approved = $request->query('approved', null);
-
-        $registrations = ContractorRegistration::query()->orderByDesc('created_at');
-
-        if ($approved !== null) {
-            $defer = null;
-        } elseif ($defer !== null) {
-            $approved = null;
-        }
-
-        if ($defer !== null) {
-            $registrations->where('defer_status', $defer)->where('approval_status', 0);
-        }
-
-        if ($approved !== null) {
-            $registrations->where('approval_status', $approved);
-        }
-
-        $searchable = [
-            'category_applied',
-            'contractor_name',
-            'address',
-            'pec_category',
-            'cnic',
-            'district',
-            'pec_number',
-            'owner_name',
-            'fbr_ntn',
-            'kpra_reg_no',
-            'email',
-            'mobile_number',
-            'is_limited',
-        ];
-
-        $records = function ($record) {
-            return [
-                'id' => $record->id,
-                'mobile_number' => $record->mobile_number,
-                'email' => $record->email,
-                'cnic' => $record->cnic,
-                'owner_name' => $record->owner_name,
-                'district' => $record->district,
-                'address' => $record->address,
-                'pec_number' => $record->pec_number,
-                'category_applied' => $record->category_applied,
-                'contractor_name' => $record->contractor_name,
-                'pec_category' => $record->pec_category,
-                'fbr_ntn' => $record->fbr_ntn,
-                'kpra_reg_no' => $record->kpra_reg_no,
-                'is_limited' => $record->is_limited,
-                'is_agreed' => $record->is_agreed,
-                'defer_status' => $record->defer_status,
-                'approval_status' => $record->approval_status,
-                'created_at' => $record->created_at->diffForHumans(),
-                'updated_at' => $record->updated_at->diffForHumans(),
-            ];
-        };
-
-        return $this->DataTable($registrations, $searchable, $records);
     }
 
     public function defer(Request $request, ContractorRegistration $ContractorRegistration)
