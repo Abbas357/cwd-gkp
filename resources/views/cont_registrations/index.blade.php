@@ -100,33 +100,31 @@
                     }]
                 });
 
-                $("#registrations-datatable").on('click', '.defer-btn', function() {
+                $("#registrations-datatable").on('click', '.defer-btn', async function() {
                     const registrationId = $(this).data("id");
-                    const url =  "{{ route('registrations.defer', ':id') }}".replace(':id', registrationId);
-                    confirmAction('Do you want to defer this registration?').then((result) => {
-                        if (result.isConfirmed) {
-                            actionRequest(url, 'PATCH').then(success => {
-                                if (success) $("#registrations-datatable").DataTable().ajax.reload();
-                            });
+                    const url = "{{ route('registrations.defer', ':id') }}".replace(':id', registrationId);
+
+                    const result = await confirmAction('Do you want to defer this registration?');
+                    if (result && result.isConfirmed) {
+                        const success = await fetchRequest(url, 'PATCH');
+                        if (success) {
+                            $("#registrations-datatable").DataTable().ajax.reload();
                         }
-                    });
+                    }
                 });
 
-
-                $("#registrations-datatable").on('click', '.approve-btn', function() {
+                $("#registrations-datatable").on('click', '.approve-btn', async function() {
                     const registrationId = $(this).data("id");
                     const url = "{{ route('registrations.approve', ':id') }}".replace(':id', registrationId);
-                    confirmAction('Do you want to approve this registration?').then((result) => {
-                        if (result.isConfirmed) {
-                            if (result.isConfirmed) {
-                                actionRequest(url, 'PATCH').then(success => {
-                                    if (success) $("#registrations-datatable").DataTable().ajax.reload();
-                                });
-                            }
-                        }
-                    });
-                });
 
+                    const result = await confirmAction('Do you want to approve this registration?');
+                    if (result && result.isConfirmed) {
+                        const success = await fetchRequest(url, 'PATCH');
+                        if (success) {
+                            $("#registrations-datatable").DataTable().ajax.reload();
+                        }
+                    }
+                });
 
                 tabHashNavigation({
                     table: table,

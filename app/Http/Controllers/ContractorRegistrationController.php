@@ -4,35 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Models\ContractorRegistration;
 use App\Http\Requests\StoreContractorRegistrationRequest;
-use App\Http\Requests\UpdateContractorRegistrationRequest;
 
 use App\Models\District;
 use App\Models\Collection;
-use DataTables;
 use Illuminate\Http\Request;
+
+use Yajra\DataTables\DataTables;
 
 class ContractorRegistrationController extends Controller
 {
     public function index(Request $request)
     {
-        $defer = ($defer = $request->query('defer') ?? 0) >= 0 && $defer <= 3 ? $defer : 0;
+        $defer = $request->query('defer', 0);
+        $defer = ($defer >= 0 && $defer <= 3) ? $defer : 0;
         $approved = $request->query('approved', null);
 
         $registrations = ContractorRegistration::query();
 
-        if ($approved !== null) {
-            $defer = null;
-        } elseif ($defer !== null) {
-            $approved = null;
-        }
+        $registrations->when($approved !== null, function ($query) use ($approved) {
+            $query->where('approval_status', $approved);
+        });
 
-        if ($defer !== null) {
-            $registrations->where('defer_status', $defer)->where('approval_status', 0);
-        }
-
-        if ($approved !== null) {
-            $registrations->where('approval_status', $approved);
-        }
+        $registrations->when($approved === null && $defer !== null, function ($query) use ($defer) {
+            $query->where('defer_status', $defer)->where('approval_status', 0);
+        });
 
         if ($request->ajax()) {
             $dataTable = Datatables::of($registrations)
@@ -169,20 +164,5 @@ class ContractorRegistrationController extends Controller
         $pecNumber = $request->input('pec_number');
         $exists = ContractorRegistration::where('pec_number', $pecNumber)->where('defer_status', '!=', 3)->exists();
         return response()->json(['unique' => !$exists]);
-    }
-
-    public function edit(ContractorRegistration $ContractorRegistration)
-    {
-        //
-    }
-
-    public function update(UpdateContractorRegistrationRequest $request, ContractorRegistration $ContractorRegistration)
-    {
-        //
-    }
-
-    public function destroy(ContractorRegistration $ContractorRegistration)
-    {
-        //
     }
 }

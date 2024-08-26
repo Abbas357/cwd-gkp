@@ -88,16 +88,18 @@
                     }]
                 });
 
-                $("#users-datatable").on('click', '.delete-btn', function() {
+                $("#users-datatable").on('click', '.delete-btn', async function() {
                     const userId = $(this).data("id");
-                    const url =  "{{ route('users.destroy', ':id') }}".replace(':id', userId);
-                    confirmAction('Do you want to delete this user?').then((result) => {
-                        if (result.isConfirmed) {
-                            actionRequest(url, 'DELETE').then(success => {
-                                if (success) $("#users-datatable").DataTable().ajax.reload();
-                            });
+                    const url = "{{ route('users.destroy', ':id') }}".replace(':id', userId);
+
+                    const result = await confirmAction('Do you want to delete this user?');
+
+                    if (result.isConfirmed) {
+                        const success = await fetchRequest(url, 'DELETE');
+                        if (success) {
+                            $("#users-datatable").DataTable().ajax.reload();
                         }
-                    });
+                    }
                 });
 
                 $('#users-datatable').colResizable(
@@ -111,32 +113,29 @@
                 });
 
 
-                $(document).on('click', '.edit-btn', function() {
-                    var userId = $(this).data('id');
-                    const url =  "{{ route('users.show', ':id') }}".replace(':id', userId);
+                $(document).on('click', '.edit-btn', async function() {
+                    const userId = $(this).data('id');
+                    const url = "{{ route('users.show', ':id') }}".replace(':id', userId);
 
                     $('#userEditModal').modal('show');
                     $('#userEditModal .loading-spinner').show();
                     $('#userEditModal .user-details').hide();
 
-                    fetchRequest(url, 'GET').then((user) => {
+                    const user = await fetchRequest(url);
+
+                    if (user) {
                         $('#userEditModal .modal-title').text('Edit User (' + user.name + ')');
                         $('#userEditModal .modal-body').html(`
-                        <p><strong>Name:</strong> ${user.name}</p>
-                        <p><strong>Email:</strong> ${user.email}</p>
-                    `);
-                        $('#userEditModal .loading-spinner').hide();
-                        $('#userEditModal .user-details').show();
-                    }).catch(error => {
+                            <p><strong>Name:</strong> ${user.name}</p>
+                            <p><strong>Email:</strong> ${user.email}</p>
+                        `);
+                    } else {
                         $('#userEditModal .modal-title').text('Error');
                         $('#userEditModal .user-details').html('<p>Failed to load user data.</p>');
-
-                        $('#userEditModal .loading-spinner').hide();
-                        $('#userEditModal .user-details').show();
-                    });
-
+                    }
+                    $('#userEditModal .loading-spinner').hide();
+                    $('#userEditModal .user-details').show();
                 });
-
                 
             });
                 

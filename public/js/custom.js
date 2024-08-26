@@ -1,9 +1,9 @@
 function previewImage(event, previewId) {
     var reader = new FileReader();
-    reader.onload = function() {
+    reader.onload = function () {
         var output = document.getElementById(previewId);
         output.src = reader.result;
-        output.style.display = 'block';
+        output.style.display = "block";
     };
     reader.readAsDataURL(event.target.files[0]);
 }
@@ -14,16 +14,16 @@ function showMessage(type, message, options = {}) {
         icon: type,
         title: message,
         showConfirmButton: options.showConfirmButton || false,
-        timer: options.timer || 1500,
+        timer: options.timer || 2000,
         ...options,
     });
 }
 
-function confirmAction(
+async function confirmAction(
     text = "You won't be able to revert this!",
     type = "warning"
 ) {
-    return Swal.fire({
+    return await Swal.fire({
         title: "Are you sure?",
         text: text,
         icon: type,
@@ -35,70 +35,48 @@ function confirmAction(
     });
 }
 
-function actionRequest(
+async function fetchRequest(
     url,
     method = "GET",
     data = {},
     successMessage = "Operation successful",
     errorMessage = "There was an error processing your request"
 ) {
-    return fetch(url, {
-        method: method,
-        headers: {
-            "X-CSRF-TOKEN": document
-                .querySelector('meta[name="csrf-token"]')
-                .getAttribute("content"),
-            "Content-Type": "application/json",
-        },
-        body: method !== "GET" ? JSON.stringify(data) : null,
-    })
-        .then((response) => response.json())
-        .then((result) => {
-            if (result.success) {
+    try {
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                "X-CSRF-TOKEN": document
+                    .querySelector('meta[name="csrf-token"]')
+                    .getAttribute("content"),
+                "Content-Type": "application/json",
+            },
+            body: method !== "GET" ? JSON.stringify(data) : null,
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            if (method === "GET") {
+                return result.data;
+            } else {
                 showMessage("success", result.success || successMessage);
                 return true;
-            } else {
-                showMessage(
-                    "error",
-                    result.error ||
-                        errorMessage ||
-                        "An unexpected error occurred"
-                );
-                return false;
             }
-        })
-        .catch(() => {
+        } else {
             showMessage(
                 "error",
-                errorMessage || "There was an error processing your request"
+                result.error || errorMessage || "An unexpected error occurred"
             );
             return false;
-        });
-}
-
-function fetchRequest(url, method = "GET", data = {}) {
-    return fetch(url, {
-        method: method,
-        headers: {
-            "X-CSRF-TOKEN": document
-                .querySelector('meta[name="csrf-token"]')
-                .getAttribute("content"),
-            "Content-Type": "application/json",
-        },
-        body: method !== "GET" ? JSON.stringify(data) : null,
-    })
-    .then((response) => response.json())
-    .then((result) => {
-        if (result.success) {
-            return result.data;
-        } else {
-            throw new Error(result.error || "An unexpected error occurred");
         }
-    })
-    .catch((error) => {
-        console.error("Fetch error:", error);
-        throw error;
-    });
+    } catch (error) {
+        showMessage(
+            "error",
+            errorMessage || "There was an error processing your request"
+        );
+        return false;
+    }
 }
 
 
@@ -166,7 +144,7 @@ function initDataTable(selector, options = {}) {
         },
         order: [
             [
-                options.defaultOrderColumn || 'created_at',
+                options.defaultOrderColumn || "created_at",
                 options.defaultOrderDirection || "desc",
             ],
         ],
@@ -209,11 +187,13 @@ function initDataTable(selector, options = {}) {
                         config: {
                             depthLimit: 2,
                             preDefined: {
-                                criteria: [{
-                                    origData: "id",
-                                    data: "id",
-                                }]
-                            }
+                                criteria: [
+                                    {
+                                        origData: "id",
+                                        data: "id",
+                                    },
+                                ],
+                            },
                         },
                     },
                     {
@@ -227,7 +207,9 @@ function initDataTable(selector, options = {}) {
                             ).then((res) => {
                                 if (res.isConfirmed) {
                                     dt.state.clear();
-                                    localStorage.removeItem(selector.replace('#', ''));
+                                    localStorage.removeItem(
+                                        selector.replace("#", "")
+                                    );
                                     window.location.reload();
                                 }
                             });
@@ -264,21 +246,19 @@ function initDataTable(selector, options = {}) {
 }
 
 function tabHashNavigation(config) {
-    const {
-        table,
-        dataTableUrl,
-        hashToParamsMap,
-        tabToHashMap,
-        defaultHash
-    } = config;
+    const { table, dataTableUrl, hashToParamsMap, tabToHashMap, defaultHash } =
+        config;
 
     function buildQueryParams(params) {
-        if (!params) return '';
+        if (!params) return "";
         const queryParams = Object.entries(params)
             .filter(([key, value]) => value !== undefined)
-            .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-            .join('&');
-        return queryParams ? '?' + queryParams : '';
+            .map(
+                ([key, value]) =>
+                    `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+            )
+            .join("&");
+        return queryParams ? "?" + queryParams : "";
     }
 
     function updateDataTableURL(params) {
@@ -288,13 +268,13 @@ function tabHashNavigation(config) {
     }
 
     function activateTab(tabId) {
-        $('.nav-tabs a[href="' + tabId + '"]').tab('show');
-        $('.tab-pane').removeClass('active show');
-        $(tabId).addClass('active show');
+        $('.nav-tabs a[href="' + tabId + '"]').tab("show");
+        $(".tab-pane").removeClass("active show");
+        $(tabId).addClass("active show");
     }
 
-    $('.nav-tabs a').on('click', function() {
-        let href = $(this).attr('href');
+    $(".nav-tabs a").on("click", function () {
+        let href = $(this).attr("href");
         window.location.hash = href;
     });
 
@@ -304,8 +284,8 @@ function tabHashNavigation(config) {
     updateDataTableURL(initialParams);
     activateTab(initialTab);
 
-    Object.keys(tabToHashMap).forEach(function(tabSelector) {
-        $(tabSelector).on('click', function() {
+    Object.keys(tabToHashMap).forEach(function (tabSelector) {
+        $(tabSelector).on("click", function () {
             let hash = tabToHashMap[tabSelector];
             let params = hashToParamsMap[hash] || {};
             updateDataTableURL(params);
