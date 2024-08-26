@@ -39,9 +39,9 @@
                     <div class="menu-title">Users</div>
                 </a>
                 <ul>
-                    <li><a href="{{ route('users.create') }}"><i class="material-symbols-outlined">arrow_right</i>Add User</a>
+                    <li><a href="{{ route('users.index') }}"><i class="material-symbols-outlined">arrow_right</i>List</a>
                     </li>
-                    <li><a href="{{ route('users.index') }}"><i class="material-symbols-outlined">arrow_right</i>Users List</a>
+                    <li><a href="{{ route('users.create') }}"><i class="material-symbols-outlined">arrow_right</i>Create</a>
                     </li>
                 </ul>
             </li>

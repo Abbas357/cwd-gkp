@@ -2,7 +2,7 @@
     <div class="container-fluid my-5">
         <div class="row">
             <div class="col-12 col-md-8 col-lg-6 col-xl-5 col-xxl-4 mx-auto">
-                <div class="card rounded-4 border border-light overflow-hidden">
+                <div class="card rounded-4 border border-secondary shadow overflow-hidden">
                     <div class="card-body p-5 position-relative">
                         <div class="bg-secondary position-absolute top-0 start-0 w-100 p-3">
                             <img src="{{ asset('images/logo.png') }}" class="d-block mx-auto" width="225" alt="">
