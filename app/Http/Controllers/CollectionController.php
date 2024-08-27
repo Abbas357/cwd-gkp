@@ -7,9 +7,15 @@ use App\Models\Collection;
 
 class CollectionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $categories  = Collection::simplePaginate(10);
+        $type = $request->query('type');
+        $categories = $type ? Collection::where('type', $type)->get() : Collection::all();
+
+        if ($request->ajax()) {
+            return response()->json($categories);
+        }
+
         return view('collections.index', compact('categories'));
     }
 
@@ -26,9 +32,9 @@ class CollectionController extends Controller
         ]);
 
         if ($collection) {
-            session()->flash('success', 'Collection Created Successfully');
+            return response()->json(['success' => 'Collection Created Successfully']);
         } else {
-            session()->flash('danger', 'Error creating collection');
+            return response()->json(['danger' => 'Error creating collection']);
         }
 
         return redirect()->route('collections.index');
@@ -36,12 +42,10 @@ class CollectionController extends Controller
 
     public function destroy(Collection $collection)
     {
-        if ($collection && $collection->delete()) {
-            session()->flash('success', 'Collection deleted successfully');
-        } else {
-            session()->flash('danger', 'Uh Oh! Collection cannot be deleted.');
+        if ($collection->delete()) {
+            return response()->json(['success' => 'Collection has been deleted successfully.']);
         }
 
-        return redirect()->route('collections.index');
+        return response()->json(['error' => 'Collection can\'t be deleted.']);
     }
 }

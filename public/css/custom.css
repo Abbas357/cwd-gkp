@@ -221,9 +221,9 @@
       transition: none !important;
     } 
   
-    select, input {
+    div.dtsb-searchBuilder select, div.dtsb-searchBuilder input {
       border-radius: 7px;
-      border: 1px solid #ddd !important;
+      border: 1px solid #ccc !important;
       font-style: normal !important;
       padding-left: 10px !important;
     }

@@ -292,3 +292,16 @@ function tabHashNavigation(config) {
         });
     });
 }
+
+function setButtonLoading(button, isLoading, loadingText = 'Please wait...') {
+    if (isLoading) {
+        $(button).html(`
+            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+            <span role="status">${loadingText}</span>
+        `);
+        $(button).prop('disabled', true);
+    } else {
+        $(button).html('Add Category'); // Default button text or you can pass it as a parameter
+        $(button).prop('disabled', false);
+    }
+}

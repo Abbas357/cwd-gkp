@@ -3,7 +3,6 @@
 
     @endpush
     <x-slot name="header">
-        <li class="breadcrumb-item active" aria-current="page"> Dashboard</li>
     </x-slot>
 
     <div class="row">

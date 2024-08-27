@@ -60,7 +60,7 @@ input::placeholder {
 /*header*/
 .top-header .navbar {
   background-color: #ffffff;
-  height: 70px;
+  height: 50px;
   position: fixed;
   left: 260px;
   right: 0;
@@ -628,7 +628,7 @@ input::placeholder {
 .main-wrapper .main-content .page-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
   display: inline-block;
   padding-right: 0.7rem;
-  content: "\\";
+  content: "/";
 }
 .main-wrapper .main-content .badge-icon {
   display: flex;

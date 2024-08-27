@@ -1,8 +1,22 @@
 <header class="top-header">
     <nav class="navbar navbar-expand align-items-center gap-2">
         <div class="d-flex flex-grow-1 justify-content-between align-items-center">
-            <div class="btn-toggle">
-                <a href="javascript:;"><i class="material-symbols-outlined">menu</i></a>
+            <div class="d-flex flex-start align-items-center gap-3">
+                <div class="btn-toggle user-select-none cursor-pointer">
+                    <i class=" material-symbols-outlined">menu</i>
+                </div>
+                @if (isset($header))
+                <div class="page-breadcrumb d-none d-sm-flex align-items-center bg-light px-2 shadow-sm">
+                    <div class="breadcrumb-title pe-2"><a href="{{ route('dashboard') }}">Home</a></div> <span class="fs-5">/</span>
+                    <div class="ps-2">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-0 p-0">
+                                {{ $header }}
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+                @endif
             </div>
             <div class="search-bar" style="max-width: 500px; flex-grow: 1">
                 <div class="position-relative">
