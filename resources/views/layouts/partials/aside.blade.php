@@ -4,7 +4,7 @@
             <img src="{{ asset('images/logo-square.png') }}" class="logo-img" alt="">
         </div>
         <div class="logo-name flex-grow-1">
-            <h5 class="mb-0">C&W Department</h5>
+            <h5 class="mb-0">C&W Dept.</h5>
         </div>
         <div class="sidebar-close">
             <span class="material-symbols-outlined">close</span>
@@ -25,10 +25,22 @@
                 <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="material-symbols-outlined">toc</i>
                     </div>
-                    <div class="menu-title">Collections</div>
+                    <div class="menu-title">Resources</div>
                 </a>
                 <ul>
-                    <li><a href="{{ route('collections.index') }}"><i class="material-symbols-outlined">arrow_right</i>Collections</a>
+                    <li><a href="{{ route('districts.index') }}"><i class="material-symbols-outlined">arrow_right</i>Districts</a>
+                    </li>
+                    <li><a href="{{ route('roles.index') }}"><i class="material-symbols-outlined">arrow_right</i>Roles</a>
+                    </li>
+                    <li><a href="{{ route('permissions.index') }}"><i class="material-symbols-outlined">arrow_right</i>Permissions</a>
+                    </li>
+                    <li><a href="{{ route('designations.index') }}"><i class="material-symbols-outlined">arrow_right</i>Designations</a>
+                    </li>
+                    <li><a href="{{ route('offices.index') }}"><i class="material-symbols-outlined">arrow_right</i>Offices</a>
+                    </li>
+                    <li><a href="{{ route('contractor_categories.index') }}"><i class="material-symbols-outlined">arrow_right</i>Contractor Categories</a>
+                    </li>
+                    <li><a href="{{ route('provincial_entities.index') }}"><i class="material-symbols-outlined">arrow_right</i>Provincial Entities</a>
                     </li>
                 </ul>
             </li>
@@ -59,25 +71,6 @@
                 </ul>
             </li>
             <li class="menu-label">Others</li>
-            <li>
-                <a class="has-arrow" href="javascript:;">
-                    <div class="parent-icon"><i class="material-symbols-outlined">lock</i>
-                    </div>
-                    <div class="menu-title">Authentication</div>
-                </a>
-                <ul>
-                    <li><a class="has-arrow" href="javascript:;"><i class="material-symbols-outlined">arrow_right</i>Basic</a>
-                        <ul>
-                            <li><a href="auth-basic-login.html" target="_blank"><i class="material-symbols-outlined">arrow_right</i>Login</a></li>
-                        </ul>
-                    </li>
-                    <li><a class="has-arrow" href="javascript:;"><i class="material-symbols-outlined">arrow_right</i>Cover</a>
-                        <ul>
-                            <li><a href="auth-cover-login.html" target="_blank"><i class="material-symbols-outlined">arrow_right</i>Login</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
             <li>
                 <a class="has-arrow" href="javascript:;">
                     <div class="parent-icon"><i class="material-symbols-outlined">face_5</i>

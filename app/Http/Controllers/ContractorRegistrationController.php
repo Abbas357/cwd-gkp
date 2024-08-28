@@ -6,7 +6,7 @@ use App\Models\ContractorRegistration;
 use App\Http\Requests\StoreContractorRegistrationRequest;
 
 use App\Models\District;
-use App\Models\Collection;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 use Yajra\DataTables\DataTables;
@@ -89,8 +89,8 @@ class ContractorRegistrationController extends Controller
     {
         $cat = [
             'districts' => District::all(),
-            'contractor_category' => Collection::where('type', 'contractor_category')->get(),
-            'provincial_entities' => Collection::where('type', 'provincial_entities')->get(),
+            'contractor_category' => Category::where('type', 'contractor_category')->get(),
+            'provincial_entities' => Category::where('type', 'provincial_entities')->get(),
         ];
         return view('cont_registrations.create', compact('cat'));
     }

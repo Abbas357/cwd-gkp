@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Categories;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Collection extends Model
+class Office extends Model
 {
     use HasFactory;
-    protected $guarded = [];
-    public $timestamps = false;
+    
+    protected $fillable = ['name'];
 }

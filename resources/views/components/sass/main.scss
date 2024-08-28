@@ -137,7 +137,7 @@ $dropdownAnimation: .6s cubic-bezier(.25, .8, .25, 1) 0s normal forwards 1 animd
     height: 70px;
     position: fixed;
     // border-bottom: 1px solid var(--bs-border-color);
-    left: 260px;
+    left: 240px;
     right: 0;
     top: 0;
     padding: 0 1.5rem;
@@ -382,7 +382,7 @@ $dropdownAnimation: .6s cubic-bezier(.25, .8, .25, 1) 0s normal forwards 1 animd
       }
 
       .dropdown-user {
-        width: 260px;
+        width: 240px;
         border-radius: 1rem;
       }
 
@@ -447,7 +447,7 @@ $dropdownAnimation: .6s cubic-bezier(.25, .8, .25, 1) 0s normal forwards 1 animd
   position: fixed;
   top: 0;
   left: 0;
-  width: 260px;
+  width: 240px;
   height: 100%;
   background-color: #ffffff;
   border-right: 1px solid var(--bs-border-color);
@@ -459,7 +459,7 @@ $dropdownAnimation: .6s cubic-bezier(.25, .8, .25, 1) 0s normal forwards 1 animd
     display: flex;
     align-items: center;
     justify-content: start;
-    width: 260px;
+    width: 240px;
     height: 70px;
     padding: 0 1rem;
     gap: .5rem;
@@ -634,7 +634,7 @@ $border-color_1: initial;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 260px;
+    width: 240px;
     height: 70px;
     border-top: 1px solid #dee2e6;
     position: fixed;
@@ -805,7 +805,7 @@ body.toggled {
 .main-wrapper {
   margin-top: 70px;
   padding-bottom: 20px;
-  margin-left: 260px;
+  margin-left: 240px;
   transition: ease-out .3s;
 
   .main-content {
@@ -1018,7 +1018,7 @@ body.toggled {
   border-top: 1px solid var(--bs-border-color);
   height: 40px;
   position: absolute;
-  left: 260px;
+  left: 240px;
   right: 0;
   bottom: 0;
   transition: ease-out .3s;

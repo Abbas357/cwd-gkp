@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\Collection;
+use App\Models\Category;
 
 use Yajra\DataTables\DataTables;
 
@@ -44,8 +44,8 @@ class UserController extends Controller
     public function create()
     {
         $cat = [
-            'designations' => Collection::where('type', 'designation')->get(),
-            'offices' => Collection::where('type', 'office')->get(),
+            'designations' => Category::where('type', 'designation')->get(),
+            'offices' => Category::where('type', 'office')->get(),
         ];
         return view('users.create', compact('cat'));
     }

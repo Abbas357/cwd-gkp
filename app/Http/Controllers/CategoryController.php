@@ -3,20 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Collection;
+use App\Models\Category;
 
-class CollectionController extends Controller
+class CategoryController extends Controller
 {
     public function index(Request $request)
     {
         $type = $request->query('type');
-        $categories = $type ? Collection::where('type', $type)->get() : Collection::all();
+        $categories = $type ? Category::where('type', $type)->get() : Category::all();
 
         if ($request->ajax()) {
             return response()->json($categories);
         }
 
-        return view('collections.index', compact('categories'));
+        return view('categories.collections.index', compact('categories'));
     }
 
     public function store(Request $request)
@@ -26,23 +26,23 @@ class CollectionController extends Controller
             'name' => 'required',
         ]);
 
-        $collection = Collection::create([
+        $category = Category::create([
             'type' => $request->type,
             'name' => $request->name,
         ]);
 
-        if ($collection) {
+        if ($category) {
             return response()->json(['success' => 'Collection Created Successfully']);
         } else {
             return response()->json(['danger' => 'Error creating collection']);
         }
 
-        return redirect()->route('collections.index');
+        return redirect()->route('categories.index');
     }
 
-    public function destroy(Collection $collection)
+    public function destroy(Category $category)
     {
-        if ($collection->delete()) {
+        if ($category->delete()) {
             return response()->json(['success' => 'Collection has been deleted successfully.']);
         }
 

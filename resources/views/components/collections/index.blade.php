@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <li class="breadcrumb-item active" aria-current="page"> Collections</li>
+        <li class="breadcrumb-item active" aria-current="page"> Categories</li>
     </x-slot>
 
     @push('style')
@@ -15,7 +15,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h3 class="card-title">Add Categories </h3>
-                                    <form id="collectionForm" enctype="multipart/form-data">
+                                    <form id="categoryForm">
                                         @csrf
                                         <div class="row mb-3">
                                             <div class="col">
@@ -77,7 +77,7 @@
     <script>
         $("#categories").on('click', '.delete-btn', async function() {
             const id = $(this).data("id");
-            const url = "{{ route('collections.destroy', ':id') }}".replace(':id', id);
+            const url = "{{ route('categories.destroy', ':id') }}".replace(':id', id);
 
             const result = await confirmAction('Do you want to delete this user?');
 
@@ -92,14 +92,14 @@
             }
         });
 
-        document.getElementById('collectionForm').addEventListener('submit', async function(event) {
+        document.getElementById('categoryForm').addEventListener('submit', async function(event) {
             event.preventDefault();
 
             setButtonLoading($('#submit-btn'), true);
             const form = event.target;
             const formData = new FormData(form);
 
-            const url = "{{ route('collections.store') }}";
+            const url = "{{ route('categories.store') }}";
 
             try {
                 const response = await fetch(url, {

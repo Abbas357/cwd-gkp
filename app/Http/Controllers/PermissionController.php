@@ -10,62 +10,38 @@ class PermissionController extends Controller
 {
     public function index()
     {
-        $permissions = Permission::all();
-        return view('permissions.index', compact('permissions'));
-    }
-
-    public function create()
-    {
-        return view('permissions.create');
+        $permissions = Permission::paginate(10);
+        return view('categories.permissions.index', compact('permissions'));
     }
 
     public function store(StorePermissionRequest $request)
     {
-        $validated = $request->validate(['name' => 'required']);
-
-        Permission::create($validated);
-
-        return to_route('permissions.index')->with('message', 'Permission created.');
-    }
-
-    public function edit(Permission $permission)
-    {
-        $roles = Role::all();
-        return view('permissions.edit', compact('permission', 'roles'));
-    }
-
-    public function update(StorePermissionRequest $request, Permission $permission)
-    {
-        $validated = $request->validate(['name' => 'required']);
-        $permission->update($validated);
-
-        return to_route('permissions.index')->with('message', 'Permission updated.');
+        Permission::create(['name' => $request->name]);
+        return to_route('permissions.index')->with('success', 'Permission created.');
     }
 
     public function destroy(Permission $permission)
     {
         $permission->delete();
-
-        return back()->with('message', 'Permission deleted.');
+        return back()->with('success', 'Permission deleted.');
     }
 
     public function assignRole(StorePermissionRequest $request, Permission $permission)
     {
         if ($permission->hasRole($request->role)) {
-            return back()->with('message', 'Role exists.');
+            return back()->with('success', 'Role exists.');
         }
-
         $permission->assignRole($request->role);
-        return back()->with('message', 'Role assigned.');
+        return back()->with('success', 'Role assigned.');
     }
 
     public function removeRole(Permission $permission, Role $role)
     {
         if ($permission->hasRole($role)) {
             $permission->removeRole($role);
-            return back()->with('message', 'Role removed.');
+            return back()->with('success', 'Role removed.');
         }
 
-        return back()->with('message', 'Role not exists.');
+        return back()->with('success', 'Role not exists.');
     }
 }

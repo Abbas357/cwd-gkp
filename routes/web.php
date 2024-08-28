@@ -5,9 +5,14 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ContractorCategoryController;
+use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ContractorRegistrationController;
+use App\Http\Controllers\DesignationController;
+use App\Http\Controllers\OfficeController;
+use App\Http\Controllers\ProvincialEntityController;
 
 require __DIR__ . '/noauth.php';
 
@@ -44,27 +49,53 @@ Route::middleware('auth')->prefix('registrations')->group(function () {
     Route::patch('/{ContractorRegistration}', [ContractorRegistrationController::class, 'update'])->name('registrations.update');
 });
 
-Route::middleware('auth')->prefix('collections')->group(function () {
-    Route::get('/', [CollectionController::class, 'index'])->name('collections.index');
-    Route::post('/', [CollectionController::class, 'store'])->name('collections.store');
-    Route::delete('/{collection}', [CollectionController::class, 'destroy'])->name('collections.destroy');
+Route::middleware('auth')->prefix('categories')->group(function () {
+    Route::get('/', [CategoryController::class, 'index'])->name('categories.index');
+    Route::post('/', [CategoryController::class, 'store'])->name('categories.store');
+    Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 });
 
 Route::middleware('auth')->prefix('roles')->group(function () {
     Route::get('/', [RoleController::class, 'index'])->name('roles.index');
-    Route::get('/create', [RoleController::class, 'create'])->name('roles.create');
     Route::post('/', [RoleController::class, 'store'])->name('roles.store');
     Route::delete('/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
 
     Route::post('/{role}/permissions', [RoleController::class, 'givePermission'])->name('roles.permissions');
     Route::delete('/{role}/permissions/{permission}', [RoleController::class, 'revokePermission'])->name('roles.permissions.revoke');
 });
-Route::get('/collections/filter', [CollectionController::class, 'filterByType'])->name('collections.filter');
 
+Route::middleware('auth')->prefix('districts')->group(function () {
+    Route::get('/', [DistrictController::class, 'index'])->name('districts.index');
+    Route::post('/', [DistrictController::class, 'store'])->name('districts.store');
+    Route::delete('/{district}', [DistrictController::class, 'destroy'])->name('districts.destroy');
+});
+
+Route::middleware('auth')->prefix('contractor_categories')->group(function () {
+    Route::get('/', [ContractorCategoryController::class, 'index'])->name('contractor_categories.index');
+    Route::post('/', [ContractorCategoryController::class, 'store'])->name('contractor_categories.store');
+    Route::delete('/{contractor_category}', [ContractorCategoryController::class, 'destroy'])->name('contractor_categories.destroy');
+});
+
+Route::middleware('auth')->prefix('designations')->group(function () {
+    Route::get('/', [DesignationController::class, 'index'])->name('designations.index');
+    Route::post('/', [DesignationController::class, 'store'])->name('designations.store');
+    Route::delete('/{designation}', [DesignationController::class, 'destroy'])->name('designations.destroy');
+});
+
+Route::middleware('auth')->prefix('offices')->group(function () {
+    Route::get('/', [OfficeController::class, 'index'])->name('offices.index');
+    Route::post('/', [OfficeController::class, 'store'])->name('offices.store');
+    Route::delete('/{office}', [OfficeController::class, 'destroy'])->name('offices.destroy');
+});
+
+Route::middleware('auth')->prefix('provincial_entities')->group(function () {
+    Route::get('/', [ProvincialEntityController::class, 'index'])->name('provincial_entities.index');
+    Route::post('/', [ProvincialEntityController::class, 'store'])->name('provincial_entities.store');
+    Route::delete('/{provincial_entity}', [ProvincialEntityController::class, 'destroy'])->name('provincial_entities.destroy');
+});
 
 Route::middleware('auth')->prefix('permissions')->group(function () {
     Route::get('/', [PermissionController::class, 'index'])->name('permissions.index');
-    Route::get('/create', [PermissionController::class, 'create'])->name('permissions.create');
     Route::post('/', [PermissionController::class, 'store'])->name('permissions.store');
     Route::delete('/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
 

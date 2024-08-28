@@ -1,4 +1,6 @@
-
+:root {
+  --bs-border-radius: 0.175rem;
+}
 .symbol-container {
     display: flex;
     align-items: center;
@@ -65,7 +67,7 @@
     }
   }
   
-  .action-btns span {
+  .material-symbols-outlined {
     cursor: pointer;
     border-radius: 5px;
     padding: 2px;
