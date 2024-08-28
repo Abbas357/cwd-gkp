@@ -2,17 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ContractorCategoryController;
-use App\Http\Controllers\DistrictController;
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\ContractorRegistrationController;
-use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\OfficeController;
-use App\Http\Controllers\ProvincialEntityController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Categories\RoleController;
+use App\Http\Controllers\Categories\DistrictController;
+use App\Http\Controllers\Categories\PermissionController;
+use App\Http\Controllers\Categories\DesignationController;
+use App\Http\Controllers\ContractorRegistrationController;
+use App\Http\Controllers\Categories\ProvincialEntityController;
+use App\Http\Controllers\Categories\ContractorCategoryController;
 
 require __DIR__ . '/noauth.php';
 
@@ -47,12 +46,6 @@ Route::middleware('auth')->prefix('registrations')->group(function () {
     Route::get('/{ContractorRegistration}', [ContractorRegistrationController::class, 'show'])->name('registrations.show');
     Route::get('/{ContractorRegistration}/edit', [ContractorRegistrationController::class, 'edit'])->name('registrations.edit');
     Route::patch('/{ContractorRegistration}', [ContractorRegistrationController::class, 'update'])->name('registrations.update');
-});
-
-Route::middleware('auth')->prefix('categories')->group(function () {
-    Route::get('/', [CategoryController::class, 'index'])->name('categories.index');
-    Route::post('/', [CategoryController::class, 'store'])->name('categories.store');
-    Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 });
 
 Route::middleware('auth')->prefix('roles')->group(function () {

@@ -7,7 +7,7 @@
             <h5 class="mb-0">C&W Dept.</h5>
         </div>
         <div class="sidebar-close">
-            <span class="material-symbols-outlined">close</span>
+            <span class="icon sidebar"></span>
         </div>
     </div>
     <div class="sidebar-nav" data-simplebar="true">

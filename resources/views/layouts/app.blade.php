@@ -29,6 +29,7 @@
     <link href="{{ asset('css/bordered-theme.css') }}" rel="stylesheet">
     <link href="{{ asset('css/responsive.css') }}" rel="stylesheet">
     @stack('style')
+    <link href="{{ asset('css/icons.css') }}" rel="stylesheet">
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 </head>
 
@@ -37,24 +38,24 @@
     @include("layouts.partials.aside")
 
     <main class="main-wrapper">
-        @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Success</strong> {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        @endif
-
-        @if (session('danger'))
-        <div class="alert alert-danger">
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <strong>Uh Oh!</strong> {{ session('danger') }}
+        <div class="main-content">
+            @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Success</strong> {{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-        </div>
-        @endif
-        <div class="main-content">
+            @endif
+
+            @if (session('danger'))
+            <div class="alert alert-danger">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>Uh Oh!</strong> {{ session('danger') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+            @endif
             {{ $slot }}
-        </div>>
+        </div>
     </main>
 
     <div class="overlay btn-toggle"></div>

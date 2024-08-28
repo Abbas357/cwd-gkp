@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Categories;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\Categories\ProvincialEntity;
 use Illuminate\Http\Request;

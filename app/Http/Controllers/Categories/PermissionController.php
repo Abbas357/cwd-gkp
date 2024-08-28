@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Categories;
+
+use App\Http\Controllers\Controller;
 
 use App\Http\Requests\StorePermissionRequest;
 use Spatie\Permission\Models\Permission;

@@ -10,9 +10,6 @@
         <div class="page">
             <div class="page-inner">
                 <div class="page-section">
-                    <div class="d-xl-none">
-                        <button class="btn btn-danger btn-floated" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"><i class="fa fa-th-list"></i></button>
-                    </div>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="card">
