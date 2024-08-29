@@ -812,7 +812,6 @@ input::placeholder {
   align-items: center;
   justify-content: center;
   background-color: #ffffff;
-  border-top: 1px solid var(--bs-border-color);
   height: 50px;
   position: absolute;
   left: 240px;

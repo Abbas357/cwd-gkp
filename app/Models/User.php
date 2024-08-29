@@ -15,6 +15,15 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'mobile_number',
+        'landline_number',
+        'designation',
+        'cnic',
+        'office',
+        'otp',
+        'is_active',
+        'is_suspended',
+        'password_updated_at',
     ];
 
     protected $hidden = [
@@ -29,4 +38,23 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function boss()
+    {
+        // $boss = $user->boss->first();
+        return $this->belongsToMany(User::class, 'user_hierarchy', 'user_id', 'boss_id');
+    }
+
+    public function subordinates()
+    {
+        // $subordinates = $user->subordinates;
+        return $this->belongsToMany(User::class, 'user_hierarchy', 'boss_id', 'user_id');
+    }
+
+    public function districts()
+    {
+        return $this->belongsToMany(District::class, 'district_user', 'user_id', 'district_id');
+    }
+
+
 }

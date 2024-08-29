@@ -82,4 +82,17 @@ class UserController extends Controller
 
         return response()->json(['error' => 'User can\'t be deleted.']);
     }
+
+    public function assignBoss(Request $request)
+    {
+        $user = User::find($request->input('user_id'));
+        $boss = User::find($request->input('boss_id'));
+
+        $user->boss()->sync([$boss->id]);
+
+        return redirect()->back()->with('success', 'Boss assigned successfully.');
+
+        // $boss = $user->boss->first();
+        // $subordinates = $user->subordinates;
+    }
 }

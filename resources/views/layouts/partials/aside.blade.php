@@ -1,4 +1,4 @@
-<aside class="sidebar-wrapper">
+<aside class="sidebar-wrapper ">
     <div class="sidebar-header">
         <div class="logo-icon">
             <img src="{{ asset('images/logo-square.png') }}" class="logo-img" alt="">

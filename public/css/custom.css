@@ -1,9 +1,14 @@
-:root {
+:root, [data-bs-theme=light] {
   --bs-border-radius: 0.175rem;
 	--bs-border-radius-sm: 0.2rem;
 	--bs-border-radius-lg: 0.3rem;
 	--bs-border-radius-xl: .5rem;
 	--bs-border-radius-xxl: 1rem;
+  --bs-border-color: #eee;
+}
+
+[data-bs-theme=dark] {
+  --bs-border-color: #333;
 }
 .symbol-container {
     display: flex;

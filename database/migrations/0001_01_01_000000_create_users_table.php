@@ -15,15 +15,16 @@ return new class extends Migration
             $table->id();
             $table->string('name', 45);
             $table->string('email', 45)->unique();
-            $table->string('mobile_number', 45)->unique();
-            $table->string('landline_number', 45)->unique();
-            $table->string('designation', 45);
-            $table->string('cnic', 45);
-            $table->string('office', 45);
-            $table->string('otp', 45);
-            $table->boolean('is_active');
-            $table->boolean('is_suspended');
+            $table->string('mobile_number', 45)->nullable();
+            $table->string('landline_number', 45)->nullable();
+            $table->string('designation', 45)->nullable();
+            $table->string('cnic', 45)->nullable();
+            $table->string('office', 45)->nullable();
+            $table->string('otp', 45)->nullable();
+            $table->boolean('is_active')->default(0);
+            $table->boolean('is_suspended')->default(0);
             $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('password_updated_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
@@ -43,6 +44,13 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
+        Schema::create('user_hierarchy', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('boss_id')->references('id')->on('users')->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -50,6 +58,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('user_hierarchy');
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');

@@ -45,7 +45,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             @endif
-
             @if (session('danger'))
             <div class="alert alert-danger">
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -55,9 +54,10 @@
             </div>
             @endif
             {{ $slot }}
+            <br /><br />
         </div>
     </main>
-
+    
     <div class="overlay btn-toggle"></div>
 
     @include("layouts.partials.footer")

@@ -28,4 +28,25 @@ class DistrictController extends Controller
         return back()->with('success', 'District deleted.');
     }
 
+    public function assignUser(Request $request, $districtId)
+    {
+        $request->validate([
+            'user_id' => 'required',
+        ]);
+
+        $district = District::findOrFail($districtId);
+        $district->users()->attach($request->user_id);
+
+        return redirect()->back()->with('success', 'User assigned successfully.');
+    }
+
+    public function deleteAssignment($districtId, $userId)
+    {
+        $district = District::findOrFail($districtId);
+        
+        $district->users()->detach($userId);
+
+        return redirect()->back()->with('success', 'User assignment deleted successfully.');
+    }
+
 }
