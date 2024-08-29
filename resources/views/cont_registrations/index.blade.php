@@ -59,7 +59,6 @@
     @push('script')
         <script src="{{ asset('plugins/datatable/js/datatables.min.js') }}"></script>
         <script src="{{ asset('plugins/col-resizable.js') }}"></script>
-        <script src="{{ asset('plugins/sweetalert2@11.js') }}"></script>
         
         <script>
             $(document).ready(function() {

@@ -25,6 +25,6 @@ class PasswordController extends Controller
             'password_updated_at' => now()
         ]);
 
-        return back()->with('status', 'password-updated');
+        return back()->with('success', 'Password Updated');
     }
 }

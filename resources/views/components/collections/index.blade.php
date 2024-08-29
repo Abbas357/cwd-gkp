@@ -117,13 +117,13 @@
                     let urlParams = new URLSearchParams(window.location.search);
                     let initialType = urlParams.get('type') || '';
                     fetchAndDisplayCategories(initialType);
-                    showMessage("success", result.success || "Operation successful");
+                    showMessage(result.success || "Operation successful");
                     $('#name').val('');
                 } else {
-                    showMessage("error", result.error || "There was an error processing your request");
+                    showMessage(result.error || "There was an error processing your request", "error");
                 }
             } catch (error) {
-                showMessage("error", "There was an error processing your request");
+                showMessage("There was an error processing your request", "error");
             }
         });
 

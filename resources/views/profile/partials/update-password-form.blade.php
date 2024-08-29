@@ -1,15 +1,24 @@
 <section>
     <header>
-        <h2 class="text-lg font-medium">
-            {{ __('Update Password') }}
-        </h2>
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="text-lg font-medium">
+                {{ __('Update Password') }}
+            </h2>
+            <h5>Password was changed <span class="text-primary"> @if (auth()->user()->password_updated_at)
+                {{ auth()->user()->password_updated_at->diffForHumans() }} </span>
+                @else
+                    Password never updated
+                @endif</h5>
+        </div>
+
+
 
         <p class="mt-1 text-sm">
             {{ __('Ensure your account is using a long, random password to stay secure.') }}
         </p>
     </header>
 
-    <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6">
+    <form method="post" class="needs-validation" action="{{ route('password.update') }}" class="mt-6 space-y-6">
         @csrf
         @method('put')
 
@@ -39,10 +48,6 @@
 
         <div class="flex items-center gap-4">
             <button type="submit" class="mt-2 btn btn-primary">Change Password</button>
-
-            @if (session('status') === 'password-updated')
-            <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)" class="text-sm text-gray-600 dark:text-gray-400">{{ __('Saved.') }}</p>
-            @endif
         </div>
     </form>
 </section>

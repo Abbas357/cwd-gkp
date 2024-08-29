@@ -1,6 +1,5 @@
 <x-app-layout>
     <x-slot name="header">
-        {{-- <li class="breadcrumb-item active" aria-current="page"><a href="#">Home</a></li> --}}
         <li class="breadcrumb-item" aria-current="page">Profile</li>
     </x-slot>
 

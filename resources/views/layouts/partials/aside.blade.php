@@ -16,7 +16,7 @@
         <ul class="metismenu" id="sidenav">
             <li>
                 <a href="{{ route('dashboard') }}">
-                    <div class="parent-icon"><i class="icon icon-home"></i>
+                    <div class="parent-icon"><i class="icon icon-dashboard"></i>
                     </div>
                     <div class="menu-title">Dashboard</div>
                 </a>
@@ -112,7 +112,7 @@
     <div class="sidebar-bottom gap-4">
         <div class="dark-mode">
             <a href="javascript:;" class="footer-icon dark-mode-icon">
-                <i class="material-symbols-outlined">dark_mode</i>
+                <i class="icon icon-dark"></i>
             </a>
         </div>
         <div class="dropdown dropup-center dropup dropdown-help">

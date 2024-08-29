@@ -40,19 +40,21 @@
     <main class="main-wrapper">
         <div class="main-content">
             @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>Success</strong> {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        showMessage("{{ session('success') }}");
+                    });
+                </script>
             @endif
+    
             @if (session('danger'))
-            <div class="alert alert-danger">
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>Uh Oh!</strong> {{ session('danger') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        showMessage("{{ session('danger') }}", 'error');
+                    });
+                </script>
             @endif
+    
             {{ $slot }}
             <br /><br />
         </div>
@@ -71,8 +73,10 @@
     <script src="{{ asset('plugins/metismenu/metisMenu.min.js') }}"></script>
     <script src="{{ asset('plugins/simplebar/js/simplebar.min.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalert2@11.js') }}"></script>
+    <script src="{{ asset('js/custom.js') }}"></script> 
     @stack('script')
-    <script src="{{ asset('js/custom.js') }}"></script>
+    
 </body>
 
 </html>

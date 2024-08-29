@@ -8,7 +8,7 @@ function previewImage(event, previewId) {
     reader.readAsDataURL(event.target.files[0]);
 }
 
-function showMessage(type, message, options = {}) {
+function showMessage(message, type = 'success', options = {}) {
     Swal.fire({
         position: "top-end",
         icon: type,
@@ -60,20 +60,20 @@ async function fetchRequest(
             if (method === "GET") {
                 return result.data;
             } else {
-                showMessage("success", result.success || successMessage);
+                showMessage(result.success || successMessage);
                 return true;
             }
         } else {
             showMessage(
-                "error",
-                result.error || errorMessage || "An unexpected error occurred"
+                result.error || errorMessage || "An unexpected error occurred",
+                "error"
             );
             return false;
         }
     } catch (error) {
         showMessage(
-            "error",
-            errorMessage || "There was an error processing your request"
+            errorMessage || "There was an error processing your request",
+            "error"
         );
         return false;
     }
@@ -85,7 +85,7 @@ function initDataTable(selector, options = {}) {
         {
             extend: "copy",
             text: `<span class="symbol-container">
-                    <i class="material-symbols-outlined">content_copy</i>
+                    <i class="icon icon-copy"></i>
                     &nbsp; Copy
                 </span>`,
             exportOptions: {
@@ -95,7 +95,7 @@ function initDataTable(selector, options = {}) {
         {
             extend: "csv",
             text: `<span class="symbol-container">
-                    <i class="material-symbols-outlined">csv</i>
+                    <i class="icon icon-csv"></i>
                     &nbsp; CSV
                 </span>`,
             exportOptions: {
@@ -105,7 +105,7 @@ function initDataTable(selector, options = {}) {
         {
             extend: "excel",
             text: `<span class="symbol-container">
-                    <i class="material-symbols-outlined">grid_on</i>
+                    <i class="icon icon-excel"></i>
                     &nbsp; Excel
                 </span>`,
             exportOptions: {
@@ -115,7 +115,7 @@ function initDataTable(selector, options = {}) {
         {
             extend: "print",
             text: `<span class="symbol-container">
-                    <i class="material-symbols-outlined">print</i>
+                    <i class="icon icon-print"></i>
                     &nbsp; Print
                 </span>`,
             autoPrint: false,
@@ -136,7 +136,7 @@ function initDataTable(selector, options = {}) {
         ajax: {
             url: options.ajaxUrl || "",
             error(jqXHR, textStatus, errorThrown) {
-                $(selector).removeClass("data-table-loading");
+                $(selector).removeClass("card-loading");
                 console.log(
                     "An error occurred while loading data: " + errorThrown
                 );
@@ -157,7 +157,7 @@ function initDataTable(selector, options = {}) {
                 },
                 clearAll: "Clear All Filters",
                 button: `<span class="symbol-container">
-                            <i class="material-symbols-outlined">filter_alt</i>
+                            <i class="icon icon-filter"></i>
                             &nbsp; Filter
                         </span>`,
             },
@@ -168,7 +168,7 @@ function initDataTable(selector, options = {}) {
                     {
                         extend: "collection",
                         text: `<span class="symbol-container">
-                                <i class="material-symbols-outlined">share</i>
+                                <i class="icon icon-share"></i>
                                 &nbsp; Export
                             </span>`,
                         autoClose: true,
@@ -178,7 +178,7 @@ function initDataTable(selector, options = {}) {
                         extend: "colvis",
                         collectionLayout: "two-column",
                         text: `<span class="symbol-container">
-                                <i class="material-symbols-outlined">visibility</i>
+                                <i class="icon icon-eye"></i>
                                 &nbsp; Columns
                             </span>`,
                     },
@@ -198,7 +198,7 @@ function initDataTable(selector, options = {}) {
                     },
                     {
                         text: `<span class="symbol-container">
-                                <i class="material-symbols-outlined">refresh</i>
+                                <i class="icon icon-refresh"></i>
                                 &nbsp; Reset
                             </span>`,
                         action: function (e, dt, node, config) {
@@ -234,10 +234,10 @@ function initDataTable(selector, options = {}) {
         },
         columnDefs: options.columnDefs || [],
         preDrawCallback() {
-            $(selector).addClass("data-table-loading");
+            $(selector).addClass("card-loading");
         },
         drawCallback() {
-            $(selector).removeClass("data-table-loading");
+            $(selector).removeClass("card-loading");
         },
     };
 
@@ -293,15 +293,44 @@ function tabHashNavigation(config) {
     });
 }
 
-function setButtonLoading(button, isLoading, loadingText = 'Please wait...') {
+function setButtonLoading(button, isLoading = true, loadingText = 'Please wait...') {
+    if (!button) return; // Ensure button is passed
+    const originalText = $(button).data('original-text') || $(button).val() || $(button).html();
+
     if (isLoading) {
-        $(button).html(`
-            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-            <span role="status">${loadingText}</span>
-        `);
+        $(button).data('original-text', originalText);
+        if ($(button).is('button')) {
+            $(button).html(`
+                <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                <span role="status">${loadingText}</span>
+            `);
+        } else if ($(button).is('input')) {
+            $(button).val(loadingText);
+        }
         $(button).prop('disabled', true);
     } else {
-        $(button).html('Add Category'); // Default button text or you can pass it as a parameter
+        if ($(button).is('button')) {
+            $(button).html(originalText);
+        } else if ($(button).is('input')) {
+            $(button).val(originalText);
+        }
         $(button).prop('disabled', false);
     }
 }
+
+document.addEventListener('DOMContentLoaded', (e) => {
+    var forms = document.querySelectorAll('.needs-validation');
+    Array.prototype.slice.call(forms).forEach(function(form) {
+        form.addEventListener('submit', function(event) {
+            if (form.checkValidity()) {
+                const cardOrDiv = form.closest('.card') || form.closest('div');
+                cardOrDiv.classList.add('card-loading');
+                setButtonLoading(form.querySelector('button[type="submit"], input[type="submit"]'));
+            } else {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+});

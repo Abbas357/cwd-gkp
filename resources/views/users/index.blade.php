@@ -9,10 +9,10 @@
     <div class="card-header mb-3">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a id="active-users" class="nav-link active" data-bs-toggle="tab" href="#active-users">Active Users</a>
+                <a id="active" class="nav-link active" data-bs-toggle="tab" href="#active-users">Active Users</a>
             </li>
             <li class="nav-item">
-                <a id="non-active-users" class="nav-link" data-bs-toggle="tab" href="#non-active-users">Non Active Users</a>
+                <a id="non-active" class="nav-link" data-bs-toggle="tab" href="#non-active-users">Non Active Users</a>
             </li>
         </ul>
     </div>
@@ -23,6 +23,14 @@
                 <th scope="col" class="p-3">ID</th>
                 <th scope="col" class="p-3">Name</th>
                 <th scope="col" class="p-3">Email</th>
+                <th scope="col" class="p-3">Mobile Number</th>
+                <th scope="col" class="p-3">Landline Number</th>
+                <th scope="col" class="p-3">Designation</th>
+                <th scope="col" class="p-3">CNIC</th>
+                <th scope="col" class="p-3">Office</th>
+                <th scope="col" class="p-3">Active</th>
+                <th scope="col" class="p-3">Suspended</th>
+                <th scope="col" class="p-3">Password Updated</th>
                 <th scope="col" class="p-3">Created At</th>
                 <th scope="col" class="p-3">Updated At</th>
                 <th scope="col" class="p-3">Actions</th>
@@ -62,7 +70,6 @@
     @push('script')
     <script src="{{ asset('plugins/datatable/js/datatables.min.js') }}"></script>
     <script src="{{ asset('plugins/col-resizable.js') }}"></script>
-    <script src="{{ asset('plugins/sweetalert2@11.js') }}"></script>
         <script>
             $(document).ready(function() {
                 var table = initDataTable('#users-datatable', {
@@ -71,6 +78,14 @@
                         { data: "id", searchBuilderType: "num" },
                         { data: "name", searchBuilderType: "string" },
                         { data: "email", searchBuilderType: "string" },
+                        { data: "mobile_number", searchBuilderType: "string" },
+                        { data: "landline_number", searchBuilderType: "string" },
+                        { data: "designation", searchBuilderType: "string" },
+                        { data: "cnic", searchBuilderType: "string" },
+                        { data: "office", searchBuilderType: "string" },
+                        { data: "is_active", searchBuilderType: "string" },
+                        { data: "is_suspended", searchBuilderType: "string" },
+                        { data: "password_updated_at", searchBuilderType: "date" },
                         { data: "created_at", searchBuilderType: "date" },
                         { data: "updated_at", searchBuilderType: "date" },
                         {
@@ -83,9 +98,23 @@
                     defaultOrderColumn: 3,
                     defaultOrderDirection: 'desc',
                     columnDefs: [{
-                        targets: [4],
+                        targets: [7,8,9],
                         visible: false
                     }]
+                });
+
+                tabHashNavigation({
+                    table: table,
+                    dataTableUrl: "{{ route('users.index') }}",
+                    tabToHashMap: {
+                        "#active": '#active-users',
+                        "#non-active": '#non-active-users',
+                    },
+                    hashToParamsMap: {
+                        '#active-users': { active: 1 },
+                        '#non-active-users': { active: 0 },
+                    },   
+                    defaultHash: '#active-users'
                 });
 
                 $("#users-datatable").on('click', '.delete-btn', async function() {

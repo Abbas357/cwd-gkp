@@ -132,12 +132,12 @@
     content: url('./icons/sun.svg');
 }
 
-.icon-thumbs-down {
-    content: url('./icons/thumbs-down.svg');
+.icon-thumb-down {
+    content: url('./icons/thumb-down.svg');
 }
 
-.icon-thumbs-up {
-    content: url('./icons/thumbs-up.svg');
+.icon-thumb-up {
+    content: url('./icons/thumb-up.svg');
 }
 
 .icon-tune {

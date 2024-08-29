@@ -3,22 +3,40 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
 use App\Models\Category;
-
+use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+
+use App\Models\Categories\Office;
+use App\Models\Categories\Designation;
 
 class UserController extends Controller
 {
 
     public function index(Request $request)
     {
-        $data = User::query();
+        $active = $request->query('active', 0);
+
+        $users = User::query();
+
+        $users->when($active !== null, function ($query) use ($active) {
+            $query->where('is_active', $active);
+        });
+
         if ($request->ajax()) {
-            $dataTable = Datatables::of($data)
+            $dataTable = Datatables::of($users)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     return view('users.partials.buttons', compact('row'))->render();
+                })
+                ->editColumn('is_active', function ($row) {
+                    return $row->is_active == 1 ? 'Yes' : 'No' ;
+                })
+                ->editColumn('is_suspended', function ($row) {
+                    return $row->is_suspended == 1 ? 'Yes' : 'No' ;
+                })
+                ->editColumn('password_updated_at', function ($row) {
+                    return $row->password_updated_at->diffForHumans();
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->diffForHumans();
@@ -44,8 +62,8 @@ class UserController extends Controller
     public function create()
     {
         $cat = [
-            'designations' => Category::where('type', 'designation')->get(),
-            'offices' => Category::where('type', 'office')->get(),
+            'designations' => Designation::all(),
+            'offices' => Office::all(),
         ];
         return view('users.create', compact('cat'));
     }

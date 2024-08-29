@@ -15,7 +15,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h3 class="card-title"> Add Districts </h3>
-                                    <form action="{{ route('districts.store') }}" method="post">
+                                    <form class="needs-validation" action="{{ route('districts.store') }}" method="post" novalidate>
                                         @csrf
                                         <div class="row mb-3">
                                             <div class="col">
@@ -76,7 +76,6 @@
     </div>
 
     @push('script')
-    <script src="{{ asset('plugins/sweetalert2@11.js') }}"></script>
     <script>
         $(document).ready(function() {
             $('.delete-district-btn').on('click', async function() {
