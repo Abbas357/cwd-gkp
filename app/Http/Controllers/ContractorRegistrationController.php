@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\ContractorRegistration;
 use App\Http\Requests\StoreContractorRegistrationRequest;
-
+use App\Models\Categories\ContractorCategory;
+use App\Models\Categories\ProvincialEntity;
 use App\Models\District;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -89,8 +90,8 @@ class ContractorRegistrationController extends Controller
     {
         $cat = [
             'districts' => District::all(),
-            'contractor_category' => Category::where('type', 'contractor_category')->get(),
-            'provincial_entities' => Category::where('type', 'provincial_entities')->get(),
+            'contractor_category' => ContractorCategory::all(),
+            'provincial_entities' => ProvincialEntity::all(),
         ];
         return view('cont_registrations.create', compact('cat'));
     }

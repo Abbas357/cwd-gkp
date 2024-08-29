@@ -4,11 +4,11 @@
 	--bs-border-radius-lg: 0.3rem;
 	--bs-border-radius-xl: .5rem;
 	--bs-border-radius-xxl: 1rem;
-  --bs-border-color: #eee;
+  --bs-border-color: #d5d5d5;
 }
 
 [data-bs-theme=dark] {
-  --bs-border-color: #333;
+  --bs-border-color: #555;
 }
 .symbol-container {
     display: flex;
