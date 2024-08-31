@@ -1,28 +1,5 @@
-/*
-Template Name: Matoxi Admin
-Author: codervent
-Email: codervent@gmail.com
-File: main.scss
-
-Table of Index 
-
-  --Genral
-  --aligns
-  --dropdown animation
-  --header
-  --mini sidebar
-  --main content
-  --page footer
-  --Metis Menu
-  --order offcanvas
-  --utilities
-  --alerts
-  --authentication
-  --switcher
-
-*/
-/* Genral*/
-@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css");
+@import "bootstrap-icons.min.css";
+@import "open-props.min.css";
 body {
   position: relative;
   font-size: 14px;
@@ -276,13 +253,13 @@ input::placeholder {
 }
 .top-header .navbar .nav-item .badge-notify {
   position: absolute;
-  top: 2px;
-  right: 3px;
+  top: 4px;
+  right: 7px;
   font-size: 12px;
   color: #fff;
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   display: flex;
   align-items: center;
   justify-content: center;

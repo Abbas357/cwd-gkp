@@ -85,7 +85,7 @@ function initDataTable(selector, options = {}) {
         {
             extend: "copy",
             text: `<span class="symbol-container">
-                    <i class="icon icon-copy"></i>
+                    <i class="bi-copy"></i>
                     &nbsp; Copy
                 </span>`,
             exportOptions: {
@@ -95,7 +95,7 @@ function initDataTable(selector, options = {}) {
         {
             extend: "csv",
             text: `<span class="symbol-container">
-                    <i class="icon icon-csv"></i>
+                    <i class="bi-filetype-csv"></i>
                     &nbsp; CSV
                 </span>`,
             exportOptions: {
@@ -105,7 +105,7 @@ function initDataTable(selector, options = {}) {
         {
             extend: "excel",
             text: `<span class="symbol-container">
-                    <i class="icon icon-excel"></i>
+                    <i class="bi-file-spreadsheet"></i>
                     &nbsp; Excel
                 </span>`,
             exportOptions: {
@@ -115,7 +115,7 @@ function initDataTable(selector, options = {}) {
         {
             extend: "print",
             text: `<span class="symbol-container">
-                    <i class="icon icon-print"></i>
+                    <i class="bi-printer"></i>
                     &nbsp; Print
                 </span>`,
             autoPrint: false,
@@ -137,9 +137,10 @@ function initDataTable(selector, options = {}) {
             url: options.ajaxUrl || "",
             error(jqXHR, textStatus, errorThrown) {
                 $(selector).removeClass("card-loading");
-                console.log(
-                    "An error occurred while loading data: " + errorThrown
-                );
+                console.error("AJAX Error:", textStatus, errorThrown);
+                if (textStatus === 'timeout' || textStatus === 'abort') {
+                    $(selector).DataTable().ajax.reload();
+                }
             },
         },
         order: [
@@ -157,7 +158,7 @@ function initDataTable(selector, options = {}) {
                 },
                 clearAll: "Clear All Filters",
                 button: `<span class="symbol-container">
-                            <i class="icon icon-filter"></i>
+                            <i class="bi-funnel"></i>
                             &nbsp; Filter
                         </span>`,
             },
@@ -168,7 +169,7 @@ function initDataTable(selector, options = {}) {
                     {
                         extend: "collection",
                         text: `<span class="symbol-container">
-                                <i class="icon icon-share"></i>
+                                <i class="bi-share"></i>
                                 &nbsp; Export
                             </span>`,
                         autoClose: true,
@@ -178,7 +179,7 @@ function initDataTable(selector, options = {}) {
                         extend: "colvis",
                         collectionLayout: "two-column",
                         text: `<span class="symbol-container">
-                                <i class="icon icon-eye"></i>
+                                <i class="bi-eye"></i>
                                 &nbsp; Columns
                             </span>`,
                     },
@@ -198,7 +199,7 @@ function initDataTable(selector, options = {}) {
                     },
                     {
                         text: `<span class="symbol-container">
-                                <i class="icon icon-refresh"></i>
+                                <i class="bi-arrow-clockwise"></i>
                                 &nbsp; Reset
                             </span>`,
                         action: function (e, dt, node, config) {
@@ -294,7 +295,7 @@ function tabHashNavigation(config) {
 }
 
 function setButtonLoading(button, isLoading = true, loadingText = 'Please wait...') {
-    if (!button) return; // Ensure button is passed
+    if (!button) return;
     const originalText = $(button).data('original-text') || $(button).val() || $(button).html();
 
     if (isLoading) {
@@ -323,8 +324,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
     Array.prototype.slice.call(forms).forEach(function(form) {
         form.addEventListener('submit', function(event) {
             if (form.checkValidity()) {
-                const cardOrDiv = form.closest('.card') || form.closest('div');
-                cardOrDiv.classList.add('card-loading');
+                document.documentElement.classList.add('card-loading');
                 setButtonLoading(form.querySelector('button[type="submit"], input[type="submit"]'));
             } else {
                 event.preventDefault();

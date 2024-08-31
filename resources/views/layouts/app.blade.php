@@ -5,22 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Communication and Works Department KP') }}</title>
-
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
+    <title>{{ $title }}</title>
     <link rel="icon" href="{{ asset('images/favicon.ico') }}" type="image/png" />
 
     <link href="{{ asset('plugins/perfect-scrollbar/css/perfect-scrollbar.css') }}" rel="stylesheet">
     <link href="{{ asset('plugins/metismenu/metisMenu.min.css') }}" rel="stylesheet">
     <link href="{{ asset('plugins/metismenu/mm-vertical.css') }}" rel="stylesheet">
     <link href="{{ asset('plugins/simplebar/css/simplebar.css') }}" rel="stylesheet">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-
+    
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/bootstrap-extended.css') }}" rel="stylesheet">
     <link href="{{ asset('css/dark-theme.css') }}" rel="stylesheet">
@@ -29,7 +21,6 @@
     <link href="{{ asset('css/bordered-theme.css') }}" rel="stylesheet">
     <link href="{{ asset('css/responsive.css') }}" rel="stylesheet">
     @stack('style')
-    <link href="{{ asset('css/icons.css') }}" rel="stylesheet">
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 </head>
 

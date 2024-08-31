@@ -3,7 +3,7 @@
         <div class="d-flex flex-grow-1 justify-content-between align-items-center">
             <div class="d-flex flex-start align-items-center gap-3">
                 <div class="btn-toggle user-select-none cursor-pointer">
-                    <span class="icon icon-sidebar"></span>
+                    <i class="bi-arrow-left-circle"></i>
                 </div>
                 @if (isset($header))
                 <div class="page-breadcrumb d-none d-sm-flex align-items-center bg-light px-2 shadow-sm">
@@ -21,23 +21,23 @@
             <div class="search-bar" style="max-width: 500px; flex-grow: 1">
                 <div class="position-relative">
                     <input class="form-control rounded-3 px-5 search-control d-lg-block d-none" type="text" placeholder="Search">
-                    <span class="icon icon-search position-absolute d-lg-block d-none ms-3 translate-middle-y start-0 top-50"></span>
-                    <span class="icon icon-close position-absolute me-3 translate-middle-y end-0 top-50 search-close"></span>
+                    <span class="bi-search position-absolute d-lg-block d-none ms-3 translate-middle-y start-0 top-50"></span>
+                    <span class="bi-x-circle position-absolute me-3 translate-middle-y end-0 top-50 search-close"></span>
                     <div class="search-popup p-3">
                         <div class="card overflow-hidden">
                             <div class="card-header d-lg-none">
                                 <div class="position-relative">
                                     <input class="form-control rounded-3 px-5 mobile-search-control" type="text" placeholder="Search">
-                                    <span class="icon icon-search position-absolute ms-3 translate-middle-y start-0 top-50"></span>
-                                    <span class="icon icon-close position-absolute me-3 translate-middle-y end-0 top-50 mobile-search-close"></span>
+                                    <span class="bi-search position-absolute ms-3 translate-middle-y start-0 top-50"></span>
+                                    <span class="bi-x-circle position-absolute me-3 translate-middle-y end-0 top-50 mobile-search-close"></span>
                                 </div>
                             </div>
                             <div class="card-body search-content">
                                 <p class="search-title">Recent Searches</p>
                                 <div class="d-flex align-items-start flex-wrap gap-2 kewords-wrapper">
-                                    <a href="javascript:;" class="kewords"><span>Tenders</span><i class="icon icon-search fs-6"></i></a>
-                                    <a href="javascript:;" class="kewords"><span>E-Bidding</span><i class="icon icon-search fs-6"></i></a>
-                                    <a href="javascript:;" class="kewords"><span>Latest news</span><i class="icon icon-search fs-6"></i></a>
+                                    <a href="javascript:;" class="kewords"><span>Tenders</span><i class="bi-search fs-6"></i></a>
+                                    <a href="javascript:;" class="kewords"><span>E-Bidding</span><i class="bi-search fs-6"></i></a>
+                                    <a href="javascript:;" class="kewords"><span>Latest news</span><i class="bi-search fs-6"></i></a>
                                 </div>
                                 <hr>
                                 <p class="search-title">Searches</p>
@@ -57,10 +57,10 @@
         </div>
         <ul class="navbar-nav gap-1 nav-right-links align-items-center">
             <li class="nav-item d-lg-none mobile-search-btn">
-                <a class="nav-link" href="javascript:;"><i class="icon icon-search"></i></a>
+                <a class="nav-link" href="javascript:;"><i class="bi-search"></i></a>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" data-bs-auto-close="outside" data-bs-toggle="dropdown" href="javascript:;"><i class="icon icon-apps"></i></a>
+                <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" data-bs-auto-close="outside" data-bs-toggle="dropdown" href="javascript:;"><i class="bi-grid-3x3-gap-fill"></i></a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-apps shadow-lg p-3">
                     <div class="border rounded-4 overflow-hidden">
                         <div class="row row-cols-3 g-0 border-bottom">
@@ -135,7 +135,7 @@
                 </div>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" data-bs-auto-close="outside" data-bs-toggle="dropdown" href="javascript:;"><i class="icon icon-notification"></i>
+                <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" data-bs-auto-close="outside" data-bs-toggle="dropdown" href="javascript:;"><i class="bi-bell"></i>
                     <span class="badge-notify">1</span>
                 </a>
                 <div class="dropdown-menu dropdown-notify dropdown-menu-end shadow">
@@ -143,7 +143,7 @@
                         <h5 class="notiy-title mb-0">Notifications</h5>
                         <div class="dropdown">
                             <button class="btn btn-secondary dropdown-toggle dropdown-toggle-nocaret option" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="icon icon-v-menu"></span>
+                                <span class="bi-three-dots-vertical"></span>
                             </button>
                             <div class="dropdown-menu dropdown-option dropdown-menu-end shadow">
                                 <div><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:;">Mark all as read</a></div>
@@ -164,7 +164,7 @@
                                         <p class="mb-0 notify-time">{{ auth()->user()->created_at->diffForHumans() }}</p>
                                     </div>
                                     <div class="notify-close position-absolute end-0 me-3">
-                                        <i class="icon icon-cancel fs-6"></i>
+                                        <i class="bi-x-circle fs-6"></i>
                                     </div>
                                 </div>
                             </a>
@@ -183,16 +183,16 @@
                         </div>
                     </a>
                     <hr class="dropdown-divider">
-                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('profile.edit') }}"><i class="icon icon-user"></i>Profile</a>
-                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('profile.edit') }}"><i class="icon icon-settings"></i>Setting</a>
-                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('dashboard') }}"><i class="icon icon-dashboard">dashboard</i>Dashboard</a>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('profile.edit') }}"><i class="bi-person-circle"></i>Profile</a>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('profile.edit') }}"><i class="bi-gear-fill"></i>Setting</a>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('dashboard') }}"><i class="bi-speedometer"></i>Dashboard</a>
                     <hr class="dropdown-divider">
                     <form method="POST" action="{{ route('logout') }}" disabled>
                         @csrf
                         <a class="dropdown-item d-flex align-items-center cursor-pointer gap-2 py-2" onclick="event.preventDefault();
                             this.closest('form').submit();
                             this.closest('.top-right-menu').classList.add('hidden');
-                            "><i class="icon icon-power-off"></i>Logout
+                            "><i class="bi-power"></i>Logout
                     </form></a>
                 </div>
             </li>

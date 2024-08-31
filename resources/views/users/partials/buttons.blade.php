@@ -1,6 +1,6 @@
 <div class="action-btns">
-    <span class="edit-btn border border-primary text-primary icon icon-edit" title="Defer" data-bs-toggle="tooltip" data-id="{{ $row->id }}">
-    </span>
-    <span class="delete-btn border border-danger text-danger icon icon-delete" title="Approve" data-bs-toggle="tooltip" data-id="{{ $row->id }}">
-    </span>
+    <i class="edit-btn bg-light text-primary bi-pencil-square" title="Edit" data-bs-toggle="tooltip" data-id="{{ $row->id }}">
+    </i>
+    <i class="delete-btn bg-light text-danger bi-trash" title="Delete" data-bs-toggle="tooltip" data-id="{{ $row->id }}">
+    </i>
 </div>

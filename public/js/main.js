@@ -60,9 +60,9 @@ $(function () {
 
     $(".dark-mode i").click(function () {
         $(this).attr("class", function () {
-            return $(this).hasClass("icon-dark")
-                ? "icon icon-sun"
-                : "icon icon-dark";
+            return $(this).hasClass("bi-moon")
+                ? "bi-brightness-high"
+                : "bi-moon";
         });
     });
 
@@ -77,7 +77,7 @@ $(function () {
     function updateDarkModeIcon(theme) {
         $(".dark-mode i").attr(
             "class",
-            theme === "dark" ? "icon icon-sun" : "icon icon-dark"
+            theme === "dark" ? "bi-brightness-high" : "bi-moon"
         );
     }
 

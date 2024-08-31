@@ -15,7 +15,7 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $active = $request->query('active', 0);
+        $active = $request->query('active', 1);
 
         $users = User::query();
 

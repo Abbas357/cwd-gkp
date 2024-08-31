@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Official Website of Communication & Works Department'),
+    'name' => env('APP_NAME', 'kOfficial Website of Communication & Works Department'),
 
     /*
     |--------------------------------------------------------------------------
