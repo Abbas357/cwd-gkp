@@ -43,24 +43,12 @@ class SearchBuilder
         if ($this->request->has('searchBuilder')) {
             $searchBuilder = $this->request->searchBuilder;
             if ($searchBuilder) {
-                $this->applySearchBuilderCriteria($this->query, $searchBuilder);
-            }
-        }
+                $sbLogic = [];
+                $logic = $searchBuilder['logic'] ?? "AND";
+                $logicValid = in_array($logic, ['AND', "OR"]);
 
-        return $this->query;
-    }
-
-    protected function applySearchBuilderCriteria($query, $searchBuilder, $logic = 'AND')
-    {
-        $logicValid = in_array($logic, ['AND', "OR"]);
-
-        if ($logicValid && isset($searchBuilder['criteria'])) {
-            $query->where(function ($query) use ($searchBuilder, $logic) {
-                foreach ($searchBuilder['criteria'] as $rule) {
-                    if (isset($rule['criteria'])) {
-                        // Nested group logic
-                        $this->applySearchBuilderCriteria($query, $rule, $rule['logic'] ?? 'AND');
-                    } else {
+                if ($logicValid && isset($searchBuilder['criteria'])) {
+                    foreach ($searchBuilder['criteria'] as $rule) {
                         $col = $rule['origData'] ?? null;
                         $searchTerm = (!in_array($rule['condition'] ?? null, ['null', '!null'])) ? $rule['value1'] ?? false : true;
 
@@ -68,7 +56,17 @@ class SearchBuilder
 
                         if ($col && $searchTerm && array_key_exists($rule['condition'] ?? null, $this->sbRules) && in_array($col, $this->allowedColumns)) {
 
-                            // Same conditions as before
+                            if ($colType == 'string' && !in_array($rule['condition'], ['starts', '!starts', 'contains', '!contains', 'ends', '!ends'])) {
+                                continue;
+                            }
+
+                            if (in_array($colType, ['integer', 'float', 'double', 'decimal']) && !in_array($rule['condition'], ['=', '!=', '>', '>=', '<', '<=', 'between', '!between'])) {
+                                continue;
+                            }
+
+                            if ($colType == 'date' && !in_array($rule['condition'], ['=', '!=', 'between', '!between', '>', '>=', '<', '<=', 'null', '!null'])) {
+                                continue;
+                            }
 
                             if ($rule['condition'] === 'starts' || $rule['condition'] === '!starts') {
                                 $searchTerm = $searchTerm . '%';
@@ -86,17 +84,41 @@ class SearchBuilder
                             }
 
                             $col = (!empty($this->mapColumns)) ? $this->mapColumns[$col] ?? $col : $col;
-
-                            if ($logic == 'AND') {
-                                $query->where($col, $this->sbRules[$rule['condition'] ?? null], $searchTerm);
-                            } else {
-                                $query->orWhere($col, $this->sbRules[$rule['condition'] ?? null], $searchTerm);
-                            }
+                            $sbLogic[] = [$col, $this->sbRules[$rule['condition'] ?? null], $searchTerm];
                         }
                     }
+
+                    if ($sbLogic) {
+                        $this->query = $this->query->where(function ($query) use ($sbLogic, $logic) {
+                            foreach ($sbLogic as $r) {
+                                $cond = 'where';
+                                if ($r[1] == 'between') {
+                                    $cond = ($logic == 'AND') ? 'whereBetween' : 'orWhereBetween';
+                                    $query->{$cond}($r[0], $r[2]);
+                                } elseif ($r[1] == 'not between') {
+                                    $cond = ($logic == 'AND') ? 'whereNotBetween' : 'orWhereNotBetween';
+                                    $query->{$cond}($r[0], $r[2]);
+                                } elseif ($r[1] == 'IS NULL') {
+                                    $cond = ($logic == 'AND') ? 'whereNull' : 'orWhereNull';
+                                    $query->{$cond}($r[0]);
+                                } elseif ($r[1] == 'IS NOT NULL') {
+                                    $cond = ($logic == 'AND') ? 'whereNotNull' : 'orWhereNotNull';
+                                    $query->{$cond}($r[0]);
+                                } else {
+                                    if ($logic == 'AND') {
+                                        $query->where($r[0], $r[1], $r[2]);
+                                    } else {
+                                        $query->orWhere($r[0], $r[1], $r[2]);
+                                    }
+                                }
+                            }
+                        });
+                    }
                 }
-            });
+            }
         }
+
+        return $this->query;
     }
-    
+
 }

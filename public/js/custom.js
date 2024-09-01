@@ -8,7 +8,7 @@ function previewImage(event, previewId) {
     reader.readAsDataURL(event.target.files[0]);
 }
 
-function showMessage(message, type = 'success', options = {}) {
+function showMessage(message, type = "success", options = {}) {
     Swal.fire({
         position: "top-end",
         icon: type,
@@ -79,7 +79,6 @@ async function fetchRequest(
     }
 }
 
-
 function initDataTable(selector, options = {}) {
     const exportButtons = [
         {
@@ -138,7 +137,7 @@ function initDataTable(selector, options = {}) {
             error(jqXHR, textStatus, errorThrown) {
                 $(selector).removeClass("card-loading");
                 console.error("AJAX Error:", textStatus, errorThrown);
-                if (textStatus === 'timeout' || textStatus === 'abort') {
+                if (textStatus === "timeout" || textStatus === "abort") {
                     $(selector).DataTable().ajax.reload();
                 }
             },
@@ -153,8 +152,8 @@ function initDataTable(selector, options = {}) {
         language: {
             searchBuilder: {
                 title: {
-                    0: "Custom Filteration",
-                    _: "Custom Filteration (%d)",
+                    0: "Conditions",
+                    _: "Conditions (%d)",
                 },
                 clearAll: "Clear All Filters",
                 button: `<span class="symbol-container">
@@ -186,7 +185,7 @@ function initDataTable(selector, options = {}) {
                     {
                         extend: "searchBuilder",
                         config: {
-                            depthLimit: 2,
+                            depthLimit: 3,
                             preDefined: {
                                 criteria: [
                                     {
@@ -206,6 +205,7 @@ function initDataTable(selector, options = {}) {
                             confirmAction(
                                 "Resetting will clear all saved settings"
                             ).then((res) => {
+                                console.log(dt)
                                 if (res.isConfirmed) {
                                     dt.state.clear();
                                     localStorage.removeItem(
@@ -242,21 +242,49 @@ function initDataTable(selector, options = {}) {
         },
     };
 
+    $.fn.dataTable.ext.errMode = "throw";
     const finalOptions = $.extend(true, {}, defaultOptions, options);
-    return $(selector).DataTable(finalOptions);
+    const table = $(selector).DataTable(finalOptions);
+
+    // Window Error Handler start
+    window.onerror = function (message, source, lineno, colno, error) {
+        if (message.includes('DataTable')) {
+            table.state.clear();
+            localStorage.removeItem(selector.replace("#", ""));
+            Swal.fire({
+                title: 'Alert',
+                text: 'The table settings have been reset to default because of an error.',
+                showCancelButton: false,
+                confirmButtonText: 'OK'
+              }).then((result) => {
+                window.location.reload();
+              });
+            return true;
+        }
+        return false;
+    };
+    // Window error handler end
+
+    return table;
 }
 
-function tabHashNavigation(config) {
-    const { table, dataTableUrl, hashToParamsMap, tabToHashMap, defaultHash } =
+function hashTabsNavigator(config) {
+    const { table, dataTableUrl, tabToHashMap, hashToParamsMap, defaultHash } =
         config;
 
     function buildQueryParams(params) {
         if (!params) return "";
         const queryParams = Object.entries(params)
             .filter(([key, value]) => value !== undefined)
-            .map(
-                ([key, value]) =>
-                    `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+            .flatMap(([key, value]) =>
+                Array.isArray(value)
+                    ? value.map(
+                          (val) =>
+                              `${encodeURIComponent(
+                                  key
+                              )}[]=${encodeURIComponent(val)}`
+                      )
+                    : `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
             )
             .join("&");
         return queryParams ? "?" + queryParams : "";
@@ -264,8 +292,8 @@ function tabHashNavigation(config) {
 
     function updateDataTableURL(params) {
         let queryParams = buildQueryParams(params);
-        let tableData = dataTableUrl + queryParams;
-        table.ajax.url(tableData).load();
+        let tableFullUrl = dataTableUrl + queryParams;
+        table.ajax.url(tableFullUrl).load();
     }
 
     function activateTab(tabId) {
@@ -294,43 +322,56 @@ function tabHashNavigation(config) {
     });
 }
 
-function setButtonLoading(button, isLoading = true, loadingText = 'Please wait...') {
+function setButtonLoading(
+    button,
+    isLoading = true,
+    loadingText = "Please wait..."
+) {
     if (!button) return;
-    const originalText = $(button).data('original-text') || $(button).val() || $(button).html();
+    const originalText =
+        $(button).data("original-text") || $(button).val() || $(button).html();
 
     if (isLoading) {
-        $(button).data('original-text', originalText);
-        if ($(button).is('button')) {
+        $(button).data("original-text", originalText);
+        if ($(button).is("button")) {
             $(button).html(`
                 <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
                 <span role="status">${loadingText}</span>
             `);
-        } else if ($(button).is('input')) {
+        } else if ($(button).is("input")) {
             $(button).val(loadingText);
         }
-        $(button).prop('disabled', true);
+        $(button).prop("disabled", true);
     } else {
-        if ($(button).is('button')) {
+        if ($(button).is("button")) {
             $(button).html(originalText);
-        } else if ($(button).is('input')) {
+        } else if ($(button).is("input")) {
             $(button).val(originalText);
         }
-        $(button).prop('disabled', false);
+        $(button).prop("disabled", false);
     }
 }
 
-document.addEventListener('DOMContentLoaded', (e) => {
-    var forms = document.querySelectorAll('.needs-validation');
-    Array.prototype.slice.call(forms).forEach(function(form) {
-        form.addEventListener('submit', function(event) {
-            if (form.checkValidity()) {
-                document.documentElement.classList.add('card-loading');
-                setButtonLoading(form.querySelector('button[type="submit"], input[type="submit"]'));
-            } else {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            form.classList.add('was-validated');
-        }, false);
+document.addEventListener("DOMContentLoaded", (e) => {
+    var forms = document.querySelectorAll(".needs-validation");
+    Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener(
+            "submit",
+            function (event) {
+                if (form.checkValidity()) {
+                    document.documentElement.classList.add("card-loading");
+                    setButtonLoading(
+                        form.querySelector(
+                            'button[type="submit"], input[type="submit"]'
+                        )
+                    );
+                } else {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add("was-validated");
+            },
+            false
+        );
     });
 });

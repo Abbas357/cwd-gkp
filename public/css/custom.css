@@ -182,7 +182,7 @@ div.dt-container {
 
   @media only screen and (min-width: 1200px) {
     .dt-search input {
-      width: 35rem !important;
+      width: 30rem !important;
     }
   }
 
@@ -191,8 +191,8 @@ div.dt-container {
   }
 
   .dt-search input:focus {
-    border: 1px solid #575757;
-    box-shadow: 0 0 8px 0 #999;
+    border: 1px solid #959595;
+    box-shadow: 0 0 6px 0 #ccc;
   }
 
   .dt-button-down-arrow {

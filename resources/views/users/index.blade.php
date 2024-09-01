@@ -3,16 +3,16 @@
     <link href="{{ asset('plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header">
-        <li class="breadcrumb-item active" aria-current="page"> Contractor Registrations</li>
+        <li class="breadcrumb-item active" aria-current="page">Users</li>
     </x-slot>
 
     <div class="card-header mb-3">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a id="active" class="nav-link active" data-bs-toggle="tab" href="#active-users">Active Users</a>
+                <a id="active-tab" class="nav-link active" data-bs-toggle="tab" href="#active">Active Users</a>
             </li>
             <li class="nav-item">
-                <a id="non-active" class="nav-link" data-bs-toggle="tab" href="#non-active-users">Non Active Users</a>
+                <a id="inactive-tab" class="nav-link" data-bs-toggle="tab" href="#inactive">Non Active Users</a>
             </li>
         </ul>
     </div>
@@ -103,18 +103,18 @@
                     }]
                 });
 
-                tabHashNavigation({
+                hashTabsNavigator({
                     table: table,
                     dataTableUrl: "{{ route('users.index') }}",
                     tabToHashMap: {
-                        "#active": '#active-users',
-                        "#non-active": '#non-active-users',
+                        "#active-tab": '#active',
+                        "#inactive-tab": '#inactive',
                     },
                     hashToParamsMap: {
-                        '#active-users': { active: 1 },
-                        '#non-active-users': { active: 0 },
+                        '#active': { active: 1 },
+                        '#inactive': { active: 0 },
                     },   
-                    defaultHash: '#active-users'
+                    defaultHash: '#active'
                 });
 
                 $("#users-datatable").on('click', '.delete-btn', async function() {

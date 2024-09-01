@@ -1,27 +1,27 @@
-<x-app-layout>
+<x-app-layout title="Contractor Registrations">
     @push('style')
         <link href="{{ asset('plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header">
-        <li class="breadcrumb-item active" aria-current="page"> Contractor Registrations</li>
+        <li class="breadcrumb-item active" aria-current="page">Registrations</li>
     </x-slot>
 
     <div class="card-header mb-3">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a id="tab-defer0" class="nav-link active" data-bs-toggle="tab" href="#not-deferred">Not Deferred</a>
+                <a id="defer-0-tab" class="nav-link active" data-bs-toggle="tab" href="#fresh">Not Deferred</a>
             </li>
             <li class="nav-item">
-                <a id="tab-defer1" class="nav-link" data-bs-toggle="tab" href="#deferred1">Deferred 1</a>
+                <a id="defer-1-tab" class="nav-link" data-bs-toggle="tab" href="#deferred1">Deferred 1</a>
             </li>
             <li class="nav-item">
-                <a id="tab-defer2" class="nav-link" data-bs-toggle="tab" href="#deferred2">Deferred 2</a>
+                <a id="defer-2-tab" class="nav-link" data-bs-toggle="tab" href="#deferred2">Deferred 2</a>
             </li>
             <li class="nav-item">
-                <a id="tab-defer3" class="nav-link" data-bs-toggle="tab" href="#deferred3">Deferred 3</a>
+                <a id="defer-3-tab" class="nav-link" data-bs-toggle="tab" href="#deferred3">Deferred 3</a>
             </li>
             <li class="nav-item">
-                <a id="tab-approved" class="nav-link" data-bs-toggle="tab" href="#approved">Approved</a>
+                <a id="approved-tab" class="nav-link" data-bs-toggle="tab" href="#approved">Approved</a>
             </li>
         </ul>
     </div>
@@ -125,24 +125,24 @@
                     }
                 });
 
-                tabHashNavigation({
+                hashTabsNavigator({
                     table: table,
                     dataTableUrl: "{{ route('registrations.index') }}",
                     tabToHashMap: {
-                        "#tab-defer0": '#not-deferred',
-                        "#tab-defer1": '#deferred1',
-                        "#tab-defer2": '#deferred2',
-                        "#tab-defer3": '#deferred3',
-                        "#tab-approved": '#approved',
+                        "#defer-0-tab": '#fresh',
+                        "#defer-1-tab": '#deferred1',
+                        "#defer-2-tab": '#deferred2',
+                        "#defer-3-tab": '#deferred3',
+                        "#approved-tab": '#approved',
                     },
                     hashToParamsMap: {
-                        '#not-deferred': { defer: 0 },
+                        '#fresh': { defer: 0 },
                         '#deferred1': { defer: 1 },
                         '#deferred2': { defer: 2 },
                         '#deferred3': { defer: 3 },
                         '#approved': { approved: 1 },
                     },   
-                    defaultHash: '#not-deferred'
+                    defaultHash: '#fresh'
                 });
             
                 $('#registrations-datatable').colResizable(
