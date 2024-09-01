@@ -14,7 +14,7 @@
                             <h2 class="mb-0">$9,568</h2>
                         </div>
                         <div class="">
-                            <p class="dash-lable d-flex align-items-center gap-1 rounded mb-0 bg-danger text-danger bg-opacity-10"><span class="material-symbols-outlined fs-6">arrow_downward</span>8.6%</p>
+                            <p class="dash-lable d-flex align-items-center gap-1 rounded mb-0 bg-danger text-danger bg-opacity-10"><span class="bi-arrow-down-circle fs-6"></span>8.6%</p>
                         </div>
                     </div>
                     <p class="mb-0">Average Weekly Sales</p>
@@ -28,7 +28,7 @@
                     <div class="d-flex align-items-center justify-content-around flex-wrap gap-4 p-4">
                         <div class="d-flex flex-column align-items-center justify-content-center gap-2">
                             <a href="javascript:;" class="mb-2 wh-48 bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="material-symbols-outlined">shopping_cart</i>
+                                <i class="bi-cart"></i>
                             </a>
                             <h3 class="mb-0">85,246</h3>
                             <p class="mb-0">Orders</p>
@@ -36,7 +36,7 @@
                         <div class="vr"></div>
                         <div class="d-flex flex-column align-items-center justify-content-center gap-2">
                             <a href="javascript:;" class="mb-2 wh-48 bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="material-symbols-outlined">print</i>
+                                <i class="bi-printer"></i>
                             </a>
                             <h3 class="mb-0">$96,147</h3>
                             <p class="mb-0">Income</p>
@@ -44,7 +44,7 @@
                         <div class="vr"></div>
                         <div class="d-flex flex-column align-items-center justify-content-center gap-2">
                             <a href="javascript:;" class="mb-2 wh-48 bg-danger bg-opacity-10 text-danger rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="material-symbols-outlined">notifications</i>
+                                <i class="bi-bell"></i>
                             </a>
                             <h3 class="mb-0">846</h3>
                             <p class="mb-0">Notifications</p>
@@ -53,7 +53,7 @@
 
                         <div class="d-flex flex-column align-items-center justify-content-center gap-2">
                             <a href="javascript:;" class="mb-2 wh-48 bg-info bg-opacity-10 text-info rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="material-symbols-outlined">payment</i>
+                                <i class="bi-currency-dollar"></i>
                             </a>
                             <h3 class="mb-0">$84,472</h3>
                             <p class="mb-0">Payment</p>
@@ -80,7 +80,7 @@
                                         </div>
                                         <div class="dropdown">
                                             <a href="javascript:;" class="dropdown-toggle-nocaret options dropdown-toggle" data-bs-toggle="dropdown">
-                                                <span class="material-symbols-outlined fs-5">more_vert</span>
+                                                <span class="bi-three-dots-vertical fs-5"></span>
                                             </a>
                                             <ul class="dropdown-menu">
                                                 <li><a class="dropdown-item" href="javascript:;">Action</a></li>
@@ -108,7 +108,7 @@
                                         </div>
                                         <div class="dropdown">
                                             <a href="javascript:;" class="dropdown-toggle-nocaret options dropdown-toggle" data-bs-toggle="dropdown">
-                                                <span class="material-symbols-outlined fs-5">more_vert</span>
+                                                <span class="bi-three-dots-vertical fs-5"></span>
                                             </a>
                                             <ul class="dropdown-menu">
                                                 <li><a class="dropdown-item" href="javascript:;">Action</a></li>
@@ -134,7 +134,7 @@
                                             <h2 class="mb-0">$65,129</h2>
                                         </div>
                                         <div class="">
-                                            <p class="dash-lable d-flex align-items-center gap-1 rounded mb-0 bg-success text-success bg-opacity-10"><span class="material-symbols-outlined fs-6">arrow_upward</span>8.6%</p>
+                                            <p class="dash-lable d-flex align-items-center gap-1 rounded mb-0 bg-success text-success bg-opacity-10"><span class="bi- fs-6">arrow_upward</span>8.6%</p>
                                         </div>
                                     </div>
                                     <p class="mb-0">Sales This Year</p>
@@ -163,7 +163,7 @@
                         </div>
                         <div class="dropdown">
                             <a href="javascript:;" class="dropdown-toggle-nocaret options dropdown-toggle" data-bs-toggle="dropdown">
-                                <span class="material-symbols-outlined fs-5">more_vert</span>
+                                <span class="bi-three-dots-vertical fs-5"></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="javascript:;">Action</a></li>
@@ -216,7 +216,7 @@
                         </div>
                         <div class="dropdown">
                             <a href="javascript:;" class="dropdown-toggle-nocaret options dropdown-toggle" data-bs-toggle="dropdown">
-                                <span class="material-symbols-outlined fs-5">more_vert</span>
+                                <span class="bi-three-dots-vertical fs-5"></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="javascript:;">Action</a></li>
@@ -229,7 +229,7 @@
                         <div class="d-flex align-items-center gap-4">
                             <div class="d-flex align-items-center gap-3 flex-grow-1 flex-shrink-0">
                                 <div class="wh-48 d-flex align-items-center justify-content-center rounded-3 border">
-                                    <img src="assets/images/projects/angular.png" width="30" alt="">
+                                    <i style="font-size: 30px" class="bi-1-circle"></i>
                                 </div>
                                 <div class="">
                                     <h6 class="mb-0 fw-bold">Angular 12</h6>
@@ -246,7 +246,7 @@
                         <div class="d-flex align-items-center gap-4">
                             <div class="d-flex align-items-center gap-3 flex-grow-1 flex-shrink-0">
                                 <div class="wh-48 d-flex align-items-center justify-content-center rounded-3 border">
-                                    <img src="assets/images/projects/react.png" width="30" alt="">
+                                    <i style="font-size: 30px" class="bi-2-circle"></i>
                                 </div>
                                 <div class="">
                                     <h6 class="mb-0 fw-bold">React Js</h6>
@@ -263,7 +263,7 @@
                         <div class="d-flex align-items-center gap-4">
                             <div class="d-flex align-items-center gap-3 flex-grow-1 flex-shrink-0">
                                 <div class="wh-48 d-flex align-items-center justify-content-center rounded-3 border">
-                                    <img src="assets/images/projects/vue.png" width="30" alt="">
+                                    <i style="font-size: 30px" class="bi-3-circle"></i>
                                 </div>
                                 <div class="">
                                     <h6 class="mb-0 fw-bold">Vue Js</h6>
@@ -280,7 +280,7 @@
                         <div class="d-flex align-items-center gap-4">
                             <div class="d-flex align-items-center gap-3 flex-grow-1 flex-shrink-0">
                                 <div class="wh-48 d-flex align-items-center justify-content-center rounded-3 border">
-                                    <img src="assets/images/projects/bootstrap.png" width="30" alt="">
+                                    <i style="font-size: 30px" class="bi-4-circle"></i>
                                 </div>
                                 <div class="">
                                     <h6 class="mb-0 fw-bold">Bootstrap 5</h6>
@@ -297,7 +297,7 @@
                         <div class="d-flex align-items-center gap-4">
                             <div class="d-flex align-items-center gap-3 flex-grow-1 flex-shrink-0">
                                 <div class="wh-48 d-flex align-items-center justify-content-center rounded-3 border">
-                                    <img src="assets/images/projects/magento.png" width="30" alt="">
+                                    <i style="font-size: 30px" class="bi-5-circle"></i>
                                 </div>
                                 <div class="">
                                     <h6 class="mb-0 fw-bold">Magento</h6>
@@ -314,7 +314,7 @@
                         <div class="d-flex align-items-center gap-4">
                             <div class="d-flex align-items-center gap-3 flex-grow-1 flex-shrink-0">
                                 <div class="wh-48 d-flex align-items-center justify-content-center rounded-3 border">
-                                    <img src="assets/images/projects/django.png" width="30" alt="">
+                                    <i style="font-size: 30px" class="bi-6-circle"></i>
                                 </div>
                                 <div class="">
                                     <h6 class="mb-0 fw-bold">Django</h6>
@@ -331,7 +331,7 @@
                         <div class="d-flex align-items-center gap-4">
                             <div class="d-flex align-items-center gap-3 flex-grow-1 flex-shrink-0">
                                 <div class="wh-48 d-flex align-items-center justify-content-center rounded-3 border">
-                                    <img src="assets/images/projects/python.png" width="30" alt="">
+                                    <i style="font-size: 30px" class="bi-7-circle"></i>
                                 </div>
                                 <div class="">
                                     <h6 class="mb-0 fw-bold">Python</h6>
@@ -359,7 +359,7 @@
                         </div>
                         <div class="dropdown">
                             <a href="javascript:;" class="dropdown-toggle-nocaret options dropdown-toggle" data-bs-toggle="dropdown">
-                                <span class="material-symbols-outlined fs-5">more_vert</span>
+                                <span class="bi-three-dots-vertical fs-5"></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="javascript:;">Action</a></li>
@@ -371,7 +371,7 @@
                     <div class="d-flex flex-column justify-content-between gap-4">
                         <div class="d-flex align-items-center gap-4">
                             <div class="d-flex align-items-center gap-3 flex-grow-1">
-                                <img src="assets/images/apps/17.png" width="32" alt="">
+                                <i style="font-size: 32px" class="bi-facebook"></i>
                                 <p class="mb-0">Facebook</p>
                             </div>
                             <div class="">
@@ -385,7 +385,7 @@
                         </div>
                         <div class="d-flex align-items-center gap-4">
                             <div class="d-flex align-items-center gap-3 flex-grow-1">
-                                <img src="assets/images/apps/18.png" width="32" alt="">
+                                <i style="font-size: 32px" class="bi-linkedin"></i>
                                 <p class="mb-0">LinkedIn</p>
                             </div>
                             <div class="">
@@ -399,7 +399,7 @@
                         </div>
                         <div class="d-flex align-items-center gap-4">
                             <div class="d-flex align-items-center gap-3 flex-grow-1">
-                                <img src="assets/images/apps/19.png" width="32" alt="">
+                                <i style="font-size: 32px" class="bi-instagram"></i>
                                 <p class="mb-0">Instagram</p>
                             </div>
                             <div class="">
@@ -413,7 +413,7 @@
                         </div>
                         <div class="d-flex align-items-center gap-4">
                             <div class="d-flex align-items-center gap-3 flex-grow-1">
-                                <img src="assets/images/apps/20.png" width="32" alt="">
+                                <i style="font-size: 32px" class="bi-snapchat"></i>
                                 <p class="mb-0">Snapchat</p>
                             </div>
                             <div class="">
@@ -427,7 +427,7 @@
                         </div>
                         <div class="d-flex align-items-center gap-4">
                             <div class="d-flex align-items-center gap-3 flex-grow-1">
-                                <img src="assets/images/apps/05.png" width="32" alt="">
+                                <i style="font-size: 32px" class="bi-google"></i>
                                 <p class="mb-0">Google</p>
                             </div>
                             <div class="">
@@ -441,7 +441,7 @@
                         </div>
                         <div class="d-flex align-items-center gap-4">
                             <div class="d-flex align-items-center gap-3 flex-grow-1">
-                                <img src="assets/images/apps/08.png" width="32" alt="">
+                                <i style="font-size: 32px" class="bi-currency-bitcoin"></i>
                                 <p class="mb-0">Altaba</p>
                             </div>
                             <div class="">
@@ -455,7 +455,7 @@
                         </div>
                         <div class="d-flex align-items-center gap-4">
                             <div class="d-flex align-items-center gap-3 flex-grow-1">
-                                <img src="assets/images/apps/07.png" width="32" alt="">
+                                <i style="font-size: 32px" class="bi-spotify"></i>
                                 <p class="mb-0">Spotify</p>
                             </div>
                             <div class="">
@@ -469,7 +469,7 @@
                         </div>
                         <div class="d-flex align-items-center gap-4">
                             <div class="d-flex align-items-center gap-3 flex-grow-1">
-                                <img src="assets/images/apps/12.png" width="32" alt="">
+                                <i style="font-size: 32px" class="bi-images"></i>
                                 <p class="mb-0">Photoes</p>
                             </div>
                             <div class="">
@@ -496,7 +496,7 @@
                         </div>
                         <div class="dropdown">
                             <a href="javascript:;" class="dropdown-toggle-nocaret options dropdown-toggle" data-bs-toggle="dropdown">
-                                <span class="material-symbols-outlined fs-5">more_vert</span>
+                                <span class="bi-three-dots-vertical fs-5"></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="javascript:;">Action</a></li>
@@ -509,7 +509,7 @@
                         <div class="d-flex flex-column gap-4">
                             <div class="d-flex align-items-center gap-3">
                                 <div class="wh-48 d-flex align-items-center justify-content-center bg-danger rounded-circle">
-                                    <span class="material-symbols-outlined text-white">shopping_cart</span>
+                                    <span class="bi-cart text-white"></span>
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-0 fw-bold">Online Purchase</h6>
@@ -521,7 +521,7 @@
                             </div>
                             <div class="d-flex align-items-center gap-3">
                                 <div class="wh-48 d-flex align-items-center justify-content-center rounded-circle bg-primary">
-                                    <span class="material-symbols-outlined text-white">monetization_on</span>
+                                    <span class="bi-bank text-white"></span>
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-0">Bank Transfer</h6>
@@ -533,7 +533,7 @@
                             </div>
                             <div class="d-flex align-items-center gap-3">
                                 <div class="wh-48 d-flex align-items-center justify-content-center rounded-circle bg-success">
-                                    <span class="material-symbols-outlined text-white">credit_card</span>
+                                    <span class="bi-credit-card text-white"></span>
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-0">Credit Card</h6>
@@ -545,7 +545,7 @@
                             </div>
                             <div class="d-flex align-items-center gap-3">
                                 <div class="wh-48 d-flex align-items-center justify-content-center rounded-circle bg-purple">
-                                    <span class="material-symbols-outlined text-white">account_balance</span>
+                                    <span class="bi-laptop text-white"></span>
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-0">Laptop Payment</h6>
@@ -557,7 +557,7 @@
                             </div>
                             <div class="d-flex align-items-center gap-3">
                                 <div class="wh-48 d-flex align-items-center justify-content-center rounded-circle bg-orange">
-                                    <span class="material-symbols-outlined text-white">savings</span>
+                                    <span class="bi-plus-circle text-white"></span>
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-0">Template Payment</h6>
@@ -569,7 +569,7 @@
                             </div>
                             <div class="d-flex align-items-center gap-3">
                                 <div class="wh-48 d-flex align-items-center justify-content-center rounded-circle bg-info">
-                                    <span class="material-symbols-outlined text-white">paid</span>
+                                    <span class="bi-file-earmark-plus text-white"></span>
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-0">iPhone Purchase</h6>
@@ -581,7 +581,7 @@
                             </div>
                             <div class="d-flex align-items-center gap-3">
                                 <div class="wh-48 d-flex align-items-center justify-content-center rounded-circle bg-pink">
-                                    <span class="material-symbols-outlined text-white">card_giftcard</span>
+                                    <span class="bi-gift text-white"></span>
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-0">Account Credit</h6>
@@ -606,7 +606,7 @@
                         </div>
                         <div class="dropdown">
                             <a href="javascript:;" class="dropdown-toggle-nocaret options dropdown-toggle" data-bs-toggle="dropdown">
-                                <span class="material-symbols-outlined fs-5">more_vert</span>
+                                <span class="bi-three-dots-vertical fs-5"></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="javascript:;">Action</a></li>
@@ -617,7 +617,7 @@
                     </div>
                     <div class="d-flex flex-column gap-4">
                         <div class="d-flex align-items-center gap-3">
-                            <img src="assets/images/orders/01.png" width="78" class="rounded-3" alt="">
+                            <i style="font-size: 50px" class="bi-smartwatch"></i>
                             <div class="flex-grow-1">
                                 <h6 class="mb-0 fw-bold">Apple Hand Watch</h6>
                                 <p class="mb-0">Sale: 258</p>
@@ -627,7 +627,7 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-3">
-                            <img src="assets/images/orders/08.png" width="78" class="rounded-3" alt="">
+                            <i style="font-size: 50px" class="bi-phone"></i>
                             <div class="flex-grow-1">
                                 <h6 class="mb-0 fw-bold">Mobile Phone Set</h6>
                                 <p class="mb-0">Sale: 169</p>
@@ -637,7 +637,7 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-3">
-                            <img src="assets/images/orders/03.png" width="78" class="rounded-3" alt="">
+                            <i style="font-size: 50px" class="bi-layers"></i>
                             <div class="flex-grow-1">
                                 <h6 class="mb-0 fw-bold">Fancy Chair</h6>
                                 <p class="mb-0">Sale: 268</p>
@@ -647,7 +647,7 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-3">
-                            <img src="assets/images/orders/04.png" width="78" class="rounded-3" alt="">
+                            <i style="font-size: 50px" class="bi-archive"></i>
                             <div class="flex-grow-1">
                                 <h6 class="mb-0 fw-bold">Blue Shoes Pair</h6>
                                 <p class="mb-0">Sale: 859</p>
@@ -657,7 +657,7 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-3">
-                            <img src="assets/images/orders/05.png" width="78" class="rounded-3" alt="">
+                            <i style="font-size: 50px" class="bi-smartwatch"></i>
                             <div class="flex-grow-1">
                                 <h6 class="mb-0 fw-bold">Blue Yoga Mat</h6>
                                 <p class="mb-0">Sale: 328</p>
@@ -667,7 +667,7 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-3">
-                            <img src="assets/images/orders/06.png" width="75" class="rounded-3" alt="">
+                            <i style="font-size: 50px" class="bi-body-text"></i>
                             <div class="flex-grow-1">
                                 <h6 class="mb-0 fw-bold">White water Bottle</h6>
                                 <p class="mb-0">Sale: 992</p>
@@ -677,7 +677,7 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-3">
-                            <img src="assets/images/orders/07.png" width="78" class="rounded-3" alt="">
+                            <i style="font-size: 50px" class="bi-laptop"></i>
                             <div class="flex-grow-1">
                                 <h6 class="mb-0 fw-bold">Laptop Full HD</h6>
                                 <p class="mb-0">Sale: 489</p>

@@ -3,7 +3,7 @@
         <div class="d-flex flex-grow-1 justify-content-between align-items-center">
             <div class="d-flex flex-start align-items-center gap-3">
                 <div class="btn-toggle user-select-none cursor-pointer">
-                    <i class="bi-arrow-left-circle"></i>
+                    <i class="bi-layout-sidebar"></i>
                 </div>
                 @if (isset($header))
                 <div class="page-breadcrumb d-none d-sm-flex align-items-center bg-light px-2 shadow-sm">
@@ -67,7 +67,7 @@
                             <div class="col border-end">
                                 <div class="app-wrapper d-flex flex-column gap-2 text-center">
                                     <div class="app-icon">
-                                        <img src="{{ asset('images/apps/01.png') }}" width="36" alt="">
+                                        <i style="font-size: 26px" class="bi-envelope"></i>
                                     </div>
                                     <div class="app-name">
                                         <p class="mb-0">Gmail</p>
@@ -77,7 +77,7 @@
                             <div class="col border-end">
                                 <div class="app-wrapper d-flex flex-column gap-2 text-center">
                                     <div class="app-icon">
-                                        <img src="{{ asset('images/apps/02.png') }}" width="36" alt="">
+                                        <i style="font-size: 26px" class="bi-skype"></i>
                                     </div>
                                     <div class="app-name">
                                         <p class="mb-0">Skype</p>
@@ -87,10 +87,10 @@
                             <div class="col">
                                 <div class="app-wrapper d-flex flex-column gap-2 text-center">
                                     <div class="app-icon">
-                                        <img src="{{ asset('images/apps/03.png') }}" width="36" alt="">
+                                        <i style="font-size: 26px" class="bi-whatsapp"></i>
                                     </div>
                                     <div class="app-name">
-                                        <p class="mb-0">Slack</p>
+                                        <p class="mb-0">Whasapp</p>
                                     </div>
                                 </div>
                             </div>
@@ -101,7 +101,7 @@
                             <div class="col border-end">
                                 <div class="app-wrapper d-flex flex-column gap-2 text-center">
                                     <div class="app-icon">
-                                        <img src="{{ asset('images/apps/04.png') }}" width="36" alt="">
+                                        <i style="font-size: 26px" class="bi-youtube"></i>
                                     </div>
                                     <div class="app-name">
                                         <p class="mb-0">YouTube</p>
@@ -111,7 +111,7 @@
                             <div class="col border-end">
                                 <div class="app-wrapper d-flex flex-column gap-2 text-center">
                                     <div class="app-icon">
-                                        <img src="{{ asset('images/apps/05.png') }}" width="36" alt="">
+                                        <i style="font-size: 26px" class="bi-google"></i>
                                     </div>
                                     <div class="app-name">
                                         <p class="mb-0">Google</p>
@@ -121,7 +121,7 @@
                             <div class="col">
                                 <div class="app-wrapper d-flex flex-column gap-2 text-center">
                                     <div class="app-icon">
-                                        <img src="{{ asset('images/apps/06.png') }}" width="36" alt="">
+                                        <i style="font-size: 26px" class="bi-instagram"></i>
                                     </div>
                                     <div class="app-name">
                                         <p class="mb-0">Instagram</p>
@@ -156,7 +156,7 @@
                             <a class="dropdown-item border-bottom py-2" href="javascript:;">
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="">
-                                        <img src="{{ asset(auth()->user()->image) }}" class="rounded-circle" width="45" height="45" alt="">
+                                        <img src="{{ asset('images/no-profile.png') }}" class="rounded-circle" width="45" height="45" alt="">
                                     </div>
                                     <div class="">
                                         <h5 class="notify-title">Welcome {{ auth()->user()->name }}</h5>
@@ -173,7 +173,7 @@
             </li>
             <li class="nav-item dropdown">
                 <a href="javascrpt:;" class="dropdown-toggle dropdown-toggle-nocaret" data-bs-toggle="dropdown">
-                    <img src="{{ asset(auth()->user()->image) }}" class="rounded-circle p-1 border" width="45" height="45">
+                    <img src="{{ asset('images/no-profile.png') }}" class="rounded-circle p-1 border" width="45" height="45">
                 </a>
                 <div class="dropdown-menu dropdown-user dropdown-menu-end shadow">
                     <a class="dropdown-item  gap-2 py-2" href="{{ route('profile.edit') }}">

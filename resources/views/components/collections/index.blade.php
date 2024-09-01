@@ -157,8 +157,7 @@
                                 <td>${category.type}</td>
                                 <td>${category.name}</td>
                                 <td>
-                                    <span class="delete-btn cursor-pointer text-danger border border-danger bg-light material-symbols-outlined" title="Defer" data-bs-toggle="tooltip" data-id="${category.id}">
-                                        delete
+                                    <span class="delete-btn cursor-pointer text-danger border border-danger bg-light bi-trash" title="Delete" data-bs-toggle="tooltip" data-id="${category.id}">
                                     </span>
                                 </td>
                             </tr>

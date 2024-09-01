@@ -9,6 +9,8 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  padding-left: 12px;
+  padding-right: 12px;
 }
 
 a {
@@ -402,7 +404,7 @@ input::placeholder {
   display: flex;
   align-items: center;
   justify-content: left;
-  padding: 6px 16px;
+  padding: 8px 20px;
   font-size: 15px;
   color: #5f5f5f;
   outline-width: 0;
@@ -419,19 +421,17 @@ input::placeholder {
   margin-left: 10px;
 }
 .sidebar-wrapper .sidebar-nav .metismenu a:active {
-  color: #008cff;
+  color: #00A76F;
   text-decoration: none;
-  background-color: rgba(0, 140, 255, 0.05);
+  background-color: rgba(0, 167, 111, 0.12);
 }
 .sidebar-wrapper .sidebar-nav .metismenu a:focus {
-  color: #008cff;
   text-decoration: none;
-  background-color: rgba(0, 140, 255, 0.05);
+  background-color: rgba(0, 167, 111, 0.12);
 }
 .sidebar-wrapper .sidebar-nav .metismenu a:hover {
-  color: #008cff;
   text-decoration: none;
-  background-color: rgba(0, 140, 255, 0.05);
+  background-color: rgba(0, 167, 111, 0.09);
 }
 .sidebar-wrapper .sidebar-nav .metismenu ul {
   background-color: #fff;
@@ -452,9 +452,9 @@ input::placeholder {
   padding: 8px 15px 8px 45px;
 }
 .sidebar-wrapper .sidebar-nav .metismenu .mm-active > a {
-  color: #008cff;
+  color: #00A76F;
   text-decoration: none;
-  background-color: rgba(0, 140, 255, 0.05);
+  background-color: rgba(0, 167, 111, 0.12);
 }
 .sidebar-wrapper .sidebar-bottom {
   display: flex;
@@ -929,7 +929,7 @@ form select.error:focus {
 /* alerts */
 .alert-border-primary {
   border: 1px solid var(--bs-gray-400);
-  border-left: 5px solid #008cff;
+  border-left: 5px solid #00A76F;
 }
 
 .alert-border-secondary {
