@@ -7,7 +7,6 @@ use App\Http\Requests\StoreContractorRegistrationRequest;
 use App\Models\Categories\ContractorCategory;
 use App\Models\Categories\ProvincialEntity;
 use App\Models\District;
-use App\Models\Category;
 use Illuminate\Http\Request;
 
 use Yajra\DataTables\DataTables;
@@ -16,8 +15,8 @@ class ContractorRegistrationController extends Controller
 {
     public function index(Request $request)
     {
-        $defer = $request->query('defer', 0);
-        $defer = ($defer >= 0 && $defer <= 3) ? $defer : 0;
+        $defer = $request->query('defer', null);
+        $defer = ($defer >= 0 && $defer <= 3) ? $defer : null;
         $approved = $request->query('approved', null);
 
         $registrations = ContractorRegistration::query();

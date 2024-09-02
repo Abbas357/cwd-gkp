@@ -15,7 +15,7 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $active = $request->query('active', 1);
+        $active = $request->query('active', null);
 
         $users = User::query();
 
@@ -31,9 +31,6 @@ class UserController extends Controller
                 })
                 ->editColumn('is_active', function ($row) {
                     return $row->is_active == 1 ? 'Yes' : 'No' ;
-                })
-                ->editColumn('is_suspended', function ($row) {
-                    return $row->is_suspended == 1 ? 'Yes' : 'No' ;
                 })
                 ->editColumn('password_updated_at', function ($row) {
                     return $row->password_updated_at->diffForHumans();

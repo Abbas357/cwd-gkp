@@ -9,7 +9,7 @@
     <div class="card-header mb-3">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a id="defer-0-tab" class="nav-link active" data-bs-toggle="tab" href="#fresh">Not Deferred</a>
+                <a id="defer-0-tab" class="nav-link" data-bs-toggle="tab" href="#fresh">Not Deferred</a>
             </li>
             <li class="nav-item">
                 <a id="defer-1-tab" class="nav-link" data-bs-toggle="tab" href="#deferred1">Deferred 1</a>

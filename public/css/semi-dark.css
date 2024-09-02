@@ -10,7 +10,7 @@
 [data-bs-theme=semi-dark] body .top-header .navbar {
   border-bottom: 1px solid #dee2e6;
   box-shadow: none;
-  background-color: #eff1f3;
+  background-color: #eee;
 }
 [data-bs-theme=semi-dark] body .top-header .navbar .btn-toggle a:hover, [data-bs-theme=semi-dark] body .top-header .navbar .btn-toggle a:focus {
   color: #383c40;

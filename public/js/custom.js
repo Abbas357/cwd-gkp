@@ -252,10 +252,10 @@ function initDataTable(selector, options = {}) {
             table.state.clear();
             localStorage.removeItem(selector.replace("#", ""));
             Swal.fire({
-                title: 'Alert',
+                icon: 'info',
                 text: 'The table settings have been reset to default because of an error.',
                 showCancelButton: false,
-                confirmButtonText: 'OK'
+                confirmButtonText: 'Reload'
               }).then((result) => {
                 window.location.reload();
               });

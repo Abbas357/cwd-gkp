@@ -592,7 +592,7 @@ input::placeholder {
   transition: ease-out 0.3s;
 }
 .main-wrapper .main-content {
-  padding: .9rem 1.3rem;
+  padding: .2rem .6rem;
 }
 .main-wrapper .main-content .breadcrumb-title {
   font-size: 20px;

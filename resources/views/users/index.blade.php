@@ -9,10 +9,10 @@
     <div class="card-header mb-3">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a id="active-tab" class="nav-link active" data-bs-toggle="tab" href="#active">Active Users</a>
+                <a id="active-tab" class="nav-link" data-bs-toggle="tab" href="#active">Active</a>
             </li>
             <li class="nav-item">
-                <a id="inactive-tab" class="nav-link" data-bs-toggle="tab" href="#inactive">Non Active Users</a>
+                <a id="inactive-tab" class="nav-link" data-bs-toggle="tab" href="#inactive">In Active</a>
             </li>
         </ul>
     </div>
@@ -28,9 +28,8 @@
                 <th scope="col" class="p-3">Designation</th>
                 <th scope="col" class="p-3">CNIC</th>
                 <th scope="col" class="p-3">Office</th>
-                <th scope="col" class="p-3">Active</th>
-                <th scope="col" class="p-3">Suspended</th>
                 <th scope="col" class="p-3">Password Updated</th>
+                <th scope="col" class="p-3">Active</th>
                 <th scope="col" class="p-3">Created At</th>
                 <th scope="col" class="p-3">Updated At</th>
                 <th scope="col" class="p-3">Actions</th>
@@ -38,7 +37,7 @@
         </thead>
         <tbody>
         </tbody>
-    </table>
+    </table>    
 
     <div class="modal fade" id="userEditModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -65,7 +64,6 @@
         </div>
     </div>
     
-
     <!--end row-->
     @push('script')
     <script src="{{ asset('plugins/datatable/js/datatables.min.js') }}"></script>
@@ -83,9 +81,8 @@
                         { data: "designation", searchBuilderType: "string" },
                         { data: "cnic", searchBuilderType: "string" },
                         { data: "office", searchBuilderType: "string" },
-                        { data: "is_active", searchBuilderType: "string" },
-                        { data: "is_suspended", searchBuilderType: "string" },
                         { data: "password_updated_at", searchBuilderType: "date" },
+                        { data: "is_active", searchBuilderType: "string" },
                         { data: "created_at", searchBuilderType: "date" },
                         { data: "updated_at", searchBuilderType: "date" },
                         {
@@ -95,7 +92,7 @@
                             type: "html"
                         }
                     ],
-                    defaultOrderColumn: 3,
+                    defaultOrderColumn: 9,
                     defaultOrderDirection: 'desc',
                     columnDefs: [{
                         targets: [7,8,9],
@@ -108,12 +105,12 @@
                     dataTableUrl: "{{ route('users.index') }}",
                     tabToHashMap: {
                         "#active-tab": '#active',
-                        "#inactive-tab": '#inactive',
+                        "#inactive-tab": '#inactive'
                     },
                     hashToParamsMap: {
                         '#active': { active: 1 },
-                        '#inactive': { active: 0 },
-                    },   
+                        '#inactive': { active: 0 }
+                    },
                     defaultHash: '#active'
                 });
 
