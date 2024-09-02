@@ -28,19 +28,26 @@
                     <div class="menu-title">Resources</div>
                 </a>
                 <ul>
-                    <li><a href="{{ route('districts.index') }}"><i class="bi-arrow-right-short"></i>Districts</a>
+                    <li>
+                        <a href="{{ route('roles.index') }}"><i class="bi-arrow-right-short"></i>Roles</a>
                     </li>
-                    <li><a href="{{ route('roles.index') }}"><i class="bi-arrow-right-short"></i>Roles</a>
+                    <li>
+                        <a href="{{ route('permissions.index') }}"><i class="bi-arrow-right-short"></i>Permissions</a>
                     </li>
-                    <li><a href="{{ route('permissions.index') }}"><i class="bi-arrow-right-short"></i>Permissions</a>
+                    <li>
+                        <a href="{{ route('districts.index') }}"><i class="bi-arrow-right-short"></i>Districts</a>
                     </li>
-                    <li><a href="{{ route('designations.index') }}"><i class="bi-arrow-right-short"></i>Designations</a>
+                    <li>
+                        <a href="{{ route('designations.index') }}"><i class="bi-arrow-right-short"></i>Designations</a>
                     </li>
-                    <li><a href="{{ route('offices.index') }}"><i class="bi-arrow-right-short"></i>Offices</a>
+                    <li>
+                        <a href="{{ route('offices.index') }}"><i class="bi-arrow-right-short"></i>Offices</a>
                     </li>
-                    <li><a href="{{ route('contractor_categories.index') }}"><i class="bi-arrow-right-short"></i>Contractor Categories</a>
+                    <li>
+                        <a href="{{ route('contractor_categories.index') }}"><i class="bi-arrow-right-short"></i>Contractor Categories</a>
                     </li>
-                    <li><a href="{{ route('provincial_entities.index') }}"><i class="bi-arrow-right-short"></i>Provincial Entities</a>
+                    <li>
+                        <a href="{{ route('provincial_entities.index') }}"><i class="bi-arrow-right-short"></i>Provincial Entities</a>
                     </li>
                 </ul>
             </li>
@@ -62,7 +69,7 @@
                     <div class="parent-icon"><i class="bi-calendar3-week"></i>
                     </div>
                     <div class="menu-title">Registrations</div>
-                </a>    
+                </a>
                 <ul>
                     <li><a href="{{ route('registrations.index') }}"><i class="bi-arrow-right-short"></i>List</a>
                     </li>

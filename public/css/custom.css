@@ -127,10 +127,6 @@
   user-select: none;
 }
 
-.nav-link.active {
-  background-color: transparent !important;
-}
-
 .grip {
   position: absolute;
   right: 0;
@@ -309,8 +305,6 @@ div.dt-container {
     }
   }
 }
-
-
 
 @media screen and (min-width: 1024px) {
   div.dt-container {

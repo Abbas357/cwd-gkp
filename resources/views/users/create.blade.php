@@ -20,8 +20,8 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="owner_name">Name</label>
-                                    <input type="text" class="form-control" id="owner_name" value="{{ old('owner_name') }}" placeholder="Name of Owner" name="owner_name" required>
-                                    @error('owner_name')
+                                    <input type="text" class="form-control" id="name" value="{{ old('name') }}" placeholder="Full Name" name="name" required>
+                                    @error('name')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -37,9 +37,9 @@
 
                             <div class="row mb-3">
                                 <div class="col">
-                                    <label for="owner_name">Password</label>
-                                    <input type="text" class="form-control" id="owner_name" value="{{ old('owner_name') }}" placeholder="Name of Owner" name="owner_name" required>
-                                    @error('owner_name')
+                                    <label for="name">Password</label>
+                                    <input type="password" class="form-control" id="password" value="{{ old('password') }}" placeholder="Password" name="password" required>
+                                    @error('password')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -56,9 +56,9 @@
                             <div class="row mb-3">
                                 
                                 <div class="col-md-6">
-                                    <label for="mobile_number">Landline Number.</label>
-                                    <input type="text" class="form-control" id="mobile_number" value="{{ old('mobile_number') }}" placeholder="Mobile No" name="mobile_number" required>
-                                    @error('mobile_number')
+                                    <label for="landline_number">Landline Number.</label>
+                                    <input type="text" class="form-control" id="landline_number" value="{{ old('landline_number') }}" placeholder="Mobile No" name="landline_number" required>
+                                    @error('landline_number')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -72,26 +72,26 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="category_applied">Designation</label>
-                                    <select class="form-select" id="category_applied" name="category_applied" required>
+                                    <label for="designation">Designation</label>
+                                    <select class="form-select" id="designation" name="designation" required>
                                         <option value="">Choose...</option>
                                         @foreach ($cat['designations'] as $designation)
                                         <option value="{{ $designation->name }}">{{ $designation->name }}</option>
                                         @endforeach
                                     </select>
-                                    @error('designations')
+                                    @error('designation')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="category_applied">Office</label>
-                                    <select class="form-select" id="category_applied" name="category_applied" required>
+                                    <label for="office">Office</label>
+                                    <select class="form-select" id="office" name="office" required>
                                         <option value="">Choose...</option>
                                         @foreach ($cat['offices'] as $office)
                                         <option value="{{ $office->name }}">{{ $office->name }}</option>
                                         @endforeach
                                     </select>
-                                    @error('offices')
+                                    @error('office')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -99,9 +99,9 @@
 
                             <div class="row mb-3">  
                                 <div class="col-md-6">
-                                    <label for="cnic_front_attachment">Image</label>
-                                    <input type="file" class="form-control" id="cnic_front_attachment" name="cnic_front_attachment" onchange="previewImage(event, 'previewCnicFront')">
-                                    @error('cnic_front_attachment')
+                                    <label for="image">Image</label>
+                                    <input type="file" class="form-control" id="image" name="image" onchange="previewImage(event, 'previewCnicFront')">
+                                    @error('image')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -121,8 +121,8 @@
                             <div class="mb-3">
                                 <label for="roles">Roles</label>
                                 <select class="form-select form-select-md" data-placeholder="Choose" id="roles" multiple name="roles[]">
-                                    @foreach ($cat['designations'] as $entities)
-                                    <option value="{{ $entities->name }}">{{ $entities->name }}</option>
+                                    @foreach ($cat['roles'] as $role)
+                                    <option value="{{ $role->name }}">{{ $role->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('roles')
@@ -132,8 +132,8 @@
                             <div class="mb-3">
                                 <label for="permissions">Permissions</label>
                                 <select class="form-select form-select-md" data-placeholder="Choose" id="permissions" multiple name="permissions[]">
-                                    @foreach ($cat['designations'] as $entities)
-                                    <option value="{{ $entities->name }}">{{ $entities->name }}</option>
+                                    @foreach ($cat['permissions'] as $permission)
+                                    <option value="{{ $permission->name }}">{{ $permission->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('permissions')
@@ -157,6 +157,10 @@
         $(document).ready(function() {
             $('#mobile_number').mask('0000-0000000', {
                 placeholder: "____-_______"
+            });
+
+            $('#landline_number').mask('000-000000', {
+                placeholder: "___-______"
             });
 
             $('#cnic').mask('00000-0000000-0', {

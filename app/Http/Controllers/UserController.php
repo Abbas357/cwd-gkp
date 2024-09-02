@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Category;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
 use App\Models\Categories\Office;
+use Spatie\Permission\Models\Role;
 use App\Models\Categories\Designation;
+use Spatie\Permission\Models\Permission;
 
 class UserController extends Controller
 {
@@ -56,11 +57,27 @@ class UserController extends Controller
         return view('users.index');
     }
 
+    public function users(Request $request){
+        $search = $request->get('q');
+        $users = User::where('name', 'LIKE', "%{$search}%")
+                    ->select('id', 'name')
+                    ->paginate(10);
+
+        return response()->json([
+            'items' => $users->items(),
+            'pagination' => [
+                'more' => $users->hasMorePages()
+            ]
+        ]);
+    }
+
     public function create()
     {
         $cat = [
             'designations' => Designation::all(),
             'offices' => Office::all(),
+            'roles' => Role::all(),
+            'permissions' => Permission::all()
         ];
         return view('users.create', compact('cat'));
     }
@@ -109,5 +126,18 @@ class UserController extends Controller
 
         // $boss = $user->boss->first();
         // $subordinates = $user->subordinates;
+    }
+
+    public function assignRole(Request $request, User $user)
+    {
+        $roles = $request->roles;
+
+        $existingRoles = array_intersect($roles, $user->getRoleNames()->toArray());
+        if (!empty($existingRoles)) {
+            return back()->with('danger', 'Roles already assigned previously.');
+        }
+
+        $user->syncRoles($roles);
+        return back()->with('success', 'Roles successfully assigned');
     }
 }

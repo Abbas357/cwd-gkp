@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers\Categories;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
 
+use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRoleRequest;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
     public function index()
     {
         $roles = Role::whereNotIn('name', ['admin'])->simplePaginate(10);
-        return view('categories.roles.index', compact('roles'));
+        $users = User::all();
+        return view('categories.roles.index', compact('roles', 'users'));
     }
 
     public function store(StoreRoleRequest $request)

@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('users.index');
+    Route::get('/api', [UserController::class, 'users'])->name('users.api');
     Route::get('/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/', [UserController::class, 'store'])->name('users.store');
     Route::get('/{user}', [UserController::class, 'show'])->name('users.show');
@@ -57,6 +58,16 @@ Route::middleware('auth')->prefix('roles')->group(function () {
     Route::delete('/{role}/permissions/{permission}', [RoleController::class, 'revokePermission'])->name('roles.permissions.revoke');
 });
 
+Route::middleware('auth')->prefix('permissions')->group(function () {
+    Route::get('/', [PermissionController::class, 'index'])->name('permissions.index');
+    Route::post('/', [PermissionController::class, 'store'])->name('permissions.store');
+    Route::delete('/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
+
+    Route::post('/{permission}/roles', [PermissionController::class, 'assignRole'])->name('permissions.roles');
+    Route::delete('/{permission}/roles/{role}', [PermissionController::class, 'removeRole'])->name('permissions.roles.remove');
+});
+
+
 Route::middleware('auth')->prefix('districts')->group(function () {
     Route::get('/', [DistrictController::class, 'index'])->name('districts.index');
     Route::post('/', [DistrictController::class, 'store'])->name('districts.store');
@@ -85,15 +96,6 @@ Route::middleware('auth')->prefix('provincial_entities')->group(function () {
     Route::get('/', [ProvincialEntityController::class, 'index'])->name('provincial_entities.index');
     Route::post('/', [ProvincialEntityController::class, 'store'])->name('provincial_entities.store');
     Route::delete('/{provincial_entity}', [ProvincialEntityController::class, 'destroy'])->name('provincial_entities.destroy');
-});
-
-Route::middleware('auth')->prefix('permissions')->group(function () {
-    Route::get('/', [PermissionController::class, 'index'])->name('permissions.index');
-    Route::post('/', [PermissionController::class, 'store'])->name('permissions.store');
-    Route::delete('/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
-
-    Route::post('/{permission}/roles', [PermissionController::class, 'assignRole'])->name('permissions.roles');
-    Route::delete('/{permission}/roles/{role}', [PermissionController::class, 'removeRole'])->name('permissions.roles.remove');
 });
 
 require __DIR__ . '/auth.php';

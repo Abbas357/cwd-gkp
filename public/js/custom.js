@@ -245,26 +245,6 @@ function initDataTable(selector, options = {}) {
     $.fn.dataTable.ext.errMode = "throw";
     const finalOptions = $.extend(true, {}, defaultOptions, options);
     const table = $(selector).DataTable(finalOptions);
-
-    // Window Error Handler start
-    window.onerror = function (message, source, lineno, colno, error) {
-        if (message.includes('DataTable')) {
-            table.state.clear();
-            localStorage.removeItem(selector.replace("#", ""));
-            Swal.fire({
-                icon: 'info',
-                text: 'The table settings have been reset to default because of an error.',
-                showCancelButton: false,
-                confirmButtonText: 'Reload'
-              }).then((result) => {
-                window.location.reload();
-              });
-            return true;
-        }
-        return false;
-    };
-    // Window error handler end
-
     return table;
 }
 

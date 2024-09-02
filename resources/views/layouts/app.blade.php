@@ -22,9 +22,58 @@
     <link href="{{ asset('css/responsive.css') }}" rel="stylesheet">
     @stack('style')
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+    <style>
+        .page-loader {
+            height: 5px;
+            width: 250px;
+            --color: no-repeat linear-gradient(rgba(28, 37, 46) 0 0);
+            background: var(--color), var(--color), #eee;
+            background-size: 60% 100%;
+            animation: page-loader 3s infinite;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            border-radius: 50px;
+            outline: 1px solid #575757;
+        }
+
+        [data-bs-theme=dark] .page-loader {
+            outline: 1px solid #bbb;
+        }
+
+        @keyframes page-loader {
+            0%   {background-position: -150% 0, -150% 0;}
+            66%  {background-position: 250% 0, -150% 0;}
+            100% {background-position: 250% 0, 250% 0;}
+        }
+
+        body.loading::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(51, 50, 50, 0.3);
+            z-index: 9998;
+        }
+
+        .page-loader.hidden {
+            display: none;
+        }
+
+        body.loading {
+            overflow: hidden;
+        }
+        
+    </style>
 </head>
 
-<body>
+<body class="loading">
+    <div class="page-loader"></div>
+    
     @include("layouts.partials.header")
     @include("layouts.partials.aside")
 
@@ -67,7 +116,12 @@
     <script src="{{ asset('plugins/sweetalert2@11.js') }}"></script>
     <script src="{{ asset('js/custom.js') }}"></script> 
     @stack('script')
-    
+    <script>
+        window.onload = function() {
+            document.querySelector('.page-loader').classList.add('hidden');
+            document.body.classList.remove('loading');
+        }
+    </script>
 </body>
 
 </html>
