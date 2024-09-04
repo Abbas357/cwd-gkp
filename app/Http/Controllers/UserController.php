@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -34,7 +35,7 @@ class UserController extends Controller
                     return $row->is_active == 1 ? 'Yes' : 'No' ;
                 })
                 ->editColumn('password_updated_at', function ($row) {
-                    return $row->password_updated_at->diffForHumans();
+                    return $row->password_updated_at ? $row->password_updated_at->diffForHumans() : 'Not Updated Yet';
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->diffForHumans();
@@ -82,9 +83,31 @@ class UserController extends Controller
         return view('users.create', compact('cat'));
     }
 
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        //
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->mobile_number = $request->mobile_number;
+        $user->landline_number = $request->landline_number;
+        $user->cnic = $request->cnic;
+        $user->designation = $request->designation;
+        $user->office = $request->office;
+
+        if ($request->has('image')) {
+            // Store Image
+        }
+
+        if ($request->has('role')) {
+            // Store Role
+        }
+
+        if ($user->save()) {
+            return redirect()->route('users.create')->with('success', 'User added successfully');
+        }
+        
+        return redirect()->route('users.create')->with('danger', 'Error submitting the user');
     }
 
     public function show(User $user)
@@ -140,4 +163,17 @@ class UserController extends Controller
         $user->syncRoles($roles);
         return back()->with('success', 'Roles successfully assigned');
     }
+
+    public function revokeRole(User $user, Role $role)
+    {
+        $user->removeRole($role);
+        return redirect()->back()->with('success', 'Role removed successfully!');
+    }
+
+    public function clearRoles(User $user)
+    {
+        $user->roles()->detach();
+        return redirect()->back()->with('success', 'All roles removed successfully!');
+    }
+
 }

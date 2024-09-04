@@ -114,17 +114,14 @@
                                                         <div class="row mb-3">
                                                             <div class="col">
                                                                 <label for="users">Users</label>
-                                                                <select class="form-select form-select-sm" data-placeholder="Choose" id="users" name="user">
-                                                                    @foreach ($users as $user)
-                                                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                                                    @endforeach
+                                                                <select class="form-select form-select-md" data-placeholder="Choose" id="users" name="user">
                                                                 </select>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-3">
                                                             <div class="col">
                                                                 <label for="roles">Roles</label>
-                                                                <select class="form-select form-select-sm" data-placeholder="Choose" id="roles" multiple name="roles[]">
+                                                                <select class="form-select form-select-md" data-placeholder="Choose" id="roles" multiple name="roles[]">
                                                                     @foreach ($roles as $role)
                                                                     <option value="{{ $role->name }}">{{ $role->name }}</option>
                                                                     @endforeach
@@ -142,41 +139,51 @@
                                         <div class="col-md-8">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <h3 class="card-title mb-3 p-2"> List of Permissions </h3>
+                                                    <h3 class="card-title mb-3 p-2"> List of roles </h3>
                                                     <table class="table p-5 table-stripped table-bordered">
                                                         <thead class="">
                                                             <tr>
                                                                 <th>ID</th>
                                                                 <th>Name</th>
-                                                                <th>Guard Name</th>
+                                                                <th>Roles</th>
                                                                 <th>Action</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            {{-- @foreach ($permissions as $permission)
+                                                            @foreach ($users as $user)
                                                             <tr>
-                                                                <td>{{ $permission->id }}</td>
-                                                                <td>{{ $permission->name }}</td>
-                                                                <td>{{ $permission->guard_name }}</td>
+                                                                <td>{{ $user->id }}</td>
+                                                                <td>{{ $user->name }}</td>
                                                                 <td>
-                                                                    <form id="delete-permission-form-{{ $permission->id }}" method="post" action="{{ route('permissions.destroy', ['permission' => $permission->id]) }}" style="display:inline;">
+                                                                    <ol>
+                                                                        @foreach($user->roles as $role)
+                                                                        <li> {{ $role->name }} <form id="delete-role-form-{{ $user->id }}-{{ $role->id }}" method="post" action="{{ route('users.role.revoke', ['user' => $user->id, 'role' => $role->id]) }}" style="display:inline;">
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            <button type="submit" class="bg-light border-0" style="cursor: pointer;">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
+                                                                                    <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
+                                                                                </svg>
+                                                                            </button>
+                                                                        </form></li>
+                                                                        @endforeach
+                                                                    </ol>
+                                                                    
+                                                                </td>
+                                                                <td>
+                                                                    <form id="delete-all-roles-form-{{ $user->id }}" method="post" action="{{ route('users.roles.clear', ['user' => $user->id]) }}" style="display:inline;">
                                                                         @csrf
                                                                         @method('DELETE')
-                                                                        <button type="button" class="bg-light border-0 delete-permission-btn" style="cursor: pointer;" data-permission-id="{{ $permission->id }}">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
-                                                                                <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
-                                                                            </svg>
-                                                                        </button>
+                                                                        <button type="submit" class="btn btn-danger">Clear All Roles</button>
                                                                     </form>
                                                                 </td>
                                                             </tr>
-                                                            @endforeach --}}
+                                                            @endforeach
                                                         </tbody>
                                                     </table>
                                                 </div>
                                             </div>
-                                            <!-- Pagination links -->
-                                            {{-- {{ $permissions->links() }} --}}
+                                            {{ $users->links() }}
                                         </div>
                                     </div>
 

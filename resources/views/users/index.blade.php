@@ -37,24 +37,61 @@
         </thead>
         <tbody>
         </tbody>
-    </table>    
+    </table>
 
-    <div class="modal fade" id="userEditModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="userEdit" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Loading...</h5>
+                    <h5>Edit User</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="loading-spinner text-center">
-                        <div class="spinner-border" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
+                <ul class="nav nav-tabs nav-primary" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#edit-info" role="tab" aria-selected="true">
+                            <div class="d-flex align-items-center">
+                                <div class="tab-icon"><i class="bi bi-person me-1 fs-6"></i>
+                                </div>
+                                <div class="tab-title">Info</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" data-bs-toggle="tab" href="#edit-roles" role="tab" aria-selected="false">
+                            <div class="d-flex align-items-center">
+                                <div class="tab-icon"><i class="bi bi-list me-1 fs-6"></i>
+                                </div>
+                                <div class="tab-title">Roles</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" data-bs-toggle="tab" href="#edit-permissions" role="tab" aria-selected="false">
+                            <div class="d-flex align-items-center">
+                                <div class="tab-icon"><i class="bi bi-list me-1 fs-6"></i>
+                                </div>
+                                <div class="tab-title">Permissions</div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+                <div class="loading-spinner text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
                     </div>
-                    <div class="user-details" style="display: none;">
-                        <!-- User details will be loaded here -->
+                </div>
+                <div class="modal-body" style="display: none;">
+                    <div class="tab-pane fade show active" id="edit-info" role="tabpanel">
                     </div>
+
+                    <div class="tab-pane fade" id="edit-roles" role="tabpanel">
+                        Roles
+                    </div>
+
+                    <div class="tab-pane fade" id="edit-permissions" role="tabpanel">
+                        Permissions
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -63,108 +100,173 @@
             </div>
         </div>
     </div>
-    
+
     <!--end row-->
     @push('script')
     <script src="{{ asset('plugins/datatable/js/datatables.min.js') }}"></script>
     <script src="{{ asset('plugins/col-resizable.js') }}"></script>
-        <script>
-            $(document).ready(function() {
-                var table = initDataTable('#users-datatable', {
-                    ajaxUrl: "{{ route('users.index') }}",
-                    columns: [
-                        { data: "id", searchBuilderType: "num" },
-                        { data: "name", searchBuilderType: "string" },
-                        { data: "email", searchBuilderType: "string" },
-                        { data: "mobile_number", searchBuilderType: "string" },
-                        { data: "landline_number", searchBuilderType: "string" },
-                        { data: "designation", searchBuilderType: "string" },
-                        { data: "cnic", searchBuilderType: "string" },
-                        { data: "office", searchBuilderType: "string" },
-                        { data: "password_updated_at", searchBuilderType: "date" },
-                        { data: "is_active", searchBuilderType: "string" },
-                        { data: "created_at", searchBuilderType: "date" },
-                        { data: "updated_at", searchBuilderType: "date" },
-                        {
-                            data: 'action',
-                            orderable: false,
-                            searchable: false,
-                            type: "html"
-                        }
-                    ],
-                    defaultOrderColumn: 9,
-                    defaultOrderDirection: 'desc',
-                    columnDefs: [{
-                        targets: [7,8,9],
-                        visible: false
-                    }]
-                });
-
-                hashTabsNavigator({
-                    table: table,
-                    dataTableUrl: "{{ route('users.index') }}",
-                    tabToHashMap: {
-                        "#active-tab": '#active',
-                        "#inactive-tab": '#inactive'
-                    },
-                    hashToParamsMap: {
-                        '#active': { active: 1 },
-                        '#inactive': { active: 0 }
-                    },
-                    defaultHash: '#active'
-                });
-
-                $("#users-datatable").on('click', '.delete-btn', async function() {
-                    const userId = $(this).data("id");
-                    const url = "{{ route('users.destroy', ':id') }}".replace(':id', userId);
-
-                    const result = await confirmAction('Do you want to delete this user?');
-
-                    if (result.isConfirmed) {
-                        const success = await fetchRequest(url, 'DELETE');
-                        if (success) {
-                            $("#users-datatable").DataTable().ajax.reload();
-                        }
+    <script>
+        $(document).ready(function() {
+            var table = initDataTable('#users-datatable', {
+                ajaxUrl: "{{ route('users.index') }}"
+                , columns: [{
+                        data: "id"
+                        , searchBuilderType: "num"
                     }
-                });
-
-                $('#users-datatable').colResizable(
-                { 
-                    liveDrag: true,
-                    resizeMode:'overflow',
-                    postbackSafe:true,
-                    useLocalStorage: true,
-                    gripInnerHtml: "<div class='grip'></div>",
-                    draggingClass:"dragging",
-                });
-
-
-                $(document).on('click', '.edit-btn', async function() {
-                    const userId = $(this).data('id');
-                    const url = "{{ route('users.show', ':id') }}".replace(':id', userId);
-
-                    $('#userEditModal').modal('show');
-                    $('#userEditModal .loading-spinner').show();
-                    $('#userEditModal .user-details').hide();
-
-                    const user = await fetchRequest(url);
-
-                    if (user) {
-                        $('#userEditModal .modal-title').text('Edit User (' + user.name + ')');
-                        $('#userEditModal .modal-body').html(`
-                            <p><strong>Name:</strong> ${user.name}</p>
-                            <p><strong>Email:</strong> ${user.email}</p>
-                        `);
-                    } else {
-                        $('#userEditModal .modal-title').text('Error');
-                        $('#userEditModal .user-details').html('<p>Failed to load user data.</p>');
+                    , {
+                        data: "name"
+                        , searchBuilderType: "string"
                     }
-                    $('#userEditModal .loading-spinner').hide();
-                    $('#userEditModal .user-details').show();
-                });
-                
+                    , {
+                        data: "email"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "mobile_number"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "landline_number"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "designation"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "cnic"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "office"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "password_updated_at"
+                        , searchBuilderType: "date"
+                    }
+                    , {
+                        data: "is_active"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "created_at"
+                        , searchBuilderType: "date"
+                    }
+                    , {
+                        data: "updated_at"
+                        , searchBuilderType: "date"
+                    }
+                    , {
+                        data: 'action'
+                        , orderable: false
+                        , searchable: false
+                        , type: "html"
+                    }
+                ]
+                , defaultOrderColumn: 9
+                , defaultOrderDirection: 'desc'
+                , columnDefs: [{
+                    targets: [7, 8, 9]
+                    , visible: false
+                }]
             });
-                
-        </script>
+
+            hashTabsNavigator({
+                table: table
+                , dataTableUrl: "{{ route('users.index') }}"
+                , tabToHashMap: {
+                    "#active-tab": '#active'
+                    , "#inactive-tab": '#inactive'
+                }
+                , hashToParamsMap: {
+                    '#active': {
+                        active: 1
+                    }
+                    , '#inactive': {
+                        active: 0
+                    }
+                }
+                , defaultHash: '#active'
+            });
+
+            $("#users-datatable").on('click', '.delete-btn', async function() {
+                const userId = $(this).data("id");
+                const url = "{{ route('users.destroy', ':id') }}".replace(':id', userId);
+
+                const result = await confirmAction('Do you want to delete this user?');
+
+                if (result.isConfirmed) {
+                    const success = await fetchRequest(url, 'DELETE');
+                    if (success) {
+                        $("#users-datatable").DataTable().ajax.reload();
+                    }
+                }
+            });
+
+            resizableTable('#users-datatable');
+
+            function openModalFromUrl() {
+                const hash = window.location.hash;
+                const urlParams = new URLSearchParams(window.location.search);
+                const userId = urlParams.get('id');
+
+                const modalHashParts = hash.split('-');
+                const baseHash = modalHashParts[0];
+                const tabHash = modalHashParts[1];
+
+                if (baseHash === '#edit' && userId) {
+                    const url = "{{ route('users.show', ':id') }}".replace(':id', userId);
+                    $('#userEdit').modal('show');
+                    $('#userEdit .loading-spinner').show();
+                    $('#userEdit .modal-body').hide();
+
+                    fetchRequest(url).then(user => {
+                        if (user) {
+                            $('#userEdit .modal-body #edit-info').html(`
+                        <p><strong>Name:</strong> ${user.name}</p>
+                        <p><strong>Email:</strong> ${user.email}</p>
+                    `);
+                        } else {
+                            $('#userEdit .modal-title').text('Error');
+                            $('#userEdit .modal-body').html('<p>Failed to load user data.</p>');
+                        }
+                        $('#userEdit .loading-spinner').hide();
+                        $('#userEdit .modal-body').show();
+
+                        if (tabHash) {
+                            $(`#userEdit a[href="#${tabHash}"]`).tab('show');
+                        }
+                    });
+                }
+            }
+
+            $(document).on('click', '.edit-btn', function() {
+                const userId = $(this).data('id');
+                const newUrl = `${window.location.pathname}?id=${userId}#edit-info`;
+                history.pushState(null, null, newUrl);
+                openModalFromUrl();
+            });
+
+            $(window).on('popstate', function() {
+                openModalFromUrl();
+            });
+
+            $('#userEdit').on('hidden.bs.modal', function() {
+                history.pushState(null, null, window.location.pathname);
+            });
+
+            $('#userEdit').on('shown.bs.tab', 'a[data-bs-toggle="tab"]', function(e) {
+                const newTabHash = $(e.target).attr('href').substring(1);
+                const currentHash = window.location.hash.split('-')[0];
+                const newUrl = `${window.location.pathname}${window.location.search}${currentHash}-${newTabHash}`;
+                history.pushState(null, null, newUrl);
+            });
+
+            openModalFromUrl();
+
+        });
+
+    </script>
     @endpush
 </x-app-layout>

@@ -35,7 +35,10 @@ Route::middleware('auth')->prefix('users')->group(function () {
     Route::delete('/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
     Route::post('/{user}/roles', [UserController::class, 'assignRole'])->name('users.roles');
-    Route::delete('/{user}/roles/{role}', [UserController::class, 'removeRole'])->name('users.roles.remove');
+
+    Route::delete('{user}/role/{role}', [UserController::class, 'revokeRole'])->name('users.role.revoke');
+    Route::delete('{user}/roles/clear', [UserController::class, 'clearRoles'])->name('users.roles.clear');
+    
     Route::post('/{user}/permissions', [UserController::class, 'givePermission'])->name('users.permissions');
     Route::delete('/{user}/permissions/{permission}', [UserController::class, 'revokePermission'])->name('users.permissions.revoke');
 });

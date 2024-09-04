@@ -332,6 +332,19 @@ function setButtonLoading(
     }
 }
 
+function resizableTable(selector, options = {}) {
+    const defaultOptions = {
+        liveDrag: true,
+        resizeMode: 'overflow',
+        postbackSafe: true,
+        useLocalStorage: true,
+        gripInnerHtml: "<div class='grip'></div>",
+        draggingClass: "dragging"
+    };
+    const finalOptions = Object.assign({}, defaultOptions, options);
+    $(selector).colResizable(finalOptions);
+}
+
 document.addEventListener("DOMContentLoaded", (e) => {
     var forms = document.querySelectorAll(".needs-validation");
     Array.prototype.slice.call(forms).forEach(function (form) {
