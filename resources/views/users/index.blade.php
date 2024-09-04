@@ -75,27 +75,44 @@
                         </a>
                     </li>
                 </ul>
-                <div class="loading-spinner text-center">
+                <div class="loading-spinner text-center mt-4">
                     <div class="spinner-border" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
-                <div class="modal-body" style="display: none;">
-                    <div class="tab-pane fade show active" id="edit-info" role="tabpanel">
-                    </div>
+                <div class="modal-body">
+                    <div class="tab-content user-details p-1" style="display: none">
+                        <div class="tab-pane fade show active" id="edit-info" role="tabpanel">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="name">Name</label>
+                                    <input type="text" class="form-control" id="name" placeholder="Full Name" name="name" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="email">Email Address</label>
+                                    <input type="email" class="form-control" id="email" placeholder="Email Address" name="email" required>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="tab-pane fade" id="edit-roles" role="tabpanel">
-                        Roles
-                    </div>
+                        <div class="tab-pane fade" id="edit-roles" role="tabpanel">
+                            <div class="col-md-12">
+                                <label for="role">Role</label>
+                                <input type="text" class="form-control" id="role" placeholder="Role" role="name" required>
+                            </div>
+                        </div>
 
-                    <div class="tab-pane fade" id="edit-permissions" role="tabpanel">
-                        Permissions
+                        <div class="tab-pane fade" id="edit-permissions" role="tabpanel">
+                            <div class="col-md-12">
+                                <label for="permission">Permission</label>
+                                <input type="text" class="form-control" id="permission" placeholder="Permission" permission="name" required>
+                            </div>
+                        </div>
                     </div>
-
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary px-3">Save</button>
                 </div>
             </div>
         </div>
@@ -206,7 +223,7 @@
 
             resizableTable('#users-datatable');
 
-            function openModalFromUrl() {
+            async function openModalFromUrl() {
                 const hash = window.location.hash;
                 const urlParams = new URLSearchParams(window.location.search);
                 const userId = urlParams.get('id');
@@ -219,25 +236,41 @@
                     const url = "{{ route('users.show', ':id') }}".replace(':id', userId);
                     $('#userEdit').modal('show');
                     $('#userEdit .loading-spinner').show();
-                    $('#userEdit .modal-body').hide();
+                    $('#userEdit .user-details').hide();
 
-                    fetchRequest(url).then(user => {
-                        if (user) {
-                            $('#userEdit .modal-body #edit-info').html(`
-                        <p><strong>Name:</strong> ${user.name}</p>
-                        <p><strong>Email:</strong> ${user.email}</p>
-                    `);
-                        } else {
-                            $('#userEdit .modal-title').text('Error');
-                            $('#userEdit .modal-body').html('<p>Failed to load user data.</p>');
-                        }
-                        $('#userEdit .loading-spinner').hide();
-                        $('#userEdit .modal-body').show();
+                    const user = await fetchRequest(url);
+                    if (user) {
+                        $('#userEdit #name').val(user.name);
+                        $('#userEdit #email').val(user.email);
+                    } else {
+                        $('#userEdit .modal-title').text('Error');
+                        $('#userEdit .user-details').html('<p>Failed to load user data.</p>');
+                    }
+                    $('#userEdit .loading-spinner').hide();
+                    $('#userEdit .user-details').show();
 
-                        if (tabHash) {
-                            $(`#userEdit a[href="#${tabHash}"]`).tab('show');
-                        }
-                    });
+                    $('#userEdit').on('shown.bs.modal', function () {
+            if (tabHash) {
+                // Activate the tab button
+                $(`#userEdit a[href="#${tabHash}"]`).tab('show');
+                
+                // Activate the tab content
+                $('.tab-pane').removeClass('show active');
+                $(`#${tabHash}`).addClass('show active');
+            } else {
+                // Default to #edit-info tab if no specific tab hash is in the URL
+                $('#userEdit a[href="#edit-info"]').tab('show');
+                $('.tab-pane').removeClass('show active');
+                $('#edit-info').addClass('show active');
+            }
+        });
+        
+                    // if (tabHash) {
+                    //     $(`#userEdit a[href="#edit-${tabHash}"]`).tab('show');
+                    //     alert('ff')
+                    // } else {
+                    //     $('#userEdit a[href="#edit-info"]').tab('show');
+                    // }
                 }
             }
 
@@ -254,13 +287,6 @@
 
             $('#userEdit').on('hidden.bs.modal', function() {
                 history.pushState(null, null, window.location.pathname);
-            });
-
-            $('#userEdit').on('shown.bs.tab', 'a[data-bs-toggle="tab"]', function(e) {
-                const newTabHash = $(e.target).attr('href').substring(1);
-                const currentHash = window.location.hash.split('-')[0];
-                const newUrl = `${window.location.pathname}${window.location.search}${currentHash}-${newTabHash}`;
-                history.pushState(null, null, newUrl);
             });
 
             openModalFromUrl();

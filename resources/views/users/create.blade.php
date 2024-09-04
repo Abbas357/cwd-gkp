@@ -19,7 +19,7 @@
 
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="owner_name">Name</label>
+                                    <label for="name">Name</label>
                                     <input type="text" class="form-control" id="name" value="{{ old('name') }}" placeholder="Full Name" name="name" required>
                                     @error('name')
                                     <div class="text-danger">{{ $message }}</div>
