@@ -114,8 +114,8 @@ class UserController extends Controller
     public function show(User $user)
     {
         if ($user) {
-            $userRoles = $user->roles; 
-            $userPermissions = $user->getDirectPermissions();
+            $roles = $user->roles; 
+            $permissions = $user->getDirectPermissions();
             $allRoles = Role::all();
             $allPermissions = Permission::all();
             $allDesignations = Designation::all();
@@ -125,9 +125,9 @@ class UserController extends Controller
                 'success' => true,
                 'data' => [
                     'user' => $user,
-                    'userRoles' => $userRoles,
+                    'roles' => $roles,
                     'allRoles' => $allRoles,
-                    'userPermissions' => $userPermissions,
+                    'permissions' => $permissions,
                     'allPermissions' => $allPermissions,
                     'allDesignations' => $allDesignations,
                     'allOffices' => $allOffices,

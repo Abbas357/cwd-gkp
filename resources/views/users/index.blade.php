@@ -1,6 +1,8 @@
 <x-app-layout>
     @push('style')
     <link href="{{ asset('plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('plugins/select2/css/select2.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header">
         <li class="breadcrumb-item active" aria-current="page">Users</li>
@@ -56,27 +58,27 @@
                         <div class="user-details" style="display: none">
                             <ul class="nav nav-tabs nav-primary" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link active" data-bs-toggle="tab" href="#info" role="tab" aria-selected="true">
+                                    <a class="nav-link active" data-bs-toggle="tab" href="#info-tab" role="tab" aria-selected="true">
                                         <div class="d-flex align-items-center">
-                                            <div class="tab-icon"><i class="bi bi-person me-1 fs-6"></i>
+                                            <div class="tab-icon"><i class="bi bi-chevron-down me-1 fs-6"></i>
                                             </div>
                                             <div class="tab-title">Info</div>
                                         </div>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link" data-bs-toggle="tab" href="#roles" role="tab" aria-selected="false">
+                                    <a class="nav-link" data-bs-toggle="tab" href="#roles-tab" role="tab" aria-selected="false">
                                         <div class="d-flex align-items-center">
-                                            <div class="tab-icon"><i class="bi bi-list me-1 fs-6"></i>
+                                            <div class="tab-icon"><i class="bi bi-chevron-down me-1 fs-6"></i>
                                             </div>
                                             <div class="tab-title">Roles</div>
                                         </div>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link" data-bs-toggle="tab" href="#permissions" role="tab" aria-selected="false">
+                                    <a class="nav-link" data-bs-toggle="tab" href="#permissions-tab" role="tab" aria-selected="false">
                                         <div class="d-flex align-items-center">
-                                            <div class="tab-icon"><i class="bi bi-list me-1 fs-6"></i>
+                                            <div class="tab-icon"><i class="bi bi-chevron-down me-1 fs-6"></i>
                                             </div>
                                             <div class="tab-title">Permissions</div>
                                         </div>
@@ -84,7 +86,7 @@
                                 </li>
                             </ul>
                             <div class="tab-content p-2 pt-3">
-                                <div class="tab-pane fade show active" id="info" role="tabpanel">
+                                <div class="tab-pane fade show active" id="info-tab" role="tabpanel">
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <label for="name">Name</label>
@@ -118,15 +120,11 @@
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <label for="designation">Designation</label>
-                                            <select class="form-select" id="designation" name="designation" required>
-                                                <option value="">Choose...</option>
-                                            </select>
+                                            <select class="form-select" id="designation" name="designation" required></select>
                                         </div>
                                         <div class="col-md-6">
                                             <label for="office">Office</label>
-                                            <select class="form-select" id="office" name="office" required>
-                                                <option value="">Choose...</option>
-                                            </select>
+                                            <select class="form-select" id="office" name="office" required></select>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -140,17 +138,15 @@
                                     </div>
                                 </div>
 
-                                <div class="tab-pane fade" id="roles" role="tabpanel">
-                                    <div class="col-md-12">
-                                        <label for="role">Role</label>
-                                        <input type="text" class="form-control" id="role" placeholder="Role" role="name" required>
+                                <div class="tab-pane fade" id="roles-tab" role="tabpanel">
+                                    <h4 class="mb-4">Roles assigned</h4>
+                                    <div id="roles" class="row">
                                     </div>
                                 </div>
 
-                                <div class="tab-pane fade" id="permissions" role="tabpanel">
-                                    <div class="col-md-12">
-                                        <label for="permission">Permission</label>
-                                        <input type="text" class="form-control" id="permission" placeholder="Permission" permission="name" required>
+                                <div class="tab-pane fade" id="permissions-tab" role="tabpanel">
+                                    <h4 class="mb-4">Direct Permissions</h4>
+                                    <div id="permissions" class="row">
                                     </div>
                                 </div>
                             </div>
@@ -169,10 +165,33 @@
     @push('script')
     <script src="{{ asset('plugins/datatable/js/datatables.min.js') }}"></script>
     <script src="{{ asset('plugins/col-resizable.js') }}"></script>
+    <script src="{{ asset('plugins/select2/js/select2.min.js') }}"></script>
+    <script src="{{ asset('plugins/jquery-mask/jquery.mask.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            new bootstrap.Modal($('#userEdit'), {
-                backdrop: 'static'
+            // new bootstrap.Modal($('#userEdit'), {
+            //     backdrop: 'static'
+            // });
+
+            $('#mobile_number').mask('0000-0000000', {
+                placeholder: "____-_______"
+            });
+
+            $('#landline_number').mask('000-000000', {
+                placeholder: "___-______"
+            });
+
+            $('#cnic').mask('00000-0000000-0', {
+                placeholder: "_____-_______-_"
+            });
+
+            $('#designation').select2( {
+                theme: "bootstrap-5",
+                dropdownParent: $('#designation').parent(),
+            });
+            $('#office').select2( {
+                theme: "bootstrap-5",
+                dropdownParent: $('#office').parent(),
             });
 
             var table = initDataTable('#users-datatable', {
@@ -276,30 +295,63 @@
                     let user = data.user;
 
                     if (data.user) {
-                        // Populate user details
-                        $('#userEdit #name').val(user.name);
-                        $('#userEdit #email').val(user.email);
-                        $('#userEdit #mobile_number').val(user.mobile_number);
-                        $('#userEdit #landline_number').val(user.landline_number);
-                        $('#userEdit #cnic').val(user.cnic);
+                        $('#name').val(user.name);
+                        $('#email').val(user.email);
+                        $('#mobile_number').val(user.mobile_number);
+                        $('#landline_number').val(user.landline_number);
+                        $('#cnic').val(user.cnic);
 
-                        // Populate designations and select the user's designation
-                        const designationsDropdown = $('#userEdit #designation');
-                        designationsDropdown.empty(); // Clear the existing options
-                        designationsDropdown.append('<option value="">Choose Designation</option>');
-                        data.allDesignations.forEach(designation => {
-                            const selected = designation.name === user.designation ? 'selected' : '';
-                            designationsDropdown.append(`<option value="${designation.name}" ${selected}>${designation.name}</option>`);
-                        });
+                        $('#designation').empty()
+                            .append('<option value="">Choose Designation</option>')
+                            .append($.map(data.allDesignations, designation => 
+                                `<option value="${designation.name}" ${designation.name === user.designation ? 'selected' : ''}>${designation.name}</option>`
+                            ));
 
-                        // Populate offices and select the user's office
-                        const officesDropdown = $('#userEdit #office');
-                        officesDropdown.empty(); // Clear the existing options
-                        officesDropdown.append('<option value="">Choose Office</option>');
-                        data.allOffices.forEach(office => {
-                            const selected = office.name === user.office ? 'selected' : '';
-                            officesDropdown.append(`<option value="${office.name}" ${selected}>${office.name}</option>`);
-                        });
+                        $('#office').empty()
+                            .append('<option value="">Choose Office</option>')
+                            .append($.map(data.allOffices, office => 
+                                `<option value="${office.name}" ${office.name === user.office ? 'selected' : ''}>${office.name}</option>`
+                            ));
+
+                            const rolesContainer = $('#roles');
+                            const permissionsContainer = $('#permissions');
+
+                            function isRoleAssigned(role) {
+                                return user.roles.some(userRole => userRole.name === role.name);
+                            }
+
+                            function isPermissionAssigned(permission) {
+                                return user.permissions.some(userPermission => userPermission.name === permission.name);
+                            }
+
+                            $.each(data.allRoles, function(index, role) {
+                                const isChecked = isRoleAssigned(role) ? 'checked' : '';
+                                
+                                const $switchHtml = $(`
+                                    <div class="col-md-3 mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="roleSwitch${role.id}" ${isChecked}>
+                                            <label class="form-check-label" for="roleSwitch${role.id}">${role.name}</label>
+                                        </div>
+                                    </div>
+                                `);
+                                
+                                rolesContainer.append($switchHtml);
+                            });
+                            $.each(data.allPermissions, function(index, permission) {
+                                const isChecked = isPermissionAssigned(permission) ? 'checked' : '';
+                                
+                                const $switchHtml = $(`
+                                    <div class="col-md-3 mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="permissionSwitch${permission.id}" ${isChecked}>
+                                            <label class="form-check-label" for="roleSwitch${permission.id}">${permission.name}</label>
+                                        </div>
+                                    </div>
+                                `);
+                                
+                                permissionsContainer.append($switchHtml);
+                            });
 
                     } else {
                         $('#userEdit .modal-title').text('Error');
