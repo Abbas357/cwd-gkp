@@ -100,13 +100,13 @@
                             <div class="row mb-3">  
                                 <div class="col-md-6">
                                     <label for="image">Image</label>
-                                    <input type="file" class="form-control" id="image" name="image" onchange="previewImage(event, 'previewCnicFront')">
+                                    <input type="file" class="form-control" id="image" name="image" onchange="previewImage(event, 'imagePreview')">
                                     @error('image')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
-                                    <img id="previewCnicFront" src="#" alt="CNIC Front Preview" style="display:none; margin-top: 10px; max-height: 100px;">
+                                    <img id="imagePreview" src="#" alt="CNIC Front Preview" style="display:none; margin-top: 10px; max-height: 100px;">
                                 </div>
                             </div>
 

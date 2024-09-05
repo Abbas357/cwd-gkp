@@ -7,7 +7,7 @@
     </x-slot>
 
     <div class="card-header mb-3">
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs nav-tabs-table">
             <li class="nav-item">
                 <a id="defer-0-tab" class="nav-link" data-bs-toggle="tab" href="#fresh">Not Deferred</a>
             </li>

@@ -32,7 +32,7 @@ class UserController extends Controller
                     return view('users.partials.buttons', compact('row'))->render();
                 })
                 ->editColumn('is_active', function ($row) {
-                    return $row->is_active == 1 ? 'Yes' : 'No' ;
+                    return $row->is_active == 1 ? 'Yes' : 'No';
                 })
                 ->editColumn('password_updated_at', function ($row) {
                     return $row->password_updated_at ? $row->password_updated_at->diffForHumans() : 'Not Updated Yet';
@@ -54,15 +54,16 @@ class UserController extends Controller
 
             return $dataTable->toJson();
         }
-          
+
         return view('users.index');
     }
 
-    public function users(Request $request){
+    public function users(Request $request)
+    {
         $search = $request->get('q');
         $users = User::where('name', 'LIKE', "%{$search}%")
-                    ->select('id', 'name')
-                    ->paginate(10);
+            ->select('id', 'name')
+            ->paginate(10);
 
         return response()->json([
             'items' => $users->items(),
@@ -106,18 +107,34 @@ class UserController extends Controller
         if ($user->save()) {
             return redirect()->route('users.create')->with('success', 'User added successfully');
         }
-        
+
         return redirect()->route('users.create')->with('danger', 'Error submitting the user');
     }
 
     public function show(User $user)
     {
         if ($user) {
+            $userRoles = $user->roles; 
+            $userPermissions = $user->getDirectPermissions();
+            $allRoles = Role::all();
+            $allPermissions = Permission::all();
+            $allDesignations = Designation::all();
+            $allOffices = Office::all();
+
             return response()->json([
                 'success' => true,
-                'data' => $user,
+                'data' => [
+                    'user' => $user,
+                    'userRoles' => $userRoles,
+                    'allRoles' => $allRoles,
+                    'userPermissions' => $userPermissions,
+                    'allPermissions' => $allPermissions,
+                    'allDesignations' => $allDesignations,
+                    'allOffices' => $allOffices,
+                ],
             ]);
         }
+
         return response()->json([
             'success' => false,
             'error' => 'User not found.',
@@ -175,5 +192,4 @@ class UserController extends Controller
         $user->roles()->detach();
         return redirect()->back()->with('success', 'All roles removed successfully!');
     }
-
 }

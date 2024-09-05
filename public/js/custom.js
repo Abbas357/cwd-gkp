@@ -4,6 +4,7 @@ function previewImage(event, previewId) {
         var output = document.getElementById(previewId);
         output.src = reader.result;
         output.style.display = "block";
+        output.classList.add('previewImage')
     };
     reader.readAsDataURL(event.target.files[0]);
 }
@@ -277,12 +278,12 @@ function hashTabsNavigator(config) {
     }
 
     function activateTab(tabId) {
-        $('.nav-tabs a[href="' + tabId + '"]').tab("show");
-        $(".tab-pane").removeClass("active show");
+        $('.nav-tabs-table a[href="' + tabId + '"]').tab("show");
+        $(".tab-pane-table").removeClass("active show");
         $(tabId).addClass("active show");
     }
 
-    $(".nav-tabs a").on("click", function () {
+    $(".nav-tabs-table a").on("click", function () {
         let href = $(this).attr("href");
         window.location.hash = href;
     });

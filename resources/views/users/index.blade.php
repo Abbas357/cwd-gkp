@@ -7,7 +7,7 @@
     </x-slot>
 
     <div class="card-header mb-3">
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs nav-tabs-table">
             <li class="nav-item">
                 <a id="active-tab" class="nav-link" data-bs-toggle="tab" href="#active">Active</a>
             </li>
@@ -40,80 +40,127 @@
     </table>
 
     <div class="modal fade" id="userEdit" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg {{--  modal-dialog-centered --}}">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5>Edit User</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <ul class="nav nav-tabs nav-primary" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link active" data-bs-toggle="tab" href="#edit-info" role="tab" aria-selected="true">
-                            <div class="d-flex align-items-center">
-                                <div class="tab-icon"><i class="bi bi-person me-1 fs-6"></i>
-                                </div>
-                                <div class="tab-title">Info</div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link" data-bs-toggle="tab" href="#edit-roles" role="tab" aria-selected="false">
-                            <div class="d-flex align-items-center">
-                                <div class="tab-icon"><i class="bi bi-list me-1 fs-6"></i>
-                                </div>
-                                <div class="tab-title">Roles</div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link" data-bs-toggle="tab" href="#edit-permissions" role="tab" aria-selected="false">
-                            <div class="d-flex align-items-center">
-                                <div class="tab-icon"><i class="bi bi-list me-1 fs-6"></i>
-                                </div>
-                                <div class="tab-title">Permissions</div>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-                <div class="loading-spinner text-center mt-4">
-                    <div class="spinner-border" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <div class="tab-content user-details p-1" style="display: none">
-                        <div class="tab-pane fade show active" id="edit-info" role="tabpanel">
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="name">Name</label>
-                                    <input type="text" class="form-control" id="name" placeholder="Full Name" name="name" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="email">Email Address</label>
-                                    <input type="email" class="form-control" id="email" placeholder="Email Address" name="email" required>
-                                </div>
+                <form method="post" action="/dsd" id="user">
+                    <div class="modal-body">
+                        <div class="loading-spinner text-center mt-2">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
                             </div>
                         </div>
+                        <div class="user-details" style="display: none">
+                            <ul class="nav nav-tabs nav-primary" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" data-bs-toggle="tab" href="#info" role="tab" aria-selected="true">
+                                        <div class="d-flex align-items-center">
+                                            <div class="tab-icon"><i class="bi bi-person me-1 fs-6"></i>
+                                            </div>
+                                            <div class="tab-title">Info</div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" data-bs-toggle="tab" href="#roles" role="tab" aria-selected="false">
+                                        <div class="d-flex align-items-center">
+                                            <div class="tab-icon"><i class="bi bi-list me-1 fs-6"></i>
+                                            </div>
+                                            <div class="tab-title">Roles</div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" data-bs-toggle="tab" href="#permissions" role="tab" aria-selected="false">
+                                        <div class="d-flex align-items-center">
+                                            <div class="tab-icon"><i class="bi bi-list me-1 fs-6"></i>
+                                            </div>
+                                            <div class="tab-title">Permissions</div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content p-2 pt-3">
+                                <div class="tab-pane fade show active" id="info" role="tabpanel">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="name">Name</label>
+                                            <input type="text" class="form-control" id="name" placeholder="Full Name" name="name" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="email">Email Address</label>
+                                            <input type="email" class="form-control" id="email" placeholder="Email Address" name="email" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col">
+                                            <label for="name">Password</label>
+                                            <input type="password" class="form-control" id="password" placeholder="Password" name="password" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="mobile_number">Mobile No.</label>
+                                            <input type="text" class="form-control" id="mobile_number" placeholder="Mobile No" name="mobile_number" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="landline_number">Landline Number.</label>
+                                            <input type="text" class="form-control" id="landline_number" placeholder="Mobile No" name="landline_number" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="cnic">CNIC Number</label>
+                                            <input type="text" class="form-control" id="cnic" placeholder="CNIC" name="cnic" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="designation">Designation</label>
+                                            <select class="form-select" id="designation" name="designation" required>
+                                                <option value="">Choose...</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="office">Office</label>
+                                            <select class="form-select" id="office" name="office" required>
+                                                <option value="">Choose...</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="image">Image</label>
+                                            <input type="file" class="form-control" id="image" name="image" onchange="previewImage(event, 'imagePreview')">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <img id="imagePreview" src="#" alt="CNIC Front Preview" style="display:none; margin-top: 10px; max-height: 100px;">
+                                        </div>
+                                    </div>
+                                </div>
 
-                        <div class="tab-pane fade" id="edit-roles" role="tabpanel">
-                            <div class="col-md-12">
-                                <label for="role">Role</label>
-                                <input type="text" class="form-control" id="role" placeholder="Role" role="name" required>
-                            </div>
-                        </div>
+                                <div class="tab-pane fade" id="roles" role="tabpanel">
+                                    <div class="col-md-12">
+                                        <label for="role">Role</label>
+                                        <input type="text" class="form-control" id="role" placeholder="Role" role="name" required>
+                                    </div>
+                                </div>
 
-                        <div class="tab-pane fade" id="edit-permissions" role="tabpanel">
-                            <div class="col-md-12">
-                                <label for="permission">Permission</label>
-                                <input type="text" class="form-control" id="permission" placeholder="Permission" permission="name" required>
+                                <div class="tab-pane fade" id="permissions" role="tabpanel">
+                                    <div class="col-md-12">
+                                        <label for="permission">Permission</label>
+                                        <input type="text" class="form-control" id="permission" placeholder="Permission" permission="name" required>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary px-3">Save</button>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary px-3">Save</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -124,63 +171,54 @@
     <script src="{{ asset('plugins/col-resizable.js') }}"></script>
     <script>
         $(document).ready(function() {
+            new bootstrap.Modal($('#userEdit'), {
+                backdrop: 'static'
+            });
+
             var table = initDataTable('#users-datatable', {
                 ajaxUrl: "{{ route('users.index') }}"
                 , columns: [{
-                        data: "id"
-                        , searchBuilderType: "num"
-                    }
-                    , {
-                        data: "name"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "email"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "mobile_number"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "landline_number"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "designation"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "cnic"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "office"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "password_updated_at"
-                        , searchBuilderType: "date"
-                    }
-                    , {
-                        data: "is_active"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "created_at"
-                        , searchBuilderType: "date"
-                    }
-                    , {
-                        data: "updated_at"
-                        , searchBuilderType: "date"
-                    }
-                    , {
-                        data: 'action'
-                        , orderable: false
-                        , searchable: false
-                        , type: "html"
-                    }
-                ]
+                    data: "id"
+                    , searchBuilderType: "num"
+                }, {
+                    data: "name"
+                    , searchBuilderType: "string"
+                }, {
+                    data: "email"
+                    , searchBuilderType: "string"
+                }, {
+                    data: "mobile_number"
+                    , searchBuilderType: "string"
+                }, {
+                    data: "landline_number"
+                    , searchBuilderType: "string"
+                }, {
+                    data: "designation"
+                    , searchBuilderType: "string"
+                }, {
+                    data: "cnic"
+                    , searchBuilderType: "string"
+                }, {
+                    data: "office"
+                    , searchBuilderType: "string"
+                }, {
+                    data: "password_updated_at"
+                    , searchBuilderType: "date"
+                }, {
+                    data: "is_active"
+                    , searchBuilderType: "string"
+                }, {
+                    data: "created_at"
+                    , searchBuilderType: "date"
+                }, {
+                    data: "updated_at"
+                    , searchBuilderType: "date"
+                }, {
+                    data: 'action'
+                    , orderable: false
+                    , searchable: false
+                    , type: "html"
+                }]
                 , defaultOrderColumn: 9
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
@@ -228,55 +266,55 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 const userId = urlParams.get('id');
 
-                const modalHashParts = hash.split('-');
-                const baseHash = modalHashParts[0];
-                const tabHash = modalHashParts[1];
-
-                if (baseHash === '#edit' && userId) {
+                if (hash === '#edit' && userId) {
                     const url = "{{ route('users.show', ':id') }}".replace(':id', userId);
                     $('#userEdit').modal('show');
                     $('#userEdit .loading-spinner').show();
                     $('#userEdit .user-details').hide();
 
-                    const user = await fetchRequest(url);
-                    if (user) {
+                    const data = await fetchRequest(url);
+                    let user = data.user;
+
+                    if (data.user) {
+                        // Populate user details
                         $('#userEdit #name').val(user.name);
                         $('#userEdit #email').val(user.email);
+                        $('#userEdit #mobile_number').val(user.mobile_number);
+                        $('#userEdit #landline_number').val(user.landline_number);
+                        $('#userEdit #cnic').val(user.cnic);
+
+                        // Populate designations and select the user's designation
+                        const designationsDropdown = $('#userEdit #designation');
+                        designationsDropdown.empty(); // Clear the existing options
+                        designationsDropdown.append('<option value="">Choose Designation</option>');
+                        data.allDesignations.forEach(designation => {
+                            const selected = designation.name === user.designation ? 'selected' : '';
+                            designationsDropdown.append(`<option value="${designation.name}" ${selected}>${designation.name}</option>`);
+                        });
+
+                        // Populate offices and select the user's office
+                        const officesDropdown = $('#userEdit #office');
+                        officesDropdown.empty(); // Clear the existing options
+                        officesDropdown.append('<option value="">Choose Office</option>');
+                        data.allOffices.forEach(office => {
+                            const selected = office.name === user.office ? 'selected' : '';
+                            officesDropdown.append(`<option value="${office.name}" ${selected}>${office.name}</option>`);
+                        });
+
                     } else {
                         $('#userEdit .modal-title').text('Error');
                         $('#userEdit .user-details').html('<p>Failed to load user data.</p>');
                     }
+
                     $('#userEdit .loading-spinner').hide();
                     $('#userEdit .user-details').show();
-
-                    $('#userEdit').on('shown.bs.modal', function () {
-            if (tabHash) {
-                // Activate the tab button
-                $(`#userEdit a[href="#${tabHash}"]`).tab('show');
-                
-                // Activate the tab content
-                $('.tab-pane').removeClass('show active');
-                $(`#${tabHash}`).addClass('show active');
-            } else {
-                // Default to #edit-info tab if no specific tab hash is in the URL
-                $('#userEdit a[href="#edit-info"]').tab('show');
-                $('.tab-pane').removeClass('show active');
-                $('#edit-info').addClass('show active');
-            }
-        });
-        
-                    // if (tabHash) {
-                    //     $(`#userEdit a[href="#edit-${tabHash}"]`).tab('show');
-                    //     alert('ff')
-                    // } else {
-                    //     $('#userEdit a[href="#edit-info"]').tab('show');
-                    // }
                 }
+
             }
 
             $(document).on('click', '.edit-btn', function() {
                 const userId = $(this).data('id');
-                const newUrl = `${window.location.pathname}?id=${userId}#edit-info`;
+                const newUrl = `${window.location.pathname}?id=${userId}#edit`;
                 history.pushState(null, null, newUrl);
                 openModalFromUrl();
             });
@@ -290,7 +328,6 @@
             });
 
             openModalFromUrl();
-
         });
 
     </script>

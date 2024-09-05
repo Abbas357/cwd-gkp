@@ -14,6 +14,10 @@
   padding: .6rem 1rem !important;
   border-bottom: 1px solid #eee;
 }
+
+.modal-body {
+  padding: .5rem !important;
+}
 .modal-footer {
   padding: .4rem .8rem !important;
   border-top: 1px solid #eee;
@@ -61,6 +65,13 @@
 
 [data-bs-theme="dark"] .theme-switcher {
   background: #3b5998;
+}
+
+.previewImage {
+  height: 70px;
+  border-radius: 10px;
+  border: 5px solid #575757;
+  outline: 1px solid #222;
 }
 
 .card-loading {
