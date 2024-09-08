@@ -10,6 +10,7 @@
 [data-bs-theme=dark] {
   --bs-border-color: #555;
 }
+
 .modal-header {
   padding: .6rem 1rem !important;
   border-bottom: 1px solid #eee;
@@ -18,6 +19,7 @@
 .modal-body {
   padding: .5rem !important;
 }
+
 .modal-footer {
   padding: .4rem .8rem !important;
   border-top: 1px solid #eee;
@@ -26,12 +28,15 @@
 [data-bs-theme=dark] .modal-header {
   border-bottom: 1px solid #333;
 }
+
 [data-bs-theme=dark] .modal-footer {
   border-top: 1px solid #333;
-} 
+}
+
 .modal-header h5 {
   margin: 0;
 }
+
 [data-bs-theme="dark"] .swal2-popup {
   background-color: #343a40 !important;
   color: #f8f9fa !important;
@@ -54,17 +59,11 @@
   background-color: transparent !important;
 }
 
-[data-bs-theme="dark"] .select2-search--dropdown, 
-[data-bs-theme="dark"] .select2-search__field, 
-[data-bs-theme="dark"] .select2-selection--single,
-[data-bs-theme="dark"] .select2-results__option,
-[data-bs-theme="dark"] .select2-selection--multiple .select2-search .select2-search__field,
-[data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice,
-[data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-dropdown .select2-search .select2-search__field,
-[data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered,
-[data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-selection {
-  background-color: #222;
-  color: #ddd;
+[data-bs-theme="dark"] {
+  .select2-search--dropdown, .select2-search__field, .select2-selection--single, .select2-results__option, .select2-selection--multiple .select2-search .select2-search__field, .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice, .select2-container--bootstrap-5 .select2-dropdown .select2-search .select2-search__field, .select2-container--bootstrap-5 .select2-selection {
+    background-color: #222;
+    color: #ddd;
+  }
 }
 
 [class^="bi-"] {
@@ -95,21 +94,41 @@
 }
 
 .rand-grid .form-check-input {
-   margin-left: -1.3rem !important;
-   margin-right: .5rem !important;
+  margin-left: -1.3rem !important;
+  margin-right: .5rem !important;
 }
 
-.rand-grid > div {
+.rand-grid .form-check-input:checked + label {
+  font-weight: bold;
+}
+
+.rand-grid>div {
   background-color: #77777715;
   border-radius: 50px;
-  padding: 5px 25px;
+  border: 1px solid #ddd;
+  padding: 0.18rem 1.5rem;
   white-space: nowrap;
   margin: auto;
+  user-select: none;
+}
+
+.rand-grid>div:hover {
+  background-color: #77777733;
+}
+
+[data-bs-theme="dark"] {
+  .rand-grid>div {
+    border: 1px solid #555
+  }
 }
 
 .rand-grid .form-check-label {
   display: block;
   font-size: 14px;
+}
+
+.rand-grid .form-check-label:hover {
+  cursor: pointer;
 }
 
 .rand-grid .form-check-input {
@@ -122,7 +141,7 @@
 }
 
 .disabled-form input, .disabled-form textarea, .disabled-form select, .disabled-form button {
-  pointer-events: none; 
+  pointer-events: none;
   background-color: #77777711;
 }
 

@@ -125,7 +125,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h3 class="card-title pb-4">Roles and Permission</h3>
-                            <div class="mb-3">
+                            <div class="mb-4">
                                 <label for="roles">Roles</label>
                                 <select class="form-select form-select-md" id="roles" multiple name="roles[]" required>
                                     @foreach ($cat['roles'] as $role)
@@ -136,7 +136,7 @@
                                 <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-4">
                                 <label for="permissions">Permissions <span class="text-warning">(Avoid Direct Permissions)</span></label>
                                 <select class="form-select form-select-md" id="permissions" multiple name="permissions[]">
                                     @foreach ($cat['permissions'] as $permission)
