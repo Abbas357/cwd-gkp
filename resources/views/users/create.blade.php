@@ -9,11 +9,18 @@
     </x-slot>
 
     <div class="wrapper">
+        <div class="row mb-3 d-none">
+            <div class="col-md-4 mx-auto">
+                <label for="load-users">All Users</label>
+                <select class="form-select form-select-md" data-placeholder="Choose" id="load-users" name="user">
+                </select>
+            </div>
+        </div>
         <form class="needs-validation" action="{{ route('users.store') }}" method="post" enctype="multipart/form-data" novalidate>
             @csrf
             <div class="row">
                 <div class="col-md-8">
-                    <div class="card shadow rounded border-2">
+                    <div class="card">
                         <div class="card-body">
                             <h3 class="card-title pb-4">Fill all the fields</h3>
 
@@ -54,7 +61,7 @@
 
 
                             <div class="row mb-3">
-                                
+
                                 <div class="col-md-6">
                                     <label for="landline_number">Landline Number.</label>
                                     <input type="text" class="form-control" id="landline_number" value="{{ old('landline_number') }}" placeholder="Mobile No" name="landline_number" required>
@@ -97,7 +104,7 @@
                                 </div>
                             </div>
 
-                            <div class="row mb-3">  
+                            <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="image">Image</label>
                                     <input type="file" class="form-control" id="image" name="image" onchange="previewImage(event, 'imagePreview')">
@@ -115,12 +122,12 @@
                 </div>
 
                 <div class="col-md-4">
-                    <div class="card shadow rounded border-2">
+                    <div class="card">
                         <div class="card-body">
                             <h3 class="card-title pb-4">Roles and Permission</h3>
                             <div class="mb-3">
                                 <label for="roles">Roles</label>
-                                <select class="form-select form-select-md" data-placeholder="Choose" id="roles" multiple name="roles[]">
+                                <select class="form-select form-select-md" id="roles" multiple name="roles[]" required>
                                     @foreach ($cat['roles'] as $role)
                                     <option value="{{ $role->name }}">{{ $role->name }}</option>
                                     @endforeach
@@ -130,8 +137,8 @@
                                 @enderror
                             </div>
                             <div class="mb-3">
-                                <label for="permissions">Permissions</label>
-                                <select class="form-select form-select-md" data-placeholder="Choose" id="permissions" multiple name="permissions[]">
+                                <label for="permissions">Permissions <span class="text-warning">(Avoid Direct Permissions)</span></label>
+                                <select class="form-select form-select-md" id="permissions" multiple name="permissions[]">
                                     @foreach ($cat['permissions'] as $permission)
                                     <option value="{{ $permission->name }}">{{ $permission->name }}</option>
                                     @endforeach
@@ -140,11 +147,11 @@
                                 <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <div class="form-actions">
-                                <button class="btn btn-primary btn-block" type="submit" id="submitBtn">Create User</button>
-                            </div>
                         </div>
                     </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary btn-block" type="submit" id="submitBtn">Create User</button>
                 </div>
             </div>
         </form>
@@ -167,23 +174,66 @@
                 placeholder: "_____-_______-_"
             });
 
-            $('#roles').select2( {
-                theme: "bootstrap-5",
-                width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
-                placeholder: $( this ).data( 'placeholder' ),
-                closeOnSelect: false,
-                dropdownParent: $( '#roles' ).parent(),
+            $('#office').select2({
+                theme: "bootstrap-5"
+                , placeholder: "Choose office"
+                , dropdownParent: $('#office').parent()
+                , allowClear: true
             });
 
-            $('#permissions').select2( {
-                theme: "bootstrap-5",
-                width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
-                placeholder: $( this ).data( 'placeholder' ),
-                closeOnSelect: false,
-                dropdownParent: $( '#permissions' ).parent(),
+            $('#designation').select2({
+                theme: "bootstrap-5"
+                , placeholder: "Choose designation"
+                , dropdownParent: $('#designation').parent()
+                , allowClear: true
+            });
+
+            $('#roles').select2({
+                theme: "bootstrap-5"
+                , placeholder: "Choose Roles"
+                , dropdownParent: $('#roles').parent()
+                , allowClear: true
+            });
+
+            $('#permissions').select2({
+                theme: "bootstrap-5"
+                , placeholder: "Choose Permissions"
+                , dropdownParent: $('#permissions').parent()
+                , allowClear: true
             });
 
 
+            $('#load-users').select2({
+                theme: "bootstrap-5"
+                , dropdownParent: $('#load-users').parent()
+                , ajax: {
+                    url: '{{ route("users.api") }}'
+                    , dataType: 'json'
+                    , data: function(params) {
+                        return {
+                            q: params.term
+                            , page: params.page || 1
+                        };
+                    }
+                    , processResults: function(data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data.items
+                            , pagination: {
+                                more: data.pagination.more
+                            }
+                        };
+                    }
+                    , cache: true
+                }
+                , minimumInputLength: 0
+                , templateResult(user) {
+                    return user.name;
+                }
+                , templateSelection(user) {
+                    return user.name;
+                }
+            });
 
         });
 

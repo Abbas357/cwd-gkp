@@ -48,7 +48,8 @@
                     <h5>Edit User</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="post" action="/dsd" id="user">
+                <form method="post" id="user-update" class="needs-validation" novalidate>
+                    @method('PATCH')
                     <div class="modal-body">
                         <div class="loading-spinner text-center mt-2">
                             <div class="spinner-border" role="status">
@@ -100,21 +101,21 @@
                                     <div class="row mb-3">
                                         <div class="col">
                                             <label for="name">Password</label>
-                                            <input type="password" class="form-control" id="password" placeholder="Password" name="password" required>
+                                            <input type="password" class="form-control" id="password" placeholder="Password" name="password">
                                         </div>
                                         <div class="col-md-6">
                                             <label for="mobile_number">Mobile No.</label>
-                                            <input type="text" class="form-control" id="mobile_number" placeholder="Mobile No" name="mobile_number" required>
+                                            <input type="text" class="form-control" id="mobile_number" placeholder="Mobile No" name="mobile_number">
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <label for="landline_number">Landline Number.</label>
-                                            <input type="text" class="form-control" id="landline_number" placeholder="Mobile No" name="landline_number" required>
+                                            <input type="text" class="form-control" id="landline_number" placeholder="Mobile No" name="landline_number">
                                         </div>
                                         <div class="col-md-6">
                                             <label for="cnic">CNIC Number</label>
-                                            <input type="text" class="form-control" id="cnic" placeholder="CNIC" name="cnic" required>
+                                            <input type="text" class="form-control" id="cnic" placeholder="CNIC" name="cnic">
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -140,21 +141,21 @@
 
                                 <div class="tab-pane fade" id="roles-tab" role="tabpanel">
                                     <h4 class="mb-4">Roles assigned</h4>
-                                    <div id="roles" class="row">
+                                    <div id="roles" class="rand-grid">
                                     </div>
                                 </div>
 
                                 <div class="tab-pane fade" id="permissions-tab" role="tabpanel">
                                     <h4 class="mb-4">Direct Permissions</h4>
-                                    <div id="permissions" class="row">
+                                    <div id="permissions" class="rand-grid">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary px-3">Save</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary px-3">Update</button>
                     </div>
                 </form>
             </div>
@@ -185,14 +186,14 @@
                 placeholder: "_____-_______-_"
             });
 
-            $('#designation').select2( {
-                theme: "bootstrap-5",
-                dropdownParent: $('#designation').parent(),
-            });
-            $('#office').select2( {
-                theme: "bootstrap-5",
-                dropdownParent: $('#office').parent(),
-            });
+            $('#designation').select2({
+                theme: "bootstrap-5"
+                , dropdownParent: $('#userEdit')
+            , });
+            $('#office').select2({
+                theme: "bootstrap-5"
+                , dropdownParent: $('#userEdit')
+            , });
 
             var table = initDataTable('#users-datatable', {
                 ajaxUrl: "{{ route('users.index') }}"
@@ -284,15 +285,25 @@
                 const hash = window.location.hash;
                 const urlParams = new URLSearchParams(window.location.search);
                 const userId = urlParams.get('id');
+                const url = "{{ route('users.show', ':id') }}".replace(':id', userId);
+                const updateURL = "{{ route('users.update', ':id') }}".replace(':id', userId);
+                $('#user-update').attr('action', updateURL);
 
-                if (hash === '#edit' && userId) {
-                    const url = "{{ route('users.show', ':id') }}".replace(':id', userId);
+                if (hash.startsWith('#edit') && userId) {
                     $('#userEdit').modal('show');
                     $('#userEdit .loading-spinner').show();
                     $('#userEdit .user-details').hide();
 
                     const data = await fetchRequest(url);
                     let user = data.user;
+
+                    if (hash === '#edit-roles') {
+                        $('[href="#roles-tab"]').tab('show');
+                    } else if (hash === '#edit-permissions') {
+                        $('[href="#permissions-tab"]').tab('show');
+                    } else {
+                        $('[href="#info-tab"]').tab('show');
+                    }
 
                     if (data.user) {
                         $('#name').val(user.name);
@@ -303,55 +314,51 @@
 
                         $('#designation').empty()
                             .append('<option value="">Choose Designation</option>')
-                            .append($.map(data.allDesignations, designation => 
+                            .append($.map(data.allDesignations, designation =>
                                 `<option value="${designation.name}" ${designation.name === user.designation ? 'selected' : ''}>${designation.name}</option>`
                             ));
 
                         $('#office').empty()
                             .append('<option value="">Choose Office</option>')
-                            .append($.map(data.allOffices, office => 
+                            .append($.map(data.allOffices, office =>
                                 `<option value="${office.name}" ${office.name === user.office ? 'selected' : ''}>${office.name}</option>`
                             ));
 
-                            const rolesContainer = $('#roles');
-                            const permissionsContainer = $('#permissions');
+                        const rolesContainer = $('#roles');
+                        const permissionsContainer = $('#permissions');
 
-                            function isRoleAssigned(role) {
-                                return user.roles.some(userRole => userRole.name === role.name);
-                            }
+                        function isRoleAssigned(role) {
+                            return user.roles.some(userRole => userRole.name === role.name);
+                        }
 
-                            function isPermissionAssigned(permission) {
-                                return user.permissions.some(userPermission => userPermission.name === permission.name);
-                            }
+                        function isPermissionAssigned(permission) {
+                            return user.permissions.some(userPermission => userPermission.name === permission.name);
+                        }
 
-                            $.each(data.allRoles, function(index, role) {
-                                const isChecked = isRoleAssigned(role) ? 'checked' : '';
-                                
-                                const $switchHtml = $(`
-                                    <div class="col-md-3 mb-3">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" role="switch" id="roleSwitch${role.id}" ${isChecked}>
-                                            <label class="form-check-label" for="roleSwitch${role.id}">${role.name}</label>
-                                        </div>
+                        $.each(data.allRoles, function(index, role) {
+                            const isChecked = isRoleAssigned(role) ? 'checked' : '';
+
+                            const $switchHtml = $(`
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="roles[]" value="${role.name}" role="switch" id="role${role.id}" ${isChecked}>
+                                        <label class="form-check-label" for="role${role.id}">${role.name}</label>
                                     </div>
                                 `);
-                                
-                                rolesContainer.append($switchHtml);
-                            });
-                            $.each(data.allPermissions, function(index, permission) {
-                                const isChecked = isPermissionAssigned(permission) ? 'checked' : '';
-                                
-                                const $switchHtml = $(`
-                                    <div class="col-md-3 mb-3">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" role="switch" id="permissionSwitch${permission.id}" ${isChecked}>
-                                            <label class="form-check-label" for="roleSwitch${permission.id}">${permission.name}</label>
-                                        </div>
+
+                            rolesContainer.append($switchHtml);
+                        });
+                        $.each(data.allPermissions, function(index, permission) {
+                            const isChecked = isPermissionAssigned(permission) ? 'checked' : '';
+
+                            const $switchHtml = $(`
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="permissions[]" value="${permission.name}" role="switch" id="permission${permission.id}" ${isChecked}>
+                                        <label class="form-check-label" for="permission${permission.id}">${permission.name}</label>
                                     </div>
                                 `);
-                                
-                                permissionsContainer.append($switchHtml);
-                            });
+
+                            permissionsContainer.append($switchHtml);
+                        });
 
                     } else {
                         $('#userEdit .modal-title').text('Error');
@@ -376,10 +383,31 @@
             });
 
             $('#userEdit').on('hidden.bs.modal', function() {
+                $('#roles').empty();
+                $('#permissions').empty();
+                $('#user-update').trigger("reset");
                 history.pushState(null, null, window.location.pathname);
             });
 
             openModalFromUrl();
+
+            $(document).on('submit', '#user-update', async function(e) {
+                e.preventDefault();
+                const form = this;
+                const formData = new FormData(form);
+                const url = $(this).attr('action');
+                
+                const result = await fetchRequest(url, 'POST', formData);
+                if (result) {
+                    form.reset();
+                    setButtonLoading($('button[type="submit"]'), false);
+                    $('#userEdit').modal('hide');
+                    $('#roles').empty();
+                    $('#permissions').empty();
+                    table.ajax.reload();
+                }
+            });
+
         });
 
     </script>

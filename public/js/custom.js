@@ -44,19 +44,39 @@ async function fetchRequest(
     errorMessage = "There was an error processing your request"
 ) {
     try {
-        const response = await fetch(url, {
+        let headers = {
+            "X-CSRF-TOKEN": document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content"),
+            "Accept": "application/json",
+        };
+
+        if (!(data instanceof FormData)) {
+            headers["Content-Type"] = "application/json";
+        }
+
+        const options = {
             method: method,
-            headers: {
-                "X-CSRF-TOKEN": document
-                    .querySelector('meta[name="csrf-token"]')
-                    .getAttribute("content"),
-                "Content-Type": "application/json",
-            },
-            body: method !== "GET" ? JSON.stringify(data) : null,
-        });
+            headers: headers,
+            body: null,
+        };
 
+        if (method !== "GET") {
+            options.body = data instanceof FormData ? data : JSON.stringify(data);
+        }
+
+        const response = await fetch(url, options);
+
+        if (!response.ok) {
+            if (response.status === 422) {
+                const result = await response.json();
+                handleValidationErrors(result.errors);
+                return false;
+            } else {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+        }
         const result = await response.json();
-
         if (result.success) {
             if (method === "GET") {
                 return result.data;
@@ -77,6 +97,21 @@ async function fetchRequest(
             "error"
         );
         return false;
+    }
+}
+
+function handleValidationErrors(errors) {
+    $('.form-error').remove();
+    setButtonLoading($('button[type="submit"]'), false);
+
+    for (const field in errors) {
+        const errorMessages = errors[field];
+        const input = $(`[name="${field}"]`);
+
+        errorMessages.forEach(message => {
+            const errorElement = `<span class="form-error text-danger">${message}</span>`;
+            input.after(errorElement);
+        });
     }
 }
 
@@ -137,7 +172,6 @@ function initDataTable(selector, options = {}) {
             url: options.ajaxUrl || "",
             error(jqXHR, textStatus, errorThrown) {
                 $(selector).removeClass("card-loading");
-                console.error("AJAX Error:", textStatus, errorThrown);
                 if (textStatus === "timeout" || textStatus === "abort") {
                     $(selector).DataTable().ajax.reload();
                 }
@@ -206,7 +240,6 @@ function initDataTable(selector, options = {}) {
                             confirmAction(
                                 "Resetting will clear all saved settings"
                             ).then((res) => {
-                                console.log(dt)
                                 if (res.isConfirmed) {
                                     dt.state.clear();
                                     localStorage.removeItem(
@@ -309,11 +342,19 @@ function setButtonLoading(
     loadingText = "Please wait..."
 ) {
     if (!button) return;
+
+    const formElement = $(button).closest('form');
     const originalText =
         $(button).data("original-text") || $(button).val() || $(button).html();
 
     if (isLoading) {
+        if (formElement.length) {
+            formElement.addClass('disabled-form');
+        }
+
         $(button).data("original-text", originalText);
+        document.documentElement.classList.add("card-loading");
+        
         if ($(button).is("button")) {
             $(button).html(`
                 <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
@@ -322,16 +363,25 @@ function setButtonLoading(
         } else if ($(button).is("input")) {
             $(button).val(loadingText);
         }
+        
         $(button).prop("disabled", true);
     } else {
+        if (formElement.length) {
+            formElement.removeClass('disabled-form');
+        }
+
+        document.documentElement.classList.remove("card-loading");
+        
         if ($(button).is("button")) {
             $(button).html(originalText);
         } else if ($(button).is("input")) {
             $(button).val(originalText);
         }
+        
         $(button).prop("disabled", false);
     }
 }
+
 
 function resizableTable(selector, options = {}) {
     const defaultOptions = {
@@ -353,7 +403,6 @@ document.addEventListener("DOMContentLoaded", (e) => {
             "submit",
             function (event) {
                 if (form.checkValidity()) {
-                    document.documentElement.classList.add("card-loading");
                     setButtonLoading(
                         form.querySelector(
                             'button[type="submit"], input[type="submit"]'
@@ -370,6 +419,6 @@ document.addEventListener("DOMContentLoaded", (e) => {
     });
 });
 
-$(document).on('select2:open', () => {
+$('div.modal').on('select2:open', () => {
     document.querySelector('.select2-search__field').focus();
 });

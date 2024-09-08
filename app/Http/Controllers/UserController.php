@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
-
 use App\Models\Categories\Office;
 use Spatie\Permission\Models\Role;
+
+use Illuminate\Support\Facades\Hash;
 use App\Models\Categories\Designation;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use Spatie\Permission\Models\Permission;
 
 class UserController extends Controller
@@ -97,11 +99,15 @@ class UserController extends Controller
         $user->office = $request->office;
 
         if ($request->has('image')) {
-            // Store Image
+            // Store Images
         }
 
-        if ($request->has('role')) {
-            // Store Role
+        if ($request->has('roles')) {
+            $user->assignRole($request->roles);
+        }
+        
+        if ($request->has('permissions')) {
+            $user->givePermissionTo($request->permissions);
         }
 
         if ($user->save()) {
@@ -114,7 +120,7 @@ class UserController extends Controller
     public function show(User $user)
     {
         if ($user) {
-            $roles = $user->roles; 
+            $roles = $user->roles;
             $permissions = $user->getDirectPermissions();
             $allRoles = Role::all();
             $allPermissions = Permission::all();
@@ -126,8 +132,8 @@ class UserController extends Controller
                 'data' => [
                     'user' => $user,
                     'roles' => $roles,
-                    'allRoles' => $allRoles,
                     'permissions' => $permissions,
+                    'allRoles' => $allRoles,
                     'allPermissions' => $allPermissions,
                     'allDesignations' => $allDesignations,
                     'allOffices' => $allOffices,
@@ -141,9 +147,33 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        //
+        $validated = $request->validated();
+
+        $user->fill(array_filter($validated, function ($value) {
+            return $value !== null;
+        }));
+
+        if (!empty($validated['password'])) {
+            $user->password = Hash::make($validated['password']);
+        }
+
+        if ($request->hasFile('image')) {
+        }
+
+        if ($request->has('roles')) {
+            $user->syncRoles($validated['roles']);
+        }
+
+        if ($request->has('permissions')) {
+            $user->syncPermissions($validated['permissions']);
+        }
+
+        if($user->save()) {
+            return response()->json(['success' => 'User updated']);
+        }
+        return response()->json(['error' => 'User updation failed']);
     }
 
     public function destroy(User $user)
