@@ -32,14 +32,6 @@ Route::middleware('auth')->prefix('users')->group(function () {
     Route::get('/{user}', [UserController::class, 'show'])->name('users.show');
     Route::patch('/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-
-    Route::post('/{user}/roles', [UserController::class, 'assignRole'])->name('users.roles');
-
-    Route::delete('{user}/role/{role}', [UserController::class, 'revokeRole'])->name('users.role.revoke');
-    Route::delete('{user}/roles/clear', [UserController::class, 'clearRoles'])->name('users.roles.clear');
-    
-    Route::post('/{user}/permissions', [UserController::class, 'givePermission'])->name('users.permissions');
-    Route::delete('/{user}/permissions/{permission}', [UserController::class, 'revokePermission'])->name('users.permissions.revoke');
 });
 
 Route::middleware('auth')->prefix('registrations')->group(function () {
@@ -56,19 +48,15 @@ Route::middleware('auth')->prefix('roles')->group(function () {
     Route::post('/', [RoleController::class, 'store'])->name('roles.store');
     Route::delete('/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
 
-    Route::post('/{role}/permissions', [RoleController::class, 'givePermission'])->name('roles.permissions');
-    Route::delete('/{role}/permissions/{permission}', [RoleController::class, 'revokePermission'])->name('roles.permissions.revoke');
+    Route::get('/{role}/permissions', [RoleController::class, 'getPermissions'])->name('roles.getPermissions');
+    Route::patch('/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('roles.updatePermissions');
 });
 
 Route::middleware('auth')->prefix('permissions')->group(function () {
     Route::get('/', [PermissionController::class, 'index'])->name('permissions.index');
     Route::post('/', [PermissionController::class, 'store'])->name('permissions.store');
     Route::delete('/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
-
-    Route::post('/{permission}/roles', [PermissionController::class, 'assignRole'])->name('permissions.roles');
-    Route::delete('/{permission}/roles/{role}', [PermissionController::class, 'removeRole'])->name('permissions.roles.remove');
 });
-
 
 Route::middleware('auth')->prefix('districts')->group(function () {
     Route::get('/', [DistrictController::class, 'index'])->name('districts.index');

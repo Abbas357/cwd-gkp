@@ -15,7 +15,7 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'name' => 'required|min:5',
-            'email' => 'required|email:unique:users',
+            'email' => 'required|email',
             'password'=> 'nullable|min:5',
             'mobile_number'=> 'nullable|min:11',
             'landline_number'=> 'nullable|min:9',

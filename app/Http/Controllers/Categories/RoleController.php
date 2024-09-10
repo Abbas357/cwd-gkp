@@ -8,6 +8,7 @@ use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRoleRequest;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
@@ -30,21 +31,53 @@ class RoleController extends Controller
         return back()->with('success', 'Role deleted.');
     }
 
-    public function givePermission(StoreRoleRequest $request, Role $role)
+    public function updatePermissions(Request $request, Role $role)
     {
-        if ($role->hasPermissionTo($request->permission)) {
-            return back()->with('success', 'Permission exists.');
+        $validated = $request->validate([
+            'permissions' => 'array|exists:permissions,name'
+        ]);
+
+        $role->syncPermissions($validated['permissions']);
+
+        if($role->save()) {
+            return response()->json(['success' => 'Permissions updated']);
         }
-        $role->givePermissionTo($request->permission);
-        return back()->with('success', 'Permission added.');
+        return response()->json(['error' => 'Permissions cannot be updated']);
     }
 
     public function revokePermission(Role $role, Permission $permission)
     {
-        if ($role->hasPermissionTo($permission)) {
-            $role->revokePermissionTo($permission);
-            return back()->with('success', 'Permission revoked.');
-        }
-        return back()->with('success', 'Permission not exists.');
+        $role->revokePermissionTo($permission);
+        return redirect()->back()->with('success', 'Permission removed from role.');
     }
+
+    public function getPermissions(Role $role)
+    {
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'role' => $role->name,
+                'permissions' => $role->permissions,
+                'allPermissions' => Permission::all(),
+            ],
+        ]);
+    }
+
+    // public function givePermission(StoreRoleRequest $request, Role $role)
+    // {
+    //     if ($role->hasPermissionTo($request->permission)) {
+    //         return back()->with('success', 'Permission exists.');
+    //     }
+    //     $role->givePermissionTo($request->permission);
+    //     return back()->with('success', 'Permission added.');
+    // }
+
+    // public function revokePermission(Role $role, Permission $permission)
+    // {
+    //     if ($role->hasPermissionTo($permission)) {
+    //         $role->revokePermissionTo($permission);
+    //         return back()->with('success', 'Permission revoked.');
+    //     }
+    //     return back()->with('success', 'Permission not exists.');
+    // }
 }

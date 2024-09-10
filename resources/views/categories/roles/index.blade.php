@@ -3,11 +3,6 @@
         <li class="breadcrumb-item active" aria-current="page"> Roles</li>
     </x-slot>
 
-    @push('style')
-    <link href="{{ asset('plugins/select2/css/select2.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
-    @endpush
-
     <div class="wrapper">
         <div class="page">
             <div class="page-inner">
@@ -55,13 +50,12 @@
                                                         <td>{{ $role->id }}</td>
                                                         <td>{{ $role->name }}</td>
                                                         <td>
+                                                            <i class="permissions-btn cursor-pointer bi-award fs-5" title="All Permissions" data-bs-toggle="tooltip" data-id="{{ $role->id }}"></i>
                                                             <form id="delete-role-form-{{ $role->id }}" method="post" action="{{ route('roles.destroy', ['role' => $role->id]) }}" style="display:inline;">
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button type="button" class="bg-light border-0 delete-role-btn" style="cursor: pointer;" data-role-id="{{ $role->id }}">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
-                                                                        <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
-                                                                    </svg>
+                                                                    <i class="cursor-pointer bi-trash fs-5" title="Delete Role" data-bs-toggle="tooltip" data-id="{{ $role->id }}"></i>
                                                                 </button>
                                                             </form>
                                                         </td>
@@ -85,8 +79,40 @@
         </div>
     </div>
 
+    <div class="modal fade" id="assignPermissions" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Permissions</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" id="permissions-update" novalidate>
+                    @method('PATCH')
+                    <div class="modal-body">
+                        <div class="loading-spinner text-center mt-2">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="card mb-0">
+                            <div class="card-body">
+                                <div class="user-details" style="display: none">
+                                    <div id="permissions" class="d-flex flex-wrap justify-content-evenly align-items-center gap-2">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary px-3">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     @push('script')
-    <script src="{{ asset('plugins/select2/js/select2.min.js') }}"></script>
     <script>
         $(document).ready(function() {
 
@@ -95,6 +121,83 @@
                 if (result && result.isConfirmed) {
                     var roleId = $(this).data('role-id');
                     $('#delete-role-form-' + roleId).submit();
+                }
+            });
+
+            async function openModalFromUrl() {
+                const hash = window.location.hash;
+                const urlParams = new URLSearchParams(window.location.search);
+                const roleId = urlParams.get('id');
+                const url = "{{ route('roles.getPermissions', ':id') }}".replace(':id', roleId);
+                const updateURL = "{{ route('roles.updatePermissions', ':id') }}".replace(':id', roleId);
+                $('#permissions-update').attr('action', updateURL);
+
+                if (hash === '#permissions' && roleId) {
+                    $('#assignPermissions').modal('show');
+                    $('#assignPermissions .loading-spinner').show();
+                    $('#assignPermissions .user-details').hide();
+
+                    const data = await fetchRequest(url);
+                    let role = data.role;
+                    let permissions = data.permissions;
+                    if (role) {
+                        $('#assignPermissions .modal-title').html('Permission for <strong>(' + role + ')</strong>')
+                        const permissionsContainer = $('#permissions');
+                        function isPermissionAssigned(permission) {
+                            return permissions.some(userPermission => userPermission.name === permission.name);
+                        }
+                        $.each(data.allPermissions, function(index, permission) {
+                            const isChecked = isPermissionAssigned(permission) ? 'checked' : '';
+                            const $permissions = $(`
+                                <div class="form-check px-2">
+                                    <input class="form-check-input" type="checkbox" name="permissions[]" value="${permission.name}" id="permission${permission.id}" ${isChecked}>
+                                    <label class="form-check-label" for="permission${permission.id}">${permission.name}</label>
+                                </div>
+                            `);
+                            permissionsContainer.append($permissions);
+                        });
+                    } else {
+                        $('#assignPermissions .modal-title').text('Error');
+                        $('#assignPermissions .user-details').html('<p>Failed to load permissions.</p>');
+                    }
+                    $('#assignPermissions .loading-spinner').hide();
+                    $('#assignPermissions .user-details').show();
+                }
+            }
+
+            $(document).on('click', '.permissions-btn', async function() {
+                const roleId = $(this).data('id');
+                const newUrl = `${window.location.pathname}?id=${roleId}#permissions`;
+                history.pushState(null, null, newUrl);
+                openModalFromUrl();
+            });
+
+            $(window).on('popstate', function() {
+                openModalFromUrl();
+            });
+
+            openModalFromUrl();
+
+            $('#assignPermissions').on('hidden.bs.modal', function() {
+                $('#permissions').empty();
+                $('#permissions-update').trigger("reset");
+                history.pushState(null, null, window.location.pathname);
+            });
+
+            $(document).on('submit', '#permissions-update', async function(e) {
+                e.preventDefault();
+                const form = this;
+                const formData = new FormData(form);
+                const url = $(this).attr('action');
+                setButtonLoading($('button[type="submit"]'));
+                
+                const result = await fetchRequest(url, 'POST', formData);
+                if (result) {
+                    form.reset();
+                    setButtonLoading($('button[type="submit"]'), false);
+                    $('#assignPermissions').modal('hide');
+                    $('#permissions').empty();
+                    table.ajax.reload();
                 }
             });
 

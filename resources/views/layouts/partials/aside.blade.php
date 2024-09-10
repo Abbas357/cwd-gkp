@@ -28,12 +28,17 @@
                     <div class="menu-title">Resources</div>
                 </a>
                 <ul>
-                    <li>
-                        <a href="{{ route('roles.index') }}"><i class="bi-arrow-right-short"></i>Roles</a>
+                    <li><a class="has-arrow" href="javascript:;"><i class="bi-arrow-right-short"></i>Access Control</a>
+                        <ul>
+                            <li>
+                                <a href="{{ route('roles.index') }}"><i class="bi-arrow-right-short"></i>Roles</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('permissions.index') }}"><i class="bi-arrow-right-short"></i>Permissions</a>
+                            </li>
+                        </ul>
                     </li>
-                    <li>
-                        <a href="{{ route('permissions.index') }}"><i class="bi-arrow-right-short"></i>Permissions</a>
-                    </li>
+                    
                     <li>
                         <a href="{{ route('districts.index') }}"><i class="bi-arrow-right-short"></i>Districts</a>
                     </li>

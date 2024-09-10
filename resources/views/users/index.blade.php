@@ -45,7 +45,7 @@
         <div class="modal-dialog modal-lg {{--  modal-dialog-centered --}}">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5>Edit User</h5>
+                    <h5 class="modal-title">Edit User</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="post" id="user-update" class="needs-validation" novalidate>
@@ -362,7 +362,7 @@
 
                     } else {
                         $('#userEdit .modal-title').text('Error');
-                        $('#userEdit .user-details').html('<p>Failed to load user data.</p>');
+                        $('#userEdit .user-details').html('<p class="pb-0 pt-3 p-4">Failed to load user data.</p>');
                     }
 
                     $('#userEdit .loading-spinner').hide();
