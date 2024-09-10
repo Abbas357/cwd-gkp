@@ -337,34 +337,35 @@ function hashTabsNavigator(config) {
 }
 
 function setButtonLoading(
-    button,
+    buttonId,
     isLoading = true,
     loadingText = "Please wait..."
 ) {
-    if (!button) return;
+    if (!buttonId) return;
+    const button = $(`${buttonId}`);
+    if (!button.length) return;
 
-    const formElement = $(button).closest('form');
-    const originalText =
-        $(button).data("original-text") || $(button).val() || $(button).html();
+    const formElement = button.closest('form');
+    const originalText = button.val() || button.html();
 
     if (isLoading) {
         if (formElement.length) {
             formElement.addClass('disabled-form');
         }
 
-        $(button).data("original-text", originalText);
+        button.data("original-text", originalText);
         document.documentElement.classList.add("card-loading");
         
-        if ($(button).is("button")) {
-            $(button).html(`
+        if (button.is("button")) {
+            button.html(`
                 <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
                 <span role="status">${loadingText}</span>
             `);
-        } else if ($(button).is("input")) {
-            $(button).val(loadingText);
+        } else if (button.is("input")) {
+            button.val(loadingText);
         }
         
-        $(button).prop("disabled", true);
+        button.prop("disabled", true);
     } else {
         if (formElement.length) {
             formElement.removeClass('disabled-form');
@@ -372,16 +373,15 @@ function setButtonLoading(
 
         document.documentElement.classList.remove("card-loading");
         
-        if ($(button).is("button")) {
-            $(button).html(originalText);
-        } else if ($(button).is("input")) {
-            $(button).val(originalText);
+        if (button.is("button")) {
+            button.html(button.data("original-text"));
+        } else if (button.is("input")) {
+            button.val(button.data("original-text"));
         }
         
-        $(button).prop("disabled", false);
+        button.prop("disabled", false);
     }
 }
-
 
 function resizableTable(selector, options = {}) {
     const defaultOptions = {

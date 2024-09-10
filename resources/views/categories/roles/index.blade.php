@@ -105,7 +105,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary px-3">Update</button>
+                        <button type="submit" id="update-permissions" data-original-text="Update" class="btn btn-primary px-3">Update Permissions</button>
                     </div>
                 </form>
             </div>
@@ -189,15 +189,14 @@
                 const form = this;
                 const formData = new FormData(form);
                 const url = $(this).attr('action');
-                setButtonLoading($('button[type="submit"]'));
+                setButtonLoading('#update-permissions');
                 
                 const result = await fetchRequest(url, 'POST', formData);
                 if (result) {
                     form.reset();
-                    setButtonLoading($('button[type="submit"]'), false);
+                    setButtonLoading('#update-permissions', false);
                     $('#assignPermissions').modal('hide');
                     $('#permissions').empty();
-                    table.ajax.reload();
                 }
             });
 
