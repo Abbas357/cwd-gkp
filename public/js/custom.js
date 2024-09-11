@@ -337,16 +337,17 @@ function hashTabsNavigator(config) {
 }
 
 function setButtonLoading(
-    buttonId,
+    buttonSelector,
     isLoading = true,
     loadingText = "Please wait..."
 ) {
-    if (!buttonId) return;
-    const button = $(`${buttonId}`);
+    if (!buttonSelector) return;
+    const button = $(buttonSelector);
     if (!button.length) return;
 
     const formElement = button.closest('form');
     const originalText = button.val() || button.html();
+    console.log(originalText)
 
     if (isLoading) {
         if (formElement.length) {

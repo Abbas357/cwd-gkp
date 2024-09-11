@@ -41,6 +41,7 @@
                                                     <tr>
                                                         <th>ID</th>
                                                         <th>Name</th>
+                                                        <th>Permissions</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -50,7 +51,14 @@
                                                         <td>{{ $role->id }}</td>
                                                         <td>{{ $role->name }}</td>
                                                         <td>
-                                                            <i class="permissions-btn cursor-pointer bi-award fs-5" title="All Permissions" data-bs-toggle="tooltip" data-id="{{ $role->id }}"></i>
+                                                            <ul>
+                                                                @foreach($role->permissions as $permission)
+                                                                    <li> {{ $permission->name }} </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        </td>
+                                                        <td>
+                                                            <i class="permissions-btn cursor-pointer bi-pencil-square fs-5" title="All Permissions" data-bs-toggle="tooltip" data-id="{{ $role->id }}"></i>
                                                             <form id="delete-role-form-{{ $role->id }}" method="post" action="{{ route('roles.destroy', ['role' => $role->id]) }}" style="display:inline;">
                                                                 @csrf
                                                                 @method('DELETE')
@@ -105,7 +113,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" id="update-permissions" data-original-text="Update" class="btn btn-primary px-3">Update Permissions</button>
+                        <button type="submit" id="update-permissions" class="btn btn-primary px-3">Update Permissions</button>
                     </div>
                 </form>
             </div>

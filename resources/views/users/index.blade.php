@@ -155,7 +155,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary px-3">Update</button>
+                        <button type="submit" id="update-user-btn" class="btn btn-primary px-3">Update User</button>
                     </div>
                 </form>
             </div>
@@ -400,7 +400,7 @@
                 const result = await fetchRequest(url, 'POST', formData);
                 if (result) {
                     form.reset();
-                    setButtonLoading($('button[type="submit"]'), false);
+                    setButtonLoading('#update-user-btn', false);
                     $('#userEdit').modal('hide');
                     $('#roles').empty();
                     $('#permissions').empty();
