@@ -347,8 +347,7 @@ function setButtonLoading(
 
     const formElement = button.closest('form');
     const originalText = button.val() || button.html();
-    console.log(originalText)
-
+    
     if (isLoading) {
         if (formElement.length) {
             formElement.addClass('disabled-form');

@@ -179,6 +179,8 @@
                 , placeholder: "Choose office"
                 , dropdownParent: $('#office').parent()
                 , allowClear: true
+                , closeOnSelect: false
+                , tags: true
             });
 
             $('#designation').select2({
@@ -186,13 +188,14 @@
                 , placeholder: "Choose designation"
                 , dropdownParent: $('#designation').parent()
                 , allowClear: true
-            });
+            , });
 
             $('#roles').select2({
                 theme: "bootstrap-5"
                 , placeholder: "Choose Roles"
                 , dropdownParent: $('#roles').parent()
-                , allowClear: true
+                , allowClear: true 
+                , closeOnSelect: false
             });
 
             $('#permissions').select2({
@@ -200,6 +203,7 @@
                 , placeholder: "Choose Permissions"
                 , dropdownParent: $('#permissions').parent()
                 , allowClear: true
+                , closeOnSelect: false
             });
 
 
