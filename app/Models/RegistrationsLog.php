@@ -10,4 +10,5 @@ class RegistrationsLog extends Model
     use HasFactory;
     protected $guarded = [];
     public $timestamps = false;
+    public $table = 'registration_logs';
 }

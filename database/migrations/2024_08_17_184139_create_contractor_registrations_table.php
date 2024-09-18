@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('owner_name', 100);
             $table->string('district', 100);
             $table->string('address')->nullable();;
-            $table->string('pec_number', 100)->unique();
+            $table->string('pec_number', 100);
             $table->string('category_applied', 45);
             $table->string('contractor_name', 100);
             $table->string('pec_category', 45);

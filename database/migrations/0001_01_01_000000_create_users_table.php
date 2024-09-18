@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 45);
-            $table->string('email', 45)->unique();
-            $table->string('mobile_number', 45)->nullable();
-            $table->string('landline_number', 45)->nullable();
-            $table->string('designation', 45)->nullable();
-            $table->string('cnic', 45)->nullable();
-            $table->string('office', 45)->nullable();
-            $table->string('otp', 45)->nullable();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('mobile_number')->nullable();
+            $table->string('landline_number')->nullable();
+            $table->string('designation')->nullable();
+            $table->string('cnic')->nullable();
+            $table->string('office')->nullable();
+            $table->string('otp')->nullable();
             $table->boolean('is_active')->default(0);
             $table->boolean('is_suspended')->default(0);
             $table->timestamp('email_verified_at')->nullable();
