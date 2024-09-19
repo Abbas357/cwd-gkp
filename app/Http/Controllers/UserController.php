@@ -98,14 +98,15 @@ class UserController extends Controller
         $user->designation = $request->designation;
         $user->office = $request->office;
 
-        if ($request->has('image')) {
-            // Store Images
+        if ($request->hasFile('image')) {
+            $user->addMedia($request->file('image'))
+                ->toMediaCollection('profile_pictures');
         }
 
         if ($request->has('roles')) {
             $user->assignRole($request->roles);
         }
-        
+
         if ($request->has('permissions')) {
             $user->givePermissionTo($request->permissions);
         }
@@ -170,7 +171,7 @@ class UserController extends Controller
             $user->syncPermissions($validated['permissions']);
         }
 
-        if($user->save()) {
+        if ($user->save()) {
             return response()->json(['success' => 'User updated']);
         }
         return response()->json(['error' => 'User updation failed']);

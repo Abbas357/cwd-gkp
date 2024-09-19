@@ -2,16 +2,45 @@
 
 namespace App\Models;
 
-use App\Models\Categories\Office;
-use App\Models\Categories\Designation;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+
+use Spatie\Image\Enums\Fit;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
+
+class User extends Authenticatable implements HasMedia
 {
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, InteractsWithMedia;
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('profile_pictures');
+    }
+
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')->fit(Fit::Crop, 200, 200)->nonQueued();
+        $this->addMediaConversion('small')->width(400)->nonQueued();
+        $this->addMediaConversion('medium')->width(800)->nonQueued();
+        $this->addMediaConversion('large')->width(1200)->nonQueued();
+
+        // <img 
+        //     src="{{ $user->getFirstMediaUrl('images', 'thumb') }}" 
+        //     srcset="
+        //         {{ $user->getFirstMediaUrl('images', 'thumb') }} 200w, 
+        //         {{ $user->getFirstMediaUrl('images', 'small') }} 400w, 
+        //         {{ $user->getFirstMediaUrl('images', 'medium') }} 800w, 
+        //         {{ $user->getFirstMediaUrl('images', 'large') }} 1200w" 
+        //     sizes="(max-width: 600px) 200px, (max-width: 1000px) 400px, (max-width: 1400px) 800px, (max-width: 1800px) 1200px, 1200px"
+        //     alt="User image">
+
+    }
 
     protected $fillable = [
         'name',

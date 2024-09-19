@@ -1,4 +1,4 @@
-<x-app-layout title="List of Users">
+<x-app-layout title="Add Users">
     @push('style')
     <link href="{{ asset('plugins/select2/css/select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
