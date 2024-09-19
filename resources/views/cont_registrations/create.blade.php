@@ -4,18 +4,18 @@
     <link href="{{ asset('plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
     @endpush
 
-    <div class="wrapper p-5">
-        <div class="page">
+    <div class="wrapper">
+        <div class="page container">
             <div class="page-inner">
                 <header class="page-title-bar">
-                    <h1 class="page-title">Online Registration</h1>
+                    <h1 class="page-title">Online Contractor Registrations</h1>
                 </header>
-                <div class="page-section p-5 shadow border border-secondary rounded border-1 bg-light">
+                <div class="page-section shadow-lg rounded bg-light" style="border:1px solid #ccc">
                     <form class="needs-validation" action="{{ route('registrations.store') }}" method="post" enctype="multipart/form-data" novalidate>
                         @csrf
                         <div class="row">
                             <div class="col-md-8">
-                                <div class="card shadow border border-light rounded border-2">
+                                <div class="card p-2 shadow border border-light rounded border-2">
                                     <div class="card-body">
                                         <h3 class="card-title">Fill all the fields</h3>
 
@@ -185,7 +185,7 @@
                             </div>
 
                             <div class="col-md-4">
-                                <div class="card shadow border border-light rounded border-2">
+                                <div class="card p-2 shadow border border-light rounded border-2">
                                     <div class="card-body">
                                         <h3 class="card-title">Upload relevant documents</h3>
 

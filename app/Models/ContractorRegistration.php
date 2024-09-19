@@ -9,6 +9,8 @@ class ContractorRegistration extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     protected static function booted()
     {
         static::updating(function ($contractorRegistration) {
@@ -17,7 +19,7 @@ class ContractorRegistration extends Model
                 $oldStatus = $contractorRegistration->getOriginal('defer_status');
                 $newStatus = $contractorRegistration->defer_status;
 
-                RegistrationsLog::create([
+                RegistrationLog::create([
                     'reg_id' => $contractorRegistration->id,
                     'action' => $action,
                     'old_status' => $oldStatus,
@@ -31,7 +33,7 @@ class ContractorRegistration extends Model
                 $oldStatus = $contractorRegistration->getOriginal('approval_status');
                 $newStatus = $contractorRegistration->approval_status;
 
-                RegistrationsLog::create([
+                RegistrationLog::create([
                     'reg_id' => $contractorRegistration->id,
                     'action' => $action,
                     'old_status' => $oldStatus,
@@ -40,6 +42,5 @@ class ContractorRegistration extends Model
                 ]);
             }
         });
-        
     }
 }

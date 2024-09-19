@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Categories\RoleController;
+use App\Http\Controllers\EStandardizationController;
 use App\Http\Controllers\Categories\DistrictController;
 use App\Http\Controllers\Categories\PermissionController;
 use App\Http\Controllers\Categories\DesignationController;
@@ -39,8 +40,14 @@ Route::middleware('auth')->prefix('registrations')->group(function () {
     Route::patch('/defer/{ContractorRegistration}', [ContractorRegistrationController::class, 'defer'])->name('registrations.defer');
     Route::patch('/approve/{ContractorRegistration}', [ContractorRegistrationController::class, 'approve'])->name('registrations.approve');
     Route::get('/{ContractorRegistration}', [ContractorRegistrationController::class, 'show'])->name('registrations.show');
-    Route::get('/{ContractorRegistration}/edit', [ContractorRegistrationController::class, 'edit'])->name('registrations.edit');
     Route::patch('/{ContractorRegistration}', [ContractorRegistrationController::class, 'update'])->name('registrations.update');
+});
+
+Route::middleware('auth')->prefix('standardizations')->group(function () {
+    Route::get('/', [EStandardizationController::class, 'index'])->name('standardizations.index');
+    Route::patch('/approve/{EStandardization}', [EStandardizationController::class, 'approve'])->name('standardizations.approve');
+    Route::get('/{EStandardization}', [EStandardizationController::class, 'show'])->name('standardizations.show');
+    Route::patch('/{EStandardization}', [EStandardizationController::class, 'update'])->name('standardizations.update');
 });
 
 Route::middleware('auth')->prefix('roles')->group(function () {
