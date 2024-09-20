@@ -24,7 +24,7 @@ class UserController extends Controller
         $users = User::query();
 
         $users->when($active !== null, function ($query) use ($active) {
-            $query->where('is_active', $active);
+            $query->where('is_active', $active)->latest();
         });
 
         if ($request->ajax()) {

@@ -184,6 +184,7 @@
                                             @enderror
                                             <img id="DepartmentRegistrations" src="#" alt="Department / Organization Registrations" style="display:none; margin-top: 10px; max-height: 100px;">
                                         </div>
+
                                         <div class="mb-3">
                                             <label for="performance_certificate">Performance Certificate</label>
                                             <input type="file" class="form-control" id="performance_certificate" name="performance_certificate" onchange="previewImage(event, 'PerformanceCertificate')">
@@ -192,9 +193,11 @@
                                             @enderror
                                             <img id="PerformanceCertificate" src="#" alt="Performance Certificate" style="display:none; margin-top: 10px; max-height: 100px;">
                                         </div>
+
                                         <div class="form-actions">
                                             <button class="btn btn-primary btn-block" type="submit" id="submitBtn">Apply</button>
                                         </div>
+                                        
                                     </div>
                                 </div>
                             </div>

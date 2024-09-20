@@ -2,6 +2,7 @@
     @push('style')
     <link href="{{ asset('plugins/select2/css/select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
     @endpush
 
     <x-slot name="header">
@@ -23,6 +24,15 @@
                     <div class="card">
                         <div class="card-body">
                             <h3 class="card-title pb-4">Fill all the fields</h3>
+
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label class="label" data-toggle="tooltip" title="Change Profile Picture">
+                                        <img src="{{ asset('images/no-profile.png') }}" id="profile-picture" alt="avatar" class="img-fluid rounded-circle" style="width: 100px; height: 100px;">
+                                        <input type="file" id="image" name="image" class="sr-only" id="input" name="image" accept="image/*">
+                                    </label>
+                                </div>
+                            </div>
 
                             <div class="row mb-3">
                                 <div class="col-md-6">
@@ -104,19 +114,6 @@
                                 </div>
                             </div>
 
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="image">Image</label>
-                                    <input type="file" class="form-control" id="image" name="image" onchange="previewImage(event, 'imagePreview')">
-                                    @error('image')
-                                    <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="col-md-6">
-                                    <img id="imagePreview" src="#" alt="CNIC Front Preview" style="display:none; margin-top: 10px; max-height: 100px;">
-                                </div>
-                            </div>
-
                         </div>
                     </div>
                 </div>
@@ -155,13 +152,108 @@
                 </div>
             </div>
         </form>
+
+        <div class="modal modal-lg fade" id="crop-modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Crop the image</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="img-container">
+                            <img id="image-canvas" style="max-height: 400px">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="crop">Crop</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     @push("script")
     <script src="{{ asset('plugins/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('plugins/jquery-mask/jquery.mask.min.js') }}"></script>
+    <script src="{{ asset('plugins/cropper/js/cropper.min.js') }}"></script>
     <script>
         $(document).ready(function() {
+
+            var imageInput = $('#image');
+            var imageAvatar = $('#profile-picture');
+            var imageCanvas = $('#image-canvas');
+            var cropModal = $('#crop-modal');
+            var cropper;
+
+            imageInput.on('change', function(e) {
+                var files = e.target.files;
+                var done = function(url) {
+                    imageInput.val('');
+                    imageCanvas.attr('src', url);
+                    cropModal.modal('show');
+                };
+                var reader;
+                var file;
+
+                if (files && files.length > 0) {
+                    file = files[0];
+
+                    if (URL) {
+                        done(URL.createObjectURL(file));
+                    } else if (FileReader) {
+                        reader = new FileReader();
+                        reader.onload = function(e) {
+                            done(reader.result);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+            });
+
+            cropModal.on('shown.bs.modal', function() {
+                cropper = new Cropper(imageCanvas[0], {
+                    // aspectRatio: 16/9
+                    // aspectRatio: 9/16
+                    // aspectRatio: 21/9
+                    // aspectRatio: 3/2
+                    // aspectRatio: 4/3
+                    aspectRatio: 1/1
+                    , viewMode: 3
+                , });
+            }).on('hidden.bs.modal', function() {
+                if (cropper) {
+                    cropper.destroy();
+                    cropper = null;
+                }
+            });
+
+            $('#crop').on('click', function() {
+                var canvas;
+
+                cropModal.modal('hide');
+
+                if (cropper) {
+                    canvas = cropper.getCroppedCanvas();
+
+                    imageAvatar.attr('src', canvas.toDataURL('image/jpeg', .7));
+
+                    canvas.toBlob(function(blob) {
+                        var file = new File([blob], 'cropped_image.jpg', {
+                            type: 'image/jpeg'
+                        });
+
+                        var dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(file);
+                        imageInput[0].files = dataTransfer.files;
+
+                    }, 'image/jpeg', .7);
+                }
+            });
+
+
             $('#mobile_number').mask('0000-0000000', {
                 placeholder: "____-_______"
             });
@@ -179,8 +271,6 @@
                 , placeholder: "Choose office"
                 , dropdownParent: $('#office').parent()
                 , allowClear: true
-                , closeOnSelect: false
-                , tags: true
             });
 
             $('#designation').select2({
@@ -194,7 +284,7 @@
                 theme: "bootstrap-5"
                 , placeholder: "Choose Roles"
                 , dropdownParent: $('#roles').parent()
-                , allowClear: true 
+                , allowClear: true
                 , closeOnSelect: false
             });
 
@@ -205,7 +295,6 @@
                 , allowClear: true
                 , closeOnSelect: false
             });
-
 
             $('#load-users').select2({
                 theme: "bootstrap-5"
@@ -238,6 +327,8 @@
                     return user.name;
                 }
             });
+
+
 
         });
 
