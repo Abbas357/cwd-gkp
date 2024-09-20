@@ -419,6 +419,16 @@ document.addEventListener("DOMContentLoaded", (e) => {
     });
 });
 
+function uniqId(amount) {
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    let uniqueID = '';
+    for (let i = 0; i < amount; i++) {
+        const randomIndex = Math.floor(Math.random() * chars.length);
+        uniqueID += chars[randomIndex];
+    }
+    return uniqueID;
+}
+
 $('div.modal').on('select2:open', () => {
     document.querySelector('.select2-search__field').focus();
 });

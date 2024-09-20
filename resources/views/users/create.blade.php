@@ -28,7 +28,7 @@
                             <div class="row mb-3">
                                 <div class="col">
                                     <label class="label" data-toggle="tooltip" title="Change Profile Picture">
-                                        <img src="{{ asset('images/no-profile.png') }}" id="profile-picture" alt="avatar" class="img-fluid rounded-circle" style="width: 100px; height: 100px;">
+                                        <img src="{{ asset('images/no-profile.png') }}" id="image-preview" alt="avatar" class="img-fluid rounded-circle" style="width: 100px; height: 100px;">
                                         <input type="file" id="image" name="image" class="sr-only" id="input" name="image" accept="image/*">
                                     </label>
                                 </div>
@@ -162,7 +162,100 @@
                     </div>
                     <div class="modal-body">
                         <div class="img-container">
-                            <img id="image-canvas" style="max-height: 400px">
+                            <img id="image-cropper" style="max-height: 400px">
+                        </div>
+                        <div class="row" id="actions">
+                            <div class="col-md-9 docs-buttons">
+                                <h3>Toolbar:</h3>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary" data-method="setDragMode" data-option="move" title="Move">
+                                        <span class="docs-tooltip" data-toggle="tooltip" title="cropper.setDragMode(&quot;move&quot;)">
+                                            <span class="bi-arrows-move"></span>
+                                        </span>
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-method="setDragMode" data-option="crop" title="Crop">
+                                        <span class="docs-tooltip" data-toggle="tooltip" title="cropper.setDragMode(&quot;crop&quot;)">
+                                            <span class="bi-crop"></span>
+                                        </span>
+                                    </button>
+                                </div>
+
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary" data-method="zoom" data-option="0.1" title="Zoom In">
+                                        <span class="docs-tooltip" data-toggle="tooltip" title="cropper.zoom(0.1)">
+                                            <i class="bi bi-zoom-in"></i>
+                                        </span>
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-method="zoom" data-option="-0.1" title="Zoom Out">
+                                        <span class="docs-tooltip" data-toggle="tooltip" title="cropper.zoom(-0.1)">
+                                            <i class="bi bi-zoom-out"></i>
+                                        </span>
+                                    </button>
+                                </div>
+
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary" data-method="move" data-option="-10" data-second-option="0" title="Move Left">
+                                        <span class="docs-tooltip" data-toggle="tooltip" title="cropper.move(-10, 0)">
+                                            <span class="bi-arrow-left"></span>
+                                        </span>
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-method="move" data-option="10" data-second-option="0" title="Move Right">
+                                        <span class="docs-tooltip" data-toggle="tooltip" title="cropper.move(10, 0)">
+                                            <span class="bi-arrow-right"></span>
+                                        </span>
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-method="move" data-option="0" data-second-option="-10" title="Move Up">
+                                        <span class="docs-tooltip" data-toggle="tooltip" title="cropper.move(0, -10)">
+                                            <span class="bi-arrow-up"></span>
+                                        </span>
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-method="move" data-option="0" data-second-option="10" title="Move Down">
+                                        <span class="docs-tooltip" data-toggle="tooltip" title="cropper.move(0, 10)">
+                                            <span class="bi-arrow-down"></span>
+                                        </span>
+                                    </button>
+                                </div>
+
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary" data-method="scaleX" data-option="-1" title="Flip Horizontal">
+                                        <span class="docs-tooltip" data-toggle="tooltip" title="cropper.scaleX(-1)">
+                                            <i class="bi-vr"></i>
+                                        </span>
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-method="scaleY" data-option="-1" title="Flip Vertical">
+                                        <span class="docs-tooltip" data-toggle="tooltip" title="cropper.scaleY(-1)">
+                                            <i class="bi-hr"></i>
+                                        </span>
+                                    </button>
+                                </div>
+
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary" data-method="crop" title="Crop">
+                                        <span class="docs-tooltip" data-toggle="tooltip" title="cropper.crop()">
+                                            <span class="bi-check"></span>
+                                        </span>
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-method="clear" title="Clear">
+                                        <span class="docs-tooltip" data-toggle="tooltip" title="cropper.clear()">
+                                            <i class="bi-x-lg"></i>
+                                        </span>
+                                    </button>
+                                </div>
+
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary" data-method="disable" title="Disable">
+                                        <span class="docs-tooltip" data-toggle="tooltip" title="cropper.disable()">
+                                            <span class="bi-lock"></span>
+                                        </span>
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-method="enable" title="Enable">
+                                        <span class="docs-tooltip" data-toggle="tooltip" title="cropper.enable()">
+                                            <span class="bi-unlock"></span>
+                                        </span>
+                                    </button>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -182,17 +275,17 @@
     <script>
         $(document).ready(function() {
 
-            var imageInput = $('#image');
-            var imageAvatar = $('#profile-picture');
-            var imageCanvas = $('#image-canvas');
+            var fileInput = $('#image');
+            var imagePreview = $('#image-preview');
+            var imageCropper = $('#image-cropper');
             var cropModal = $('#crop-modal');
             var cropper;
 
-            imageInput.on('change', function(e) {
+            fileInput.on('change', function(e) {
                 var files = e.target.files;
                 var done = function(url) {
-                    imageInput.val('');
-                    imageCanvas.attr('src', url);
+                    fileInput.val('');
+                    imageCropper.attr('src', url);
                     cropModal.modal('show');
                 };
                 var reader;
@@ -214,15 +307,15 @@
             });
 
             cropModal.on('shown.bs.modal', function() {
-                cropper = new Cropper(imageCanvas[0], {
+                cropper = new Cropper(imageCropper[0], {
                     // aspectRatio: 16/9
                     // aspectRatio: 9/16
                     // aspectRatio: 21/9
                     // aspectRatio: 3/2
                     // aspectRatio: 4/3
-                    aspectRatio: 1/1
+                    aspectRatio: 1 / 1
                     , viewMode: 3
-                , });
+                });
             }).on('hidden.bs.modal', function() {
                 if (cropper) {
                     cropper.destroy();
@@ -238,7 +331,7 @@
                 if (cropper) {
                     canvas = cropper.getCroppedCanvas();
 
-                    imageAvatar.attr('src', canvas.toDataURL('image/jpeg', .7));
+                    imagePreview.attr('src', canvas.toDataURL('image/jpeg', .7));
 
                     canvas.toBlob(function(blob) {
                         var file = new File([blob], 'cropped_image.jpg', {
@@ -247,12 +340,113 @@
 
                         var dataTransfer = new DataTransfer();
                         dataTransfer.items.add(file);
-                        imageInput[0].files = dataTransfer.files;
+                        fileInput[0].files = dataTransfer.files;
 
                     }, 'image/jpeg', .7);
                 }
             });
 
+            // Methods
+            actions.querySelector('.docs-buttons').onclick = function(event) {
+                var e = event || window.event;
+                var target = e.target || e.srcElement;
+                var cropped;
+                var result;
+                var input;
+                var data;
+
+                if (!cropper) {
+                    return;
+                }
+
+                while (target !== this) {
+                    if (target.getAttribute('data-method')) {
+                        break;
+                    }
+
+                    target = target.parentNode;
+                }
+
+                if (target === this || target.disabled || target.className.indexOf('disabled') > -1) {
+                    return;
+                }
+
+                data = {
+                    method: target.getAttribute('data-method')
+                    , target: target.getAttribute('data-target')
+                    , option: target.getAttribute('data-option') || undefined
+                    , secondOption: target.getAttribute('data-second-option') || undefined
+                };
+
+                cropped = cropper.cropped;
+
+                if (data.method) {
+                    if (typeof data.target !== 'undefined') {
+                        input = document.querySelector(data.target);
+
+                        if (!target.hasAttribute('data-option') && data.target && input) {
+                            try {
+                                data.option = JSON.parse(input.value);
+                            } catch (e) {
+                                console.log(e.message);
+                            }
+                        }
+                    }
+
+                    switch (data.method) {
+                        case 'rotate':
+                            if (cropped && options.viewMode > 0) {
+                                cropper.clear();
+                            }
+
+                            break;
+
+                        case 'getCroppedCanvas':
+                            try {
+                                data.option = JSON.parse(data.option);
+                            } catch (e) {
+                                console.log(e.message);
+                            }
+
+                            if (uploadedImageType === 'image/jpeg') {
+                                if (!data.option) {
+                                    data.option = {};
+                                }
+
+                                data.option.fillColor = '#fff';
+                            }
+
+                            break;
+                    }
+
+                    result = cropper[data.method](data.option, data.secondOption);
+
+                    switch (data.method) {
+                        case 'rotate':
+                            if (cropped && options.viewMode > 0) {
+                                cropper.crop();
+                            }
+
+                            break;
+
+                        case 'scaleX':
+                        case 'scaleY':
+                            target.setAttribute('data-option', -data.option);
+                            break;
+
+                        case 'destroy':
+                            cropper = null;
+
+                            if (uploadedImageURL) {
+                                URL.revokeObjectURL(uploadedImageURL);
+                                uploadedImageURL = '';
+                                image.src = originalImageURL;
+                            }
+
+                            break;
+                    }
+                }
+            };
 
             $('#mobile_number').mask('0000-0000000', {
                 placeholder: "____-_______"
@@ -327,8 +521,6 @@
                     return user.name;
                 }
             });
-
-
 
         });
 

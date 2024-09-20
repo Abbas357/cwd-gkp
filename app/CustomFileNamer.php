@@ -11,12 +11,15 @@ class CustomFileNamer extends DefaultFileNamer
 {
     public function originalFileName(string $fileName): string
     {
-        $baseName = pathinfo($fileName, PATHINFO_FILENAME);
-        $uniqueId = substr(uniqid(), -6);
+        // $baseName = pathinfo($fileName, PATHINFO_FILENAME);
+        // $uniqueId = substr(uniqid(), -6);
+        // $date = now()->format('d-m-Y');
+        // $newFileName = Str::lower(Str::limit($baseName, 10, ''));
+        // $newFileName = str_replace('-', '_', $newFileName);
+        // return "{$newFileName}_{$uniqueId}_{$date}";
+        $uniqueId = substr(uniqid(), -10);
         $date = now()->format('d-m-Y');
-        $newFileName = Str::lower(Str::limit($baseName, 10, ''));
-        $newFileName = str_replace('-', '_', $newFileName);
-        return "{$newFileName}_{$uniqueId}_{$date}";
+        return "{$uniqueId}_{$date}";
     }
 
     public function conversionFileName(string $fileName, Conversion $conversion): string
