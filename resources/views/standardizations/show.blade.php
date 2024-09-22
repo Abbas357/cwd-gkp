@@ -1,130 +1,95 @@
 <x-app-layout>
     <x-slot name="header">
-        <li class="breadcrumb-item" aria-current="page"><a href="{{ route('registrations.index') }}">Registrations</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="{{ route('standardizations.index') }}">Standardization</a></li>
         <li class="breadcrumb-item active" aria-current="page">Show</li>
     </x-slot>
 
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-12">
-                <h2 class="mb-4">Contractor Details</h2>
+                <h2 class="mb-4">Standardization Details</h2>
                 <table class="table table-bordered">
                     <tr>
-                        <th>Contractor Name</th>
-                        <td>{{ $ContractorRegistration->contractor_name }}</td>
+                        <th>Product Name</th>
+                        <td>{{ $EStandardization->product_name }}</td>
                     </tr>
                     <tr>
-                        <th>Email</th>
-                        <td>{{ $ContractorRegistration->email }}</td>
+                        <th>Specification Details</th>
+                        <td>{{ $EStandardization->specification_details }}</td>
                     </tr>
                     <tr>
-                        <th>Mobile Number</th>
-                        <td>{{ $ContractorRegistration->mobile_number }}</td>
-                    </tr>
-                    <tr>
-                        <th>CNIC</th>
-                        <td>{{ $ContractorRegistration->cnic }}</td>
-                    </tr>
-                    <tr>
-                        <th>District</th>
-                        <td>{{ $ContractorRegistration->district }}</td>
+                        <th>Firm Name</th>
+                        <td>{{ $EStandardization->firm_name }}</td>
                     </tr>
                     <tr>
                         <th>Address</th>
-                        <td>{{ $ContractorRegistration->address }}</td>
+                        <td>{{ $EStandardization->address }}</td>
                     </tr>
                     <tr>
-                        <th>PEC Number</th>
-                        <td>{{ $ContractorRegistration->pec_number }}</td>
+                        <th>Mobile Number</th>
+                        <td>{{ $EStandardization->mobile_number }}</td>
                     </tr>
                     <tr>
-                        <th>Owner Name</th>
-                        <td>{{ $ContractorRegistration->owner_name }}</td>
+                        <th>Phone Number</th>
+                        <td>{{ $EStandardization->phone_number }}</td>
                     </tr>
                     <tr>
-                        <th>Category Applied</th>
-                        <td>{{ $ContractorRegistration->category_applied }}</td>
+                        <th>Email</th>
+                        <td>{{ $EStandardization->email }}</td>
                     </tr>
                     <tr>
-                        <th>PEC Category</th>
-                        <td>{{ $ContractorRegistration->pec_category }}</td>
+                        <th>NTN Number</th>
+                        <td>{{ $EStandardization->ntn_number }}</td>
                     </tr>
                     <tr>
-                        <th>FBR NTN</th>
-                        <td>{{ $ContractorRegistration->fbr_ntn }}</td>
+                        <th>Locality</th>
+                        <td>{{ $EStandardization->locality }}</td>
                     </tr>
                     <tr>
-                        <th>KPRA Registration No</th>
-                        <td>{{ $ContractorRegistration->kpra_reg_no }}</td>
-                    </tr>
-                    <tr>
-                        <th>Pre-Enlistment</th>
-                        <td>{{ json_decode($ContractorRegistration->pre_enlistment, true) ? implode(', ', json_decode($ContractorRegistration->pre_enlistment, true)) : 'N/A' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Is Limited</th>
-                        <td>{{ $ContractorRegistration->is_limited == 'yes' ? 'Yes' : 'No' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Defer Status</th>
-                        <td>{{ $ContractorRegistration->defer_status }}</td>
-                    </tr>
-                    <tr>
-                        <th>Approval Status</th>
-                        <td>{{ $ContractorRegistration->approval_status }}</td>
+                        <th>Location Type</th>
+                        <td>{{ $EStandardization->location_type }}</td>
                     </tr>
                 </table>
 
                 <h3 class="mt-5">Uploaded Documents</h3>
                 <div class="row mt-3">
-                    @if($ContractorRegistration->cnic_front_attachment)
+                    @if($EStandardization->hasMedia('secp_certificates'))
                         <div class="col-md-4 mb-3">
                             <div class="card">
-                                <img src="{{ asset('storage/' . $ContractorRegistration->cnic_front_attachment) }}" class="card-img-top" alt="CNIC Front">
+                                <img src="{{ $EStandardization->getFirstMediaUrl('secp_certificates') }}" class="card-img-top" alt="SECP Certificate">
                                 <div class="card-body">
-                                    <p class="card-text">CNIC Front Side</p>
+                                    <p class="card-text">SECP Certificate</p>
                                 </div>
                             </div>
                         </div>
                     @endif
 
-                    @if($ContractorRegistration->cnic_back_attachment)
+                    @if($EStandardization->hasMedia('iso_certificates'))
                         <div class="col-md-4 mb-3">
                             <div class="card">
-                                <img src="{{ asset('storage/' . $ContractorRegistration->cnic_back_attachment) }}" class="card-img-top" alt="CNIC Back">
+                                <img src="{{ $EStandardization->getFirstMediaUrl('iso_certificates') }}" class="card-img-top" alt="ISO Certificate">
                                 <div class="card-body">
-                                    <p class="card-text">CNIC Back Side</p>
+                                    <p class="card-text">ISO Certificate</p>
                                 </div>
                             </div>
                         </div>
                     @endif
 
-                    @if($ContractorRegistration->fbr_attachment)
+                    @if($EStandardization->hasMedia('commerse_memberships'))
                         <div class="col-md-4 mb-3">
                             <div class="card">
-                                <img src="{{ asset('storage/' . $ContractorRegistration->fbr_attachment) }}" class="card-img-top" alt="FBR Registration">
+                                <img src="{{ $EStandardization->getFirstMediaUrl('commerse_memberships') }}" class="card-img-top" alt="Commerce Membership">
                                 <div class="card-body">
-                                    <p class="card-text">FBR Registration</p>
+                                    <p class="card-text">Commerse Membership</p>
                                 </div>
                             </div>
                         </div>
                     @endif
 
-                    @if($ContractorRegistration->kpra_attachment)
+                    @if($EStandardization->hasMedia('pec_certificates'))
                         <div class="col-md-4 mb-3">
                             <div class="card">
-                                <img src="{{ asset('storage/' . $ContractorRegistration->kpra_attachment) }}" class="card-img-top" alt="KPRA Certificate">
-                                <div class="card-body">
-                                    <p class="card-text">KPRA Certificate</p>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-
-                    @if($ContractorRegistration->pec_attachment)
-                        <div class="col-md-4 mb-3">
-                            <div class="card">
-                                <img src="{{ asset('storage/' . $ContractorRegistration->pec_attachment) }}" class="card-img-top" alt="PEC Certificate">
+                                <img src="{{ $EStandardization->getFirstMediaUrl('pec_certificates') }}" class="card-img-top" alt="PEC Certificate">
                                 <div class="card-body">
                                     <p class="card-text">PEC Certificate</p>
                                 </div>
@@ -132,31 +97,52 @@
                         </div>
                     @endif
 
-                    @if($ContractorRegistration->form_h_attachment)
+                    @if($EStandardization->hasMedia('annual_tax_returns'))
                         <div class="col-md-4 mb-3">
                             <div class="card">
-                                <img src="{{ asset('storage/' . $ContractorRegistration->form_h_attachment) }}" class="card-img-top" alt="Form H">
+                                <img src="{{ $EStandardization->getFirstMediaUrl('annual_tax_returns') }}" class="card-img-top" alt="Annual Tax Returns">
                                 <div class="card-body">
-                                    <p class="card-text">Form H</p>
+                                    <p class="card-text">Annual Tax Returns</p>
                                 </div>
                             </div>
                         </div>
                     @endif
 
-                    @if($ContractorRegistration->pre_enlistment_attachment)
+                    @if($EStandardization->hasMedia('audited_financials'))
                         <div class="col-md-4 mb-3">
                             <div class="card">
-                                <img src="{{ asset('storage/' . $ContractorRegistration->pre_enlistment_attachment) }}" class="card-img-top" alt="Previous Enlistment">
+                                <img src="{{ $EStandardization->getFirstMediaUrl('audited_financials') }}" class="card-img-top" alt="Audited Financial">
                                 <div class="card-body">
-                                    <p class="card-text">Previous Enlistment</p>
+                                    <p class="card-text">Audited Financial</p>
                                 </div>
                             </div>
                         </div>
                     @endif
-                </div>
+
+                    @if($EStandardization->hasMedia('organization_registrations'))
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
+                                <img src="{{ $EStandardization->getFirstMediaUrl('organization_registrations') }}" class="card-img-top" alt="Department / Organizations Certificate">
+                                <div class="card-body">
+                                    <p class="card-text">Department / Organizations Certificate</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if($EStandardization->hasMedia('performance_certificate'))
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
+                                <img src="{{ $EStandardization->getFirstMediaUrl('performance_certificate') }}" class="card-img-top" alt="Performance Certificate">
+                                <div class="card-body">
+                                    <p class="card-text">Performance Certificate</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
 
                 <div class="mt-4">
-                    <a href="{{ route('registrations.index') }}" class="btn btn-primary">Back to List</a>
+                    <a href="{{ route('standardizations.index') }}" class="btn btn-primary">Back to List</a>
                 </div>
             </div>
         </div>

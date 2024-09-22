@@ -117,8 +117,9 @@ class EStandardizationController extends Controller
         return redirect()->route('standardizations.create')->with('danger', 'There is an error submitting your data');
     }
 
-    public function show(EStandardization $eStandardization)
+    public function show(EStandardization $EStandardization)
     {
+        // dd($EStandardization->getMedia('organization_registrations'));
         return view('standardizations.show', compact('EStandardization'));
     }
 

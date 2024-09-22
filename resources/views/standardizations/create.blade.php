@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-guest-layout title="Standardization of Engineering Products / Materials">
     @push('style')
     <link href="{{ asset('plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
     @endpush
@@ -127,7 +127,7 @@
 
                                         <div class="mb-3">
                                             <label for="secp_certificate">SECP Certificate</label>
-                                            <input type="file" class="form-control" id="secp_certificate" name="secp_certificate" onchange="previewImage(event, 'CECPCertificate')">
+                                            <input type="file" class="form-control" id="secp_certificate" name="secp_certificate" onchange="$('#CECPCertificate').show()">
                                             @error('secp_certificate')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -136,7 +136,7 @@
 
                                         <div class="mb-3">
                                             <label for="iso_certificate">ISO Certificate</label>
-                                            <input type="file" class="form-control" id="iso_certificate" name="iso_certificate" onchange="previewImage(event, 'ISOCertificate')">
+                                            <input type="file" class="form-control" id="iso_certificate" name="iso_certificate" onchange="$('#ISOCertificate').show()">
                                             @error('iso_certificate')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -145,7 +145,7 @@
 
                                         <div class="mb-3">
                                             <label for="commerce_membership">Commerce Membership</label>
-                                            <input type="file" class="form-control" id="commerce_membership" name="commerce_membership" onchange="previewImage(event, 'CommerceMembership')">
+                                            <input type="file" class="form-control" id="commerce_membership" name="commerce_membership" onchange="$('#CommerceMembership').show()">
                                             @error('commerce_membership')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -154,7 +154,7 @@
 
                                         <div class="mb-3">
                                             <label for="pec_certificate">PEC Certificate</label>
-                                            <input type="file" class="form-control" id="pec_certificate" name="pec_certificate" onchange="previewImage(event, 'PECCertificate')">
+                                            <input type="file" class="form-control" id="pec_certificate" name="pec_certificate" onchange="$('#PECCertificate').show()">
                                             @error('pec_certificate')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -163,7 +163,7 @@
 
                                         <div class="mb-3">
                                             <label for="annual_tax_returns">Annual Tax Returns</label>
-                                            <input type="file" class="form-control" id="annual_tax_returns" name="annual_tax_returns" onchange="previewImage(event, 'AnnualTaxReturns')">
+                                            <input type="file" class="form-control" id="annual_tax_returns" name="annual_tax_returns" onchange="$('#AnnualTaxReturns').show()">
                                             @error('annual_tax_returns')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -172,7 +172,7 @@
 
                                         <div class="mb-3">
                                             <label for="audited_financial">Audited Financial</label>
-                                            <input type="file" class="form-control" id="audited_financial" name="audited_financial" onchange="previewImage(event, 'AuditedFinancial')">
+                                            <input type="file" class="form-control" id="audited_financial" name="audited_financial" onchange="$('#AuditedFinancial').show()">
                                             @error('audited_financial')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -181,7 +181,7 @@
 
                                         <div class="mb-3">
                                             <label for="dept_org_cert">Department / Organization Registrations</label>
-                                            <input type="file" class="form-control" id="dept_org_cert" name="dept_org_cert" onchange="previewImage(event, 'DepartmentRegistrations')">
+                                            <input type="file" class="form-control" id="dept_org_cert" name="dept_org_cert" onchange="$('#DepartmentRegistrations').show()">
                                             @error('dept_org_cert')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -190,7 +190,7 @@
 
                                         <div class="mb-3">
                                             <label for="performance_certificate">Performance Certificate</label>
-                                            <input type="file" class="form-control" id="performance_certificate" name="performance_certificate" onchange="previewImage(event, 'PerformanceCertificate')">
+                                            <input type="file" class="form-control" id="performance_certificate" name="performance_certificate" onchange="$('#PerformanceCertificate').show()">
                                             @error('performance_certificate')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror

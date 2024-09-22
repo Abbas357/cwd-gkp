@@ -5,13 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Official Website of Communication and Works Department') }}</title>
+    <title>{{ $title }}</title>
 
     <link rel="icon" href="{{ asset('images/favicon.ico') }}" type="image/png">
-
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600&display=swap') }}rel=" stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Material+Icons+Outlined') }}rel=" stylesheet">
 
     <link href="{{ asset('css/bootstrap-extended.css') }}" rel="stylesheet">
     <link href="{{ asset('css/main.css') }}" rel="stylesheet">

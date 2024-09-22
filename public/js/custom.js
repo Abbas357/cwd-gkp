@@ -1,14 +1,3 @@
-function previewImage(event, previewId) {
-    var reader = new FileReader();
-    reader.onload = function () {
-        var output = document.getElementById(previewId);
-        output.src = reader.result;
-        output.style.display = "block";
-        output.classList.add("previewImage");
-    };
-    reader.readAsDataURL(event.target.files[0]);
-}
-
 function showMessage(message, type = "success", options = {}) {
     Swal.fire({
         position: "top-end",
