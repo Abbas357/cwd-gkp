@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('e_standardizations', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('product_name');
             $table->text('specification_details');
             $table->string('firm_name');
@@ -29,7 +29,7 @@ return new class extends Migration
 
         Schema::create('e_standardization_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('s_id')->constrained('e_standardizations')->onDelete('cascade');
+            $table->foreignUuid('s_id')->constrained('e_standardizations')->onDelete('cascade');
             $table->string('action')->nullable();
             $table->string('old_status')->nullable();
             $table->string('new_status')->nullable();

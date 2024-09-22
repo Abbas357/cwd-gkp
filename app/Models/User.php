@@ -2,16 +2,16 @@
 
 namespace App\Models;
 
+use Spatie\Image\Enums\Fit;
+use Spatie\MediaLibrary\HasMedia;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 
-use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-use Spatie\Image\Enums\Fit;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 
 class User extends Authenticatable implements HasMedia
@@ -20,7 +20,10 @@ class User extends Authenticatable implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('profile_pictures');
+        $this->addMediaCollection('profile_pictures')
+        ->singleFile()
+        // ->onlyKeepLatest(3)
+        ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif']);
     }
 
     public function registerMediaConversions(?Media $media = null): void

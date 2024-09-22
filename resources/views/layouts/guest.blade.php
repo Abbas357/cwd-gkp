@@ -18,6 +18,7 @@
     <link href="{{ asset('css/dark-theme.css') }}" rel="stylesheet">
     <link href="{{ asset('css/responsive.css') }}" rel="stylesheet">
     @stack('style')
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 </head>
 <body class="bg-image">
     <div class="wrapper">
@@ -34,7 +35,9 @@
         @endif
         {{ $slot }}
     </div>
+    <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/custom.js') }}"></script> 
     @stack('script')
 </body>
 </html>

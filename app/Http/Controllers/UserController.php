@@ -132,6 +132,7 @@ class UserController extends Controller
                 'success' => true,
                 'data' => [
                     'user' => $user,
+                    'profile_picture' => getProfilePic($user),
                     'roles' => $roles,
                     'permissions' => $permissions,
                     'allRoles' => $allRoles,
@@ -161,6 +162,8 @@ class UserController extends Controller
         }
 
         if ($request->hasFile('image')) {
+            $user->addMedia($request->file('image'))
+                ->toMediaCollection('profile_pictures');
         }
 
         if ($request->has('roles')) {

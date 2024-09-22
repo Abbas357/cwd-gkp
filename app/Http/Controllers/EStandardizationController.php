@@ -71,8 +71,44 @@ class EStandardizationController extends Controller
         $standardization->ntn_number = $request->input('ntn_number');
         $standardization->location_type = $request->input('location_type');
 
-        if ($request->hasFile('cnic_front_attachment')) {
-            $standardization->cnic_front_attachment = $request->file('cnic_front_attachment')->store('standardizations/cnic', 'public');
+        if ($request->hasFile('secp_certificate')) {
+            $standardization->addMedia($request->file('secp_certificate'))
+                ->toMediaCollection('secp_certificates');
+        }
+
+        if ($request->hasFile('iso_certificate')) {
+            $standardization->addMedia($request->file('iso_certificate'))
+                ->toMediaCollection('iso_certificates');
+        }
+
+        if ($request->hasFile('commerce_membership')) {
+            $standardization->addMedia($request->file('commerce_membership'))
+                ->toMediaCollection('commerse_memberships');
+        }
+
+        if ($request->hasFile('pec_certificate')) {
+            $standardization->addMedia($request->file('pec_certificate'))
+                ->toMediaCollection('pec_certificates');
+        }
+
+        if ($request->hasFile('annual_tax_returns')) {
+            $standardization->addMedia($request->file('annual_tax_returns'))
+                ->toMediaCollection('annual_tax_returns');
+        }
+
+        if ($request->hasFile('audited_financial')) {
+            $standardization->addMedia($request->file('audited_financial'))
+                ->toMediaCollection('audited_financials');
+        }
+
+        if ($request->hasFile('dept_org_cert')) {
+            $standardization->addMedia($request->file('dept_org_cert'))
+                ->toMediaCollection('organization_registrations');
+        }
+
+        if ($request->hasFile('performance_certificate')) {
+            $standardization->addMedia($request->file('performance_certificate'))
+                ->toMediaCollection('performance_certificate');
         }
 
         if ($standardization->save()) {
@@ -104,19 +140,7 @@ class EStandardizationController extends Controller
             return $value !== null;
         }));
 
-        if (!empty($validated['password'])) {
-            $eStandardization->password = Hash::make($validated['password']);
-        }
-
         if ($request->hasFile('image')) {
-        }
-
-        if ($request->has('roles')) {
-            $eStandardization->syncRoles($validated['roles']);
-        }
-
-        if ($request->has('permissions')) {
-            $eStandardization->syncPermissions($validated['permissions']);
         }
 
         if($eStandardization->save()) {

@@ -82,6 +82,19 @@
                     </li>
                 </ul>
             </li>
+            <li>
+                <a href="javascript:;" class="has-arrow">
+                    <div class="parent-icon"><i class="bi-basket"></i>
+                    </div>
+                    <div class="menu-title">e-Standardization</div>
+                </a>
+                <ul>
+                    <li><a href="{{ route('standardizations.index') }}"><i class="bi-arrow-right-short"></i>List</a>
+                    </li>
+                    <li><a href="{{ route('standardizations.create') }}"><i class="bi-arrow-right-short"></i>Create</a>
+                    </li>
+                </ul>
+            </li>
             <li class="menu-label">Others</li>
             <li>
                 <a class="has-arrow" href="javascript:;">
