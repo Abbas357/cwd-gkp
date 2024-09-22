@@ -162,27 +162,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="crop-modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabel">Crop the image</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="img-container">
-                        <img id="cropbox-image" style="display:block; max-height:300px; max-width:100%">
-                    </div>
-                    <div id="action-buttons"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary btn-sm" id="apply-crop">Crop</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!--end row-->
     @push('script')
     <script src="{{ asset('plugins/datatable/js/datatables.min.js') }}"></script>
@@ -192,14 +171,10 @@
     <script src="{{ asset('plugins/cropper/js/cropper.min.js') }}"></script>
     <script>
         $(document).ready(function() {
+            
             imageCropper({
                 fileInput: '#image',
                 inputLabelPreview: '#image-label-preview',
-                cropBoxImage: "#cropbox-image",
-                cropModal: '#crop-modal',
-                aspectRatioSelect: '#aspect-ratio-select',
-                cropButton: '#apply-crop',
-                actionsContainer: "#action-buttons",
             });
 
             // new bootstrap.Modal($('#userEdit'), {

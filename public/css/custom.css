@@ -483,7 +483,7 @@ div.dt-container {
   scale: 1.05;
 }
 
-#action-buttons {
+[id^="action-buttons"] {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;

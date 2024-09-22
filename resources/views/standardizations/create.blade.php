@@ -211,27 +211,6 @@
         </div>
     </div>
 
-    <div class="modal modal fade" id="crop-modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabel">Crop the image</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="img-container">
-                        <img id="cropbox-image" style="display:block; max-height:300px; max-width:100%">
-                    </div>
-                    <div id="action-buttons"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary btn-sm" id="apply-crop">Crop</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     @push("script")
     <script src="{{ asset('plugins/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('plugins/jquery-mask/jquery.mask.min.js') }}"></script>
@@ -240,83 +219,52 @@
         $(document).ready(function() {
 
             imageCropper({
-                fileInput: '#secp_certificate',
-                inputLabelPreview: '#CECPCertificate',
-                cropBoxImage: "#cropbox-image",
-                cropModal: '#crop-modal',
-                aspectRatioSelect: '#aspect-ratio-select',
-                cropButton: '#apply-crop',
-                actionsContainer: "#action-buttons",
+                fileInput: "#secp_certificate",
+                inputLabelPreview: "#CECPCertificate",
+                aspectRatio: 1 / 1.6471
             });
 
             imageCropper({
-                fileInput: '#iso_certificate',
-                inputLabelPreview: '#ISOCertificate',
-                cropBoxImage: "#cropbox-image",
-                cropModal: '#crop-modal',
-                aspectRatioSelect: '#aspect-ratio-select',
-                cropButton: '#apply-crop',
-                actionsContainer: "#action-buttons",
+                fileInput: "#iso_certificate",
+                inputLabelPreview: "#ISOCertificate",
+                aspectRatio: 1 / 1.6471
             });
+
 
             imageCropper({
                 fileInput: '#commerce_membership',
                 inputLabelPreview: '#CommerceMembership',
-                cropBoxImage: "#cropbox-image",
-                cropModal: '#crop-modal',
-                aspectRatioSelect: '#aspect-ratio-select',
-                cropButton: '#apply-crop',
-                actionsContainer: "#action-buttons",
+                aspectRatio: 1 / 1.6471
             });
 
             imageCropper({
                 fileInput: '#pec_certificate',
                 inputLabelPreview: '#PECCertificate',
-                cropBoxImage: "#cropbox-image",
-                cropModal: '#crop-modal',
-                aspectRatioSelect: '#aspect-ratio-select',
-                cropButton: '#apply-crop',
-                actionsContainer: "#action-buttons",
+                aspectRatio: 1 / 1.6471
             });
 
             imageCropper({
                 fileInput: '#annual_tax_returns',
                 inputLabelPreview: '#AnnualTaxReturns',
-                cropBoxImage: "#cropbox-image",
-                cropModal: '#crop-modal',
-                aspectRatioSelect: '#aspect-ratio-select',
-                cropButton: '#apply-crop',
-                actionsContainer: "#action-buttons",
+                aspectRatio: 1 / 1.6471
             });
 
             imageCropper({
                 fileInput: '#audited_financial',
                 inputLabelPreview: '#AuditedFinancial',
-                cropBoxImage: "#cropbox-image",
-                cropModal: '#crop-modal',
-                aspectRatioSelect: '#aspect-ratio-select',
-                cropButton: '#apply-crop',
-                actionsContainer: "#action-buttons",
+                aspectRatio: 1 / 1.6471
             });
 
             imageCropper({
                 fileInput: '#dept_org_cert',
                 inputLabelPreview: '#DepartmentRegistrations',
-                cropBoxImage: "#cropbox-image",
-                cropModal: '#crop-modal',
-                aspectRatioSelect: '#aspect-ratio-select',
-                cropButton: '#apply-crop',
-                actionsContainer: "#action-buttons",
+                aspectRatio: 1 / 1.6471
             });
 
             imageCropper({
                 fileInput: '#performance_certificate',
                 inputLabelPreview: '#PerformanceCertificate',
-                cropBoxImage: "#cropbox-image",
-                cropModal: '#crop-modal',
-                aspectRatioSelect: '#aspect-ratio-select',
-                cropButton: '#apply-crop',
-                actionsContainer: "#action-buttons",
+                aspectRatio: 1 / 1.6471
             });
 
             var forms = document.querySelectorAll('.needs-validation')

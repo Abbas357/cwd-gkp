@@ -434,12 +434,7 @@ function imageCropper(options) {
     var defaults = {
         fileInput: "#image",
         inputLabelPreview: "#image-label-preview",
-        cropBoxImage: "#cropbox-image",
-        cropModal: "#crop-modal",
-        aspectRatioSelect: "#aspect-ratio-select",
-        cropButton: "#apply-crop",
-        actionsContainer: "#action-buttons",
-        defaultAspectRatio: 1 / 1,
+        aspectRatio: 1 / 1,
         viewMode: 2,
         imageType: "image/jpeg",
         quality: 0.7,
@@ -447,13 +442,23 @@ function imageCropper(options) {
 
     options = $.extend({}, defaults, options);
 
+    var uniqueId = uniqId(6);
+
+    var modalId = `#crop-modal-${uniqueId}`,
+        cropBoxImageId = `#cropbox-image-${uniqueId}`,
+        cropButtonId = `#apply-crop-${uniqueId}`,
+        aspectRatioSelectId = `#aspect-ratio-select`,
+        actionsContainerId = `#action-buttons-${uniqueId}`;
+
+    $("body").append(generateModalHtml(uniqueId));
+
     var $fileInput = $(options.fileInput),
         $inputLabelPreview = $(options.inputLabelPreview),
-        $cropBoxImage = $(options.cropBoxImage),
-        $cropModal = $(options.cropModal),
-        $aspectRatioSelect = $(options.aspectRatioSelect),
-        $cropButton = $(options.cropButton),
-        $actionsContainer = $(options.actionsContainer);
+        $cropBoxImage = $(cropBoxImageId),
+        $cropModal = $(modalId),
+        $aspectRatioSelect = $(aspectRatioSelectId),
+        $cropButton = $(cropButtonId),
+        $actionsContainer = $(actionsContainerId);
 
     var cropper;
 
@@ -462,10 +467,9 @@ function imageCropper(options) {
         if (files.length === 0 || !files[0].type.startsWith("image/")) {
             return;
         }
-
         var done = function (url) {
-            $cropBoxImage.attr("src", url); // Set the selected image in the modal
-            $cropModal.modal("show"); // Open the modal
+            $cropBoxImage.attr("src", url);
+            $cropModal.modal("show");
         };
 
         var reader, file;
@@ -484,15 +488,14 @@ function imageCropper(options) {
             }
         }
 
-        // Store the current file input and preview element for later use
-        $cropButton.data("input", this); // Store current file input
-        $cropButton.data("preview", $inputLabelPreview); // Store preview element
+        $cropButton.data("input", this);
+        $cropButton.data("preview", $inputLabelPreview);
     });
 
     $cropModal
         .on("shown.bs.modal", function () {
             var selectedAspectRatio =
-                parseFloat($aspectRatioSelect.val()) || options.defaultAspectRatio;
+                parseFloat($aspectRatioSelect.val()) || options.aspectRatio;
             cropper = new Cropper($cropBoxImage[0], {
                 aspectRatio: selectedAspectRatio,
                 viewMode: options.viewMode,
@@ -513,12 +516,9 @@ function imageCropper(options) {
     $cropButton.on("click", function () {
         var canvas;
         $cropModal.modal("hide");
-        
 
         if (cropper) {
             canvas = cropper.getCroppedCanvas();
-            console.log(canvas)
-
             var $inputLabelPreview = $(this).data("preview");
             $inputLabelPreview.attr(
                 "src",
@@ -586,6 +586,8 @@ function imageCropper(options) {
             <option value="21 / 9">21:9 (Ultra-wide)</option>
             <option value="4 / 3">4:3 (Old TV)</option>
             <option value="3 / 2">3:2 (DSLR)</option>
+            <option value="1 / 1.294">1:1.294 (Letter)</option>
+            <option value="1 / 1.6471">1:1.6471 (Legal)</option>
             <option value="NaN">Free (Whatever you want)</option>
         </select>
         <button type="button" class="btn-mode-move btn btn-light btn-sm" data-method="setDragMode" data-option="move" title="Move">
@@ -661,12 +663,37 @@ function imageCropper(options) {
     `;
         $container.html(buttonsHTML);
 
-        $container.find("#aspect-ratio-select").on("change", function () {
+        $container.find('#aspect-ratio-select').on("change", function () {
             var aspectRatio = eval($(this).val());
             if (cropper) {
                 cropper.setAspectRatio(aspectRatio);
             }
         });
+    }
+
+    function generateModalHtml(uniqueId) {
+        return `
+        <div class="modal modal fade" id="crop-modal-${uniqueId}" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Crop the image</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="img-container">
+                            <img id="cropbox-image-${uniqueId}" style="display:block; max-height:300px; max-width:100%">
+                        </div>
+                        <div id="action-buttons-${uniqueId}"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary btn-sm" id="apply-crop-${uniqueId}">Crop</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
     }
 }
 
