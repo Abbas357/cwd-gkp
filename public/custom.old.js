@@ -464,8 +464,9 @@ function imageCropper(options) {
         }
 
         var done = function (url) {
-            $cropBoxImage.attr("src", url); // Set the selected image in the modal
-            $cropModal.modal("show"); // Open the modal
+            $fileInput.val("");
+            $cropBoxImage.attr("src", url);
+            $cropModal.modal("show");
         };
 
         var reader, file;
@@ -483,16 +484,13 @@ function imageCropper(options) {
                 reader.readAsDataURL(file);
             }
         }
-
-        // Store the current file input and preview element for later use
-        $cropButton.data("input", this); // Store current file input
-        $cropButton.data("preview", $inputLabelPreview); // Store preview element
     });
 
     $cropModal
         .on("shown.bs.modal", function () {
             var selectedAspectRatio =
-                parseFloat($aspectRatioSelect.val()) || options.defaultAspectRatio;
+                parseFloat($aspectRatioSelect.val()) ||
+                options.defaultAspectRatio;
             cropper = new Cropper($cropBoxImage[0], {
                 aspectRatio: selectedAspectRatio,
                 viewMode: options.viewMode,
@@ -512,20 +510,17 @@ function imageCropper(options) {
 
     $cropButton.on("click", function () {
         var canvas;
+
         $cropModal.modal("hide");
-        
 
         if (cropper) {
             canvas = cropper.getCroppedCanvas();
-            console.log(canvas)
 
-            var $inputLabelPreview = $(this).data("preview");
             $inputLabelPreview.attr(
                 "src",
                 canvas.toDataURL(options.imageType, options.quality)
             );
 
-            var $fileInput = $(this).data("input");
             canvas.toBlob(
                 function (blob) {
                     var file = new File([blob], `cropped-${uniqId(6)}.jpg`, {
@@ -534,7 +529,7 @@ function imageCropper(options) {
 
                     var dataTransfer = new DataTransfer();
                     dataTransfer.items.add(file);
-                    $fileInput.files = dataTransfer.files;
+                    $fileInput[0].files = dataTransfer.files;
                 },
                 options.imageType,
                 options.quality

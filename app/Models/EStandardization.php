@@ -2,28 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Str;
-use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class EStandardization extends Model implements HasMedia
 {
-    use HasFactory, HasUuids, InteractsWithMedia;
+    use HasFactory, InteractsWithMedia;
     protected $guarded = [];
 
-    protected $keyType = 'string';
-    public $incrementing = false; 
-
     protected static function booted()
-    {
-        static::creating(function ($model) {
-            $model->id = Str::uuid();
-        });
-        
+    {        
         static::updating(function ($standardization) {
             if ($standardization->isDirty('approval_status')) {
                 $action = 'approval';

@@ -112,9 +112,9 @@ class EStandardizationController extends Controller
         }
 
         if ($standardization->save()) {
-            return redirect()->route('registrations.create')->with('success', 'Your form has been submitted successfully');
+            return redirect()->route('standardizations.create')->with('success', 'Your form has been submitted successfully');
         }
-        return redirect()->route('registrations.create')->with('danger', 'There is an error submitting your data');
+        return redirect()->route('standardizations.create')->with('danger', 'There is an error submitting your data');
     }
 
     public function show(EStandardization $eStandardization)
@@ -127,9 +127,9 @@ class EStandardizationController extends Controller
         if ($eStandardization->approval_status !== 1) {
             $eStandardization->approval_status = 1;
             $eStandardization->save();
-            return response()->json(['success' => 'Registration has been approved successfully.']);
+            return response()->json(['success' => 'Product has been approved successfully.']);
         }
-        return response()->json(['error' => 'Registration can\'t be approved.']);
+        return response()->json(['error' => 'Product can\'t be approved.']);
     }
 
     public function update(UpdateEStandardizationRequest $request, EStandardization $eStandardization)
