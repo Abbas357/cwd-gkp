@@ -5,7 +5,6 @@
   --bs-border-radius-xl: .5rem;
   --bs-border-radius-xxl: 1rem;
   --bs-border-color: #d5d5d5;
-  user-select: none;
 }
 
 .btn-light {

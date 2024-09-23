@@ -25,6 +25,32 @@ async function confirmAction(
     });
 }
 
+async function confirmWithInput({
+    text = "Please provide your input",
+    inputValidator = null,
+    inputType = 'text',
+    inputPlaceholder = '',
+    confirmButtonText = "Submit",
+    cancelButtonText = "Cancel"
+} = {}) {
+    const options = {
+        title: text,
+        input: inputType,
+        inputPlaceholder: inputPlaceholder,
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: confirmButtonText,
+        cancelButtonText: cancelButtonText,
+    };
+
+    if (inputValidator) {
+        options.inputValidator = inputValidator;
+    }
+
+    return await Swal.fire(options);
+}
+
 async function fetchRequest(
     url,
     method = "GET",

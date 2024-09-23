@@ -119,18 +119,47 @@ class EStandardizationController extends Controller
 
     public function show(EStandardization $EStandardization)
     {
-        // dd($EStandardization->getMedia('organization_registrations'));
         return view('standardizations.show', compact('EStandardization'));
     }
 
-    public function approve(Request $request, EStandardization $eStandardization)
+    public function showDetail(EStandardization $EStandardization) {
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'standardization' => $EStandardization,
+            ],
+        ]);
+    }
+
+    public function showCard(EStandardization $EStandardization) {
+        $html = view('standardizations.partials.card', compact('EStandardization'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'standardization' => $html,
+            ],
+        ]);
+    }
+
+    public function approve(Request $request, EStandardization $EStandardization)
     {
-        if ($eStandardization->approval_status !== 1) {
-            $eStandardization->approval_status = 1;
-            $eStandardization->save();
+        if ($EStandardization->approval_status !== 1) {
+            $EStandardization->approval_status = 1;
+            $EStandardization->save();
             return response()->json(['success' => 'Product has been approved successfully.']);
         }
         return response()->json(['error' => 'Product can\'t be approved.']);
+    }
+
+    public function reject(Request $request, EStandardization $EStandardization)
+    {
+        if (!in_array($EStandardization->approval_status, [1, 2])) {
+            $EStandardization->approval_status = 2;
+            $EStandardization->rejection_reason = $request->reason;
+            $EStandardization->save();
+            return response()->json(['success' => 'Product has been rejected.']);
+        }
+        return response()->json(['error' => 'Product can\'t be rejected.']);
     }
 
     public function update(UpdateEStandardizationRequest $request, EStandardization $eStandardization)
@@ -144,10 +173,9 @@ class EStandardizationController extends Controller
         if ($request->hasFile('image')) {
         }
 
-        if($eStandardization->save()) {
+        if ($eStandardization->save()) {
             return response()->json(['success' => 'User updated']);
         }
         return response()->json(['error' => 'User updation failed']);
     }
-
 }

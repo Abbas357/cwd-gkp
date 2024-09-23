@@ -16,12 +16,12 @@ class EStandardization extends Model implements HasMedia
     {        
         static::updating(function ($standardization) {
             if ($standardization->isDirty('approval_status')) {
-                $action = 'approval';
+                $action = $standardization->approval_status === 1 ? 'approval' : 'rejection';
                 $oldStatus = $standardization->getOriginal('approval_status');
                 $newStatus = $standardization->approval_status;
 
                 EStandardizationLog::create([
-                    'reg_id' => $standardization->id,
+                    's_id' => $standardization->id,
                     'action' => $action,
                     'old_status' => $oldStatus,
                     'new_status' => $newStatus,

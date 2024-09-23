@@ -3,7 +3,7 @@
         <div class="d-flex flex-grow-1 justify-content-between align-items-center">
             <div class="d-flex flex-start align-items-center gap-3">
                 <div class="btn-toggle user-select-none cursor-pointer">
-                    <i class="bi-layout-sidebar"></i>
+                    <i class="bi-three-dots-vertical"></i>
                 </div>
                 @if (isset($header))
                 <div class="page-breadcrumb d-none d-sm-flex align-items-center bg-light px-2 shadow-sm">

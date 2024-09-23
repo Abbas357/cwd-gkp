@@ -7,7 +7,7 @@
             <h5 class="mb-0">C&W Dept.</h5>
         </div>
         <div class="sidebar-close">
-            <span class="bi-layout-text-sidebar-reverse"></span>
+            <span class="bi-layout-sidebar"></span>
         </div>
     </div>
     <div class="sidebar-nav" data-simplebar="true">

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('ntn_number');
             $table->enum('location_type', ['Factory', 'Warehouse'])->default('Factory');
             $table->boolean('approval_status')->default(0);
+            $table->string('rejection_reason');
             $table->timestamps();
         });
 

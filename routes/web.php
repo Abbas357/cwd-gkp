@@ -46,7 +46,10 @@ Route::middleware('auth')->prefix('registrations')->group(function () {
 Route::middleware('auth')->prefix('standardizations')->group(function () {
     Route::get('/', [EStandardizationController::class, 'index'])->name('standardizations.index');
     Route::patch('/approve/{EStandardization}', [EStandardizationController::class, 'approve'])->name('standardizations.approve');
+    Route::patch('/reject/{EStandardization}', [EStandardizationController::class, 'reject'])->name('standardizations.reject');
     Route::get('/{EStandardization}', [EStandardizationController::class, 'show'])->name('standardizations.show');
+    Route::get('/get/{EStandardization}', [EStandardizationController::class, 'showDetail'])->name('standardizations.showDetail');
+    Route::get('/card/{EStandardization}', [EStandardizationController::class, 'showCard'])->name('standardizations.showCard');
     Route::patch('/{EStandardization}', [EStandardizationController::class, 'update'])->name('standardizations.update');
 });
 
