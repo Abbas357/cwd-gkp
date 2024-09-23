@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\EStandardization;
 use Yajra\DataTables\DataTables;
-use Illuminate\Support\Facades\Hash;
 
 use App\Http\Requests\StoreEStandardizationRequest;
 use App\Http\Requests\UpdateEStandardizationRequest;
+
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\Writer\PngWriter;
 
 class EStandardizationController extends Controller
 {
@@ -132,7 +135,26 @@ class EStandardizationController extends Controller
     }
 
     public function showCard(EStandardization $EStandardization) {
-        $html = view('standardizations.partials.card', compact('EStandardization'))->render();
+        if($EStandardization->approval_status !== 1) {
+            return response()->json([
+                'success' => false,
+                'data' => [
+                    'standardization' => 'The Product is not standardized',
+                ],
+            ]);
+        }
+        $data = route('standardizations.show', ['EStandardization' => $EStandardization->id]);
+        $qrCode = Builder::create()
+        ->writer(new PngWriter())
+        ->data($data)
+        ->encoding(new Encoding('UTF-8'))
+        ->size(300)
+        ->margin(1)
+        ->build();
+
+        $qrCodeUri = $qrCode->getDataUri();
+
+        $html = view('standardizations.partials.card', compact('EStandardization', 'qrCodeUri'))->render();
         return response()->json([
             'success' => true,
             'data' => [

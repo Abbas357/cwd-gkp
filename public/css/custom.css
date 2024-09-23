@@ -558,3 +558,70 @@ div.dt-container {
 .select-aspect-ratio {
   grid-area: aspect-ratio;
 }
+
+.product-card {
+  border: 2px solid #ddd;
+  border-radius: 15px;
+  padding: 1rem;
+  max-width: 450px;
+  height: 750px;
+  margin: auto;
+}
+
+.product-card_front {
+  background-image: url('../images/card-front.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.product-card_back {
+  background-image: url('../images/card-back.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.product-card .logo {
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  margin-bottom: 10px;
+}
+
+.product-card h1 {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.product-card .card-subtitle {
+  text-decoration: underline;
+}
+
+.product-card .company-logo {
+  display: inline-block;
+  margin: 1.5rem auto;
+  width: 100px;
+  border: 5px solid transparent; 
+  border: 5px solid #ccc; 
+  border-radius: 50px;
+
+}
+
+.product-card .authority-sign {
+  border-top: 1px solid black;
+  width: 150px;
+  margin-top: 10px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.terms {
+  font-size: 0.9rem;
+}
+
+.terms ol {
+  margin: 1.5rem;
+}
+
+.terms li {
+  margin-bottom: .7rem;
+  font-weight: bold;
+  padding-left: 1rem;
+}

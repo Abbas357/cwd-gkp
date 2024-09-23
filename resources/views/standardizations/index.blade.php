@@ -44,7 +44,7 @@
     </table>
 
     <div class="modal fade" id="generate-card" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-dialog modal-md modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit User</h5>
@@ -61,7 +61,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" id="update-user-btn" class="btn btn-primary px-3">Print Card</button>
+                    <button type="submit" id="generate-image" class="btn btn-primary px-3">Download Card</button>
                 </div>
             </div>
         </div>
@@ -71,9 +71,24 @@
     @push('script')
     <script src="{{ asset('plugins/datatable/js/datatables.min.js') }}"></script>
     <script src="{{ asset('plugins/col-resizable.js') }}"></script>
+    <script src="{{ asset('plugins/html2canvas/html2canvas.min.js') }}"></script>
 
     <script>
         $(document).ready(function() {
+            $('#generate-image').on('click', function() {
+                var div = $('#capture')[0];
+                html2canvas(div, {
+                    scale: 2
+                }).then(function(canvas) {
+                    canvas.toBlob(function(blob) {
+                        var link = $('<a></a>')[0];
+                        link.href = URL.createObjectURL(blob);
+                        link.download = `card-${uniqId(6)}.png`;
+                        link.click();
+                    });
+                });
+            });
+
             var table = initDataTable('#standardizations-datatable', {
                 ajaxUrl: "{{ route('standardizations.index') }}"
                 , columns: [{
@@ -228,7 +243,6 @@
 
                     const data = await fetchRequest(url);
                     let standardization = data.standardization;
-                    console.log(standardization)
                     if (standardization) {
                         $('#generate-card .modal-title').text('Standardization Card');
                         $('#generate-card .card-details').html(standardization);
