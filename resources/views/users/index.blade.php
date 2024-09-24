@@ -180,7 +180,7 @@
             $('#mobile_number').mask('0000-0000000', {
                 placeholder: "____-_______"
             });
-
+            
             $('#landline_number').mask('000-000000', {
                 placeholder: "___-______"
             });

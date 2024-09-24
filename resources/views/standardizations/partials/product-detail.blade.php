@@ -55,7 +55,7 @@
         <h3 class="mt-5">Uploaded Documents</h3>
         <div class="row mt-3">
             @if($EStandardization->hasMedia('secp_certificates'))
-            <div class="col-md-2 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="card">
                     <img src="{{ $EStandardization->getFirstMediaUrl('secp_certificates') }}" class="card-img-top" alt="SECP Certificate">
                     <div class="card-body">
@@ -66,7 +66,7 @@
             @endif
 
             @if($EStandardization->hasMedia('iso_certificates'))
-            <div class="col-md-2 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="card">
                     <img src="{{ $EStandardization->getFirstMediaUrl('iso_certificates') }}" class="card-img-top" alt="ISO Certificate">
                     <div class="card-body">
@@ -77,7 +77,7 @@
             @endif
 
             @if($EStandardization->hasMedia('commerse_memberships'))
-            <div class="col-md-2 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="card">
                     <img src="{{ $EStandardization->getFirstMediaUrl('commerse_memberships') }}" class="card-img-top" alt="Commerce Membership">
                     <div class="card-body">
@@ -88,7 +88,7 @@
             @endif
 
             @if($EStandardization->hasMedia('pec_certificates'))
-            <div class="col-md-2 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="card">
                     <img src="{{ $EStandardization->getFirstMediaUrl('pec_certificates') }}" class="card-img-top" alt="PEC Certificate">
                     <div class="card-body">
@@ -99,7 +99,7 @@
             @endif
 
             @if($EStandardization->hasMedia('annual_tax_returns'))
-            <div class="col-md-2 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="card">
                     <img src="{{ $EStandardization->getFirstMediaUrl('annual_tax_returns') }}" class="card-img-top" alt="Annual Tax Returns">
                     <div class="card-body">
@@ -110,7 +110,7 @@
             @endif
 
             @if($EStandardization->hasMedia('audited_financials'))
-            <div class="col-md-2 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="card">
                     <img src="{{ $EStandardization->getFirstMediaUrl('audited_financials') }}" class="card-img-top" alt="Audited Financial">
                     <div class="card-body">
@@ -121,7 +121,7 @@
             @endif
 
             @if($EStandardization->hasMedia('organization_registrations'))
-            <div class="col-md-2 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="card">
                     <img src="{{ $EStandardization->getFirstMediaUrl('organization_registrations') }}" class="card-img-top" alt="Department / Organizations Certificate">
                     <div class="card-body">
@@ -132,7 +132,7 @@
             @endif
 
             @if($EStandardization->hasMedia('performance_certificate'))
-            <div class="col-md-2 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="card">
                     <img src="{{ $EStandardization->getFirstMediaUrl('performance_certificate') }}" class="card-img-top" alt="Performance Certificate">
                     <div class="card-body">

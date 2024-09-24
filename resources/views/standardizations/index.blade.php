@@ -195,49 +195,33 @@
                 fetchUrlTemplate: "{{ route('standardizations.showCard', ':id') }}",
                 btnSelector: '.card-btn',
                 title: 'Standardization Card',
-                modalFooterActionButton: '<button type="submit" id="generate-image" class="btn btn-primary px-3">Download Card</button>',
+                actionButtonName: 'Generate Card',
                 fetchDataKey: 'standardization',
+                modalType: 'card'
+            }).then(([modal, actionBtn]) => {
+                actionBtn.on('click', function() {
+                    var div = $('#capture')[0];
+                    html2canvas(div, {
+                        scale: 2
+                    }).then(function(canvas) {
+                        canvas.toBlob(function(blob) {
+                            var link = $('<a></a>')[0];
+                            link.href = URL.createObjectURL(blob);
+                            link.download = `card-${uniqId(6)}.png`;
+                            link.click();
+                        });
+                    });
+                })
             });
 
             pushStateModal({
                 fetchUrlTemplate: "{{ route('standardizations.showDetail', ':id') }}",
                 btnSelector: '.view-btn',
-                title: 'Standardization Card',
+                title: 'Standardization Details',
                 fetchDataKey: 'standardization',
-                modalSize: 'xl'
+                modalSize: 'xl',
+                modalType: 'detail'
             });
-
-            $('#generate-image').on('click', function() {
-                var div = $('#capture')[0];
-                html2canvas(div, {
-                    scale: 2
-                }).then(function(canvas) {
-                    canvas.toBlob(function(blob) {
-                        var link = $('<a></a>')[0];
-                        link.href = URL.createObjectURL(blob);
-                        link.download = `card-${uniqId(6)}.png`;
-                        link.click();
-                    });
-                });
-            });
-
-            pushStateModal({
-    fetchUrlTemplate: "{{ route('standardizations.showCard', ':id') }}",
-    btnSelector: '.card-btn',
-    title: 'Standardization Card',
-    modalFooterActionButton: '<button type="submit" id="generate-image" class="btn btn-primary px-3">Download Card</button>',
-    fetchDataKey: 'standardization',
-    modalType: 'card'
-});
-
-pushStateModal({
-    fetchUrlTemplate: "{{ route('standardizations.showDetail', ':id') }}",
-    btnSelector: '.view-btn',
-    title: 'Standardization Details',
-    fetchDataKey: 'standardization',
-    modalSize: 'xl',
-    modalType: 'detail'
-});
             
         });
 

@@ -149,7 +149,7 @@ class EStandardizationController extends Controller
                 ],
             ]);
         }
-        $data = route('standardizations.show', ['EStandardization' => $EStandardization->id]);
+        $data = route('standardizations.approved', ['id' => $EStandardization->id]);
         $qrCode = Builder::create()
         ->writer(new PngWriter())
         ->data($data)

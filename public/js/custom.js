@@ -28,10 +28,10 @@ async function confirmAction(
 async function confirmWithInput({
     text = "Please provide your input",
     inputValidator = null,
-    inputType = 'text',
-    inputPlaceholder = '',
+    inputType = "text",
+    inputPlaceholder = "",
     confirmButtonText = "Submit",
-    cancelButtonText = "Cancel"
+    cancelButtonText = "Cancel",
 } = {}) {
     const options = {
         title: text,
@@ -484,7 +484,7 @@ function imageCropper(options) {
         }
         var done = function (url) {
             $cropBoxImage.attr("src", url);
-            $cropModal.modal({ backdrop: 'static', keyboard: false });
+            $cropModal.modal({ backdrop: "static", keyboard: false });
             $cropModal.modal("show");
         };
 
@@ -508,11 +508,11 @@ function imageCropper(options) {
         $cropButton.data("preview", $inputLabelPreview);
     });
 
-    $cropModal.on('click', function (e) {
+    $cropModal.on("click", function (e) {
         if ($(e.target).is($cropModal)) {
-            $cropModal.addClass('shake');
-            setTimeout(function() {
-                $cropModal.removeClass('shake');
+            $cropModal.addClass("shake");
+            setTimeout(function () {
+                $cropModal.removeClass("shake");
             }, 500);
         }
     });
@@ -689,7 +689,7 @@ function imageCropper(options) {
     `;
         $container.html(buttonsHTML);
 
-        $container.find('#aspect-ratio-select').on("change", function () {
+        $container.find("#aspect-ratio-select").on("change", function () {
             var aspectRatio = eval($(this).val());
             if (cropper) {
                 cropper.setAspectRatio(aspectRatio);
@@ -724,21 +724,23 @@ function imageCropper(options) {
 }
 
 function pushStateModal({
-    title = 'Title',
+    title = "Title",
     fetchUrlTemplate,
     btnSelector,
-    loadingSpinnerClass = 'loading-spinner',
-    modalFooterActionButton = '',
-    fetchDataKey = 'result',
-    modalSize = 'md',
-    modalType = '' // to be added as a query parameter
+    loadingSpinnerClass = "loading-spinner",
+    actionButtonName = "",
+    fetchDataKey = "result",
+    modalSize = "md",
+    modalType = "",
 }) {
-    const modalId = `modal-${modalType}`; // Unique modal ID based on type
-    const modalContentClass = `detail-${uniqId(6)}`; // Ensure unique content class
+    return new Promise((resolve) => {
+        const modalId = `modal-${modalType}`;
+        const modalContentClass = `detail-${modalType}`;
+        const actionBtnId = actionButtonName.replace(/\s+/g, '-').toLowerCase()+'-'+modalType;
 
-    const modalTemplate = `
+        const modalTemplate = `
         <div class="modal modal-${modalSize} fade" id="${modalId}" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-${modalSize} modal-dialog-centered">
+            <div class="modal-dialog modal-${modalSize} modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">${title}</h5>
@@ -754,177 +756,107 @@ function pushStateModal({
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        ${modalFooterActionButton}
+                        ${actionButtonName ? `<button type="submit" id="${actionBtnId}" class="btn btn-primary px-3">${actionButtonName}</button>` : ''}    
                     </div>
                 </div>
             </div>
         </div>`;
 
-    // Avoid appending a duplicate modal if it already exists
-    if (!$(`#${modalId}`).length) {
-        $('body').append(modalTemplate);
-    }
-
-    async function openModal(recordId, type) {
-        // Only open the modal if the type matches
-        if (type !== modalType) {
-            return;
+        if (!$(`#${modalId}`).length) {
+            $("body").append(modalTemplate);
         }
 
-        const url = fetchUrlTemplate.replace(':id', recordId);
-        
-        $(`#${modalId}`).modal('show'); // Show the modal
-        $(`#${modalId} .${loadingSpinnerClass}`).show(); // Show loading spinner
-        $(`#${modalId} .${modalContentClass}`).hide(); // Hide content initially
+        async function openModal(recordId) {
+            const url = fetchUrlTemplate.replace(":id", recordId);
 
-        // Fetch data
-        const response = await fetchRequest(url);
-        const result = response[fetchDataKey];
+            $(`#${modalId}`).modal("show");
+            $(`#${modalId} .${loadingSpinnerClass}`).show();
+            $(`#${modalId} .${modalContentClass}`).hide();
 
-        if (result) {
-            $(`#${modalId} .modal-title`).text(title); // Set title
-            $(`#${modalId} .${modalContentClass}`).html(result); // Insert fetched content
-        } else {
-            $(`#${modalId} .modal-title`).text('Error');
-            $(`#${modalId} .${modalContentClass}`).html('<p class="pb-0 pt-3 p-4">Unable to load content.</p>');
+            const response = await fetchRequest(url);
+            const result = response[fetchDataKey];
+
+            if (result) {
+                $(`#${modalId} .modal-title`).text(title);
+                $(`#${modalId} .${modalContentClass}`).html(result);
+            } else {
+                $(`#${modalId} .modal-title`).text("Error");
+                $(`#${modalId} .${modalContentClass}`).html(
+                    '<p class="pb-0 pt-3 p-4">Unable to load content.</p>'
+                );
+            }
+
+            $(`#${modalId} .${loadingSpinnerClass}`).hide();
+            $(`#${modalId} .${modalContentClass}`).show();
         }
 
-        $(`#${modalId} .${loadingSpinnerClass}`).hide(); // Hide spinner
-        $(`#${modalId} .${modalContentClass}`).show(); // Show content
-    }
+        function openModalFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const recordId = urlParams.get("id");
+            const type = urlParams.get("type");
 
-    function openModalFromUrl() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const recordId = urlParams.get('id');
-        const type = urlParams.get('type');
+            if (recordId && type === modalType) {
+                openModal(recordId);
+            }
+        }
 
-        // Only open the modal if the type matches the current modalType
-        if (recordId && type === modalType) {
+        $(document).on("click", btnSelector, function () {
+            const recordId = $(this).data("id");
+            const currentUrl = new URL(window.location);
+
+            const newUrl = `${currentUrl.pathname}?id=${recordId}&type=${modalType}${window.location.hash}`;
+            history.pushState(null, null, newUrl);
             openModal(recordId, modalType);
+        });
+
+        $(window).on("popstate", function () {
+            openModalFromUrl();
+        });
+
+        $(`#${modalId}`).on("hidden.bs.modal", function () {
+            const currentUrl = new URL(window.location);
+            currentUrl.searchParams.delete("id");
+            currentUrl.searchParams.delete("type");
+
+            const newUrl = `${currentUrl.pathname}${currentUrl.search}${window.location.hash}`;
+            history.pushState(null, null, newUrl);
+        });
+
+        openModalFromUrl();
+
+        const modal = $("#" + modalId);
+        const actionBtn = $("#" + actionBtnId);
+
+        if (modal.length && actionBtn.length) {
+            resolve([modal, actionBtn]);
         }
-    }
 
-    $(document).on('click', btnSelector, function() {
-        const recordId = $(this).data('id');
-        const currentUrl = new URL(window.location);
+        // pushStateModal({
+        //     fetchUrlTemplate: "{{ route('standardizations.showDetail', ':id') }}",
+        //     btnSelector: '.view-btn',
+        //     title: 'Standardization Details',
+        //     fetchDataKey: 'standardization',
+        //     modalSize: 'xl',
+        //     modalType: 'detail'
+        // }).then(([modal, actionBtn]) => {
+        //     modal.on('shown.bs.modal', function () {
+        //         console.log(`Modal with ID ${modalId} is fully shown.`);
+        //     });
 
-        // Keep existing hash while updating query parameters
-        const newUrl = `${currentUrl.pathname}?id=${recordId}&type=${modalType}${window.location.hash}`;
-        history.pushState(null, null, newUrl);
-        openModal(recordId, modalType); // Pass modalType to openModal
+        //     modal.on('hidden.bs.modal', function () {
+        //         console.log(`Modal with ID ${modalId} is fully hidden.`);
+        //     });
+        // });
     });
-
-    $(window).on('popstate', function() {
-        openModalFromUrl(); // Handle browser back/forward actions
-    });
-
-    $(`#${modalId}`).on('hidden.bs.modal', function() {
-        const currentUrl = new URL(window.location);
-        currentUrl.searchParams.delete('id');
-        currentUrl.searchParams.delete('type');
-
-        // Keep the hash intact when removing query parameters
-        const newUrl = `${currentUrl.pathname}${currentUrl.search}${window.location.hash}`;
-        history.pushState(null, null, newUrl);
-    });
-
-    openModalFromUrl(); // Check URL for query parameters on page load
 }
-
-
-
-// function pushStateModal({
-//     title = 'Title',
-//     fetchUrlTemplate,
-//     btnSelector,
-//     loadingSpinnerClass = 'loading-spinner',
-//     modalFooterActionButton = '',
-//     fetchDataKey = 'result',
-//     modalSize = 'md'
-// }) {
-//     const modalId = `modal-${uniqId(6)}`;
-//     const modalContentClass = `detail-${uniqId(6)}`;
-    
-//     const modalTemplate = `
-//         <div class="modal modal-${modalSize} fade" id="${modalId}" tabindex="-1" aria-hidden="true">
-//             <div class="modal-dialog modal-md modal-dialog-centered">
-//                 <div class="modal-content">
-//                     <div class="modal-header">
-//                         <h5 class="modal-title">${title}</h5>
-//                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-//                     </div>
-//                     <div class="modal-body">
-//                         <div class="${loadingSpinnerClass} text-center mt-2">
-//                             <div class="spinner-border" role="status">
-//                                 <span class="visually-hidden">Loading...</span>
-//                             </div>
-//                         </div>
-//                         <div class="${modalContentClass} p-1"></div>
-//                     </div>
-//                     <div class="modal-footer">
-//                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-//                         ${modalFooterActionButton}
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>`;
-    
-//     if (!$(`#${modalId}`).length) {
-//         $('body').append(modalTemplate);
-//     }
-
-//     async function openModal(recordId) {
-//         const url = fetchUrlTemplate.replace(':id', recordId);
-        
-//         $(`#${modalId}`).modal('show');
-//         $(`#${modalId} .${loadingSpinnerClass}`).show();
-//         $(`#${modalId} .${modalContentClass}`).hide();
-
-//         const response = await fetchRequest(url);
-//         const result = response[fetchDataKey];
-
-//         if (result) {
-//             $(`#${modalId} .modal-title`).text(title);
-//             $(`#${modalId} .${modalContentClass}`).html(result);
-//         } else {
-//             $(`#${modalId} .modal-title`).text('Error');
-//             $(`#${modalId} .${modalContentClass}`).html('<p class="pb-0 pt-3 p-4">Unable to load content.</p>');
-//         }
-
-//         $(`#${modalId} .${loadingSpinnerClass}`).hide();
-//         $(`#${modalId} .${modalContentClass}`).show();
-//     }
-
-//     function openModalFromUrl() {
-//         const urlParams = new URLSearchParams(window.location.search);
-//         const recordId = urlParams.get('id');
-//         if (recordId) {
-//             openModal(recordId);
-//         }
-//     }
-
-//     $(document).on('click', btnSelector, function() {
-//         const recordId = $(this).data('id');
-//         const currentHash = window.location.hash;
-//         const newUrl = `${window.location.pathname}?id=${recordId}${currentHash}`;
-//         history.pushState(null, null, newUrl);
-//         openModal(recordId);
-//     });
-
-//     $(window).on('popstate', function() {
-//         openModalFromUrl();
-//     });
-
-//     $(`#${modalId}`).on('hidden.bs.modal', function() {
-//         const currentUrl = new URL(window.location);
-//         currentUrl.searchParams.delete('id');
-//         const newUrl = `${currentUrl.pathname}${window.location.hash}`;
-//         history.pushState(null, null, newUrl);
-//     });
-
-//     openModalFromUrl();
-// }
 
 $("div.modal").on("select2:open", () => {
     document.querySelector(".select2-search__field").focus();
+});
+
+document.addEventListener('shown.bs.modal', function (event) {
+    var scrollable = event.target.querySelector('.modal-body');
+    if (scrollable) {
+        new PerfectScrollbar(scrollable);
+    }
 });
