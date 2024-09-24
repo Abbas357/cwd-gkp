@@ -727,6 +727,7 @@ function pushStateModal({
     title = "Title",
     fetchUrlTemplate,
     btnSelector,
+    appendTo = 'body',
     loadingSpinnerClass = "loading-spinner",
     actionButtonName = "",
     fetchDataKey = "result",
@@ -763,7 +764,7 @@ function pushStateModal({
         </div>`;
 
         if (!$(`#${modalId}`).length) {
-            $("body").append(modalTemplate);
+            $(appendTo).append(modalTemplate);
         }
 
         async function openModal(recordId) {

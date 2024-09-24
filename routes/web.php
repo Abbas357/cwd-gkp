@@ -29,6 +29,7 @@ Route::middleware('auth')->prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('users.index');
     Route::get('/api', [UserController::class, 'users'])->name('users.api');
     Route::get('/create', [UserController::class, 'create'])->name('users.create');
+    Route::get('/edit/{user}', [UserController::class, 'edit'])->name('users.edit');
     Route::post('/', [UserController::class, 'store'])->name('users.store');
     Route::get('/{user}', [UserController::class, 'show'])->name('users.show');
     Route::patch('/{user}', [UserController::class, 'update'])->name('users.update');

@@ -60,6 +60,36 @@ class UserController extends Controller
         return view('users.index');
     }
 
+    public function edit(User $user)
+    {
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'data' => [
+                    'user' => 'The user does not exists in Database',
+                ],
+            ]);
+        }
+
+        $data = [
+            'user' => $user,
+            'roles' => $user->roles,
+            'permissions' => $user->getDirectPermissions(),
+            'allRoles' => Role::all(),
+            'allPermissions' => Permission::all(),
+            'allDesignations' => Designation::all(),
+            'allOffices' => Office::all(),
+        ];
+
+        $html = view('users.partials.edit', compact('data'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'user' => $html,
+            ],
+        ]);
+    }
+
     public function users(Request $request)
     {
         $search = $request->get('q');
