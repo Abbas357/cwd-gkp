@@ -2,6 +2,7 @@
     @push('style')
     <link href="{{ asset('plugins/select2/css/select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
     @endpush
 
     <div class="wrapper">
@@ -191,7 +192,7 @@
 
                                         <div class="mb-3">
                                             <label for="cnic_front_attachment">CNIC (Front Side)</label>
-                                            <input type="file" class="form-control" id="cnic_front_attachment" name="cnic_front_attachment" onchange="previewImage(event, 'previewCnicFront')">
+                                            <input type="file" class="form-control" id="cnic_front_attachment" name="cnic_front_attachment"  onchange="$('#previewCnicFront').show()">
                                             @error('cnic_front_attachment')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -200,7 +201,7 @@
 
                                         <div class="mb-3">
                                             <label for="cnic_back_attachment">CNIC (Back Side)</label>
-                                            <input type="file" class="form-control" id="cnic_back_attachment" name="cnic_back_attachment" onchange="previewImage(event, 'previewCnicBack')">
+                                            <input type="file" class="form-control" id="cnic_back_attachment" name="cnic_back_attachment"  onchange="$('#previewCnicBack').show()">
                                             @error('cnic_back_attachment')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -209,7 +210,7 @@
 
                                         <div class="mb-3">
                                             <label for="fbr_attachment">FBR Registration</label>
-                                            <input type="file" class="form-control" id="fbr_attachment" name="fbr_attachment" onchange="previewImage(event, 'previewFbrRegistration')">
+                                            <input type="file" class="form-control" id="fbr_attachment" name="fbr_attachment"  onchange="$('#previewFbrRegistration').show()">
                                             @error('fbr_attachment')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -218,7 +219,7 @@
 
                                         <div class="mb-3">
                                             <label for="kpra_attachment">KIPPRA Certificate</label>
-                                            <input type="file" class="form-control" id="kpra_attachment" name="kpra_attachment" onchange="previewImage(event, 'previewKippraCertificate')">
+                                            <input type="file" class="form-control" id="kpra_attachment" name="kpra_attachment"  onchange="$('#previewKippraCertificate').show()">
                                             @error('kpra_attachment')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -227,7 +228,7 @@
 
                                         <div class="mb-3">
                                             <label for="pec_attachment">PEC - 2020</label>
-                                            <input type="file" class="form-control" id="pec_attachment" name="pec_attachment" onchange="previewImage(event, 'previewPecCert')">
+                                            <input type="file" class="form-control" id="pec_attachment" name="pec_attachment" onchange="$('#previewPecCert').show()">
                                             @error('pec_attachment')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -236,7 +237,7 @@
 
                                         <div class="mb-3">
                                             <label for="form_h_attachment">Form - H (In case of Company)</label>
-                                            <input type="file" class="form-control" id="form_h_attachment" name="form_h_attachment" onchange="previewImage(event, 'previewFormH')">
+                                            <input type="file" class="form-control" id="form_h_attachment" name="form_h_attachment" onchange="$('#previewFormH').show()">
                                             @error('form_h_attachment')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -245,7 +246,7 @@
 
                                         <div class="mb-3">
                                             <label for="pre_enlistment_attachment">Previous Enlistment (Not for fresh contractors)</label>
-                                            <input type="file" class="form-control" id="pre_enlistment_attachment" name="pre_enlistment_attachment" onchange="previewImage(event, 'previewPreviousEnlistment')">
+                                            <input type="file" class="form-control" id="pre_enlistment_attachment" name="pre_enlistment_attachment" onchange="$('#previewPreviousEnlistment').show()">
                                             @error('pre_enlistment_attachment')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -282,9 +283,51 @@
     @push("script")
     <script src="{{ asset('plugins/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('plugins/jquery-mask/jquery.mask.min.js') }}"></script>
+    <script src="{{ asset('plugins/cropper/js/cropper.min.js') }}"></script>
     <script>
         $(document).ready(function() {
 
+            imageCropper({
+                fileInput: "#cnic_front_attachment",
+                inputLabelPreview: "#previewCnicFront",
+                aspectRatio: 1.58 / 1
+            });
+
+            imageCropper({
+                fileInput: "#cnic_back_attachment",
+                inputLabelPreview: "#previewCnicBack",
+                aspectRatio: 1.58 / 1
+            });
+
+            imageCropper({
+                fileInput: "#fbr_attachment",
+                inputLabelPreview: "#previewFbrRegistration",
+                aspectRatio: 1 / 1.6471
+            });
+
+            imageCropper({
+                fileInput: "#kpra_attachment",
+                inputLabelPreview: "#previewKippraCertificate",
+                aspectRatio: 1 / 1.6471
+            });
+
+            imageCropper({
+                fileInput: "#pec_attachment",
+                inputLabelPreview: "#previewPecCert",
+                aspectRatio: 1 / 1.6471
+            });
+
+            imageCropper({
+                fileInput: "#form_h_attachment",
+                inputLabelPreview: "#previewFormH",
+                aspectRatio: 1 / 1.6471
+            });
+
+            imageCropper({
+                fileInput: "#pre_enlistment_attachment",
+                inputLabelPreview: "#previewPreviousEnlistment",
+                aspectRatio: 1 / 1.6471
+            });
             var forms = document.querySelectorAll('.needs-validation')
 
             Array.prototype.slice.call(forms).forEach(function(form) {

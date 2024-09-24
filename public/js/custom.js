@@ -484,6 +484,7 @@ function imageCropper(options) {
         }
         var done = function (url) {
             $cropBoxImage.attr("src", url);
+            $cropModal.modal({ backdrop: 'static', keyboard: false });
             $cropModal.modal("show");
         };
 
@@ -505,6 +506,15 @@ function imageCropper(options) {
 
         $cropButton.data("input", this);
         $cropButton.data("preview", $inputLabelPreview);
+    });
+
+    $cropModal.on('click', function (e) {
+        if ($(e.target).is($cropModal)) {
+            $cropModal.addClass('shake');
+            setTimeout(function() {
+                $cropModal.removeClass('shake');
+            }, 500);
+        }
     });
 
     $cropModal
@@ -595,6 +605,7 @@ function imageCropper(options) {
     function loadActionButtons($container) {
         var buttonsHTML = `
         <select id="aspect-ratio-select" class="select-aspect-ratio form-control">
+            <option value="">Choose Size</option>
             <option value="1 / 1">1:1 (Square)</option>
             <option value="16 / 9">16:9 (Widescreen)</option>
             <option value="9 / 16">9:16 (Vertical)</option>

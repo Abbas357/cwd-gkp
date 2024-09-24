@@ -254,7 +254,6 @@
                     $('#generate-card .loading-spinner').hide();
                     $('#generate-card .card-details').show();
                 }
-
             }
 
             $(document).on('click', '.card-btn', function() {

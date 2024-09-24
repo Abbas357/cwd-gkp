@@ -9,5 +9,6 @@ Route::post('registrations', [ContractorRegistrationController::class, 'store'])
 
 Route::get('standardizations/create', [EStandardizationController::class, 'create'])->name('standardizations.create');
 Route::post('standardizations', [EStandardizationController::class, 'store'])->name('standardizations.store');
+Route::get('standardizations/approved/{id}', [EStandardizationController::class, 'approvedProducts'])->name('standardizations.approved');
 
 Route::post('registrations/check-pec-number', [ContractorRegistrationController::class, 'checkPecNumber'])->name('check.pec.number');

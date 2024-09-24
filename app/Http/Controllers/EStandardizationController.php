@@ -122,14 +122,20 @@ class EStandardizationController extends Controller
 
     public function show(EStandardization $EStandardization)
     {
-        return view('standardizations.show', compact('EStandardization'));
-    }
-
-    public function showDetail(EStandardization $EStandardization) {
         return response()->json([
             'success' => true,
             'data' => [
                 'standardization' => $EStandardization,
+            ],
+        ]);
+    }
+
+    public function showDetail(EStandardization $EStandardization) {
+        $html = view('standardizations.partials.product-detail', compact('EStandardization'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'standardization' => $html,
             ],
         ]);
     }
@@ -171,6 +177,11 @@ class EStandardizationController extends Controller
             return response()->json(['success' => 'Product has been approved successfully.']);
         }
         return response()->json(['error' => 'Product can\'t be approved.']);
+    }
+
+    public function approvedProducts(Request $request, $id) {
+        $product = EStandardization::find($id);
+        return view('standardizations.approved', compact('product'));
     }
 
     public function reject(Request $request, EStandardization $EStandardization)

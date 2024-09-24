@@ -177,10 +177,6 @@
                 inputLabelPreview: '#image-label-preview',
             });
 
-            // new bootstrap.Modal($('#userEdit'), {
-            //     backdrop: 'static'
-            // });
-
             $('#mobile_number').mask('0000-0000000', {
                 placeholder: "____-_______"
             });
