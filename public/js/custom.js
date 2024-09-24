@@ -723,6 +723,208 @@ function imageCropper(options) {
     }
 }
 
+function pushStateModal({
+    title = 'Title',
+    fetchUrlTemplate,
+    btnSelector,
+    loadingSpinnerClass = 'loading-spinner',
+    modalFooterActionButton = '',
+    fetchDataKey = 'result',
+    modalSize = 'md',
+    modalType = '' // to be added as a query parameter
+}) {
+    const modalId = `modal-${modalType}`; // Unique modal ID based on type
+    const modalContentClass = `detail-${uniqId(6)}`; // Ensure unique content class
+
+    const modalTemplate = `
+        <div class="modal modal-${modalSize} fade" id="${modalId}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-${modalSize} modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">${title}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="${loadingSpinnerClass} text-center mt-2">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="${modalContentClass} p-1"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        ${modalFooterActionButton}
+                    </div>
+                </div>
+            </div>
+        </div>`;
+
+    // Avoid appending a duplicate modal if it already exists
+    if (!$(`#${modalId}`).length) {
+        $('body').append(modalTemplate);
+    }
+
+    async function openModal(recordId, type) {
+        // Only open the modal if the type matches
+        if (type !== modalType) {
+            return;
+        }
+
+        const url = fetchUrlTemplate.replace(':id', recordId);
+        
+        $(`#${modalId}`).modal('show'); // Show the modal
+        $(`#${modalId} .${loadingSpinnerClass}`).show(); // Show loading spinner
+        $(`#${modalId} .${modalContentClass}`).hide(); // Hide content initially
+
+        // Fetch data
+        const response = await fetchRequest(url);
+        const result = response[fetchDataKey];
+
+        if (result) {
+            $(`#${modalId} .modal-title`).text(title); // Set title
+            $(`#${modalId} .${modalContentClass}`).html(result); // Insert fetched content
+        } else {
+            $(`#${modalId} .modal-title`).text('Error');
+            $(`#${modalId} .${modalContentClass}`).html('<p class="pb-0 pt-3 p-4">Unable to load content.</p>');
+        }
+
+        $(`#${modalId} .${loadingSpinnerClass}`).hide(); // Hide spinner
+        $(`#${modalId} .${modalContentClass}`).show(); // Show content
+    }
+
+    function openModalFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const recordId = urlParams.get('id');
+        const type = urlParams.get('type');
+
+        // Only open the modal if the type matches the current modalType
+        if (recordId && type === modalType) {
+            openModal(recordId, modalType);
+        }
+    }
+
+    $(document).on('click', btnSelector, function() {
+        const recordId = $(this).data('id');
+        const currentUrl = new URL(window.location);
+
+        // Keep existing hash while updating query parameters
+        const newUrl = `${currentUrl.pathname}?id=${recordId}&type=${modalType}${window.location.hash}`;
+        history.pushState(null, null, newUrl);
+        openModal(recordId, modalType); // Pass modalType to openModal
+    });
+
+    $(window).on('popstate', function() {
+        openModalFromUrl(); // Handle browser back/forward actions
+    });
+
+    $(`#${modalId}`).on('hidden.bs.modal', function() {
+        const currentUrl = new URL(window.location);
+        currentUrl.searchParams.delete('id');
+        currentUrl.searchParams.delete('type');
+
+        // Keep the hash intact when removing query parameters
+        const newUrl = `${currentUrl.pathname}${currentUrl.search}${window.location.hash}`;
+        history.pushState(null, null, newUrl);
+    });
+
+    openModalFromUrl(); // Check URL for query parameters on page load
+}
+
+
+
+// function pushStateModal({
+//     title = 'Title',
+//     fetchUrlTemplate,
+//     btnSelector,
+//     loadingSpinnerClass = 'loading-spinner',
+//     modalFooterActionButton = '',
+//     fetchDataKey = 'result',
+//     modalSize = 'md'
+// }) {
+//     const modalId = `modal-${uniqId(6)}`;
+//     const modalContentClass = `detail-${uniqId(6)}`;
+    
+//     const modalTemplate = `
+//         <div class="modal modal-${modalSize} fade" id="${modalId}" tabindex="-1" aria-hidden="true">
+//             <div class="modal-dialog modal-md modal-dialog-centered">
+//                 <div class="modal-content">
+//                     <div class="modal-header">
+//                         <h5 class="modal-title">${title}</h5>
+//                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+//                     </div>
+//                     <div class="modal-body">
+//                         <div class="${loadingSpinnerClass} text-center mt-2">
+//                             <div class="spinner-border" role="status">
+//                                 <span class="visually-hidden">Loading...</span>
+//                             </div>
+//                         </div>
+//                         <div class="${modalContentClass} p-1"></div>
+//                     </div>
+//                     <div class="modal-footer">
+//                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+//                         ${modalFooterActionButton}
+//                     </div>
+//                 </div>
+//             </div>
+//         </div>`;
+    
+//     if (!$(`#${modalId}`).length) {
+//         $('body').append(modalTemplate);
+//     }
+
+//     async function openModal(recordId) {
+//         const url = fetchUrlTemplate.replace(':id', recordId);
+        
+//         $(`#${modalId}`).modal('show');
+//         $(`#${modalId} .${loadingSpinnerClass}`).show();
+//         $(`#${modalId} .${modalContentClass}`).hide();
+
+//         const response = await fetchRequest(url);
+//         const result = response[fetchDataKey];
+
+//         if (result) {
+//             $(`#${modalId} .modal-title`).text(title);
+//             $(`#${modalId} .${modalContentClass}`).html(result);
+//         } else {
+//             $(`#${modalId} .modal-title`).text('Error');
+//             $(`#${modalId} .${modalContentClass}`).html('<p class="pb-0 pt-3 p-4">Unable to load content.</p>');
+//         }
+
+//         $(`#${modalId} .${loadingSpinnerClass}`).hide();
+//         $(`#${modalId} .${modalContentClass}`).show();
+//     }
+
+//     function openModalFromUrl() {
+//         const urlParams = new URLSearchParams(window.location.search);
+//         const recordId = urlParams.get('id');
+//         if (recordId) {
+//             openModal(recordId);
+//         }
+//     }
+
+//     $(document).on('click', btnSelector, function() {
+//         const recordId = $(this).data('id');
+//         const currentHash = window.location.hash;
+//         const newUrl = `${window.location.pathname}?id=${recordId}${currentHash}`;
+//         history.pushState(null, null, newUrl);
+//         openModal(recordId);
+//     });
+
+//     $(window).on('popstate', function() {
+//         openModalFromUrl();
+//     });
+
+//     $(`#${modalId}`).on('hidden.bs.modal', function() {
+//         const currentUrl = new URL(window.location);
+//         currentUrl.searchParams.delete('id');
+//         const newUrl = `${currentUrl.pathname}${window.location.hash}`;
+//         history.pushState(null, null, newUrl);
+//     });
+
+//     openModalFromUrl();
+// }
+
 $("div.modal").on("select2:open", () => {
     document.querySelector(".select2-search__field").focus();
 });

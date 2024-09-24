@@ -42,31 +42,6 @@
         <tbody>
         </tbody>
     </table>
-
-    <div class="modal fade" id="generate-card" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-md modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit User</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="loading-spinner text-center mt-2">
-                        <div class="spinner-border" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
-                    <div class="card-details p-1">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" id="generate-image" class="btn btn-primary px-3">Download Card</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!--end row-->
     @push('script')
     <script src="{{ asset('plugins/datatable/js/datatables.min.js') }}"></script>
@@ -75,20 +50,6 @@
 
     <script>
         $(document).ready(function() {
-            $('#generate-image').on('click', function() {
-                var div = $('#capture')[0];
-                html2canvas(div, {
-                    scale: 2
-                }).then(function(canvas) {
-                    canvas.toBlob(function(blob) {
-                        var link = $('<a></a>')[0];
-                        link.href = URL.createObjectURL(blob);
-                        link.download = `card-${uniqId(6)}.png`;
-                        link.click();
-                    });
-                });
-            });
-
             var table = initDataTable('#standardizations-datatable', {
                 ajaxUrl: "{{ route('standardizations.index') }}"
                 , columns: [{
@@ -230,52 +191,54 @@
                 , draggingClass: "dragging"
             , });
 
-
-            async function openModalFromUrl() {
-                const urlParams = new URLSearchParams(window.location.search);
-                const standardizationId = urlParams.get('id');
-                const url = "{{ route('standardizations.showCard', ':EStandardization') }}".replace(':EStandardization', standardizationId);
-
-                if (standardizationId) {
-                    $('#generate-card').modal('show');
-                    $('#generate-card .loading-spinner').show();
-                    $('#generate-card .card-details').hide();
-
-                    const data = await fetchRequest(url);
-                    let standardization = data.standardization;
-                    if (standardization) {
-                        $('#generate-card .modal-title').text('Standardization Card');
-                        $('#generate-card .card-details').html(standardization);
-                    } else {
-                        $('#generate-card .modal-title').text('Error');
-                        $('#generate-card .user-details').html('<p class="pb-0 pt-3 p-4">Unable to generate Card.</p>');
-                    }
-
-                    $('#generate-card .loading-spinner').hide();
-                    $('#generate-card .card-details').show();
-                }
-            }
-
-            $(document).on('click', '.card-btn', function() {
-                const standardizationId = $(this).data('id');
-                const currentHash = window.location.hash;
-                const newUrl = `${window.location.pathname}?id=${standardizationId}${currentHash}`;
-                history.pushState(null, null, newUrl);
-                openModalFromUrl();
+            pushStateModal({
+                fetchUrlTemplate: "{{ route('standardizations.showCard', ':id') }}",
+                btnSelector: '.card-btn',
+                title: 'Standardization Card',
+                modalFooterActionButton: '<button type="submit" id="generate-image" class="btn btn-primary px-3">Download Card</button>',
+                fetchDataKey: 'standardization',
             });
 
-            $(window).on('popstate', function() {
-                openModalFromUrl();
+            pushStateModal({
+                fetchUrlTemplate: "{{ route('standardizations.showDetail', ':id') }}",
+                btnSelector: '.view-btn',
+                title: 'Standardization Card',
+                fetchDataKey: 'standardization',
+                modalSize: 'xl'
             });
 
-            $('#generate-card').on('hidden.bs.modal', function() {
-                const currentUrl = new URL(window.location);
-                currentUrl.searchParams.delete('id');
-                const newUrl = `${currentUrl.pathname}${window.location.hash}`;
-                history.pushState(null, null, newUrl);
+            $('#generate-image').on('click', function() {
+                var div = $('#capture')[0];
+                html2canvas(div, {
+                    scale: 2
+                }).then(function(canvas) {
+                    canvas.toBlob(function(blob) {
+                        var link = $('<a></a>')[0];
+                        link.href = URL.createObjectURL(blob);
+                        link.download = `card-${uniqId(6)}.png`;
+                        link.click();
+                    });
+                });
             });
-            openModalFromUrl();
 
+            pushStateModal({
+    fetchUrlTemplate: "{{ route('standardizations.showCard', ':id') }}",
+    btnSelector: '.card-btn',
+    title: 'Standardization Card',
+    modalFooterActionButton: '<button type="submit" id="generate-image" class="btn btn-primary px-3">Download Card</button>',
+    fetchDataKey: 'standardization',
+    modalType: 'card'
+});
+
+pushStateModal({
+    fetchUrlTemplate: "{{ route('standardizations.showDetail', ':id') }}",
+    btnSelector: '.view-btn',
+    title: 'Standardization Details',
+    fetchDataKey: 'standardization',
+    modalSize: 'xl',
+    modalType: 'detail'
+});
+            
         });
 
     </script>
