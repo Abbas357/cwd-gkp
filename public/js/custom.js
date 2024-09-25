@@ -733,20 +733,29 @@ function pushStateModal({
     fetchDataKey = "result",
     modalSize = "md",
     modalType = "",
+    includeForm = false,
+    formAction = "",
 }) {
     return new Promise((resolve) => {
         const modalId = `modal-${modalType}`;
         const modalContentClass = `detail-${modalType}`;
         const actionBtnId = actionButtonName.replace(/\s+/g, '-').toLowerCase()+'-'+modalType;
 
+        const formTagOpen = includeForm
+            ? `<form id="form-${modalType}" method="POST" enctype="multipart/form-data">`
+            : "";
+        const formTagClose = includeForm ? `</form>` : "";
+
         const modalTemplate = `
         <div class="modal modal-${modalSize} fade" id="${modalId}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-${modalSize} modal-dialog-centered modal-dialog-scrollable">
+                
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">${title}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    ${formTagOpen}
                     <div class="modal-body">
                         <div class="${loadingSpinnerClass} text-center mt-2">
                             <div class="spinner-border" role="status">
@@ -756,10 +765,12 @@ function pushStateModal({
                         <div class="${modalContentClass} p-1"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Closse">Cancel</button>
                         ${actionButtonName ? `<button type="submit" id="${actionBtnId}" class="btn btn-primary px-3">${actionButtonName}</button>` : ''}    
                     </div>
+                    ${formTagClose}
                 </div>
+                
             </div>
         </div>`;
 
@@ -769,6 +780,10 @@ function pushStateModal({
 
         async function openModal(recordId) {
             const url = fetchUrlTemplate.replace(":id", recordId);
+
+            if (includeForm) {
+                $(`#form-${modalType}`).attr('action', formAction.replace(":id", recordId));
+            }
 
             $(`#${modalId}`).modal("show");
             $(`#${modalId} .${loadingSpinnerClass}`).show();
@@ -825,29 +840,9 @@ function pushStateModal({
 
         openModalFromUrl();
 
-        const modal = $("#" + modalId);
-        const actionBtn = $("#" + actionBtnId);
-
-        if (modal.length && actionBtn.length) {
-            resolve([modal, actionBtn]);
+        if (modalId.length && actionBtnId.length) {
+            resolve([modalId, actionBtnId]);
         }
-
-        // pushStateModal({
-        //     fetchUrlTemplate: "{{ route('standardizations.showDetail', ':id') }}",
-        //     btnSelector: '.view-btn',
-        //     title: 'Standardization Details',
-        //     fetchDataKey: 'standardization',
-        //     modalSize: 'xl',
-        //     modalType: 'detail'
-        // }).then(([modal, actionBtn]) => {
-        //     modal.on('shown.bs.modal', function () {
-        //         console.log(`Modal with ID ${modalId} is fully shown.`);
-        //     });
-
-        //     modal.on('hidden.bs.modal', function () {
-        //         console.log(`Modal with ID ${modalId} is fully hidden.`);
-        //     });
-        // });
     });
 }
 

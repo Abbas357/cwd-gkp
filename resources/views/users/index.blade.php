@@ -138,61 +138,37 @@
             resizableTable('#users-datatable');
 
             pushStateModal({
-                fetchUrlTemplate: "{{ route('users.edit', ':id') }}",
-                btnSelector: '.edit-btn',
-                title: 'User Detail',
-                fetchDataKey: 'user',
-                actionButtonName: 'Update User',
-                modalSize: 'lg',
-                modalType: 'detail'
+                fetchUrlTemplate: "{{ route('users.edit', ':id') }}"
+                , btnSelector: '.edit-btn'
+                , title: 'User Detail'
+                , fetchDataKey: 'user'
+                , actionButtonName: 'Update User'
+                , modalSize: 'lg'
+                , modalType: 'user'
+                , includeForm: true
+                , formAction: "{{ route('users.update', ':id') }}"
+            , }).then(([modal, action]) => {
+                const userModal = $('#' + modal);
+                const updateUserBtn = $('#' + action);
+                updateUserBtn.closest('form').on('submit', async function(e) {
+                    e.preventDefault();
+                    const form = this;
+                    const formData = new FormData(form);
+                    const url = $(this).attr('action');
+                    setButtonLoading('#' + action, true);
+                    try {
+                        const result = await fetchRequest(url, 'POST', formData);
+                        if (result) {
+                            setButtonLoading('#' + action, false);
+                            userModal.modal('hide');
+                            table.ajax.reload();
+                        }
+                    } catch (error) {
+                        setButtonLoading('#' + action, false);
+                        console.error('Error during form submission:', error);
+                    }
+                });
             });
-
-            $(document).on('submit', '#user-update', async function(e) {
-                e.preventDefault();
-                const form = this;
-                const formData = new FormData(form);
-                const url = $(this).attr('action');
-                
-                const result = await fetchRequest(url, 'POST', formData);
-                if (result) {
-                    form.reset();
-                    setButtonLoading('#update-user-btn', false);
-                    $('#userEdit').modal('hide');
-                    $('#roles').empty();
-                    $('#permissions').empty();
-                    table.ajax.reload();
-                }
-            });
-
-            $('#image').change(()=>{
-                alert('fff')
-            })
-            imageCropper({
-                fileInput: '#image',
-                inputLabelPreview: '#image-label-preview',
-            });
-
-            $('#mobile_number').mask('0000-0000000', {
-                placeholder: "____-_______"
-            });
-            
-            $('#landline_number').mask('000-000000', {
-                placeholder: "___-______"
-            });
-
-            $('#cnic').mask('00000-0000000-0', {
-                placeholder: "_____-_______-_"
-            });
-
-            $('#designation').select2({
-                theme: "bootstrap-5"
-                , dropdownParent: $('#userEdit')
-            , });
-            $('#office').select2({
-                theme: "bootstrap-5"
-                , dropdownParent: $('#userEdit')
-            , });
-
 
         });
 

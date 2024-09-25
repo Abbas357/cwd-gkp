@@ -199,7 +199,7 @@
                 fetchDataKey: 'standardization',
                 modalType: 'card'
             }).then(([modal, actionBtn]) => {
-                actionBtn.on('click', function() {
+                $('#' + actionBtn).on('click', function() {
                     var div = $('#capture')[0];
                     html2canvas(div, {
                         scale: 2
