@@ -29,7 +29,7 @@
                                 <div class="col d-flex justify-content-center align-items-center">
                                     <label class="label" data-toggle="tooltip" title="Change Profile Picture">
                                         <img src="{{ asset('images/no-profile.png') }}" id="image-label-preview" alt="avatar" class="change-image img-fluid rounded-circle">
-                                        <input type="file" id="image" name="image" class="sr-only" id="input" name="image" accept="image/*">
+                                        <input type="file" id="image" name="image" class="sr-only" accept="image/*">
                                     </label>
                                 </div>
                             </div>

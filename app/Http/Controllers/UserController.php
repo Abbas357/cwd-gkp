@@ -66,7 +66,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'data' => [
-                    'user' => 'The user does not exists in Database',
+                    'result' => 'The user does not exists in Database',
                 ],
             ]);
         }
@@ -85,7 +85,7 @@ class UserController extends Controller
         return response()->json([
             'success' => true,
             'data' => [
-                'user' => $html,
+                'result' => $html,
             ],
         ]);
     }

@@ -125,38 +125,48 @@ class EStandardizationController extends Controller
         return response()->json([
             'success' => true,
             'data' => [
-                'standardization' => $EStandardization,
+                'result' => $EStandardization,
             ],
         ]);
     }
 
-    public function showDetail(EStandardization $EStandardization) {
+    public function showDetail(EStandardization $EStandardization)
+    {
+        if (!$EStandardization) {
+            return response()->json([
+                'success' => false,
+                'data' => [
+                    'result' => 'Unable to load Product detail',
+                ],
+            ]);
+        }
         $html = view('standardizations.partials.product-detail', compact('EStandardization'))->render();
         return response()->json([
             'success' => true,
             'data' => [
-                'standardization' => $html,
+                'result' => $html,
             ],
         ]);
     }
 
-    public function showCard(EStandardization $EStandardization) {
-        if($EStandardization->approval_status !== 1) {
+    public function showCard(EStandardization $EStandardization)
+    {
+        if ($EStandardization->approval_status !== 1) {
             return response()->json([
                 'success' => false,
                 'data' => [
-                    'standardization' => 'The Product is not standardized',
+                    'result' => 'The Product is not standardized',
                 ],
             ]);
         }
         $data = route('standardizations.approved', ['id' => $EStandardization->id]);
         $qrCode = Builder::create()
-        ->writer(new PngWriter())
-        ->data($data)
-        ->encoding(new Encoding('UTF-8'))
-        ->size(300)
-        ->margin(1)
-        ->build();
+            ->writer(new PngWriter())
+            ->data($data)
+            ->encoding(new Encoding('UTF-8'))
+            ->size(300)
+            ->margin(1)
+            ->build();
 
         $qrCodeUri = $qrCode->getDataUri();
 
@@ -164,7 +174,7 @@ class EStandardizationController extends Controller
         return response()->json([
             'success' => true,
             'data' => [
-                'standardization' => $html,
+                'result' => $html,
             ],
         ]);
     }
@@ -179,7 +189,8 @@ class EStandardizationController extends Controller
         return response()->json(['error' => 'Product can\'t be approved.']);
     }
 
-    public function approvedProducts(Request $request, $id) {
+    public function approvedProducts(Request $request, $id)
+    {
         $product = EStandardization::find($id);
         return view('standardizations.approved', compact('product'));
     }
@@ -193,6 +204,33 @@ class EStandardizationController extends Controller
             return response()->json(['success' => 'Product has been rejected.']);
         }
         return response()->json(['error' => 'Product can\'t be rejected.']);
+    }
+
+    public function updateField(Request $request)
+    {
+        $request->validate([
+            'field' => 'required|string',
+            'value' => 'required|string',
+        ]);
+
+        $EStandardization = EStandardization::find($request->id);
+        $EStandardization->{$request->field} = $request->value;
+        $EStandardization->save();
+
+        return response()->json(['success' => 'Field saved']);
+    }
+
+    public function upsertImage(Request $request)
+    {
+        $standardization = EStandardization::find($request->id);
+        $image = $request->image;
+        $collection = $request->collection;
+        $standardization->addMedia($image)->toMediaCollection($collection);
+        if($standardization->save()) {
+            return response()->json(['success' => 'Image Updated']);
+        }
+        return response()->json(['error' => 'Error Uploading Image']);
+
     }
 
     public function update(UpdateEStandardizationRequest $request, EStandardization $eStandardization)

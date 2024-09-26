@@ -13,9 +13,11 @@ class EStandardization extends Model implements HasMedia
     protected $guarded = [];
 
     protected static function booted()
-    {        
+    {
         static::updating(function ($standardization) {
-            if ($standardization->isDirty('approval_status')) {
+            $changedFields = $standardization->getDirty();
+
+            if (isset($changedFields['approval_status'])) {
                 $action = $standardization->approval_status === 1 ? 'approval' : 'rejection';
                 $oldStatus = $standardization->getOriginal('approval_status');
                 $newStatus = $standardization->approval_status;
@@ -23,8 +25,24 @@ class EStandardization extends Model implements HasMedia
                 EStandardizationLog::create([
                     's_id' => $standardization->id,
                     'action' => $action,
-                    'old_status' => $oldStatus,
-                    'new_status' => $newStatus,
+                    'old_value' => $oldStatus,
+                    'new_value' => $newStatus,
+                    'action_by' => request()->user()->id,
+                    'action_at' => now(),
+                ]);
+
+                unset($changedFields['approval_status']);
+            }
+
+            foreach ($changedFields as $field => $newValue) {
+                $oldValue = $standardization->getOriginal($field);
+
+                EStandardizationLog::create([
+                    's_id' => $standardization->id,
+                    'action' => 'editing',
+                    'field_name' => $field,
+                    'old_value' => $oldValue,
+                    'new_value' => $newValue,
                     'action_by' => request()->user()->id,
                     'action_at' => now(),
                 ]);
@@ -32,15 +50,16 @@ class EStandardization extends Model implements HasMedia
         });
     }
 
+
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('secp_certificates');
-        $this->addMediaCollection('iso_certificates');
-        $this->addMediaCollection('commerse_memberships');
-        $this->addMediaCollection('pec_certificates');
-        $this->addMediaCollection('annual_tax_returns');
-        $this->addMediaCollection('audited_financials');
-        $this->addMediaCollection('organization_registrations');
-        $this->addMediaCollection('performance_certificate');
+        $this->addMediaCollection('secp_certificates')->singleFile();
+        $this->addMediaCollection('iso_certificates')->singleFile();
+        $this->addMediaCollection('commerse_memberships')->singleFile();
+        $this->addMediaCollection('pec_certificates')->singleFile();
+        $this->addMediaCollection('annual_tax_returns')->singleFile();
+        $this->addMediaCollection('audited_financials')->singleFile();
+        $this->addMediaCollection('organization_registrations')->singleFile();
+        $this->addMediaCollection('performance_certificate')->singleFile();
     }
 }

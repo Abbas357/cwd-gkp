@@ -139,6 +139,7 @@
                 const {
                     value: reason
                 } = await confirmWithInput({
+                    inputType: "textarea",
                     text: 'Do you want to reject this product?'
                     , inputValidator: (value) => {
                         if (!value) {
@@ -192,12 +193,10 @@
             , });
 
             pushStateModal({
-                fetchUrlTemplate: "{{ route('standardizations.showCard', ':id') }}",
+                fetchUrl: "{{ route('standardizations.showCard', ':id') }}",
                 btnSelector: '.card-btn',
                 title: 'Standardization Card',
                 actionButtonName: 'Generate Card',
-                fetchDataKey: 'standardization',
-                modalType: 'card'
             }).then(([modal, actionBtn]) => {
                 $('#' + actionBtn).on('click', function() {
                     var div = $('#capture')[0];
@@ -215,12 +214,10 @@
             });
 
             pushStateModal({
-                fetchUrlTemplate: "{{ route('standardizations.showDetail', ':id') }}",
+                fetchUrl: "{{ route('standardizations.showDetail', ':id') }}",
                 btnSelector: '.view-btn',
                 title: 'Standardization Details',
-                fetchDataKey: 'standardization',
                 modalSize: 'xl',
-                modalType: 'detail'
             });
             
         });

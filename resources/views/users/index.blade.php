@@ -138,33 +138,31 @@
             resizableTable('#users-datatable');
 
             pushStateModal({
-                fetchUrlTemplate: "{{ route('users.edit', ':id') }}"
+                fetchUrl: "{{ route('users.edit', ':id') }}"
                 , btnSelector: '.edit-btn'
                 , title: 'User Detail'
-                , fetchDataKey: 'user'
                 , actionButtonName: 'Update User'
                 , modalSize: 'lg'
-                , modalType: 'user'
                 , includeForm: true
                 , formAction: "{{ route('users.update', ':id') }}"
-            , }).then(([modal, action]) => {
+            , }).then((modal) => {
                 const userModal = $('#' + modal);
-                const updateUserBtn = $('#' + action);
-                updateUserBtn.closest('form').on('submit', async function(e) {
+                const updateUserBtn = userModal.find('button[type="submit"]');
+                userModal.find('form').on('submit', async function(e) {
                     e.preventDefault();
                     const form = this;
                     const formData = new FormData(form);
                     const url = $(this).attr('action');
-                    setButtonLoading('#' + action, true);
+                    setButtonLoading(updateUserBtn, true);
                     try {
                         const result = await fetchRequest(url, 'POST', formData);
                         if (result) {
-                            setButtonLoading('#' + action, false);
+                            setButtonLoading(updateUserBtn, false);
                             userModal.modal('hide');
                             table.ajax.reload();
                         }
                     } catch (error) {
-                        setButtonLoading('#' + action, false);
+                        setButtonLoading(updateUserBtn, false);
                         console.error('Error during form submission:', error);
                     }
                 });

@@ -35,7 +35,7 @@ async function confirmWithInput({
 } = {}) {
     const options = {
         title: text,
-        input: inputType,
+        input: inputType === 'textarea' ? 'textarea' : inputType,  // Checks if textarea is needed
         inputPlaceholder: inputPlaceholder,
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -50,6 +50,7 @@ async function confirmWithInput({
 
     return await Swal.fire(options);
 }
+
 
 async function fetchRequest(
     url,
@@ -453,6 +454,7 @@ function imageCropper(options) {
         viewMode: 2,
         imageType: "image/jpeg",
         quality: 0.7,
+        onCrop: null,
     };
 
     options = $.extend({}, defaults, options);
@@ -556,6 +558,10 @@ function imageCropper(options) {
                     var file = new File([blob], `cropped-${uniqId(6)}.jpg`, {
                         type: options.imageType,
                     });
+
+                    if (typeof options.onCrop === "function") {
+                        options.onCrop(file);
+                    }
 
                     var dataTransfer = new DataTransfer();
                     dataTransfer.items.add(file);
@@ -725,24 +731,23 @@ function imageCropper(options) {
 
 function pushStateModal({
     title = "Title",
-    fetchUrlTemplate,
+    fetchUrl,
     btnSelector,
-    appendTo = 'body',
-    loadingSpinnerClass = "loading-spinner",
-    actionButtonName = "",
-    fetchDataKey = "result",
+    loadingSpinner = "loading-spinner",
+    actionButtonName,
     modalSize = "md",
-    modalType = "",
+    modalType,
     includeForm = false,
-    formAction = "",
+    formAction,
 }) {
     return new Promise((resolve) => {
-        const modalId = `modal-${modalType}`;
-        const modalContentClass = `detail-${modalType}`;
-        const actionBtnId = actionButtonName.replace(/\s+/g, '-').toLowerCase()+'-'+modalType;
+        const calcModalType = modalType ?? btnSelector.replace(/^[.#]/, '').split('-')[0];
+        const modalId = `modal-${calcModalType}`;
+        const modalContentClass = `detail-${calcModalType}`;
+        const actionBtnId = actionButtonName && actionButtonName.replace(/\s+/g, '-').toLowerCase()+'-'+calcModalType;
 
         const formTagOpen = includeForm
-            ? `<form id="form-${modalType}" method="POST" enctype="multipart/form-data">`
+            ? `<form id="form-${calcModalType}" method="POST" enctype="multipart/form-data">`
             : "";
         const formTagClose = includeForm ? `</form>` : "";
 
@@ -757,7 +762,7 @@ function pushStateModal({
                     </div>
                     ${formTagOpen}
                     <div class="modal-body">
-                        <div class="${loadingSpinnerClass} text-center mt-2">
+                        <div class="${loadingSpinner} text-center mt-2">
                             <div class="spinner-border" role="status">
                                 <span class="visually-hidden">Loading...</span>
                             </div>
@@ -775,22 +780,22 @@ function pushStateModal({
         </div>`;
 
         if (!$(`#${modalId}`).length) {
-            $(appendTo).append(modalTemplate);
+            $('body').append(modalTemplate);
         }
 
         async function openModal(recordId) {
-            const url = fetchUrlTemplate.replace(":id", recordId);
+            const url = fetchUrl.replace(":id", recordId);
 
             if (includeForm) {
-                $(`#form-${modalType}`).attr('action', formAction.replace(":id", recordId));
+                $(`#form-${calcModalType}`).attr('action', formAction.replace(":id", recordId));
             }
 
             $(`#${modalId}`).modal("show");
-            $(`#${modalId} .${loadingSpinnerClass}`).show();
+            $(`#${modalId} .${loadingSpinner}`).show();
             $(`#${modalId} .${modalContentClass}`).hide();
 
             const response = await fetchRequest(url);
-            const result = response[fetchDataKey];
+            const result = response['result'];
 
             if (result) {
                 $(`#${modalId} .modal-title`).text(title);
@@ -802,7 +807,7 @@ function pushStateModal({
                 );
             }
 
-            $(`#${modalId} .${loadingSpinnerClass}`).hide();
+            $(`#${modalId} .${loadingSpinner}`).hide();
             $(`#${modalId} .${modalContentClass}`).show();
         }
 
@@ -811,7 +816,7 @@ function pushStateModal({
             const recordId = urlParams.get("id");
             const type = urlParams.get("type");
 
-            if (recordId && type === modalType) {
+            if (recordId && type === calcModalType) {
                 openModal(recordId);
             }
         }
@@ -820,9 +825,9 @@ function pushStateModal({
             const recordId = $(this).data("id");
             const currentUrl = new URL(window.location);
 
-            const newUrl = `${currentUrl.pathname}?id=${recordId}&type=${modalType}${window.location.hash}`;
+            const newUrl = `${currentUrl.pathname}?id=${recordId}&type=${calcModalType}${window.location.hash}`;
             history.pushState(null, null, newUrl);
-            openModal(recordId, modalType);
+            openModal(recordId, calcModalType);
         });
 
         $(window).on("popstate", function () {
@@ -840,8 +845,8 @@ function pushStateModal({
 
         openModalFromUrl();
 
-        if (modalId.length && actionBtnId.length) {
-            resolve([modalId, actionBtnId]);
+        if (modalId.length) {
+            resolve(modalId);
         }
     });
 }
