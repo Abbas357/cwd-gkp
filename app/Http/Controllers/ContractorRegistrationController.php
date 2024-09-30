@@ -156,7 +156,31 @@ class ContractorRegistrationController extends Controller
 
     public function show(ContractorRegistration $ContractorRegistration)
     {
-        return view('cont_registrations.show', compact('ContractorRegistration'));
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $ContractorRegistration,
+            ],
+        ]);
+    }
+
+    public function showDetail(ContractorRegistration $ContractorRegistration)
+    {
+        if (!$ContractorRegistration) {
+            return response()->json([
+                'success' => false,
+                'data' => [
+                    'result' => 'Unable to load Registration detail',
+                ],
+            ]);
+        }
+        $html = view('cont_registrations.partials.detail', compact('cc'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
     }
 
     public function checkPecNumber(Request $request)

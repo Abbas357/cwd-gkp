@@ -140,7 +140,7 @@ class EStandardizationController extends Controller
                 ],
             ]);
         }
-        $html = view('standardizations.partials.product-detail', compact('EStandardization'))->render();
+        $html = view('standardizations.partials.detail', compact('EStandardization'))->render();
         return response()->json([
             'success' => true,
             'data' => [

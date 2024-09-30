@@ -40,8 +40,7 @@ Route::middleware('auth')->prefix('registrations')->group(function () {
     Route::get('/', [ContractorRegistrationController::class, 'index'])->name('registrations.index');
     Route::patch('/defer/{ContractorRegistration}', [ContractorRegistrationController::class, 'defer'])->name('registrations.defer');
     Route::patch('/approve/{ContractorRegistration}', [ContractorRegistrationController::class, 'approve'])->name('registrations.approve');
-    Route::get('/{ContractorRegistration}', [ContractorRegistrationController::class, 'show'])->name('registrations.show');
-    Route::patch('/{ContractorRegistration}', [ContractorRegistrationController::class, 'update'])->name('registrations.update');
+    Route::get('/get/{ContractorRegistration}', [ContractorRegistrationController::class, 'showDetail'])->name('registrations.showDetail');
 });
 
 Route::middleware('auth')->prefix('standardizations')->group(function () {

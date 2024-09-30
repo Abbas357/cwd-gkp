@@ -154,6 +154,15 @@
                     gripInnerHtml: "<div class='grip'></div>",
                     draggingClass:"dragging",
                 });
+
+                pushStateModal({
+                    fetchUrl: "{{ route('registrations.showDetail', ':id') }}",
+                    btnSelector: '.view-btn',
+                    title: 'Registrations Details',
+                    modalSize: 'xl',
+                });
+
+
             });
                 
         </script>
