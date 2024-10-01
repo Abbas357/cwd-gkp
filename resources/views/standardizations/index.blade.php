@@ -217,7 +217,7 @@
                 fetchUrl: "{{ route('standardizations.showDetail', ':id') }}",
                 btnSelector: '.view-btn',
                 title: 'Standardization Details',
-                modalSize: 'xl',
+                modalSize: 'lg',
             });
             
         });

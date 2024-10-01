@@ -174,7 +174,7 @@ class ContractorRegistrationController extends Controller
                 ],
             ]);
         }
-        $html = view('cont_registrations.partials.detail', compact('cc'))->render();
+        $html = view('cont_registrations.partials.detail', compact('ContractorRegistration'))->render();
         return response()->json([
             'success' => true,
             'data' => [

@@ -51,7 +51,7 @@ Route::middleware('auth')->prefix('standardizations')->group(function () {
     Route::get('/get/{EStandardization}', [EStandardizationController::class, 'showDetail'])->name('standardizations.showDetail');
     Route::get('/card/{EStandardization}', [EStandardizationController::class, 'showCard'])->name('standardizations.showCard');
     Route::patch('/update-field', [EStandardizationController::class, 'updateField'])->name('standardizations.updateField');
-    Route::patch('/upsert-image', [EStandardizationController::class, 'upsertImage'])->name('standardizations.upsertImage');
+    Route::patch('/upload-file', [EStandardizationController::class, 'uploadFile'])->name('standardizations.uploadFile');
 });
 
 Route::middleware('auth')->prefix('roles')->group(function () {

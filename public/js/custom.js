@@ -482,6 +482,7 @@ function imageCropper(options) {
     $fileInput.on("change", function (e) {
         var files = e.target.files;
         if (files.length === 0 || !files[0].type.startsWith("image/")) {
+            options.onCrop(files[0]);
             return;
         }
         var done = function (url) {

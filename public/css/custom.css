@@ -643,3 +643,9 @@ div.dt-container {
   font-weight: bold;
   padding-left: 1rem;
 }
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

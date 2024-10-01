@@ -1,41 +1,9 @@
 <link href="{{ asset('plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
-<style>
-    .card {
-        position: relative;
-    }
-
-    .card-img-top {
-        display: block;
-        width: 100%;
-        height: auto;
-    }
-
-    .card .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        cursor: pointer;
-    }
-
-    .card:hover .overlay {
-        opacity: 1;
-    }
-
-</style>
 <div class="row standardization-details">
     <div class="col-md-12">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="mb-4">Standardization Details</h2>
-            <button type="button" id="print-standardization" class="btn btn-light text-gray-900 border border-gray-300 float-end me-2 mb-2">
+            <button type="button" id="print-standardization" class="no-print btn btn-light text-gray-900 border border-gray-300 float-end me-2 mb-2">
                 <span class="d-flex align-items-center">
                     <i class="bi-print"></i>
                     Print
@@ -51,7 +19,7 @@
                     <span id="text-{{ $field }}">{{ $EStandardization->$field }}</span>
                     <input type="text" id="input-{{ $field }}" value="{{ $EStandardization->$field }}" class="d-none form-control" />
                     <button id="save-btn-{{ $field }}" class="btn btn-sm btn-primary d-none" onclick="updateField('{{ $field }}', {{ $EStandardization->id }})">Update</button>
-                    <button class="btn btn-sm" onclick="enableEditing('{{ $field }}')">
+                    <button class="no-print btn btn-sm" onclick="enableEditing('{{ $field }}')">
                         edit
                     </button>
                 </td>
@@ -59,11 +27,9 @@
             @endforeach
         </table>
 
-        <h3 class="mt-5">Uploaded Documents</h3>
-
-        <div class="row mt-3">
+        <div class="row mt-3 mx-1">
             @php
-            $imageFields = [
+            $uploads = [
             'secp_certificates' => 'SECP Certificate',
             'iso_certificates' => 'ISO Certificate',
             'commerse_memberships' => 'Commerce Membership',
@@ -74,23 +40,40 @@
             'performance_certificate' => 'Performance Certificate',
             ];
             @endphp
+            <h3 class="mt-3">Documents</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Link</th>
+                        <th class="no-print">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($uploads as $upload => $label)
+                    <tr>
+                        <td>{{ $label }}</td>
+                        <td>
+                            @if($EStandardization->hasMedia($upload))
+                            <a href="{{ $EStandardization->getFirstMediaUrl($upload) }}" target="_blank" title="{{ $label }}" class="d-flex align-items-center gap-2">
+                                View
+                            </a>
+                            @else
+                            <span>Not Uploaded</span>
+                            @endif
+                        </td>
+                        <td class="no-print">
+                            <label for="{{ $upload }}" class="d-flex align-items-center btn btn-sm btn-light">
+                                <span>{{ $EStandardization->hasMedia($upload) ? 'Change File' : 'Add File' }}</span>
+                            </label>
+                            <input type="file" id="{{ $upload }}" name="{{ $upload }}" class="file-input" data-upload="{{ $upload }}">
+                            <img src="" class=".preview-image" alt="">
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
 
-            @foreach($imageFields as $imageField => $label)
-            <div class="col-md-3 mb-3">
-                <div class="card">
-                    <label for="{{ $imageField }}">
-                        <img src="{{ $EStandardization->hasMedia($imageField) ? $EStandardization->getFirstMediaUrl($imageField) : 'https://via.placeholder.com/150x247' }}" id="{{ $imageField }}-prev" class="card-img-top" alt="{{ $label }}">
-                        <div class="overlay">
-                            <span>{{ $EStandardization->hasMedia($imageField) ? 'Change Image' : 'Add Image' }}</span>
-                        </div>
-                    </label>
-                    <input type="file" id="{{ $imageField }}" name="{{ $imageField }}" class="d-none image-input">
-                    <div class="card-body">
-                        <p class="card-text">{{ $label }}</p>
-                    </div>
-                </div>
-            </div>
-            @endforeach
 
         </div>
     </div>
@@ -99,67 +82,30 @@
 <script src="{{ asset('plugins/printThis/printThis.js') }}"></script>
 <script src="{{ asset('plugins/cropper/js/cropper.min.js') }}"></script>
 <script>
-    const certificates = [{
-            fileInput: '#secp_certificates'
-            , inputLabelPreview: '#secp_certificates-prev'
-        }
-        , {
-            fileInput: '#iso_certificates'
-            , inputLabelPreview: '#iso_certificates-prev'
-        }
-        , {
-            fileInput: '#commerse_memberships'
-            , inputLabelPreview: '#commerse_memberships-prev'
-        }
-        , {
-            fileInput: '#pec_certificates'
-            , inputLabelPreview: '#pec_certificates-prev'
-        }
-        , {
-            fileInput: '#annual_tax_returns'
-            , inputLabelPreview: '#annual_tax_returns-prev'
-        }
-        , {
-            fileInput: '#audited_financials'
-            , inputLabelPreview: '#audited_financials-prev'
-        }
-        , {
-            fileInput: '#organization_registrations'
-            , inputLabelPreview: '#organization_registrations-prev'
-        }
-        , {
-            fileInput: '#performance_certificate'
-            , inputLabelPreview: '#performance_certificate-prev'
-        }
-    ];
-
-    certificates.forEach(cert => {
-        const fileInput = document.querySelector(cert.fileInput);
-
+    $(document).ready(function() {
+        
         imageCropper({
-            fileInput: cert.fileInput
-            , inputLabelPreview: cert.inputLabelPreview
+            fileInput: '.file-input'
+            , inputLabelPreview: '.preview-image'
             , aspectRatio: 1 / 1.6471
             , onCrop: async function(croppedFile) {
                 var formData = new FormData();
-                formData.append('image', croppedFile);
-                formData.append('collection', cert.fileInput.replace('#', ''));
+                console.log(croppedFile)
+                formData.append('file', croppedFile);
+                formData.append('collection', '');
                 formData.append('id', "{{ $EStandardization->id }}");
                 formData.append('_method', "PATCH");
 
-                const url = "{{ route('standardizations.upsertImage') }}"
+                const url = "{{ route('standardizations.uploadFile') }}"
                 try {
                     const result = await fetchRequest(url, 'POST', formData);
-                    if (result) {
-                    }
+                    if (result) {}
                 } catch (error) {
                     console.error('Error during form submission:', error);
                 }
             }
         });
-    });
-
-
+    })
 
     $('#print-standardization').on('click', () => {
         $(".standardization-details").printThis({

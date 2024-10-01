@@ -220,18 +220,18 @@ class EStandardizationController extends Controller
         return response()->json(['success' => 'Field saved']);
     }
 
-    public function upsertImage(Request $request)
+    public function uploadFile(Request $request)
     {
         $standardization = EStandardization::find($request->id);
-        $image = $request->image;
+        $file = $request->file;
         $collection = $request->collection;
-        $standardization->addMedia($image)->toMediaCollection($collection);
+        $standardization->addMedia($file)->toMediaCollection($collection);
         if($standardization->save()) {
-            return response()->json(['success' => 'Image Updated']);
+            return response()->json(['success' => 'File Updated']);
         }
-        return response()->json(['error' => 'Error Uploading Image']);
-
+        return response()->json(['error' => 'Error Uploading File']);
     }
+
 
     public function update(UpdateEStandardizationRequest $request, EStandardization $eStandardization)
     {
