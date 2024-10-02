@@ -140,9 +140,9 @@
             fileInput: cert.fileInput
             , inputLabelPreview: cert.inputLabelPreview
             , aspectRatio: 1 / 1.6471
-            , onCrop: async function(croppedFile) {
+            , onComplete: async function(file) {
                 var formData = new FormData();
-                formData.append('image', croppedFile);
+                formData.append('image', file);
                 formData.append('collection', cert.fileInput.replace('#', ''));
                 formData.append('id', "{{ $mobile_number->id }}");
                 formData.append('_method', "PATCH");

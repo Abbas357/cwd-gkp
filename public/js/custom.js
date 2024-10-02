@@ -454,7 +454,7 @@ function imageCropper(options) {
         viewMode: 2,
         imageType: "image/jpeg",
         quality: 0.7,
-        onCrop: null,
+        onComplete: null,
     };
 
     options = $.extend({}, defaults, options);
@@ -482,7 +482,7 @@ function imageCropper(options) {
     $fileInput.on("change", function (e) {
         var files = e.target.files;
         if (files.length === 0 || !files[0].type.startsWith("image/")) {
-            options.onCrop(files[0]);
+            options.onComplete(files[0], this);
             return;
         }
         var done = function (url) {
@@ -560,8 +560,8 @@ function imageCropper(options) {
                         type: options.imageType,
                     });
 
-                    if (typeof options.onCrop === "function") {
-                        options.onCrop(file);
+                    if (typeof options.onComplete === "function") {
+                        options.onComplete(file, $fileInput);
                     }
 
                     var dataTransfer = new DataTransfer();

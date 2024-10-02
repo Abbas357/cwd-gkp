@@ -214,6 +214,9 @@ class EStandardizationController extends Controller
         ]);
 
         $EStandardization = EStandardization::find($request->id);
+        if($EStandardization->approval_status !== 0) {
+            return response()->json(['error' => 'Approved or Rejected Products cannot be updated']);
+        }
         $EStandardization->{$request->field} = $request->value;
         $EStandardization->save();
 
@@ -223,6 +226,9 @@ class EStandardizationController extends Controller
     public function uploadFile(Request $request)
     {
         $standardization = EStandardization::find($request->id);
+        if($standardization->approval_status !== 0) {
+            return response()->json(['error' => 'Approved or Rejected Products cannot be updated']);
+        }
         $file = $request->file;
         $collection = $request->collection;
         $standardization->addMedia($file)->toMediaCollection($collection);
