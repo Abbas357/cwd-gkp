@@ -1,8 +1,17 @@
+<style>
+    .table>:not(caption)>*>* {
+        padding: .1rem .5rem !important;
+    }
+    .table-cell {
+        padding: 0.1rem 0.5rem;
+        vertical-align:middle
+    }
+</style>
 <link href="{{ asset('plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
 <div class="row standardization-details">
     <div class="col-md-12">
         <div class="d-flex justify-content-between align-items-center">
-            <h2 class="mb-4">Standardization Details</h2>
+            <h3 class="mb-4">Standardization Details</h3>
             <button type="button" id="print-standardization" class="no-print btn btn-light text-gray-900 border border-gray-300 float-end me-2 mb-2">
                 <span class="d-flex align-items-center">
                     <i class="bi-print"></i>
@@ -13,97 +22,102 @@
 
         <table class="table table-bordered">
             <tr>
-                <th style="padding: 0.1rem 0.5rem; vertical-align:middle">Product Name</th>
-                <td class="d-flex justify-content-between align-items-center gap-3" style="padding: 0.1rem 0.5rem; vertical-align:middle">
+                <th class="table-cell">Product Name</th>
+                <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-product_name">{{ $EStandardization->product_name }}</span>
-                    <input type="text" id="input-product_name" value="{{ $EStandardization->product_name }}" class="d-none form-control" />
-                    <button id="save-btn-product_name" class="btn btn-sm btn-primary d-none" onclick="updateField('product_name', {{ $EStandardization->id }})">Update</button>
-                    <button class="no-print btn btn-sm" onclick="enableEditing('product_name')">edit</button>
+                    <input type="text" id="input-product_name" value="{{ $EStandardization->product_name }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('product_name', {{ $EStandardization->id }})" />
+                    <button id="save-btn-product_name" class="btn btn-sm btn-light d-none" onclick="updateField('product_name', {{ $EStandardization->id }})"><i class="bi-send-fill"></i></button>
+                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('product_name')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
             <tr>
-                <th style="padding: 0.1rem 0.5rem; vertical-align:middle">Specification Details</th>
-                <td class="d-flex justify-content-between align-items-center gap-3" style="padding: 0.1rem 0.5rem; vertical-align:middle">
+                <th class="table-cell">Specification Details</th>
+                <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-specification_details">{{ $EStandardization->specification_details }}</span>
-                    <input type="text" id="input-specification_details" value="{{ $EStandardization->specification_details }}" class="d-none form-control" />
-                    <button id="save-btn-specification_details" class="btn btn-sm btn-primary d-none" onclick="updateField('specification_details', {{ $EStandardization->id }})">Update</button>
-                    <button class="no-print btn btn-sm" onclick="enableEditing('specification_details')">edit</button>
+                    <input type="text" id="input-specification_details" value="{{ $EStandardization->specification_details }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('specification_details', {{ $EStandardization->id }})" />
+                    <button id="save-btn-specification_details" class="btn btn-sm btn-light d-none" onclick="updateField('specification_details', {{ $EStandardization->id }})"><i class="bi-send-fill"></i></button>
+                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('specification_details')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
             <tr>
-                <th style="padding: 0.1rem 0.5rem; vertical-align:middle">Firm Name</th>
-                <td class="d-flex justify-content-between align-items-center gap-3" style="padding: 0.1rem 0.5rem; vertical-align:middle">
+                <th class="table-cell">Firm Name</th>
+                <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-firm_name">{{ $EStandardization->firm_name }}</span>
-                    <input type="text" id="input-firm_name" value="{{ $EStandardization->firm_name }}" class="d-none form-control" />
-                    <button id="save-btn-firm_name" class="btn btn-sm btn-primary d-none" onclick="updateField('firm_name', {{ $EStandardization->id }})">Update</button>
-                    <button class="no-print btn btn-sm" onclick="enableEditing('firm_name')">edit</button>
+                    <input type="text" id="input-firm_name" value="{{ $EStandardization->firm_name }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('firm_name', {{ $EStandardization->id }})" />
+                    <button id="save-btn-firm_name" class="btn btn-sm btn-light d-none" onclick="updateField('firm_name', {{ $EStandardization->id }})"><i class="bi-send-fill"></i></button>
+                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('firm_name')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
             <tr>
-                <th style="padding: 0.1rem 0.5rem; vertical-align:middle">Address</th>
-                <td class="d-flex justify-content-between align-items-center gap-3" style="padding: 0.1rem 0.5rem; vertical-align:middle">
+                <th class="table-cell">Address</th>
+                <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-address">{{ $EStandardization->address }}</span>
-                    <input type="text" id="input-address" value="{{ $EStandardization->address }}" class="d-none form-control" />
-                    <button id="save-btn-address" class="btn btn-sm btn-primary d-none" onclick="updateField('address', {{ $EStandardization->id }})">Update</button>
-                    <button class="no-print btn btn-sm" onclick="enableEditing('address')">edit</button>
+                    <input type="text" id="input-address" value="{{ $EStandardization->address }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('address', {{ $EStandardization->id }})" />
+                    <button id="save-btn-address" class="btn btn-sm btn-light d-none" onclick="updateField('address', {{ $EStandardization->id }})"><i class="bi-send-fill"></i></button>
+                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('address')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
             <tr>
-                <th style="padding: 0.1rem 0.5rem; vertical-align:middle">Mobile Number</th>
-                <td class="d-flex justify-content-between align-items-center gap-3" style="padding: 0.1rem 0.5rem; vertical-align:middle">
+                <th class="table-cell">Mobile Number</th>
+                <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-mobile_number">{{ $EStandardization->mobile_number }}</span>
-                    <input type="text" id="input-mobile_number" value="{{ $EStandardization->mobile_number }}" class="d-none form-control" />
-                    <button id="save-btn-mobile_number" class="btn btn-sm btn-primary d-none" onclick="updateField('mobile_number', {{ $EStandardization->id }})">Update</button>
-                    <button class="no-print btn btn-sm" onclick="enableEditing('mobile_number')">edit</button>
+                    <input type="text" id="input-mobile_number" value="{{ $EStandardization->mobile_number }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('mobile_number', {{ $EStandardization->id }})" />
+                    <button id="save-btn-mobile_number" class="btn btn-sm btn-light d-none" onclick="updateField('mobile_number', {{ $EStandardization->id }})"><i class="bi-send-fill"></i></button>
+                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('mobile_number')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
             <tr>
-                <th style="padding: 0.1rem 0.5rem; vertical-align:middle">Phone Number</th>
-                <td class="d-flex justify-content-between align-items-center gap-3" style="padding: 0.1rem 0.5rem; vertical-align:middle">
+                <th class="table-cell">Phone Number</th>
+                <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-phone_number">{{ $EStandardization->phone_number }}</span>
-                    <input type="text" id="input-phone_number" value="{{ $EStandardization->phone_number }}" class="d-none form-control" />
-                    <button id="save-btn-phone_number" class="btn btn-sm btn-primary d-none" onclick="updateField('phone_number', {{ $EStandardization->id }})">Update</button>
-                    <button class="no-print btn btn-sm" onclick="enableEditing('phone_number')">edit</button>
+                    <input type="text" id="input-phone_number" value="{{ $EStandardization->phone_number }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('phone_number', {{ $EStandardization->id }})" />
+                    <button id="save-btn-phone_number" class="btn btn-sm btn-light d-none" onclick="updateField('phone_number', {{ $EStandardization->id }})"><i class="bi-send-fill"></i></button>
+                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('phone_number')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
             <tr>
-                <th style="padding: 0.1rem 0.5rem; vertical-align:middle">Email</th>
-                <td class="d-flex justify-content-between align-items-center gap-3" style="padding: 0.1rem 0.5rem; vertical-align:middle">
+                <th class="table-cell">Email</th>
+                <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-email">{{ $EStandardization->email }}</span>
-                    <input type="text" id="input-email" value="{{ $EStandardization->email }}" class="d-none form-control" />
-                    <button id="save-btn-email" class="btn btn-sm btn-primary d-none" onclick="updateField('email', {{ $EStandardization->id }})">Update</button>
-                    <button class="no-print btn btn-sm" onclick="enableEditing('email')">edit</button>
+                    <input type="text" id="input-email" value="{{ $EStandardization->email }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('email', {{ $EStandardization->id }})" />
+                    <button id="save-btn-email" class="btn btn-sm btn-light d-none" onclick="updateField('email', {{ $EStandardization->id }})"><i class="bi-send-fill"></i></button>
+                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('email')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
             <tr>
-                <th style="padding: 0.1rem 0.5rem; vertical-align:middle">NTN Number</th>
-                <td class="d-flex justify-content-between align-items-center gap-3" style="padding: 0.1rem 0.5rem; vertical-align:middle">
+                <th class="table-cell">NTN Number</th>
+                <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-ntn_number">{{ $EStandardization->ntn_number }}</span>
-                    <input type="text" id="input-ntn_number" value="{{ $EStandardization->ntn_number }}" class="d-none form-control" />
-                    <button id="save-btn-ntn_number" class="btn btn-sm btn-primary d-none" onclick="updateField('ntn_number', {{ $EStandardization->id }})">Update</button>
-                    <button class="no-print btn btn-sm" onclick="enableEditing('ntn_number')">edit</button>
+                    <input type="text" id="input-ntn_number" value="{{ $EStandardization->ntn_number }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('ntn_number', {{ $EStandardization->id }})" />
+                    <button id="save-btn-ntn_number" class="btn btn-sm btn-light d-none" onclick="updateField('ntn_number', {{ $EStandardization->id }})"><i class="bi-send-fill"></i></button>
+                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('ntn_number')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
             <tr>
-                <th style="padding: 0.1rem 0.5rem; vertical-align:middle">Locality</th>
-                <td class="d-flex justify-content-between align-items-center gap-3" style="padding: 0.1rem 0.5rem; vertical-align:middle">
+                <th class="table-cell">Locality</th>
+                <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-locality">{{ $EStandardization->locality }}</span>
-                    <input type="text" id="input-locality" value="{{ $EStandardization->locality }}" class="d-none form-control" />
-                    <button id="save-btn-locality" class="btn btn-sm btn-primary d-none" onclick="updateField('locality', {{ $EStandardization->id }})">Update</button>
-                    <button class="no-print btn btn-sm" onclick="enableEditing('locality')">edit</button>
+                    <select id="input-locality" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('locality', {{ $EStandardization->id }})">
+                        <option value="Local" {{ $EStandardization->locality == 'Local' ? 'selected' : '' }}>Local</option>
+                        <option value="Foreign" {{ $EStandardization->locality == 'Foreign' ? 'selected' : '' }}>Foreign</option>
+                    </select>
+                    <button id="save-btn-locality" class="btn btn-sm btn-light d-none" onclick="updateField('locality', {{ $EStandardization->id }})"><i class="bi-send-fill"></i></button>
+                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('locality')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
             <tr>
-                <th style="padding: 0.1rem 0.5rem; vertical-align:middle">Location Type</th>
-                <td class="d-flex justify-content-between align-items-center gap-3" style="padding: 0.1rem 0.5rem; vertical-align:middle">
+                <th class="table-cell">Location Type</th>
+                <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-location_type">{{ $EStandardization->location_type }}</span>
-                    <input type="text" id="input-location_type" value="{{ $EStandardization->location_type }}" class="d-none form-control" />
-                    <button id="save-btn-location_type" class="btn btn-sm btn-primary d-none" onclick="updateField('location_type', {{ $EStandardization->id }})">Update</button>
-                    <button class="no-print btn btn-sm" onclick="enableEditing('location_type')">edit</button>
+                    <select id="input-location_type" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('location_type', {{ $EStandardization->id }})">
+                        <option value="Factory" {{ $EStandardization->location_type == 'Factory' ? 'selected' : '' }}>Factory</option>
+                        <option value="Warehouse" {{ $EStandardization->location_type == 'Warehouse' ? 'selected' : '' }}>Warehouse</option>
+                    </select>
+                    <button id="save-btn-location_type" class="btn btn-sm btn-light d-none" onclick="updateField('location_type', {{ $EStandardization->id }})"><i class="bi-send-fill"></i></button>
+                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('location_type')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
         </table>
-        
 
         <div class="row mt-3 mx-1">
             @php
@@ -118,13 +132,13 @@
                 'performance_certificate',
             ];
             @endphp
-            <h3 class="mt-3">Documents</h3>
+            <h3 class="mt-3">Attachments</h3>
             <table class="table table-bordered" style="vertical-align: middle">
                 <thead>
                     <tr>
                         <th>Name</th>
                         <th>Link</th>
-                        <th class="no-print text-center">Action</th>
+                        <th class="no-print text-center">Add / Update Attachment</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -194,6 +208,7 @@
     function enableEditing(field) {
         $('#text-' + field).addClass('d-none');
         $('#input-' + field).removeClass('d-none');
+        $('#input-' + field + '~ .edit-button').addClass('d-none');
         $('#save-btn-' + field).removeClass('d-none');
     }
 
@@ -209,6 +224,7 @@
         if (success) {
             $('#text-' + field).text(newValue);
             $('#input-' + field).addClass('d-none');
+            $('#input-' + field + '~ .edit-button').removeClass('d-none');
             $('#save-btn-' + field).addClass('d-none');
             $('#text-' + field).removeClass('d-none');
         }

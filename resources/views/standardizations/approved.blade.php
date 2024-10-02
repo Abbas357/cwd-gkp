@@ -1,4 +1,4 @@
-<x-guest-layout title="The product is {{ $product->approval_status === 1 ? 'Approved' : 'Not Approved' }}">
+<x-guest-layout title="The product is {{ $product->status === 1 ? 'Approved' : 'Not Approved' }}">
     <div class="container mt-2">
         
         <div class="row standardization-details">
@@ -15,9 +15,9 @@
                 <table class="table table-bordered">
                     <tr>
                         <th>Status</th>
-                        <td>{!! $product->approval_status === 1 ? '<span class="badge fs-6 bg-success">Approved</span>' : '<span class="badge fs-6 bg-danger">Not Approved</span>' !!}</td>
+                        <td>{!! $product->status === 1 ? '<span class="badge fs-6 bg-success">Approved</span>' : '<span class="badge fs-6 bg-danger">Not Approved</span>' !!}</td>
                     </tr>
-                    @if($product->approval_status === 1)
+                    @if($product->status === 1)
                     <tr>
                         <th>Issue Date</th>
                         <td>{{ $product->updated_at->format('d-M-Y') }} ({{ $product->updated_at->diffForHumans() }})</td>

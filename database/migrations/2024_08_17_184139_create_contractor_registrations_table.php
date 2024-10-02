@@ -35,8 +35,7 @@ return new class extends Migration
             $table->string('form_h_attachment')->nullable();
             $table->string('pre_enlistment_attachment')->nullable();
             $table->boolean('is_agreed')->default(false);
-            $table->boolean('defer_status')->default(false);
-            $table->boolean('approval_status')->default(false);
+            $table->boolean('status')->default(0);
             $table->timestamps();
         });
 
@@ -44,8 +43,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('reg_id')->constrained('contractor_registrations')->onDelete('cascade');
             $table->string('action')->nullable();
-            $table->string('old_status')->nullable();
-            $table->string('new_status')->nullable();
+            $table->string('field_name')->nullable();
+            $table->string('old_value')->nullable();
+            $table->string('new_value')->nullable();
+            $table->foreignId('action_by')->constrained('users')->onDelete('cascade');
             $table->timestamp('action_at')->useCurrent();
         });
     }

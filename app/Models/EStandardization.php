@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class EStandardization extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
+    
     protected $guarded = [];
 
     protected static function booted()
@@ -17,10 +18,10 @@ class EStandardization extends Model implements HasMedia
         static::updating(function ($standardization) {
             $changedFields = $standardization->getDirty();
 
-            if (isset($changedFields['approval_status'])) {
-                $action = $standardization->approval_status === 1 ? 'approval' : 'rejection';
-                $oldStatus = $standardization->getOriginal('approval_status');
-                $newStatus = $standardization->approval_status;
+            if (isset($changedFields['status'])) {
+                $action = $standardization->status === 1 ? 'approval' : 'rejection';
+                $oldStatus = $standardization->getOriginal('status');
+                $newStatus = $standardization->status;
 
                 EStandardizationLog::create([
                     's_id' => $standardization->id,
@@ -31,7 +32,7 @@ class EStandardization extends Model implements HasMedia
                     'action_at' => now(),
                 ]);
 
-                unset($changedFields['approval_status']);
+                unset($changedFields['status']);
             }
 
             foreach ($changedFields as $field => $newValue) {

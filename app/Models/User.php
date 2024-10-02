@@ -74,6 +74,11 @@ class User extends Authenticatable implements HasMedia
         ];
     }
 
+    public function logs()
+    {
+        return $this->hasMany(ActivityLog::class, 'action_by');
+    }
+ 
     public function boss()
     {
         // $boss = $user->boss->first();

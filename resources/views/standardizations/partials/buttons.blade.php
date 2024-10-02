@@ -1,5 +1,5 @@
 @php
-    $approvalStatus = $row->approval_status;
+    $approvalStatus = $row->statusi;
 @endphp
 
 <div class="action-btns">

@@ -7,7 +7,6 @@ use App\Models\EStandardization;
 use Yajra\DataTables\DataTables;
 
 use App\Http\Requests\StoreEStandardizationRequest;
-use App\Http\Requests\UpdateEStandardizationRequest;
 
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
@@ -22,7 +21,7 @@ class EStandardizationController extends Controller
         $standardizations = EStandardization::query();
 
         $standardizations->when($approved !== null, function ($query) use ($approved) {
-            $query->where('approval_status', $approved);
+            $query->where('status', $approved);
         });
 
         if ($request->ajax()) {
@@ -37,8 +36,8 @@ class EStandardizationController extends Controller
                 ->editColumn('updated_at', function ($row) {
                     return $row->updated_at->diffForHumans();
                 })
-                ->editColumn('approval_status', function ($row) {
-                    return $row->approval_status === 1 ? 'Approved' : 'Not Approved';
+                ->editColumn('status', function ($row) {
+                    return $row->status === 1 ? 'Approved' : 'Not Approved';
                 })
                 ->rawColumns(['action']);
 
@@ -151,7 +150,7 @@ class EStandardizationController extends Controller
 
     public function showCard(EStandardization $EStandardization)
     {
-        if ($EStandardization->approval_status !== 1) {
+        if ($EStandardization->status !== 1) {
             return response()->json([
                 'success' => false,
                 'data' => [
@@ -181,8 +180,8 @@ class EStandardizationController extends Controller
 
     public function approve(Request $request, EStandardization $EStandardization)
     {
-        if ($EStandardization->approval_status !== 1) {
-            $EStandardization->approval_status = 1;
+        if ($EStandardization->status !== 1) {
+            $EStandardization->status = 1;
             $EStandardization->save();
             return response()->json(['success' => 'Product has been approved successfully.']);
         }
@@ -197,8 +196,8 @@ class EStandardizationController extends Controller
 
     public function reject(Request $request, EStandardization $EStandardization)
     {
-        if (!in_array($EStandardization->approval_status, [1, 2])) {
-            $EStandardization->approval_status = 2;
+        if (!in_array($EStandardization->status, [1, 2])) {
+            $EStandardization->status = 2;
             $EStandardization->rejection_reason = $request->reason;
             $EStandardization->save();
             return response()->json(['success' => 'Product has been rejected.']);
@@ -214,7 +213,7 @@ class EStandardizationController extends Controller
         ]);
 
         $EStandardization = EStandardization::find($request->id);
-        if($EStandardization->approval_status !== 0) {
+        if($EStandardization->status !== 0) {
             return response()->json(['error' => 'Approved or Rejected Products cannot be updated']);
         }
         $EStandardization->{$request->field} = $request->value;
@@ -226,7 +225,7 @@ class EStandardizationController extends Controller
     public function uploadFile(Request $request)
     {
         $standardization = EStandardization::find($request->id);
-        if($standardization->approval_status !== 0) {
+        if($standardization->status !== 0) {
             return response()->json(['error' => 'Approved or Rejected Products cannot be updated']);
         }
         $file = $request->file;
@@ -236,23 +235,5 @@ class EStandardizationController extends Controller
             return response()->json(['success' => 'File Updated']);
         }
         return response()->json(['error' => 'Error Uploading File']);
-    }
-
-
-    public function update(UpdateEStandardizationRequest $request, EStandardization $eStandardization)
-    {
-        $validated = $request->validated();
-
-        $eStandardization->fill(array_filter($validated, function ($value) {
-            return $value !== null;
-        }));
-
-        if ($request->hasFile('image')) {
-        }
-
-        if ($eStandardization->save()) {
-            return response()->json(['success' => 'User updated']);
-        }
-        return response()->json(['error' => 'User updation failed']);
     }
 }

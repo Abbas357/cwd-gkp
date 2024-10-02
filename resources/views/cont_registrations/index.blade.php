@@ -44,8 +44,7 @@
                 <th scope="col" class="p-3">KPRA Registration</th>
                 <th scope="col" class="p-3">Registration Limited</th>
                 <th scope="col" class="p-3">Terms Accepted</th>
-                <th scope="col" class="p-3">Defer Status</th>
-                <th scope="col" class="p-3">Approval Status</th>
+                <th scope="col" class="p-3">Status</th>
                 <th scope="col" class="p-3">Created At</th>
                 <th scope="col" class="p-3">Updated At</th>
                 <th scope="col" class="p-3">Actions</th>
@@ -80,8 +79,7 @@
                         { data: "kpra_reg_no", searchBuilderType: "string" },
                         { data: "is_limited", searchBuilderType: "string" },
                         { data: "is_agreed", searchBuilderType: "string" },
-                        { data: "defer_status", searchBuilderType: "string" },
-                        { data: "approval_status", searchBuilderType: "string" },
+                        { data: "status", searchBuilderType: "string" },
                         { data: "created_at", searchBuilderType: "date" },
                         { data: "updated_at", searchBuilderType: "date" },
                         {
@@ -136,11 +134,11 @@
                         "#approved-tab": '#approved',
                     },
                     hashToParamsMap: {
-                        '#fresh': { defer: 0 },
-                        '#deferred1': { defer: 1 },
-                        '#deferred2': { defer: 2 },
-                        '#deferred3': { defer: 3 },
-                        '#approved': { approved: 1 },
+                        '#fresh': { status: 0 },
+                        '#deferred1': { status: 1 },
+                        '#deferred2': { status: 2 },
+                        '#deferred3': { status: 3 },
+                        '#approved': { status: 4 },
                     },   
                     defaultHash: '#fresh'
                 });
@@ -159,7 +157,7 @@
                     fetchUrl: "{{ route('registrations.showDetail', ':id') }}",
                     btnSelector: '.view-btn',
                     title: 'Registrations Details',
-                    modalSize: 'xl',
+                    modalSize: 'lg',
                 });
 
 

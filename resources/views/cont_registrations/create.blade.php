@@ -192,7 +192,7 @@
 
                                         <div class="mb-3">
                                             <label for="cnic_front_attachment">CNIC (Front Side)</label>
-                                            <input type="file" class="form-control" id="cnic_front_attachment" name="cnic_front_attachment"  onchange="$('#previewCnicFront').show()">
+                                            <input type="file" class="form-control" id="cnic_front_attachment" name="cnic_front_attachment" onchange="$('#previewCnicFront').show()">
                                             @error('cnic_front_attachment')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -201,7 +201,7 @@
 
                                         <div class="mb-3">
                                             <label for="cnic_back_attachment">CNIC (Back Side)</label>
-                                            <input type="file" class="form-control" id="cnic_back_attachment" name="cnic_back_attachment"  onchange="$('#previewCnicBack').show()">
+                                            <input type="file" class="form-control" id="cnic_back_attachment" name="cnic_back_attachment" onchange="$('#previewCnicBack').show()">
                                             @error('cnic_back_attachment')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -210,7 +210,7 @@
 
                                         <div class="mb-3">
                                             <label for="fbr_attachment">FBR Registration</label>
-                                            <input type="file" class="form-control" id="fbr_attachment" name="fbr_attachment"  onchange="$('#previewFbrRegistration').show()">
+                                            <input type="file" class="form-control" id="fbr_attachment" name="fbr_attachment" onchange="$('#previewFbrRegistration').show()">
                                             @error('fbr_attachment')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -219,7 +219,7 @@
 
                                         <div class="mb-3">
                                             <label for="kpra_attachment">KIPPRA Certificate</label>
-                                            <input type="file" class="form-control" id="kpra_attachment" name="kpra_attachment"  onchange="$('#previewKippraCertificate').show()">
+                                            <input type="file" class="form-control" id="kpra_attachment" name="kpra_attachment" onchange="$('#previewKippraCertificate').show()">
                                             @error('kpra_attachment')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -288,45 +288,45 @@
         $(document).ready(function() {
 
             imageCropper({
-                fileInput: "#cnic_front_attachment",
-                inputLabelPreview: "#previewCnicFront",
-                aspectRatio: 1.58 / 1
+                fileInput: "#cnic_front_attachment"
+                , inputLabelPreview: "#previewCnicFront"
+                , aspectRatio: 1.58 / 1
             });
 
             imageCropper({
-                fileInput: "#cnic_back_attachment",
-                inputLabelPreview: "#previewCnicBack",
-                aspectRatio: 1.58 / 1
+                fileInput: "#cnic_back_attachment"
+                , inputLabelPreview: "#previewCnicBack"
+                , aspectRatio: 1.58 / 1
             });
 
             imageCropper({
-                fileInput: "#fbr_attachment",
-                inputLabelPreview: "#previewFbrRegistration",
-                aspectRatio: 1 / 1.6471
+                fileInput: "#fbr_attachment"
+                , inputLabelPreview: "#previewFbrRegistration"
+                , aspectRatio: 1 / 1.6471
             });
 
             imageCropper({
-                fileInput: "#kpra_attachment",
-                inputLabelPreview: "#previewKippraCertificate",
-                aspectRatio: 1 / 1.6471
+                fileInput: "#kpra_attachment"
+                , inputLabelPreview: "#previewKippraCertificate"
+                , aspectRatio: 1 / 1.6471
             });
 
             imageCropper({
-                fileInput: "#pec_attachment",
-                inputLabelPreview: "#previewPecCert",
-                aspectRatio: 1 / 1.6471
+                fileInput: "#pec_attachment"
+                , inputLabelPreview: "#previewPecCert"
+                , aspectRatio: 1 / 1.6471
             });
 
             imageCropper({
-                fileInput: "#form_h_attachment",
-                inputLabelPreview: "#previewFormH",
-                aspectRatio: 1 / 1.6471
+                fileInput: "#form_h_attachment"
+                , inputLabelPreview: "#previewFormH"
+                , aspectRatio: 1 / 1.6471
             });
 
             imageCropper({
-                fileInput: "#pre_enlistment_attachment",
-                inputLabelPreview: "#previewPreviousEnlistment",
-                aspectRatio: 1 / 1.6471
+                fileInput: "#pre_enlistment_attachment"
+                , inputLabelPreview: "#previewPreviousEnlistment"
+                , aspectRatio: 1 / 1.6471
             });
             var forms = document.querySelectorAll('.needs-validation')
 
@@ -349,24 +349,30 @@
                 placeholder: "_____-_______-_"
             });
 
-            $('#pre_enlistment').select2( {
-                theme: "bootstrap-5",
-                width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
-                placeholder: $( this ).data( 'placeholder' ),
-                closeOnSelect: false,
-                dropdownParent: $('#pre_enlistment').parent(),
-            } );
+            $('#pre_enlistment').select2({
+                theme: "bootstrap-5"
+                , width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style'
+                , placeholder: $(this).data('placeholder')
+                , closeOnSelect: false
+                , dropdownParent: $('#pre_enlistment').parent()
+            , });
 
-            document.getElementById('pec_number').addEventListener('input', function() {
-                let pecNumber = this.value;
-                let feedbackElement = document.getElementById('pec_number_feedback');
-                let loaderElement = document.getElementById('checking_loader');
-                let submitButton = document.getElementById('submitBtn');
+            $('#district').select2({
+                theme: "bootstrap-5"
+                , placeholder: $(this).data('placeholder')
+                , dropdownParent: $('#district').parent()
+            , });
+
+            $('#pec_number').on('input', function() {
+                let pecNumber = $(this).val();
+                let feedbackElement = $('#pec_number_feedback');
+                let loaderElement = $('#checking_loader');
+                let submitButton = $('#submitBtn');
 
                 if (pecNumber) {
-                    loaderElement.style.display = 'inline-block';
-                    feedbackElement.textContent = '';
-                    feedbackElement.classList.remove('text-danger', 'text-success');
+                    loaderElement.show();
+                    feedbackElement.text('');
+                    feedbackElement.removeClass('text-danger text-success');
 
                     fetch("{{ route('check.pec.number') }}", {
                             method: 'POST'
@@ -380,27 +386,28 @@
                         })
                         .then(response => response.json())
                         .then(data => {
-                            loaderElement.style.display = 'none';
+                            loaderElement.hide();
                             if (data.unique) {
-                                feedbackElement.textContent = 'PEC Number is available for registration';
-                                feedbackElement.classList.add('text-success');
-                                submitButton.disabled = false;
+                                feedbackElement.text('PEC Number is available for registration');
+                                feedbackElement.addClass('text-success');
+                                submitButton.prop('disabled', false);
                             } else {
-                                feedbackElement.textContent = 'You have already applied.';
-                                feedbackElement.classList.add('text-danger');
-                                submitButton.disabled = true;
+                                feedbackElement.text('You have already applied.');
+                                feedbackElement.addClass('text-danger');
+                                submitButton.prop('disabled', true);
                             }
                         })
                         .catch(error => {
-                            loaderElement.style.display = 'none';
+                            loaderElement.hide();
                             console.error('Error:', error);
                         });
                 } else {
-                    feedbackElement.textContent = '';
-                    loaderElement.style.display = 'none';
-                    submitButton.disabled = false;
+                    feedbackElement.text('');
+                    loaderElement.hide();
+                    submitButton.prop('disabled', false);
                 }
             });
+
 
         });
 

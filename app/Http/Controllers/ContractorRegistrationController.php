@@ -9,63 +9,61 @@ use App\Models\Categories\ProvincialEntity;
 use App\Models\District;
 use Illuminate\Http\Request;
 
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\Writer\PngWriter;
+
 use Yajra\DataTables\DataTables;
 
 class ContractorRegistrationController extends Controller
 {
     public function index(Request $request)
     {
-        $defer = $request->query('defer', null);
-        $defer = ($defer >= 0 && $defer <= 3) ? $defer : null;
-        $approved = $request->query('approved', null);
+        $status = $request->query('status', null);
 
         $registrations = ContractorRegistration::query();
 
-        $registrations->when($approved !== null, function ($query) use ($approved) {
-            $query->where('approval_status', $approved);
-        });
-
-        $registrations->when($approved === null && $defer !== null, function ($query) use ($defer) {
-            $query->where('defer_status', $defer)->where('approval_status', 0);
+        $registrations->when($status !== null, function ($query) use ($status) {
+            $query->where('status', $status);
         });
 
         if ($request->ajax()) {
             $dataTable = Datatables::of($registrations)
                 ->addIndexColumn()
-                ->addColumn('action', function($row) {
+                ->addColumn('action', function ($row) {
                     return view('cont_registrations.partials.buttons', compact('row'))->render();
                 })
-                ->editColumn('created_at', function($row) {
+                ->editColumn('created_at', function ($row) {
                     return $row->created_at->diffForHumans();
                 })
-                ->editColumn('updated_at', function($row) {
+                ->editColumn('updated_at', function ($row) {
                     return $row->updated_at->diffForHumans();
                 })
-                ->editColumn('approval_status', function($row) {
-                    return $row->approval_status === 1 ? 'Approved' : 'Not Approved';
-                })
-                ->editColumn('defer_status', function($row) {
-                    return $row->defer_status === 0 ? 'Not Deffered' : ($row->defer_status === 1 ? 'First time deffered' : ($row->defer_status === 2 ? '2nd time deffered' : '3rd time deffered') );
+                ->editColumn('status', function ($row) {
+                    return $row->status === 1 ? 'Deferred 1 time' :
+                            ($row->status === 2 ? 'Deferred 2 time' :
+                            ($row->status === 3 ? 'Deferred 3 time' :
+                            ($row->status === 4 ? 'Approved' : 'Nil')));
                 })
                 ->rawColumns(['action']);
-        
+
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
                 $dataTable->filter(function ($query) use ($request) {
                     $sb = new \App\SearchBuilder($request, $query);
                     $sb->build();
                 });
             }
-        
+
             return $dataTable->toJson();
         }
-          
+
         return view('cont_registrations.index');
     }
 
     public function defer(Request $request, ContractorRegistration $ContractorRegistration)
     {
-        if ($ContractorRegistration->approval_status == 0 && $ContractorRegistration->defer_status < 3) {
-            $ContractorRegistration->defer_status += 1;
+        if (!in_array($ContractorRegistration->status, [3, 4])) {
+            $ContractorRegistration->status += 1;
             $ContractorRegistration->save();
             return response()->json(['success' => 'Registration has been deferred successfully.']);
         }
@@ -76,8 +74,8 @@ class ContractorRegistrationController extends Controller
 
     public function approve(Request $request, ContractorRegistration $ContractorRegistration)
     {
-        if ($ContractorRegistration->approval_status !== 1 && $ContractorRegistration->defer_status !== 3) {
-            $ContractorRegistration->approval_status = 1;
+        if (!in_array($ContractorRegistration->status, [3, 4])) {
+            $ContractorRegistration->status = 4;
             $ContractorRegistration->save();
             return response()->json(['success' => 'Registration has been approved successfully.']);
         }
@@ -98,7 +96,7 @@ class ContractorRegistrationController extends Controller
     public function store(StoreContractorRegistrationRequest $request)
     {
         $registration = new ContractorRegistration();
-        if($registration->where('pec_number', $request->input('pec_number'))->where('defer_status', '!=', 3)->exists()) {
+        if ($registration->where('pec_number', $request->input('pec_number'))->where('defer_status', '!=', 3)->exists()) {
             return redirect()->route('registrations.create')->with('danger', 'User with this PEC Number already exists');
         }
         $registration->owner_name = $request->input('owner_name');
@@ -121,31 +119,38 @@ class ContractorRegistrationController extends Controller
         }
 
         if ($request->hasFile('cnic_front_attachment')) {
-            $registration->cnic_front_attachment = $request->file('cnic_front_attachment')->store('registrations/cnic', 'public');
+            $registration->addMedia($request->file('cnic_front_attachment'))
+                ->toMediaCollection('cnic_front_attachments');
         }
 
         if ($request->hasFile('cnic_back_attachment')) {
-            $registration->cnic_back_attachment = $request->file('cnic_back_attachment')->store('registrations/cnic', 'public');
+            $registration->addMedia($request->file('cnic_back_attachment'))
+                ->toMediaCollection('cnic_back_attachments');
         }
 
         if ($request->hasFile('fbr_attachment')) {
-            $registration->fbr_attachment = $request->file('fbr_attachment')->store('registrations/fbr', 'public');
+            $registration->addMedia($request->file('fbr_attachment'))
+                ->toMediaCollection('fbr_attachments');
         }
 
         if ($request->hasFile('kpra_attachment')) {
-            $registration->kpra_attachment = $request->file('kpra_attachment')->store('registrations/kpra', 'public');
+            $registration->addMedia($request->file('kpra_attachment'))
+                ->toMediaCollection('kpra_attachments');
         }
 
         if ($request->hasFile('pec_attachment')) {
-            $registration->pec_attachment = $request->file('pec_attachment')->store('registrations/pec', 'public');
+            $registration->addMedia($request->file('pec_attachment'))
+                ->toMediaCollection('pec_attachments');
         }
 
         if ($request->hasFile('form_h_attachment')) {
-            $registration->form_h_attachment = $request->file('form_h_attachment')->store('registrations/form_h', 'public');
+            $registration->addMedia($request->file('form_h_attachment'))
+                ->toMediaCollection('form_h_attachments');
         }
 
         if ($request->hasFile('pre_enlistment_attachment')) {
-            $registration->pre_enlistment_attachment = $request->file('pre_enlistment_attachment')->store('registrations/pre_enlistment', 'public');
+            $registration->addMedia($request->file('pre_enlistment_attachment'))
+                ->toMediaCollection('pre_enlistment_attachments');
         }
 
         if ($registration->save()) {
@@ -166,6 +171,12 @@ class ContractorRegistrationController extends Controller
 
     public function showDetail(ContractorRegistration $ContractorRegistration)
     {
+        $cat = [
+            'districts' => District::all(),
+            'contractor_category' => ContractorCategory::all(),
+            'provincial_entities' => ProvincialEntity::all(),
+        ];
+
         if (!$ContractorRegistration) {
             return response()->json([
                 'success' => false,
@@ -174,7 +185,37 @@ class ContractorRegistrationController extends Controller
                 ],
             ]);
         }
-        $html = view('cont_registrations.partials.detail', compact('ContractorRegistration'))->render();
+        $html = view('cont_registrations.partials.detail', compact('ContractorRegistration', 'cat'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
+    }
+
+    public function showCard(ContractorRegistration $ContractorRegistration)
+    {
+        if ($ContractorRegistration->status !== 1) {
+            return response()->json([
+                'success' => false,
+                'data' => [
+                    'result' => 'The Product is not standardized',
+                ],
+            ]);
+        }
+        $data = route('standardizations.approved', ['id' => $ContractorRegistration->id]);
+        $qrCode = Builder::create()
+            ->writer(new PngWriter())
+            ->data($data)
+            ->encoding(new Encoding('UTF-8'))
+            ->size(300)
+            ->margin(1)
+            ->build();
+
+        $qrCodeUri = $qrCode->getDataUri();
+
+        $html = view('standardizations.partials.card', compact('ContractorRegistration', 'qrCodeUri'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -188,5 +229,45 @@ class ContractorRegistrationController extends Controller
         $pecNumber = $request->input('pec_number');
         $exists = ContractorRegistration::where('pec_number', $pecNumber)->where('defer_status', '!=', 3)->exists();
         return response()->json(['unique' => !$exists]);
+    }
+
+    public function updateField(Request $request)
+    {
+        $request->validate([
+            'field' => 'required|string',
+            'value' => 'required',
+        ]);
+
+        $ContractorRegistration = ContractorRegistration::find($request->id);
+        if ($ContractorRegistration->status === 1 && $ContractorRegistration->defer_status === 3) {
+            return response()->json(['error' => 'Approved or Rejected Registrations cannot be updated']);
+        }
+        if ($request->field === 'pec_number') {
+            if (ContractorRegistration::where('pec_number', $request->value)->where('defer_status', '!=', 3)->exists()) {
+                return response()->json(['error' => 'PEC number already exists']);
+            }
+        }
+
+        $ContractorRegistration->{$request->field} = $request->field === 'pre_enlistment'
+            ? json_encode($request->value)
+            : $request->value;
+        $ContractorRegistration->save();
+
+        return response()->json(['success' => 'Field saved']);
+    }
+
+    public function uploadFile(Request $request)
+    {
+        $ContractorRegistration = ContractorRegistration::find($request->id);
+        if ($ContractorRegistration->status === 1 && $ContractorRegistration->defer_status === 3) {
+            return response()->json(['error' => 'Approved or Rejected Registrations cannot be updated']);
+        }
+        $file = $request->file;
+        $collection = $request->collection;
+        $ContractorRegistration->addMedia($file)->toMediaCollection($collection);
+        if ($ContractorRegistration->save()) {
+            return response()->json(['success' => 'File Updated']);
+        }
+        return response()->json(['error' => 'Error Uploading File']);
     }
 }

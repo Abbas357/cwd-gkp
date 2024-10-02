@@ -71,7 +71,7 @@
                     </tr>
                     <tr>
                         <th>Approval Status</th>
-                        <td>{{ $ContractorRegistration->approval_status }}</td>
+                        <td>{{ $ContractorRegistration->status }}</td>
                     </tr>
                 </table>
 
