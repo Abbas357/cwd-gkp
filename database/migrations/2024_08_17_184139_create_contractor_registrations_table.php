@@ -38,17 +38,6 @@ return new class extends Migration
             $table->boolean('status')->default(0);
             $table->timestamps();
         });
-
-        Schema::create('registration_logs', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('reg_id')->constrained('contractor_registrations')->onDelete('cascade');
-            $table->string('action')->nullable();
-            $table->string('field_name')->nullable();
-            $table->string('old_value')->nullable();
-            $table->string('new_value')->nullable();
-            $table->foreignId('action_by')->constrained('users')->onDelete('cascade');
-            $table->timestamp('action_at')->useCurrent();
-        });
     }
 
     /**

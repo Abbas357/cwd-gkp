@@ -25,44 +25,52 @@
                 <th class="table-cell">Owner Name</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-owner_name">{{ $ContractorRegistration->owner_name }}</span>
-                    <input type="text" id="input-owner_name" value="{{ $ContractorRegistration->owner_name }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('owner_name', {{ $ContractorRegistration->id }})" />
-                    <button id="save-btn-owner_name" class="btn btn-sm btn-light d-none" onclick="updateField('owner_name', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
-                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('owner_name')"><i class="bi-pencil fs-6"></i></button>
+                    @if (!in_array($ContractorRegistration->status, [3, 4]))
+                        <input type="text" id="input-owner_name" value="{{ $ContractorRegistration->owner_name }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('owner_name', {{ $ContractorRegistration->id }})" />
+                        <button id="save-btn-owner_name" class="btn btn-sm btn-light d-none" onclick="updateField('owner_name', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
+                        <button class="no-print btn btn-sm edit-button" onclick="enableEditing('owner_name')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
             <tr>
                 <th class="table-cell">District</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-district">{{ $ContractorRegistration->district }}</span>
-                    <select id="input-district" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('district', {{ $ContractorRegistration->id }})">
-                        @foreach($cat['districts'] as $district)
-                        <option value="{{ $district->name }}" {{ $ContractorRegistration->district == $district->name ? 'selected' : '' }}>{{ $district->name }}</option>
-                        @endforeach
-                    </select>
-                    <button id="save-btn-district" class="btn btn-sm btn-light d-none" onclick="updateField('district', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
-                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('district')"><i class="bi-pencil fs-6"></i></button>
+                    @if (!in_array($ContractorRegistration->status, [3, 4]))
+                        <select id="input-district" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('district', {{ $ContractorRegistration->id }})">
+                            @foreach($cat['districts'] as $district)
+                            <option value="{{ $district->name }}" {{ $ContractorRegistration->district == $district->name ? 'selected' : '' }}>{{ $district->name }}</option>
+                            @endforeach
+                        </select>
+                        <button id="save-btn-district" class="btn btn-sm btn-light d-none" onclick="updateField('district', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
+                        <button class="no-print btn btn-sm edit-button" onclick="enableEditing('district')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
             <tr>
                 <th class="table-cell">PEC Number</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-pec_number">{{ $ContractorRegistration->pec_number }}</span>
-                    <input type="text" id="input-pec_number" value="{{ $ContractorRegistration->pec_number }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('pec_number', {{ $ContractorRegistration->id }})" />
-                    <button id="save-btn-pec_number" class="btn btn-sm btn-light d-none" onclick="updateField('pec_number', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
-                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('pec_number')"><i class="bi-pencil fs-6"></i></button>
+                    @if (!in_array($ContractorRegistration->status, [3, 4]))
+                        <input type="text" id="input-pec_number" value="{{ $ContractorRegistration->pec_number }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('pec_number', {{ $ContractorRegistration->id }})" />
+                        <button id="save-btn-pec_number" class="btn btn-sm btn-light d-none" onclick="updateField('pec_number', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
+                        <button class="no-print btn btn-sm edit-button" onclick="enableEditing('pec_number')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
             <tr>
                 <th class="table-cell">Category Applied</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-category_applied">{{ $ContractorRegistration->category_applied }}</span>
-                    <select id="input-category_applied" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('category_applied', {{ $ContractorRegistration->id }})">
-                        @foreach($cat['contractor_category'] as $category)
-                        <option value="{{ $category->name }}" {{ $ContractorRegistration->category_applied == $category->name ? 'selected' : '' }}>{{ $category->name }}</option>
-                        @endforeach
-                    </select>
-                    <button id="save-btn-category_applied" class="btn btn-sm btn-light d-none" onclick="updateField('category_applied', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
-                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('category_applied')"><i class="bi-pencil fs-6"></i></button>
+                    @if (!in_array($ContractorRegistration->status, [3, 4]))
+                        <select id="input-category_applied" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('category_applied', {{ $ContractorRegistration->id }})">
+                            @foreach($cat['contractor_category'] as $category)
+                            <option value="{{ $category->name }}" {{ $ContractorRegistration->category_applied == $category->name ? 'selected' : '' }}>{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                        <button id="save-btn-category_applied" class="btn btn-sm btn-light d-none" onclick="updateField('category_applied', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
+                        <button class="no-print btn btn-sm edit-button" onclick="enableEditing('category_applied')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
             <tr>

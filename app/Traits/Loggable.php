@@ -13,9 +13,10 @@ trait Loggable
             $user = request()->user();
             foreach ($changedFields as $field => $newValue) {
                 $oldValue = $model->getOriginal($field);
-                $action = method_exists($model, 'getLogAction')
-                    ? $model->getLogAction($field, $newValue)
-                    : 'editing';
+                $action = method_exists($model, 'getLogAction') 
+                        ? $model->getLogAction($field, $newValue) 
+                        : 'edit';
+                $action = $action ?? 'edit';
 
                 ActivityLog::create([
                     'loggable_id' => $model->id,

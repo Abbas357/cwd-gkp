@@ -27,17 +27,6 @@ return new class extends Migration
             $table->string('rejection_reason');
             $table->timestamps();
         });
-
-        Schema::create('e_standardization_logs', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('s_id')->constrained('e_standardizations')->onDelete('cascade');
-            $table->string('action')->nullable();
-            $table->string('field_name')->nullable();
-            $table->string('old_value')->nullable();
-            $table->string('new_value')->nullable();
-            $table->foreignId('action_by')->constrained('users')->onDelete('cascade');
-            $table->timestamp('action_at')->useCurrent();
-        });
     }
 
     /**

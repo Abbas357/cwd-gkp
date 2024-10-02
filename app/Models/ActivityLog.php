@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class ActivityLog extends Model
 {
+    public $timestamps = false;
+    
     protected $fillable = [
         'loggable_id', 'loggable_type', 'action', 'field_name',
         'old_value', 'new_value', 'action_by', 'action_at'
