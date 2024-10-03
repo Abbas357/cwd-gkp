@@ -171,13 +171,13 @@
                 , }
                 , hashToParamsMap: {
                     '#new': {
-                        approved: 0
+                        status: 0
                     }
                     , '#approved': {
-                        approved: 1
+                        status: 1
                     }
                     , '#rejected': {
-                        approved: 2
+                        status: 2
                     }
                 , }
                 , defaultHash: '#new'
@@ -196,7 +196,7 @@
                 fetchUrl: "{{ route('standardizations.showCard', ':id') }}",
                 btnSelector: '.card-btn',
                 title: 'Standardization Card',
-                actionButtonName: 'Generate Card',
+                actionButtonName: 'Download Card',
             }).then(([modal, actionBtn]) => {
                 $('#' + actionBtn).on('click', function() {
                     var div = $('#capture')[0];

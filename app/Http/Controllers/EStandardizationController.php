@@ -16,12 +16,12 @@ class EStandardizationController extends Controller
 {
     public function index(Request $request)
     {
-        $approved = $request->query('approved', null);
+        $status = $request->query('status', null);
 
         $standardizations = EStandardization::query();
 
-        $standardizations->when($approved !== null, function ($query) use ($approved) {
-            $query->where('status', $approved);
+        $standardizations->when($status !== null, function ($query) use ($status) {
+            $query->where('status', $status);
         });
 
         if ($request->ajax()) {

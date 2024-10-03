@@ -196,7 +196,7 @@ class ContractorRegistrationController extends Controller
 
     public function showCard(ContractorRegistration $ContractorRegistration)
     {
-        if ($ContractorRegistration->status !== 1) {
+        if ($ContractorRegistration->status !== 4) {
             return response()->json([
                 'success' => false,
                 'data' => [
@@ -215,7 +215,7 @@ class ContractorRegistrationController extends Controller
 
         $qrCodeUri = $qrCode->getDataUri();
 
-        $html = view('standardizations.partials.card', compact('ContractorRegistration', 'qrCodeUri'))->render();
+        $html = view('cont_registrations.partials.card', compact('ContractorRegistration', 'qrCodeUri'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -227,7 +227,7 @@ class ContractorRegistrationController extends Controller
     public function checkPecNumber(Request $request)
     {
         $pecNumber = $request->input('pec_number');
-        $exists = ContractorRegistration::where('pec_number', $pecNumber)->where('defer_status', '!=', 3)->exists();
+        $exists = ContractorRegistration::where('pec_number', $pecNumber)->where('status', '!=', 3)->exists();
         return response()->json(['unique' => !$exists]);
     }
 
@@ -239,11 +239,11 @@ class ContractorRegistrationController extends Controller
         ]);
 
         $ContractorRegistration = ContractorRegistration::find($request->id);
-        if ($ContractorRegistration->status === 1 && $ContractorRegistration->defer_status === 3) {
+        if (in_array($ContractorRegistration->status, [3, 4])) {
             return response()->json(['error' => 'Approved or Rejected Registrations cannot be updated']);
         }
         if ($request->field === 'pec_number') {
-            if (ContractorRegistration::where('pec_number', $request->value)->where('defer_status', '!=', 3)->exists()) {
+            if (ContractorRegistration::where('pec_number', $request->value)->where('status', '!=', 3)->exists()) {
                 return response()->json(['error' => 'PEC number already exists']);
             }
         }

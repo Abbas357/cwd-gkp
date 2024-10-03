@@ -160,6 +160,28 @@
                     modalSize: 'lg',
                 });
 
+                pushStateModal({
+                fetchUrl: "{{ route('registrations.showCard', ':id') }}",
+                btnSelector: '.card-btn',
+                title: 'Contractor Card',
+                modalSize: 'md',
+                actionButtonName: 'Download Card',
+                }).then(([modal, actionBtn]) => {
+                    $('#' + actionBtn).on('click', function() {
+                        var div = $('#capture')[0];
+                        html2canvas(div, {
+                            scale: 2
+                        }).then(function(canvas) {
+                            canvas.toBlob(function(blob) {
+                                var link = $('<a></a>')[0];
+                                link.href = URL.createObjectURL(blob);
+                                link.download = `contractor-card-${uniqId(6)}.png`;
+                                link.click();
+                            });
+                        });
+                    })
+                });
+
 
             });
                 

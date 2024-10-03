@@ -1,5 +1,5 @@
 <div id="capture">
-    <div class="card product-card product-card_front text-center">
+    <div class="card contractor-card contractor-card_front text-center">
         <div class="d-flex justify-content-between align-items-center">
             <img src="{{ asset('images/logo-square.png') }}" class="logo" alt="KP Logo">
             <div>
@@ -11,27 +11,27 @@
         
         <img src="{{ getProfilePic(auth()->user()) }}" class="company-logo" alt="KP Logo">
 
-        <h2 class="text-center">{{ $EStandardization->product_name }}</h2>
+        <h2 class="text-center">{{ $ContractorRegistration->owner_name }}</h2>
         <table class="text-start fs-6 mx-auto mb-5" style="width: 300px">
             <tr>
                 <td>Firm Name</td>
-                <td>{{ $EStandardization->firm_name }}</td>
+                <td>{{ $ContractorRegistration->contractor_name }}</td>
             </tr>
             <tr>
                 <td>Address</td>
-                <td>{{ $EStandardization->address }}</td>
+                <td>{{ $ContractorRegistration->address }}</td>
             </tr>
             <tr>
                 <td>Email</td>
-                <td>{{ $EStandardization->email }}</td>
+                <td>{{ $ContractorRegistration->email }}</td>
             </tr>
             <tr>
                 <td>Contact Number</td>
-                <td>{{ $EStandardization->mobile_number }}</td>
+                <td>{{ $ContractorRegistration->mobile_number }}</td>
             </tr>
             <tr>
                 <td>Issue Date</td>
-                <td>{{ $EStandardization->created_at->format('d-M-Y') }}</td>
+                <td>{{ $ContractorRegistration->created_at->format('d-M-Y') }}</td>
             </tr>
         </table>
         <p class="text-danger">This certificate is valid for three years from the date of issue</p>
@@ -42,14 +42,14 @@
                 Authority Sign
             </div>
             <div>
-                <p style="font-size: 10px; margin-bottom:0px">Date: {{ $EStandardization->updated_at->format('d-M-Y') }}</p>
+                <p style="font-size: 10px; margin-bottom:0px">Date: {{ $ContractorRegistration->updated_at->format('d-M-Y') }}</p>
                 <img src="{{ $qrCodeUri }}" style="width: 100px" alt="QR Code for verification">
             </div>
         </div>
     </div>
 
     <!-- Back Side -->
-    <div class="card product-card product-card_back mt-1">
+    <div class="card contractor-card contractor-card_back mt-1">
         <img src="{{ asset('images/logo-square.png') }}" class="logo block mx-auto" alt="KP Logo">
         <h5 class="card-title text-center mt-2">Terms and Conditions</h5>
         <div class="terms">

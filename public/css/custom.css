@@ -7,6 +7,10 @@
   --bs-border-color: #d5d5d5;
 }
 
+.table>:not(caption)>*>* {
+  padding: .2rem .4rem !important;
+}
+
 .btn-light {
   background-color: #eee;
 }
@@ -630,15 +634,15 @@ div.dt-container {
   margin-bottom: 20px;
 }
 
-.terms {
+.product-card .terms {
   font-size: 0.9rem;
 }
 
-.terms ol {
+.product-card .terms ol {
   margin: 1.5rem;
 }
 
-.terms li {
+.product-card .terms li {
   margin-bottom: .7rem;
   font-weight: bold;
   padding-left: 1rem;
