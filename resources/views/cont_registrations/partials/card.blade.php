@@ -7,7 +7,7 @@
                 <h1 class="card-title">Communication & Works Department</h5>
             </div>
         </div>
-        <h6 class="card-subtitle text-muted lead">E-Registration of Engineering Products</h6>
+        <h6 class="card-subtitle text-muted lead fs-6 font-bold">CONTRACTOR REGISTRATION CARD</h6>
         
         <img src="{{ getProfilePic(auth()->user()) }}" class="company-logo" alt="KP Logo">
 
