@@ -1,6 +1,6 @@
 <x-app-layout title="Contractor Registrations">
     @push('style')
-        <link href="{{ asset('plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header">
         <li class="breadcrumb-item active" aria-current="page">Registrations</li>
@@ -56,135 +56,199 @@
 
     <!--end row-->
     @push('script')
-        <script src="{{ asset('plugins/datatable/js/datatables.min.js') }}"></script>
-        <script src="{{ asset('plugins/col-resizable.js') }}"></script>
-        
-        <script>
-            $(document).ready(function() {
-                var table = initDataTable('#registrations-datatable', {
-                    ajaxUrl: "{{ route('registrations.index') }}",
-                    columns: [
-                        { data: "id", searchBuilderType: "num" },
-                        { data: "contractor_name", searchBuilderType: "string" },
-                        { data: "email", searchBuilderType: "string" },
-                        { data: "mobile_number", searchBuilderType: "string" },
-                        { data: "cnic", searchBuilderType: "string" },
-                        { data: "district", searchBuilderType: "string" },
-                        { data: "address", searchBuilderType: "string" },
-                        { data: "category_applied", searchBuilderType: "string" },
-                        { data: "owner_name", searchBuilderType: "string" },
-                        { data: "pec_number", searchBuilderType: "string" },
-                        { data: "pec_category", searchBuilderType: "string" },
-                        { data: "fbr_ntn", searchBuilderType: "string" },
-                        { data: "kpra_reg_no", searchBuilderType: "string" },
-                        { data: "is_limited", searchBuilderType: "string" },
-                        { data: "is_agreed", searchBuilderType: "string" },
-                        { data: "status", searchBuilderType: "string" },
-                        { data: "created_at", searchBuilderType: "date" },
-                        { data: "updated_at", searchBuilderType: "date" },
-                        {
-                            data: 'action',
-                            orderable: false,
-                            searchable: false,
-                            type: "html"
-                        }
-                    ],
-                    defaultOrderColumn: 17,
-                    defaultOrderDirection: 'desc',
-                    columnDefs: [{
-                        targets: [0, 2, 3, 6, 11, 12, 13, 14, 15, 16],
-                        visible: false
-                    }]
-                });
+    <script src="{{ asset('plugins/datatable/js/datatables.min.js') }}"></script>
+    <script src="{{ asset('plugins/col-resizable.js') }}"></script>
+    <script src="{{ asset('plugins/html2canvas/html2canvas.min.js') }}"></script>
 
-                $("#registrations-datatable").on('click', '.defer-btn', async function() {
-                    const registrationId = $(this).data("id");
-                    const url = "{{ route('registrations.defer', ':id') }}".replace(':id', registrationId);
-
-                    const result = await confirmAction('Do you want to defer this registration?');
-                    if (result && result.isConfirmed) {
-                        const success = await fetchRequest(url, 'PATCH');
-                        if (success) {
-                            $("#registrations-datatable").DataTable().ajax.reload();
-                        }
+    <script>
+        $(document).ready(function() {
+            var table = initDataTable('#registrations-datatable', {
+                ajaxUrl: "{{ route('registrations.index') }}"
+                , columns: [{
+                        data: "id"
+                        , searchBuilderType: "num"
                     }
-                });
-
-                $("#registrations-datatable").on('click', '.approve-btn', async function() {
-                    const registrationId = $(this).data("id");
-                    const url = "{{ route('registrations.approve', ':id') }}".replace(':id', registrationId);
-
-                    const result = await confirmAction('Do you want to approve this registration?');
-                    if (result && result.isConfirmed) {
-                        const success = await fetchRequest(url, 'PATCH');
-                        if (success) {
-                            $("#registrations-datatable").DataTable().ajax.reload();
-                        }
+                    , {
+                        data: "contractor_name"
+                        , searchBuilderType: "string"
                     }
-                });
-
-                hashTabsNavigator({
-                    table: table,
-                    dataTableUrl: "{{ route('registrations.index') }}",
-                    tabToHashMap: {
-                        "#defer-0-tab": '#fresh',
-                        "#defer-1-tab": '#deferred1',
-                        "#defer-2-tab": '#deferred2',
-                        "#defer-3-tab": '#deferred3',
-                        "#approved-tab": '#approved',
-                    },
-                    hashToParamsMap: {
-                        '#fresh': { status: 0 },
-                        '#deferred1': { status: 1 },
-                        '#deferred2': { status: 2 },
-                        '#deferred3': { status: 3 },
-                        '#approved': { status: 4 },
-                    },   
-                    defaultHash: '#fresh'
-                });
-            
-                $('#registrations-datatable').colResizable(
-                { 
-                    liveDrag: true,
-                    resizeMode:'overflow',
-                    postbackSafe:true,
-                    useLocalStorage: true,
-                    gripInnerHtml: "<div class='grip'></div>",
-                    draggingClass:"dragging",
-                });
-
-                pushStateModal({
-                    fetchUrl: "{{ route('registrations.showDetail', ':id') }}",
-                    btnSelector: '.view-btn',
-                    title: 'Registrations Details',
-                    modalSize: 'lg',
-                });
-
-                pushStateModal({
-                fetchUrl: "{{ route('registrations.showCard', ':id') }}",
-                btnSelector: '.card-btn',
-                title: 'Contractor Card',
-                modalSize: 'md',
-                actionButtonName: 'Download Card',
-                }).then(([modal, actionBtn]) => {
-                    $('#' + actionBtn).on('click', function() {
-                        var div = $('#capture')[0];
-                        html2canvas(div, {
-                            scale: 2
-                        }).then(function(canvas) {
-                            canvas.toBlob(function(blob) {
-                                var link = $('<a></a>')[0];
-                                link.href = URL.createObjectURL(blob);
-                                link.download = `contractor-card-${uniqId(6)}.png`;
-                                link.click();
-                            });
-                        });
-                    })
-                });
-
-
+                    , {
+                        data: "email"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "mobile_number"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "cnic"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "district"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "address"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "category_applied"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "owner_name"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "pec_number"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "pec_category"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "fbr_ntn"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "kpra_reg_no"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "is_limited"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "is_agreed"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "status"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "created_at"
+                        , searchBuilderType: "date"
+                    }
+                    , {
+                        data: "updated_at"
+                        , searchBuilderType: "date"
+                    }
+                    , {
+                        data: 'action'
+                        , orderable: false
+                        , searchable: false
+                        , type: "html"
+                    }
+                ]
+                , defaultOrderColumn: 17
+                , defaultOrderDirection: 'desc'
+                , columnDefs: [{
+                    targets: [0, 2, 3, 6, 11, 12, 13, 14, 15, 16]
+                    , visible: false
+                }]
             });
-                
-        </script>
+
+            $("#registrations-datatable").on('click', '.defer-btn', async function() {
+                const registrationId = $(this).data("id");
+                const url = "{{ route('registrations.defer', ':id') }}".replace(':id', registrationId);
+
+                const result = await confirmAction('Do you want to defer this registration?');
+                if (result && result.isConfirmed) {
+                    const success = await fetchRequest(url, 'PATCH');
+                    if (success) {
+                        $("#registrations-datatable").DataTable().ajax.reload();
+                    }
+                }
+            });
+
+            $("#registrations-datatable").on('click', '.approve-btn', async function() {
+                const registrationId = $(this).data("id");
+                const url = "{{ route('registrations.approve', ':id') }}".replace(':id', registrationId);
+
+                const result = await confirmAction('Do you want to approve this registration?');
+                if (result && result.isConfirmed) {
+                    const success = await fetchRequest(url, 'PATCH');
+                    if (success) {
+                        $("#registrations-datatable").DataTable().ajax.reload();
+                    }
+                }
+            });
+
+            hashTabsNavigator({
+                table: table
+                , dataTableUrl: "{{ route('registrations.index') }}"
+                , tabToHashMap: {
+                    "#defer-0-tab": '#fresh'
+                    , "#defer-1-tab": '#deferred1'
+                    , "#defer-2-tab": '#deferred2'
+                    , "#defer-3-tab": '#deferred3'
+                    , "#approved-tab": '#approved'
+                , }
+                , hashToParamsMap: {
+                    '#fresh': {
+                        status: 0
+                    }
+                    , '#deferred1': {
+                        status: 1
+                    }
+                    , '#deferred2': {
+                        status: 2
+                    }
+                    , '#deferred3': {
+                        status: 3
+                    }
+                    , '#approved': {
+                        status: 4
+                    }
+                , }
+                , defaultHash: '#fresh'
+            });
+
+            $('#registrations-datatable').colResizable({
+                liveDrag: true
+                , resizeMode: 'overflow'
+                , postbackSafe: true
+                , useLocalStorage: true
+                , gripInnerHtml: "<div class='grip'></div>"
+                , draggingClass: "dragging"
+            , });
+
+            pushStateModal({
+                fetchUrl: "{{ route('registrations.showDetail', ':id') }}"
+                , btnSelector: '.view-btn'
+                , title: 'Registrations Details'
+                , modalSize: 'lg'
+            , });
+
+            pushStateModal({
+                fetchUrl: "{{ route('registrations.showCard', ':id') }}"
+                , btnSelector: '.card-btn'
+                , title: 'Contractor Card'
+                , modalSize: 'md'
+                , actionButtonName: 'Download Card'
+            , }).then((modal) => {
+                const actionBtn = $('#'+modal).find('button[type="submit"]');
+                actionBtn.on('click', function() {
+                    var div = $('#capture')[0];
+                    html2canvas(div, {
+                        scale: 2
+                    }).then(function(canvas) {
+                        canvas.toBlob(function(blob) {
+                            var link = $('<a></a>')[0];
+                            link.href = URL.createObjectURL(blob);
+                            link.download = `contractor-card-${uniqId(6)}.png`;
+                            link.click();
+                        });
+                    });
+                })
+            });
+
+
+        });
+
+    </script>
     @endpush
 </x-app-layout>

@@ -194,6 +194,12 @@ class ContractorRegistrationController extends Controller
         ]);
     }
 
+    public function approvedContractors(Request $request, $id)
+    {
+        $registration = ContractorRegistration::find($id);
+        return view('cont_registrations.approved', compact('registration'));
+    }
+
     public function showCard(ContractorRegistration $ContractorRegistration)
     {
         if ($ContractorRegistration->status !== 4) {
@@ -204,7 +210,7 @@ class ContractorRegistrationController extends Controller
                 ],
             ]);
         }
-        $data = route('standardizations.approved', ['id' => $ContractorRegistration->id]);
+        $data = route('registrations.approved', ['id' => $ContractorRegistration->id]);
         $qrCode = Builder::create()
             ->writer(new PngWriter())
             ->data($data)

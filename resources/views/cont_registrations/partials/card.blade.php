@@ -4,15 +4,15 @@
             <img src="{{ asset('images/logo-square.png') }}" class="logo" alt="KP Logo">
             <div class="header">
                 <h1>Communication & Works Department</h1>
-                <h3>Civil Secretariat Peshawar</h3>
+                <h3>Civil Secretariat, Peshawar</h3>
             </div>
         </div>
 
-        <h6 class="text-muted lead fs-6 fw-bolder">CONTRACTOR REGISTRATION CARD</h6>
+        <h6 class="card-main-title">Contractor Registration Card</h6>
 
-        <div class="d-flex justify-content-around align-items-center mt-4">
+        <div class="d-flex align-items-center gap-3 mt-4">
             <img src="{{ getProfilePic(auth()->user()) }}" class="company-logo" alt="Contractor Name">
-            <div class="body align-self-start mt-3">
+            <div class="body align-self-start mt-3 ml-5">
                 <h5>{{ $ContractorRegistration->contractor_name }}</h5>
                 <p> Enlistment No: {{ $ContractorRegistration->pec_number }} </p>
             </div>
@@ -22,7 +22,7 @@
         <div class="footer">
             <div></div>
             <div class="authority-sign align-self-end">
-                Authority Sign
+                Addl. Secretary (Tech)
             </div>
             <div>
                 <p style="font-size: 10px; margin-bottom:0px; color:red">Validity: {{ $ContractorRegistration->updated_at->format('d-M-Y') }}</p>
@@ -33,7 +33,7 @@
 
     <!-- Back Side -->
     <div class="card contractor-card contractor-card_back mt-1">
-        <h5 class="card-title text-center mt-2 text-uppercase">Contractor Details</h5>
+        <h5 class="card-main-title">Contractor Details</h5>
         <table>
             <tbody>
                 <tr>

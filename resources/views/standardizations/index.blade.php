@@ -197,8 +197,9 @@
                 btnSelector: '.card-btn',
                 title: 'Standardization Card',
                 actionButtonName: 'Download Card',
-            }).then(([modal, actionBtn]) => {
-                $('#' + actionBtn).on('click', function() {
+            }).then((modal) => {
+                const actionBtn = $('#'+modal).find('button[type="submit"]');
+                actionBtn.on('click', function() {
                     var div = $('#capture')[0];
                     html2canvas(div, {
                         scale: 2
