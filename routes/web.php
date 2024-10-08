@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
@@ -101,6 +102,10 @@ Route::middleware('auth')->prefix('provincial_entities')->group(function () {
     Route::get('/', [ProvincialEntityController::class, 'index'])->name('provincial_entities.index');
     Route::post('/', [ProvincialEntityController::class, 'store'])->name('provincial_entities.store');
     Route::delete('/{provincial_entity}', [ProvincialEntityController::class, 'destroy'])->name('provincial_entities.destroy');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/logs', ActivityLogController::class)->name('logs');
 });
 
 require __DIR__ . '/auth.php';

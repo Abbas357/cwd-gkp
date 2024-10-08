@@ -95,4 +95,8 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->belongsToMany(District::class, 'district_user', 'user_id', 'district_id');
     }
+
+    public function isAdmin() {
+        return $this->id === 1;
+    }
 }

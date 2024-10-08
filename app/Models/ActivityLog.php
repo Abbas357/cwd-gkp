@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class ActivityLog extends Model
 {
     public $timestamps = false;
+
+    protected $casts = [
+        'action_at' => 'datetime',
+    ];
     
     protected $fillable = [
         'loggable_id', 'loggable_type', 'action', 'field_name',

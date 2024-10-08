@@ -15,44 +15,49 @@
         <!--navigation-->
         <ul class="metismenu" id="sidenav">
             <li>
-                <a href="{{ route('dashboard') }}">
-                    <div class="parent-icon"><i class="bi-speedometer"></i>
-                    </div>
-                    <div class="menu-title">Dashboard</div>
-                </a>
-            </li>
-            <li>
                 <a href="javascript:;" class="has-arrow">
-                    <div class="parent-icon"><i class="bi-collection"></i>
+                    <div class="parent-icon"><i class="bi-house"></i>
                     </div>
-                    <div class="menu-title">Resources</div>
+                    <div class="menu-title">Home</div>
                 </a>
                 <ul>
-                    <li><a class="has-arrow" href="javascript:;"><i class="bi-arrow-right-short"></i>Access Control</a>
+                    <li><a href="{{ route('dashboard') }}"><i class="bi-arrow-right-short"></i>Dashboard</a></li>
+                    <li><a href="{{ route('profile.edit') }}"><i class="bi-arrow-right-short"></i>Edit Profile</a></li>
+                    <li><a href="{{ route('logs') }}"><i class="bi-arrow-right-short"></i>Activity Log</a></li>
+                    <li>
+                        <a href="javascript:;" class="has-arrow">
+                            <div class="parent-icon"><i class="bi-arrow-right-short"></i>
+                            </div>
+                            <div class="menu-title">Resources</div>
+                        </a>
                         <ul>
+                            <li><a class="has-arrow" href="javascript:;"><i class="bi-arrow-right-short"></i>Access Control</a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ route('roles.index') }}"><i class="bi-arrow-right-short"></i>Roles</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('permissions.index') }}"><i class="bi-arrow-right-short"></i>Permissions</a>
+                                    </li>
+                                </ul>
+                            </li>
+
                             <li>
-                                <a href="{{ route('roles.index') }}"><i class="bi-arrow-right-short"></i>Roles</a>
+                                <a href="{{ route('districts.index') }}"><i class="bi-arrow-right-short"></i>Districts</a>
                             </li>
                             <li>
-                                <a href="{{ route('permissions.index') }}"><i class="bi-arrow-right-short"></i>Permissions</a>
+                                <a href="{{ route('designations.index') }}"><i class="bi-arrow-right-short"></i>Designations</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('offices.index') }}"><i class="bi-arrow-right-short"></i>Offices</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('contractor_categories.index') }}"><i class="bi-arrow-right-short"></i>Contractor Categories</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('provincial_entities.index') }}"><i class="bi-arrow-right-short"></i>Provincial Entities</a>
                             </li>
                         </ul>
-                    </li>
-                    
-                    <li>
-                        <a href="{{ route('districts.index') }}"><i class="bi-arrow-right-short"></i>Districts</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('designations.index') }}"><i class="bi-arrow-right-short"></i>Designations</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('offices.index') }}"><i class="bi-arrow-right-short"></i>Offices</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('contractor_categories.index') }}"><i class="bi-arrow-right-short"></i>Contractor Categories</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('provincial_entities.index') }}"><i class="bi-arrow-right-short"></i>Provincial Entities</a>
                     </li>
                 </ul>
             </li>
