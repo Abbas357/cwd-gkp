@@ -16,6 +16,6 @@ class AppLayout extends Component
 
     public function render(): View
     {
-        return view('layouts.app', ['title' => $this->title]);
+        return view('layouts.admin.app', ['title' => $this->title]);
     }
 }

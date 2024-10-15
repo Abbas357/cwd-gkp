@@ -1013,7 +1013,8 @@ form select.error:focus {
 
 .bg-image {
   background-color: #ffffff;
-  background-image: url("../images/texture.png");
+  background-image: url("../images/bg-image.jpg");
+  background-size: cover;
 }
 
 .login-box {

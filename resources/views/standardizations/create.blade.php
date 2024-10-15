@@ -1,4 +1,4 @@
-<x-guest-layout title="Standardization of Engineering Products / Materials">
+<x-main-layout title="Standardization of Engineering Products / Materials">
     @push('style')
     <link href="{{ asset('plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
     @endpush
@@ -292,4 +292,4 @@
 
     </script>
     @endpush
-</x-guest-layout>
+</x-main-layout>

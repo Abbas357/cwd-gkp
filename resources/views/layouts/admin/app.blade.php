@@ -74,8 +74,8 @@
 <body class="loading">
     <div class="page-loader"></div>
     
-    @include("layouts.partials.header")
-    @include("layouts.partials.aside")
+    @include("layouts.admin.partials.header")
+    @include("layouts.admin.partials.aside")
 
     <main class="main-wrapper">
         <div class="main-content">
@@ -102,8 +102,8 @@
     
     <div class="overlay btn-toggle"></div>
 
-    @include("layouts.partials.footer")
-    @include("layouts.partials.theme-switcher")
+    @include("layouts.admin.partials.footer")
+    @include("layouts.admin.partials.theme-switcher")
 
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
 

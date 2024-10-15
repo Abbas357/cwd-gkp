@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-main-layout>
     @push('style')
     <link href="{{ asset('plugins/select2/css/select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
@@ -413,4 +413,4 @@
 
     </script>
     @endpush
-</x-guest-layout>
+</x-main-layout>
