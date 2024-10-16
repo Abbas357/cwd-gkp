@@ -38,6 +38,6 @@ class ActivityLogController extends Controller
             return $dataTable->toJson();
         }
 
-        return view('activity_logs.index');
+        return view('backend.activity_logs.index');
     }
 }

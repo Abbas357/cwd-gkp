@@ -10,7 +10,7 @@ class OfficeController extends Controller
     public function index()
     {
         $offices = Office::paginate(10);
-        return view('categories.offices.index', compact('offices'));
+        return view('backend.categories.offices.index', compact('offices'));
     }
 
     public function store(Request $request)

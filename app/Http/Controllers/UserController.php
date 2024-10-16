@@ -31,7 +31,7 @@ class UserController extends Controller
             $dataTable = Datatables::of($users)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    return view('users.partials.buttons', compact('row'))->render();
+                    return view('backend.users.partials.buttons', compact('row'))->render();
                 })
                 ->editColumn('is_active', function ($row) {
                     return $row->is_active == 1 ? 'Yes' : 'No';
@@ -57,7 +57,7 @@ class UserController extends Controller
             return $dataTable->toJson();
         }
 
-        return view('users.index');
+        return view('backend.users.index');
     }
 
     public function edit(User $user)
@@ -81,7 +81,7 @@ class UserController extends Controller
             'allOffices' => Office::all(),
         ];
 
-        $html = view('users.partials.edit', compact('data'))->render();
+        $html = view('backend.users.partials.edit', compact('data'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -113,7 +113,7 @@ class UserController extends Controller
             'roles' => Role::all(),
             'permissions' => Permission::all()
         ];
-        return view('users.create', compact('cat'));
+        return view('backend.users.create', compact('cat'));
     }
 
     public function store(StoreUserRequest $request)

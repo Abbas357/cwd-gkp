@@ -31,7 +31,7 @@ class ContractorRegistrationController extends Controller
             $dataTable = Datatables::of($registrations)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    return view('cont_registrations.partials.buttons', compact('row'))->render();
+                    return view('backend.cont_registrations.partials.buttons', compact('row'))->render();
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->diffForHumans();
@@ -57,7 +57,7 @@ class ContractorRegistrationController extends Controller
             return $dataTable->toJson();
         }
 
-        return view('cont_registrations.index');
+        return view('backend.cont_registrations.index');
     }
 
     public function defer(Request $request, ContractorRegistration $ContractorRegistration)
@@ -90,7 +90,7 @@ class ContractorRegistrationController extends Controller
             'contractor_category' => ContractorCategory::all(),
             'provincial_entities' => ProvincialEntity::all(),
         ];
-        return view('cont_registrations.create', compact('cat'));
+        return view('backend.cont_registrations.create', compact('cat'));
     }
 
     public function store(StoreContractorRegistrationRequest $request)
@@ -185,7 +185,7 @@ class ContractorRegistrationController extends Controller
                 ],
             ]);
         }
-        $html = view('cont_registrations.partials.detail', compact('ContractorRegistration', 'cat'))->render();
+        $html = view('backend.cont_registrations.partials.detail', compact('ContractorRegistration', 'cat'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -197,7 +197,7 @@ class ContractorRegistrationController extends Controller
     public function approvedContractors(Request $request, $id)
     {
         $registration = ContractorRegistration::find($id);
-        return view('cont_registrations.approved', compact('registration'));
+        return view('backend.cont_registrations.approved', compact('registration'));
     }
 
     public function showCard(ContractorRegistration $ContractorRegistration)
@@ -221,7 +221,7 @@ class ContractorRegistrationController extends Controller
 
         $qrCodeUri = $qrCode->getDataUri();
 
-        $html = view('cont_registrations.partials.card', compact('ContractorRegistration', 'qrCodeUri'))->render();
+        $html = view('backend.cont_registrations.partials.card', compact('ContractorRegistration', 'qrCodeUri'))->render();
         return response()->json([
             'success' => true,
             'data' => [

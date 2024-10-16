@@ -28,7 +28,7 @@ class EStandardizationController extends Controller
             $dataTable = Datatables::of($standardizations)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    return view('standardizations.partials.buttons', compact('row'))->render();
+                    return view('backend.standardizations.partials.buttons', compact('row'))->render();
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->diffForHumans();
@@ -51,12 +51,12 @@ class EStandardizationController extends Controller
             return $dataTable->toJson();
         }
 
-        return view('standardizations.index');
+        return view('backend.standardizations.index');
     }
 
     public function create()
     {
-        return view('standardizations.create');
+        return view('backend.standardizations.create');
     }
 
     public function store(StoreEStandardizationRequest $request)
@@ -139,7 +139,7 @@ class EStandardizationController extends Controller
                 ],
             ]);
         }
-        $html = view('standardizations.partials.detail', compact('EStandardization'))->render();
+        $html = view('backend.standardizations.partials.detail', compact('EStandardization'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -169,7 +169,7 @@ class EStandardizationController extends Controller
 
         $qrCodeUri = $qrCode->getDataUri();
 
-        $html = view('standardizations.partials.card', compact('EStandardization', 'qrCodeUri'))->render();
+        $html = view('backend.standardizations.partials.card', compact('EStandardization', 'qrCodeUri'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -191,7 +191,7 @@ class EStandardizationController extends Controller
     public function approvedProducts(Request $request, $id)
     {
         $product = EStandardization::find($id);
-        return view('standardizations.approved', compact('product'));
+        return view('backend.standardizations.approved', compact('product'));
     }
 
     public function reject(Request $request, EStandardization $EStandardization)

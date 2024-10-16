@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\ActivityLogController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OfficeController;
@@ -13,7 +13,7 @@ use App\Http\Controllers\Categories\PermissionController;
 use App\Http\Controllers\Categories\DesignationController;
 use App\Http\Controllers\ContractorRegistrationController;
 use App\Http\Controllers\Categories\ProvincialEntityController;
-use App\Http\Controllers\Categories\ContractorCategoryController;
+use App\Http\Controllers\Categories\ContractorCategoryController; 
 
 require __DIR__ . '/noauth.php';
 
