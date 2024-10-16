@@ -35,12 +35,12 @@
                 </div>
                 <div class="cw-search cw-search-temp-wrapper cw-mobile-search" role="search">
                     <div class="cw-input-container">
-                        <input id="cw-search-input" type="search" class="cw-search-input" aria-label="Search C&W" placeholder="Search C&W" tabindex="0" autocomplete="off" />
+                        <input id="cw-search-input" type="search" class="cw-search-input" aria-label="Search..." placeholder="Search..." tabindex="0" autocomplete="off" />
                         <div class="input-loading"></div>
                         <button class="cw-search-btn cw-search-cancel" tabindex="0" aria-label="Cancel Search">
                             <i class="bi bi-x-circle"></i>
                         </button>
-                        <button class="cw-search-btn cw-search-submit" tabindex="0" aria-label="Search C&W">
+                        <button class="cw-search-btn cw-search-submit" tabindex="0" aria-label="Search...">
                             <i class="bi bi-search d-none d-sm-block"></i>
                         </button>
                     </div>
@@ -63,7 +63,7 @@
                     <a href="tel:+919210843"><i class="bi-telephone"></i> &nbsp; +919210843</a>
                 </div>
                 <div class="searchIcon">
-                    <button class="btn cw-search-btn cw-search-submit" tabindex="0" aria-label="Search C&W">
+                    <button class="btn cw-search-btn cw-search-submit" tabindex="0" aria-label="Search...">
                         <i class="bi-search"></i>
                         <span class="menu-label">SEARCH</span>
                     </button>

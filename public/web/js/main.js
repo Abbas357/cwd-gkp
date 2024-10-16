@@ -22,7 +22,7 @@
     });
 
     $(".module-carousel").owlCarousel({
-        autoplay: false,
+        autoplay: false, 
         smartSpeed: 1000,
         center: false,
         dots: true,

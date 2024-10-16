@@ -15,7 +15,6 @@
 		sugsContent: $(".cw-search .cw-suggesstion #content"),
 		inputLoading: $(".input-loading"),
 		searchWidget: $(".cw-search .widget"),
-		mainContent: $("main.cw-main-content"),
 		lastScrollTop: 0,
 
 		handleSearchIcon() {
@@ -39,39 +38,6 @@
 			} else {
 				CWD.cwBottom.css("height", "0px");
 				CWD.mobileSearch.addClass("cw-mobile-search");
-			}
-		},
-
-		handleScrollMenu() {
-			let debounceTimer;
-			const currentScrollTop = $(window).scrollTop();
-
-			clearTimeout(debounceTimer);
-			debounceTimer = setTimeout(() => {
-				if (currentScrollTop > CWD.lastScrollTop) {
-					if (window.innerWidth > 1024) {
-						CWD.integratedPlate.css("opacity", "0.9");
-						CWD.cwBottom.css({ height: "0px", visibility: "hidden" });
-						CWD.mainContent.css({ marginTop: "50px" });
-					}
-				} else {
-					if (window.innerWidth > 1024) {
-						CWD.integratedPlate.css("opacity", "1");
-						CWD.cwBottom.css({ height: "50px", visibility: "visible" });
-						CWD.mainContent.css({ marginTop: "113px" });
-					}
-				}
-				CWD.lastScrollTop = currentScrollTop;
-			}, 500);
-		},
-
-		handleOpacityOfMenu() {
-			CWD.integratedPlate.css("opacity", "1");
-			if (
-				CWD.cwBottom.css("visibility") === "hidden" &&
-				window.innerWidth > 1024
-			) {
-				CWD.cwBottom.css({ height: "50px", visibility: "visible" });
 			}
 		},
 
@@ -168,15 +134,7 @@
 	$(document).ready(function () {
 		CWD.searchIcon.on("click", CWD.handleSearchIcon);
 		$(window).on("resize", CWD.handleMatchMedia);
-		CWD.overlay.on("mouseenter", CWD.handlePopoverlay);
-		CWD.searchInput.on("blur", CWD.handlePopoverlay);
 		CWD.searchInput.on("input", CWD.handleSearchInput);
-		$(window).on("scroll", CWD.handleScrollMenu);
-		CWD.integratedPlate.on("mouseenter", CWD.handleOpacityOfMenu);
-
-		if (window.innerWidth > 1024) {
-			CWD.mainContent.css({ marginTop: "113px" });
-		}
 
 		CWD.topMenu.on("mouseenter", function () {
 			if ($(this).hasClass("child-nav") && window.innerWidth > 1024) {
