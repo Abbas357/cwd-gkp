@@ -112,9 +112,10 @@
     <script src="{{ asset('plugins/perfect-scrollbar/js/perfect-scrollbar.js') }}"></script>
     <script src="{{ asset('plugins/metismenu/metisMenu.min.js') }}"></script>
     <script src="{{ asset('plugins/simplebar/js/simplebar.min.js') }}"></script>
-    <script src="{{ asset('js/main.js') }}"></script>
     <script src="{{ asset('plugins/sweetalert2@11.js') }}"></script>
-    <script src="{{ asset('js/custom.js') }}"></script> 
+    
+    <script src="{{ asset('js/helpers.js') }}"></script> 
+    <script src="{{ asset('js/custom.js') }}"></script>
     @stack('script')
     <script>
         window.onload = function() {

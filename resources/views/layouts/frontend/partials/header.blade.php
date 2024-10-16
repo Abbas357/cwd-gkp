@@ -24,7 +24,7 @@
 
                         <div>
                             <div class="cw-show-DeskTop-Tab">
-                                <img src="{{ asset('web/img/logo-desktop.png') }}" class="desktop-logo" alt="CWD DEPT" />
+                                <img src="{{ asset('web/img/logo-desktop.gif') }}" class="desktop-logo rounded-top-3" alt="CWD DEPT" />
                             </div>
 
                             <div class="cw-show-Mobile">

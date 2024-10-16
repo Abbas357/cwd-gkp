@@ -1,0 +1,76 @@
+[id^="action-buttons"] {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-auto-columns: 1fr;
+    gap: 5px;
+    grid-auto-flow: row;
+    grid-template-areas:
+      ". aspect-ratio aspect-ratio aspect-ratio aspect-ratio aspect-ratio ."
+      "mode-move lock zoom-in arrow-up zoom-out add-crop flip-hr"
+      "mode-crop unlock arrow-left arrow-down arrow-right remove-crop flip-vr";
+  }
+  
+  .btn-arrow-up {
+    grid-area: arrow-up;
+    background-color: #00000022;
+  }
+  
+  .btn-arrow-down {
+    grid-area: arrow-down;
+    background-color: #00000022;
+  }
+  
+  .btn-arrow-left {
+    grid-area: arrow-left;
+    background-color: #00000022;
+  }
+  
+  .btn-arrow-right {
+    grid-area: arrow-right;
+    background-color: #00000022;
+  }
+  
+  .btn-zoom-in {
+    grid-area: zoom-in;
+  }
+  
+  .btn-zoom-out {
+    grid-area: zoom-out;
+  }
+  
+  .btn-lock {
+    grid-area: lock;
+  }
+  
+  .btn-unlock {
+    grid-area: unlock;
+  }
+  
+  .btn-mode-move {
+    grid-area: mode-move;
+  }
+  
+  .btn-mode-crop {
+    grid-area: mode-crop;
+  }
+  
+  .btn-add-crop {
+    grid-area: add-crop;
+  }
+  
+  .btn-remove-crop {
+    grid-area: remove-crop;
+  }
+  
+  .btn-flip-hr {
+    grid-area: flip-hr;
+  }
+  
+  .btn-flip-vr {
+    grid-area: flip-vr;
+  }
+  
+  .select-aspect-ratio {
+    grid-area: aspect-ratio;
+  }

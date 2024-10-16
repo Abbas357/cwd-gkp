@@ -44,9 +44,8 @@
     <script src="{{ asset('web/lib/lightbox/js/lightbox.min.js') }}"></script>
     
     <script src="{{ asset('web/js/menu.js') }}"></script>
-    <script src="{{ asset('web/js/main.js') }}"></script>
     <script src="{{ asset('web/js/core.min.js') }}"></script>
-    @stack('script')
     <script src="{{ asset('web/js/custom.js') }}"></script>
+    @stack('script')
 </body>
 </html>
