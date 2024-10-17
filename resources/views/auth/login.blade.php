@@ -5,7 +5,7 @@
                 <div class="card overflow-hidden login-box border border-secondary" style="box-shadow: -20px -20px 20px 0px #fff, 20px 20px 20px 0px #aaa">
                     <div class="card-body p-4 position-relative">
                         <div class="bg-secondary position-absolute top-0 start-0 w-100 p-3">
-                            <img src="{{ asset('images/logo.png') }}" class="d-block mx-auto" width="225" alt="">
+                            <img src="{{ asset('admin/images/logo.png') }}" class="d-block mx-auto" width="225" alt="">
                         </div>
                         <hr /><br /><br />
                         <h4 class="fw-bold">Login</h4>

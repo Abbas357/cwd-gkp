@@ -1,9 +1,14 @@
 <!-- Footer Start -->
-<div class="container-fluid footer py-5">
-    <div class="container py-5">
+<img src="{{ asset('site/img/footer-img.png') }}" style="width:100%; opacity: 0.3" alt="CWD">
+
+<div class="container-fluid footer py-2">
+    <div class="container py-3">
         <div class="row g-5">
             <div class="col-md-6 col-lg-6 col-xl-3">
-                <img src="{{ asset('web/img/logo-mobile.png') }}" style="width:250px" class="mt-5" alt="CWD">
+                <h4 class="mb-4 text-white">About Us</h4>
+                <p class="text-white">
+                    Communications & Works Department was established in 1979. Since establishment the Department is working to promote safe, sustainable, cost effective and environment friendly road infrastructure leading to socio-economic development.
+                </p>
             </div>
             <div class="col-md-6 col-lg-6 col-xl-3">
                 <div class="footer-item d-flex flex-column">
@@ -46,15 +51,12 @@
     <div class="container">
         <div class="row g-4 align-items-center">
             <div class="col-md-6 text-center text-md-end mb-md-0 text-white">
-                <i class="fas fa-copyright me-2"></i><a class="text-white" href="#">Communication & Works
-                    Department</a>, All right
-                reserved.
+                <i class="fas fa-copyright me-2"></i>
+                <a class="text-white" href="#">Communication & Works
+                    Department</a>
             </div>
             <div class="col-md-6 text-center text-white text-md-start">
-                <!--/*** This template is free as long as you keep the below author’s credit link/attribution link/backlink. ***/-->
-                <!--/*** If you'd like to use the template without the below author’s credit link/attribution link/backlink, ***/-->
-                <!--/*** you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". ***/-->
-                Designed By <a class="text-white" href="https://htmlcodex.com">HTML Codex</a> Distributed By <a href="https://themewagon.com">ThemeWagon</a>
+                Developed By <a class="text-white" href="#">IT Cell, C&W Department</a>
             </div>
         </div>
     </div>

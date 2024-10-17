@@ -7,7 +7,7 @@
                 </div>
                 @if (isset($header))
                 <div class="page-breadcrumb d-none d-sm-flex align-items-center bg-light px-2 shadow-sm">
-                    <div class="breadcrumb-title pe-2"><a href="{{ route('dashboard') }}">Home</a></div> <span class="fs-5">/</span>
+                    <div class="breadcrumb-title pe-2"><a href="{{ route('admin.dashboard') }}">Home</a></div> <span class="fs-5">/</span>
                     <div class="ps-2">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb mb-0 p-0">
@@ -176,16 +176,16 @@
                     <img src="{{ getProfilePic(auth()->user()) }}" class="rounded-circle p-1 border" width="45" height="45">
                 </a>
                 <div class="dropdown-menu dropdown-user dropdown-menu-end shadow">
-                    <a class="dropdown-item  gap-2 py-2" href="{{ route('profile.edit') }}">
+                    <a class="dropdown-item  gap-2 py-2" href="{{ route('admin.profile.edit') }}">
                         <div class="text-center">
                             <img src="{{ getProfilePic(auth()->user()) }}" class="rounded-circle p-1 shadow mb-3" width="90" height="90" alt="">
                             <h5 class="user-name mb-0 fw-bold">Hello, {{ auth()->user()->name }}</h5>
                         </div>
                     </a>
                     <hr class="dropdown-divider">
-                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('profile.edit') }}"><i class="bi-person-circle"></i>Profile</a>
-                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('profile.edit') }}"><i class="bi-gear-fill"></i>Settings</a>
-                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('dashboard') }}"><i class="bi-speedometer"></i>Dashboard</a>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('admin.profile.edit') }}"><i class="bi-person-circle"></i>Profile</a>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('admin.profile.edit') }}"><i class="bi-gear-fill"></i>Settings</a>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('admin.dashboard') }}"><i class="bi-speedometer"></i>Dashboard</a>
                     <hr class="dropdown-divider">
                     <form method="POST" action="{{ route('logout') }}" disabled>
                         @csrf

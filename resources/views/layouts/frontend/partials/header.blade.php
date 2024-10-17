@@ -24,11 +24,11 @@
 
                         <div>
                             <div class="cw-show-DeskTop-Tab">
-                                <img src="{{ asset('web/img/logo-desktop.gif') }}" class="desktop-logo rounded-top-3" alt="CWD DEPT" />
+                                <img src="{{ asset('site/img/logo-desktop.gif') }}" class="desktop-logo" style="border-top-right-radius: 30px; border-bottom-left-radius: 20px" alt="CWD DEPT" />
                             </div>
 
                             <div class="cw-show-Mobile">
-                                <img src="{{ asset('web/img/logo-mobile.png') }}" class="mobile-logo" alt="CWD DEPT" />
+                                <img src="{{ asset('site/img/logo-mobile.png') }}" class="mobile-logo" alt="CWD DEPT" />
                             </div>
                         </div>
                     </a>

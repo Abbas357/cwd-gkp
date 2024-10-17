@@ -14,17 +14,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600&family=Roboto&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
-    <link rel="stylesheet" href="{{ asset('web/css/bootstrap-icons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('site/css/bootstrap-icons.min.css') }}">
 
-    <link href="{{ asset('web/lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('web/lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('site/lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('site/lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
     
-    <link href="{{ asset('web/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('site/css/bootstrap.min.css') }}" rel="stylesheet">
 
-    <link href="{{ asset('web/css/style.css') }}" rel="stylesheet">
-    <link href="{{ asset('web/css/menu.css') }}" rel="stylesheet">
+    <link href="{{ asset('site/css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('site/css/menu.css') }}" rel="stylesheet">
     @stack('style')
-    <link href="{{ asset('web/css/custom.css') }}" rel="stylesheet">
+    <link href="{{ asset('site/css/custom.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -36,16 +36,16 @@
 
     @include("layouts.frontend.partials.footer")
 
-    <script src="{{ asset('web/js/jquery.min.js') }}"></script>
-    <script src="{{ asset('web/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('web/lib/easing/easing.min.js') }}"></script>
-    <script src="{{ asset('web/lib/waypoints/waypoints.min.js') }}"></script>
-    <script src="{{ asset('web/lib/owlcarousel/owl.carousel.min.js') }}"></script>
-    <script src="{{ asset('web/lib/lightbox/js/lightbox.min.js') }}"></script>
+    <script src="{{ asset('site/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('site/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('site/lib/easing/easing.min.js') }}"></script>
+    <script src="{{ asset('site/lib/waypoints/waypoints.min.js') }}"></script>
+    <script src="{{ asset('site/lib/owlcarousel/owl.carousel.min.js') }}"></script>
+    <script src="{{ asset('site/lib/lightbox/js/lightbox.min.js') }}"></script>
     
-    <script src="{{ asset('web/js/menu.js') }}"></script>
-    <script src="{{ asset('web/js/core.min.js') }}"></script>
-    <script src="{{ asset('web/js/custom.js') }}"></script>
+    <script src="{{ asset('site/js/menu.js') }}"></script>
+    <script src="{{ asset('site/js/core.min.js') }}"></script>
+    <script src="{{ asset('site/js/custom.js') }}"></script>
     @stack('script')
 </body>
 </html>

@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ContractorRegistrationController;
-use App\Http\Controllers\EStandardizationController;
+use App\Http\Controllers\Admin\ContractorRegistrationController;
+use App\Http\Controllers\Admin\EStandardizationController;
 
 Route::get('registrations/create', [ContractorRegistrationController::class, 'create'])->name('registrations.create');
 Route::post('registrations', [ContractorRegistrationController::class, 'store'])->name('registrations.store');

@@ -6,11 +6,11 @@ class HomeController extends Controller
 {
     public function index()
     {
-        return view('frontend.index');
+        return view('site.index');
     }
 
     public function dashboard()
     {
-        return view('backend.home');
+        return view('admin.home');
     }
 }

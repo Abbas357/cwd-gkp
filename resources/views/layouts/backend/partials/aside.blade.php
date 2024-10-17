@@ -21,9 +21,9 @@
                     <div class="menu-title">Home</div>
                 </a>
                 <ul>
-                    <li><a href="{{ route('dashboard') }}"><i class="bi-arrow-right-short"></i>Dashboard</a></li>
-                    <li><a href="{{ route('profile.edit') }}"><i class="bi-arrow-right-short"></i>Edit Profile</a></li>
-                    <li><a href="{{ route('logs') }}"><i class="bi-arrow-right-short"></i>Activity Log</a></li>
+                    <li><a href="{{ route('admin.dashboard') }}"><i class="bi-arrow-right-short"></i>Dashboard</a></li>
+                    <li><a href="{{ route('admin.profile.edit') }}"><i class="bi-arrow-right-short"></i>Edit Profile</a></li>
+                    <li><a href="{{ route('admin.logs') }}"><i class="bi-arrow-right-short"></i>Activity Log</a></li>
                     <li>
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="bi-arrow-right-short"></i>
@@ -34,28 +34,28 @@
                             <li><a class="has-arrow" href="javascript:;"><i class="bi-arrow-right-short"></i>Access Control</a>
                                 <ul>
                                     <li>
-                                        <a href="{{ route('roles.index') }}"><i class="bi-arrow-right-short"></i>Roles</a>
+                                        <a href="{{ route('admin.roles.index') }}"><i class="bi-arrow-right-short"></i>Roles</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('permissions.index') }}"><i class="bi-arrow-right-short"></i>Permissions</a>
+                                        <a href="{{ route('admin.permissions.index') }}"><i class="bi-arrow-right-short"></i>Permissions</a>
                                     </li>
                                 </ul>
                             </li>
 
                             <li>
-                                <a href="{{ route('districts.index') }}"><i class="bi-arrow-right-short"></i>Districts</a>
+                                <a href="{{ route('admin.districts.index') }}"><i class="bi-arrow-right-short"></i>Districts</a>
                             </li>
                             <li>
-                                <a href="{{ route('designations.index') }}"><i class="bi-arrow-right-short"></i>Designations</a>
+                                <a href="{{ route('admin.designations.index') }}"><i class="bi-arrow-right-short"></i>Designations</a>
                             </li>
                             <li>
-                                <a href="{{ route('offices.index') }}"><i class="bi-arrow-right-short"></i>Offices</a>
+                                <a href="{{ route('admin.offices.index') }}"><i class="bi-arrow-right-short"></i>Offices</a>
                             </li>
                             <li>
-                                <a href="{{ route('contractor_categories.index') }}"><i class="bi-arrow-right-short"></i>Contractor Categories</a>
+                                <a href="{{ route('admin.contractor_categories.index') }}"><i class="bi-arrow-right-short"></i>Contractor Categories</a>
                             </li>
                             <li>
-                                <a href="{{ route('provincial_entities.index') }}"><i class="bi-arrow-right-short"></i>Provincial Entities</a>
+                                <a href="{{ route('admin.provincial_entities.index') }}"><i class="bi-arrow-right-short"></i>Provincial Entities</a>
                             </li>
                         </ul>
                     </li>
@@ -68,9 +68,9 @@
                     <div class="menu-title">Users</div>
                 </a>
                 <ul>
-                    <li><a href="{{ route('users.index') }}"><i class="bi-arrow-right-short"></i>List</a>
+                    <li><a href="{{ route('admin.users.index') }}"><i class="bi-arrow-right-short"></i>List</a>
                     </li>
-                    <li><a href="{{ route('users.create') }}"><i class="bi-arrow-right-short"></i>Create</a>
+                    <li><a href="{{ route('admin.users.create') }}"><i class="bi-arrow-right-short"></i>Create</a>
                     </li>
                 </ul>
             </li>
@@ -81,7 +81,7 @@
                     <div class="menu-title">Registrations</div>
                 </a>
                 <ul>
-                    <li><a href="{{ route('registrations.index') }}"><i class="bi-arrow-right-short"></i>List</a>
+                    <li><a href="{{ route('admin.registrations.index') }}"><i class="bi-arrow-right-short"></i>List</a>
                     </li>
                     <li><a href="{{ route('registrations.create') }}"><i class="bi-arrow-right-short"></i>Create</a>
                     </li>
@@ -94,7 +94,7 @@
                     <div class="menu-title">e-Standardization</div>
                 </a>
                 <ul>
-                    <li><a href="{{ route('standardizations.index') }}"><i class="bi-arrow-right-short"></i>List</a>
+                    <li><a href="{{ route('admin.standardizations.index') }}"><i class="bi-arrow-right-short"></i>List</a>
                     </li>
                     <li><a href="{{ route('standardizations.create') }}"><i class="bi-arrow-right-short"></i>Create</a>
                     </li>
