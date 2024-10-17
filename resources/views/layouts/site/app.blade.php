@@ -28,13 +28,13 @@
 </head>
 
 <body>
-    @include("layouts.frontend.partials.header")
+    @include("layouts.site.partials.header")
 
     <main class="cw-main-content">
         {{ $slot }}
     </main>
 
-    @include("layouts.frontend.partials.footer")
+    @include("layouts.site.partials.footer")
 
     <script src="{{ asset('site/js/jquery.min.js') }}"></script>
     <script src="{{ asset('site/js/bootstrap.bundle.min.js') }}"></script>

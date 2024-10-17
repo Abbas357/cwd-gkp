@@ -328,7 +328,9 @@
                         <li role="menuitem" aria-hidden="true" class="divider cw-onlyMobileTab"></li>
                     </ul>
                 </nav>
+                <button href="#" class="cw-top-nav-button" style="padding: 7px 10px; border: none;position: absolute; bottom: 3px; right:0px; border-radius: 50px"><i class="bi-camera"></i>&nbsp; STORIES</button>
             </div>
         </div>
     </div>
+    
 </header>

@@ -47,16 +47,12 @@
 <!-- Footer End -->
 
 <!-- Copyright Start -->
-<div class="container-fluid copyright text-body py-4">
+<div class="container-fluid copyright text-body py-2">
     <div class="container">
-        <div class="row g-4 align-items-center">
-            <div class="col-md-6 text-center text-md-end mb-md-0 text-white">
-                <i class="fas fa-copyright me-2"></i>
-                <a class="text-white" href="#">Communication & Works
-                    Department</a>
-            </div>
-            <div class="col-md-6 text-center text-white text-md-start">
-                Developed By <a class="text-white" href="#">IT Cell, C&W Department</a>
+        <div class="g-4 align-items-center">
+            <div class="text-center mb-md-0 text-white">
+                <a class="text-white" href="https://cwd.gkp.pk">&copy; Communication & Works Department, Govt. of Khyber Pakhtunkhwa</a>
+                <div>Developed By <a class="text-info" href="https://cwd.gkp.pk">IT Cell, C&W Department</a></div>
             </div>
         </div>
     </div>

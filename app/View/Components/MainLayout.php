@@ -16,6 +16,6 @@ class MainLayout extends Component
 
     public function render(): View
     {
-        return view('layouts.frontend.app', ['title' => $this->title]);
+        return view('layouts.site.app', ['title' => $this->title]);
     }
 }

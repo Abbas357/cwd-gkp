@@ -367,7 +367,7 @@ a {
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, 0.5));
+    background: linear-gradient(rgba(0, 0, 0, .8), rgba(0, 0, 0, 0.5));
     background-size: cover;
 }
 
@@ -453,76 +453,6 @@ a {
     color: var(--bs-white) !important;
 }
 /*** Service End ***/
-
-
-/*** Destination Start ***/
-.destination .tab-class .tab-content .tab-pane .destination-img {
-    position: relative;
-    overflow: hidden;
-    border-radius: 10px;
-    z-index: 1;
-}
-
-.destination .tab-class .tab-content .tab-pane .destination-img .destination-overlay {
-    position: absolute;
-    bottom: -100%;
-    left: 0;
-    z-index: 3;
-    transition: 0.5s;
-}
-
-.destination .tab-class .tab-content .tab-pane .destination-img .search-icon {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    right: 0;
-    display: flex;
-    justify-content: end;
-    padding: 20px 20px 0 0;
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    transition: 0.5s;
-
-}
-
-.destination .tab-class .tab-content .tab-pane .destination-img .search-icon a i {
-    opacity: 0;
-    transition: 0.5s;
-}
-
-.destination .tab-class .nav-item {
-    padding: 0 0 20px 0;
-}
-.destination .tab-class .nav-item a.active {
-    background: var(--bs-primary) !important;
-}
-
-.destination .tab-class .nav-item a.active span {
-    color: var(--bs-white) !important;
-}
-
-.destination .tab-class .tab-content .destination-img:hover .search-icon {
-    background: rgba(19, 53, 123, 0.4);
-}
-
-.destination .tab-class .tab-content .destination-img:hover .destination-overlay {
-    bottom: 0;
-}
-
-.destination .tab-class .tab-content .destination-img:hover .search-icon a i {
-    opacity: 1;
-}
-
-.destination .tab-class .tab-content .destination-img img {
-    transition: 0.5s;
-}
-
-.destination .tab-class .tab-content .destination-img:hover img {
-    transform: scale(1.2);
-}
-/*** Destination End ***/
-
 
 /*** Packages Start ***/
 .packages .packages-item .packages-img {
@@ -642,176 +572,6 @@ a {
 }
 /*** Packages End ***/
 
-
-/*** Explore Tour Start ***/
-.ExploreTour .tab-class .nav-item {
-    padding: 0 0 20px 0;
-}
-.ExploreTour .tab-class .nav-item a.active {
-    background: var(--bs-primary) !important;
-}
-
-.ExploreTour .tab-class .nav-item a.active span {
-    color: var(--bs-white) !important;
-}
-
-
-/* National Tour Start */
-.ExploreTour #NationalTab-1 .national-item {
-    position: relative;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.ExploreTour #NationalTab-1 .national-item img {
-    transition: 0.5s;
-}
-
-.ExploreTour #NationalTab-1 .national-item:hover img {
-    transform: scale(1.2);
-}
-
-.ExploreTour #NationalTab-1 .national-item .national-content {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    border-radius: 10px;
-    padding: 20px;
-    background: rgba(0, 0, 0, .2);
-    display: flex;
-    align-items: end;
-    justify-content: center;
-    transition: 0.5s;
-}
-
-.ExploreTour #NationalTab-1 .national-item:hover .national-content {
-    background: rgba(19, 53, 123, .6);
-}
-
-.ExploreTour #NationalTab-1 .national-item .national-plus-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    transition: 0.5s;
-    opacity: 0;
-}
-
-.ExploreTour #NationalTab-1 .national-item:hover .national-plus-icon {
-    opacity: 1;
-}
-
-.ExploreTour #NationalTab-1 .national-item .tour-offer {
-    position: absolute;
-    top: -1px;
-    left: -1px;
-    padding: 20px;
-    border-top-right-radius: 40px;
-    border-top-left-radius: 20px;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 80px;
-    background: var(--bs-primary);
-    color: var(--bs-white);
-}
-
-/* International Tour Start */
-.ExploreTour #InternationalTab-2 .international-item {
-    position: relative;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.ExploreTour #InternationalTab-2 .international-item img {
-    transition: 0.5s;
-}
-
-.ExploreTour #InternationalTab-2 .international-item:hover img {
-    transform: scale(1.2);
-}
-
-.ExploreTour #InternationalTab-2 .international-item .tour-offer {
-    position: absolute;
-    top: -1px;
-    left: -1px;
-    padding: 20px;
-    border-top-right-radius: 30px;
-    border-top-left-radius: 20px;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 80px;
-    background: var(--bs-primary);
-    color: var(--bs-white);
-}
-
-.ExploreTour #InternationalTab-2 .international-item .international-content {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    border-radius: 10px;
-    padding: 20px;
-    background: rgba(0, 0, 0, .3);
-    display: flex;
-    align-items: end;
-    justify-content: center;
-    transition: 0.5s;
-}
-
-.ExploreTour #InternationalTab-2 .international-item:hover .international-content {
-    background: rgba(19, 53, 123, .6);
-}
-
-.ExploreTour #InternationalTab-2 .international-item .international-content .international-info a {
-    font-size: 14px;
-}
-
-.ExploreTour #InternationalTab-2 .international-item .international-plus-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    transition: 0.5s;
-    opacity: 0;
-}
-
-.ExploreTour #InternationalTab-2 .international-item:hover .international-plus-icon {
-    opacity: 1;
-}
-
-/* carousel Start */
-.ExploreTour #InternationalTab-2 .InternationalTour-carousel .international-item {
-    position: relative;
-    overflow: hidden;
-}
-
-.ExploreTour #InternationalTab-2 .InternationalTour-carousel .owl-dots {
-    margin-top: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.ExploreTour #InternationalTab-2 .InternationalTour-carousel .owl-dot {
-    position: relative;
-    display: inline-block;
-    margin: 0 5px;
-    width: 15px;
-    height: 15px;
-    background: var(--bs-light);
-    border: 1px solid var(--bs-primary);
-    border-radius: 10px;
-    transition: 0.5s;
-}
-
-.ExploreTour #InternationalTab-2 .InternationalTour-carousel .owl-dot.active {
-    width: 40px;
-    background: var(--bs-primary);
-}
-/*** Explore Tour End ***/
-
-
 /*** Gallery Start ***/
 .gallery .gallery-item {
     position: relative;
@@ -925,98 +685,7 @@ a {
 }
 
 
-
 /*** Tour Booking end ***/
-
-/*** Travel Guide Start ***/
-.guide .guide-item .guide-img {
-    position: relative;
-}
-
-.guide .guide-item .guide-img .guide-icon {
-    position: absolute;
-    bottom: 0; 
-    left: 50%; 
-    transform: translate(-50%, -50%);
-    margin-bottom: -50px;
-    display: flex;
-    justify-content: center;
-    border: 1px solid var(--bs-primary);
-    background: var(--bs-light);
-    z-index: 9;
-}
-
-.guide .guide-item .guide-img .guide-img-efects {
-    position: relative;
-    overflow: hidden;
-    border-top-right-radius: 10px;
-    border-top-left-radius: 10px;
-}
-
-.guide .guide-item .guide-img .guide-img-efects::after {
-    content: "";
-    width: 100%;
-    height: 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transition: 0.5s;
-}
-
-.guide .guide-item:hover .guide-img-efects::after {
-    height: 100%;
-    border-top-right-radius: 10px;
-    border-top-left-radius: 10px;
-    background: rgba(19, 53, 123, .5);
-}
-
-.guide .guide-item .guide-img-efects img {
-    transition: 0.5s;
-}
-.guide .guide-item:hover .guide-img-efects img {
-    transform: scale(1.1);
-}
-
-.guide .guide-item .guide-title {
-    position: relative;
-    background: var(--bs-light);
-    transition: 0.5s;
-}
-
-.guide .guide-item .guide-title::after {
-    content: "";
-    width: 100%;
-    height: 0;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    border-bottom-right-radius: 10px;
-    border-bottom-left-radius: 10px;
-    transition: 0.5s;
-}
-
-.guide .guide-item:hover .guide-title::after {
-    height: 100%;
-    background: var(--bs-primary) !important;
-    color: var(--bs-white);
-}
-
-.guide .guide-item .guide-title .guide-title-inner,
-.guide .guide-item:hover .guide-title .guide-title-inner h4 {
-    transition: 0.5s;
-}
-
-.guide .guide-item:hover .guide-title .guide-title-inner {
-    position: relative;
-    color: var(--bs-white) !important;
-    z-index: 2;
-}
-
-.guide .guide-item:hover .guide-title .guide-title-inner h4 {
-    color: var(--bs-white);
-}
-/*** Travel Guide End ***/
-
 
 /*** Blog Start ***/
 .blog .blog-item .blog-img {
@@ -1086,29 +755,18 @@ a {
 /*** Blog End ***/
 
 /*** Testimonial Start ***/
-.testimonial .testimonial-carousel {
+.team .team-item .team-img {
     position: relative;
 }
 
-.testimonial .testimonial-carousel .testimonial-item .testimonial-img {
-    position: relative;
-    width: 100px; 
-    height: 100px; 
-    top: 0; left: 50%; 
-    transform: translate(-50%, -50%);
-    border: 3px solid var(--bs-primary); 
-    border-style: dotted;
-    border-radius: 50%;
-}
-
-.testimonial .testimonial-carousel .owl-dots {
+.team .team-carousel .owl-dots {
     margin-top: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.testimonial .testimonial-carousel .owl-dot {
+.team .team-carousel .owl-dot {
     position: relative;
     display: inline-block;
     margin: 0 5px;
@@ -1120,12 +778,12 @@ a {
     transition: 0.5s;
 }
 
-.testimonial .testimonial-carousel .owl-dot.active {
+.team .team-carousel .owl-dot.active {
     width: 40px;
     background: var(--bs-primary);
 }
 
-.testimonial .testimonial-carousel .owl-nav .owl-prev {
+.team .team-carousel .owl-nav .owl-prev {
     position: absolute;
     top: -55px;
     left: 0;
@@ -1135,7 +793,7 @@ a {
     transition: 0.5s;
 }
 
-.testimonial .testimonial-carousel .owl-nav .owl-next {
+.team .team-carousel .owl-nav .owl-next {
     position: absolute;
     top: -55px;
     right: 0;
@@ -1145,35 +803,105 @@ a {
     transition: 0.5s;
 }
 
-.testimonial .testimonial-carousel .owl-nav .owl-prev i,
-.testimonial .testimonial-carousel .owl-nav .owl-next i {
+.team .team-carousel .owl-nav .owl-prev i,
+.team .team-carousel .owl-nav .owl-next i {
     color: var(--bs-primary);
     font-size: 17px;
     transition: 0.5s;
 }
 
-.testimonial .testimonial-carousel .owl-nav .owl-prev:hover,
-.testimonial .testimonial-carousel .owl-nav .owl-next:hover {
+.team .team-carousel .owl-nav .owl-prev:hover,
+.team .team-carousel .owl-nav .owl-next:hover {
     background: var(--bs-primary);
 }
 
-.testimonial .testimonial-carousel .owl-nav .owl-prev:hover i,
-.testimonial .testimonial-carousel .owl-nav .owl-next:hover i {
+.team .team-carousel .owl-nav .owl-prev:hover i,
+.team .team-carousel .owl-nav .owl-next:hover i {
     color: var(--bs-white);
 }
 
-.testimonial .testimonial-carousel .owl-item.center .testimonial-item .testimonial-comment {
+.team .team-item .team-img .team-icon {
+    position: absolute;
+    bottom: 0; 
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    margin-bottom: -50px;
+    display: flex;
+    justify-content: center;
+    border: 1px solid var(--bs-primary);
+    background: var(--bs-light);
+    z-index: 9;
+}
+
+.team .team-item .team-img .team-img-efects {
+    position: relative;
+    overflow: hidden;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
+.team .team-item .team-img .team-img-efects::after {
+    content: "";
+    width: 100%;
+    height: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: 0.5s;
+}
+
+.team .team-item:hover .team-img-efects::after {
+    height: 100%;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    background: rgba(19, 53, 123, .5);
+}
+
+.team .team-item .team-img-efects img {
+    transition: 0.5s;
+}
+.team .team-item:hover .team-img-efects img {
+    transform: scale(1.1);
+}
+
+.team .team-item .team-title {
+    position: relative;
+    background: var(--bs-light);
+    transition: 0.5s;
+}
+
+.team .team-item .team-title::after {
+    content: "";
+    width: 100%;
+    height: 0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    transition: 0.5s;
+}
+
+.team .team-item:hover .team-title::after {
+    height: 100%;
     background: var(--bs-primary) !important;
     color: var(--bs-white);
+}
+
+.team .team-item .team-title .team-title-inner,
+.team .team-item:hover .team-title .team-title-inner h4 {
     transition: 0.5s;
 }
 
-.testimonial .testimonial-carousel .owl-item.center .testimonial-item .testimonial-img {
-    border: 3px solid var(--bs-white); 
-    border-style: dotted;
-    transition: 0.5s;
+.team .team-item:hover .team-title .team-title-inner {
+    position: relative;
+    color: var(--bs-white) !important;
+    z-index: 2;
 }
-/*** Testimonial End ***/
+
+.team .team-item:hover .team-title .team-title-inner h4 {
+    color: var(--bs-white);
+}
 
 /*** Contact Start ***/
 .contact .container form .btn.btn-primary {
@@ -1187,13 +915,6 @@ a {
 /*** Contact End ***/
 
 /*** Subscribe Start ***/
-.subscribe {
-    background: linear-gradient(rgba(19, 53, 123, .6), rgba(19, 53, 123, .6)), url(../img/subscribe-img.jpg);
-    background-attachment: fixed;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
 
 .subscribe .subscribe-title {
     position: relative;
@@ -1227,7 +948,9 @@ a {
 
 /*** Footer Start ***/
 .footer {
-    background: var(--bs-dark);
+    background: #0a191f;
+    background: -webkit-linear-gradient(to top, #153a49, #203A43, #0F2027);
+    background: linear-gradient(to top, #153441, #203A43, #121e24);
 }
 .footer .footer-item a {
     line-height: 30px;
