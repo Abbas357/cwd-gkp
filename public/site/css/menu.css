@@ -100,6 +100,8 @@
 header#integrated-plate {
     font-size: 16px !important;
     background-color: transparent;
+    position: sticky;
+    top: 0px;
 }
 
 .CWD {

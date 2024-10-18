@@ -7,6 +7,7 @@
 		popoverBtn: $(".cw-menu-popover-btn"),
 		searchIcon: $(".searchIcon"),
 		mobileSearch: $(".cw-mobile-search"),
+		cwTop: $(".cw-top"),
 		cwBottom: $(".cw-bottom"),
 		overlay: $(".CWD .popoverOverlay"),
 		searchInput: $("#cw-search-input"),
@@ -41,6 +42,27 @@
 			}
 		},
 
+		throttle(func, limit) {
+			let lastFunc;
+			let lastRan;
+			return function() {
+				const context = this;
+				const args = arguments;
+				if (!lastRan) {
+					func.apply(context, args);
+					lastRan = Date.now();
+				} else {
+					clearTimeout(lastFunc);
+					lastFunc = setTimeout(function() {
+						if (Date.now() - lastRan >= limit) {
+							func.apply(context, args);
+							lastRan = Date.now();
+						}
+					}, limit - (Date.now() - lastRan));
+				}
+			};
+		},
+
 		handleSearchInput(e) {
 			let debounceTimer;
 			clearTimeout(debounceTimer);
@@ -58,7 +80,6 @@
 						url: "https://restcountries.com/v3.1/name/" + input.value,
 						method: "GET",
 						success: function (data) {
-							CWD.overlay.css({ top: "0px", display: "block" });
 							CWD.searchWidget.css("display", "none");
 							CWD.displayResults(data);
 						},
@@ -111,13 +132,11 @@
 		openSearch(input) {
 			CWD.cancelBtn.show();
 			CWD.suggesstion.show();
-			CWD.overlay.show();
 
 			CWD.cancelBtn.on("click", function () {
 				input.value = "";
 				CWD.cancelBtn.hide();
 				CWD.suggesstion.hide();
-				CWD.overlay.hide();
 				CWD.searchInput.focus();
 			});
 		},
@@ -125,16 +144,30 @@
 		closeSearch() {
 			CWD.cancelBtn.hide();
 			CWD.suggesstion.hide();
-			CWD.overlay.hide();
 			CWD.inputLoading.removeClass("cw-animated-border");
 			CWD.searchWidget.css("display", "none");
 		},
+
+		handleStickyBehavior() {
+			const scrollThreshold = 100;
+			const buffer = 50;
+		
+			if (window.scrollY > (scrollThreshold + buffer) && window.innerWidth > 900) {
+				CWD.cwTop.addClass('d-none');
+				CWD.cwBottom.css('opacity', '0.9');
+			} else if (window.scrollY < (scrollThreshold - buffer) && window.innerWidth > 900) {
+				CWD.cwTop.removeClass('d-none');
+				CWD.cwBottom.css('opacity', '1')
+			}
+		},
+
 	};
 
 	$(document).ready(function () {
 		CWD.searchIcon.on("click", CWD.handleSearchIcon);
-		$(window).on("resize", CWD.handleMatchMedia);
 		CWD.searchInput.on("input", CWD.handleSearchInput);
+		$(window).on("resize", CWD.handleMatchMedia);
+		$(document).on('scroll', CWD.throttle(CWD.handleStickyBehavior, 500));
 
 		CWD.topMenu.on("mouseenter", function () {
 			if ($(this).hasClass("child-nav") && window.innerWidth > 1024) {

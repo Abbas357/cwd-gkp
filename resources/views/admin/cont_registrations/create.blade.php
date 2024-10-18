@@ -374,7 +374,7 @@
                     feedbackElement.text('');
                     feedbackElement.removeClass('text-danger text-success');
 
-                    fetch("{{ route('check.pec.number') }}", {
+                    fetch("{{ route('registrations.checkPEC') }}", {
                             method: 'POST'
                             , headers: {
                                 'Content-Type': 'application/json'

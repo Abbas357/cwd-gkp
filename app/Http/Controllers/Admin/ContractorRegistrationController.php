@@ -231,7 +231,7 @@ class ContractorRegistrationController extends Controller
         ]);
     }
 
-    public function checkPecNumber(Request $request)
+    public function checkPEC(Request $request)
     {
         $pecNumber = $request->input('pec_number');
         $exists = ContractorRegistration::where('pec_number', $pecNumber)->where('status', '!=', 3)->exists();

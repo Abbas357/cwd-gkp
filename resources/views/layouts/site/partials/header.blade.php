@@ -1,4 +1,3 @@
-
 <!-- Spinner Start -->
 <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
     <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
@@ -20,8 +19,7 @@
                     </span>
                 </button>
                 <div class="cw-logo material">
-                    <a class="LogoWrapper dynamic-link" href="#" aria-label="Home">
-
+                    <a class="LogoWrapper dynamic-link" href="{{ route('site') }}" aria-label="Home">
                         <div>
                             <div class="cw-show-DeskTop-Tab">
                                 <img src="{{ asset('site/img/logo-desktop.gif') }}" class="desktop-logo" style="border-top-right-radius: 30px; border-bottom-left-radius: 20px" alt="CWD DEPT" />
@@ -328,9 +326,49 @@
                         <li role="menuitem" aria-hidden="true" class="divider cw-onlyMobileTab"></li>
                     </ul>
                 </nav>
-                <button href="#" class="cw-top-nav-button" style="padding: 7px 10px; border: none;position: absolute; bottom: 3px; right:0px; border-radius: 50px"><i class="bi-camera"></i>&nbsp; STORIES</button>
+                <button id="story-btn" href="#" class="cw-top-nav-button" style="padding: 7px 10px; border: none;position: absolute; bottom: 2px; right:0px; border-radius: 50px">
+                    STORIES &nbsp;
+                    <i class="bi-caret-down-fill mt-1"></i>
+                </button>
             </div>
         </div>
     </div>
-    
+    <div id="stories-content" class="d-flex justify-content-center bg-light p-3 d-none">
+        <div id="stories-spinner" class="show bg-white d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
 </header>
+
+<script>
+    document.querySelector('#story-btn').addEventListener('click', function() {
+        let storiesContent = document.querySelector('#stories-content');
+        let spinner = document.querySelector('#stories-spinner');
+        let errorMessage = "<div class='alert alert-warning' role='alert'>There is currently no stories</div>";
+
+        storiesContent.classList.toggle('d-none');
+        spinner.classList.add('show');
+        fetch("{{ route('get.stories') }}")
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+            })
+            .then(data => {
+                spinner.classList.remove('show');
+                if (data.success) {
+                    storiesContent.innerHTML = data.data.result;
+                    storiesContent.classList.remove('d-none');
+                } else {
+                    storiesContent.innerHTML = errorMessage;
+                }
+            })
+            .catch(error => {
+                spinner.classList.remove('show');
+                storiesContent.innerHTML = errorMessage;
+            });
+    });
+
+</script>
