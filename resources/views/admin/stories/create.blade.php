@@ -42,16 +42,6 @@
                                 </div>
                             </div>
 
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <label for="description">Title</label>
-                                    <textarea class="form-control" id="description" style="height: 150px" placeholder="Description" name="description">{{ old('description') }}</textarea>
-                                    @error('title')
-                                    <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
                         </div>
                     </div>
                 </div>

@@ -78,6 +78,11 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->hasMany(ActivityLog::class, 'action_by');
     }
+
+    public function stories()
+    {
+        return $this->hasMany(Story::class);
+    }
  
     public function boss()
     {

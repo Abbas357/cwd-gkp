@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('stories', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('description')->nullable()->default(null);
+            $table->bigInteger('views');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->timestamp('published')->nullable()->default(null);
+            $table->timestamp('published_at')->nullable()->default(null);
             $table->timestamps();
         });
     }

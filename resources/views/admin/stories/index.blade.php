@@ -9,31 +9,21 @@
     <div class="card-header mb-3">
         <ul class="nav nav-tabs nav-tabs-table">
             <li class="nav-item">
-                <a id="new-tab" class="nav-link" data-bs-toggle="tab" href="#new">New</a>
+                <a id="not-published-tab" class="nav-link" data-bs-toggle="tab" href="#not-published">Not Published</a>
             </li>
             <li class="nav-item">
-                <a id="approved-tab" class="nav-link" data-bs-toggle="tab" href="#approved">Approved</a>
-            </li>
-            <li class="nav-item">
-                <a id="rejected-tab" class="nav-link" data-bs-toggle="tab" href="#rejected">Rejected</a>
+                <a id="published-tab" class="nav-link" data-bs-toggle="tab" href="#published">Published</a>
             </li>
         </ul>
     </div>
 
-    <table id="standardizations-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+    <table id="stories-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
         <thead>
             <tr>
                 <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Product Name</th>
-                <th scope="col" class="p-3">Specification Details</th>
-                <th scope="col" class="p-3">Firm Name</th>
-                <th scope="col" class="p-3">Address</th>
-                <th scope="col" class="p-3">Mobile Number</th>
-                <th scope="col" class="p-3">Phone Number</th>
-                <th scope="col" class="p-3">Email</th>
-                <th scope="col" class="p-3">Locality</th>
-                <th scope="col" class="p-3">NTN Number</th>
-                <th scope="col" class="p-3">Location Type</th>
+                <th scope="col" class="p-3">Title</th>
+                <th scope="col" class="p-3">Image</th>
+                <th scope="col" class="p-3">Posted By</th>
                 <th scope="col" class="p-3">Created At</th>
                 <th scope="col" class="p-3">Updated At</th>
                 <th scope="col" class="p-3">Actions</th>
@@ -50,50 +40,22 @@
 
     <script>
         $(document).ready(function() {
-            var table = initDataTable('#standardizations-datatable', {
-                ajaxUrl: "{{ route('admin.standardizations.index') }}"
+            var table = initDataTable('#stories-datatable', {
+                ajaxUrl: "{{ route('admin.stories.index') }}"
                 , columns: [{
                         data: "id"
                         , searchBuilderType: "num"
                     }
                     , {
-                        data: "product_name"
+                        data: "title"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "specification_details"
-                        , searchBuilderType: "string"
+                        data: "image"
+                        , searchBuilderType: "null"
                     }
                     , {
-                        data: "firm_name"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "address"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "mobile_number"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "phone_number"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "email"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "locality"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "ntn_number"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "location_type"
+                        data: "user"
                         , searchBuilderType: "string"
                     }
                     , {
@@ -114,111 +76,55 @@
                 , defaultOrderColumn: 11
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
-                    targets: [0, 2, 5, 8, 10]
+                    targets: [0]
                     , visible: false
                 }]
             });
 
-            $("#standardizations-datatable").on('click', '.approve-btn', async function() {
-                const standardizationId = $(this).data("id");
-                const url = "{{ route('admin.standardizations.approve', ':id') }}".replace(':id', standardizationId);
+            $("#stories-datatable").on('click', '.publish-btn', async function() {
+                const storyId = $(this).data("id");
+                const message = $(this).data("type");
+                const url = "{{ route('admin.stories.publish', ':id') }}".replace(':id', storyId);
 
-                const result = await confirmAction('Do you want to approve this product?');
+                const result = await confirmAction(`Do you want to ${message} this story?`);
                 if (result && result.isConfirmed) {
                     const success = await fetchRequest(url, 'PATCH');
                     if (success) {
-                        $("#standardizations-datatable").DataTable().ajax.reload();
+                        $("#stories-datatable").DataTable().ajax.reload();
                     }
                 }
             });
 
-            $("#standardizations-datatable").on('click', '.reject-btn', async function() {
-                const standardizationId = $(this).data("id");
-                const url = "{{ route('admin.standardizations.reject', ':id') }}".replace(':id', standardizationId);
+            $("#stories-datatable").on('click', '.delete-btn', async function() {
+                const storyId = $(this).data("id");
+                const url = "{{ route('admin.stories.destroy', ':id') }}".replace(':id', storyId);
 
-                const {
-                    value: reason
-                } = await confirmWithInput({
-                    inputType: "textarea",
-                    text: 'Do you want to reject this product?'
-                    , inputValidator: (value) => {
-                        if (!value) {
-                            return 'You need to provide a reason!';
-                        }
-                    }
-                    , inputPlaceholder: 'Enter the reason for rejection'
-                    , confirmButtonText: 'Reject'
-                    , cancelButtonText: 'Cancel'
-                });
+                const result = await confirmAction('Do you want to delete this story?');
 
-                if (reason) {
-                    const success = await fetchRequest(url, 'PATCH', {
-                        reason
-                    });
+                if (result.isConfirmed) {
+                    const success = await fetchRequest(url, 'DELETE');
                     if (success) {
-                        $("#standardizations-datatable").DataTable().ajax.reload();
+                        $("#stories-datatable").DataTable().ajax.reload();
                     }
                 }
             });
 
             hashTabsNavigator({
                 table: table
-                , dataTableUrl: "{{ route('admin.standardizations.index') }}"
+                , dataTableUrl: "{{ route('admin.stories.index') }}"
                 , tabToHashMap: {
-                    "#new-tab": '#new'
-                    , "#approved-tab": '#approved'
-                    , "#rejected-tab": '#rejected'
+                    "#not-published-tab": '#not-published'
+                    , "#published-tab": '#published'
                 , }
                 , hashToParamsMap: {
-                    '#new': {
-                        status: 0
+                    '#not-published': {
+                        published: 0
                     }
-                    , '#approved': {
-                        status: 1
-                    }
-                    , '#rejected': {
-                        status: 2
+                    , '#published': {
+                        published: 1
                     }
                 , }
-                , defaultHash: '#new'
-            });
-
-            $('#standardizations-datatable').colResizable({
-                liveDrag: true
-                , resizeMode: 'overflow'
-                , postbackSafe: true
-                , useLocalStorage: true
-                , gripInnerHtml: "<div class='grip'></div>"
-                , draggingClass: "dragging"
-            , });
-
-            pushStateModal({
-                fetchUrl: "{{ route('admin.standardizations.showCard', ':id') }}",
-                btnSelector: '.card-btn',
-                title: 'Standardization Card',
-                actionButtonName: 'Download Card',
-            }).then((modal) => {
-                const actionBtn = $('#'+modal).find('button[type="submit"]');
-                actionBtn.on('click', function() {
-                    var div = $('#capture')[0];
-                    html2canvas(div, {
-                        scale: 2
-                    }).then(function(canvas) {
-                        canvas.toBlob(function(blob) {
-                            var link = $('<a></a>')[0];
-                            link.href = URL.createObjectURL(blob);
-                            link.download = `card-${uniqId(6)}.png`;
-                            link.click();
-                        });
-                    });
-                })
-            });
-
-            pushStateModal({
-                fetchUrl: "{{ route('admin.standardizations.showDetail', ':id') }}",
-                btnSelector: '.view-btn',
-                title: 'Standardization Details',
-                modalSize: 'lg',
+                , defaultHash: '#not-published'
             });
             
         });

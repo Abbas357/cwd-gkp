@@ -63,12 +63,11 @@ Route::middleware('auth')->group(function () {
         Route::prefix('stories')->as('stories.')->group(function () {
             Route::get('/', [StoryController::class, 'index'])->name('index');
             Route::get('/create', [StoryController::class, 'create'])->name('create');
-            Route::get('/edit/{story}', [StoryController::class, 'edit'])->name('edit');
             Route::post('/', [StoryController::class, 'store'])->name('store');
-            Route::patch('/publish/{story}', [StoryController::class, 'approve'])->name('publish');
+            Route::patch('/publish/{story}', [StoryController::class, 'publishStory'])->name('publish');
+            Route::patch('/viewed/{story}', [StoryController::class, 'incrementSeen'])->name('viewed');
             Route::get('/{story}', [StoryController::class, 'show'])->name('show');
-            Route::get('/get/{story}', [StoryController::class, 'showDetail'])->name('showDetail');
-            Route::patch('/update-field', [StoryController::class, 'updateField'])->name('updateField');
+            Route::delete('/{story}', [StoryController::class, 'destroy'])->name('destroy');
         });
 
         Route::prefix('roles')->as('roles.')->group(function () {

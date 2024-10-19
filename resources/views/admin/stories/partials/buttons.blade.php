@@ -1,16 +1,8 @@
-@php
-    $status = $row->status;
-@endphp
-
 <div class="action-btns">
-    <i class="view-btn bi-eye bg-light text-primary"  title="View" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
-    @if (!in_array($status, [1, 2]))
-        <i class="approve-btn bg-light text-success bi-check2-circle" title="Approve" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
+    @if(!$row->published_at)
+        <i class="publish-btn bg-light text-success bi-check-circle" title="publish" data-bs-toggle="tooltip" data-type="publish" data-id="{{ $row->id }}"></i>
+    @else
+        <i class="publish-btn bg-light text-warning bi-archive" title="Unpublish" data-bs-toggle="tooltip" data-type="unpublish" data-id="{{ $row->id }}"></i>
     @endif
-    @if (!in_array($status, [1, 2]))
-        <i class="reject-btn bg-light text-warning bi-ban" title="Reject" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
-    @endif
-    @if (!in_array($status, [0, 2]))
-        <i class="card-btn bi-credit-card bg-light text-info" title="Generate Card" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
-    @endif
+    <i class="delete-btn bi-dash-circle bg-light text-danger" title="Delete" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
 </div>

@@ -333,7 +333,7 @@
             </div>
         </div>
     </div>
-    <div id="stories-content" class="d-flex justify-content-center bg-light p-3 d-none">
+    <div id="stories-content" class="container d-flex justify-content-center bg-light p-2 d-none">
         <div id="stories-spinner" class="show bg-white d-flex align-items-center justify-content-center">
             <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
                 <span class="sr-only">Loading...</span>
@@ -341,34 +341,128 @@
         </div>
     </div>
 </header>
-
 <script>
+    function loadZuckLibraries(callback) {
+        if (!document.getElementById('zuck-css')) {
+            let cssLink = document.createElement('link');
+            cssLink.id = 'zuck-css';
+            cssLink.rel = 'stylesheet';
+            cssLink.href = "{{ asset('site/lib/zuck/css/zuck.min.css') }}";
+            document.head.appendChild(cssLink);
+        }
+
+        if (!document.getElementById('zuck-js')) {
+            let scriptTag = document.createElement('script');
+            scriptTag.id = 'zuck-js';
+            scriptTag.src = "{{ asset('site/lib/zuck/js/zuck.min.js') }}";
+            scriptTag.onload = callback;
+            document.body.appendChild(scriptTag);
+        } else {
+            callback();
+        }
+    }
     document.querySelector('#story-btn').addEventListener('click', function() {
         let storiesContent = document.querySelector('#stories-content');
         let spinner = document.querySelector('#stories-spinner');
-        let errorMessage = "<div class='alert alert-warning' role='alert'>There is currently no stories</div>";
+        let errorMessage = "<div class='alert alert-warning' role='alert'>There are currently no stories</div>";
 
-        storiesContent.classList.toggle('d-none');
-        spinner.classList.add('show');
-        fetch("{{ route('get.stories') }}")
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-            })
-            .then(data => {
-                spinner.classList.remove('show');
-                if (data.success) {
-                    storiesContent.innerHTML = data.data.result;
-                    storiesContent.classList.remove('d-none');
-                } else {
+        loadZuckLibraries(function() {
+            storiesContent.classList.toggle('d-none');
+
+            fetch("{{ route('get.stories') }}")
+                .then(response => response.json())
+                .then(data => {
+                    spinner.classList.remove('show');
+                    if (data.success) {
+                        let storiesData = data.data.result;
+                        storiesContent.innerHTML = '';
+
+                        let unviewedSeenItems = localStorage.getItem('zuck-unviewed-stories-seenItems');
+                        let contentSeenItems = localStorage.getItem('zuck-stories-content-seenItems');
+
+                        unviewedSeenItems = unviewedSeenItems ? JSON.parse(unviewedSeenItems) : {};
+                        contentSeenItems = contentSeenItems ? JSON.parse(contentSeenItems) : {};
+
+                        storiesData.sort((a, b) => {
+                            let aViewed = unviewedSeenItems[a.id] || contentSeenItems[a.id] || false;
+                            let bViewed = unviewedSeenItems[b.id] || contentSeenItems[b.id] || false;
+
+                            if (aViewed && !bViewed) return 1;
+                            if (!aViewed && bViewed) return -1;
+                            return 0;
+                        });
+
+                        new Zuck(storiesContent, {
+                            backNative: true
+                            , autoFullScreen: false
+                            , skin: 'snapgram'
+                            , avatars: true
+                            , list: false
+                            , cubeEffect: true
+                            , localStorage: true
+                            , reactive: false
+                            , stories: storiesData
+                            , callbacks: {
+                                onView: function(storyId, callback) {
+                                    console.log('Story viewed:', storyId);
+                                    incrementViewCount(storyId);
+                                    if (typeof callback === 'function') {
+                                        callback();
+                                    }
+                                },
+                                onClose: function(storyId, callback) {
+                                    callback();
+                                },
+
+                                onOpen: function(storyId, callback) {
+                                    callback();
+                                },
+
+                                onNextItem: function(storyId, currentItem, callback) {
+                                    callback();
+                                },
+
+                                onEnd: function(storyId, callback) {
+                                    callback();
+                                },
+
+                                onNavigateItem: function(storyId, direction, callback) {
+                                    callback();
+                                },
+
+                                onDataUpdate: function(storyId, callback) {
+                                    callback();
+                                }
+                            }
+                        });
+
+                        function incrementViewCount(storyId) {
+                            const url = "{{ route('admin.stories.viewed', ':id') }}".replace(':id', storyId);
+                            fetch(url, {
+                                method: 'PATCH',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('View count incremented:', data);
+                            })
+                            .catch(error => {
+                                console.error('Error incrementing view count:', error);
+                            });
+                        }
+
+                    } else {
+                        storiesContent.innerHTML = errorMessage;
+                    }
+                })
+                .catch(error => {
+                    spinner.classList.remove('show');
                     storiesContent.innerHTML = errorMessage;
-                }
-            })
-            .catch(error => {
-                spinner.classList.remove('show');
-                storiesContent.innerHTML = errorMessage;
-            });
+                });
+        });
     });
 
 </script>
