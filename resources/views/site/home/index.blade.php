@@ -20,10 +20,6 @@
         @include('site.home.partials.services')
     </div>
     
-    <div class="container-fluid packages py-3">
-        @include('site.home.partials.events')
-    </div>
-    
     @include('site.home.partials.gallery')
     
     @include('site.home.partials.blogs')

@@ -76,6 +76,19 @@
             </li>
             <li>
                 <a href="javascript:;" class="has-arrow">
+                    <div class="parent-icon"><i class="bi-circle"></i>
+                    </div>
+                    <div class="menu-title">Stories</div>
+                </a>
+                <ul>
+                    <li><a href="{{ route('admin.stories.index') }}"><i class="bi-arrow-right-short"></i>List</a>
+                    </li>
+                    <li><a href="{{ route('admin.stories.create') }}"><i class="bi-arrow-right-short"></i>Create</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="bi-calendar3-week"></i>
                     </div>
                     <div class="menu-title">Registrations</div>

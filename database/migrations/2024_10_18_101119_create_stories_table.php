@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('stories', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->bigInteger('views');
+            $table->bigInteger('views')->nullable();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamp('published_at')->nullable()->default(null);
+            $table->foreignId('published_by')->nullable()->constrained('users');
             $table->timestamps();
         });
     }

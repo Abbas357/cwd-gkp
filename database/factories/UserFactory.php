@@ -25,6 +25,7 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name,
+            'username' => fake()->username,
             'email' => fake()->unique()->safeEmail,
             'mobile_number' => fake()->phoneNumber,
             'landline_number' => fake()->phoneNumber,
@@ -32,8 +33,6 @@ class UserFactory extends Factory
             'cnic' => fake()->numerify('#####-#######-#'),
             'office' => fake()->company,
             'is_active' => fake()->boolean,
-            'is_suspended' => fake()->boolean,
-            'email_verified_at' => fake()->dateTime,
             'password_updated_at' => fake()->dateTime,
             'password' => bcrypt('password'),
             'remember_token' => Str::random(10),

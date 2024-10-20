@@ -1,25 +1,22 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\ActivityLogController;
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\OfficeController;
-use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Controllers\Admin\Categories\RoleController;
-use App\Http\Controllers\Admin\EStandardizationController;
-use App\Http\Controllers\Admin\Categories\DistrictController;
-use App\Http\Controllers\Admin\Categories\PermissionController;
-use App\Http\Controllers\Admin\Categories\DesignationController;
-use App\Http\Controllers\Admin\ContractorRegistrationController;
-use App\Http\Controllers\Admin\Categories\ProvincialEntityController;
-use App\Http\Controllers\Admin\Categories\ContractorCategoryController;
-use App\Http\Controllers\Admin\StoryController;
+use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\EStandardizationController;
+use App\Http\Controllers\ContractorRegistrationController;
+use App\Http\Controllers\StoryController;
+use App\Http\Controllers\Categories\OfficeController;
+use App\Http\Controllers\Categories\RoleController;
+use App\Http\Controllers\Categories\DistrictController;
+use App\Http\Controllers\Categories\PermissionController;
+use App\Http\Controllers\Categories\DesignationController;
+use App\Http\Controllers\Categories\ProvincialEntityController;
+use App\Http\Controllers\Categories\ContractorCategoryController;
 
 Route::middleware('auth')->group(function () {
     Route::prefix('admin')->as('admin.')->group(function () {
-        
-        Route::get('/dashboard', [AdminController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
         Route::prefix('profile')->as('profile.')->group(function () {
             Route::get('/', [ProfileController::class, 'edit'])->name('edit');
@@ -65,7 +62,6 @@ Route::middleware('auth')->group(function () {
             Route::get('/create', [StoryController::class, 'create'])->name('create');
             Route::post('/', [StoryController::class, 'store'])->name('store');
             Route::patch('/publish/{story}', [StoryController::class, 'publishStory'])->name('publish');
-            Route::patch('/viewed/{story}', [StoryController::class, 'incrementSeen'])->name('viewed');
             Route::get('/{story}', [StoryController::class, 'show'])->name('show');
             Route::delete('/{story}', [StoryController::class, 'destroy'])->name('destroy');
         });

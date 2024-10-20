@@ -12,10 +12,7 @@ class ActivityLog extends Model
         'action_at' => 'datetime',
     ];
     
-    protected $fillable = [
-        'loggable_id', 'loggable_type', 'action', 'field_name',
-        'old_value', 'new_value', 'action_by', 'action_at'
-    ];
+    protected $guarded = [];
 
     public function loggable()
     {

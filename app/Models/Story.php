@@ -14,6 +14,8 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 class Story extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
+
+    protected $guarded = [];
     
     public function registerMediaCollections(): void
     {
@@ -26,7 +28,11 @@ class Story extends Model implements HasMedia
     }
 
     public function user() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'author_id');
+    }
+
+    public function publishBy() {
+        return $this->belongsTo(User::class, 'published_by');
     }
 
 }

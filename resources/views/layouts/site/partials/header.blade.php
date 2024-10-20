@@ -299,17 +299,12 @@
                         </li>
                         <li role="none" class="cw-top-menu" data-tier-id="4">
                             <a href="#" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
-                                <span>MEDIA</span>
+                                <span>GALLERY</span>
                             </a>
                         </li>
                         <li role="none" class="cw-top-menu" data-tier-id="4">
                             <a href="#" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>NEWS</span>
-                            </a>
-                        </li>
-                        <li role="none" class="cw-top-menu" data-tier-id="4">
-                            <a href="#" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
-                                <span>EVENTS</span>
                             </a>
                         </li>
                         <li role="none" class="cw-top-menu" data-tier-id="4">
@@ -369,7 +364,7 @@
         loadZuckLibraries(function() {
             storiesContent.classList.toggle('d-none');
 
-            fetch("{{ route('get.stories') }}")
+            fetch("{{ route('stories.get') }}")
                 .then(response => response.json())
                 .then(data => {
                     spinner.classList.remove('show');
@@ -437,7 +432,7 @@
                         });
 
                         function incrementViewCount(storyId) {
-                            const url = "{{ route('admin.stories.viewed', ':id') }}".replace(':id', storyId);
+                            const url = "{{ route('stories.viewed', ':id') }}".replace(':id', storyId);
                             fetch(url, {
                                 method: 'PATCH',
                                 headers: {

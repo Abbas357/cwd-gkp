@@ -1,12 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Site\SiteController;
-use App\Http\Controllers\Admin\StoryController;
-use App\Http\Controllers\Admin\EStandardizationController;
-use App\Http\Controllers\Admin\ContractorRegistrationController;
-
-Route::get('/', [SiteController::class, 'index'])->name('site');
+use App\Http\Controllers\StoryController;
+use App\Http\Controllers\EStandardizationController;
+use App\Http\Controllers\ContractorRegistrationController;
 
 Route::prefix('registrations')->as('registrations.')->group(function () {
     Route::get('/create', [ContractorRegistrationController::class, 'create'])->name('create');
@@ -21,4 +18,7 @@ Route::prefix('standardizations')->as('standardizations.')->group(function () {
     Route::get('/approved/{id}', [EStandardizationController::class, 'approvedProducts'])->name('approved');
 });
 
-Route::get('/stories', [StoryController::class, 'getStories'])->name('get.stories');
+Route::prefix('stories')->as('stories.')->group(function () {
+    Route::get('/', [StoryController::class, 'getStories'])->name('get');
+    Route::patch('/viewed/{story}', [StoryController::class, 'incrementSeen'])->name('viewed');
+});

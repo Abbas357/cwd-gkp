@@ -82,7 +82,7 @@
 .stories.snapgram .story > .item-link > .item-preview img {
   border-radius: 50%;
   border: 2px solid transparent;
-  outline: 4px solid rgb(151, 247, 172)
+  outline: 4px solid #25d366;
 }
 
 .stories.carousel .story>.item-link>.item-preview img {
@@ -107,4 +107,9 @@
 
 .stories.snapgram .story.seen > .item-link > .item-preview img {
   outline: 4px solid #ccc;
+}
+
+.story-views-count {
+  font-weight: bold;
+  border-top: 1px solid white;
 }

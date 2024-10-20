@@ -7,8 +7,9 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 
-use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Builder;
 
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -21,9 +22,17 @@ class User extends Authenticatable implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('profile_pictures')
-        ->singleFile()
-        // ->onlyKeepLatest(3)
-        ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif']);
+            ->singleFile()
+            // ->onlyKeepLatest(3)
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif']);
+
+        $this->addMediaCollection('posting_orders')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'application/pdf']);
+
+        $this->addMediaCollection('exit_orders')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'application/pdf']);
     }
 
     public function registerMediaConversions(?Media $media = null): void
@@ -45,20 +54,14 @@ class User extends Authenticatable implements HasMedia
 
     }
 
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'mobile_number',
-        'landline_number',
-        'designation',
-        'cnic',
-        'office',
-        'otp',
-        'is_active',
-        'is_suspended',
-        'password_updated_at',
-    ];
+    protected static function booted()
+    {
+        static::addGlobalScope('active', function (Builder $builder) {
+            $builder->where('is_active', 1);
+        });
+    }
+
+    protected $guarded = [];
 
     protected $hidden = [
         'password',
@@ -83,7 +86,27 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->hasMany(Story::class);
     }
- 
+
+    public function downloads()
+    {
+        return $this->hasMany(Download::class);
+    }
+
+    public function galleries()
+    {
+        return $this->hasMany(Gallery::class);
+    }
+
+    public function news()
+    {
+        return $this->hasMany(News::class);
+    }
+
+    public function sliders()
+    {
+        return $this->hasMany(Slider::class);
+    }
+
     public function boss()
     {
         // $boss = $user->boss->first();
@@ -101,7 +124,8 @@ class User extends Authenticatable implements HasMedia
         return $this->belongsToMany(District::class, 'district_user', 'user_id', 'district_id');
     }
 
-    public function isAdmin() {
+    public function isAdmin()
+    {
         return $this->id === 1;
     }
 }

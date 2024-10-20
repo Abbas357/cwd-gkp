@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         User::factory()->create([
             'name' => 'Abbas Khan',
+            'username' => 'abbas',
             'email' => 'abbaskhan357@gmail.com',
             'password' => bcrypt('password'),
             'mobile_number' => '0313-0535333',
@@ -23,12 +24,10 @@ class DatabaseSeeder extends Seeder
             'cnic' => '15701-2490811-7',
             'office' => 'IT',
             'is_active' => 1,
-            'is_suspended' => 0,
-            'email_verified_at' => fake()->dateTime,
             'password_updated_at' => fake()->dateTime,
             'password' => bcrypt('password'),
         ]);
 
-        User::factory(100)->create();
+        User::factory(50)->create();
     }
 }

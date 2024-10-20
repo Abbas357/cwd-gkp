@@ -1,0 +1,42 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('settings', function (Blueprint $table) {
+            $table->id();
+            $table->string('site_name')->default('Communication & Works Department, KP');
+            $table->string('description')->default('Official Website of Communication and Works Department, Government of Khyber Pakhtunkhwa');
+            $table->string('logo_desktop')->default('site/img/logo-desktop.gif');
+            $table->string('logo_mobile')->default('site/img/logo-mobile.png');
+            $table->string('favicon')->default('favicon.png');
+            $table->string('email')->default('cwd.gkp@gmail.com');
+            $table->boolean('maintenance_mode')->default(false);
+            $table->string('contact_phone')->default('091-9214039');
+            $table->string('contact_address')->default('Civil Secretariat, Peshawar');
+            $table->string('whatsapp')->nullable();
+            $table->string('facebook')->default('CWDKPGovt');
+            $table->string('twitter')->default('CWDKPGovt');
+            $table->string('youtube')->default('CWDKPGovt');
+            $table->text('meta_description')->nullable();
+            $table->timestamps();
+        });
+        
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('settings');
+    }
+};
