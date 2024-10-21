@@ -24,6 +24,7 @@
                 <th scope="col" class="p-3">Title</th>
                 <th scope="col" class="p-3">Image</th>
                 <th scope="col" class="p-3">Posted By</th>
+                <th scope="col" class="p-3">Views</th>
                 <th scope="col" class="p-3">Created At</th>
                 <th scope="col" class="p-3">Updated At</th>
                 <th scope="col" class="p-3">Actions</th>
@@ -56,6 +57,10 @@
                     }
                     , {
                         data: "user"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "views"
                         , searchBuilderType: "string"
                     }
                     , {

@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Categories;
-
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\District;
@@ -12,7 +10,7 @@ class DistrictController extends Controller
     public function index()
     {
         $districts = District::paginate(10);
-        return view('admin.categories.districts.index', compact('districts'));
+        return view('admin.districts.index', compact('districts'));
     }
 
     public function store(Request $request)

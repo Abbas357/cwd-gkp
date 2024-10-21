@@ -7,19 +7,28 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-use App\Traits\Loggable;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class ContractorRegistration extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, Loggable;
+    use HasFactory, InteractsWithMedia, LogsActivity;
 
     protected $guarded = [];
 
-    public function getLogAction($field, $newValue)
+    protected static $recordEvents = ['updated', 'deleted'];
+    
+    public function getActivitylogOptions(): LogOptions
     {
-        if ($field === 'status') {
-            return $newValue === 4 ? 'approval' : 'deferred';
-        }
+        return LogOptions::defaults()
+            ->logAll()
+            ->logExcept(['id', 'updated_at', 'created_at'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->useLogName('contractor_registrations')
+            ->setDescriptionForEvent(function (string $eventName) {
+                return "Registration has been {$eventName}";
+            });
     }
 
     public function registerMediaCollections(): void

@@ -12,10 +12,10 @@
     <div class="card-header mb-3">
         <ul class="nav nav-tabs nav-tabs-table">
             <li class="nav-item">
-                <a id="active-tab" class="nav-link" data-bs-toggle="tab" href="#active">Active</a>
+                <a id="inactive-tab" class="nav-link" data-bs-toggle="tab" href="#inactive">In Active</a>
             </li>
             <li class="nav-item">
-                <a id="inactive-tab" class="nav-link" data-bs-toggle="tab" href="#inactive">In Active</a>
+                <a id="active-tab" class="nav-link" data-bs-toggle="tab" href="#active">Active</a>
             </li>
         </ul>
     </div>
@@ -129,6 +129,20 @@
 
                 if (result.isConfirmed) {
                     const success = await fetchRequest(url, 'DELETE');
+                    if (success) {
+                        $("#users-datatable").DataTable().ajax.reload();
+                    }
+                }
+            });
+
+            $("#users-datatable").on('click', '.activate-btn', async function() {
+                const userId = $(this).data("id");
+                const message = $(this).data("type");
+                const url = "{{ route('admin.users.activate', ':id') }}".replace(':id', userId);
+
+                const result = await confirmAction(`Do you want to ${message} this user?`);
+                if (result && result.isConfirmed) {
+                    const success = await fetchRequest(url, 'PATCH');
                     if (success) {
                         $("#users-datatable").DataTable().ajax.reload();
                     }

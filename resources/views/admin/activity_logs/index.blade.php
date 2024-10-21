@@ -10,13 +10,11 @@
         <thead>
             <tr>
                 <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Type</th>
-                <th scope="col" class="p-3">Record ID</th>
-                <th scope="col" class="p-3">Action</th>
-                <th scope="col" class="p-3">Field Name</th>
-                <th scope="col" class="p-3">Old Value</th>
-                <th scope="col" class="p-3">New Value</th>
-                <th scope="col" class="p-3">User</th>
+                <th scope="col" class="p-3">Table</th>
+                <th scope="col" class="p-3">Description</th>
+                <th scope="col" class="p-3">Effected Record</th>
+                <th scope="col" class="p-3">Change by</th>
+                <th scope="col" class="p-3">Changed Properties</th>
                 <th scope="col" class="p-3">Date</th>
             </tr>
         </thead>
@@ -33,42 +31,14 @@
         $(document).ready(function() {
             var table = initDataTable('#log-datatable', {
                 ajaxUrl: "{{ route('admin.logs') }}"
-                , columns: [{
-                        data: "id"
-                        , searchBuilderType: "num"
-                    }
-                    , {
-                        data: "loggable_type"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "loggable_id"
-                        , searchBuilderType: "num"
-                    }
-                    , {
-                        data: "action"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "field_name"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "old_value"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "new_value"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "user"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "action_at"
-                        , searchBuilderType: "date"
-                    }
+                , columns: [
+                    { data: 'id', searchBuilderType: "num" },
+                    { data: 'log_name', searchBuilderType: 'string' },
+                    { data: 'description', searchBuilderType: 'string' },
+                    { data: 'subject', searchBuilderType: 'string', orderable: false, searchable: false },
+                    { data: 'causer', searchBuilderType: 'string' },
+                    { data: 'properties', searchBuilderType: 'string', orderable: false, searchable: false },
+                    { data: 'created_at', searchBuilderType: 'date' }
                 ]
                 , defaultOrderColumn: 8
                 , defaultOrderDirection: 'desc'

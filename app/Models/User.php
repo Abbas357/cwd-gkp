@@ -4,22 +4,51 @@ namespace App\Models;
 
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
+use Spatie\Activitylog\LogOptions;
 use Spatie\Permission\Traits\HasRoles;
+
+use Spatie\Activitylog\Models\Activity;
+
 use Illuminate\Notifications\Notifiable;
-
 use Illuminate\Database\Eloquent\Builder;
-
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-
 class User extends Authenticatable implements HasMedia
 {
-    use HasFactory, Notifiable, HasRoles, InteractsWithMedia;
+    use HasFactory, Notifiable, HasRoles, InteractsWithMedia, LogsActivity;
 
     protected $guarded = [];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password_updated_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll()
+            ->logExcept(['id', 'password', 'remember_token', 'password_updated_at', 'updated_at', 'created_at'])
+            ->logOnlyDirty()
+            ->useLogName('users')
+            ->dontSubmitEmptyLogs()
+            ->setDescriptionForEvent(function (string $eventName) {
+                return "User has been {$eventName}";
+            });
+    }
 
     public function registerMediaCollections(): void
     {
@@ -63,25 +92,11 @@ class User extends Authenticatable implements HasMedia
         });
     }
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password_updated_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
-
     public function logs()
     {
-        return $this->hasMany(ActivityLog::class, 'action_by');
+        return $this->hasMany(Activity::class, 'causer_id');
     }
-
+    
     public function stories()
     {
         return $this->hasMany(Story::class);

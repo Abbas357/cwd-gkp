@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Categories;
-
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePermissionRequest;
 use Spatie\Permission\Models\Permission;
@@ -13,7 +11,7 @@ class PermissionController extends Controller
     public function index()
     {
         $permissions = Permission::paginate(10);
-        return view('admin.categories.permissions.index', compact('permissions'));
+        return view('admin.permissions.index', compact('permissions'));
     }
 
     public function store(StorePermissionRequest $request)

@@ -11,113 +11,68 @@
         </div>
     </div>
     <div class="sidebar-nav" data-simplebar="true">
- 
+
         <!--navigation-->
         <ul class="metismenu" id="sidenav">
             <li>
                 <a href="javascript:;" class="has-arrow">
-                    <div class="parent-icon"><i class="bi-house"></i>
-                    </div>
+                    <div class="parent-icon"><i class="bi-house"></i></div>
                     <div class="menu-title">Home</div>
                 </a>
                 <ul>
                     <li><a href="{{ route('admin.dashboard') }}"><i class="bi-arrow-right-short"></i>Dashboard</a></li>
                     <li><a href="{{ route('admin.profile.edit') }}"><i class="bi-arrow-right-short"></i>Edit Profile</a></li>
                     <li><a href="{{ route('admin.logs') }}"><i class="bi-arrow-right-short"></i>Activity Log</a></li>
-                    <li>
-                        <a href="javascript:;" class="has-arrow">
-                            <div class="parent-icon"><i class="bi-arrow-right-short"></i>
-                            </div>
-                            <div class="menu-title">Resources</div>
-                        </a>
-                        <ul>
-                            <li><a class="has-arrow" href="javascript:;"><i class="bi-arrow-right-short"></i>Access Control</a>
-                                <ul>
-                                    <li>
-                                        <a href="{{ route('admin.roles.index') }}"><i class="bi-arrow-right-short"></i>Roles</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('admin.permissions.index') }}"><i class="bi-arrow-right-short"></i>Permissions</a>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li>
-                                <a href="{{ route('admin.districts.index') }}"><i class="bi-arrow-right-short"></i>Districts</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('admin.designations.index') }}"><i class="bi-arrow-right-short"></i>Designations</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('admin.offices.index') }}"><i class="bi-arrow-right-short"></i>Offices</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('admin.contractor_categories.index') }}"><i class="bi-arrow-right-short"></i>Contractor Categories</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('admin.provincial_entities.index') }}"><i class="bi-arrow-right-short"></i>Provincial Entities</a>
-                            </li>
-                        </ul>
-                    </li>
+                    <li><a href="{{ route('admin.districts.index') }}"><i class="bi-arrow-right-short"></i>Districts</a></li>
+                    <li><a href="{{ route('admin.categories.index') }}"><i class="bi-arrow-right-short"></i>Categories</a></li>
                 </ul>
             </li>
             <li>
                 <a href="javascript:;" class="has-arrow">
-                    <div class="parent-icon"><i class="bi-person-circle"></i>
-                    </div>
+                    <div class="parent-icon"><i class="bi-person-circle"></i></div>
                     <div class="menu-title">Users</div>
                 </a>
                 <ul>
-                    <li><a href="{{ route('admin.users.index') }}"><i class="bi-arrow-right-short"></i>List</a>
-                    </li>
-                    <li><a href="{{ route('admin.users.create') }}"><i class="bi-arrow-right-short"></i>Create</a>
-                    </li>
+                    <li><a href="{{ route('admin.users.index') }}"><i class="bi-arrow-right-short"></i>List</a></li>
+                    <li><a href="{{ route('admin.users.create') }}"><i class="bi-arrow-right-short"></i>Create</a></li>
+                    <li><a href="{{ route('admin.roles.index') }}"><i class="bi-arrow-right-short"></i>Roles</a></li>
+                    <li><a href="{{ route('admin.permissions.index') }}"><i class="bi-arrow-right-short"></i>Permissions</a></li>
                 </ul>
             </li>
             <li>
                 <a href="javascript:;" class="has-arrow">
-                    <div class="parent-icon"><i class="bi-circle"></i>
-                    </div>
+                    <div class="parent-icon"><i class="bi-circle"></i></div>
                     <div class="menu-title">Stories</div>
                 </a>
                 <ul>
-                    <li><a href="{{ route('admin.stories.index') }}"><i class="bi-arrow-right-short"></i>List</a>
-                    </li>
-                    <li><a href="{{ route('admin.stories.create') }}"><i class="bi-arrow-right-short"></i>Create</a>
-                    </li>
+                    <li><a href="{{ route('admin.stories.index') }}"><i class="bi-arrow-right-short"></i>List</a></li>
+                    <li><a href="{{ route('admin.stories.create') }}"><i class="bi-arrow-right-short"></i>Create</a></li>
                 </ul>
             </li>
             <li>
                 <a href="javascript:;" class="has-arrow">
-                    <div class="parent-icon"><i class="bi-calendar3-week"></i>
-                    </div>
+                    <div class="parent-icon"><i class="bi-calendar3-week"></i></div>
                     <div class="menu-title">Registrations</div>
                 </a>
                 <ul>
-                    <li><a href="{{ route('admin.registrations.index') }}"><i class="bi-arrow-right-short"></i>List</a>
-                    </li>
-                    <li><a href="{{ route('registrations.create') }}"><i class="bi-arrow-right-short"></i>Create</a>
-                    </li>
+                    <li><a href="{{ route('admin.registrations.index') }}"><i class="bi-arrow-right-short"></i>List</a></li>
+                    <li><a href="{{ route('registrations.create') }}"><i class="bi-arrow-right-short"></i>Create</a></li>
                 </ul>
             </li>
             <li>
                 <a href="javascript:;" class="has-arrow">
-                    <div class="parent-icon"><i class="bi-basket"></i>
-                    </div>
+                    <div class="parent-icon"><i class="bi-basket"></i></div>
                     <div class="menu-title">e-Standardization</div>
                 </a>
                 <ul>
-                    <li><a href="{{ route('admin.standardizations.index') }}"><i class="bi-arrow-right-short"></i>List</a>
-                    </li>
-                    <li><a href="{{ route('standardizations.create') }}"><i class="bi-arrow-right-short"></i>Create</a>
-                    </li>
+                    <li><a href="{{ route('admin.standardizations.index') }}"><i class="bi-arrow-right-short"></i>List</a></li>
+                    <li><a href="{{ route('standardizations.create') }}"><i class="bi-arrow-right-short"></i>Create</a></li>
                 </ul>
             </li>
             <li class="menu-label">Others</li>
             <li>
                 <a class="has-arrow" href="javascript:;">
-                    <div class="parent-icon"><i class="bi-three-dots"></i>
-                    </div>
+                    <div class="parent-icon"><i class="bi-three-dots"></i></div>
                     <div class="menu-title">Menu Levels</div>
                 </a>
                 <ul>
@@ -137,15 +92,13 @@
             </li>
             <li>
                 <a href="javascrpt:;">
-                    <div class="parent-icon"><i class="bi-file-earmark-word"></i>
-                    </div>
+                    <div class="parent-icon"><i class="bi-file-earmark-word"></i></div>
                     <div class="menu-title">Documentation</div>
                 </a>
             </li>
             <li>
                 <a href="javascrpt:;">
-                    <div class="parent-icon"><i class="bi-exclamation-circle"></i>
-                    </div>
+                    <div class="parent-icon"><i class="bi-exclamation-circle"></i></div>
                     <div class="menu-title">Support</div>
                 </a>
             </li>

@@ -7,21 +7,30 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-use App\Traits\Loggable;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class EStandardization extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, Loggable;
-    
+    use HasFactory, InteractsWithMedia, LogsActivity;
+
     protected $guarded = [];
 
-    public function getLogAction($field, $newValue)
+    protected static $recordEvents = ['updated', 'deleted'];
+    
+    public function getActivitylogOptions(): LogOptions
     {
-        if ($field === 'status') {
-            return $newValue === 1 ? 'approval' : 'rejection';
-        }
+        return LogOptions::defaults()
+            ->logAll()
+            ->logExcept(['id', 'updated_at', 'created_at'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->useLogName('standardization')
+            ->setDescriptionForEvent(function (string $eventName) {
+                return "Standardization has been {$eventName}";
+            });
     }
-
+    
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('secp_certificates')->singleFile();

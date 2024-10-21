@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Categories;
-
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers;
 
 use App\Models\User;
 
@@ -17,7 +15,7 @@ class RoleController extends Controller
     {
         $roles = Role::whereNotIn('name', ['admin'])->paginate(10);
         $users = User::with('roles')->paginate(10);
-        return view('admin.categories.roles.index', compact('roles', 'users'));
+        return view('admin.roles.index', compact('roles', 'users'));
     }
 
     public function store(StoreRoleRequest $request)
@@ -63,22 +61,4 @@ class RoleController extends Controller
             ],
         ]);
     }
-
-    // public function givePermission(StoreRoleRequest $request, Role $role)
-    // {
-    //     if ($role->hasPermissionTo($request->permission)) {
-    //         return back()->with('success', 'Permission exists.');
-    //     }
-    //     $role->givePermissionTo($request->permission);
-    //     return back()->with('success', 'Permission added.');
-    // }
-
-    // public function revokePermission(Role $role, Permission $permission)
-    // {
-    //     if ($role->hasPermissionTo($permission)) {
-    //         $role->revokePermissionTo($permission);
-    //         return back()->with('success', 'Permission revoked.');
-    //     }
-    //     return back()->with('success', 'Permission not exists.');
-    // }
 }

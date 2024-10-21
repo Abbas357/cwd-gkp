@@ -3,32 +3,41 @@
 namespace App\Http\Controllers;
 
 
-use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Spatie\Activitylog\Models\Activity;
 
 class ActivityLogController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $logs = ActivityLog::query();
+        $logs = Activity::query()->latest();
 
         if (!$request->user()->isAdmin()) {
-            $logs = $request->user()->logs()->getQuery();
+            $logs = $request->user()->logs()->latest()->getQuery();
         }
 
         if ($request->ajax()) {
             $dataTable = Datatables::of($logs)
-                ->addIndexColumn()
-                ->editColumn('loggable_type', function ($log) {
-                    return class_basename($log->loggable_type);
+                ->addColumn('description', function ($row) {
+                    return $row->description;
                 })
-                ->addColumn('user', function ($log) {
-                    return $log->user ? $log->user->name . ' (' . $log->user->designation . ' - ' . $log->user->office  . ')' : 'N/A';
+                ->addColumn('causer', function ($row) {
+                    return optional($row->causer)->designation . ' ('. optional($row->causer)->name. ')' ?? 'System';
                 })
-                ->editColumn('action_at', function ($row) {
-                    return $row->action_at->diffForHumans();
-                });
+                ->addColumn('subject', function ($row) {
+                    return view('admin.activity_logs.partials.subject', [
+                        'subjectId' => $row->subject_id,
+                        'subjectType' => $row->subject_type,
+                    ])->render();
+                })
+                ->addColumn('properties', function ($row) {
+                    return view('admin.activity_logs.partials.properties', ['row' => $row])->render();
+                })
+                ->addColumn('created_at', function ($row) {
+                    return $row->created_at->format('j, F Y').' ('.$row->created_at->diffForHumans().')';
+                })
+                ->rawColumns(['properties', 'subject']);
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
                 $dataTable->filter(function ($query) use ($request) {
                     $sb = new \App\SearchBuilder($request, $query);

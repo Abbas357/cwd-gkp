@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
-use App\Models\Categories\Office;
-use Spatie\Permission\Models\Role;
 
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Categories\Designation;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Spatie\Permission\Models\Permission;
@@ -78,8 +77,8 @@ class UserController extends Controller
     public function create()
     {
         $cat = [
-            'designations' => Designation::all(),
-            'offices' => Office::all(),
+            'designations' => Category::where('type', 'designation')->get(),
+            'offices' => Category::where('type', 'office')->get(),
             'roles' => Role::all(),
             'permissions' => Permission::all()
         ];
@@ -123,12 +122,31 @@ class UserController extends Controller
             $user->addMedia($request->file('exit_order'))
                 ->toMediaCollection('exit_orders');
         }
-        
+
         if ($user->save()) {
             return redirect()->route('admin.users.create')->with('success', 'User added successfully');
         }
 
         return redirect()->route('admin.users.create')->with('danger', 'Error submitting the user');
+    }
+
+    public function show(User $user)
+    {
+        return response()->json($user);
+    }
+
+    public function activateUser(Request $request, $userId)
+    {
+        $user = User::withoutGlobalScope('active')->findOrFail($userId);
+        if ($user->is_active ===  0) {
+            $user->is_active = 1;    
+            $message = 'User has been Activated successfully.';
+        } else {
+            $user->is_active = 0;
+            $message = 'User has been Deactivate.';
+        }
+        $user->save();
+        return response()->json(['success' => $message], 200);
     }
 
     public function edit(User $user)
@@ -148,8 +166,8 @@ class UserController extends Controller
             'permissions' => $user->getDirectPermissions(),
             'allRoles' => Role::all(),
             'allPermissions' => Permission::all(),
-            'allDesignations' => Designation::all(),
-            'allOffices' => Office::all(),
+            'allDesignations' => Category::where('type', 'designation')->get(),
+            'allOffices' => Category::where('type', 'office')->get(),
         ];
 
         $html = view('admin.users.partials.edit', compact('data'))->render();

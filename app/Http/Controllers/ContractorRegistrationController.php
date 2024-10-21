@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\ContractorRegistration;
 use App\Http\Requests\StoreContractorRegistrationRequest;
-use App\Models\Categories\ContractorCategory;
-use App\Models\Categories\ProvincialEntity;
 use App\Models\District;
 use Illuminate\Http\Request;
 
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\Writer\PngWriter;
+
+use App\Models\Category;
 
 use Yajra\DataTables\DataTables;
 
@@ -87,8 +87,8 @@ class ContractorRegistrationController extends Controller
     {
         $cat = [
             'districts' => District::all(),
-            'contractor_category' => ContractorCategory::all(),
-            'provincial_entities' => ProvincialEntity::all(),
+            'contractor_category' => Category::where('type', 'contractor_category')->get(),
+            'provincial_entities' => Category::where('type', 'provincial_entity')->get(),
         ];
         return view('admin.cont_registrations.create', compact('cat'));
     }
@@ -173,8 +173,8 @@ class ContractorRegistrationController extends Controller
     {
         $cat = [
             'districts' => District::all(),
-            'contractor_category' => ContractorCategory::all(),
-            'provincial_entities' => ProvincialEntity::all(),
+            'contractor_category' => Category::where('type', 'contractor_category')->get(),
+            'provincial_entities' => Category::where('type', 'provincial_entity')->get(),
         ];
 
         if (!$ContractorRegistration) {

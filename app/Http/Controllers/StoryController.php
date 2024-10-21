@@ -90,7 +90,7 @@ class StoryController extends Controller
                     'src'      => $story->getFirstMediaUrl('stories'),
                     'preview'  => $story->getFirstMediaUrl('stories', 'thumb'),
                     'link'     => 'javascript:void(false)',
-                    'linkText' => $story->title.' <div class=story-views-count>Views: '.' '.$story->views.'</div>',
+                    'linkText' => $story->title . ' <div class=story-views-count>Views: ' . ' ' . $story->views . '</div>',
                     'time'     => $story->created_at->timestamp,
                 ];
             }
@@ -139,13 +139,19 @@ class StoryController extends Controller
     {
         if (is_null($story->published_at)) {
             $story->published_at = now();
-            $story->save();
-            return response()->json(['success' => 'Story has been published successfully.']);
+            $message = 'Story has been published successfully.';
         } else {
             $story->published_at = null;
-            $story->save();
-            return response()->json(['success' => 'Story has been unpublished.']);
+            $message = 'Story has been unpublished.';
         }
+        $story->published_by = $request->user()->id;
+        $story->save();
+        return response()->json(['success' => $message], 200);
+    }
+
+    public function show(Story $story)
+    {
+        return response()->json($story);
     }
 
     public function destroy(Story $story)
@@ -159,9 +165,9 @@ class StoryController extends Controller
     public function incrementSeen($userId)
     {
         $stories = User::find($userId)->stories;
-        foreach($stories as $story) {
+        foreach ($stories as $story) {
             $story->views += 1;
-            if($story->save()) {
+            if ($story->save()) {
                 return response()->json(['message' => 'View count incremented']);
             }
         }

@@ -25,15 +25,10 @@
             <tr>
                 <th scope="col" class="p-3">ID</th>
                 <th scope="col" class="p-3">Product Name</th>
-                <th scope="col" class="p-3">Specification Details</th>
                 <th scope="col" class="p-3">Firm Name</th>
                 <th scope="col" class="p-3">Address</th>
                 <th scope="col" class="p-3">Mobile Number</th>
                 <th scope="col" class="p-3">Phone Number</th>
-                <th scope="col" class="p-3">Email</th>
-                <th scope="col" class="p-3">Locality</th>
-                <th scope="col" class="p-3">NTN Number</th>
-                <th scope="col" class="p-3">Location Type</th>
                 <th scope="col" class="p-3">Created At</th>
                 <th scope="col" class="p-3">Updated At</th>
                 <th scope="col" class="p-3">Actions</th>
@@ -61,10 +56,6 @@
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "specification_details"
-                        , searchBuilderType: "string"
-                    }
-                    , {
                         data: "firm_name"
                         , searchBuilderType: "string"
                     }
@@ -74,26 +65,6 @@
                     }
                     , {
                         data: "mobile_number"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "phone_number"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "email"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "locality"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "ntn_number"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "location_type"
                         , searchBuilderType: "string"
                     }
                     , {
@@ -193,7 +164,7 @@
             , });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.standardizations.card', ':id') }}",
+                fetchUrl: "{{ route('admin.standardizations.showCard', ':id') }}",
                 btnSelector: '.card-btn',
                 title: 'Standardization Card',
                 actionButtonName: 'Download Card',
@@ -215,7 +186,7 @@
             });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.standardizations.detail', ':id') }}",
+                fetchUrl: "{{ route('admin.standardizations.showDetail', ':id') }}",
                 btnSelector: '.view-btn',
                 title: 'Standardization Details',
                 modalSize: 'lg',

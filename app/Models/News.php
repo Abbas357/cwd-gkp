@@ -7,11 +7,27 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
+
 class News extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia;
-    
+    use HasFactory, InteractsWithMedia, LogsActivity;
+
     protected $guarded = [];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll()
+            ->logExcept(['id', 'updated_at', 'created_at'])
+            ->logOnlyDirty()
+            ->useLogName('news')
+            ->dontSubmitEmptyLogs()
+            ->setDescriptionForEvent(function (string $eventName) {
+                return "News has been {$eventName}";
+            });
+    }
 
     public function registerMediaCollections(): void
     {

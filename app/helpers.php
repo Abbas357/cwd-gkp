@@ -11,3 +11,10 @@ function getProfilePic(App\Models\User $user): string
     }
     return $url;
 }
+
+function categoryType()
+{
+    return [
+        'designation', 'office', 'file_type', 'file_category', 'contractor_category', 'provincial_entity'
+    ];
+}
