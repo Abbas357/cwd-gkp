@@ -142,9 +142,10 @@
                 , btnSelector: '.edit-btn'
                 , title: 'User Detail'
                 , actionButtonName: 'Update User'
-                , modalSize: 'lg'
+                , modalSize: 'xl'
                 , includeForm: true
                 , formAction: "{{ route('admin.users.update', ':id') }}"
+                , modalHeight: '75vh'
             , }).then((modal) => {
                 const userModal = $('#' + modal);
                 const updateUserBtn = userModal.find('button[type="submit"]');

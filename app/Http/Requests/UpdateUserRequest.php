@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -15,16 +16,31 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'name' => 'required|min:5',
-            'email' => 'required|email',
+            'username' => [
+                'nullable',
+                'min:5',
+                Rule::unique('users')->ignore(request()->user->id),
+            ],
+            'email' => 'required|email|unique:users',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users')->ignore(request()->user->id),
+            ],
             'password'=> 'nullable|min:5',
             'mobile_number'=> 'nullable|min:11',
             'landline_number'=> 'nullable|min:9',
             'cnic'=> 'nullable|min:13',
             'designation'=> 'required',
             'office'=> 'required',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
-            'roles' => 'nullable|array',
-            'permissions' => 'nullable|array',
+            'posting_type'=> 'nullable',
+            'posting_date'=> 'nullable',
+            'exit_type'=> 'nullable',
+            'exit_date'=> 'nullable',
+            'message'=> 'nullable',
+            'whatsapp'=> 'nullable',
+            'facebook'=> 'nullable',
+            'twitter'=> 'nullable',
         ];
     }
 }

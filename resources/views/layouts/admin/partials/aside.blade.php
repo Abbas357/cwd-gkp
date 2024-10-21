@@ -1,7 +1,7 @@
 <aside class="sidebar-wrapper">
     <div class="sidebar-header">
         <div class="logo-icon">
-            <img src="{{ asset('images/logo-square.png') }}" class="logo-img" alt="">
+            <img src="{{ asset('admin/images/logo-square.png') }}" class="logo-img" alt="">
         </div>
         <div class="logo-name flex-grow-1">
             <h5 class="mb-0">C&W Dept.</h5>
@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="sidebar-nav" data-simplebar="true">
-
+ 
         <!--navigation-->
         <ul class="metismenu" id="sidenav">
             <li>

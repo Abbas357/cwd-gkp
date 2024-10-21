@@ -19,6 +19,8 @@ class User extends Authenticatable implements HasMedia
 {
     use HasFactory, Notifiable, HasRoles, InteractsWithMedia;
 
+    protected $guarded = [];
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('profile_pictures')
@@ -60,8 +62,6 @@ class User extends Authenticatable implements HasMedia
             $builder->where('is_active', 1);
         });
     }
-
-    protected $guarded = [];
 
     protected $hidden = [
         'password',

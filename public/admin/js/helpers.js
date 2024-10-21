@@ -740,6 +740,7 @@ function pushStateModal({
     modalType,
     includeForm = false,
     formAction,
+    modalHeight = "70vh"
 }) {
     return new Promise((resolve) => {
         const calcModalType = modalType ?? btnSelector.replace(/^[.#]/, '').split('-')[0];
@@ -747,13 +748,13 @@ function pushStateModal({
         const modalContentClass = `detail-${calcModalType}`;
         const actionBtnId = actionButtonName && actionButtonName.replace(/\s+/g, '-').toLowerCase()+'-'+calcModalType;
 
-        const formTagOpen = includeForm
-            ? `<form id="form-${calcModalType}" method="POST" enctype="multipart/form-data">`
-            : "";
-        const formTagClose = includeForm ? `</form>` : "";
+        const formTagOpen = includeForm ? `<form id="form-${calcModalType}" method="POST" enctype="multipart/form-data">` : '';
+        const formTagClose = includeForm ? `</form>` : '';
 
         const modalTemplate = `
-        <div class="modal modal-${modalSize} fade" id="${modalId}" tabindex="-1" aria-hidden="true">
+        <div class="modal 
+        
+        fade" id="${modalId}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-${modalSize} modal-dialog-centered modal-dialog-scrollable">
                 
                 <div class="modal-content">
@@ -762,7 +763,7 @@ function pushStateModal({
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     ${formTagOpen}
-                    <div class="modal-body">
+                    <div class="modal-body" style="${includeForm && 'height:'+modalHeight}">
                         <div class="${loadingSpinner} text-center mt-2">
                             <div class="spinner-border" role="status">
                                 <span class="visually-hidden">Loading...</span>

@@ -60,36 +60,6 @@ class UserController extends Controller
         return view('admin.users.index');
     }
 
-    public function edit(User $user)
-    {
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'data' => [
-                    'result' => 'The user does not exists in Database',
-                ],
-            ]);
-        }
-
-        $data = [
-            'user' => $user,
-            'roles' => $user->roles,
-            'permissions' => $user->getDirectPermissions(),
-            'allRoles' => Role::all(),
-            'allPermissions' => Permission::all(),
-            'allDesignations' => Designation::all(),
-            'allOffices' => Office::all(),
-        ];
-
-        $html = view('admin.users.partials.edit', compact('data'))->render();
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'result' => $html,
-            ],
-        ]);
-    }
-
     public function users(Request $request)
     {
         $search = $request->get('q');
@@ -121,26 +91,39 @@ class UserController extends Controller
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->username = $request->username ?? $this->generateUsername($request->email);
         $user->password = bcrypt($request->password);
-        $user->mobile_number = $request->mobile_number;
-        $user->landline_number = $request->landline_number;
-        $user->cnic = $request->cnic;
+
         $user->designation = $request->designation;
         $user->office = $request->office;
+
+        $user->mobile_number = $request->mobile_number ?? null;
+        $user->landline_number = $request->landline_number ?? null;
+        $user->cnic = $request->cnic ?? null;
+        $user->posting_type = $request->posting_type ?? null;
+        $user->posting_date = $request->posting_date ?? null;
+        $user->exit_type = $request->exit_type ?? null;
+        $user->exit_date = $request->exit_date ?? null;
+        $user->message = $request->message ?? null;
+        $user->facebook = $request->facebook ?? null;
+        $user->whatsapp = $request->whatsapp ?? null;
+        $user->twitter = $request->twitter ?? null;
 
         if ($request->hasFile('image')) {
             $user->addMedia($request->file('image'))
                 ->toMediaCollection('profile_pictures');
         }
 
-        if ($request->has('roles')) {
-            $user->assignRole($request->roles);
+        if ($request->hasFile('posting_order')) {
+            $user->addMedia($request->file('posting_order'))
+                ->toMediaCollection('posting_orders');
         }
 
-        if ($request->has('permissions')) {
-            $user->givePermissionTo($request->permissions);
+        if ($request->hasFile('exit_order')) {
+            $user->addMedia($request->file('exit_order'))
+                ->toMediaCollection('exit_orders');
         }
-
+        
         if ($user->save()) {
             return redirect()->route('admin.users.create')->with('success', 'User added successfully');
         }
@@ -148,41 +131,39 @@ class UserController extends Controller
         return redirect()->route('admin.users.create')->with('danger', 'Error submitting the user');
     }
 
-    public function show(User $user)
+    public function edit(User $user)
     {
-        if ($user) {
-            $roles = $user->roles;
-            $permissions = $user->getDirectPermissions();
-            $allRoles = Role::all();
-            $allPermissions = Permission::all();
-            $allDesignations = Designation::all();
-            $allOffices = Office::all();
-
+        if (!$user) {
             return response()->json([
-                'success' => true,
+                'success' => false,
                 'data' => [
-                    'user' => $user,
-                    'profile_picture' => getProfilePic($user),
-                    'roles' => $roles,
-                    'permissions' => $permissions,
-                    'allRoles' => $allRoles,
-                    'allPermissions' => $allPermissions,
-                    'allDesignations' => $allDesignations,
-                    'allOffices' => $allOffices,
+                    'result' => 'The user does not exists in Database',
                 ],
             ]);
         }
 
+        $data = [
+            'user' => $user,
+            'roles' => $user->roles,
+            'permissions' => $user->getDirectPermissions(),
+            'allRoles' => Role::all(),
+            'allPermissions' => Permission::all(),
+            'allDesignations' => Designation::all(),
+            'allOffices' => Office::all(),
+        ];
+
+        $html = view('admin.users.partials.edit', compact('data'))->render();
         return response()->json([
-            'success' => false,
-            'error' => 'User not found.',
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
         ]);
     }
 
     public function update(UpdateUserRequest $request, User $user)
     {
         $validated = $request->validated();
-
         $user->fill(array_filter($validated, function ($value) {
             return $value !== null;
         }));
@@ -196,12 +177,22 @@ class UserController extends Controller
                 ->toMediaCollection('profile_pictures');
         }
 
+        if ($request->hasFile('posting_order')) {
+            $user->addMedia($request->file('posting_order'))
+                ->toMediaCollection('posting_orders');
+        }
+
+        if ($request->hasFile('exit_order')) {
+            $user->addMedia($request->file('exit_order'))
+                ->toMediaCollection('exit_orders');
+        }
+
         if ($request->has('roles')) {
-            $user->syncRoles($validated['roles']);
+            $user->syncRoles($request->roles);
         }
 
         if ($request->has('permissions')) {
-            $user->syncPermissions($validated['permissions']);
+            $user->syncPermissions($request->permissions);
         }
 
         if ($user->save()) {
@@ -219,6 +210,20 @@ class UserController extends Controller
         return response()->json(['error' => 'User can\'t be deleted.']);
     }
 
+    private function generateUsername($email)
+    {
+        $username = strstr($email, '@', true);
+
+        $originalUsername = $username;
+        $counter = 1;
+        while (User::where('username', $username)->exists()) {
+            $username = $originalUsername . '-' . $counter;
+            $counter++;
+        }
+
+        return $username;
+    }
+
     public function assignBoss(Request $request)
     {
         $user = User::find($request->input('user_id'));
@@ -230,30 +235,5 @@ class UserController extends Controller
 
         // $boss = $user->boss->first();
         // $subordinates = $user->subordinates;
-    }
-
-    public function assignRole(Request $request, User $user)
-    {
-        $roles = $request->roles;
-
-        $existingRoles = array_intersect($roles, $user->getRoleNames()->toArray());
-        if (!empty($existingRoles)) {
-            return back()->with('danger', 'Roles already assigned previously.');
-        }
-
-        $user->syncRoles($roles);
-        return back()->with('success', 'Roles successfully assigned');
-    }
-
-    public function revokeRole(User $user, Role $role)
-    {
-        $user->removeRole($role);
-        return redirect()->back()->with('success', 'Role removed successfully!');
-    }
-
-    public function clearRoles(User $user)
-    {
-        $user->roles()->detach();
-        return redirect()->back()->with('success', 'All roles removed successfully!');
     }
 }

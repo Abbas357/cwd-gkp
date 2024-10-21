@@ -142,52 +142,50 @@
   outline: 1px solid #555;
 }
 
-.rand-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  grid-gap: 1rem 1rem;
-  grid-auto-flow: dense;
+.inline-block-items {
+  width: 100%;
 }
 
-.rand-grid .form-check-input {
-  margin-left: -1.3rem !important;
+.inline-block-items .form-check-input {
+  margin-left: -1rem !important;
   margin-right: .5rem !important;
 }
 
-.rand-grid .form-check-input:checked+label {
+.inline-block-items .form-check-input:checked+label {
   font-weight: bold;
 }
 
-.rand-grid>div {
+.inline-block-items>div {
+  display: inline-block;
+  margin: 5px;
   background-color: #77777715;
   border-radius: 50px;
   border: 1px solid #ddd;
   padding: 0.18rem 1.5rem;
   white-space: nowrap;
-  margin: auto;
   user-select: none;
 }
 
-.rand-grid>div:hover {
+.inline-block-items>div:hover {
   background-color: #77777733;
 }
 
 [data-bs-theme="dark"] {
-  .rand-grid>div {
+  .inline-block-items>div {
     border: 1px solid #555
   }
 }
 
-.rand-grid .form-check-label {
+.inline-block-items .form-check-label {
   display: block;
   font-size: 14px;
 }
 
-.rand-grid .form-check-label:hover {
+.inline-block-items .form-check-label:hover {
   cursor: pointer;
 }
 
-.rand-grid .form-check-input {
+.inline-block-items .form-check-input {
   margin-left: 10px;
 }
 
