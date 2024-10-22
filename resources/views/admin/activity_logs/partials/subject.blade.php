@@ -14,6 +14,8 @@
                 $routeName = 'admin.standardizations.show';
             } elseif (class_basename($subjectType) === 'Story') {
                 $routeName = 'admin.stories.show';
+            }elseif (class_basename($subjectType) === 'Gallery') {
+                $routeName = 'admin.gallery.show';
             } else {
                 $routeName = 'admin.' . $subjectClassName . 's.show';
             }

@@ -185,7 +185,7 @@
                     <hr class="dropdown-divider">
                     <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('admin.profile.edit') }}"><i class="bi-person-circle"></i>Profile</a>
                     <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('admin.profile.edit') }}"><i class="bi-gear-fill"></i>Settings</a>
-                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('admin.dashboard') }}"><i class="bi-speedometer"></i>Dashboard</a>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('admin.logs') }}"><i class="bi-activity"></i>Activity Log</a>
                     <hr class="dropdown-divider">
                     <form method="POST" action="{{ route('logout') }}" disabled>
                         @csrf

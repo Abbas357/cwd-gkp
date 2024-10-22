@@ -3,18 +3,26 @@
 namespace App\Models;
 
 use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Activitylog\LogOptions;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Gallery extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, LogsActivity;
 
     protected $guarded = [];
+
+    protected function casts(): array
+    {
+        return [
+            'published_at' => 'datetime',
+        ];
+    }
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -31,7 +39,7 @@ class Gallery extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('galleries')
+        $this->addMediaCollection('gallery')
             ->singleFile()
             ->acceptsMimeTypes([
                 'image/jpeg',
@@ -48,6 +56,13 @@ class Gallery extends Model implements HasMedia
             ]);
     }
 
+    protected static function booted()
+    {
+        static::addGlobalScope('published', function (Builder $builder) {
+            $builder->where('status', 'published')->whereNotNull('published_at');
+        });
+    }
+    
     public function user() {
         return $this->belongsTo(User::class);
     }

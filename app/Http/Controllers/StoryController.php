@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use Carbon\Carbon;
 
+use App\Models\User;
 use App\Models\Story;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -162,14 +163,40 @@ class StoryController extends Controller
         return response()->json(['error' => 'Story can\'t be deleted.']);
     }
 
+    public function checkExpired(Request $request)
+    {
+        $seenUserIds = $request->input('seenUserIds', []);
+
+        $users = User::whereIn('id', $seenUserIds)->get();
+        $seenUsers = [];
+
+        foreach ($users as $user) {
+            if (!$user->stories()->where('created_at', '>=', Carbon::now()->subHours(24))->exists()) {
+                $seenUsers[] = $user->id;
+            }
+        }
+
+        $success = !empty($seenUsers);
+
+        return response()->json([
+            'success' => $success,
+            'users' => $seenUsers
+        ]);
+    }
+
     public function incrementSeen($userId)
     {
         $stories = User::find($userId)->stories;
+
         foreach ($stories as $story) {
-            $story->views += 1;
-            if ($story->save()) {
-                return response()->json(['message' => 'View count incremented']);
+            if ($story->created_at >= Carbon::now()->subHours(24)) {
+                $story->views += 1;
+
+                if (!$story->save()) {
+                    return response()->json(['success' => 'false'], 500);
+                }
             }
         }
+        return response()->json(['success' => 'true', 200]);
     }
 }

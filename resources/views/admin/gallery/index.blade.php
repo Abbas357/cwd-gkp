@@ -1,9 +1,9 @@
-<x-app-layout title="Downloads">
+<x-app-layout title="Gallery">
     @push('style')
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header">
-        <li class="breadcrumb-item active" aria-current="page">Downloads</li>
+        <li class="breadcrumb-item active" aria-current="page">Gallery</li>
     </x-slot>
 
     <div class="card-header mb-3">
@@ -20,14 +20,14 @@
         </ul>
     </div>
 
-    <table id="downloads-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+    <table id="gallery-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
         <thead>
             <tr>
                 <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">File Name</th>
-                <th scope="col" class="p-3">File Type</th>
-                <th scope="col" class="p-3">File Category</th>
-                <th scope="col" class="p-3">File</th>
+                <th scope="col" class="p-3">Title</th>
+                <th scope="col" class="p-3">Type</th>
+                <th scope="col" class="p-3">Description</th>
+                <th scope="col" class="p-3">Image</th>
                 <th scope="col" class="p-3">Uploaded By</th>
                 <th scope="col" class="p-3">Status</th>
                 <th scope="col" class="p-3">Created At</th>
@@ -46,26 +46,26 @@
 
     <script>
         $(document).ready(function() {
-            var table = initDataTable('#downloads-datatable', {
-                ajaxUrl: "{{ route('admin.downloads.index') }}"
+            var table = initDataTable('#gallery-datatable', {
+                ajaxUrl: "{{ route('admin.gallery.index') }}"
                 , columns: [{
                         data: "id"
                         , searchBuilderType: "num"
                     }
                     , {
-                        data: "file_name"
+                        data: "title"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "file_type"
+                        data: "type"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "file_category"
+                        data: "description"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "file"
+                        data: "image"
                         , searchBuilderType: "string"
                     }
                     , {
@@ -99,49 +99,49 @@
                 }]
             });
 
-            $("#downloads-datatable").on('click', '.publish-btn', async function() {
+            $("#gallery-datatable").on('click', '.publish-btn', async function() {
                 const downloadId = $(this).data("id");
                 const message = $(this).data("type");
-                const url = "{{ route('admin.downloads.publish', ':id') }}".replace(':id', downloadId);
+                const url = "{{ route('admin.gallery.publish', ':id') }}".replace(':id', downloadId);
 
                 const result = await confirmAction(`Do you want to ${message} this file?`);
                 if (result && result.isConfirmed) {
                     const success = await fetchRequest(url, 'PATCH');
                     if (success) {
-                        $("#downloads-datatable").DataTable().ajax.reload();
+                        $("#gallery-datatable").DataTable().ajax.reload();
                     }
                 }
             });
 
-            $("#downloads-datatable").on('click', '.archive-btn', async function() {
+            $("#gallery-datatable").on('click', '.archive-btn', async function() {
                 const downloadId = $(this).data("id");
-                const url = "{{ route('admin.downloads.archive', ':id') }}".replace(':id', downloadId);
+                const url = "{{ route('admin.gallery.archive', ':id') }}".replace(':id', downloadId);
 
                 const result = await confirmAction(`Do you want to archive this file?`);
                 if (result && result.isConfirmed) {
                     const success = await fetchRequest(url, 'PATCH');
                     if (success) {
-                        $("#downloads-datatable").DataTable().ajax.reload();
+                        $("#gallery-datatable").DataTable().ajax.reload();
                     }
                 }
             });
 
-            $("#downloads-datatable").on('click', '.delete-btn', async function() {
+            $("#gallery-datatable").on('click', '.delete-btn', async function() {
                 const downloadId = $(this).data("id");
-                const url = "{{ route('admin.downloads.destroy', ':id') }}".replace(':id', downloadId);
+                const url = "{{ route('admin.gallery.destroy', ':id') }}".replace(':id', downloadId);
 
-                const result = await confirmAction(`Do you want to delete this file?`);
+                const result = await confirmAction(`Do you want to delete this image?`);
                 if (result && result.isConfirmed) {
                     const success = await fetchRequest(url, 'DELETE');
                     if (success) {
-                        $("#downloads-datatable").DataTable().ajax.reload();
+                        $("#gallery-datatable").DataTable().ajax.reload();
                     }
                 }
             });
 
             hashTabsNavigator({
                 table: table
-                , dataTableUrl: "{{ route('admin.downloads.index') }}"
+                , dataTableUrl: "{{ route('admin.gallery.index') }}"
                 , tabToHashMap: {
                     "#draft-tab": '#draft'
                     , "#published-tab": '#published'
@@ -161,7 +161,7 @@
                 , defaultHash: '#draft'
             });
 
-            $('#downloads-datatable').colResizable({
+            $('#gallery-datatable').colResizable({
                 liveDrag: true
                 , resizeMode: 'overflow'
                 , postbackSafe: true
@@ -171,9 +171,9 @@
             , });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.downloads.detail', ':id') }}",
+                fetchUrl: "{{ route('admin.gallery.detail', ':id') }}",
                 btnSelector: '.view-btn',
-                title: 'Download Details',
+                title: 'Gallery Details',
                 modalSize: 'lg',
             });
             

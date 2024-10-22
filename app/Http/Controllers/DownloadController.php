@@ -30,7 +30,7 @@ class DownloadController extends Controller
                     return view('admin.downloads.partials.status', compact('row'))->render();
                 })
                 ->addColumn('file', function ($row) {
-                    return '<a target="_blank" href="' . $row->getFirstMediaUrl('downloads') . '" class="btn btn-light">File Link</span>';
+                    return '<a target="_blank" href="' . $row->getFirstMediaUrl('downloads') . '" class="btn btn-light bi bi-file-earmark fs-4"></span>';
                 })
                 ->addColumn('uploaded_by', function ($row) {
                     return $row->user ? $row->user->name . ' (' . $row->user->designation . ' - ' . $row->user->office  . ')' : 'N/A';
@@ -128,7 +128,7 @@ class DownloadController extends Controller
             return response()->json([
                 'success' => false,
                 'data' => [
-                    'result' => 'Unable to load Product detail',
+                    'result' => 'Unable to load Download Detail',
                 ],
             ]);
         }
@@ -168,7 +168,7 @@ class DownloadController extends Controller
             return response()->json(['success' => 'Field updated successfully'], 200);
         }
 
-        return response()->json(['message' => 'No changes were made to the field'], 200);
+        return response()->json(['error' => 'No changes were made to the field'], 200);
     }
 
 

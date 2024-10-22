@@ -107,7 +107,7 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(Download::class);
     }
 
-    public function galleries()
+    public function gallery()
     {
         return $this->hasMany(Gallery::class);
     }

@@ -20,5 +20,6 @@ Route::prefix('standardizations')->as('standardizations.')->group(function () {
 
 Route::prefix('stories')->as('stories.')->group(function () {
     Route::get('/', [StoryController::class, 'getStories'])->name('get');
+    Route::post('/check', [StoryController::class, 'checkExpired'])->name('checkExpired');
     Route::patch('/viewed/{story}', [StoryController::class, 'incrementSeen'])->name('viewed');
 });

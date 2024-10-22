@@ -1,9 +1,9 @@
-<x-app-layout title="E-Standardization">
+<x-app-layout title="Stories">
     @push('style')
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header">
-        <li class="breadcrumb-item active" aria-current="page">E-Standardization</li>
+        <li class="breadcrumb-item active" aria-current="page">Stories</li>
     </x-slot>
 
     <div class="card-header mb-3">
