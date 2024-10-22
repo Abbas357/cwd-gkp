@@ -13,11 +13,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600&family=Roboto&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
     <link rel="stylesheet" href="{{ asset('site/css/bootstrap-icons.min.css') }}">
-
-    <link href="{{ asset('site/lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('site/lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
     
     <link href="{{ asset('site/css/bootstrap.min.css') }}" rel="stylesheet">
 
@@ -38,14 +34,10 @@
 
     <script src="{{ asset('site/js/jquery.min.js') }}"></script>
     <script src="{{ asset('site/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('site/lib/easing/easing.min.js') }}"></script>
-    <script src="{{ asset('site/lib/waypoints/waypoints.min.js') }}"></script>
-    <script src="{{ asset('site/lib/owlcarousel/owl.carousel.min.js') }}"></script>
-    <script src="{{ asset('site/lib/lightbox/js/lightbox.min.js') }}"></script>
-    
     <script src="{{ asset('site/js/menu.js') }}"></script>
     <script src="{{ asset('site/js/core.min.js') }}"></script>
-    <script src="{{ asset('site/js/custom.js') }}"></script>
+
     @stack('script')
+    <script src="{{ asset('site/js/custom.js') }}"></script>
 </body>
 </html>

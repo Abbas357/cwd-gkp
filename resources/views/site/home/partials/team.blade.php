@@ -9,10 +9,10 @@
                     <img src="{{ asset('site/img/guide-1.jpg') }}" class="img-fluid w-100 rounded-top" alt="Image">
                 </div>
                 <div class="team-icon rounded-pill p-2">
-                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-twitter"></i></a>
-                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-instagram"></i></a>
-                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="bi bi-facebook"></i></a>
+                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="bi bi-twitter"></i></a>
+                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="bi bi-instagram"></i></a>
+                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="bi bi-linkedin"></i></a>
                 </div>
             </div>
             <div class="team-title text-center rounded-bottom p-4">
@@ -29,10 +29,10 @@
                     <img src="{{ asset('site/img/guide-2.jpg') }}" class="img-fluid w-100 rounded-top" alt="Image">
                 </div>
                 <div class="team-icon rounded-pill p-2">
-                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-twitter"></i></a>
-                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-instagram"></i></a>
-                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="bi bi-facebook"></i></a>
+                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="bi bi-twitter"></i></a>
+                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="bi bi-instagram"></i></a>
+                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="bi bi-linkedin"></i></a>
                 </div>
             </div>
             <div class="team-title text-center rounded-bottom p-4">
@@ -48,10 +48,10 @@
                     <img src="{{ asset('site/img/guide-3.jpg') }}" class="img-fluid w-100 rounded-top" alt="Image">
                 </div>
                 <div class="team-icon rounded-pill p-2">
-                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-twitter"></i></a>
-                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-instagram"></i></a>
-                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="bi bi-facebook"></i></a>
+                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="bi bi-twitter"></i></a>
+                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="bi bi-instagram"></i></a>
+                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="bi bi-linkedin"></i></a>
                 </div>
             </div>
             <div class="team-title text-center rounded-bottom p-4">
@@ -67,10 +67,10 @@
                     <img src="{{ asset('site/img/guide-4.jpg') }}" class="img-fluid w-100 rounded-top" alt="Image">
                 </div>
                 <div class="team-icon rounded-pill p-2">
-                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-twitter"></i></a>
-                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-instagram"></i></a>
-                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="bi bi-facebook"></i></a>
+                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="bi bi-twitter"></i></a>
+                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="bi bi-instagram"></i></a>
+                    <a class="btn btn-square btn-primary rounded-circle mx-1" href=""><i class="bi bi-linkedin"></i></a>
                 </div>
             </div>
             <div class="team-title text-center rounded-bottom p-4">

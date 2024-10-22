@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Download;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreDownloadRequest;
 use Yajra\DataTables\DataTables;
+use App\Http\Requests\StoreDownloadRequest;
 
 class DownloadController extends Controller
 {
@@ -13,7 +14,7 @@ class DownloadController extends Controller
     {
         $status = $request->query('status', null);
 
-        $downloads = Download::query();
+        $downloads = Download::query()->latest()->withoutGlobalScope('published');
 
         $downloads->when($status !== null, function ($query) use ($status) {
             $query->where('status', $status);
@@ -25,16 +26,22 @@ class DownloadController extends Controller
                 ->addColumn('action', function ($row) {
                     return view('admin.downloads.partials.buttons', compact('row'))->render();
                 })
+                ->editColumn('status', function ($row) {
+                    return view('admin.downloads.partials.status', compact('row'))->render();
+                })
+                ->addColumn('file', function ($row) {
+                    return '<a target="_blank" href="' . $row->getFirstMediaUrl('downloads') . '" class="btn btn-light">File Link</span>';
+                })
+                ->addColumn('uploaded_by', function ($row) {
+                    return $row->user ? $row->user->name . ' (' . $row->user->designation . ' - ' . $row->user->office  . ')' : 'N/A';
+                })
                 ->editColumn('created_at', function ($row) {
-                    return $row->created_at->diffForHumans();
+                    return $row->created_at->format('j, F Y');
                 })
                 ->editColumn('updated_at', function ($row) {
                     return $row->updated_at->diffForHumans();
                 })
-                ->editColumn('status', function ($row) {
-                    return $row->status === 1 ? 'Approved' : 'Not Approved';
-                })
-                ->rawColumns(['action']);
+                ->rawColumns(['action', 'status', 'file']);
 
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
                 $dataTable->filter(function ($query) use ($request) {
@@ -52,27 +59,35 @@ class DownloadController extends Controller
     public function create()
     {
         $stats = [
-            'totalCount' => Download::count(),
-            'publishedCount' => Download::whereNotNull('published_at')->count(),
-            'unPublishedCount' => Download::whereNull('published_at')->count(),
+            'totalCount' => Download::withoutGlobalScope('published')->count(),
+            'publishedCount' => Download::withoutGlobalScope('published')->where('status', 'published')->whereNotNull('published_at')->count(),
+            'archivedCount' => Download::withoutGlobalScope('published')->where('status', 'archived')->count(),
+            'unPublishedCount' => Download::withoutGlobalScope('published')->where('status', 'draft')->count(),
         ];
-        return view('admin.downloads.create', compact('stats'));
+        $cat = [
+            'file_type' => Category::where('type', 'file_type')->get(),
+            'file_category' => Category::where('type', 'file_category')->get(),
+        ];
+        return view('admin.downloads.create', compact('stats', 'cat'));
     }
 
     public function store(StoreDownloadRequest $request)
     {
-        $standardization = new Download();
-        $standardization->product_name = $request->input('product_name');
+        $download = new Download();
+        $download->file_name = $request->file_name;
+        $download->file_type = $request->file_type;
+        $download->file_category = $request->file_category;
+        $download->status = 'draft';
 
-        if ($request->hasFile('secp_certificate')) {
-            $standardization->addMedia($request->file('secp_certificate'))
-                ->toMediaCollection('secp_certificates');
+        if ($request->hasFile('file')) {
+            $download->addMedia($request->file('file'))
+                ->toMediaCollection('downloads');
         }
 
-        if ($standardization->save()) {
-            return redirect()->route('admin.downloads.create')->with('success', 'Your form has been submitted successfully');
+        if ($request->user()->downloads()->save($download)) {
+            return redirect()->route('admin.downloads.create')->with('success', 'File Added successfully');
         }
-        return redirect()->route('admin.downloads.create')->with('danger', 'There is an error submitting your data');
+        return redirect()->route('admin.downloads.create')->with('danger', 'There is an error adding your download');
     }
 
     public function show(Download $Download)
@@ -80,9 +95,36 @@ class DownloadController extends Controller
         return response()->json($Download);
     }
 
-    public function showDetail(Download $Download)
+    public function publishDownload(Request $request, $downloadId)
     {
-        if (!$Download) {
+        $download = Download::withoutGlobalScope('published')->findOrFail($downloadId);
+        if ($download->status === 'draft') {
+            $download->published_at = now();
+            $download->status = 'published';
+            $message = 'File has been published successfully.';
+        } else {
+            $download->status = 'draft';
+            $message = 'File has been unpublished.';
+        }
+        $download->published_by = $request->user()->id;
+        $download->save();
+        return response()->json(['success' => $message], 200);
+    }
+
+    public function archiveDownload(Request $request, Download $download)
+    {
+        if (!is_null($download->published_at)) {
+            $download->status = 'archived';
+            $download->save();
+            return response()->json(['success' => 'File has been archived successfully.'], 200);
+        }
+        return response()->json(['success' => 'File cannot be archived.'], 403);
+    }
+
+    public function showDetail($downloadId)
+    {
+        $download = Download::withoutGlobalScope('published')->findOrFail($downloadId);
+        if (!$download) {
             return response()->json([
                 'success' => false,
                 'data' => [
@@ -90,7 +132,13 @@ class DownloadController extends Controller
                 ],
             ]);
         }
-        $html = view('admin.downloads.partials.detail', compact('Download'))->render();
+
+        $cat = [
+            'file_type' => Category::where('type', 'file_type')->get(),
+            'file_category' => Category::where('type', 'file_category')->get(),
+        ];
+
+        $html = view('admin.downloads.partials.detail', compact('download', 'cat'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -104,30 +152,58 @@ class DownloadController extends Controller
         $request->validate([
             'field' => 'required|string',
             'value' => 'required|string',
+            'id'    => 'required|integer|exists:downloads,id',
         ]);
 
-        $Download = Download::find($request->id);
-        if($Download->status !== 0) {
-            return response()->json(['error' => 'Approved or Rejected Products cannot be updated']);
-        }
-        $Download->{$request->field} = $request->value;
-        $Download->save();
+        $download = Download::withoutGlobalScope('published')->findOrFail($request->id);
 
-        return response()->json(['success' => 'Field saved']);
+        if (in_array($download->status, ['published', 'archived'])) {
+            return response()->json(['error' => 'Published or Archived products cannot be updated'], 403);
+        }
+
+        $download->{$request->field} = $request->value;
+
+        if ($download->isDirty($request->field)) {
+            $download->save();
+            return response()->json(['success' => 'Field updated successfully'], 200);
+        }
+
+        return response()->json(['message' => 'No changes were made to the field'], 200);
     }
+
 
     public function uploadFile(Request $request)
     {
-        $standardization = Download::find($request->id);
-        if($standardization->status !== 0) {
-            return response()->json(['error' => 'Approved or Rejected Products cannot be updated']);
+        $request->validate([
+            'file' => 'required|file|mimes:pdf,docx,pptx, txt,jpg,png|max:10240', 
+            'id'   => 'required|integer|exists:downloads,id',
+        ]);
+
+        $download = Download::withoutGlobalScope('published')->findOrFail($request->id);
+
+        if (in_array($download->status, ['published', 'archived'])) {
+            return response()->json(['error' => 'Published or Archived products cannot be updated'], 403); 
         }
-        $file = $request->file;
-        $collection = $request->collection;
-        $standardization->addMedia($file)->toMediaCollection($collection);
-        if($standardization->save()) {
-            return response()->json(['success' => 'File Updated']);
+
+        try {
+            $file = $request->file('file');
+            $download->addMedia($file)->toMediaCollection('downloads');
+
+            return response()->json(['success' => 'File uploaded successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error uploading file: ' . $e->getMessage()], 500);
         }
-        return response()->json(['error' => 'Error Uploading File']);
+    }
+
+
+    public function destroy($downloadId)
+    {
+        $download = Download::withoutGlobalScope('published')->findOrFail($downloadId);
+        if ($download->status === 'draft' && is_null($download->published_at)) {
+            if ($download->delete()) {
+                return response()->json(['success' => 'File has been deleted successfully.']);
+            }
+        }
+        return response()->json(['error' => 'Published, Archived, or Draft files that were once published cannot be deleted.']);
     }
 }

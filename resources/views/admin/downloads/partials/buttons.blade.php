@@ -1,16 +1,22 @@
 @php
     $status = $row->status;
+    $publishedAt = $row->published_at;
 @endphp
 
 <div class="action-btns">
-    <i class="view-btn bi-eye bg-light text-primary"  title="View" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
-    @if (!in_array($status, [1, 2]))
-        <i class="approve-btn bg-light text-success bi-check2-circle" title="Approve" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
-    @endif
-    @if (!in_array($status, [1, 2]))
-        <i class="reject-btn bg-light text-warning bi-ban" title="Reject" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
-    @endif
-    @if (!in_array($status, [0, 2]))
-        <i class="card-btn bi-credit-card bg-light text-info" title="Generate Card" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
+    <i class="view-btn bi-eye bg-light text-primary" title="View" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
+
+    @if($status !== 'archived')
+        @if($status === 'draft' && is_null($publishedAt))
+        <i class="publish-btn bg-light text-success bi-check-circle" title="Publish" data-bs-toggle="tooltip" data-type="publish" data-id="{{ $row->id }}"></i>
+        <i class="delete-btn bg-light text-danger bi-trash" title="Delete" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
+        @elseif($status === 'draft' && !is_null($publishedAt))
+            <i class="publish-btn bg-light text-success bi-check-circle" title="Publish" data-bs-toggle="tooltip" data-type="publish" data-id="{{ $row->id }}"></i>
+        @endif
+
+        @if($status === 'published' && !is_null($publishedAt))
+            <i class="publish-btn bg-light text-warning bi-x-circle" title="Unpublish" data-bs-toggle="tooltip" data-type="unpublish" data-id="{{ $row->id }}"></i>
+            <i class="archive-btn bi-archive bg-light text-secondary" title="Archive" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
+        @endif
     @endif
 </div>

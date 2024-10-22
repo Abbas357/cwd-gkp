@@ -69,6 +69,16 @@
                     <li><a href="{{ route('standardizations.create') }}"><i class="bi-arrow-right-short"></i>Create</a></li>
                 </ul>
             </li>
+            <li>
+                <a href="javascript:;" class="has-arrow">
+                    <div class="parent-icon"><i class="bi-cloud-arrow-down"></i></div>
+                    <div class="menu-title">Downloads</div>
+                </a>
+                <ul>
+                    <li><a href="{{ route('admin.downloads.index') }}"><i class="bi-arrow-right-short"></i>List</a></li>
+                    <li><a href="{{ route('admin.downloads.create') }}"><i class="bi-arrow-right-short"></i>Create</a></li>
+                </ul>
+            </li>
             <li class="menu-label">Others</li>
             <li>
                 <a class="has-arrow" href="javascript:;">

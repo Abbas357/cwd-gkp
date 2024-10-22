@@ -59,10 +59,14 @@ Route::middleware('auth')->group(function () {
         Route::prefix('downloads')->as('downloads.')->group(function () {
             Route::get('/', [DownloadController::class, 'index'])->name('index');
             Route::get('/create', [DownloadController::class, 'create'])->name('create');
+            Route::post('/', [DownloadController::class, 'store'])->name('store');
             Route::get('/{download}', [DownloadController::class, 'show'])->name('show');
             Route::get('/get/{download}', [DownloadController::class, 'showDetail'])->name('detail');
+            Route::patch('/publish/{download}', [DownloadController::class, 'publishDownload'])->name('publish');
+            Route::patch('/archive/{download}', [DownloadController::class, 'archiveDownload'])->name('archive');
             Route::patch('/update-field', [DownloadController::class, 'updateField'])->name('updateField');
             Route::patch('/upload-file', [DownloadController::class, 'uploadFile'])->name('uploadFile');
+            Route::delete('/{download}', [DownloadController::class, 'destroy'])->name('destroy');
         });
 
         Route::prefix('stories')->as('stories.')->group(function () {

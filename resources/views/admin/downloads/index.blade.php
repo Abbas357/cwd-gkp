@@ -3,32 +3,33 @@
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header">
-        <li class="breadcrumb-item active" aria-current="page">E-Standardization</li>
+        <li class="breadcrumb-item active" aria-current="page">Downloads</li>
     </x-slot>
 
     <div class="card-header mb-3">
         <ul class="nav nav-tabs nav-tabs-table">
             <li class="nav-item">
-                <a id="new-tab" class="nav-link" data-bs-toggle="tab" href="#new">New</a>
+                <a id="draft-tab" class="nav-link" data-bs-toggle="tab" href="#draft">Draft</a>
             </li>
             <li class="nav-item">
-                <a id="approved-tab" class="nav-link" data-bs-toggle="tab" href="#approved">Approved</a>
+                <a id="published-tab" class="nav-link" data-bs-toggle="tab" href="#published">Published</a>
             </li>
             <li class="nav-item">
-                <a id="rejected-tab" class="nav-link" data-bs-toggle="tab" href="#rejected">Rejected</a>
+                <a id="archived-tab" class="nav-link" data-bs-toggle="tab" href="#archived">Archived</a>
             </li>
         </ul>
     </div>
 
-    <table id="standardizations-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+    <table id="downloads-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
         <thead>
             <tr>
                 <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Product Name</th>
-                <th scope="col" class="p-3">Firm Name</th>
-                <th scope="col" class="p-3">Address</th>
-                <th scope="col" class="p-3">Mobile Number</th>
-                <th scope="col" class="p-3">Phone Number</th>
+                <th scope="col" class="p-3">File Name</th>
+                <th scope="col" class="p-3">File Type</th>
+                <th scope="col" class="p-3">File Category</th>
+                <th scope="col" class="p-3">File</th>
+                <th scope="col" class="p-3">Uploaded By</th>
+                <th scope="col" class="p-3">Status</th>
                 <th scope="col" class="p-3">Created At</th>
                 <th scope="col" class="p-3">Updated At</th>
                 <th scope="col" class="p-3">Actions</th>
@@ -45,26 +46,34 @@
 
     <script>
         $(document).ready(function() {
-            var table = initDataTable('#standardizations-datatable', {
-                ajaxUrl: "{{ route('admin.standardizations.index') }}"
+            var table = initDataTable('#downloads-datatable', {
+                ajaxUrl: "{{ route('admin.downloads.index') }}"
                 , columns: [{
                         data: "id"
                         , searchBuilderType: "num"
                     }
                     , {
-                        data: "product_name"
+                        data: "file_name"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "firm_name"
+                        data: "file_type"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "address"
+                        data: "file_category"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "mobile_number"
+                        data: "file"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "uploaded_by"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "status"
                         , searchBuilderType: "string"
                     }
                     , {
@@ -85,76 +94,74 @@
                 , defaultOrderColumn: 11
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
-                    targets: [0, 2, 5, 8, 10]
+                    targets: [0]
                     , visible: false
                 }]
             });
 
-            $("#standardizations-datatable").on('click', '.approve-btn', async function() {
-                const standardizationId = $(this).data("id");
-                const url = "{{ route('admin.standardizations.approve', ':id') }}".replace(':id', standardizationId);
+            $("#downloads-datatable").on('click', '.publish-btn', async function() {
+                const downloadId = $(this).data("id");
+                const message = $(this).data("type");
+                const url = "{{ route('admin.downloads.publish', ':id') }}".replace(':id', downloadId);
 
-                const result = await confirmAction('Do you want to approve this product?');
+                const result = await confirmAction(`Do you want to ${message} this file?`);
                 if (result && result.isConfirmed) {
                     const success = await fetchRequest(url, 'PATCH');
                     if (success) {
-                        $("#standardizations-datatable").DataTable().ajax.reload();
+                        $("#downloads-datatable").DataTable().ajax.reload();
                     }
                 }
             });
 
-            $("#standardizations-datatable").on('click', '.reject-btn', async function() {
-                const standardizationId = $(this).data("id");
-                const url = "{{ route('admin.standardizations.reject', ':id') }}".replace(':id', standardizationId);
+            $("#downloads-datatable").on('click', '.archive-btn', async function() {
+                const downloadId = $(this).data("id");
+                const url = "{{ route('admin.downloads.archive', ':id') }}".replace(':id', downloadId);
 
-                const {
-                    value: reason
-                } = await confirmWithInput({
-                    inputType: "textarea",
-                    text: 'Do you want to reject this product?'
-                    , inputValidator: (value) => {
-                        if (!value) {
-                            return 'You need to provide a reason!';
-                        }
-                    }
-                    , inputPlaceholder: 'Enter the reason for rejection'
-                    , confirmButtonText: 'Reject'
-                    , cancelButtonText: 'Cancel'
-                });
-
-                if (reason) {
-                    const success = await fetchRequest(url, 'PATCH', {
-                        reason
-                    });
+                const result = await confirmAction(`Do you want to archive this file?`);
+                if (result && result.isConfirmed) {
+                    const success = await fetchRequest(url, 'PATCH');
                     if (success) {
-                        $("#standardizations-datatable").DataTable().ajax.reload();
+                        $("#downloads-datatable").DataTable().ajax.reload();
+                    }
+                }
+            });
+
+            $("#downloads-datatable").on('click', '.delete-btn', async function() {
+                const downloadId = $(this).data("id");
+                const url = "{{ route('admin.downloads.destroy', ':id') }}".replace(':id', downloadId);
+
+                const result = await confirmAction(`Do you want to delete this file?`);
+                if (result && result.isConfirmed) {
+                    const success = await fetchRequest(url, 'DELETE');
+                    if (success) {
+                        $("#downloads-datatable").DataTable().ajax.reload();
                     }
                 }
             });
 
             hashTabsNavigator({
                 table: table
-                , dataTableUrl: "{{ route('admin.standardizations.index') }}"
+                , dataTableUrl: "{{ route('admin.downloads.index') }}"
                 , tabToHashMap: {
-                    "#new-tab": '#new'
-                    , "#approved-tab": '#approved'
-                    , "#rejected-tab": '#rejected'
+                    "#draft-tab": '#draft'
+                    , "#published-tab": '#published'
+                    , "#archived-tab": '#archived'
                 , }
                 , hashToParamsMap: {
-                    '#new': {
-                        status: 0
+                    '#draft': {
+                        status: 'draft'
                     }
-                    , '#approved': {
-                        status: 1
+                    , '#published': {
+                        status: 'published'
                     }
-                    , '#rejected': {
-                        status: 2
+                    , '#archived': {
+                        status: 'archived'
                     }
                 , }
-                , defaultHash: '#new'
+                , defaultHash: '#draft'
             });
 
-            $('#standardizations-datatable').colResizable({
+            $('#downloads-datatable').colResizable({
                 liveDrag: true
                 , resizeMode: 'overflow'
                 , postbackSafe: true
@@ -164,31 +171,9 @@
             , });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.standardizations.showCard', ':id') }}",
-                btnSelector: '.card-btn',
-                title: 'Standardization Card',
-                actionButtonName: 'Download Card',
-            }).then((modal) => {
-                const actionBtn = $('#'+modal).find('button[type="submit"]');
-                actionBtn.on('click', function() {
-                    var div = $('#capture')[0];
-                    html2canvas(div, {
-                        scale: 2
-                    }).then(function(canvas) {
-                        canvas.toBlob(function(blob) {
-                            var link = $('<a></a>')[0];
-                            link.href = URL.createObjectURL(blob);
-                            link.download = `card-${uniqId(6)}.png`;
-                            link.click();
-                        });
-                    });
-                })
-            });
-
-            pushStateModal({
-                fetchUrl: "{{ route('admin.standardizations.showDetail', ':id') }}",
+                fetchUrl: "{{ route('admin.downloads.detail', ':id') }}",
                 btnSelector: '.view-btn',
-                title: 'Standardization Details',
+                title: 'Download Details',
                 modalSize: 'lg',
             });
             

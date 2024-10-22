@@ -17,7 +17,7 @@
                             </p>
                         </div>
                         <div class="service-icon p-4">
-                            <i class="fa fa-globe fa-4x text-primary"></i>
+                            <i class="bi bi-globe fs-1 text-primary"></i>
                         </div>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
                             </p>
                         </div>
                         <div class="service-icon p-4">
-                            <i class="fa fa-hotel fa-4x text-primary"></i>
+                            <i class="bi bi-bank fs-1 text-primary"></i>
                         </div>
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                 <div class="col-12">
                     <div class="service-content-inner d-flex align-items-center bg-white border border-primary rounded p-4 ps-0">
                         <div class="service-icon p-4">
-                            <i class="fa fa-globe fa-4x text-primary"></i>
+                            <i class="bi bi-globe fs-1 text-primary"></i>
                         </div>
                         <div class="service-content">
                             <h5 class="mb-4">WorldWide Tours</h5>
@@ -60,7 +60,7 @@
                 <div class="col-12">
                     <div class="service-content-inner d-flex align-items-center bg-white border border-primary rounded p-4 ps-0">
                         <div class="service-icon p-4">
-                            <i class="fa fa-hotel fa-4x text-primary"></i>
+                            <i class="bi bi-bank fs-1 text-primary"></i>
                         </div>
                         <div class="service-content">
                             <h5 class="mb-4">Hotel Reservation</h5>

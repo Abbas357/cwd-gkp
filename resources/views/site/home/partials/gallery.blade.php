@@ -39,11 +39,11 @@
                             <div class="gallery-content">
                                 <div class="gallery-info">
                                     <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
+                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
                                 </div>
                             </div>
                             <div class="gallery-plus-icon">
-                                <a href="img/gallery-1.jpg" data-lightbox="gallery-1" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
+                                <a href="img/gallery-1.jpg" data-lightbox="gallery-1" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
                             </div>
                         </div>
                     </div>
@@ -53,11 +53,11 @@
                             <div class="gallery-content">
                                 <div class="gallery-info">
                                     <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
+                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
                                 </div>
                             </div>
                             <div class="gallery-plus-icon">
-                                <a href="img/gallery-2.jpg" data-lightbox="gallery-2" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
+                                <a href="img/gallery-2.jpg" data-lightbox="gallery-2" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
                             </div>
                         </div>
                     </div>
@@ -67,11 +67,11 @@
                             <div class="gallery-content">
                                 <div class="gallery-info">
                                     <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
+                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
                                 </div>
                             </div>
                             <div class="gallery-plus-icon">
-                                <a href="img/gallery-3.jpg" data-lightbox="gallery-3" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
+                                <a href="img/gallery-3.jpg" data-lightbox="gallery-3" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
                             </div>
                         </div>
                     </div>
@@ -81,11 +81,11 @@
                             <div class="gallery-content">
                                 <div class="gallery-info">
                                     <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
+                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
                                 </div>
                             </div>
                             <div class="gallery-plus-icon">
-                                <a href="img/gallery-4.jpg" data-lightbox="gallery-4" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
+                                <a href="img/gallery-4.jpg" data-lightbox="gallery-4" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
                             </div>
                         </div>
                     </div>
@@ -95,11 +95,11 @@
                             <div class="gallery-content">
                                 <div class="gallery-info">
                                     <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
+                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
                                 </div>
                             </div>
                             <div class="gallery-plus-icon">
-                                <a href="img/gallery-5.jpg" data-lightbox="gallery-5" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
+                                <a href="img/gallery-5.jpg" data-lightbox="gallery-5" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
                             </div>
                         </div>
                     </div>
@@ -109,11 +109,11 @@
                             <div class="gallery-content">
                                 <div class="gallery-info">
                                     <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
+                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
                                 </div>
                             </div>
                             <div class="gallery-plus-icon">
-                                <a href="img/gallery-6.jpg" data-lightbox="gallery-6" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
+                                <a href="img/gallery-6.jpg" data-lightbox="gallery-6" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
                             </div>
                         </div>
                     </div>
@@ -123,11 +123,11 @@
                             <div class="gallery-content">
                                 <div class="gallery-info">
                                     <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
+                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
                                 </div>
                             </div>
                             <div class="gallery-plus-icon">
-                                <a href="img/gallery-7.jpg" data-lightbox="gallery-7" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
+                                <a href="img/gallery-7.jpg" data-lightbox="gallery-7" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
                             </div>
                         </div>
                     </div>
@@ -137,11 +137,11 @@
                             <div class="gallery-content">
                                 <div class="gallery-info">
                                     <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
+                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
                                 </div>
                             </div>
                             <div class="gallery-plus-icon">
-                                <a href="img/gallery-8.jpg" data-lightbox="gallery-8" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
+                                <a href="img/gallery-8.jpg" data-lightbox="gallery-8" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
                             </div>
                         </div>
                     </div>
@@ -151,11 +151,11 @@
                             <div class="gallery-content">
                                 <div class="gallery-info">
                                     <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
+                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
                                 </div>
                             </div>
                             <div class="gallery-plus-icon">
-                                <a href="img/gallery-9.jpg" data-lightbox="gallery-9" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
+                                <a href="img/gallery-9.jpg" data-lightbox="gallery-9" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
                             </div>
                         </div>
                     </div>
@@ -165,11 +165,11 @@
                             <div class="gallery-content">
                                 <div class="gallery-info">
                                     <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
+                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
                                 </div>
                             </div>
                             <div class="gallery-plus-icon">
-                                <a href="img/gallery-10.jpg" data-lightbox="gallery-10" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
+                                <a href="img/gallery-10.jpg" data-lightbox="gallery-10" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
                             </div>
                         </div>
                     </div>
@@ -183,11 +183,11 @@
                             <div class="gallery-content">
                                 <div class="gallery-info">
                                     <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
+                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
                                 </div>
                             </div>
                             <div class="gallery-plus-icon">
-                                <a href="img/gallery-2.jpg" data-lightbox="gallery-2" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
+                                <a href="img/gallery-2.jpg" data-lightbox="gallery-2" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
                             </div>
                         </div>
                     </div>
@@ -197,11 +197,11 @@
                             <div class="gallery-content">
                                 <div class="gallery-info">
                                     <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
+                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
                                 </div>
                             </div>
                             <div class="gallery-plus-icon">
-                                <a href="img/gallery-3.jpg" data-lightbox="gallery-3" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
+                                <a href="img/gallery-3.jpg" data-lightbox="gallery-3" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
                             </div>
                         </div>
                     </div>
@@ -215,11 +215,11 @@
                             <div class="gallery-content">
                                 <div class="gallery-info">
                                     <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
+                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
                                 </div>
                             </div>
                             <div class="gallery-plus-icon">
-                                <a href="img/gallery-2.jpg" data-lightbox="gallery-2" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
+                                <a href="img/gallery-2.jpg" data-lightbox="gallery-2" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
                             </div>
                         </div>
                     </div>
@@ -229,11 +229,11 @@
                             <div class="gallery-content">
                                 <div class="gallery-info">
                                     <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
+                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
                                 </div>
                             </div>
                             <div class="gallery-plus-icon">
-                                <a href="img/gallery-3.jpg" data-lightbox="gallery-3" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
+                                <a href="img/gallery-3.jpg" data-lightbox="gallery-3" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
                             </div>
                         </div>
                     </div>
@@ -247,11 +247,11 @@
                             <div class="gallery-content">
                                 <div class="gallery-info">
                                     <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
+                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
                                 </div>
                             </div>
                             <div class="gallery-plus-icon">
-                                <a href="img/gallery-2.jpg" data-lightbox="gallery-2" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
+                                <a href="img/gallery-2.jpg" data-lightbox="gallery-2" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
                             </div>
                         </div>
                     </div>
@@ -261,11 +261,11 @@
                             <div class="gallery-content">
                                 <div class="gallery-info">
                                     <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
+                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
                                 </div>
                             </div>
                             <div class="gallery-plus-icon">
-                                <a href="img/gallery-3.jpg" data-lightbox="gallery-3" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
+                                <a href="img/gallery-3.jpg" data-lightbox="gallery-3" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
                             </div>
                         </div>
                     </div>
@@ -279,11 +279,11 @@
                             <div class="gallery-content">
                                 <div class="gallery-info">
                                     <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
+                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
                                 </div>
                             </div>
                             <div class="gallery-plus-icon">
-                                <a href="img/gallery-2.jpg" data-lightbox="gallery-2" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
+                                <a href="img/gallery-2.jpg" data-lightbox="gallery-2" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
                             </div>
                         </div>
                     </div>
@@ -293,11 +293,11 @@
                             <div class="gallery-content">
                                 <div class="gallery-info">
                                     <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="fa fa-arrow-right ms-2"></i></a>
+                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
                                 </div>
                             </div>
                             <div class="gallery-plus-icon">
-                                <a href="img/gallery-3.jpg" data-lightbox="gallery-3" class="my-auto"><i class="fas fa-plus fa-2x text-white"></i></a>
+                                <a href="img/gallery-3.jpg" data-lightbox="gallery-3" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
                             </div>
                         </div>
                     </div>

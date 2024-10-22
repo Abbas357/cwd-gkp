@@ -7,6 +7,8 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Database\Eloquent\Builder;
+
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 
@@ -15,6 +17,13 @@ class Download extends Model implements HasMedia
     use HasFactory, InteractsWithMedia, LogsActivity;
 
     protected $guarded = [];
+
+    protected function casts(): array
+    {
+        return [
+            'published_at' => 'datetime',
+        ];
+    }
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -29,25 +38,17 @@ class Download extends Model implements HasMedia
             });
     }
 
+    protected static function booted()
+    {
+        static::addGlobalScope('published', function (Builder $builder) {
+            $builder->where('status', 'published')->whereNotNull('published_at');
+        });
+    }
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('downloads')
-        ->singleFile()
-        ->acceptsMimeTypes([
-            'image/jpeg',
-            'image/png',
-            'image/gif',
-            'application/pdf',
-            'application/msword',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'application/vnd.ms-excel',
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'application/vnd.ms-powerpoint',
-            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-            'text/plain',
-            'application/zip',
-            'application/x-rar-compressed',
-          ]);
+        ->singleFile();
     }
 
     public function user() {
