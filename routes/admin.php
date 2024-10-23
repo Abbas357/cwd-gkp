@@ -13,6 +13,9 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\NewsLetterController;
+use App\Http\Controllers\PageController;
 
 Route::middleware('auth')->group(function () {
     Route::prefix('admin')->as('admin.')->group(function () {
@@ -81,6 +84,39 @@ Route::middleware('auth')->group(function () {
             Route::patch('/update/field', [GalleryController::class, 'updateField'])->name('updateField');
             Route::patch('/upload/file', [GalleryController::class, 'uploadFile'])->name('uploadFile');
             Route::delete('/{gallery}', [GalleryController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('newsletter')->as('newsletter.')->group(function () {
+            Route::get('/', [NewsLetterController::class, 'index'])->name('index');
+            Route::post('/', [NewsLetterController::class, 'store'])->name('store');
+            Route::get('/mass-email', [NewsLetterController::class, 'createMassEmail'])->name('create_mass_email');
+            Route::post('/mass-email', [NewsLetterController::class, 'sendMassEmail'])->name('send_mass_email');
+        });
+
+        Route::prefix('news')->as('news.')->group(function () {
+            Route::get('/', [NewsController::class, 'index'])->name('index');
+            Route::get('/create', [NewsController::class, 'create'])->name('create');
+            Route::post('/', [NewsController::class, 'store'])->name('store');
+            Route::get('/{news}', [NewsController::class, 'show'])->name('show');
+            Route::get('/get/{news}', [NewsController::class, 'showDetail'])->name('detail');
+            Route::patch('/publish/{news}', [NewsController::class, 'publishNews'])->name('publish');
+            Route::patch('/archive/{news}', [NewsController::class, 'archiveNews'])->name('archive');
+            Route::patch('/update/field', [NewsController::class, 'updateField'])->name('updateField');
+            Route::patch('/upload/file', [NewsController::class, 'uploadFile'])->name('uploadFile');
+            Route::delete('/{news}', [NewsController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('pages')->as('pages.')->group(function () {
+            Route::get('/', [PageController::class, 'index'])->name('index');
+            Route::get('/create', [PageController::class, 'create'])->name('create');
+            Route::post('/', [PageController::class, 'store'])->name('store');
+            Route::get('/{page}', [PageController::class, 'show'])->name('show');
+            Route::get('/get/{page}', [PageController::class, 'showDetail'])->name('detail');
+            Route::patch('/publish/{page}', [PageController::class, 'publishNews'])->name('publish');
+            Route::patch('/archive/{page}', [PageController::class, 'archiveNews'])->name('archive');
+            Route::patch('/update/field', [PageController::class, 'updateField'])->name('updateField');
+            Route::patch('/upload/file', [PageController::class, 'uploadFile'])->name('uploadFile');
+            Route::delete('/{page}', [PageController::class, 'destroy'])->name('destroy');
         });
 
         Route::prefix('stories')->as('stories.')->group(function () {

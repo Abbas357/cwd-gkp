@@ -40,7 +40,7 @@
                     { data: 'properties', searchBuilderType: 'string', orderable: false, searchable: false },
                     { data: 'created_at', searchBuilderType: 'date' }
                 ]
-                , defaultOrderColumn: 8
+                , defaultOrderColumn: 6
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
                     targets: [0]

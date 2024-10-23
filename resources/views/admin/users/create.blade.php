@@ -10,13 +10,6 @@
     </x-slot>
 
     <div class="wrapper">
-        <div class="row mb-3 d-none">
-            <div class="col-md-4 mx-auto">
-                <label for="load-users">All Users</label>
-                <select class="form-select form-select-md" data-placeholder="Choose" id="load-users" name="user">
-                </select>
-            </div>
-        </div>
         <form class="needs-validation" action="{{ route('admin.users.store') }}" method="post" enctype="multipart/form-data" novalidate>
             @csrf
             <div class="card">
@@ -274,38 +267,6 @@
                 , dropdownParent: $('#permissions').parent()
                 , allowClear: true
                 , closeOnSelect: false
-            });
-
-            $('#load-users').select2({
-                theme: "bootstrap-5"
-                , dropdownParent: $('#load-users').parent()
-                , ajax: {
-                    url: '{{ route("admin.users.api") }}'
-                    , dataType: 'json'
-                    , data: function(params) {
-                        return {
-                            q: params.term
-                            , page: params.page || 1
-                        };
-                    }
-                    , processResults: function(data, params) {
-                        params.page = params.page || 1;
-                        return {
-                            results: data.items
-                            , pagination: {
-                                more: data.pagination.more
-                            }
-                        };
-                    }
-                    , cache: true
-                }
-                , minimumInputLength: 0
-                , templateResult(user) {
-                    return user.name;
-                }
-                , templateSelection(user) {
-                    return user.name;
-                }
             });
 
         });

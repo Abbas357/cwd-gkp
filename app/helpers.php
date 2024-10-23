@@ -15,6 +15,6 @@ function getProfilePic(App\Models\User $user): string
 function categoryType()
 {
     return [
-        'designation', 'office', 'file_type', 'file_category', 'contractor_category', 'provincial_entity', 'gallery_type'
+        'designation', 'office', 'file_type', 'file_category', 'contractor_category', 'provincial_entity', 'gallery_type', 'news_category', 'page_type'
     ];
 }

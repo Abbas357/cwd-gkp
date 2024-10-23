@@ -100,9 +100,9 @@
             });
 
             $("#gallery-datatable").on('click', '.publish-btn', async function() {
-                const downloadId = $(this).data("id");
+                const galleryId = $(this).data("id");
                 const message = $(this).data("type");
-                const url = "{{ route('admin.gallery.publish', ':id') }}".replace(':id', downloadId);
+                const url = "{{ route('admin.gallery.publish', ':id') }}".replace(':id', galleryId);
 
                 const result = await confirmAction(`Do you want to ${message} this file?`);
                 if (result && result.isConfirmed) {
@@ -114,8 +114,8 @@
             });
 
             $("#gallery-datatable").on('click', '.archive-btn', async function() {
-                const downloadId = $(this).data("id");
-                const url = "{{ route('admin.gallery.archive', ':id') }}".replace(':id', downloadId);
+                const galleryId = $(this).data("id");
+                const url = "{{ route('admin.gallery.archive', ':id') }}".replace(':id', galleryId);
 
                 const result = await confirmAction(`Do you want to archive this file?`);
                 if (result && result.isConfirmed) {
@@ -127,8 +127,8 @@
             });
 
             $("#gallery-datatable").on('click', '.delete-btn', async function() {
-                const downloadId = $(this).data("id");
-                const url = "{{ route('admin.gallery.destroy', ':id') }}".replace(':id', downloadId);
+                const galleryId = $(this).data("id");
+                const url = "{{ route('admin.gallery.destroy', ':id') }}".replace(':id', galleryId);
 
                 const result = await confirmAction(`Do you want to delete this image?`);
                 if (result && result.isConfirmed) {

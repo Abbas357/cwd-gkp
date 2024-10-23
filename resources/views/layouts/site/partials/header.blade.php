@@ -342,6 +342,13 @@
             </div>
         </div>
     </div>
+    @if (session('success'))
+        <div class="container d-flex justify-content-center pt-2 bg-light">
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        </div>
+    @endif
 </header>
 <script>
     function loadZuckLibraries(callback) {
@@ -372,129 +379,118 @@
             loadZuckLibraries(function() {
                 storiesContent.classList.toggle('d-none');
 
-                // Remove Seen Users - Start
+                // Prepare seenUserIds
                 let contentSeenItems = localStorage.getItem('zuck-stories-content-seenItems');
                 contentSeenItems = contentSeenItems ? JSON.parse(contentSeenItems) : {};
 
                 let seenUserIds = Object.keys(contentSeenItems);
 
-                fetch("{{ route('stories.checkExpired') }}", {
-                        method: 'POST'
-                        , headers: {
-                            'Content-Type': 'application/json'
-                            , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }
-                        , body: JSON.stringify({
-                            seenUserIds: seenUserIds
-                        })
+                // Fetch stories and handle expired users in one request
+                fetch("{{ route('stories.get') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        seenUserIds: seenUserIds
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            data.users.forEach(userId => {
+                })
+                .then(response => response.json())
+                .then(data => {
+                    spinner.classList.remove('show');
+                    if (data.success) {
+                        let storiesData = data.data.result;
+
+                        if (data.expiredUsers && data.expiredUsers.length > 0) {
+                            data.expiredUsers.forEach(userId => {
                                 delete contentSeenItems[userId];
                             });
-
                             localStorage.setItem('zuck-stories-content-seenItems', JSON.stringify(contentSeenItems));
                         }
-                    });
-                    // Remove Seen Users - End
 
+                        storiesContent.innerHTML = '';
 
-                fetch("{{ route('stories.get') }}")
-                    .then(response => response.json())
-                    .then(data => {
-                        spinner.classList.remove('show');
-                        if (data.success) {
-                            let storiesData = data.data.result;
-                            storiesContent.innerHTML = '';
+                        let unviewedSeenItems = localStorage.getItem('zuck-unviewed-stories-seenItems');
+                        contentSeenItems = localStorage.getItem('zuck-stories-content-seenItems');
 
-                            let unviewedSeenItems = localStorage.getItem('zuck-unviewed-stories-seenItems');
-                            let contentSeenItems = localStorage.getItem('zuck-stories-content-seenItems');
+                        unviewedSeenItems = unviewedSeenItems ? JSON.parse(unviewedSeenItems) : {};
+                        contentSeenItems = contentSeenItems ? JSON.parse(contentSeenItems) : {};
 
-                            unviewedSeenItems = unviewedSeenItems ? JSON.parse(unviewedSeenItems) : {};
-                            contentSeenItems = contentSeenItems ? JSON.parse(contentSeenItems) : {};
+                        storiesData.sort((a, b) => {
+                            let aViewed = unviewedSeenItems[a.id] || contentSeenItems[a.id] || false;
+                            let bViewed = unviewedSeenItems[b.id] || contentSeenItems[b.id] || false;
 
-                            storiesData.sort((a, b) => {
-                                let aViewed = unviewedSeenItems[a.id] || contentSeenItems[a.id] || false;
-                                let bViewed = unviewedSeenItems[b.id] || contentSeenItems[b.id] || false;
+                            if (aViewed && !bViewed) return 1;
+                            if (!aViewed && bViewed) return -1;
+                            return 0;
+                        });
 
-                                if (aViewed && !bViewed) return 1;
-                                if (!aViewed && bViewed) return -1;
-                                return 0;
-                            });
-
-                            new Zuck(storiesContent, {
-                                backNative: true
-                                , autoFullScreen: false
-                                , skin: 'snapgram'
-                                , avatars: true
-                                , list: false
-                                , cubeEffect: true
-                                , localStorage: true
-                                , reactive: false
-                                , stories: storiesData
-                                , callbacks: {
-                                    onView: function(storyId, callback) {
-                                        incrementViewCount(storyId);
-                                        if (typeof callback === 'function') {
-                                            callback();
-                                        }
-                                    }
-                                    , onClose: function(storyId, callback) {
-                                        callback();
-                                    },
-
-                                    onOpen: function(storyId, callback) {
-                                        callback();
-                                    },
-
-                                    onNextItem: function(storyId, currentItem, callback) {
-                                        callback();
-                                    },
-
-                                    onEnd: function(storyId, callback) {
-                                        callback();
-                                    },
-
-                                    onNavigateItem: function(storyId, direction, callback) {
-                                        callback();
-                                    },
-
-                                    onDataUpdate: function(storyId, callback) {
+                        new Zuck(storiesContent, {
+                            backNative: true,
+                            autoFullScreen: false,
+                            skin: 'snapgram',
+                            avatars: true,
+                            list: false,
+                            cubeEffect: true,
+                            localStorage: true,
+                            reactive: false,
+                            stories: storiesData,
+                            callbacks: {
+                                onView: function(storyId, callback) {
+                                    incrementViewCount(storyId);
+                                    if (typeof callback === 'function') {
                                         callback();
                                     }
+                                },
+                                onClose: function(storyId, callback) {
+                                    callback();
+                                },
+                                onOpen: function(storyId, callback) {
+                                    callback();
+                                },
+                                onNextItem: function(storyId, currentItem, callback) {
+                                    callback();
+                                },
+                                onEnd: function(storyId, callback) {
+                                    callback();
+                                },
+                                onNavigateItem: function(storyId, direction, callback) {
+                                    callback();
+                                },
+                                onDataUpdate: function(storyId, callback) {
+                                    callback();
                                 }
-                            });
-
-                            function incrementViewCount(storyId) {
-                                const url = "{{ route('stories.viewed', ':id') }}".replace(':id', storyId);
-                                fetch(url, {
-                                        method: 'PATCH'
-                                        , headers: {
-                                            'Content-Type': 'application/json'
-                                            , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                                        }
-                                    })
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        console.log('View count incremented:', data);
-                                    })
-                                    .catch(error => {
-                                        console.error('Error incrementing view count:', error);
-                                    });
                             }
+                        });
 
-                        } else {
-                            storiesContent.innerHTML = errorMessage;
+                        function incrementViewCount(storyId) {
+                            const url = "{{ route('stories.viewed', ':id') }}".replace(':id', storyId);
+                            fetch(url, {
+                                    method: 'PATCH',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log('View count incremented:', data);
+                                })
+                                .catch(error => {
+                                    console.error('Error incrementing view count:', error);
+                                });
                         }
-                    })
-                    .catch(error => {
-                        spinner.classList.remove('show');
+
+                    } else {
                         storiesContent.innerHTML = errorMessage;
-                    });
+                    }
+                })
+                .catch(error => {
+                    spinner.classList.remove('show');
+                    storiesContent.innerHTML = errorMessage;
+                });
             });
         });
     });
-
 </script>

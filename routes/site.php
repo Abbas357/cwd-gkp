@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StoryController;
+use App\Http\Controllers\NewsLetterController;
 use App\Http\Controllers\EStandardizationController;
 use App\Http\Controllers\ContractorRegistrationController;
 
@@ -19,7 +20,11 @@ Route::prefix('standardizations')->as('standardizations.')->group(function () {
 });
 
 Route::prefix('stories')->as('stories.')->group(function () {
-    Route::get('/', [StoryController::class, 'getStories'])->name('get');
-    Route::post('/check', [StoryController::class, 'checkExpired'])->name('checkExpired');
+    Route::post('/', [StoryController::class, 'getStories'])->name('get');
     Route::patch('/viewed/{story}', [StoryController::class, 'incrementSeen'])->name('viewed');
+});
+
+Route::prefix('newsletter')->as('newsletter.')->group(function () {
+    Route::post('/', [NewsLetterController::class, 'store'])->name('store');
+    Route::get('/unsubscribe/{token}', [NewsLetterController::class, 'unsubscribe'])->name('unsubscribe');
 });

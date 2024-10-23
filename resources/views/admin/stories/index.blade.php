@@ -53,7 +53,7 @@
                     }
                     , {
                         data: "image"
-                        , searchBuilderType: "null"
+                        , searchBuilderType: "string"
                     }
                     , {
                         data: "user"

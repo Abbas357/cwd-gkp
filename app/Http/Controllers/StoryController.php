@@ -12,12 +12,11 @@ use App\Http\Requests\StoreStoryRequest;
 
 class StoryController extends Controller
 {
-
     public function index(Request $request)
     {
         $published = $request->query('published');
 
-        $stories = Story::query();
+        $stories = Story::query()->latest('id');
 
         $stories->when($published !== null, function ($query) use ($published) {
             if ($published === '1') {
@@ -57,12 +56,26 @@ class StoryController extends Controller
 
             return $dataTable->toJson();
         }
-
         return view('admin.stories.index');
     }
 
-    public function getStories()
+    public function getStories(Request $request)
     {
+        $seenUserIds = $request->input('seenUserIds', []);
+        // Determine expired users
+        $expiredUsers = [];
+
+        if (!empty($seenUserIds)) {
+            $usersWithExpiredStories = User::whereIn('id', $seenUserIds)
+                ->whereDoesntHave('stories', function ($query) {
+                    $query->where('created_at', '>=', now()->subDay());
+                })
+                ->pluck('id')
+                ->toArray();
+
+            $expiredUsers = $usersWithExpiredStories;
+        }
+        // Fetch stories as before
         $users = User::whereHas('stories', function ($query) {
             $query->where('created_at', '>=', now()->subDay());
         })->with(['stories' => function ($query) {
@@ -71,10 +84,11 @@ class StoryController extends Controller
 
         if ($users->isEmpty()) {
             return response()->json([
-                'success' => false,
+                'success' => true,
                 'data' => [
                     'result' => 'No stories available.',
                 ],
+                'expiredUsers' => $expiredUsers,
             ]);
         }
 
@@ -111,9 +125,9 @@ class StoryController extends Controller
             'data'    => [
                 'result' => $storiesData,
             ],
+            'expiredUsers' => $expiredUsers,
         ]);
     }
-
 
     public function create()
     {
@@ -161,27 +175,6 @@ class StoryController extends Controller
             return response()->json(['success' => 'Story has been deleted successfully.']);
         }
         return response()->json(['error' => 'Story can\'t be deleted.']);
-    }
-
-    public function checkExpired(Request $request)
-    {
-        $seenUserIds = $request->input('seenUserIds', []);
-
-        $users = User::whereIn('id', $seenUserIds)->get();
-        $seenUsers = [];
-
-        foreach ($users as $user) {
-            if (!$user->stories()->where('created_at', '>=', Carbon::now()->subHours(24))->exists()) {
-                $seenUsers[] = $user->id;
-            }
-        }
-
-        $success = !empty($seenUsers);
-
-        return response()->json([
-            'success' => $success,
-            'users' => $seenUsers
-        ]);
     }
 
     public function incrementSeen($userId)

@@ -28,7 +28,7 @@ class Gallery extends Model implements HasMedia
     {
         return LogOptions::defaults()
             ->logAll()
-            ->logExcept(['id', 'updated_at', 'created_at'])
+            ->logExcept(['id', 'updated_at', 'description', 'created_at'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
             ->useLogName('galleries')

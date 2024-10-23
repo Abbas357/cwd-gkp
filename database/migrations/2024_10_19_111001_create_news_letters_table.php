@@ -14,13 +14,11 @@ return new class extends Migration
         Schema::create('news_letters', function (Blueprint $table) {
             $table->id();
             $table->string('email')->unique();
-            $table->boolean('is_subscribed')->default(true);
             $table->timestamp('subscribed_at')->nullable();
             $table->timestamp('unsubscribed_at')->nullable();
             $table->string('unsubscribe_token')->nullable();
             $table->string('ip_address')->nullable();
-            $table->string('device_info')->nullable();
-            $table->string('user_agent')->nullable();
+            $table->text('device_info')->nullable();
             $table->timestamps();
         });
         

@@ -52,7 +52,7 @@
         <div class="g-4 align-items-center">
             <div class="text-center mb-md-0 text-white">
                 <a class="text-white" href="https://cwd.gkp.pk">&copy; Communication & Works Department, Govt. of Khyber Pakhtunkhwa</a>
-                <div>Developed By <a class="text-info" href="https://cwd.gkp.pk">IT Cell, C&W Department</a></div>
+                <div>Developed and maintained by <a class="text-info" href="https://cwd.gkp.pk">IT Cell, C&W Department</a></div>
             </div>
         </div>
     </div>

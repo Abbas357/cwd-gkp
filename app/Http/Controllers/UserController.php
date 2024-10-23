@@ -20,7 +20,7 @@ class UserController extends Controller
     {
         $active = $request->query('active', null);
 
-        $users = User::query()->withoutGlobalScope('active');
+        $users = User::query()->latest('id')->withoutGlobalScope('active');
 
         $users->when($active !== null, function ($query) use ($active) {
             $query->where('is_active', $active);
@@ -62,8 +62,8 @@ class UserController extends Controller
     public function users(Request $request)
     {
         $search = $request->get('q');
-        $users = User::where('name', 'LIKE', "%{$search}%")
-            ->select('id', 'name')
+        $users = User::where('designation', 'LIKE', "%{$search}%")
+            ->select('id', 'designation')
             ->paginate(10);
 
         return response()->json([

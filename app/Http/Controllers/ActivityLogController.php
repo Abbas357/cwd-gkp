@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Spatie\Activitylog\Models\Activity;
@@ -11,10 +10,10 @@ class ActivityLogController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $logs = Activity::query()->latest();
+        $logs = Activity::query()->latest('id');
 
         if (!$request->user()->isAdmin()) {
-            $logs = $request->user()->logs()->latest()->getQuery();
+            $logs = $request->user()->logs()->latest('id')->getQuery();
         }
 
         if ($request->ajax()) {

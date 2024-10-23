@@ -12,10 +12,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug')->unique();
-            $table->text('content')->nullable();
-            $table->text('summary')->nullable();
-            $table->foreignId('author_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('category_id')->nullable()->constrained('news_categories')->nullOnDelete();
+            $table->longText('content')->nullable();
+            $table->string('category')->nullable();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
             $table->timestamp('published_at')->nullable()->default(null);
             $table->foreignId('published_by')->nullable()->constrained('users');

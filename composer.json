@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.2",
         "endroid/qr-code": "^5.1",
+        "jenssegers/agent": "^2.6",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
         "protoqol/prequel": "^1.22",

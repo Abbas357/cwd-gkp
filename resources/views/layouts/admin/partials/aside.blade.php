@@ -82,6 +82,16 @@
                     <li><a href="{{ route('admin.gallery.create') }}"><i class="bi-arrow-right-short"></i>Create</a></li>
                 </ul>
             </li>
+            <li>
+                <a href="javascript:;" class="has-arrow">
+                    <div class="parent-icon"><i class="bi-newspaper"></i></div>
+                    <div class="menu-title">News</div>
+                </a>
+                <ul>
+                    <li><a href="{{ route('admin.news.index') }}"><i class="bi-arrow-right-short"></i>List</a></li>
+                    <li><a href="{{ route('admin.news.create') }}"><i class="bi-arrow-right-short"></i>Create</a></li>
+                </ul>
+            </li>
             <li class="menu-label">Others</li>
             <li>
                 <a href="javascript:;" class="has-arrow">
@@ -91,6 +101,16 @@
                 <ul>
                     <li><a href="{{ route('admin.districts.index') }}"><i class="bi-arrow-right-short"></i>Districts</a></li>
                     <li><a href="{{ route('admin.categories.index') }}"><i class="bi-arrow-right-short"></i>Categories</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;" class="has-arrow">
+                    <div class="parent-icon"><i class="bi-megaphone"></i></div>
+                    <div class="menu-title">Newsletter</div>
+                </a>
+                <ul>
+                    <li><a href="{{ route('admin.newsletter.create_mass_email') }}"><i class="bi-arrow-right-short"></i>Send Email</a></li>
+                    <li><a href="{{ route('admin.newsletter.index') }}"><i class="bi-arrow-right-short"></i>All Emails</a></li>
                 </ul>
             </li>
             {{-- <li>

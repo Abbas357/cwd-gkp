@@ -16,7 +16,7 @@ class GalleryController extends Controller
     {
         $status = $request->query('status', null);
 
-        $galleries = Gallery::query()->latest()->withoutGlobalScope('published');
+        $galleries = Gallery::query()->latest('id')->withoutGlobalScope('published');
 
         $galleries->when($status !== null, function ($query) use ($status) {
             $query->where('status', $status);

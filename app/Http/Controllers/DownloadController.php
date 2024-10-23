@@ -14,7 +14,7 @@ class DownloadController extends Controller
     {
         $status = $request->query('status', null);
 
-        $downloads = Download::query()->latest()->withoutGlobalScope('published');
+        $downloads = Download::query()->latest('id')->withoutGlobalScope('published');
 
         $downloads->when($status !== null, function ($query) use ($status) {
             $query->where('status', $status);
@@ -158,7 +158,7 @@ class DownloadController extends Controller
         $download = Download::withoutGlobalScope('published')->findOrFail($request->id);
 
         if (in_array($download->status, ['published', 'archived'])) {
-            return response()->json(['error' => 'Published or Archived products cannot be updated'], 403);
+            return response()->json(['error' => 'Published or Archived downlods cannot be updated'], 403);
         }
 
         $download->{$request->field} = $request->value;
@@ -182,7 +182,7 @@ class DownloadController extends Controller
         $download = Download::withoutGlobalScope('published')->findOrFail($request->id);
 
         if (in_array($download->status, ['published', 'archived'])) {
-            return response()->json(['error' => 'Published or Archived products cannot be updated'], 403); 
+            return response()->json(['error' => 'Published or Archived downloads cannot be updated'], 403); 
         }
 
         try {
@@ -204,6 +204,6 @@ class DownloadController extends Controller
                 return response()->json(['success' => 'File has been deleted successfully.']);
             }
         }
-        return response()->json(['error' => 'Published, Archived, or Draft files that were once published cannot be deleted.']);
+        return response()->json(['error' => 'Published, Archived, or Draft downloads that were once published cannot be deleted.']);
     }
 }
