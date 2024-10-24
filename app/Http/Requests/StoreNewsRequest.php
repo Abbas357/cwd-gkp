@@ -15,7 +15,8 @@ class StoreNewsRequest extends FormRequest
     {
         return [
             'title' => 'required',
-            'attachment' => 'required|file'
+            'summary' => 'required',
+            'attachment' => 'required|file|mimes:pdf,docx,pptx,txt,jpeg,jpg,png,gif|max:10240', 
         ];
     }
 }

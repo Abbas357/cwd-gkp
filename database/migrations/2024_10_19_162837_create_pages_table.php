@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('page_type')->unique();
             $table->string('title');
             $table->string('slug')->unique();
-            $table->text('content');
+            $table->mediumText('content');
             $table->boolean('is_active')->default(true);
             $table->string('meta_title')->nullable();
             $table->string('meta_description')->nullable();

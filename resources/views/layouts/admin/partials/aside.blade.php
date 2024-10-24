@@ -34,6 +34,26 @@
             </li>
             <li>
                 <a href="javascript:;" class="has-arrow">
+                    <div class="parent-icon"><i class="bi-file-earmark-plus"></i></div>
+                    <div class="menu-title">Pages</div>
+                </a>
+                <ul>
+                    <li><a href="{{ route('admin.pages.create') }}"><i class="bi-arrow-right-short"></i>Create</a></li>
+                    <li><a href="{{ route('admin.pages.index') }}"><i class="bi-arrow-right-short"></i>List</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;" class="has-arrow">
+                    <div class="parent-icon"><i class="bi-images"></i></div>
+                    <div class="menu-title">Sliders</div>
+                </a>
+                <ul>
+                    <li><a href="{{ route('admin.sliders.index') }}"><i class="bi-arrow-right-short"></i>List</a></li>
+                    <li><a href="{{ route('admin.sliders.create') }}"><i class="bi-arrow-right-short"></i>Create</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="bi-circle"></i></div>
                     <div class="menu-title">Stories</div>
                 </a>

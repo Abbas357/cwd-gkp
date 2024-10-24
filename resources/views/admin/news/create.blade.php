@@ -58,7 +58,16 @@
 
                             <div class="row">
                                 <div class="col-md-12 mb-3">
-                                    <label for="content">Content</label>
+                                    <label for="summary">Short Description</label>
+                                    <div class="mb-3">
+                                        <textarea name="summary" id="summary" class="form-control" style="height:100px">{{ old('summary') }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="content">Description</label>
                                     <div class="mb-3">
                                         <textarea name="content" id="content" class="form-control" style="height:150px">{{ old('content') }}</textarea>
                                     </div>

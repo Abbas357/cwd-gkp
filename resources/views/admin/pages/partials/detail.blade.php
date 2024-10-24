@@ -5,7 +5,7 @@
     }
 
 </style>
-<link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
+<link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
 <div class="row downloads-details">
     <div class="col-md-12">
 
@@ -14,10 +14,10 @@
             <tr>
                 <th class="table-cell"> Title</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-title">{{ $gallery->title }}</span>
-                    @if (!in_array($gallery->status, ['published', 'archived']))
-                    <input type="text" id="input-title" value="{{ $gallery->title }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('title', {{ $gallery->id }})" />
-                    <button id="save-btn-title" class="btn btn-sm btn-light d-none" onclick="updateField('title', {{ $gallery->id }})"><i class="bi-send-fill"></i></button>
+                    <span id="text-title">{{ $page->title }}</span>
+                    @if ($page->is_active === 0)
+                    <input type="text" id="input-title" value="{{ $page->title }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('title', {{ $page->id }})" />
+                    <button id="save-btn-title" class="btn btn-sm btn-light d-none" onclick="updateField('title', {{ $page->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-title" class="no-print btn btn-sm edit-button" onclick="enableEditing('title')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
@@ -25,104 +25,63 @@
 
             <!-- File Type -->
             <tr>
-                <th class="table-cell">Gallery Type</th>
+                <th class="table-cell">Page Type</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-type">{{ $gallery->type }}</span>
-                    @if (!in_array($gallery->status, ['published', 'archived']))
-                    <select id="input-type" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('type', {{ $gallery->id }})">
-                        @foreach ($cat['gallery_type'] as $type)
-                        <option value="{{ $type->name }}" {{ $gallery->type == $type->name ? 'selected' : '' }}>
-                            {{ $type->name }}
+                    <span id="text-page_type">{{ $page->page_type }}</span>
+                    @if ($page->is_active === 0)
+                    <select id="input-page_type" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('page_type', {{ $page->id }})">
+                        @foreach ($cat['page_type'] as $page_type)
+                        <option value="{{ $page_type->name }}" {{ $page->page_type == $page_type->name ? 'selected' : '' }}>
+                            {{ $page_type->name }}
                         </option>
                         @endforeach
                     </select>
-                    <button id="save-btn-type" class="btn btn-sm btn-light d-none" onclick="updateField('type', {{ $gallery->id }})"><i class="bi-send-fill"></i></button>
-                    <button id="edit-btn-type" class="no-print btn btn-sm edit-button" onclick="enableEditing('type')"><i class="bi-pencil fs-6"></i></button>
+                    <button id="save-btn-page_type" class="btn btn-sm btn-light d-none" onclick="updateField('page_type', {{ $page->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="edit-btn-page_type" class="no-print btn btn-sm edit-button" onclick="enableEditing('page_type')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
             </tr>
 
-            <!-- File Category -->
             <tr>
                 <th class="table-cell">Description</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-description">{{ $gallery->description }}</span>
-                    @if (!in_array($gallery->status, ['published', 'archived']))
+                    <span id="text-content">{!! $page->content !!}</span> <!-- Render HTML content properly -->
+                    @if ($page->is_active === 0)
                     <div class="mb-3 w-100">
-                        <textarea name="description" id="input-description" class="form-control d-none" style="height:150px">{{ old('description', $gallery->description) }}</textarea>
+                        <textarea name="content" id="input-content" class="form-control d-none" style="height:150px">{{ old('content', $page->content) }}</textarea>
                     </div>
-                    <button id="save-btn-description" class="btn btn-sm btn-light d-none" onclick="updateField('description', {{ $gallery->id }})"><i class="bi-send-fill"></i></button>
-                    <button id="edit-btn-description" class="no-print btn btn-sm edit-button" onclick="enableEditing('description')"><i class="bi-pencil fs-6"></i></button>
+                    <button id="save-btn-content" class="btn btn-sm btn-light d-none" onclick="updateField('content', {{ $page->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="edit-btn-content" class="no-print btn btn-sm edit-button" onclick="enableEditing('content')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
             </tr>
-
-            <tr>
-                <th class="table-cell">File</th>
-                <td class="d-flex justify-content-between align-items-center gap-2">
-                    <!-- If the file is uploaded, show View link -->
-                    @if($gallery->hasMedia('gallery'))
-                    <a href="{{ $gallery->getFirstMediaUrl('gallery') }}" target="_blank" title="File" class="d-flex align-items-center gap-2">
-                        View
-                    </a>
-                    @else
-                    <span>Not Uploaded</span>
-                    @endif
-
-                    @if (!in_array($gallery->status, ['published', 'archived']))
-                    <div class="no-print">
-                        <label for="file" class="btn btn-sm btn-light">
-                            <span class="d-flex align-items-center">
-                                <i class="bi-{{ $gallery->hasMedia('gallery') ? 'pencil-square' : 'plus-circle' }}"></i>&nbsp;
-                                {{ $gallery->hasMedia('gallery') ? 'Update' : 'Add' }}
-                            </span>
-                        </label>
-                        <input type="file" id="file" name="file" class="d-none file-input">
-                    </div>
-                    @endif
-                </td>
-            </tr>
-
 
         </table>
     </div>
 </div>
-<script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
+<script src="{{ asset('admin/plugins/summernote/summernote-bs5.min.js') }}"></script>
 <script>
-    $(document).ready(function() {
-        imageCropper({
-            fileInput: '.file-input'
-            , aspectRatio: 4 / 3
-            , onComplete: async function(file, input) {
-                var formData = new FormData();
-                formData.append('file', file);
-                formData.append('id', "{{ $gallery->id }}");
-                formData.append('_method', "PATCH");
-
-                const url = "{{ route('admin.gallery.uploadFile') }}"
-                try {
-                    const result = await fetchRequest(url, 'POST', formData);
-                    if (result) {
-                        $(input).closest('.modal').modal('toggle');
-                    }
-                } catch (error) {
-                    console.error('Error during form submission:', error);
-                }
-            }
-        });
-
-    });
-
     function enableEditing(field) {
         $('#text-' + field).addClass('d-none');
         $('#input-' + field).removeClass('d-none');
         $('#save-btn-' + field).removeClass('d-none');
         $('#edit-btn-' + field).addClass('d-none');
+
+        if (field === 'content') {
+            var textarea = $('#input-' + field);
+            if (textarea.data('summernote-initialized')) {
+                textarea.summernote('destroy'); // Ensure any existing instances are destroyed
+            }
+            textarea.summernote({
+                height: 300
+            });
+            textarea.data('summernote-initialized', true); // Set flag indicating initialization
+        }
     }
 
     async function updateField(field, id) {
-        const newValue = $('#input-' + field).val();
-        const url = "{{ route('admin.gallery.updateField') }}";
+        const newValue = (field === 'content') ? $('#input-' + field).summernote('code') : $('#input-' + field).val();
+        const url = "{{ route('admin.pages.updateField') }}";
         const data = {
             id: id
             , field: field
@@ -130,7 +89,13 @@
         };
         const success = await fetchRequest(url, 'PATCH', data);
         if (success) {
-            $('#text-' + field).text(newValue);
+            if (field === 'content') {
+                $('#text-' + field).html(newValue); // Update the HTML content properly
+                $('#input-' + field).summernote('destroy'); // Destroy Summernote instance
+                $('#input-' + field).data('summernote-initialized', false); // Reset initialization flag
+            } else {
+                $('#text-' + field).text(newValue);
+            }
             $('#input-' + field).addClass('d-none');
             $('#save-btn-' + field).addClass('d-none');
             $('#edit-btn-' + field).removeClass('d-none');

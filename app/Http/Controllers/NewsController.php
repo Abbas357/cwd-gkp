@@ -42,7 +42,7 @@ class NewsController extends Controller
                 ->editColumn('updated_at', function ($row) {
                     return $row->updated_at->diffForHumans();
                 })
-                ->rawColumns(['action', 'status', 'attachment', 'content']);
+                ->rawColumns(['action', 'status', 'attachment']);
 
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
                 $dataTable->filter(function ($query) use ($request) {
@@ -76,6 +76,7 @@ class NewsController extends Controller
         $news = new News();
         $news->title = $request->title;
         $news->category = $request->news_category;
+        $news->summary = $request->summary;
         $news->content = $request->content;
         $news->slug = Str::slug($request->title) . '-' . substr(uniqid(), -6). '-' . date('d-m-Y');
         $news->status = 'draft';

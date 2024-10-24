@@ -21,8 +21,8 @@
         <thead>
             <tr>
                 <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Page Type</th>
                 <th scope="col" class="p-3">Title</th>
+                <th scope="col" class="p-3">Page Type</th>
                 <th scope="col" class="p-3">Status</th>
                 <th scope="col" class="p-3">Created At</th>
                 <th scope="col" class="p-3">Updated At</th>
@@ -55,14 +55,6 @@
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "meta_title"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "meta_description"
-                        , searchBuilderType: "string"
-                    }
-                    , {
                         data: "status"
                         , searchBuilderType: "string"
                     }
@@ -89,25 +81,12 @@
                 }]
             });
 
-            $("#pages-datatable").on('click', '.publish-btn', async function() {
-                const downloadId = $(this).data("id");
+            $("#pages-datatable").on('click', '.activate-btn', async function() {
+                const pageId = $(this).data("id");
                 const message = $(this).data("type");
-                const url = "{{ route('admin.pages.publish', ':id') }}".replace(':id', downloadId);
+                const url = "{{ route('admin.pages.activate', ':id') }}".replace(':id', pageId);
 
-                const result = await confirmAction(`Do you want to ${message} this file?`);
-                if (result && result.isConfirmed) {
-                    const success = await fetchRequest(url, 'PATCH');
-                    if (success) {
-                        $("#pages-datatable").DataTable().ajax.reload();
-                    }
-                }
-            });
-
-            $("#pages-datatable").on('click', '.archive-btn', async function() {
-                const downloadId = $(this).data("id");
-                const url = "{{ route('admin.pages.archive', ':id') }}".replace(':id', downloadId);
-
-                const result = await confirmAction(`Do you want to archive this file?`);
+                const result = await confirmAction(`Do you want to ${message} this page?`);
                 if (result && result.isConfirmed) {
                     const success = await fetchRequest(url, 'PATCH');
                     if (success) {
@@ -117,10 +96,10 @@
             });
 
             $("#pages-datatable").on('click', '.delete-btn', async function() {
-                const downloadId = $(this).data("id");
-                const url = "{{ route('admin.pages.destroy', ':id') }}".replace(':id', downloadId);
+                const pageId = $(this).data("id");
+                const url = "{{ route('admin.pages.destroy', ':id') }}".replace(':id', pageId);
 
-                const result = await confirmAction(`Do you want to delete this image?`);
+                const result = await confirmAction(`Do you want to delete this page?`);
                 if (result && result.isConfirmed) {
                     const success = await fetchRequest(url, 'DELETE');
                     if (success) {
@@ -133,22 +112,18 @@
                 table: table
                 , dataTableUrl: "{{ route('admin.pages.index') }}"
                 , tabToHashMap: {
-                    "#draft-tab": '#draft'
-                    , "#published-tab": '#published'
-                    , "#archived-tab": '#archived'
+                    "#active-tab": '#active'
+                    , "#inactive-tab": '#inactive'
                 , }
                 , hashToParamsMap: {
-                    '#draft': {
-                        status: 'draft'
+                    '#active': {
+                        status: 1
                     }
-                    , '#published': {
-                        status: 'published'
-                    }
-                    , '#archived': {
-                        status: 'archived'
+                    , '#inactive': {
+                        status: 0
                     }
                 , }
-                , defaultHash: '#draft'
+                , defaultHash: '#active'
             });
 
             $('#pages-datatable').colResizable({

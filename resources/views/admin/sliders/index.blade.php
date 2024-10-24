@@ -1,9 +1,9 @@
-<x-app-layout title="Gallery">
+<x-app-layout title="Slider">
     @push('style')
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header">
-        <li class="breadcrumb-item active" aria-current="page">Gallery</li>
+        <li class="breadcrumb-item active" aria-current="page">Slider</li>
     </x-slot>
 
     <div class="card-header mb-3">
@@ -20,15 +20,14 @@
         </ul>
     </div>
 
-    <table id="gallery-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+    <table id="sliders-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
         <thead>
             <tr>
                 <th scope="col" class="p-3">ID</th>
                 <th scope="col" class="p-3">Title</th>
-                <th scope="col" class="p-3">Type</th>
-                <th scope="col" class="p-3">Description</th>
+                <th scope="col" class="p-3">Short Description</th>
                 <th scope="col" class="p-3">Image</th>
-                <th scope="col" class="p-3">Uploaded By</th>
+                <th scope="col" class="p-3">User</th>
                 <th scope="col" class="p-3">Status</th>
                 <th scope="col" class="p-3">Created At</th>
                 <th scope="col" class="p-3">Updated At</th>
@@ -46,8 +45,8 @@
 
     <script>
         $(document).ready(function() {
-            var table = initDataTable('#gallery-datatable', {
-                ajaxUrl: "{{ route('admin.gallery.index') }}"
+            var table = initDataTable('#sliders-datatable', {
+                ajaxUrl: "{{ route('admin.sliders.index') }}"
                 , columns: [{
                         data: "id"
                         , searchBuilderType: "num"
@@ -57,11 +56,7 @@
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "type"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "description"
+                        data: "summary"
                         , searchBuilderType: "string"
                     }
                     , {
@@ -69,7 +64,7 @@
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "uploaded_by"
+                        data: "user"
                         , searchBuilderType: "string"
                     }
                     , {
@@ -91,7 +86,7 @@
                         , type: "html"
                     }
                 ]
-                , defaultOrderColumn: 11
+                , defaultOrderColumn: 0
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
                     targets: [0]
@@ -99,49 +94,49 @@
                 }]
             });
 
-            $("#gallery-datatable").on('click', '.publish-btn', async function() {
-                const downloadId = $(this).data("id");
+            $("#sliders-datatable").on('click', '.publish-btn', async function() {
+                const slidersId = $(this).data("id");
                 const message = $(this).data("type");
-                const url = "{{ route('admin.gallery.publish', ':id') }}".replace(':id', downloadId);
+                const url = "{{ route('admin.sliders.publish', ':id') }}".replace(':id', slidersId);
 
-                const result = await confirmAction(`Do you want to ${message} this file?`);
+                const result = await confirmAction(`Do you want to ${message} this sliders?`);
                 if (result && result.isConfirmed) {
                     const success = await fetchRequest(url, 'PATCH');
                     if (success) {
-                        $("#gallery-datatable").DataTable().ajax.reload();
+                        $("#sliders-datatable").DataTable().ajax.reload();
                     }
                 }
             });
 
-            $("#gallery-datatable").on('click', '.archive-btn', async function() {
-                const downloadId = $(this).data("id");
-                const url = "{{ route('admin.gallery.archive', ':id') }}".replace(':id', downloadId);
+            $("#sliders-datatable").on('click', '.archive-btn', async function() {
+                const slidersId = $(this).data("id");
+                const url = "{{ route('admin.sliders.archive', ':id') }}".replace(':id', slidersId);
 
-                const result = await confirmAction(`Do you want to archive this file?`);
+                const result = await confirmAction(`Do you want to archive this sliders?`);
                 if (result && result.isConfirmed) {
                     const success = await fetchRequest(url, 'PATCH');
                     if (success) {
-                        $("#gallery-datatable").DataTable().ajax.reload();
+                        $("#sliders-datatable").DataTable().ajax.reload();
                     }
                 }
             });
 
-            $("#gallery-datatable").on('click', '.delete-btn', async function() {
-                const downloadId = $(this).data("id");
-                const url = "{{ route('admin.gallery.destroy', ':id') }}".replace(':id', downloadId);
+            $("#sliders-datatable").on('click', '.delete-btn', async function() {
+                const slidersId = $(this).data("id");
+                const url = "{{ route('admin.sliders.destroy', ':id') }}".replace(':id', slidersId);
 
-                const result = await confirmAction(`Do you want to delete this image?`);
+                const result = await confirmAction(`Do you want to delete this sliders?`);
                 if (result && result.isConfirmed) {
                     const success = await fetchRequest(url, 'DELETE');
                     if (success) {
-                        $("#gallery-datatable").DataTable().ajax.reload();
+                        $("#sliders-datatable").DataTable().ajax.reload();
                     }
                 }
             });
 
             hashTabsNavigator({
                 table: table
-                , dataTableUrl: "{{ route('admin.gallery.index') }}"
+                , dataTableUrl: "{{ route('admin.sliders.index') }}"
                 , tabToHashMap: {
                     "#draft-tab": '#draft'
                     , "#published-tab": '#published'
@@ -161,7 +156,7 @@
                 , defaultHash: '#draft'
             });
 
-            $('#gallery-datatable').colResizable({
+            $('#sliders-datatable').colResizable({
                 liveDrag: true
                 , resizeMode: 'overflow'
                 , postbackSafe: true
@@ -171,9 +166,9 @@
             , });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.gallery.detail', ':id') }}",
+                fetchUrl: "{{ route('admin.sliders.detail', ':id') }}",
                 btnSelector: '.view-btn',
-                title: 'Gallery Details',
+                title: 'Slider Details',
                 modalSize: 'lg',
             });
             

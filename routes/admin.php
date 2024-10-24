@@ -1,21 +1,22 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\StoryController;
+use App\Http\Controllers\SliderController;
+use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DistrictController;
+use App\Http\Controllers\DownloadController;
+use App\Http\Controllers\NewsLetterController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\EStandardizationController;
 use App\Http\Controllers\ContractorRegistrationController;
-use App\Http\Controllers\StoryController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\DistrictController;
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\DownloadController;
-use App\Http\Controllers\GalleryController;
-use App\Http\Controllers\NewsController;
-use App\Http\Controllers\NewsLetterController;
-use App\Http\Controllers\PageController;
 
 Route::middleware('auth')->group(function () {
     Route::prefix('admin')->as('admin.')->group(function () {
@@ -106,16 +107,27 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{news}', [NewsController::class, 'destroy'])->name('destroy');
         });
 
+        Route::prefix('sliders')->as('sliders.')->group(function () {
+            Route::get('/', [SliderController::class, 'index'])->name('index');
+            Route::get('/create', [SliderController::class, 'create'])->name('create');
+            Route::post('/', [SliderController::class, 'store'])->name('store');
+            Route::get('/{slider}', [SliderController::class, 'show'])->name('show');
+            Route::get('/get/{slider}', [SliderController::class, 'showDetail'])->name('detail');
+            Route::patch('/publish/{slider}', [SliderController::class, 'publishSlider'])->name('publish');
+            Route::patch('/archive/{slider}', [SliderController::class, 'archiveSlider'])->name('archive');
+            Route::patch('/update/field', [SliderController::class, 'updateField'])->name('updateField');
+            Route::patch('/upload/file', [SliderController::class, 'uploadFile'])->name('uploadFile');
+            Route::delete('/{slider}', [SliderController::class, 'destroy'])->name('destroy');
+        });
+
         Route::prefix('pages')->as('pages.')->group(function () {
             Route::get('/', [PageController::class, 'index'])->name('index');
             Route::get('/create', [PageController::class, 'create'])->name('create');
             Route::post('/', [PageController::class, 'store'])->name('store');
             Route::get('/{page}', [PageController::class, 'show'])->name('show');
             Route::get('/get/{page}', [PageController::class, 'showDetail'])->name('detail');
-            Route::patch('/publish/{page}', [PageController::class, 'publishNews'])->name('publish');
-            Route::patch('/archive/{page}', [PageController::class, 'archiveNews'])->name('archive');
+            Route::patch('/activate/{page}', [PageController::class, 'activatePage'])->name('activate');
             Route::patch('/update/field', [PageController::class, 'updateField'])->name('updateField');
-            Route::patch('/upload/file', [PageController::class, 'uploadFile'])->name('uploadFile');
             Route::delete('/{page}', [PageController::class, 'destroy'])->name('destroy');
         });
 

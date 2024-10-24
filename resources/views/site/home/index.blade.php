@@ -17,10 +17,6 @@
         @include('site.home.partials.about')
     </div>
 
-    <div class="container-fluid bg-light service py-3">
-        @include('site.home.partials.services')
-    </div>
-
     @include('site.home.partials.gallery')
 
     @include('site.home.partials.blogs')

@@ -26,6 +26,7 @@
                 <th scope="col" class="p-3">ID</th>
                 <th scope="col" class="p-3">Title</th>
                 <th scope="col" class="p-3">Category</th>
+                <th scope="col" class="p-3">Short Description</th>
                 <th scope="col" class="p-3">Attachment</th>
                 <th scope="col" class="p-3">User</th>
                 <th scope="col" class="p-3">Status</th>
@@ -57,6 +58,10 @@
                     }
                     , {
                         data: "category"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "summary"
                         , searchBuilderType: "string"
                     }
                     , {
