@@ -68,16 +68,16 @@ input::placeholder {
   position: absolute;
   width: auto;
   height: auto;
-  top: 54px;
+  top: 38px;
   left: 0;
   right: 0;
   background-color: #ffffff;
-  border-radius: 1rem;
+  border-radius: .2rem;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   animation: 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) 0s normal forwards 1 animdropdown;
 }
 .top-header .navbar .search-bar .search-popup .card {
-  border: 1px solid #dee2e6;
+  border: 1px solid #dedede;
   box-shadow: none;
   margin-bottom: 0;
 }
@@ -96,9 +96,9 @@ input::placeholder {
   font-size: 12.5px;
   font-weight: 500;
   color: #606060;
-  padding: 0.4rem 0.7rem;
+  padding: 0.3rem 0.5rem;
   background-color: #f3f3f3;
-  border-radius: 2rem;
+  border-radius: .4rem;
   display: flex;
   align-items: center;
   justify-content: center;

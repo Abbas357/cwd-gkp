@@ -20,7 +20,7 @@
             </div>
             <div class="search-bar" style="max-width: 500px; flex-grow: 1">
                 <div class="position-relative">
-                    <input class="form-control rounded-3 px-5 search-control d-lg-block d-none" type="text" placeholder="Search">
+                    <input class="form-control rounded-3 px-5 search-control shadow-sm d-lg-block d-none" type="text" placeholder="Search">
                     <span class="bi-search position-absolute d-lg-block d-none ms-3 translate-middle-y start-0 top-50"></span>
                     <span class="bi-x-circle position-absolute me-3 translate-middle-y end-0 top-50 search-close"></span>
                     <div class="search-popup p-3">
@@ -67,30 +67,30 @@
                             <div class="col border-end">
                                 <div class="app-wrapper d-flex flex-column gap-2 text-center">
                                     <div class="app-icon">
-                                        <i style="font-size: 26px" class="bi-envelope"></i>
+                                        <i style="font-size: 26px" class="bi-gear"></i>
                                     </div>
                                     <div class="app-name">
-                                        <p class="mb-0">Gmail</p>
+                                        <p class="mb-0">Settings</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col border-end">
                                 <div class="app-wrapper d-flex flex-column gap-2 text-center">
                                     <div class="app-icon">
-                                        <i style="font-size: 26px" class="bi-skype"></i>
+                                        <i style="font-size: 26px" class="bi-calendar"></i>
                                     </div>
                                     <div class="app-name">
-                                        <p class="mb-0">Skype</p>
+                                        <p class="mb-0">Calendar</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="app-wrapper d-flex flex-column gap-2 text-center">
                                     <div class="app-icon">
-                                        <i style="font-size: 26px" class="bi-whatsapp"></i>
+                                        <i style="font-size: 26px" class="bi-chat-left-text"></i>
                                     </div>
                                     <div class="app-name">
-                                        <p class="mb-0">Whasapp</p>
+                                        <p class="mb-0">Chat</p>
                                     </div>
                                 </div>
                             </div>
@@ -101,36 +101,35 @@
                             <div class="col border-end">
                                 <div class="app-wrapper d-flex flex-column gap-2 text-center">
                                     <div class="app-icon">
-                                        <i style="font-size: 26px" class="bi-youtube"></i>
+                                        <i style="font-size: 26px" class="bi-clock"></i>
                                     </div>
                                     <div class="app-name">
-                                        <p class="mb-0">YouTube</p>
+                                        <p class="mb-0">Clock</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col border-end">
                                 <div class="app-wrapper d-flex flex-column gap-2 text-center">
                                     <div class="app-icon">
-                                        <i style="font-size: 26px" class="bi-google"></i>
+                                        <i style="font-size: 26px" class="bi-folder"></i>
                                     </div>
                                     <div class="app-name">
-                                        <p class="mb-0">Google</p>
+                                        <p class="mb-0">Directory</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="app-wrapper d-flex flex-column gap-2 text-center">
                                     <div class="app-icon">
-                                        <i style="font-size: 26px" class="bi-instagram"></i>
+                                        <i style="font-size: 26px" class="bi-shield"></i>
                                     </div>
                                     <div class="app-name">
-                                        <p class="mb-0">Instagram</p>
+                                        <p class="mb-0">Security</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!--end row-->
-
                     </div>
                 </div>
             </li>
@@ -170,6 +169,7 @@
                             </a>
                         </div>
                     </div>
+                </div>
             </li>
             <li class="nav-item dropdown">
                 <a href="javascrpt:;" class="dropdown-toggle dropdown-toggle-nocaret" data-bs-toggle="dropdown">
@@ -184,7 +184,7 @@
                     </a>
                     <hr class="dropdown-divider">
                     <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('admin.profile.edit') }}"><i class="bi-person-circle"></i>Profile</a>
-                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('admin.profile.edit') }}"><i class="bi-gear-fill"></i>Settings</a>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('admin.settings.index') }}"><i class="bi-gear-fill"></i>Settings</a>
                     <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('admin.logs') }}"><i class="bi-activity"></i>Activity Log</a>
                     <hr class="dropdown-divider">
                     <form method="POST" action="{{ route('logout') }}" disabled>

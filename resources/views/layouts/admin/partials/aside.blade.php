@@ -1,11 +1,8 @@
 <aside class="sidebar-wrapper">
     <div class="sidebar-header">
-        <div class="logo-icon">
-            <img src="{{ asset('admin/images/logo-square.png') }}" class="logo-img" alt="">
-        </div>
-        <div class="logo-name flex-grow-1">
-            <h5 class="mb-0">C&W Dept.</h5>
-        </div>
+        <a href="{{ route('admin.dashboard') }}" class="logo-icon">
+            <img src="{{ asset('admin/images/logo.png') }}" style="width:190px; border-radius:5px" class="mt-2" alt="Logo Desktop">
+        </a>
         <div class="sidebar-close">
             <span class="bi-layout-sidebar"></span>
         </div>
@@ -14,12 +11,6 @@
 
         <!--navigation-->
         <ul class="metismenu" id="sidenav">
-            <li>
-                <a href="{{ route('admin.dashboard') }}">
-                    <div class="parent-icon"><i class="bi-house"></i></div>
-                    <div class="menu-title">Dashboard</div>
-                </a>
-            </li>
             <li>
                 <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="bi-person-circle"></i></div>
@@ -177,7 +168,7 @@
             </a>
             <div class="dropdown-menu dropdown-option dropdown-menu-end shadow">
                 <div><a class="dropdown-item d-flex align-items-center gap-3 py-2" href="{{ route('admin.logs') }}"><i class="bi-activity"></i>Activity Log</a></div>
-                <div><a class="dropdown-item d-flex align-items-center gap-3 py-2" href="javascript:;"><i class="bi-gear"></i>Settings</a></div>
+                <div><a class="dropdown-item d-flex align-items-center gap-3 py-2" href="{{ route('admin.settings.index') }}"><i class="bi-gear"></i>Settings</a></div>
                 <div><a class="dropdown-item d-flex align-items-center gap-3 py-2" href="{{ route('admin.profile.edit') }}"><i class="bi-person-circle"></i>Edit Profile</a></div>
             </div>
         </div>

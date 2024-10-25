@@ -13,7 +13,11 @@ use Spatie\Activitylog\LogOptions;
 class Setting extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, LogsActivity;
-    protected $guarded = [];
+
+    protected $fillable = [
+        'site_name', 'description', 'email', 'maintenance_mode', 'contact_phone', 'contact_address',
+        'whatsapp', 'facebook', 'twitter', 'youtube', 'meta_description', 'secret_key',
+    ];
 
     protected static $recordEvents = ['updated'];
     public function getActivitylogOptions(): LogOptions

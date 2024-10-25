@@ -7,7 +7,7 @@
             <div class="col-md-6 col-lg-6 col-xl-3">
                 <h4 class="mb-4 text-white">About Us</h4>
                 <p class="text-white">
-                    Communications & Works Department was established in 1979. Since establishment the Department is working to promote safe, sustainable, cost effective and environment friendly road infrastructure leading to socio-economic development.
+                    {{ $settings->description ?? 'Communications & Works Department was established in 1979. Since establishment the Department is working to promote safe, sustainable, cost effective and environment friendly road infrastructure leading to socio-economic development.'}}    
                 </p>
             </div>
             <div class="col-md-6 col-lg-6 col-xl-3">
@@ -35,10 +35,18 @@
             <div class="col-md-6 col-lg-6 col-xl-3">
                 <div class="footer-item d-flex flex-column">
                     <h4 class="mb-4 text-white">Get In Touch</h4>
-                    <a href=""><i class="bi bi-house me-2"></i> 123 Street, New York, USA</a>
-                    <a href=""><i class="bi bi-envelope me-2"></i> info@example.com</a>
-                    <a href=""><i class="bi bi-phone me-2"></i> +012 345 67890</a>
-                    <a href="" class="mb-3"><i class="bi bi-telephone me-2"></i> +012 345 67890</a>
+                    <a href=""><i class="bi bi-house me-2"></i>{{ $settings->contact_address ?? 'Civil Secretariat, Peshawar'}}</a>
+                    <a href=""><i class="bi bi-envelope me-2"></i>{{ $settings->email ?? 'info@cwd.gkp.pk'}}</a>
+                    <a href=""><i class="bi bi-phone me-2"></i>{{ $settings->contact_phone ?? '091-9214039'}}</a>
+                    <a href="" class="mb-3"><i class="bi bi-whatsapp me-2"></i> {{ $settings->whatsapp ?? '0313-0535333'}}</a>
+                </div>
+                <div class="footer-item d-flex flex-column">
+                    <h4 class="mb-2 text-white">Follow Us</h4>
+                    <div>
+                        <a href="{{ $settings->facebook ?? 'CWDKPGovt'}}"><i class="bi bi-facebook fs-4 me-2"></i></a>
+                        <a href="{{ $settings->twitter ?? 'CWDKPGovt'}}"><i class="bi bi-twitter fs-4 me-2"></i></a>
+                        <a href="{{ $settings->youtube ?? 'CWDKPGovt'}}"><i class="bi bi-youtube fs-4 me-2"></i> </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -51,7 +59,7 @@
     <div class="container">
         <div class="g-4 align-items-center">
             <div class="text-center mb-md-0 text-white">
-                <a class="text-white" href="https://cwd.gkp.pk">&copy; Communication & Works Department, Govt. of Khyber Pakhtunkhwa</a>
+                <a class="text-white" href="https://cwd.gkp.pk">&copy; {{ $settings->site_name ?? config('app.name') }}</a>
                 <div>Developed and maintained by <a class="text-info" href="https://cwd.gkp.pk">IT Cell, C&W Department</a></div>
             </div>
         </div>

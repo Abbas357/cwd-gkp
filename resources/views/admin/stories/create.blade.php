@@ -18,19 +18,10 @@
         <form class="needs-validation" action="{{ route('admin.stories.store') }}" method="post" enctype="multipart/form-data" novalidate>
             @csrf
             <div class="row">
-                <div class="col-md-8">
+                <div class="col">
                     <div class="card">
                         <div class="card-body">
-                            <h3 class="card-title pb-4">Fill all the fields</h3>
-
-                            <div class="row mb-4">
-                                <div class="col d-flex justify-content-center align-items-center">
-                                    <label class="label" data-toggle="tooltip" title="Change Profile Picture">
-                                        <img src="{{ asset('admin/images/upload-image.jpg') }}" style="height:100px; width:70px;cursor:pointer" id="image-label-preview" alt="avatar" class="img-fluid">
-                                        <input type="file" id="image" name="image" class="sr-only" accept="image/*">
-                                    </label>
-                                </div>
-                            </div>
+                            <h3 class="card-title pb-4">Post a story</h3>
 
                             <div class="row mb-3">
                                 <div class="col-md-12">
@@ -42,21 +33,33 @@
                                 </div>
                             </div>
 
+                            <div class="row mb-3">
+                                <div class="col mb-3">
+                                    <label for="image">Image</label>
+                                    <input type="file" class="form-control" id="image" name="image" required>
+                                    @error('image')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button class="btn btn-primary btn-block" type="submit" id="submitBtn">Create Story</button>
+                            </div>
                         </div>
+                        
                     </div>
                 </div>
 
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-body">
-                            <h3 class="card-title pb-4">Statistics</h3>
-                            
+                            <h3 class="card-title pb-4">Image Preview</h3>
+                            <img src="#" class="d-none" id="preview-image" style="width:70%; border-radius: 10px" alt="Preview">
                         </div>
                     </div>
                 </div>
-                <div class="form-actions">
-                    <button class="btn btn-primary btn-block" type="submit" id="submitBtn">Create Story</button>
-                </div>
+                
             </div>
         </form>
 
@@ -67,9 +70,12 @@
     <script>
         $(document).ready(function() {
             imageCropper({
-                fileInput: '#image',
-                inputLabelPreview: '#image-label-preview',
-                aspectRatio: 1 / 1.6471
+                fileInput: '#image'
+                , inputLabelPreview: '#preview-image'
+                , aspectRatio: 1 / 1.6471
+                , onComplete() {
+                    $('#preview-image').removeClass('d-none');
+                }
             });
         });
 

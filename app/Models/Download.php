@@ -22,6 +22,7 @@ class Download extends Model implements HasMedia
     {
         return [
             'published_at' => 'datetime',
+            'downloaded_at' => 'datetime',
         ];
     }
 

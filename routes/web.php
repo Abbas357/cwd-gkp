@@ -9,7 +9,3 @@ Route::get('/admin/dashboard', [HomePageController::class, 'dashboard'])->middle
 require __DIR__ . '/auth.php';
 require __DIR__ . '/site.php';
 require __DIR__ . '/admin.php';
-
-Route::fallback(function () {
-    return view('errors.404');
-});

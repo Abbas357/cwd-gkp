@@ -9,6 +9,7 @@ use App\Http\Controllers\StoryController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DownloadController;
@@ -18,7 +19,7 @@ use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\EStandardizationController;
 use App\Http\Controllers\ContractorRegistrationController;
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function () { 
     Route::prefix('admin')->as('admin.')->group(function () {
 
         Route::prefix('profile')->as('profile.')->group(function () {
@@ -153,6 +154,11 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [PermissionController::class, 'index'])->name('index');
             Route::post('/', [PermissionController::class, 'store'])->name('store');
             Route::delete('/{permission}', [PermissionController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('settings')->as('settings.')->group(function () {
+            Route::get('/', [SettingController::class, 'index'])->name('index');
+            Route::patch('/', [SettingController::class, 'update'])->name('update');
         });
 
         Route::prefix('categories')->as('categories.')->group(function () {

@@ -57,8 +57,8 @@
             </div>
             <div class="right-column">
                 <div class="d-none d-md-block cw-info">
-                    <a href="mailto:info@cwd.gkp.pk"><i class="bi-envelope"></i> &nbsp; info@cwd.gkp.pk</a>
-                    <a href="tel:+919210843"><i class="bi-telephone"></i> &nbsp; +919210843</a>
+                    <a href="mailto:info@cwd.gkp.pk"><i class="bi-envelope"></i> &nbsp; {{ $settings->email ?? 'info@cwd.gkp.pk'}}</a>
+                    <a href="tel:+919210843"><i class="bi-telephone"></i> &nbsp; {{ $settings->contact_phone ?? '091-9214039'}}</a>
                 </div>
                 <button id="story-btn-sm" class="btn cw-onlyMobileTab">
                     <svg width="20px" height="20px" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">

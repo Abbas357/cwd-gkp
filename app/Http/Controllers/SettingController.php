@@ -3,64 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Setting;
-use App\Http\Requests\StoreSettingRequest;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\UpdateSettingRequest;
 
 class SettingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $settings = Setting::first();
+        return view('admin.settings.index', compact('settings'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function update(UpdateSettingRequest $request)
     {
-        //
-    }
+        $validatedData = $request->validated();
+        Setting::updateOrCreate(
+            ['id' => 1],
+            $validatedData
+        );
+        Cache::forget('settings');
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreSettingRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Setting $setting)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Setting $setting)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateSettingRequest $request, Setting $setting)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Setting $setting)
-    {
-        //
+        return redirect()->route('admin.settings.index')->with('success', 'Settings updated successfully.');
     }
 }

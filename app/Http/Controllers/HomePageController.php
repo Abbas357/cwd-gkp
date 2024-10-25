@@ -6,7 +6,9 @@ class HomePageController extends Controller
 {
     public function site()
     {
-        return view('site.home.index');
+        return view('site.home.index', [
+            'title' => 'HomePage'
+        ]);
     }
 
     public function dashboard()

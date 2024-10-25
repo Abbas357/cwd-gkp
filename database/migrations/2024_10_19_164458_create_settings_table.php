@@ -12,9 +12,6 @@ return new class extends Migration
             $table->id();
             $table->string('site_name')->default('Communication & Works Department, KP');
             $table->string('description')->default('Official Website of Communication and Works Department, Government of Khyber Pakhtunkhwa');
-            $table->string('logo_desktop')->default('site/img/logo-desktop.gif');
-            $table->string('logo_mobile')->default('site/img/logo-mobile.png');
-            $table->string('favicon')->default('favicon.png');
             $table->string('email')->default('cwd.gkp@gmail.com');
             $table->boolean('maintenance_mode')->default(false);
             $table->string('contact_phone')->default('091-9214039');
@@ -24,6 +21,7 @@ return new class extends Migration
             $table->string('twitter')->default('CWDKPGovt');
             $table->string('youtube')->default('CWDKPGovt');
             $table->text('meta_description')->nullable();
+            $table->string('secret_key')->nullable();
             $table->timestamps();
         });
         

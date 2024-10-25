@@ -1,184 +1,171 @@
-<x-app-layout title="Gallery">
+<x-app-layout title="Site Settings">
     @push('style')
-    <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
     @endpush
+
     <x-slot name="header">
-        <li class="breadcrumb-item active" aria-current="page">Gallery</li>
+        <li class="breadcrumb-item active" aria-current="page"> Site Settings</li>
     </x-slot>
 
-    <div class="card-header mb-3">
-        <ul class="nav nav-tabs nav-tabs-table">
-            <li class="nav-item">
-                <a id="draft-tab" class="nav-link" data-bs-toggle="tab" href="#draft">Draft</a>
-            </li>
-            <li class="nav-item">
-                <a id="published-tab" class="nav-link" data-bs-toggle="tab" href="#published">Published</a>
-            </li>
-            <li class="nav-item">
-                <a id="archived-tab" class="nav-link" data-bs-toggle="tab" href="#archived">Archived</a>
-            </li>
-        </ul>
+    <div class="wrapper">
+        <form class="needs-validation" action="{{ route('admin.settings.update') }}" method="post" novalidate>
+            @csrf
+            @method('patch')
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Left Column -->
+                        <div class="col-md-6">
+                            <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="text-secondary">Settings</span>
+                            </h4>
+                            <div class="row">
+                                <div class="col-md-12 mb-4">
+                                    <label for="site_name">Site Name</label>
+                                    <input type="text" class="form-control" id="site_name" value="{{ old('site_name', $settings->site_name) }}" name="site_name" required>
+                                    @error('site_name')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-12 mb-4">
+                                    <label for="description">Description</label>
+                                    <textarea name="description" id="description" class="form-control" style="height:100px" required>{{ old('description', $settings->description) }}</textarea>
+                                    @error('description')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                
+
+                                <div class="col-md-12 mb-4">
+                                    <label for="contact_address">Contact Address</label>
+                                    <input type="text" class="form-control" id="contact_address" value="{{ old('contact_address',  $settings->contact_address) }}" name="contact_address" required>
+                                    @error('contact_address')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-12 mb-4">
+                                    <label for="maintenance_mode">Maintenance Mode</label>
+                                    <select class="form-select" id="maintenance_mode" name="maintenance_mode">
+                                        <option value="0" {{ $settings->maintenance_mode === 0 ? 'selected' : '' }}>Off</option>
+                                        <option value="1" {{ $settings->maintenance_mode ===1 ? 'selected' : '' }}>On</option>
+                                    </select>
+                                    @error('maintenance_mode')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-12 mb-4">
+                                    <label for="meta_description">Meta Description</label>
+                                    <textarea name="meta_description" id="meta_description" class="form-control" style="height:100px">{{ old('meta_description', $settings->meta_description) }}</textarea>
+                                    @error('meta_description')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-12 mb-4">
+                                    <label for="contact_phone">Contact Phone</label>
+                                    <input type="text" class="form-control" id="contact_phone" value="{{ old('contact_phone', $settings->contact_phone) }}" name="contact_phone" required>
+                                    @error('contact_phone')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-12 mb-4">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" value="{{ old('email', $settings->email) }}" name="email" required>
+                                    @error('email')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-12 mb-4">
+                                    <label for="whatsapp">WhatsApp</label>
+                                    <input type="text" class="form-control" id="whatsapp" value="{{ old('whatsapp', $settings->whatsapp) }}" name="whatsapp">
+                                    @error('whatsapp')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-12 mb-4">
+                                    <label for="facebook">Facebook</label>
+                                    <input type="text" class="form-control" id="facebook" value="{{ old('facebook', $settings->facebook) }}" name="facebook">
+                                    @error('facebook')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-12 mb-4">
+                                    <label for="twitter">Twitter</label>
+                                    <input type="text" class="form-control" id="twitter" value="{{ old('twitter', $settings->twitter) }}" name="twitter">
+                                    @error('twitter')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-12 mb-4">
+                                    <label for="youtube">YouTube</label>
+                                    <input type="text" class="form-control" id="youtube" value="{{ old('youtube', $settings->youtube) }}" name="youtube">
+                                    @error('youtube')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-12 mb-4">
+                                    <label for="secret_key">Secret Key (Used during maintenance)</label>
+                                    <input type="text" class="form-control" id="secret_key" value="{{ old('secret_key', $settings->secret_key) }}" name="secret_key">
+                                    @error('secret_key')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions mb-4 mt-2">
+                        <button class="btn btn-primary btn-block" type="submit" id="submitBtn">Save Settings</button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 
-    <table id="gallery-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
-        <thead>
-            <tr>
-                <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Title</th>
-                <th scope="col" class="p-3">Type</th>
-                <th scope="col" class="p-3">Description</th>
-                <th scope="col" class="p-3">Image</th>
-                <th scope="col" class="p-3">Uploaded By</th>
-                <th scope="col" class="p-3">Status</th>
-                <th scope="col" class="p-3">Created At</th>
-                <th scope="col" class="p-3">Updated At</th>
-                <th scope="col" class="p-3">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-    <!--end row-->
     @push('script')
-    <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
-    <script src="{{ asset('admin/plugins/col-resizable.js') }}"></script>
-    <script src="{{ asset('admin/plugins/html2canvas/html2canvas.min.js') }}"></script>
-
+    <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            var table = initDataTable('#gallery-datatable', {
-                ajaxUrl: "{{ route('admin.gallery.index') }}"
-                , columns: [{
-                        data: "id"
-                        , searchBuilderType: "num"
-                    }
-                    , {
-                        data: "title"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "type"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "description"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "image"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "uploaded_by"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "status"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "created_at"
-                        , searchBuilderType: "date"
-                    }
-                    , {
-                        data: "updated_at"
-                        , searchBuilderType: "date"
-                    }
-                    , {
-                        data: 'action'
-                        , orderable: false
-                        , searchable: false
-                        , type: "html"
-                    }
-                ]
-                , defaultOrderColumn: 11
-                , defaultOrderDirection: 'desc'
-                , columnDefs: [{
-                    targets: [0]
-                    , visible: false
-                }]
+            imageCropper({
+                fileInput: "#logo_desktop",
+                inputLabelPreview: "#previewDesktop",
+                aspectRatio: 4 / 3
             });
 
-            $("#gallery-datatable").on('click', '.publish-btn', async function() {
-                const downloadId = $(this).data("id");
-                const message = $(this).data("type");
-                const url = "{{ route('admin.gallery.publish', ':id') }}".replace(':id', downloadId);
-
-                const result = await confirmAction(`Do you want to ${message} this file?`);
-                if (result && result.isConfirmed) {
-                    const success = await fetchRequest(url, 'PATCH');
-                    if (success) {
-                        $("#gallery-datatable").DataTable().ajax.reload();
-                    }
-                }
+            imageCropper({
+                fileInput: "#logo_mobile",
+                inputLabelPreview: "#previewMobile",
+                aspectRatio: 1 / 1
             });
 
-            $("#gallery-datatable").on('click', '.archive-btn', async function() {
-                const downloadId = $(this).data("id");
-                const url = "{{ route('admin.gallery.archive', ':id') }}".replace(':id', downloadId);
-
-                const result = await confirmAction(`Do you want to archive this file?`);
-                if (result && result.isConfirmed) {
-                    const success = await fetchRequest(url, 'PATCH');
-                    if (success) {
-                        $("#gallery-datatable").DataTable().ajax.reload();
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
                     }
-                }
+                    form.classList.add('was-validated');
+                }, false);
             });
-
-            $("#gallery-datatable").on('click', '.delete-btn', async function() {
-                const downloadId = $(this).data("id");
-                const url = "{{ route('admin.gallery.destroy', ':id') }}".replace(':id', downloadId);
-
-                const result = await confirmAction(`Do you want to delete this image?`);
-                if (result && result.isConfirmed) {
-                    const success = await fetchRequest(url, 'DELETE');
-                    if (success) {
-                        $("#gallery-datatable").DataTable().ajax.reload();
-                    }
-                }
-            });
-
-            hashTabsNavigator({
-                table: table
-                , dataTableUrl: "{{ route('admin.gallery.index') }}"
-                , tabToHashMap: {
-                    "#draft-tab": '#draft'
-                    , "#published-tab": '#published'
-                    , "#archived-tab": '#archived'
-                , }
-                , hashToParamsMap: {
-                    '#draft': {
-                        status: 'draft'
-                    }
-                    , '#published': {
-                        status: 'published'
-                    }
-                    , '#archived': {
-                        status: 'archived'
-                    }
-                , }
-                , defaultHash: '#draft'
-            });
-
-            $('#gallery-datatable').colResizable({
-                liveDrag: true
-                , resizeMode: 'overflow'
-                , postbackSafe: true
-                , useLocalStorage: true
-                , gripInnerHtml: "<div class='grip'></div>"
-                , draggingClass: "dragging"
-            , });
-
-            pushStateModal({
-                fetchUrl: "{{ route('admin.gallery.detail', ':id') }}",
-                btnSelector: '.view-btn',
-                title: 'Gallery Details',
-                modalSize: 'lg',
-            });
-            
         });
-
     </script>
     @endpush
 </x-app-layout>
