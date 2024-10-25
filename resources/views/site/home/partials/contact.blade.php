@@ -22,38 +22,39 @@
         </div>
         <div class="col-lg-6">
             <h1 class="text-white mb-3">Contact Us</h1>
-            <form>
+            <form action="{{ route('public_contact.store') }}" method="POST">
+                @csrf
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control bg-white border-0" id="name" name="name" placeholder="Your Name">
+                            <input type="text" class="form-control bg-white border-0" id="name" name="name" placeholder="Your Name" required>
                             <label for="name">Your Name</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="email" class="form-control bg-white border-0" id="email" name="email" placeholder="Your Email">
+                            <input type="email" class="form-control bg-white border-0" id="email" name="email" placeholder="Your Email" required>
                             <label for="email">Your Email</label>
                         </div>
                     </div>
-
+            
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control bg-white border-0" id="mobile_number" name="mobile_number" placeholder="Phone / Mobile Number">
-                            <label for="name">Phone/Mobile Number</label>
+                            <input type="text" class="form-control bg-white border-0" id="contact_number" name="contact_number" placeholder="Phone / Mobile Number" required>
+                            <label for="contact_number">Phone/Mobile Number</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="email" class="form-control bg-white border-0" id="cnic" name="cnic" placeholder="CNIC">
-                            <label for="email">CNIC Number</label>
+                            <input type="text" class="form-control bg-white border-0" id="cnic" name="cnic" placeholder="CNIC" required>
+                            <label for="cnic">CNIC Number</label>
                         </div>
                     </div>
-
+            
                     <div class="col-12">
                         <div class="form-floating">
-                            <textarea class="form-control bg-white border-0" placeholder="Special Request" id="message" name="message" style="height: 150px"></textarea>
-                            <label for="message">Message Detail</label>
+                            <textarea class="form-control bg-white border-0" placeholder="Special Request" id="message" name="message" style="height: 150px" required></textarea>
+                            <label for="message">Message / Query / Complaint Detail</label>
                         </div>
                     </div>
                     <div class="col-12">
@@ -61,6 +62,7 @@
                     </div>
                 </div>
             </form>
+            
         </div>
     </div>
 </div>

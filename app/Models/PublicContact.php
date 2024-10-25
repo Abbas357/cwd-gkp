@@ -14,6 +14,13 @@ class PublicContact extends Model
 
     protected $fillable = ['name', 'email', 'contact_number', 'cnic', 'message'];
 
+    protected function casts(): array
+    {
+        return [
+            'action_at' => 'datetime',
+        ];
+    }
+
     // protected static $recordEvents = ['deleted'];
     public function getActivitylogOptions(): LogOptions
     {

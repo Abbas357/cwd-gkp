@@ -1,6 +1,7 @@
 <x-main-layout title="Standardization of Engineering Products / Materials">
     @push('style')
     <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
     @endpush
     <div class="wrapper">
         <div class="page container">
@@ -20,7 +21,7 @@
                                         <div class="row mb-3">
                                             <div class="col">
                                                 <label for="product_name">Product Name <abbr title="Required">*</abbr></label>
-                                                <input type="text" class="form-control" id="product_name" value="{{ old('product_name') }}" placeholder="Name of Owner" name="product_name" required>
+                                                <input type="text" class="form-control" id="product_name" value="{{ old('product_name') }}" placeholder="Product Name" name="product_name" required>
                                                 @error('product_name')
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @enderror
@@ -215,8 +216,13 @@
     <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/jquery-mask/jquery.mask.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
+    <script src="{{ asset('admin/plugins/summernote/summernote-bs5.min.js') }}"></script>
     <script>
         $(document).ready(function() {
+
+            $('#specification_details').summernote({
+                height: 200,
+            });
 
             imageCropper({
                 fileInput: "#secp_certificate",

@@ -155,9 +155,24 @@
                 const registrationId = $(this).data("id");
                 const url = "{{ route('admin.registrations.defer', ':id') }}".replace(':id', registrationId);
 
-                const result = await confirmAction('Do you want to defer this registration?');
-                if (result && result.isConfirmed) {
-                    const success = await fetchRequest(url, 'PATCH');
+
+                const { value: reason } = await confirmWithInput({
+                    inputType: "textarea",
+                    text: 'Do you want to deffered this registration?'
+                    , inputValidator: (value) => {
+                        if (!value) {
+                            return 'You need to provide a reason!';
+                        }
+                    }
+                    , inputPlaceholder: 'Enter the reason for deffering'
+                    , confirmButtonText: 'Reject'
+                    , cancelButtonText: 'Cancel'
+                });
+
+                if (reason) {
+                    const success = await fetchRequest(url, 'PATCH', {
+                        reason
+                    });
                     if (success) {
                         $("#registrations-datatable").DataTable().ajax.reload();
                     }

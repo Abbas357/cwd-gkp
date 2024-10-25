@@ -5,6 +5,7 @@ use App\Http\Controllers\StoryController;
 use App\Http\Controllers\NewsLetterController;
 use App\Http\Controllers\EStandardizationController;
 use App\Http\Controllers\ContractorRegistrationController;
+use App\Http\Controllers\PublicContactController;
 
 Route::prefix('registrations')->as('registrations.')->group(function () {
     Route::get('/create', [ContractorRegistrationController::class, 'create'])->name('create');
@@ -27,4 +28,8 @@ Route::prefix('stories')->as('stories.')->group(function () {
 Route::prefix('newsletter')->as('newsletter.')->group(function () {
     Route::post('/', [NewsLetterController::class, 'store'])->name('store');
     Route::get('/unsubscribe/{token}', [NewsLetterController::class, 'unsubscribe'])->name('unsubscribe');
+});
+
+Route::prefix('public_contact')->as('public_contact.')->group(function () {
+    Route::post('/', [PublicContactController::class, 'store'])->name('store');
 });

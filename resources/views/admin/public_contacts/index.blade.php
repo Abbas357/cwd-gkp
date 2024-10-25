@@ -1,38 +1,41 @@
-<x-app-layout title="Gallery">
+<x-app-layout title="Public Contact">
     @push('style')
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header">
-        <li class="breadcrumb-item active" aria-current="page">Gallery</li>
+        <li class="breadcrumb-item active" aria-current="page">Public Contact</li>
     </x-slot>
 
-    <div class="card-header mb-3">
+    <div class="card-header mb-3 d-flex justify-content-between">
         <ul class="nav nav-tabs nav-tabs-table">
             <li class="nav-item">
-                <a id="draft-tab" class="nav-link" data-bs-toggle="tab" href="#draft">Draft</a>
+                <a id="new-tab" class="nav-link" data-bs-toggle="tab" href="#new">New</a>
             </li>
             <li class="nav-item">
-                <a id="published-tab" class="nav-link" data-bs-toggle="tab" href="#published">Published</a>
+                <a id="relief-granted-tab" class="nav-link" data-bs-toggle="tab" href="#relief-granted">Relief Granted</a>
             </li>
             <li class="nav-item">
-                <a id="archived-tab" class="nav-link" data-bs-toggle="tab" href="#archived">Archived</a>
+                <a id="relief-not-granted-tab" class="nav-link" data-bs-toggle="tab" href="#relief-not-granted">Relief Not Granted</a>
+            </li>
+            <li class="nav-item">
+                <a id="dropped-tab" class="nav-link" data-bs-toggle="tab" href="#dropped">Dropped</a>
             </li>
         </ul>
     </div>
 
-    <table id="gallery-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+    <table id="public_contact-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
         <thead>
             <tr>
                 <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Title</th>
-                <th scope="col" class="p-3">Type</th>
-                <th scope="col" class="p-3">Description</th>
-                <th scope="col" class="p-3">Image</th>
-                <th scope="col" class="p-3">Uploaded By</th>
+                <th scope="col" class="p-3">Name</th>
+                <th scope="col" class="p-3">Email</th>
+                <th scope="col" class="p-3">Contact Number</th>
+                <th scope="col" class="p-3">CNIC</th>
+                <th scope="col" class="p-3">Message</th>
+                <th scope="col" class="p-3">Device Info</th>
                 <th scope="col" class="p-3">Status</th>
                 <th scope="col" class="p-3">Created At</th>
-                <th scope="col" class="p-3">Updated At</th>
-                <th scope="col" class="p-3">Actions</th>
+                <th scope="col" class="p-3">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -42,34 +45,37 @@
     @push('script')
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/col-resizable.js') }}"></script>
-    <script src="{{ asset('admin/plugins/html2canvas/html2canvas.min.js') }}"></script>
 
     <script>
         $(document).ready(function() {
-            var table = initDataTable('#gallery-datatable', {
-                ajaxUrl: "{{ route('admin.gallery.index') }}"
+            var table = initDataTable('#public_contact-datatable', {
+                ajaxUrl: "{{ route('admin.public_contact.index') }}"
                 , columns: [{
                         data: "id"
                         , searchBuilderType: "num"
                     }
                     , {
-                        data: "title"
+                        data: "name"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "type"
+                        data: "email"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "description"
+                        data: "contact_number"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "image"
+                        data: "cnic"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "uploaded_by"
+                        data: "message"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "device_info"
                         , searchBuilderType: "string"
                     }
                     , {
@@ -78,10 +84,6 @@
                     }
                     , {
                         data: "created_at"
-                        , searchBuilderType: "date"
-                    }
-                    , {
-                        data: "updated_at"
                         , searchBuilderType: "date"
                     }
                     , {
@@ -99,69 +101,120 @@
                 }]
             });
 
-            $("#gallery-datatable").on('click', '.publish-btn', async function() {
-                const downloadId = $(this).data("id");
-                const message = $(this).data("type");
-                const url = "{{ route('admin.gallery.publish', ':id') }}".replace(':id', downloadId);
-
-                const result = await confirmAction(`Do you want to ${message} this file?`);
-                if (result && result.isConfirmed) {
-                    const success = await fetchRequest(url, 'PATCH');
-                    if (success) {
-                        $("#gallery-datatable").DataTable().ajax.reload();
-                    }
-                }
-            });
-
-            $("#gallery-datatable").on('click', '.archive-btn', async function() {
-                const downloadId = $(this).data("id");
-                const url = "{{ route('admin.gallery.archive', ':id') }}".replace(':id', downloadId);
-
-                const result = await confirmAction(`Do you want to archive this file?`);
-                if (result && result.isConfirmed) {
-                    const success = await fetchRequest(url, 'PATCH');
-                    if (success) {
-                        $("#gallery-datatable").DataTable().ajax.reload();
-                    }
-                }
-            });
-
-            $("#gallery-datatable").on('click', '.delete-btn', async function() {
-                const downloadId = $(this).data("id");
-                const url = "{{ route('admin.gallery.destroy', ':id') }}".replace(':id', downloadId);
-
-                const result = await confirmAction(`Do you want to delete this image?`);
-                if (result && result.isConfirmed) {
-                    const success = await fetchRequest(url, 'DELETE');
-                    if (success) {
-                        $("#gallery-datatable").DataTable().ajax.reload();
-                    }
-                }
-            });
-
             hashTabsNavigator({
                 table: table
-                , dataTableUrl: "{{ route('admin.gallery.index') }}"
+                , dataTableUrl: "{{ route('admin.public_contact.index') }}"
                 , tabToHashMap: {
-                    "#draft-tab": '#draft'
-                    , "#published-tab": '#published'
-                    , "#archived-tab": '#archived'
+                    "#new-tab": '#new'
+                    , "#relief-granted-tab": '#relief-granted'
+                    , "#relief-not-granted-tab": '#relief-not-granted'
+                    , "#dropped-tab": '#dropped'
                 , }
                 , hashToParamsMap: {
-                    '#draft': {
-                        status: 'draft'
+                    '#new': {
+                        status: 'new'
                     }
-                    , '#published': {
-                        status: 'published'
+                    , '#relief-granted': {
+                        status: 'relief-granted'
                     }
-                    , '#archived': {
-                        status: 'archived'
+                    , '#relief-not-granted': {
+                        status: 'relief-not-granted'
+                    }
+                    , '#dropped': {
+                        status: 'dropped'
                     }
                 , }
-                , defaultHash: '#draft'
+                , defaultHash: '#new'
             });
 
-            $('#gallery-datatable').colResizable({
+            $("#public_contact-datatable").on('click', '.relief-grant-btn', async function() {
+                const contactId = $(this).data("id");
+                const url = "{{ route('admin.public_contact.grant', ':id') }}".replace(':id', contactId);
+
+                const {
+                    value: remarks
+                } = await confirmWithInput({
+                    inputType: "textarea",
+                    text: 'Do you want to grant relief to this person'
+                    , inputValidator: (value) => {
+                        if (!value) {
+                            return 'You need to provide some detail!';
+                        }
+                    }
+                    , inputPlaceholder: 'Detail About Relief Granting'
+                    , confirmButtonText: 'Grant Relief'
+                    , cancelButtonText: 'Cancel'
+                });
+
+                if (remarks) {
+                    const success = await fetchRequest(url, 'PATCH', {
+                        remarks
+                    });
+                    if (success) {
+                        $("#public_contact-datatable").DataTable().ajax.reload();
+                    }
+                }
+            });
+
+            $("#public_contact-datatable").on('click', '.relief-not-grant-btn', async function() {
+                const contactId = $(this).data("id");
+                const url = "{{ route('admin.public_contact.notgrant', ':id') }}".replace(':id', contactId);
+
+                const {
+                    value: remarks
+                } = await confirmWithInput({
+                    inputType: "textarea",
+                    text: 'Do you want to not grant relief to this person'
+                    , inputValidator: (value) => {
+                        if (!value) {
+                            return 'You need to provide some detail!';
+                        }
+                    }
+                    , inputPlaceholder: 'Details About not Granting the Relief'
+                    , confirmButtonText: 'No Relief Grant'
+                    , cancelButtonText: 'Cancel'
+                });
+
+                if (remarks) {
+                    const success = await fetchRequest(url, 'PATCH', {
+                        remarks
+                    });
+                    if (success) {
+                        $("#public_contact-datatable").DataTable().ajax.reload();
+                    }
+                }
+            });
+
+            $("#public_contact-datatable").on('click', '.dropped-btn', async function() {
+                const contactId = $(this).data("id");
+                const url = "{{ route('admin.public_contact.drop', ':id') }}".replace(':id', contactId);
+
+                const {
+                    value: remarks
+                } = await confirmWithInput({
+                    inputType: "textarea",
+                    text: 'Do you want to drop this record'
+                    , inputValidator: (value) => {
+                        if (!value) {
+                            return 'You need to provide some detail!';
+                        }
+                    }
+                    , inputPlaceholder: 'Details About dropping the record'
+                    , confirmButtonText: 'Drop'
+                    , cancelButtonText: 'Cancel'
+                });
+
+                if (remarks) {
+                    const success = await fetchRequest(url, 'PATCH', {
+                        remarks
+                    });
+                    if (success) {
+                        $("#public_contact-datatable").DataTable().ajax.reload();
+                    }
+                }
+            });
+
+            $('#public_contact-datatable').colResizable({
                 liveDrag: true
                 , resizeMode: 'overflow'
                 , postbackSafe: true
@@ -170,13 +223,6 @@
                 , draggingClass: "dragging"
             , });
 
-            pushStateModal({
-                fetchUrl: "{{ route('admin.gallery.detail', ':id') }}",
-                btnSelector: '.view-btn',
-                title: 'Gallery Details',
-                modalSize: 'lg',
-            });
-            
         });
 
     </script>

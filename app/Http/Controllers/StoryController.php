@@ -40,7 +40,7 @@ class StoryController extends Controller
                     return $row->user ? $row->user->name . ' (' . $row->user->designation . ' - ' . $row->user->office  . ')' : 'N/A';
                 })
                 ->editColumn('created_at', function ($row) {
-                    return $row->created_at->diffForHumans();
+                    return $row->created_at->format('j, F Y');
                 })
                 ->editColumn('updated_at', function ($row) {
                     return $row->updated_at->diffForHumans();

@@ -39,7 +39,7 @@ class UserController extends Controller
                     return $row->password_updated_at ? $row->password_updated_at->diffForHumans() : 'Not Updated Yet';
                 })
                 ->editColumn('created_at', function ($row) {
-                    return $row->created_at->diffForHumans();
+                    return $row->created_at->format('j, F Y');
                 })
                 ->editColumn('updated_at', function ($row) {
                     return $row->updated_at->diffForHumans();

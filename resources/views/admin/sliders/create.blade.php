@@ -115,7 +115,7 @@
             imageCropper({
                 fileInput: "#image"
                 , inputLabelPreview: "#previewSlider"
-                , aspectRatio: 4 / 3
+                , aspectRatio: 16 / 9
             });
 
             var forms = document.querySelectorAll('.needs-validation')

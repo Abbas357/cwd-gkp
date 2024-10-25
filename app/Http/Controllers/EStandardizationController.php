@@ -6,11 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\EStandardization;
 use Yajra\DataTables\DataTables;
 
-use App\Http\Requests\StoreEStandardizationRequest;
-
 use Endroid\QrCode\Builder\Builder;
-use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\Writer\PngWriter;
+use Illuminate\Support\Facades\Mail;
+use Endroid\QrCode\Encoding\Encoding;
+use App\Mail\StandardizationAppliedMail;
+use App\Mail\StandardizationApprovedMail;
+use App\Mail\StandardizationRejectedMail;
+use App\Http\Requests\StoreEStandardizationRequest;
 
 class EStandardizationController extends Controller
 {
@@ -114,9 +117,10 @@ class EStandardizationController extends Controller
         }
 
         if ($standardization->save()) {
-            return redirect()->route('admin.standardizations.create')->with('success', 'Your form has been submitted successfully');
+            Mail::to($standardization->email)->queue(new StandardizationAppliedMail($standardization));
+            return redirect()->route('standardizations.create')->with('success', 'Your form has been submitted successfully');
         }
-        return redirect()->route('admin.standardizations.create')->with('danger', 'There is an error submitting your data');
+        return redirect()->route('standardizations.create')->with('danger', 'There is an error submitting your data');
     }
 
     public function show(EStandardization $EStandardization)
@@ -182,8 +186,10 @@ class EStandardizationController extends Controller
     {
         if ($EStandardization->status !== 1) {
             $EStandardization->status = 1;
-            $EStandardization->save();
-            return response()->json(['success' => 'Product has been approved successfully.']);
+            if($EStandardization->save()) {
+                Mail::to($EStandardization->email)->queue(new StandardizationApprovedMail($EStandardization));
+                return response()->json(['success' => 'Product has been approved successfully.']);
+            }
         }
         return response()->json(['error' => 'Product can\'t be approved.']);
     }
@@ -199,8 +205,11 @@ class EStandardizationController extends Controller
         if (!in_array($EStandardization->status, [1, 2])) {
             $EStandardization->status = 2;
             $EStandardization->rejection_reason = $request->reason;
-            $EStandardization->save();
-            return response()->json(['success' => 'Product has been rejected.']);
+
+            if($EStandardization->save()) {
+                Mail::to($EStandardization->email)->queue(new StandardizationRejectedMail($EStandardization, $$request->reason));
+                return response()->json(['success' => 'Product has been rejected.']);
+            }
         }
         return response()->json(['error' => 'Product can\'t be rejected.']);
     }

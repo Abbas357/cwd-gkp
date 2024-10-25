@@ -273,13 +273,9 @@
         $('#save-btn-' + field).removeClass('d-none');
     }
 
-    async function 
-    
-    (field, id) {
+    async function updateField(field, id) {
         const newValue = $('#input-' + field).val();
-        const url = "{{ route('admin.standardizations.
-        
-        ') }}";
+        const url = "{{ route('admin.standardizations.uploadFile') }}";
         const data = {
             id: id
             , field: field

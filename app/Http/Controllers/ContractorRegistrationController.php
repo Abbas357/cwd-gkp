@@ -2,18 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ContractorRegistration;
-use App\Http\Requests\StoreContractorRegistrationRequest;
+use App\Models\Category;
 use App\Models\District;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 use Endroid\QrCode\Builder\Builder;
-use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\Writer\PngWriter;
+use Illuminate\Support\Facades\Mail;
 
-use App\Models\Category;
+use Endroid\QrCode\Encoding\Encoding;
 
-use Yajra\DataTables\DataTables;
+use App\Models\ContractorRegistration;
+use App\Http\Requests\StoreContractorRegistrationRequest;
+
+use App\Mail\ContractorRegistrationAppliedMail;
+use App\Mail\ContractorRegistrationApprovedMail;
+use App\Mail\ContractorRegistrationDeferredFirstMail;
+use App\Mail\ContractorRegistrationDeferredThirdMail;
+use App\Mail\ContractorRegistrationDeferredSecondMail;
 
 class ContractorRegistrationController extends Controller
 {
@@ -40,10 +47,7 @@ class ContractorRegistrationController extends Controller
                     return $row->updated_at->diffForHumans();
                 })
                 ->editColumn('status', function ($row) {
-                    return $row->status === 1 ? 'Deferred 1 time' :
-                            ($row->status === 2 ? 'Deferred 2 time' :
-                            ($row->status === 3 ? 'Deferred 3 time' :
-                            ($row->status === 4 ? 'Approved' : 'Nil')));
+                    return $row->status === 1 ? 'Deferred 1 time' : ($row->status === 2 ? 'Deferred 2 time' : ($row->status === 3 ? 'Deferred 3 time' : ($row->status === 4 ? 'Approved' : 'Nil')));
                 })
                 ->rawColumns(['action']);
 
@@ -59,29 +63,6 @@ class ContractorRegistrationController extends Controller
 
         return view('admin.cont_registrations.index');
     }
-
-    public function defer(Request $request, ContractorRegistration $ContractorRegistration)
-    {
-        if (!in_array($ContractorRegistration->status, [3, 4])) {
-            $ContractorRegistration->status += 1;
-            $ContractorRegistration->save();
-            return response()->json(['success' => 'Registration has been deferred successfully.']);
-        }
-
-        return response()->json(['error' => 'Registration can\'t be deferred further or has already been approved.']);
-    }
-
-
-    public function approve(Request $request, ContractorRegistration $ContractorRegistration)
-    {
-        if (!in_array($ContractorRegistration->status, [3, 4])) {
-            $ContractorRegistration->status = 4;
-            $ContractorRegistration->save();
-            return response()->json(['success' => 'Registration has been approved successfully.']);
-        }
-        return response()->json(['error' => 'Registration can\'t be approved.']);
-    }
-
 
     public function create()
     {
@@ -154,9 +135,41 @@ class ContractorRegistrationController extends Controller
         }
 
         if ($registration->save()) {
-            return redirect()->route('admin.registrations.create')->with('success', 'Your form has been submitted successfully');
+            Mail::to($registration->email)->queue(new ContractorRegistrationAppliedMail($registration));
+            return redirect()->route('registrations.create')->with('success', 'Your form has been submitted successfully');
         }
-        return redirect()->route('admin.registrations.create')->with('danger', 'There is an error submitting your data');
+        return redirect()->route('registrations.create')->with('danger', 'There is an error submitting your data');
+    }
+
+    public function defer(Request $request, ContractorRegistration $ContractorRegistration)
+    {
+        $ContractorRegistration->deffered_reason = $request->reason;
+        if ($ContractorRegistration->status == 0) {
+            $ContractorRegistration->status = 1;
+            Mail::to($ContractorRegistration->email)->queue(new ContractorRegistrationDeferredFirstMail($ContractorRegistration, $request->reason));
+        } elseif ($ContractorRegistration->status == 1) {
+            $ContractorRegistration->status = 2;
+            Mail::to($ContractorRegistration->email)->queue(new ContractorRegistrationDeferredSecondMail($ContractorRegistration, $request->reason));
+        } elseif ($ContractorRegistration->status == 2) {
+            $ContractorRegistration->status = 3;
+            Mail::to($ContractorRegistration->email)->queue(new ContractorRegistrationDeferredThirdMail($ContractorRegistration, $request->reason));
+        }
+        if($ContractorRegistration->save()) {
+            return response()->json(['success' => 'Registration has been deferred successfully.']);
+        }
+        return response()->json(['error' => 'Registration can\'t be deferred further or has already been approved.']);
+    }
+
+
+    public function approve(Request $request, ContractorRegistration $ContractorRegistration)
+    {
+        if (!in_array($ContractorRegistration->status, [3, 4])) {
+            $ContractorRegistration->status = 4;
+            $ContractorRegistration->save();
+            Mail::to($ContractorRegistration->email)->queue(new ContractorRegistrationApprovedMail($ContractorRegistration));
+            return response()->json(['success' => 'Registration has been approved successfully.']);
+        }
+        return response()->json(['error' => 'Registration can\'t be approved.']);
     }
 
     public function show(ContractorRegistration $ContractorRegistration)

@@ -18,6 +18,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\EStandardizationController;
 use App\Http\Controllers\ContractorRegistrationController;
+use App\Http\Controllers\PublicContactController;
 
 Route::middleware('auth')->group(function () { 
     Route::prefix('admin')->as('admin.')->group(function () {
@@ -90,9 +91,15 @@ Route::middleware('auth')->group(function () {
 
         Route::prefix('newsletter')->as('newsletter.')->group(function () {
             Route::get('/', [NewsLetterController::class, 'index'])->name('index');
-            Route::post('/', [NewsLetterController::class, 'store'])->name('store');
             Route::get('/mass-email', [NewsLetterController::class, 'createMassEmail'])->name('create_mass_email');
             Route::post('/mass-email', [NewsLetterController::class, 'sendMassEmail'])->name('send_mass_email');
+        });
+
+        Route::prefix('public_contact')->as('public_contact.')->group(function () {
+            Route::get('/', [PublicContactController::class, 'index'])->name('index');
+            Route::patch('/relief-grant/{PublicContact}', [PublicContactController::class, 'reliefGrant'])->name('grant');
+            Route::patch('/relief-not-grant/{PublicContact}', [PublicContactController::class, 'reliefNotGrant'])->name('notgrant');
+            Route::patch('/drop/{PublicContact}', [PublicContactController::class, 'drop'])->name('drop');
         });
 
         Route::prefix('news')->as('news.')->group(function () {

@@ -124,6 +124,15 @@
                     <li><a href="{{ route('admin.newsletter.index') }}"><i class="bi-arrow-right-short"></i>All Emails</a></li>
                 </ul>
             </li>
+            <li>
+                <a href="javascript:;" class="has-arrow">
+                    <div class="parent-icon"><i class="bi-exclamation-triangle"></i></div>
+                    <div class="menu-title">Public Queries</div>
+                </a>
+                <ul>
+                    <li><a href="{{ route('admin.public_contact.index') }}"><i class="bi-arrow-right-short"></i>List</a></li>
+                </ul>
+            </li>
             {{-- <li>
                 <a class="has-arrow" href="javascript:;">
                     <div class="parent-icon"><i class="bi-three-dots"></i></div>

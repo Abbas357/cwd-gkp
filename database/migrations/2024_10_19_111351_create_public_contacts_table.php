@@ -17,10 +17,12 @@ return new class extends Migration
             $table->text('message');
             $table->string('ip_address')->nullable();
             $table->string('device_info')->nullable();
-            $table->string('user_agent')->nullable();
+            $table->enum('status', ['new', 'relief-granted', 'relief-not-granted', 'dropped'])->default('new');
+            $table->timestamp('action_at')->nullable()->default(null);
+            $table->foreignId('action_by')->nullable()->constrained('users');
+            $table->string('remarks')->nullable();
             $table->timestamps();
         });
-        
     }
 
     public function down(): void

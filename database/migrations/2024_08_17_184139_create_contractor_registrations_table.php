@@ -34,6 +34,7 @@ return new class extends Migration
             $table->string('pec_attachment')->nullable();
             $table->string('form_h_attachment')->nullable();
             $table->string('pre_enlistment_attachment')->nullable();
+            $table->text('deffered_reason');
             $table->boolean('is_agreed')->default(false);
             $table->boolean('status')->default(0);
             $table->timestamps();

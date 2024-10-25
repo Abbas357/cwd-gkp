@@ -9,8 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-// class MassNewsletterEmail extends Mailable implements ShouldQueue
-class MassNewsletterEmail extends Mailable
+class MassNewsletterEmail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -26,7 +25,7 @@ class MassNewsletterEmail extends Mailable
     public function build()
     {
         return $this->subject('Newsletter Update')
-            ->view('emails.mass_newsletter_email')
+            ->view('emails.newsletter.mass-email')
             ->with([
                 'content' => $this->emailContent,
                 'unsubscribeLink' => $this->unsubscribeLink,

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
@@ -9,29 +8,33 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class SubscriptionConfirmation extends Mailable implements ShouldQueue
+class ContractorRegistrationApprovedMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $unsubscribeUrl;
+    public $registration;
 
-    public function __construct($unsubscribeToken)
+    public function __construct($registration)
     {
-        $this->unsubscribeUrl = route('newsletter.unsubscribe', ['token' => $unsubscribeToken]);
+        $this->registration = $registration;
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Newsletter Subscribed',
+            subject: 'Your Registration is Approved',
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'emails.newsletter.confirmation',
-            with: ['unsubscribeUrl' => $this->unsubscribeUrl],
+            view: 'emails.registration.approved',
+            with: [
+                'owner_name' => $this->registration->owner_name,
+                'contractor_name' => $this->registration->contractor_name,
+                'pec_number' => $this->registration->pec_number,
+            ],
         );
     }
 
