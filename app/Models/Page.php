@@ -9,9 +9,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Page extends Model
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+
+class Page extends Model implements HasMedia
 {
-    use HasFactory, LogsActivity;
+    use HasFactory, LogsActivity, InteractsWithMedia;
 
     protected $guarded = [];
 
@@ -33,5 +36,11 @@ class Page extends Model
             ->setDescriptionForEvent(function (string $eventName) {
                 return "Page has been {$eventName}";
             });
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('page_attachments')
+        ->singleFile();
     }
 }

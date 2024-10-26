@@ -6,6 +6,7 @@ use App\Models\Slider;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\StoreSliderRequest;
 
 class SliderController extends Controller
@@ -81,6 +82,8 @@ class SliderController extends Controller
                 ->toMediaCollection('sliders');
         }
 
+        Cache::forget('sliders');
+
         if ($request->user()->sliders()->save($slider)) {
             return redirect()->route('admin.sliders.create')->with('success', 'Slider Added successfully');
         }
@@ -96,12 +99,11 @@ class SliderController extends Controller
     {
         $publishedSlidersCount = Slider::where('status', 'published')->whereNotNull('published_at')->count();
 
-        if ($publishedSlidersCount >= 5) {
-            return response()->json(['error' => 'You cannot publish more than 5 sliders.'], 400);
-        }
-
         $slider = Slider::withoutGlobalScope('published')->findOrFail($sliderId);
         if ($slider->status === 'draft') {
+            if ($publishedSlidersCount >= 5) {
+                return response()->json(['error' => 'You cannot publish more than 5 sliders.'], 400);
+            }
             $slider->published_at = now();
             $slider->status = 'published';
             $message = 'Slider has been published successfully.';
@@ -109,6 +111,7 @@ class SliderController extends Controller
             $slider->status = 'draft';
             $message = 'Slider has been unpublished.';
         }
+        Cache::forget('sliders');
         $slider->published_by = $request->user()->id;
         $slider->save();
         return response()->json(['success' => $message], 200);
@@ -121,6 +124,7 @@ class SliderController extends Controller
             $slider->save();
             return response()->json(['success' => 'Slider has been archived successfully.'], 200);
         }
+        Cache::forget('sliders');
         return response()->json(['error' => 'Slider cannot be archived.'], 403);
     }
 
@@ -163,6 +167,7 @@ class SliderController extends Controller
 
         if ($slider->isDirty($request->field)) {
             $slider->save();
+            Cache::forget('sliders');
             return response()->json(['success' => 'Field updated successfully'], 200);
         }
 
@@ -186,7 +191,7 @@ class SliderController extends Controller
         try {
             $slider->addMedia($request->file('image'))
                 ->toMediaCollection('sliders');
-
+            Cache::forget('sliders');
             return response()->json(['success' => 'File uploaded successfully'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error uploading file: ' . $e->getMessage()], 500);
@@ -199,6 +204,7 @@ class SliderController extends Controller
         $slider = Slider::withoutGlobalScope('published')->findOrFail($sliderId);
         if ($slider->status === 'draft' && is_null($slider->published_at)) {
             if ($slider->delete()) {
+                Cache::forget('sliders');
                 return response()->json(['success' => 'Slider has been deleted successfully.']);
             }
         }

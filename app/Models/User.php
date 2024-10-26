@@ -34,6 +34,8 @@ class User extends Authenticatable implements HasMedia
             'email_verified_at' => 'datetime',
             'password_updated_at' => 'datetime',
             'password' => 'hashed',
+            'posting_date' => 'datetime',
+            'exit_date' => 'datetime',
         ];
     }
 

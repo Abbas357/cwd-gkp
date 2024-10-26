@@ -136,6 +136,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/get/{page}', [PageController::class, 'showDetail'])->name('detail');
             Route::patch('/activate/{page}', [PageController::class, 'activatePage'])->name('activate');
             Route::patch('/update/field', [PageController::class, 'updateField'])->name('updateField');
+            Route::patch('/upload/file', [PageController::class, 'uploadFile'])->name('uploadFile');
             Route::delete('/{page}', [PageController::class, 'destroy'])->name('destroy');
         });
 

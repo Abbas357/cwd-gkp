@@ -27,6 +27,7 @@ class UpdateUserRequest extends FormRequest
                 'email',
                 Rule::unique('users')->ignore(request()->user->id),
             ],
+            'title'=> 'nullable',
             'password'=> 'nullable|min:5',
             'mobile_number'=> 'nullable|min:11',
             'landline_number'=> 'nullable|min:9',

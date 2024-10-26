@@ -752,9 +752,7 @@ function pushStateModal({
         const formTagClose = includeForm ? `</form>` : '';
 
         const modalTemplate = `
-        <div class="modal 
-        
-        fade" id="${modalId}" tabindex="-1" aria-hidden="true">
+        <div class="modal fade" id="${modalId}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-${modalSize} modal-dialog-centered modal-dialog-scrollable">
                 
                 <div class="modal-content">

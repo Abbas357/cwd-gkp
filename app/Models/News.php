@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 
 use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\MediaLibrary\InteractsWithMedia;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class News extends Model implements HasMedia

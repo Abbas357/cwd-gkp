@@ -348,7 +348,7 @@ a {
 
 .carousel-header .carousel-inner .carousel-item {
     position: relative;
-    min-height: 100vh
+    min-height: 80vh
 }
 
 .carousel-header .carousel-inner .carousel-item img {
@@ -369,7 +369,7 @@ a {
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: linear-gradient(rgba(0, 0, 0, .3), rgba(0, 0, 0, 0.3));
+    background: linear-gradient(rgba(0, 0, 0, .1), rgba(0, 0, 0, 0.1));
     background-size: cover;
 
     p, h3 {
@@ -883,70 +883,4 @@ a {
     text-decoration: none;
     color: inherit;
 }
-
-.module .module-carousel {
-    position: relative;
-}
-
-.module .module-carousel .owl-dots {
-    margin-top: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.module .module-carousel .owl-dot {
-    position: relative;
-    display: inline-block;
-    margin: 0 5px;
-    width: 15px;
-    height: 15px;
-    background: var(--bs-light);
-    border: 1px solid var(--bs-primary);
-    border-radius: 10px;
-    transition: 0.5s;
-}
-
-.module .module-carousel .owl-dot.active {
-    width: 40px;
-    background: var(--bs-primary);
-}
-
-.module .module-carousel .owl-nav .owl-prev {
-    position: absolute;
-    top: -55px;
-    left: 0;
-    padding: 5px 30px;
-    border: 1px solid var(--bs-primary);
-    border-radius: 30px;
-    transition: 0.5s;
-}
-
-.module .module-carousel .owl-nav .owl-next {
-    position: absolute;
-    top: -55px;
-    right: 0;
-    padding: 5px 30px;
-    border: 1px solid var(--bs-primary);
-    border-radius: 30px;
-    transition: 0.5s;
-}
-
-.module .module-carousel .owl-nav .owl-prev i,
-.module .module-carousel .owl-nav .owl-next i {
-    color: var(--bs-primary);
-    font-size: 17px;
-    transition: 0.5s;
-}
-
-.module .module-carousel .owl-nav .owl-prev:hover,
-.module .module-carousel .owl-nav .owl-next:hover {
-    background: var(--bs-primary);
-}
-
-.module .module-carousel .owl-nav .owl-prev:hover i,
-.module .module-carousel .owl-nav .owl-next:hover i {
-    color: var(--bs-white);
-}
-
 /*** module End ***/

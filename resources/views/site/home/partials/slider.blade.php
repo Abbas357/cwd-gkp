@@ -1,53 +1,57 @@
 <div class="carousel-header">
-    <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
+    <div id="homePageSlider" class="carousel slide" data-bs-ride="carousel">
+        
+        <!-- Carousel Indicators -->
         <ol class="carousel-indicators">
-            <li data-bs-target="#carouselId" data-bs-slide-to="0" class="active"></li>
-            <li data-bs-target="#carouselId" data-bs-slide-to="1"></li>
-            <li data-bs-target="#carouselId" data-bs-slide-to="2"></li>
+            @foreach($sliders as $index => $slider)
+                <li data-bs-target="#homePageSlider" data-bs-slide-to="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }}"></li>
+            @endforeach
         </ol>
+        
+        <!-- Carousel Inner -->
         <div class="carousel-inner" role="listbox">
-            <div class="carousel-item active">
-                <img src="{{ asset('site/img/carousel-2.jpg') }}" class="img-fluid" alt="Image">
-                <div class="carousel-caption">
-                    <div class="p-3" style="max-width: 900px;">
-                        <h3 class="text-white text-uppercase fw-bold mb-4 p-3" style="letter-spacing: 3px; background: #99999933; border-radius: 20px 20px 0px 0px">Explore The World</h3>
-                        <p class="mb-5 fs-5 p-3" style="background: #99999933; border-radius: 0px 0px 20px 20px">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
-                        <div class="d-flex align-items-center justify-content-center">
-                            <a class="btn-hover-bg btn btn-primary rounded-pill text-white py-3 px-5" href="#">View Details</a>
+            @foreach($sliders as $index => $slider)
+                <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                    <!-- Responsive Image -->
+                    <img 
+                        src="{{ $slider['image']['large'] }}" 
+                        srcset="{{ $slider['image']['small'] }} 400w, {{ $slider['image']['medium'] }} 800w, {{ $slider['image']['large'] }} 1200w" 
+                        sizes="(max-width: 600px) 400px, (max-width: 1200px) 800px, 1200px" 
+                        class="img-fluid" 
+                        alt="{{ $slider['title'] }}">
+                    
+                    <div class="carousel-caption">
+                        <div class="p-3" style="max-width: 900px;">
+                            <!-- Slider Title -->
+                            <h3 class="text-white text-uppercase fw-bold mb-4 p-3" 
+                                style="letter-spacing: 3px; background: #99999955; border-radius: 20px 20px 0px 0px">
+                                {{ $slider['title'] }}
+                            </h3>
+                            
+                            <!-- Slider Summary -->
+                            <p class="mb-5 fs-5 p-3" style="background: #99999955; border-radius: 0px 0px 20px 20px">
+                                {{ $slider['summary'] }}
+                            </p>
+                            
+                            <!-- View Details Button -->
+                            <div class="d-flex align-items-center justify-content-center">
+                                <a class="btn-hover-bg btn btn-primary rounded-pill text-white py-2 px-3" 
+                                   href="{{ route('sliders.showSlider', $slider['slug']) }}">
+                                   View Details
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="carousel-item">
-                <img src="{{ asset('site/img/carousel-1.jpg') }}" class="img-fluid" alt="Image">
-                <div class="carousel-caption">
-                    <div class="p-3" style="max-width: 900px;">
-                        <h3 class="text-white text-uppercase fw-bold mb-4 p-3" style="letter-spacing: 3px; background: #99999933; border-radius: 20px 20px 0px 0px">Explore The World</h3>
-                        <p class="mb-5 fs-5 p-3" style="background: #99999933; border-radius: 0px 0px 20px 20px">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
-                        <div class="d-flex align-items-center justify-content-center">
-                            <a class="btn-hover-bg btn btn-primary rounded-pill text-white py-3 px-5" href="#">View Details</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img src="{{ asset('site/img/carousel-3.jpg') }}" class="img-fluid" alt="Image">
-                <div class="carousel-caption">
-                    <div class="p-3" style="max-width: 900px;">
-                        <h3 class="text-white text-uppercase fw-bold mb-4 p-3" style="letter-spacing: 3px; background: #99999933; border-radius: 20px 20px 0px 0px">Explore The World</h3>
-                        <p class="mb-5 fs-5 p-3" style="background: #99999933; border-radius: 0px 0px 20px 20px">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
-                        <div class="d-flex align-items-center justify-content-center">
-                            <a class="btn-hover-bg btn btn-primary rounded-pill text-white py-3 px-5" href="#">View Details</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
+
+        <!-- Carousel Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#homePageSlider" data-bs-slide="prev">
             <span class="carousel-control-prev-icon btn bg-primary" aria-hidden="false"></span>
             <span class="visually-hidden">Previous</span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
+        <button class="carousel-control-next" type="button" data-bs-target="#homePageSlider" data-bs-slide="next">
             <span class="carousel-control-next-icon btn bg-primary" aria-hidden="false"></span>
             <span class="visually-hidden">Next</span>
         </button>

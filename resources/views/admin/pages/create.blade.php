@@ -42,20 +42,14 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="meta_title">Meta Title</label>
-                                    <input type="text" class="form-control" id="meta_title" value="{{ old('meta_title') }}" placeholder="Meta title" name="meta_title">
-                                    @error('meta_title')
+                                <div class="col mb-3">
+                                    <label for="attachment">Attachment</label>
+                                    <input type="file" class="form-control" id="attachment" name="attachment" required>
+                                    @error('attachment')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="meta_description">Meta Description</label>
-                                    <input type="text" class="form-control" id="meta_description" value="{{ old('meta_description') }}" placeholder="Meta Description" name="meta_description">
-                                    @error('meta_description')
-                                    <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                                <img src="#" style="width:100px" class="image-preview rounded d-none" />
                             </div>
 
                             <div class="row">
@@ -89,8 +83,11 @@
 
             imageCropper({
                 fileInput: "#attachment"
-                , inputLabelPreview: "#previewPage"
-                , aspectRatio: 4 / 3
+                , inputLabelPreview: ".image-preview"
+                , aspectRatio: 1 / 1, 
+                onComplete(){
+                    $('.image-preview').removeClass('d-none')
+                }
             });
 
             var forms = document.querySelectorAll('.needs-validation')

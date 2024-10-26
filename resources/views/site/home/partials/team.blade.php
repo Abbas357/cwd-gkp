@@ -1,3 +1,4 @@
+<link href="{{ asset('site/lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
 <div class="container py-2">
     <div class="mx-auto text-center" style="max-width: 900px;">
         <h5 class="section-title my-5 px-3">Meet Our Team</h5>
@@ -82,3 +83,35 @@
         </div>
     </div>
 </div>
+<script src="{{ asset('site/lib/owlcarousel/owl.carousel.min.js') }}"></script>
+<script>
+    $(".team-carousel").owlCarousel({
+        autoplay: true,
+        smartSpeed: 1000,
+        center: true,
+        dots: true,
+        loop: true,
+        margin: 25,
+        nav : true,
+        navText : [
+            '<i class="bi bi-arrow-left"></i>',
+            '<i class="bi bi-arrow-right"></i>'
+        ],
+        responsiveClass: true,
+        responsive: {
+            0:{
+                items:2
+            },
+            768:{
+                items:3
+            },
+            992:{
+                items:4
+            },
+            1200:{
+                items:5
+            }
+        }
+    });
+
+</script>

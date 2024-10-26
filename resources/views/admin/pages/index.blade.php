@@ -23,6 +23,7 @@
                 <th scope="col" class="p-3">ID</th>
                 <th scope="col" class="p-3">Title</th>
                 <th scope="col" class="p-3">Page Type</th>
+                <th scope="col" class="p-3">Attachment</th>
                 <th scope="col" class="p-3">Status</th>
                 <th scope="col" class="p-3">Created At</th>
                 <th scope="col" class="p-3">Updated At</th>
@@ -52,6 +53,10 @@
                     }
                     , {
                         data: "page_type"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "attachment"
                         , searchBuilderType: "string"
                     }
                     , {

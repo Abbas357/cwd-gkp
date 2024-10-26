@@ -28,6 +28,9 @@ class PageController extends Controller
                 ->addColumn('action', function ($row) {
                     return view('admin.pages.partials.buttons', compact('row'))->render();
                 })
+                ->addColumn('attachment', function ($row) {
+                    return '<a target="_blank" href="' . $row->getFirstMediaUrl('page_attachments') . '" class="btn btn-light bi bi-file-earmark fs-4"></span>';
+                })
                 ->editColumn('status', function ($row) {
                     return view('admin.pages.partials.status', compact('row'))->render();
                 })
@@ -37,7 +40,7 @@ class PageController extends Controller
                 ->editColumn('updated_at', function ($row) {
                     return $row->updated_at->diffForHumans();
                 })
-                ->rawColumns(['action', 'status']);
+                ->rawColumns(['action', 'status', 'attachment']);
 
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
                 $dataTable->filter(function ($query) use ($request) {
@@ -67,8 +70,11 @@ class PageController extends Controller
         $page->title = $request->title;
         $page->content = $request->content;
         $page->slug = Str::slug($request->title);
-        $page->meta_title = $request->meta_title;
-        $page->meta_description = $request->meta_description;
+
+        if ($request->hasFile('attachment')) {
+            $page->addMedia($request->file('attachment'))
+                ->toMediaCollection('page_attachments');
+        }
 
         if ($page->save()) {
             return redirect()->route('admin.pages.create')->with('success', 'Page Added successfully');
@@ -138,6 +144,29 @@ class PageController extends Controller
         }
 
         return response()->json(['error' => 'No changes were made to the field'], 200);
+    }
+
+    public function uploadFile(Request $request)
+    {
+        $request->validate([
+            'id'   => 'required|integer|exists:pages,id',
+            'attachment' => 'required|file|mimes:pdf,docx,pptx,txt,jpeg,jpg,png,gif|max:10240', 
+        ]);
+
+        $page = Page::withoutGlobalScope('active')->findOrFail($request->id);
+
+        if ($page->is_active === 1) {
+            return response()->json(['error' => 'Active page cannot be updated'], 403); 
+        }
+
+        try {
+            $page->addMedia($request->file('attachment'))
+                ->toMediaCollection('page_attachments');
+
+            return response()->json(['success' => 'Page uploaded successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error uploading file: ' . $e->getMessage()], 500);
+        }
     }
 
     public function destroy($pageId)

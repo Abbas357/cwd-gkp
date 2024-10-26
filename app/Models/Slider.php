@@ -76,7 +76,7 @@ class Slider extends Model implements HasMedia
         return $this->belongsTo(User::class, 'author_id');
     }
 
-    public function publishBy() {
+    public function publishedBy() {
         return $this->belongsTo(User::class, 'published_by');
     }
 

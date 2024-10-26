@@ -1,3 +1,68 @@
+async function fetchRequest(
+    url,
+    method = "GET",
+    data = {},
+    successMessage = "Operation successful",
+    errorMessage = "There was an error processing your request"
+) {
+    try {
+        let headers = {
+            "X-CSRF-TOKEN": document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content"),
+            Accept: "application/json",
+        };
+
+        if (!(data instanceof FormData)) {
+            headers["Content-Type"] = "application/json";
+        }
+
+        const options = {
+            method: method,
+            headers: headers,
+            body: null,
+        };
+
+        if (method !== "GET") {
+            options.body =
+                data instanceof FormData ? data : JSON.stringify(data);
+        }
+
+        const response = await fetch(url, options);
+
+        if (!response.ok) {
+            if (response.status === 422) {
+                const result = await response.json();
+                handleValidationErrors(result.errors);
+                return false;
+            } else {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+        }
+        const result = await response.json();
+        if (result.success) {
+            if (method === "GET") {
+                return result.data;
+            } else {
+                alert(result.success || successMessage);
+                return true;
+            }
+        } else {
+            alert(
+                result.error || errorMessage || "An unexpected error occurred",
+                "error"
+            );
+            return false;
+        }
+    } catch (error) {
+        alert(
+            errorMessage || "There was an error processing your request",
+            "error"
+        );
+        return false;
+    }
+}
+
 function handleValidationErrors(errors) {
     $(".form-error").remove();
     setButtonLoading($('button[type="submit"]'), false);
@@ -354,6 +419,127 @@ function imageCropper(options) {
     }
 }
 
+function pushStateModal({
+    title = "Title",
+    fetchUrl,
+    btnSelector,
+    loadingSpinner = "loading-spinner",
+    actionButtonName,
+    modalSize = "md",
+    modalType,
+    includeForm = false,
+    formAction,
+    modalHeight = "70vh"
+}) {
+    return new Promise((resolve) => {
+        const calcModalType = modalType ?? btnSelector.replace(/^[.#]/, '').split('-')[0];
+        const modalId = `modal-${calcModalType}`;
+        const modalContentClass = `detail-${calcModalType}`;
+        const actionBtnId = actionButtonName && actionButtonName.replace(/\s+/g, '-').toLowerCase()+'-'+calcModalType;
+
+        const formTagOpen = includeForm ? `<form id="form-${calcModalType}" method="POST" enctype="multipart/form-data">` : '';
+        const formTagClose = includeForm ? `</form>` : '';
+
+        const modalTemplate = `
+        <div class="modal fade" id="${modalId}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-${modalSize} modal-dialog-centered modal-dialog-scrollable">
+                
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">${title}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    ${formTagOpen}
+                    <div class="modal-body" style="${includeForm && 'height:'+modalHeight}">
+                        <div class="${loadingSpinner} text-center mt-2">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="${modalContentClass} p-1"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Closse">Cancel</button>
+                        ${actionButtonName ? `<button type="submit" id="${actionBtnId}" class="btn btn-primary px-3">${actionButtonName}</button>` : ''}    
+                    </div>
+                    ${formTagClose}
+                </div>
+                
+            </div>
+        </div>`;
+
+        if (!$(`#${modalId}`).length) {
+            $('body').append(modalTemplate);
+        }
+
+        async function openModal(recordId) {
+            const url = fetchUrl.replace(":id", recordId);
+
+            if (includeForm) {
+                $(`#form-${calcModalType}`).attr('action', formAction.replace(":id", recordId));
+            }
+
+            $(`#${modalId}`).modal("show");
+            $(`#${modalId} .${loadingSpinner}`).show();
+            $(`#${modalId} .${modalContentClass}`).hide();
+
+            const response = await fetchRequest(url);
+            const result = response['result'];
+
+            if (result) {
+                $(`#${modalId} .modal-title`).text(title);
+                $(`#${modalId} .${modalContentClass}`).html(result);
+            } else {
+                $(`#${modalId} .modal-title`).text("Error");
+                $(`#${modalId} .${modalContentClass}`).html(
+                    '<p class="pb-0 pt-3 p-4">Unable to load content.</p>'
+                );
+            }
+
+            $(`#${modalId} .${loadingSpinner}`).hide();
+            $(`#${modalId} .${modalContentClass}`).show();
+        }
+
+        function openModalFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const recordId = urlParams.get("id");
+            const type = urlParams.get("type");
+
+            if (recordId && type === calcModalType) {
+                openModal(recordId);
+            }
+        }
+
+        $(document).on("click", btnSelector, function () {
+            const recordId = $(this).data("id");
+            const currentUrl = new URL(window.location);
+
+            const newUrl = `${currentUrl.pathname}?id=${recordId}&type=${calcModalType}${window.location.hash}`;
+            history.pushState(null, null, newUrl);
+            openModal(recordId, calcModalType);
+        });
+
+        $(window).on("popstate", function () {
+            openModalFromUrl();
+        });
+
+        $(`#${modalId}`).on("hidden.bs.modal", function () {
+            const currentUrl = new URL(window.location);
+            currentUrl.searchParams.delete("id");
+            currentUrl.searchParams.delete("type");
+
+            const newUrl = `${currentUrl.pathname}${currentUrl.search}${window.location.hash}`;
+            history.pushState(null, null, newUrl);
+        });
+
+        openModalFromUrl();
+
+        if (modalId.length) {
+            resolve(modalId);
+        }
+    });
+}
+
 (function ($) {
     "use strict";
 
@@ -367,72 +553,8 @@ function imageCropper(options) {
     };
     spinner(0);
 
-    // Sticky Navbar
-    // $(window).scroll(function () {
-    //     if ($(this).scrollTop() > 45) {
-    //         $('.navbar').addClass('sticky-top shadow-sm');
-    //     } else {
-    //         $('.navbar').removeClass('sticky-top shadow-sm');
-    //     }
-    // });
-
-    $(".module-carousel").owlCarousel({
-        autoplay: false, 
-        smartSpeed: 1000,
-        center: false,
-        dots: true,
-        loop: true,
-        margin: 25,
-        responsiveClass: true,
-        responsive: {
-            0: {
-                items: 2
-            },
-            576: {
-                items: 3
-            },
-            768: {
-                items: 4
-            },
-            992: {
-                items: 5
-            },
-            1200: {
-                items: 6
-            }
-        }
-    });
-
     // team carousel
-    $(".team-carousel").owlCarousel({
-        autoplay: true,
-        smartSpeed: 1000,
-        center: true,
-        dots: true,
-        loop: true,
-        margin: 25,
-        nav : true,
-        navText : [
-            '<i class="bi bi-arrow-left"></i>',
-            '<i class="bi bi-arrow-right"></i>'
-        ],
-        responsiveClass: true,
-        responsive: {
-            0:{
-                items:2
-            },
-            768:{
-                items:3
-            },
-            992:{
-                items:4
-            },
-            1200:{
-                items:5
-            }
-        }
-    });
-
+    
    // Back to top button
    $(window).scroll(function () {
     if ($(this).scrollTop() > 300) {

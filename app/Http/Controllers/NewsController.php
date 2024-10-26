@@ -196,7 +196,6 @@ class NewsController extends Controller
         }
     }
 
-
     public function destroy($newsId)
     {
         $news = News::withoutGlobalScope('published')->findOrFail($newsId);

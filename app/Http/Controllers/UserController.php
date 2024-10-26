@@ -95,6 +95,7 @@ class UserController extends Controller
 
         $user->designation = $request->designation;
         $user->office = $request->office;
+        $user->title = $request->title ?? null;
 
         $user->mobile_number = $request->mobile_number ?? null;
         $user->landline_number = $request->landline_number ?? null;
