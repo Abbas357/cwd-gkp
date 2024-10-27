@@ -77,7 +77,7 @@
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <div class="col-lg-4">
+                    <div class="col-lg-6">
                         <label for="designation">Designation</label>
                         <select class="form-select" id="designation" name="designation" required>
                             <option value="">Choose Designation</option>
@@ -86,14 +86,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="title">Title</label>
-                        <input type="text" class="form-control" id="title" value="{{ old('title', $data['user']->title) }}" placeholder="Title" name="title">
-                        @error('title')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-6">
                         <label for="office">Office</label>
                         <select class="form-select" id="office" name="office" required>
                             <option value="">Choose Office</option>
@@ -101,6 +94,24 @@
                             <option value="{{ $office->name }}" {{ $office->name === $data['user']->office ? 'selected' : '' }}> {{ $office->name }}</option>
                             @endforeach
                         </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-lg-6">
+                        <label for="bps">BPS</label>
+                        <select class="form-select" id="bps" name="bps" required>
+                            <option value="">Choose Designation</option>
+                            @foreach($data['bps'] as $bps)
+                            <option value="{{ $bps->name }}" {{ $bps->name === $data['user']->bps ? 'selected' : '' }}> {{ $bps->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" id="title" value="{{ old('title', $data['user']->title) }}" placeholder="Title" name="title">
+                        @error('title')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
                 <div class="row">

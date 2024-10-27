@@ -53,3 +53,11 @@ Route::prefix('positions')->as('positions.')->group(function () {
     Route::get('/{designation}', [HomePageController::class, 'showPositions'])->name('show');
     Route::get('/details/{id}', [HomePageController::class, 'getUserDetails'])->name('details');
 });
+
+Route::prefix('news')->as('news.')->group(function () {
+    Route::get('/{slug}', [HomePageController::class, 'showNews'])->name('show');
+});
+
+Route::prefix('gallery')->as('gallery.')->group(function () {
+    Route::get('/{slug}', [HomePageController::class, 'showGalleryDetail'])->name('show');
+});

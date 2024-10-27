@@ -43,6 +43,19 @@
                 <div class="card">
                     <div class="card-body">
                         <h3 class="card-title mb-3 p-2"> List of Categories </h3>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <form action="{{ route('admin.categories.index') }}" method="GET">
+                                    <label for="type" class="form-label">Filter</label>
+                                    <select class="form-select" id="type" name="type" required onchange="this.form.submit()">
+                                        <option value=""> Choose... </option>
+                                        @foreach(categoryType() as $cat)
+                                        <option value="{{ $cat }}" {{ request('type') == $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                                        @endforeach
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
                         <table class="table p-5 table-stripped table-bordered">
                             <thead class="">
                                 <tr>

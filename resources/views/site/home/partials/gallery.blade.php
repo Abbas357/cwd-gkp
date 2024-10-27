@@ -3,306 +3,77 @@
         <h5 class="section-title px-3">Our Gallery</h5>
     </div>
     <div class="tab-class text-center">
+        <!-- Tab buttons -->
         <ul class="nav nav-pills d-inline-flex justify-content-center mb-5">
+            <!-- 'All' Tab -->
             <li class="nav-item">
-                <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill active" data-bs-toggle="pill" href="#GalleryTab-1">
+                <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill active" data-bs-toggle="pill" href="#GalleryTab-All">
                     <span class="text-dark" style="width: 150px;">All</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="d-flex py-2 mx-3 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#GalleryTab-2">
-                    <span class="text-dark" style="width: 150px;">World tour</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#GalleryTab-3">
-                    <span class="text-dark" style="width: 150px;">Ocean Tour</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#GalleryTab-4">
-                    <span class="text-dark" style="width: 150px;">Summer Tour</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="d-flex mx-3 py-2 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#GalleryTab-5">
-                    <span class="text-dark" style="width: 150px;">Sport Tour</span>
-                </a>
-            </li>
+            <!-- Dynamic Type Tabs (limited to 5) -->
+            @foreach($galleriesByType as $type => $galleries)
+                @php
+                    // Convert type to a human-readable format
+                    $formattedType = ucfirst(str_replace('_', ' ', $type));
+                @endphp
+                <li class="nav-item">
+                    <a class="d-flex py-2 mx-3 border border-primary bg-light rounded-pill" data-bs-toggle="pill" href="#GalleryTab-{{ $type }}">
+                        <span class="text-dark" style="width: 150px;">{{ $formattedType }}</span>
+                    </a>
+                </li>
+            @endforeach
         </ul>
+
+        <!-- Tab content -->
         <div class="tab-content">
-            <div id="GalleryTab-1" class="tab-pane fade show p-0 active">
+            <!-- 'All' Tab Content: Shows all galleries -->
+            <div id="GalleryTab-All" class="tab-pane fade show p-0 active">
                 <div class="row g-2">
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-                        <div class="gallery-item h-100">
-                            <img src="{{ asset('site/img/gallery-1.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
+                    @foreach($galleriesByType as $galleries)
+                        @foreach($galleries as $gallery)
+                            <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                <div class="gallery-item h-100">
+                                    <img src="{{ $gallery->getFirstMediaUrl('gallery') ?: asset('admin/images/no-image.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="{{ $gallery->title }}">
+                                    <div class="gallery-content">
+                                        <div class="gallery-info">
+                                            <h5 class="text-white text-uppercase mb-2">{{ ucfirst(str_replace('_', ' ', $gallery->type)) }}</h5>
+                                            <a href="{{ route('gallery.show', ['slug' => $gallery->slug]) }}" class="btn-hover text-white">View Detail <i class="bi bi-arrow-right ms-2"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="gallery-plus-icon">
+                                        <a href="{{ $gallery->getFirstMediaUrl('gallery') }}" data-lightbox="gallery-{{ $gallery->id }}" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-1.jpg" data-lightbox="gallery-1" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                        <div class="gallery-item h-100">
-                            <img src="{{ asset('site/img/gallery-2.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-2.jpg" data-lightbox="gallery-2" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-                        <div class="gallery-item h-100">
-                            <img src="{{ asset('site/img/gallery-3.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-3.jpg" data-lightbox="gallery-3" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                        <div class="gallery-item h-100">
-                            <img src="{{ asset('site/img/gallery-4.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-4.jpg" data-lightbox="gallery-4" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-                        <div class="gallery-item h-100">
-                            <img src="{{ asset('site/img/gallery-5.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-5.jpg" data-lightbox="gallery-5" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-                        <div class="gallery-item h-100">
-                            <img src="{{ asset('site/img/gallery-6.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-6.jpg" data-lightbox="gallery-6" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-3 col-xl-3">
-                        <div class="gallery-item h-100">
-                            <img src="{{ asset('site/img/gallery-7.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-7.jpg" data-lightbox="gallery-7" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-3 col-xl-2">
-                        <div class="gallery-item h-100">
-                            <img src="{{ asset('site/img/gallery-8.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-8.jpg" data-lightbox="gallery-8" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-3 col-xl-3">
-                        <div class="gallery-item h-100">
-                            <img src="{{ asset('site/img/gallery-9.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-9.jpg" data-lightbox="gallery-9" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-3 col-xl-2">
-                        <div class="gallery-item h-100">
-                            <img src="{{ asset('site/img/gallery-10.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-10.jpg" data-lightbox="gallery-10" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
+                        @endforeach
+                    @endforeach
                 </div>
             </div>
-            <div id="GalleryTab-2" class="tab-pane fade show p-0">
-                <div class="row g-2">
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                        <div class="gallery-item h-100">
-                            <img src="{{ asset('site/img/gallery-2.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
+            
+            <!-- Dynamic Tab Content for Each Type (limited to 5) -->
+            @foreach($galleriesByType as $type => $galleries)
+                <div id="GalleryTab-{{ $type }}" class="tab-pane fade show p-0">
+                    <div class="row g-2">
+                        @foreach($galleries as $gallery)
+                            <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                                <div class="gallery-item h-100">
+                                    <img src="{{ $gallery->getFirstMediaUrl('gallery') ?: asset('admin/images/no-image.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="{{ $gallery->title }}">
+                                    <div class="gallery-content">
+                                        <div class="gallery-info">
+                                            <h5 class="text-white text-uppercase mb-2">{{ ucfirst(str_replace('_', ' ', $gallery->type)) }}</h5>
+                                            <a href="{{ route('gallery.show', ['slug' => $gallery->slug]) }}" class="btn-hover text-white">View Detail <i class="bi bi-arrow-right ms-2"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="gallery-plus-icon">
+                                        <a href="{{ $gallery->getFirstMediaUrl('gallery') }}" data-lightbox="gallery-{{ $gallery->id }}" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-2.jpg" data-lightbox="gallery-2" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-                        <div class="gallery-item h-100">
-                            <img src="{{ asset('site/img/gallery-3.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-3.jpg" data-lightbox="gallery-3" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
-            </div>
-            <div id="GalleryTab-3" class="tab-pane fade show p-0">
-                <div class="row g-2">
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                        <div class="gallery-item h-100">
-                            <img src="{{ asset('site/img/gallery-2.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-2.jpg" data-lightbox="gallery-2" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-                        <div class="gallery-item h-100">
-                            <img src="{{ asset('site/img/gallery-3.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-3.jpg" data-lightbox="gallery-3" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="GalleryTab-4" class="tab-pane fade show p-0">
-                <div class="row g-2">
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                        <div class="gallery-item h-100">
-                            <img src="{{ asset('site/img/gallery-2.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-2.jpg" data-lightbox="gallery-2" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-                        <div class="gallery-item h-100">
-                            <img src="{{ asset('site/img/gallery-3.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-3.jpg" data-lightbox="gallery-3" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="GalleryTab-5" class="tab-pane fade show p-0">
-                <div class="row g-2">
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                        <div class="gallery-item h-100">
-                            <img src="{{ asset('site/img/gallery-2.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-2.jpg" data-lightbox="gallery-2" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-                        <div class="gallery-item h-100">
-                            <img src="{{ asset('site/img/gallery-3.jpg') }}" class="img-fluid w-100 h-100 rounded" alt="Image">
-                            <div class="gallery-content">
-                                <div class="gallery-info">
-                                    <h5 class="text-white text-uppercase mb-2">World Tour</h5>
-                                    <a href="#" class="btn-hover text-white">View All Place <i class="bi bi-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                            <div class="gallery-plus-icon">
-                                <a href="img/gallery-3.jpg" data-lightbox="gallery-3" class="my-auto"><i class="bi bi-plus fs-1 text-white"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 </div>

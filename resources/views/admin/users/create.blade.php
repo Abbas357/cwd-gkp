@@ -83,7 +83,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-6 mb-3">
                                     <label for="designation">Designation</label>
                                     <select class="form-select" id="designation" name="designation" required>
                                         <option value="">Choose...</option>
@@ -95,14 +95,7 @@
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-4 mb-3">
-                                    <label for="title">Title</label>
-                                    <input type="text" class="form-control" id="title" value="{{ old('title') }}" placeholder="Title" name="title">
-                                    @error('title')
-                                    <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-6 mb-3">
                                     <label for="office">Office</label>
                                     <select class="form-select" id="office" name="office" required>
                                         <option value="">Choose...</option>
@@ -111,6 +104,27 @@
                                         @endforeach
                                     </select>
                                     @error('office')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="bps">BPS</label>
+                                    <select class="form-select" id="bps" name="bps" required>
+                                        <option value="">Choose...</option>
+                                        @foreach ($cat['bps'] as $bps)
+                                        <option value="{{ $bps->name }}">{{ $bps->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('bps')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="title">Title</label>
+                                    <input type="text" class="form-control" id="title" value="{{ old('title') }}" placeholder="Title" name="title">
+                                    @error('title')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>

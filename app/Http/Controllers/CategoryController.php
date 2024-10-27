@@ -3,13 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreCategoryRequest;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::paginate(10);
+        $type = $request->input('type');
+
+        $categories = Category::when($type, function ($query, $type) {
+            return $query->where('type', $type);
+        })->paginate(10);
+
         return view('admin.categories.index', compact('categories'));
     }
 

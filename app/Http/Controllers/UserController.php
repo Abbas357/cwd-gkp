@@ -79,6 +79,7 @@ class UserController extends Controller
         $cat = [
             'designations' => Category::where('type', 'designation')->get(),
             'offices' => Category::where('type', 'office')->get(),
+            'bps' => Category::where('type', 'bps')->get(),
             'roles' => Role::all(),
             'permissions' => Permission::all()
         ];
@@ -96,6 +97,7 @@ class UserController extends Controller
         $user->designation = $request->designation;
         $user->office = $request->office;
         $user->title = $request->title ?? null;
+        $user->bps = $request->bps ?? null;
 
         $user->mobile_number = $request->mobile_number ?? null;
         $user->landline_number = $request->landline_number ?? null;
@@ -169,6 +171,7 @@ class UserController extends Controller
             'allPermissions' => Permission::all(),
             'allDesignations' => Category::where('type', 'designation')->get(),
             'allOffices' => Category::where('type', 'office')->get(),
+            'bps' => Category::where('type', 'bps')->get(),
         ];
 
         $html = view('admin.users.partials.edit', compact('data'))->render();
