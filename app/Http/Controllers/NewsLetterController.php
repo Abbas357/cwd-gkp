@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use App\Models\NewsLetter;
 use Illuminate\Support\Str;
-use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\SubscriptionConfirmation;
 use Yajra\DataTables\DataTables;
 use App\Mail\MassNewsletterEmail;
 
@@ -53,60 +50,6 @@ class NewsLetterController extends Controller
         }
 
         return view('admin.newsletters.index');
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email|unique:news_letters,email',
-        ]);
-
-        $ipAddress = $request->ip();
-        $userAgent = $request->header('User-Agent');
-        $deviceInfo = $this->getDeviceInfo($userAgent);
-
-        $unsubscribeToken = Str::random(32);
-
-        Newsletter::create([
-            'email' => $request->email,
-            'subscribed_at' => Carbon::now(),
-            'unsubscribe_token' => $unsubscribeToken,
-            'ip_address' => $ipAddress,
-            'device_info' => $deviceInfo,
-        ]);
-
-        Mail::to($request->email)->send(new SubscriptionConfirmation($unsubscribeToken));
-
-        return redirect()->back()->with('success', 'You have have successfully subscribe to our newsletter. You can always unsubscribe via unsubscribe link in your inbox!');
-    }
-
-    private function getDeviceInfo($userAgent)
-    {
-        $agent = new Agent();
-        $agent->setUserAgent($userAgent);
-
-        $device = $agent->device();
-        $platform = $agent->platform();
-        $browser = $agent->browser();
-        $deviceType = $agent->isMobile() ? 'Mobile' : 'Desktop';
-
-        return "Device: {$device}, {$deviceType}, Platform: {$platform}, Browser: {$browser}";
-    }
-
-    public function unsubscribe($token)
-    {
-        $subscriber = Newsletter::where('unsubscribe_token', $token)->first();
-
-        if (!$subscriber) {
-            return redirect()->back()->with('error', 'Invalid unsubscribe token.');
-        }
-
-        $subscriber->update([
-            'unsubscribed_at' => Carbon::now(),
-            'unsubscribe_token' => null
-        ]);
-
-        return redirect()->route('site')->with('success', 'You have successfully unsubscribed. You will not receive any email from C&W Department in future. (^_^)');
     }
 
     public function createMassEmail()

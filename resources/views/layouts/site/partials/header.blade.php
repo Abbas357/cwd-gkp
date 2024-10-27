@@ -296,11 +296,6 @@
                         </li>
                         <li role="none" class="cw-top-menu" data-tier-id="4">
                             <a href="#" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
-                                <span>PROJECTS</span>
-                            </a>
-                        </li>
-                        <li role="none" class="cw-top-menu" data-tier-id="4">
-                            <a href="#" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>DOWNLOADS</span>
                             </a>
                         </li>

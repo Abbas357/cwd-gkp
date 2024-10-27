@@ -1,21 +1,24 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\StoryController;
-use App\Http\Controllers\SliderController;
-use App\Http\Controllers\HomePageController;
-use App\Http\Controllers\NewsLetterController;
-use App\Http\Controllers\PublicContactController;
-use App\Http\Controllers\EStandardizationController;
-use App\Http\Controllers\ContractorRegistrationController;
+use App\Http\Controllers\Site\HomeController;
+use App\Http\Controllers\Site\NewsController;
+use App\Http\Controllers\Site\UserController;
+use App\Http\Controllers\Site\StoryController;
+use App\Http\Controllers\Site\SliderController;
+use App\Http\Controllers\Site\GalleryController;
+use App\Http\Controllers\Site\NewsLetterController;
+use App\Http\Controllers\Site\PublicContactController;
+use App\Http\Controllers\Site\EStandardizationController;
+use App\Http\Controllers\Site\ContractorRegistrationController;
 
 Route::prefix('partials')->as('partials.')->group(function () {
-    Route::get('/message', [HomePageController::class, 'messagePartial'])->name('message');
-    Route::get('/about', [HomePageController::class, 'aboutPartial'])->name('about');
-    Route::get('/gallery', [HomePageController::class, 'galleryPartial'])->name('gallery');
-    Route::get('/blogs', [HomePageController::class, 'blogsPartial'])->name('blogs');
-    Route::get('/team', [HomePageController::class, 'teamPartial'])->name('team');
-    Route::get('/contact', [HomePageController::class, 'contactPartial'])->name('contact');
+    Route::get('/message', [HomeController::class, 'messagePartial'])->name('message');
+    Route::get('/about', [HomeController::class, 'aboutPartial'])->name('about');
+    Route::get('/gallery', [HomeController::class, 'galleryPartial'])->name('gallery');
+    Route::get('/blogs', [HomeController::class, 'blogsPartial'])->name('blogs');
+    Route::get('/team', [HomeController::class, 'teamPartial'])->name('team');
+    Route::get('/contact', [HomeController::class, 'contactPartial'])->name('contact');
 });
 
 Route::prefix('registrations')->as('registrations.')->group(function () {
@@ -46,18 +49,18 @@ Route::prefix('public_contact')->as('public_contact.')->group(function () {
 });
 
 Route::prefix('sliders')->as('sliders.')->group(function () {
-    Route::get('/{slug}', [HomePageController::class, 'showSlider'])->name('showSlider');
+    Route::get('/{slug}', [SliderController::class, 'showSlider'])->name('showSlider');
 });
 
 Route::prefix('positions')->as('positions.')->group(function () {
-    Route::get('/{designation}', [HomePageController::class, 'showPositions'])->name('show');
-    Route::get('/details/{id}', [HomePageController::class, 'getUserDetails'])->name('details');
+    Route::get('/{designation}', [UserController::class, 'showPositions'])->name('show');
+    Route::get('/details/{id}', [UserController::class, 'getUserDetails'])->name('details');
 });
 
 Route::prefix('news')->as('news.')->group(function () {
-    Route::get('/{slug}', [HomePageController::class, 'showNews'])->name('show');
+    Route::get('/{slug}', [NewsController::class, 'showNews'])->name('show');
 });
 
 Route::prefix('gallery')->as('gallery.')->group(function () {
-    Route::get('/{slug}', [HomePageController::class, 'showGalleryDetail'])->name('show');
+    Route::get('/{slug}', [GalleryController::class, 'showGalleryDetail'])->name('show');
 });

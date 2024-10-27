@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomePageController;
+use App\Http\Controllers\Site\HomeController as SiteController;
+use App\Http\Controllers\HomeController as AdminController;
 
-Route::get('/', [HomePageController::class, 'site'])->name('site');
-Route::get('/admin/dashboard', [HomePageController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('admin.dashboard');
+Route::get('/', [SiteController::class, 'site'])->name('site');
+Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('admin.dashboard');
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/site.php';

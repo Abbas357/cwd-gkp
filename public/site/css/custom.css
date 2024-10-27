@@ -231,7 +231,6 @@
   }
 }
 
-/* Ensures button text is above background effects */
 .btn-animate span {
   position: relative;
   z-index: 1;

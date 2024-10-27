@@ -165,29 +165,28 @@
 <script>
     const maxCharacters = 400;
 
-    document.querySelectorAll('.message-text-content').forEach(textContent => {
-        const fullText = textContent.getAttribute('data-full-text');
-        const showMoreButton = textContent.nextElementSibling;
+    $('.message-text-content').each(function() {
+        const $textContent = $(this);
+        const fullText = $textContent.data('full-text');
+        const $showMoreButton = $textContent.next();
 
-        // Display initial truncated text
         if (fullText.length > maxCharacters) {
-            textContent.textContent = fullText.slice(0, maxCharacters) + '...';
-            showMoreButton.style.display = 'inline';
+            $textContent.text(fullText.slice(0, maxCharacters) + '...');
+            $showMoreButton.show();
 
-            // Toggle full and truncated text on button click
-            showMoreButton.addEventListener('click', () => {
-                if (textContent.textContent.endsWith('...')) {
-                    textContent.textContent = fullText;
-                    showMoreButton.textContent = 'Show Less';
+            $showMoreButton.on('click', function() {
+                if ($textContent.text().endsWith('...')) {
+                    $textContent.text(fullText);
+                    $showMoreButton.text('Show Less');
                 } else {
-                    textContent.textContent = fullText.slice(0, maxCharacters) + '...';
-                    showMoreButton.textContent = 'Show More';
+                    $textContent.text(fullText.slice(0, maxCharacters) + '...');
+                    $showMoreButton.text('Show More');
                 }
             });
         } else {
-            textContent.textContent = fullText;
-            showMoreButton.style.display = 'none';
+            $textContent.text(fullText);
+            $showMoreButton.hide();
         }
     });
-
 </script>
+

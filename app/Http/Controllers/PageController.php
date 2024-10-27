@@ -7,6 +7,7 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\StorePageRequest;
 use App\Http\Requests\UpdatePageRequest;
 
@@ -139,6 +140,7 @@ class PageController extends Controller
         $page->{$request->field} = $request->value;
 
         if ($page->isDirty($request->field)) {
+            Cache::forget('about_partial');
             $page->save();
             return response()->json(['success' => 'Field updated successfully'], 200);
         }
@@ -163,6 +165,7 @@ class PageController extends Controller
             $page->addMedia($request->file('attachment'))
                 ->toMediaCollection('page_attachments');
 
+            Cache::forget('about_partial');
             return response()->json(['success' => 'Page uploaded successfully'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error uploading file: ' . $e->getMessage()], 500);
@@ -173,7 +176,8 @@ class PageController extends Controller
     {
         $page = Page::withoutGlobalScope('active')->findOrFail($pageId);
         if ($page->is_active === 0 && $page->delete()) {
-            return response()->json(['success' => 'File has been deleted successfully.']);
+            Cache::forget('about_partial');
+            return response()->json(['success' => 'Page has been deleted successfully.']);
         }
         return response()->json(['error' => 'Active page cannot be deleted.']);
     }

@@ -9,6 +9,7 @@ use Yajra\DataTables\DataTables;
 
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Spatie\Permission\Models\Permission;
@@ -127,6 +128,8 @@ class UserController extends Controller
         }
 
         if ($user->save()) {
+            Cache::forget('message_partial');
+            Cache::forget('team_partial');
             return redirect()->route('admin.users.create')->with('success', 'User added successfully');
         }
 
@@ -218,6 +221,8 @@ class UserController extends Controller
         }
 
         if ($user->save()) {
+            Cache::forget('message_partial');
+            Cache::forget('team_partial');
             return response()->json(['success' => 'User updated']);
         }
         return response()->json(['error' => 'User updation failed']);
@@ -226,6 +231,8 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         if ($user->delete()) {
+            Cache::forget('message_partial');
+            Cache::forget('team_partial');
             return response()->json(['success' => 'User has been deleted successfully.']);
         }
 

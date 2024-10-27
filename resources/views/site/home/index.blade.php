@@ -13,7 +13,7 @@
     </div>
     
     <!-- Placeholder for Message Section -->
-    <div id="message-section" class="container-fluid pb-3" style="min-height: 200px">
+    <div id="message-section" class="container-fluid pb-3" style="min-height: 400px">
         <!-- Loading Spinner -->
         <div class="d-flex justify-content-center">
             <div class="spinner-border text-primary" role="status" id="message-spinner">
@@ -23,7 +23,7 @@
     </div>
 
     <!-- Placeholder for About Section -->
-    <div id="about-section" class="container-fluid about py-3" style="min-height: 200px">
+    <div id="about-section" class="container-fluid about py-3" style="min-height: 400px">
         <div class="d-flex justify-content-center">
             <div class="spinner-border text-primary" role="status" id="about-spinner">
                 <span class="visually-hidden">Loading...</span>
@@ -32,7 +32,7 @@
     </div>
 
     <!-- Placeholder for Gallery Section -->
-    <div id="gallery-section" style="min-height: 200px">
+    <div id="gallery-section" style="min-height: 400px">
         <div class="d-flex justify-content-center">
             <div class="spinner-border text-primary" role="status" id="gallery-spinner">
                 <span class="visually-hidden">Loading...</span>
@@ -41,7 +41,7 @@
     </div>
 
     <!-- Placeholder for Blogs Section -->
-    <div id="blogs-section" style="min-height: 200px">
+    <div id="blogs-section" style="min-height: 400px">
         <div class="d-flex justify-content-center">
             <div class="spinner-border text-primary" role="status" id="blogs-spinner">
                 <span class="visually-hidden">Loading...</span>
@@ -50,7 +50,7 @@
     </div>
 
     <!-- Placeholder for Team Section -->
-    <div id="team-section" class="container-fluid team py-3" style="min-height: 200px">
+    <div id="team-section" class="container-fluid team py-3" style="min-height: 400px">
         <div class="d-flex justify-content-center">
             <div class="spinner-border text-primary" role="status" id="team-spinner">
                 <span class="visually-hidden">Loading...</span>
@@ -59,7 +59,7 @@
     </div>
 
     <!-- Placeholder for Contact Section -->
-    <div id="contact-section" class="container-fluid booking py-3" style="min-height: 200px">
+    <div id="contact-section" class="container-fluid booking py-3" style="min-height: 400px">
         <div class="d-flex justify-content-center">
             <div class="spinner-border text-primary" role="status" id="contact-spinner">
                 <span class="visually-hidden">Loading...</span>
