@@ -15,7 +15,7 @@ class NewsController extends Controller
     {
         $status = $request->query('status', null);
 
-        $news = News::query()->latest('id')->withoutGlobalScope('published');
+        $news = News::query()->withoutGlobalScope('published');
 
         $news->when($status !== null, function ($query) use ($status) {
             $query->where('status', $status);

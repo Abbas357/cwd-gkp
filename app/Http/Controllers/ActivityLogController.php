@@ -13,7 +13,7 @@ class ActivityLogController extends Controller
         $logs = Activity::query()->latest('id');
 
         if (!$request->user()->isAdmin()) {
-            $logs = $request->user()->logs()->latest('id')->getQuery();
+            $logs = $request->user()->logs()->getQuery();
         }
 
         if ($request->ajax()) {

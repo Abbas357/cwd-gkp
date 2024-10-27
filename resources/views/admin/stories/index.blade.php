@@ -78,7 +78,7 @@
                         , type: "html"
                     }
                 ]
-                , defaultOrderColumn: 11
+                , defaultOrderColumn: 5
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
                     targets: [0]

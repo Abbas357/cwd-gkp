@@ -19,7 +19,7 @@ class EStandardizationController extends Controller
     {
         $status = $request->query('status', null);
 
-        $standardizations = EStandardization::query()->latest('id');
+        $standardizations = EStandardization::query();
 
         $standardizations->when($status !== null, function ($query) use ($status) {
             $query->where('status', $status);

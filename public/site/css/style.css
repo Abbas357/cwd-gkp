@@ -404,16 +404,14 @@ a {
 
 /*** Single Page Hero Header Start ***/
 .bg-breadcrumb {
-    background: linear-gradient(rgba(19, 53, 123, 0.5), rgba(19, 53, 123, 0.5)), url(../img/breadcrumb-bg.jpg);
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
-    padding: 150px 0 50px 0;
+    background: url(../img/paper.jpg);
+    opacity: .7;
+    background-repeat: repeat;
+    padding: 1rem 0 1rem 0;
 }
 
 .bg-breadcrumb .breadcrumb-item a {
-    color: var(--bs-secondary) !important;
+    color: var(--bs-primary) !important;
 }
 
 /*** Single Page Hero Header End ***/

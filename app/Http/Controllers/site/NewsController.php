@@ -8,6 +8,20 @@ use App\Http\Controllers\Controller;
 
 class NewsController extends Controller
 {
+    public function index(Request $request)
+    {
+        $newsItems = News::with(['media', 'user'])
+            ->when($request->category, function ($query, $category) {
+                $query->where('category', $category);
+            })
+            ->orderBy('published_at', 'desc')
+            ->paginate(10);
+
+        $categories = News::select('category')->distinct()->pluck('category');
+
+        return view('site.news.index', compact('newsItems', 'categories'));
+    }
+
     public function showNews($slug)
     {
         $news = News::where('slug', $slug)->with(['media'])->firstOrFail();

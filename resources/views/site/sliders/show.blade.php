@@ -1,6 +1,14 @@
 <x-main-layout title="{{ $sliderData['title'] }}">
+    <div class="container-fluid bg-breadcrumb">
+        <div class="container text-center py-2" style="max-width: 900px;">
+            <h3 class="text-white display-3 mb-4">{{ $sliderData['title'] }}</h1>
+            <ol class="breadcrumb justify-content-center mb-0">
+                <li class="breadcrumb-item"><a href="{{ route('site') }}">Home</a></li>
+                <li class="breadcrumb-item active text-white">Gallery</li>
+            </ol>    
+        </div>
+    </div>
     <div class="container mt-3">
-        <h1 class="mb-3">{{ $sliderData['title'] }}</h1>
         <div class="d-flex justify-content-between">
             <p><strong>Published By:</strong> {{ $sliderData['published_by'] }}</p>
             <p><strong>Published At:</strong> {{ $sliderData['published_at'] ? $sliderData['published_at']->format('M d, Y') : 'Not Published' }}</p>

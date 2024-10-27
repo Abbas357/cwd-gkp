@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\NewsController;
+use App\Http\Controllers\Site\PageController;
 use App\Http\Controllers\Site\UserController;
 use App\Http\Controllers\Site\StoryController;
 use App\Http\Controllers\Site\SliderController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\Site\NewsLetterController;
 use App\Http\Controllers\Site\PublicContactController;
 use App\Http\Controllers\Site\EStandardizationController;
 use App\Http\Controllers\Site\ContractorRegistrationController;
+use App\Http\Controllers\Site\DownloadController;
 
 Route::prefix('partials')->as('partials.')->group(function () {
     Route::get('/message', [HomeController::class, 'messagePartial'])->name('message');
@@ -57,10 +59,24 @@ Route::prefix('positions')->as('positions.')->group(function () {
     Route::get('/details/{id}', [UserController::class, 'getUserDetails'])->name('details');
 });
 
+Route::prefix('contacts')->as('contacts.')->group(function () {
+    Route::get('/', [UserController::class, 'contacts'])->name('index');
+});
+
 Route::prefix('news')->as('news.')->group(function () {
+    Route::get('/', [NewsController::class, 'index'])->name('index');
     Route::get('/{slug}', [NewsController::class, 'showNews'])->name('show');
 });
 
 Route::prefix('gallery')->as('gallery.')->group(function () {
+    Route::get('/', [GalleryController::class, 'index'])->name('index');
     Route::get('/{slug}', [GalleryController::class, 'showGalleryDetail'])->name('show');
+});
+
+Route::prefix('pages')->as('pages.')->group(function () {
+    Route::get('/{type}', [PageController::class, 'showPage'])->name('show');
+});
+
+Route::prefix('downloads')->as('downloads.')->group(function () {
+    Route::get('/', [DownloadController::class, 'index'])->name('index');
 });

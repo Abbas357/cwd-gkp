@@ -21,7 +21,7 @@ class UserController extends Controller
     {
         $active = $request->query('active', null);
 
-        $users = User::query()->latest('id')->withoutGlobalScope('active');
+        $users = User::query()->withoutGlobalScope('active');
 
         $users->when($active !== null, function ($query) use ($active) {
             $query->where('is_active', $active);

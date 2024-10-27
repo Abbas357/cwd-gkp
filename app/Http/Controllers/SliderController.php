@@ -15,7 +15,7 @@ class SliderController extends Controller
     {
         $status = $request->query('status', null);
 
-        $sliders = Slider::query()->latest('id')->withoutGlobalScope('published');
+        $sliders = Slider::query()->withoutGlobalScope('published');
 
         $sliders->when($status !== null, function ($query) use ($status) {
             $query->where('status', $status);

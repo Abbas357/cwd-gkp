@@ -98,25 +98,19 @@
                                     HOME
                                 </li>
                                 <li role="none" data-tier-id="4">
-                                    <a role="menuitem" class="cw-menuItem" href="#" data-tier-id="4" tabindex="0">FAQ</a>
+                                    <a href="{{ route('pages.show', 'about_us') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="4" tabindex="0">ABOUT</a>
                                 </li>
                                 <li role="none" data-tier-id="4">
-                                    <a role="menuitem" class="cw-menuItem" href="#" data-tier-id="4" tabindex="0">INTRODUCTION</a>
+                                    <a href="{{ route('pages.show', 'introduction') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="4" tabindex="0">INTRODUCTION</a>
                                 </li>
                                 <li role="none" data-tier-id="4">
-                                    <a role="menuitem" class="cw-menuItem" href="#" data-tier-id="4" tabindex="0">VISION</a>
+                                    <a href="{{ route('pages.show', 'vision') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="4" tabindex="0">VISION</a>
                                 </li>
                                 <li role="none" data-tier-id="4">
-                                    <a role="menuitem" class="cw-menuItem" href="#" data-tier-id="4" tabindex="0">FUNCTIONS</a>
+                                    <a href="{{ route('pages.show', 'functions') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="4" tabindex="0">FUNCTIONS</a>
                                 </li>
                                 <li role="none" data-tier-id="4">
-                                    <a role="menuitem" class="cw-menuItem" href="#" data-tier-id="4" tabindex="0">ORGANOGRAM</a>
-                                </li>
-                                <li role="none" data-tier-id="4">
-                                    <a role="menuitem" class="cw-menuItem" href="#" data-tier-id="4" tabindex="0">LIST OF EX-SECRETARIES</a>
-                                </li>
-                                <li role="none" data-tier-id="4">
-                                    <a role="menuitem" class="cw-menuItem" href="#" data-tier-id="4" tabindex="0">BRIEF INTRODUCTION</a>
+                                    <a href="#" role="menuitem" class="cw-menuItem" href="#" data-tier-id="4" tabindex="0">ORGANOGRAM</a>
                                 </li>
                             </ul>
                         </li>
@@ -295,28 +289,28 @@
                             </ul>
                         </li>
                         <li role="none" class="cw-top-menu" data-tier-id="4">
-                            <a href="#" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
+                            <a href="{{ route('downloads.index') }}" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>DOWNLOADS</span>
                             </a>
                         </li>
                         <li role="none" class="cw-top-menu" data-tier-id="4">
-                            <a href="#" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
+                            <a href="{{ route('gallery.index') }}" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>GALLERY</span>
                             </a>
                         </li>
                         <li role="none" class="cw-top-menu" data-tier-id="4">
-                            <a href="#" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
+                            <a href="{{ route('news.index') }}" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>NEWS</span>
                             </a>
                         </li>
                         <li role="none" class="cw-top-menu" data-tier-id="4">
                             <a href="#" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
-                                <span>TEAM</span>
+                                <span>OUR TEAM</span>
                             </a>
                         </li>
                         <li role="none" class="cw-top-menu" data-tier-id="4">
-                            <a href="#" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
-                                <span>CONTACT</span>
+                            <a href="{{ route('contacts.index') }}" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
+                                <span>CONTACTS</span>
                             </a>
                         </li>
 

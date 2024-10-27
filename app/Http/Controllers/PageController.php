@@ -17,7 +17,7 @@ class PageController extends Controller
     {
         $status = $request->query('status', null);
 
-        $page = Page::query()->latest('id')->withoutGlobalScope('active');
+        $page = Page::query()->withoutGlobalScope('active');
 
         $page->when($status !== null, function ($query) use ($status) {
             $query->where('is_active', $status);

@@ -95,7 +95,7 @@
                     , searchable: false
                     , type: "html"
                 }]
-                , defaultOrderColumn: 9
+                , defaultOrderColumn: 11
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
                     targets: [7, 8, 9]

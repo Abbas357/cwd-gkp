@@ -13,7 +13,7 @@ class StoryController extends Controller
     {
         $published = $request->query('published');
 
-        $stories = Story::query()->latest('id');
+        $stories = Story::query();
 
         $stories->when($published !== null, function ($query) use ($published) {
             if ($published === '1') {

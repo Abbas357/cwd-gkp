@@ -14,7 +14,7 @@ class DownloadController extends Controller
     {
         $status = $request->query('status', null);
 
-        $downloads = Download::query()->latest('id')->withoutGlobalScope('published');
+        $downloads = Download::query()->withoutGlobalScope('published');
 
         $downloads->when($status !== null, function ($query) use ($status) {
             $query->where('status', $status);

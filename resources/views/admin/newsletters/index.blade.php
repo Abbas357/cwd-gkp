@@ -71,7 +71,7 @@
                         , searchBuilderType: "date"
                     }
                 ]
-                , defaultOrderColumn: 11
+                , defaultOrderColumn: 6
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
                     targets: [0]

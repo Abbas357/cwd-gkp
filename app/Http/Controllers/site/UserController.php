@@ -7,7 +7,25 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class UserController extends Controller
-{   
+{
+    public function contacts()
+    {
+        $offices = User::select('office')
+            ->distinct()
+            ->orderBy('office')
+            ->pluck('office');
+
+        $contactsByOffice = $offices->mapWithKeys(function ($office) {
+            $contacts = User::select('name', 'designation', 'office', 'mobile_number', 'landline_number', 'facebook', 'twitter', 'whatsapp')
+                ->where('office', $office)
+                ->orderBy('name')
+                ->get();
+            return [$office => $contacts];
+        });
+
+        return view('site.users.contacts', compact('contactsByOffice'));
+    }
+
     public function showPositions($designation)
     {
         $users = User::where('designation', $designation)

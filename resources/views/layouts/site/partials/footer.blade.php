@@ -7,29 +7,32 @@
             <div class="col-md-6 col-lg-6 col-xl-3">
                 <h4 class="mb-4 text-white">About Us</h4>
                 <p class="text-white">
-                    {{ $settings->description ?? 'Communications & Works Department was established in 1979. Since establishment the Department is working to promote safe, sustainable, cost effective and environment friendly road infrastructure leading to socio-economic development.'}}    
+                    {{ $settings->description ?? 'Communication & Works Department, Government of Khyber Pakhtunkhwa.'}}    
                 </p>
             </div>
             <div class="col-md-6 col-lg-6 col-xl-3">
                 <div class="footer-item d-flex flex-column">
-                    <h4 class="mb-4 text-white">Company</h4>
-                    <a href=""><i class="bi bi-arrow-right-short me-2"></i> About</a>
-                    <a href=""><i class="bi bi-arrow-right-short me-2"></i> Careers</a>
-                    <a href=""><i class="bi bi-arrow-right-short me-2"></i> Blog</a>
-                    <a href=""><i class="bi bi-arrow-right-short me-2"></i> Press</a>
-                    <a href=""><i class="bi bi-arrow-right-short me-2"></i> Gift Cards</a>
-                    <a href=""><i class="bi bi-arrow-right-short me-2"></i> Magazine</a>
+                    <h4 class="mb-4 text-white">Department</h4>
+                    <a href="{{ route('pages.show', 'about') }}"><i class="bi bi-arrow-right-short me-2"></i> About</a>
+                    <a href="{{ route('pages.show', 'introduction') }}"><i class="bi bi-arrow-right-short me-2"></i> Introduction</a>
+                    <a href="{{ route('pages.show', 'vision') }}"><i class="bi bi-arrow-right-short me-2"></i> Vision</a>
+                    <a href="{{ route('pages.show', 'functions') }}"><i class="bi bi-arrow-right-short me-2"></i> Functions</a>
+                    <a href="#"><i class="bi bi-arrow-right-short me-2"></i> Organogram</a>
+                    <a href="#"><i class="bi bi-arrow-right-short me-2"></i> Sitemap</a>
+                    <a href="#"><i class="bi bi-arrow-right-short me-2"></i> FAQ</a>
                 </div>
             </div>
             <div class="col-md-6 col-lg-6 col-xl-3">
                 <div class="footer-item d-flex flex-column">
-                    <h4 class="mb-4 text-white">Support</h4>
-                    <a href=""><i class="bi bi-arrow-right-short me-2"></i> Contact</a>
-                    <a href=""><i class="bi bi-arrow-right-short me-2"></i> Legal Notice</a>
-                    <a href=""><i class="bi bi-arrow-right-short me-2"></i> Privacy Policy</a>
-                    <a href=""><i class="bi bi-arrow-right-short me-2"></i> Terms and Conditions</a>
-                    <a href=""><i class="bi bi-arrow-right-short me-2"></i> Sitemap</a>
-                    <a href=""><i class="bi bi-arrow-right-short me-2"></i> Cookie policy</a>
+                    <h4 class="mb-4 text-white">Modules</h4>
+                    <a href="{{ route('registrations.create') }}"><i class="bi bi-arrow-right-short me-2"></i> E-Registration</a>
+                    <a href="{{ route('standardizations.create') }}"><i class="bi bi-arrow-right-short me-2"></i> E-Standardization</a>
+                    <a href="http://eprocurement.cwd.gkp.pk"><i class="bi bi-arrow-right-short me-2"></i> E-bidding</a>
+                    <a href="http://etenders.cwd.gkp.pk/"><i class="bi bi-arrow-right-short me-2"></i> Contractor Login</a>
+                    <a href="http://103.240.220.71:8080/index.php"><i class="bi bi-arrow-right-short me-2"></i> GIS Portal</a>
+                    <a href="http://175.107.63.223:8889/forms/frmservlet?config=mb"><i class="bi bi-arrow-right-short me-2"></i> E-Billing</a>
+                    <a href="https://pr.cwd.gkp.pk"><i class="bi bi-arrow-right-short me-2"></i> PWMIS</a>
+                    <a href="https://cwd.gkp.pk/etender/login.php"><i class="bi bi-arrow-right-short me-2"></i> Old E-Tender</a>
                 </div>
             </div>
             <div class="col-md-6 col-lg-6 col-xl-3">

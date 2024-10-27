@@ -15,7 +15,7 @@ class NewsLetterController extends Controller
     {
         $status = $request->query('status', null);
 
-        $newsletters = NewsLetter::query()->latest('id')->withoutGlobalScope('subscribed');
+        $newsletters = NewsLetter::query()->withoutGlobalScope('subscribed');
 
         $newsletters->when($status !== null, function ($query) use ($status) {
             if ((int) $status === 0) {

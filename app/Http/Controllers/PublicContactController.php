@@ -16,7 +16,7 @@ class PublicContactController extends Controller
     {
         $status = $request->query('status', null);
 
-        $public_contacts = PublicContact::query()->latest('id');
+        $public_contacts = PublicContact::query();
 
         $public_contacts->when($status !== null, function ($query) use ($status) {
             $query->where('status', $status);

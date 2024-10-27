@@ -25,7 +25,7 @@ class ContractorRegistrationController extends Controller
     {
         $status = $request->query('status', null);
 
-        $registrations = ContractorRegistration::query()->latest('id');
+        $registrations = ContractorRegistration::query();
 
         $registrations->when($status !== null, function ($query) use ($status) {
             $query->where('status', $status);
