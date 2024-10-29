@@ -3,14 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Setting;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
         User::factory()->create([
@@ -28,6 +25,19 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password'),
         ]);
 
-        User::factory(50)->create();
+        Setting::factory()->create([
+            'site_name' => 'Communication & Works Department, KP',
+            'description' => 'Communications & Works Department was established in 1979. Since establishment the Department is working to promote safe, sustainable, cost effective and environment friendly road infrastructure leading to socio-economic development.',
+            'email' => 'cwd.gkp@gmail.com',
+            'maintenance_mode' => 0,
+            'contact_phone' => '091-9214039',
+            'contact_address' => 'Civil Secretariat, Peshawar',
+            'whatsapp' => '03130535333',
+            'facebook' => 'CWDKPGovt',
+            'twitter' => 'CWDKPGovt',
+            'youtube' => 'CWDKPGovt',
+            'meta_description' => 'Communications & Works Department was established in 1979. Since establishment the Department is working to promote safe, sustainable, cost effective and environment friendly road infrastructure leading to socio-economic development.',
+            'secret_key' => 'abbas',
+        ]);
     }
 }

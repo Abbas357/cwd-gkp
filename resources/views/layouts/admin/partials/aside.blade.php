@@ -104,27 +104,34 @@
                 </ul>
             </li>
             <li>
-                <a class="has-arrow" href="javascript:;">
-                    <div class="parent-icon"><i class="bi-bank"></i></div>
+                <a href="javascript:;" class="has-arrow">
+                    <div class="parent-icon"><i class="bi-kanban"></i></div>
                     <div class="menu-title">Projects</div>
                 </a>
                 <ul>
-                    <li><a class="has-arrow" href="javascript:;"><i class="bi-arrow-right-short"></i>Projects</a>
-                        <ul>
-                            <li><a href="{{ route('admin.projects.index') }}"><i class="bi-arrow-right-short"></i>List</a></li>
-                            <li><a href="{{ route('admin.projects.create') }}"><i class="bi-arrow-right-short"></i>Create</a></li>
-                        </ul>
+                    <li><a href="{{ route('admin.projects.index') }}" class="{{ Request::routeIs('admin.projects.index') ? 'active' : '' }}">
+                            <i class="bi-arrow-right-short"></i>List</a>
                     </li>
-                </ul>
-                <ul>
-                    <li><a class="has-arrow" href="javascript:;"><i class="bi-arrow-right-short"></i>Files</a>
-                        <ul>
-                            <li><a href="{{ route('admin.project_files.index') }}"><i class="bi-arrow-right-short"></i>List</a></li>
-                            <li><a href="{{ route('admin.project_files.create') }}"><i class="bi-arrow-right-short"></i>Create</a></li>
-                        </ul>
+                    <li><a href="{{ route('admin.projects.create') }}" class="{{ Request::routeIs('admin.projects.create') ? 'active' : '' }}">
+                            <i class="bi-arrow-right-short"></i>Create</a>
                     </li>
                 </ul>
             </li>
+            <li>
+                <a href="javascript:;" class="has-arrow">
+                    <div class="parent-icon"><i class="bi-folder"></i></div>
+                    <div class="menu-title">Project Files</div>
+                </a>
+                <ul>
+                    <li><a href="{{ route('admin.project_files.index') }}" class="{{ Request::routeIs('admin.project_files.index') ? 'active' : '' }}">
+                            <i class="bi-arrow-right-short"></i>List</a>
+                    </li>
+                    <li><a href="{{ route('admin.project_files.create') }}" class="{{ Request::routeIs('admin.project_files.create') ? 'active' : '' }}">
+                            <i class="bi-arrow-right-short"></i>Create</a>
+                    </li>
+                </ul>
+            </li>
+
             <li class="menu-label">Others</li>
             <li>
                 <a href="javascript:;" class="has-arrow">

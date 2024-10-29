@@ -8,11 +8,12 @@ use App\Http\Controllers\Site\UserController;
 use App\Http\Controllers\Site\StoryController;
 use App\Http\Controllers\Site\SliderController;
 use App\Http\Controllers\Site\GalleryController;
+use App\Http\Controllers\site\ProjectController;
+use App\Http\Controllers\Site\DownloadController;
 use App\Http\Controllers\Site\NewsLetterController;
 use App\Http\Controllers\Site\PublicContactController;
 use App\Http\Controllers\Site\EStandardizationController;
 use App\Http\Controllers\Site\ContractorRegistrationController;
-use App\Http\Controllers\Site\DownloadController;
 
 Route::prefix('partials')->as('partials.')->group(function () {
     Route::get('/message', [HomeController::class, 'messagePartial'])->name('message');
@@ -79,4 +80,8 @@ Route::prefix('pages')->as('pages.')->group(function () {
 
 Route::prefix('downloads')->as('downloads.')->group(function () {
     Route::get('/', [DownloadController::class, 'index'])->name('index');
+});
+
+Route::prefix('projects')->as('projects.')->group(function () {
+    Route::get('/{name}', [ProjectController::class, 'showProject'])->name('show');
 });

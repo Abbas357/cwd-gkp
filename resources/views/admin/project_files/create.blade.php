@@ -1,8 +1,12 @@
-<x-app-layout title="Add Download">
+<x-app-layout title="Add Project File">
 
     <x-slot name="header">
-        <li class="breadcrumb-item active" aria-current="page"> Add Download</li>
+        <li class="breadcrumb-item active" aria-current="page"> Add Project File</li>
     </x-slot>
+
+    @push('style')
+    <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
+    @endpush
 
     <div class="wrapper">
         <form class="needs-validation" action="{{ route('admin.project_files.store') }}" method="post" enctype="multipart/form-data" novalidate>
@@ -66,11 +70,22 @@
                                 </div>
                             </div>
                             <div class="form-actions mb-4 mt-2">
-                                <button class="btn btn-primary btn-block" type="submit" id="submitBtn">Add Download</button>
+                                <button class="btn btn-primary btn-block" type="submit" id="submitBtn">Add Project File</button>
                             </div>
                         </div>
                     </div>
                 </div>
         </form>
     </div>
+    @push('script')
+        <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
+
+        <script>
+            imageCropper({
+                fileInput: "#file"
+                , inputLabelPreview: "#file"
+                , aspectRatio: 4 / 3
+            });
+        </script>
+    @endpush
 </x-app-layout>

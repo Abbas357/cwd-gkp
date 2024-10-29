@@ -120,10 +120,10 @@ class ProjectFileController extends Controller
         return response()->json(['success' => 'File cannot be archived.'], 403);
     }
 
-    public function showDetail($projectId)
+    public function showDetail($projectFileId)
     {
-        $project = ProjectFile::withoutGlobalScope('published')->findOrFail($projectId);
-        if (!$project) {
+        $projectFile = ProjectFile::withoutGlobalScope('published')->findOrFail($projectFileId);
+        if (!$projectFile) {
             return response()->json([
                 'success' => false,
                 'data' => [
@@ -137,7 +137,7 @@ class ProjectFileController extends Controller
             'projects' => Project::select('id', 'name')->get(),
         ];
 
-        $html = view('admin.project_files.partials.detail', compact('project', 'cat'))->render();
+        $html = view('admin.project_files.partials.detail', compact('projectFile', 'cat'))->render();
         return response()->json([
             'success' => true,
             'data' => [

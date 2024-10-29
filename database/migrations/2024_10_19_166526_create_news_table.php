@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug')->unique();
-            $table->textext('summary')->nullable();
+            $table->text('summary')->nullable();
             $table->mediumText('content')->nullable();
             $table->string('category')->nullable();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');

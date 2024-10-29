@@ -28,8 +28,8 @@ return new class extends Migration
         Schema::create('project_files', function (Blueprint $table) {
             $table->id();
             $table->string('file_name');
-            $table->string('file_type');
-            $table->string('file_link');
+            $table->string('file_type')->nullable();
+            $table->string('file_link')->nullable();
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
             $table->timestamp('published_at')->nullable()->default(null);
