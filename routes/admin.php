@@ -9,6 +9,7 @@ use App\Http\Controllers\StoryController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DistrictController;
@@ -16,9 +17,10 @@ use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\NewsLetterController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\ProjectFileController;
+use App\Http\Controllers\PublicContactController;
 use App\Http\Controllers\EStandardizationController;
 use App\Http\Controllers\ContractorRegistrationController;
-use App\Http\Controllers\PublicContactController;
 
 Route::middleware('auth')->group(function () { 
     Route::prefix('admin')->as('admin.')->group(function () {
@@ -113,6 +115,30 @@ Route::middleware('auth')->group(function () {
             Route::patch('/update/field', [NewsController::class, 'updateField'])->name('updateField');
             Route::patch('/upload/file', [NewsController::class, 'uploadFile'])->name('uploadFile');
             Route::delete('/{news}', [NewsController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('projects')->as('projects.')->group(function () {
+            Route::get('/', [ProjectController::class, 'index'])->name('index');
+            Route::get('/create', [ProjectController::class, 'create'])->name('create');
+            Route::post('/', [ProjectController::class, 'store'])->name('store');
+            Route::get('/{project}', [ProjectController::class, 'show'])->name('show');
+            Route::get('/get/{project}', [ProjectController::class, 'showDetail'])->name('detail');
+            Route::patch('/update/field', [ProjectController::class, 'updateField'])->name('updateField');
+            Route::patch('/upload/file', [ProjectController::class, 'uploadFile'])->name('uploadFile');
+            Route::delete('/{project}', [ProjectController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('project_files')->as('project_files.')->group(function () {
+            Route::get('/', [ProjectFileController::class, 'index'])->name('index');
+            Route::get('/create', [ProjectFileController::class, 'create'])->name('create');
+            Route::post('/', [ProjectFileController::class, 'store'])->name('store');
+            Route::get('/{project_file}', [ProjectFileController::class, 'show'])->name('show');
+            Route::get('/get/{project_file}', [ProjectFileController::class, 'showDetail'])->name('detail');
+            Route::patch('/publish/{project_file}', [ProjectFileController::class, 'publishProjectFile'])->name('publish');
+            Route::patch('/archive/{project_file}', [ProjectFileController::class, 'archiveProjectFile'])->name('archive');
+            Route::patch('/update/field', [ProjectFileController::class, 'updateField'])->name('updateField');
+            Route::patch('/upload/file', [ProjectFileController::class, 'uploadFile'])->name('uploadFile');
+            Route::delete('/{project_file}', [ProjectFileController::class, 'destroy'])->name('destroy');
         });
 
         Route::prefix('sliders')->as('sliders.')->group(function () {

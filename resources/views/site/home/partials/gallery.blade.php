@@ -11,10 +11,8 @@
                     <span class="text-dark" style="width: 150px;">All</span>
                 </a>
             </li>
-            <!-- Dynamic Type Tabs (limited to 5) -->
             @foreach($galleriesByType as $type => $galleries)
                 @php
-                    // Convert type to a human-readable format
                     $formattedType = ucfirst(str_replace('_', ' ', $type));
                 @endphp
                 <li class="nav-item">

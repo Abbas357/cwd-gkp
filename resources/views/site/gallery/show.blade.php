@@ -1,13 +1,13 @@
 <x-main-layout title="{{ $galleryData['title'] }}">
-    <div class="container-fluid bg-breadcrumb">
-        <div class="container text-center py-2" style="max-width: 900px;">
-            <h3 class="text-white display-3 mb-4">Downloads</h1>
-            <ol class="breadcrumb justify-content-center mb-0">
-                <li class="breadcrumb-item"><a href="{{ route('site') }}">Home</a></li>
-                <li class="breadcrumb-item active text-white">Gallery</li>
-            </ol>    
-        </div>
-    </div>
+    
+    <x-slot name="breadcrumbTitle">
+        {{ $galleryData['title'] }}
+    </x-slot>
+
+    <x-slot name="breadcrumbItems">
+        <li class="breadcrumb-item active">Gallery</li>
+    </x-slot>
+    
     <div class="container py-3">
         <div class="gallery-detail">
             <h2>{{ $galleryData['title'] }}</h2>

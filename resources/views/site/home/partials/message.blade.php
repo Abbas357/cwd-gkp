@@ -83,7 +83,6 @@
         color: #333;
     }
 
-    /* Responsive Styles */
     @media (max-width: 768px) {
         .message .card-body {
             flex-direction: column;
@@ -92,14 +91,12 @@
 
         .message .card-text {
             order: 2;
-            /* Text below image on smaller screens */
             width: 100%;
             text-align: justify;
         }
 
         .message .card-image {
             order: 1;
-            /* Image above text on smaller screens */
             width: 100%;
             margin-bottom: 10px;
         }
@@ -113,10 +110,11 @@
 
 </style>
 
-<div class="container message py-3">
+<div class="container message pb-5">
+    <div class="mx-auto text-center mb-5" style="max-width: 900px;">
+        <h5 class="section-title px-3">Message</h5>
+    </div>
     <div class="card-row">
-        
-        <!-- Card 1: Minister -->
         @if($ministerData)
         <div class="card">
             <div class="card-body">

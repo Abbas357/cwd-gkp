@@ -1,13 +1,13 @@
 <x-main-layout title="{{ $newsData['title'] }}">
-    <div class="container-fluid bg-breadcrumb">
-        <div class="container text-center py-2" style="max-width: 900px;">
-            <h3 class="text-white display-3 mb-4">{{ $newsData['title'] }}</h1>
-            <ol class="breadcrumb justify-content-center mb-0">
-                <li class="breadcrumb-item"><a href="{{ route('site') }}">Home</a></li>
-                <li class="breadcrumb-item active text-white">News</li>
-            </ol>    
-        </div>
-    </div>
+
+    <x-slot name="breadcrumbTitle">
+        {{ $newsData['title'] }}
+    </x-slot>
+
+    <x-slot name="breadcrumbItems">
+        <li class="breadcrumb-item active">News</li>
+    </x-slot>
+    
     <div class="container mt-3">
         <div class="d-flex justify-content-between">
             <p><strong>Published By:</strong> {{ $newsData['published_by'] }}</p>

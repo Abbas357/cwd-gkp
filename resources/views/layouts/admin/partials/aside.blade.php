@@ -103,6 +103,28 @@
                     <li><a href="{{ route('admin.news.create') }}"><i class="bi-arrow-right-short"></i>Create</a></li>
                 </ul>
             </li>
+            <li>
+                <a class="has-arrow" href="javascript:;">
+                    <div class="parent-icon"><i class="bi-bank"></i></div>
+                    <div class="menu-title">Projects</div>
+                </a>
+                <ul>
+                    <li><a class="has-arrow" href="javascript:;"><i class="bi-arrow-right-short"></i>Projects</a>
+                        <ul>
+                            <li><a href="{{ route('admin.projects.index') }}"><i class="bi-arrow-right-short"></i>List</a></li>
+                            <li><a href="{{ route('admin.projects.create') }}"><i class="bi-arrow-right-short"></i>Create</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li><a class="has-arrow" href="javascript:;"><i class="bi-arrow-right-short"></i>Files</a>
+                        <ul>
+                            <li><a href="{{ route('admin.project_files.index') }}"><i class="bi-arrow-right-short"></i>List</a></li>
+                            <li><a href="{{ route('admin.project_files.create') }}"><i class="bi-arrow-right-short"></i>Create</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
             <li class="menu-label">Others</li>
             <li>
                 <a href="javascript:;" class="has-arrow">

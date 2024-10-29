@@ -1,14 +1,12 @@
 <x-main-layout title="Gallery">
-    <!-- Breadcrumb Section -->
-    <div class="container-fluid bg-breadcrumb">
-        <div class="container text-center py-2" style="max-width: 900px;">
-            <h3 class="text-white display-3 mb-4">Gallery</h3>
-            <ol class="breadcrumb justify-content-center mb-0">
-                <li class="breadcrumb-item"><a href="{{ route('site') }}" class="text-decoration-none">Home</a></li>
-                <li class="breadcrumb-item active text-white">Gallery</li>
-            </ol>
-        </div>
-    </div>
+    
+    <x-slot name="breadcrumbTitle">
+        Gallery
+    </x-slot>
+
+    <x-slot name="breadcrumbItems">
+        <li class="breadcrumb-item active">Gallery</li>
+    </x-slot>
 
     <!-- Gallery Section -->
     <div class="container my-5">

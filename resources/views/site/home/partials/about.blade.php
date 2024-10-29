@@ -1,4 +1,7 @@
 <div class="container py-2">
+    <div class="mx-auto text-center mb-5" style="max-width: 900px;">
+        <h5 class="section-title px-3">About US</h5>
+    </div>
     <div class="row g-5 align-items-center">
         <div class="col-lg-5">
             <div class="h-100" style="border: 30px solid; border-color: transparent #13357B transparent #13357B;">

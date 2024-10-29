@@ -1,13 +1,11 @@
 <x-main-layout title="All Downloads">
-    <div class="container-fluid bg-breadcrumb">
-        <div class="container text-center py-2" style="max-width: 900px;">
-            <h3 class="text-white display-3 mb-4">Downloads</h1>
-            <ol class="breadcrumb justify-content-center mb-0">
-                <li class="breadcrumb-item"><a href="{{ route('site') }}">Home</a></li>
-                <li class="breadcrumb-item active text-white">Downloads</li>
-            </ol>    
-        </div>
-    </div>
+    <x-slot name="breadcrumbTitle">
+        Downloads
+    </x-slot>
+
+    <x-slot name="breadcrumbItems">
+        <li class="breadcrumb-item active">Downloads</li>
+    </x-slot>
     <div class="container my-3">
         <div class="row">
             <div class="col-md-3">

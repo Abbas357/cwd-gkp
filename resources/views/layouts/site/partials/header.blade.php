@@ -368,13 +368,11 @@
             loadZuckLibraries(function() {
                 storiesContent.classList.toggle('d-none');
 
-                // Prepare seenUserIds
                 let contentSeenItems = localStorage.getItem('zuck-stories-content-seenItems');
                 contentSeenItems = contentSeenItems ? JSON.parse(contentSeenItems) : {};
 
                 let seenUserIds = Object.keys(contentSeenItems);
 
-                // Fetch stories and handle expired users in one request
                 fetch("{{ route('stories.get') }}", {
                     method: 'POST',
                     headers: {

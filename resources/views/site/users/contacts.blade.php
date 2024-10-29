@@ -1,13 +1,12 @@
 <x-main-layout title="Contacts">
-    <div class="container-fluid bg-breadcrumb">
-        <div class="container text-center py-1" style="max-width: 900px;">
-            <h3 class="text-secondary display-6 fw-bold mb-4">Contact List</h3>
-            <ol class="breadcrumb justify-content-center mb-0">
-                <li class="breadcrumb-item"><a href="{{ route('site') }}" class="text-decoration-none">Home</a></li>
-                <li class="breadcrumb-item active">Contacts</li>
-            </ol>
-        </div>
-    </div>
+
+    <x-slot name="breadcrumbTitle">
+        Contact List
+    </x-slot>
+
+    <x-slot name="breadcrumbItems">
+        <li class="breadcrumb-item active">Contacts</li>
+    </x-slot>
 
     <div class="container my-3">
         <div class="row">

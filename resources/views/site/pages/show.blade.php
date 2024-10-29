@@ -1,13 +1,13 @@
 <x-main-layout title="{{ $pageData['title'] }}">
-    <div class="container-fluid bg-breadcrumb">
-        <div class="container text-center py-2" style="max-width: 900px;">
-            <h3 class="text-white display-3 mb-4">{{ $pageData['title'] }}</h1>
-            <ol class="breadcrumb justify-content-center mb-0">
-                <li class="breadcrumb-item"><a href="{{ route('site') }}">Home</a></li>
-                <li class="breadcrumb-item active text-white">Pages</li>
-            </ol>    
-        </div>
-    </div>
+    
+    <x-slot name="breadcrumbTitle">
+        {{ $pageData['title'] }}
+    </x-slot>
+
+    <x-slot name="breadcrumbItems">
+        <li class="breadcrumb-item active">Pages</li>
+    </x-slot>
+
     <div class="container mt-3">
         <h1 class="page-title fs-3 py-2 bg-light px-2">{{ $pageData['title'] }}</h1>
         <img 
