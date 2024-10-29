@@ -66,6 +66,7 @@ Route::prefix('contacts')->as('contacts.')->group(function () {
 
 Route::prefix('news')->as('news.')->group(function () {
     Route::get('/', [NewsController::class, 'index'])->name('index');
+    Route::get('/ticker', [NewsController::class, 'newsTicker'])->name('ticker');;
     Route::get('/{slug}', [NewsController::class, 'showNews'])->name('show');
 });
 

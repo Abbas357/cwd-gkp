@@ -26,6 +26,15 @@ class NewsController extends Controller
     {
         $news = News::where('slug', $slug)->with(['media'])->firstOrFail();
 
+        $mediaUrl = $news->getFirstMediaUrl('news_attachments') ?: null;
+        $mediaType = '';
+
+        if ($news->hasMedia('news_attachments')) {
+            $media = $news->getFirstMedia('news_attachments');
+            $mediaUrl = $media->getUrl();
+            $mediaType = $media->mime_type;
+        }
+
         $newsData = [
             'id' => $news->id,
             'title' => $news->title,
@@ -36,10 +45,25 @@ class NewsController extends Controller
             'author' => $news->user->designation,
             'published_by' => $news->publishBy->designation,
             'published_at' => $news->published_at->format('M d, Y'),
-            'image' => $news->getFirstMediaUrl('news_attachments')
-                ?: asset('admin/images/no-image.jpg'),
+            'file_url' => $mediaUrl,
+            'file_type' => $mediaType,
         ];
 
         return view('site.news.show', compact('newsData'));
+    }
+
+
+    public function newsTicker()
+    {
+        $newsItems = News::latest()->take(10)->get(['title', 'slug']);
+
+        $news = $newsItems->map(function ($item, $index) {
+            return [
+                'title' => ($index + 1) . '. ' . $item->title,
+                'slug' => $item->slug,
+            ];
+        });
+
+        return response()->json($news);
     }
 }

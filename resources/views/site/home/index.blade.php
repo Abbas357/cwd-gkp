@@ -1,6 +1,7 @@
 <x-main-layout title="{{ $title }}">
     @push('style')
     <link href="{{ asset('site/lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('site/lib/newsticker/news-ticker.min.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header"></x-slot>
 
@@ -11,9 +12,13 @@
     <div class="container-fluid position-relative module" style="top: -50%; transform: translateY(-50%);">
         @include('site.home.partials.main-links')
     </div>
+
+    <div class="container position-relative module" class="mb-4">
+        @include('site.home.partials.newsticker')
+    </div>
     
     <!-- Placeholder for Message Section -->
-    <div id="message-section" class="container-fluid pb-3" style="min-height: 400px">
+    <div id="message-section" class="container-fluid py-5" style="min-height: 400px">
         <!-- Loading Spinner -->
         <div class="d-flex justify-content-center">
             <div class="spinner-border text-primary" role="status" id="message-spinner">
@@ -71,7 +76,38 @@
     <script src="{{ asset('site/lib/lightbox/js/lightbox.min.js') }}"></script>
     <script src="{{ asset('site/lib/easing/easing.min.js') }}"></script>
     <script src="{{ asset('site/lib/waypoints/waypoints.min.js') }}"></script>
+    <script src="{{ asset('site/lib/newsticker/news-ticker.min.js') }}"></script>
     <script>
+        function loadNews() {
+            $.ajax({
+                url: "{{ route('news.ticker') }}",
+                method: 'GET',
+                success: function(data) {
+                    displayNews(data);
+                },
+                error: function() {
+                    console.log("Error fetching news.");
+                }
+            });
+        }
+
+        function displayNews(newsItems) {
+            const newsShowRoute = "{{ route('news.show', ':slug') }}";
+            let tickerContent = newsItems.map(item => `<li><a href="${newsShowRoute.replace(':slug', item.slug)}" target="_blank">${item.title}</a></li>`).join('');
+
+            $('#newsTicker .bn-news ul').html(tickerContent);
+
+            $('#newsTicker').breakingNews({
+                effect: 'typography',
+                themeColor: '#3b5998',
+                fontSize: '20px'
+            });
+        }
+
+        $(document).ready(function() {
+            loadNews();
+        });
+
         function loadPartial(url, elementId, spinnerId) {
             $('#' + spinnerId).show();
 
@@ -89,7 +125,7 @@
             element: document.getElementById('message-section'),
             handler: function(direction) {
                 loadPartial('{{ route('partials.message') }}', 'message-section', 'message-spinner');
-                this.destroy(); // Destroy waypoint after content is loaded
+                this.destroy();
             },
             offset: '100%'
         });
