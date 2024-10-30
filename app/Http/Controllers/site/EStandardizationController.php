@@ -16,7 +16,7 @@ class EStandardizationController extends Controller
 {
     public function create()
     {
-        return view('admin.standardizations.create');
+        return view('site.standardizations.create');
     }
 
     public function store(StoreEStandardizationRequest $request)

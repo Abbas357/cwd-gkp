@@ -9,9 +9,7 @@
     </x-slot>
 
     <div class="container my-4">
-        <h2 class="mb-4">Latest News</h2>
     
-        <!-- Category Filter -->
         <div class="mb-4">
             <form method="GET" action="{{ route('news.index') }}">
                 <div class="d-flex align-items-center">

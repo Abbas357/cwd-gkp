@@ -27,7 +27,6 @@ class HomeController extends Controller
                         'slug' => $slider->slug,
                         'summary' => $slider->summary,
                         'image' => [
-                            'small' => $slider->getFirstMediaUrl('sliders', 'small'),
                             'medium' => $slider->getFirstMediaUrl('sliders', 'medium'),
                             'large' => $slider->getFirstMediaUrl('sliders', 'large'),
                             'original' => $slider->getFirstMediaUrl('sliders')

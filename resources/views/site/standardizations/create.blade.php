@@ -3,13 +3,19 @@
     <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
     @endpush
-    <div class="wrapper">
+
+    <x-slot name="breadcrumbTitle">
+        Standardization of Engineering Products / Materials
+    </x-slot>
+
+    <x-slot name="breadcrumbItems">
+        <li class="breadcrumb-item active">Standardization</li>
+    </x-slot>
+    
+    <div class="wrapper mt-2">
         <div class="page container">
             <div class="page-inner">
-                <header class="page-title-bar">
-                    <h1 class="page-title fs-3 py-2 bg-light px-2">Standardization of Engineering Products / Materials</h1>
-                </header>
-                <div class="page-section shadow-lg rounded bg-light" style="border:1px solid #ccc">
+                <div class="page-section shadow-lg rounded bg-light" style="border:1px solid #dedede">
                     <form class="needs-validation" action="{{ route('standardizations.store') }}" method="post" enctype="multipart/form-data" novalidate>
                         @csrf
                         <div class="row">

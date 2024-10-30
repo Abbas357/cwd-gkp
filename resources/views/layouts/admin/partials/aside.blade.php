@@ -56,21 +56,11 @@
             <li>
                 <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="bi-calendar3-week"></i></div>
-                    <div class="menu-title">Registrations</div>
+                    <div class="menu-title">Online Apply</div>
                 </a>
                 <ul>
-                    <li><a href="{{ route('admin.registrations.index') }}"><i class="bi-arrow-right-short"></i>List</a></li>
-                    <li><a href="{{ route('registrations.create') }}"><i class="bi-arrow-right-short"></i>Create</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="javascript:;" class="has-arrow">
-                    <div class="parent-icon"><i class="bi-basket"></i></div>
-                    <div class="menu-title">Standardization</div>
-                </a>
-                <ul>
-                    <li><a href="{{ route('admin.standardizations.index') }}"><i class="bi-arrow-right-short"></i>List</a></li>
-                    <li><a href="{{ route('standardizations.create') }}"><i class="bi-arrow-right-short"></i>Create</a></li>
+                    <li><a href="{{ route('admin.registrations.index') }}"><i class="bi-arrow-right-short"></i>E-Registration</a></li>
+                    <li><a href="{{ route('admin.standardizations.index') }}"><i class="bi-arrow-right-short"></i>E-Standardization</a></li>
                 </ul>
             </li>
             <li>

@@ -4,14 +4,17 @@
     <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
     @endpush
+    <x-slot name="breadcrumbTitle">
+        Online Contractor Registrations
+    </x-slot>
 
-    <div class="wrapper">
+    <x-slot name="breadcrumbItems">
+        <li class="breadcrumb-item active">Registration</li>
+    </x-slot>
+    <div class="wrapper mt-2">
         <div class="page container">
             <div class="page-inner">
-                <header class="page-title-bar">
-                    <h1 class="page-title fs-3 py-2 bg-light px-2">Online Contractor Registrations</h1>
-                </header>
-                <div class="page-section shadow-lg rounded bg-light" style="border:1px solid #ccc">
+                <div class="page-section shadow-lg rounded bg-light" style="border:1px solid #dedede">
                     <form class="needs-validation" action="{{ route('registrations.store') }}" method="post" enctype="multipart/form-data" novalidate>
                         @csrf
                         <div class="row">

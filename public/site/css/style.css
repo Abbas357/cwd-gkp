@@ -348,7 +348,7 @@ a {
 
 .carousel-header .carousel-inner .carousel-item {
     position: relative;
-    min-height: 80vh
+    min-height: 80vh;
 }
 
 .carousel-header .carousel-inner .carousel-item img {
@@ -356,59 +356,104 @@ a {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    filter: contrast(1.2) saturate(1.2);
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
 }
 
 .carousel-header .carousel-inner .carousel-item .carousel-caption {
     position: absolute;
     width: 100%;
     height: 100%;
-    top: 0;
-    left: 0;
+    top: 25%;
+    left: 10%;
     padding-top: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    background: linear-gradient(rgba(0, 0, 0, .1), rgba(0, 0, 0, 0.1));
+    text-align: left;
     background-size: cover;
+    max-width: 600px;
+}
 
-    p, h3 {
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7), -2px -2px 4px rgba(75, 75, 75, 0.7);
-    }
+.carousel-header .carousel-inner .carousel-item .carousel-caption p,
+.carousel-header .carousel-inner .carousel-item .carousel-caption h3 {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7), -2px -2px 4px rgba(75, 75, 75, 0.7);
+}
+
+.carousel-header .carousel-inner .carousel-item .carousel-caption h3 {
+    letter-spacing: 3px;
+    background: #00000033;
+    border-radius: 10px 10px 0px 0px;
+}
+
+.carousel-header .carousel-inner .carousel-item .carousel-caption p {
+    background: #00000033;
+    border-radius: 0px 0px 10px 10px;
 }
 
 @media (max-width: 768px) {
-
-    .carousel-header .carousel-inner .carousel-item img,
-    .carousel-header .carousel-inner .carousel-item .carousel-caption {
-        height: 700px;
-        margin-top: -100px;
+    .carousel-header .carousel-inner .carousel-item {
+        min-height: 300px;
     }
 
-    .carousel-header {
-        height: 700px !important;
+    .carousel-header .carousel-inner .carousel-item img {
+        height: 200px;
+        position: relative;
+        object-fit: cover;
+    }
+
+    .carousel-header .carousel-inner .carousel-item .carousel-caption {
+        position: static;
+        max-width: 100%;
+        padding-top: 2px;
+        text-align: center;
+        background: rgb(129, 233, 190);
+        color: #333;
+        border-radius: 8px;
+    }
+
+    /* Style individual text elements */
+    .carousel-header .carousel-inner .carousel-item .carousel-caption h3,
+    .carousel-header .carousel-inner .carousel-item .carousel-caption p {
+        color: #333;
+        background: none;
+        text-shadow: none;
+    }
+
+    .search-bar {
+        margin-top: 0;
+        transition: 0.5s;
     }
 
     .carousel-header .carousel-control-prev .carousel-control-prev-icon,
     .carousel-header .carousel-control-next .carousel-control-next-icon {
-        opacity: 0;
-    }
-
-    .search-bar {
-        margin-top: -100px;
-        transition: 0.5s;
+        opacity: 0.5;
     }
 }
+
+@media (min-width: 769px) {
+    .module {
+        top: -50%;
+        transform: translateY(-50%);
+    }
+}
+
 
 /*** Carousel Hero Header End ***/
 
 /*** Single Page Hero Header Start ***/
 .bg-breadcrumb {
-    background: url(../img/paper.jpg);
-    opacity: .7;
-    background-repeat: repeat;
-    padding: 1rem 0 1rem 0;
+    background: 
+        linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)),
+        url(../img/breadcrumb-bg.png) repeat;
+    background-blend-mode: overlay;
+    padding: 1.2rem 0 1rem 0;
+    color: #000;
+    opacity: .8;
+    box-shadow: 0 0 1rem #00000022;
+    border-bottom-left-radius: 3rem;
+    border-bottom-right-radius: 3rem;
 }
+
 
 .bg-breadcrumb .breadcrumb-item a {
     color: var(--bs-primary) !important;
@@ -514,7 +559,7 @@ a {
 
 /*** Tour Booking Start ***/
 .booking {
-    background: linear-gradient(rgba(19, 53, 123, .8), rgba(19, 53, 123, .8)), url(../img/tour-booking-bg.jpg);
+    background: linear-gradient(rgba(19, 53, 123, .8), rgba(19, 53, 123, .8)), url(../img/bg-general.jpg);
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -844,9 +889,13 @@ a {
 
 /*** copyright end ***/
 
+.main-links {
+    z-index: 9999;  
+}
 .action-button {
+    scale: .9;
     text-align: center;
-    padding: 20px;
+    padding: 10px 0;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -866,7 +915,7 @@ a {
 }
 
 .action-icon {
-    font-size: 35px;
+    font-size: 30px;
     color: #28a745;
     cursor: pointer;
 }
@@ -889,13 +938,3 @@ a {
     margin-top: 4px;
     line-height: 1.2;
 }
-
-.sunken-text {
-    color: #222;
-    text-shadow: 
-        1px 1px 2px rgba(0, 0, 0, 0.2),
-        -1px -1px 2px rgba(255, 255, 255, 0.6),
-        0px 2px 2px rgba(0, 0, 0, 0.15),
-        2px 2px 5px rgba(0, 0, 0, 0.1);
-}
-

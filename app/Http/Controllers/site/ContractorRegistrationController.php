@@ -22,7 +22,7 @@ class ContractorRegistrationController extends Controller
             'contractor_category' => Category::where('type', 'contractor_category')->get(),
             'provincial_entities' => Category::where('type', 'provincial_entity')->get(),
         ];
-        return view('admin.cont_registrations.create', compact('cat'));
+        return view('site.cont_registrations.create', compact('cat'));
     }
 
     public function store(StoreContractorRegistrationRequest $request)

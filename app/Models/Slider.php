@@ -58,14 +58,12 @@ class Slider extends Model implements HasMedia
 
     public function registerMediaConversions(?Media $media = null): void
     {
-        $this->addMediaConversion('small')->width(400)->nonQueued();
         $this->addMediaConversion('medium')->width(800)->nonQueued();
         $this->addMediaConversion('large')->width(1200)->nonQueued();
 
         // <img 
         //     src="{{ $user->getFirstMediaUrl('images', 'thumb') }}" 
         //     srcset="
-        //         {{ $user->getFirstMediaUrl('images', 'small') }} 400w, 
         //         {{ $user->getFirstMediaUrl('images', 'medium') }} 800w, 
         //         {{ $user->getFirstMediaUrl('images', 'large') }} 1200w" 
         //     sizes="(max-width: 600px) 200px, (max-width: 1000px) 400px, (max-width: 1400px) 800px, (max-width: 1800px) 1200px, 1200px"

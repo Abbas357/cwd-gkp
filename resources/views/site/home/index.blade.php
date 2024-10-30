@@ -9,11 +9,11 @@
         @include('site.home.partials.slider')
     </div>
 
-    <div class="container-fluid position-relative module" style="top: -50%; transform: translateY(-50%);">
+    <div class="container-fluid position-relative module">
         @include('site.home.partials.main-links')
     </div>
 
-    <div class="container position-relative module" class="mb-4">
+    <div class="container position-relative" class="mb-4">
         @include('site.home.partials.newsticker')
     </div>
     

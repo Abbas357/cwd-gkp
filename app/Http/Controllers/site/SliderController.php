@@ -18,7 +18,6 @@ class SliderController extends Controller
             'published_at' => $slider->published_at,
             'published_by' => $slider->publishedBy->designation,
             'image' => [
-                'small' => $slider->getFirstMediaUrl('sliders', 'small'),
                 'medium' => $slider->getFirstMediaUrl('sliders', 'medium'),
                 'large' => $slider->getFirstMediaUrl('sliders', 'large'),
                 'original' => $slider->getFirstMediaUrl('sliders')

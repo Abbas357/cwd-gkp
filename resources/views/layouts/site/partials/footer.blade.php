@@ -1,5 +1,5 @@
 <!-- Footer Start -->
-<img src="{{ asset('site/img/footer-img.png') }}" style="width:100%; opacity: 0.3" alt="CWD">
+<img src="{{ asset('site/img/footer-bg.jpg') }}" style="height:100px;width:100%; opacity: 0.3; border-top-left-radius: 3rem; border-top-right-radius: 3rem; box-shadow: 0 0 1rem #00000033;" alt="CWD">
 
 <div class="container-fluid footer py-2">
     <div class="container py-3">

@@ -15,27 +15,26 @@
                     <!-- Responsive Image -->
                     <img 
                         src="{{ $slider['image']['large'] }}" 
-                        srcset="{{ $slider['image']['small'] }} 400w, {{ $slider['image']['medium'] }} 800w, {{ $slider['image']['large'] }} 1200w" 
-                        sizes="(max-width: 600px) 400px, (max-width: 1200px) 800px, 1200px" 
+                        srcset="
+                            {{ $slider['image']['medium'] }} 768w, 
+                            {{ $slider['image']['large'] }} 1000w, 
+                            {{ $slider['image']['original'] }} 1200w"
+                        sizes="(max-width: 768px) 768px, (max-width: 1000px) 1000px, 100vw" 
                         class="img-fluid" 
                         alt="{{ $slider['title'] }}">
                     
                     <div class="carousel-caption">
-                        <div class="p-3" style="max-width: 900px;">
-                            <!-- Slider Title -->
-                            <h3 class="text-white text-uppercase fw-bold mb-4 p-3" 
-                                style="letter-spacing: 3px; background: #99999955; border-radius: 20px 20px 0px 0px">
+                        <div class="p-3">
+                            <h3 class="text-uppercase fw-bold mb-2 p-3">
                                 {{ $slider['title'] }}
                             </h3>
                             
-                            <!-- Slider Summary -->
-                            <p class="mb-5 fs-5 p-3" style="background: #99999955; border-radius: 0px 0px 20px 20px">
+                            <p class="mb-2 fs-5 p-3">
                                 {{ $slider['summary'] }}
                             </p>
                             
-                            <!-- View Details Button -->
-                            <div class="d-flex align-items-center justify-content-center">
-                                <a class="btn-hover-bg btn btn-primary rounded-pill text-white py-2 px-3" 
+                            <div>
+                                <a class="btn-hover-bg btn btn-primary text-white py-2 px-3" 
                                    href="{{ route('sliders.showSlider', $slider['slug']) }}">
                                    View Details
                                 </a>
@@ -44,7 +43,7 @@
                     </div>
                 </div>
             @endforeach
-        </div>
+        </div>        
 
         <!-- Carousel Controls -->
         <button class="carousel-control-prev" type="button" data-bs-target="#homePageSlider" data-bs-slide="prev">

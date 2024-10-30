@@ -56,7 +56,7 @@
                 </div>
             </div>
             <div class="right-column">
-                <div class="d-none d-md-block cw-info">
+                <div class="d-none d-xl-block cw-info">
                     <a href="mailto:info@cwd.gkp.pk"><i class="bi-envelope"></i> &nbsp; {{ $settings->email ?? 'info@cwd.gkp.pk'}}</a>
                     <a href="tel:+919210843"><i class="bi-telephone"></i> &nbsp; {{ $settings->contact_phone ?? '091-9214039'}}</a>
                 </div>
