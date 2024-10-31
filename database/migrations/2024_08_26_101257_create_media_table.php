@@ -10,7 +10,8 @@ return new class extends Migration
     {
         Schema::create('media', function (Blueprint $table) {
             $table->id();
-            $table->morphs('model'); // `morphs` is equivalent to `model_type` and `model_id`
+            $table->string('model_type', 125);
+            $table->unsignedBigInteger('model_id');
             $table->uuid()->nullable()->unique();
             $table->string('collection_name');
             $table->string('name');
@@ -19,14 +20,15 @@ return new class extends Migration
             $table->string('disk');
             $table->string('conversions_disk')->nullable();
             $table->unsignedBigInteger('size');
-            $table->longText('manipulations');
-            $table->longText('custom_properties');
-            $table->longText('generated_conversions');
-            $table->longText('responsive_images');
+            $table->text('manipulations');
+            $table->text('custom_properties');
+            $table->text('generated_conversions');
+            $table->text('responsive_images');
             $table->unsignedInteger('order_column')->nullable()->index();
             $table->nullableTimestamps();
         
             $table->index(['model_type', 'model_id'], 'media_model_type_model_id_index');
         });
+        
     }
 };
