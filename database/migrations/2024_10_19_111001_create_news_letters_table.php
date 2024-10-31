@@ -13,16 +13,16 @@ return new class extends Migration
     {
         Schema::create('news_letters', function (Blueprint $table) {
             $table->id();
-            $table->string('email')->unique();
+            $table->string('email', 191)->unique(); // Set length for compatibility
             $table->timestamp('subscribed_at')->nullable();
             $table->timestamp('unsubscribed_at')->nullable();
-            $table->string('unsubscribe_token')->nullable();
-            $table->string('ip_address')->nullable();
+            $table->string('unsubscribe_token', 191)->nullable(); // Set length for compatibility
+            $table->string('ip_address', 45)->nullable(); // Set length for IP address
             $table->text('device_info')->nullable();
             $table->timestamps();
         });
-        
     }
+
 
     /**
      * Reverse the migrations.
