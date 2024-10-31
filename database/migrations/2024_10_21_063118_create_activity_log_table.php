@@ -14,12 +14,10 @@ class CreateActivityLogTable extends Migration
             $table->text('description');
             $table->nullableMorphs('subject', 'subject');
             $table->nullableMorphs('causer', 'causer');
-            $table->longText('properties')->nullable(); 
+            $table->longText('properties')->nullable();
             $table->timestamps();
-            $table->index('log_name');  
         
-            $table->string('subject_type', 191);
-            $table->unsignedBigInteger('subject_id');
+            $table->index(['log_name'], 'log_name_index', 100);
         });
         
     }
