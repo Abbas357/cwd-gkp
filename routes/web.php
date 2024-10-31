@@ -13,16 +13,16 @@ Route::get('/dump-autoload', function () {
     }
 });
 Route::get('/artisan', function () {
-    // \Artisan::call('storage:link');
-    // \Artisan::call('config:cache');
-    Artisan::call('route:cache');
-    Artisan::call('composer:dump-autoload');
-    // \Artisan::call('view:cache');
-    // \Artisan::call('optimize');
+    // Artisan::call('storage:link');
+    // Artisan::call('config:cache');
+    // Artisan::call('route:cache');
+    // Artisan::call('composer:dump-autoload');
+    // Artisan::call('view:cache');
+    // Artisan::call('optimize');
 
-    // \Artisan::call('view:clear');
-    // \Artisan::call('route:clear');
-    // \Artisan::call('cache:clear');
+    // Artisan::call('view:clear');
+    Artisan::call('route:clear');
+    // Artisan::call('cache:clear');
     return 'Command executed successfully.';
 });
 Route::get('/', [SiteController::class, 'site'])->name('site');
