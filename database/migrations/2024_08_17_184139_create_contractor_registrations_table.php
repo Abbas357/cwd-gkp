@@ -27,13 +27,6 @@ return new class extends Migration
             $table->string('kpra_reg_no', 45)->nullable();
             $table->string('pre_enlistment')->nullable();
             $table->boolean('is_limited')->default(false);
-            $table->string('cnic_front_attachment')->nullable();
-            $table->string('cnic_back_attachment')->nullable();
-            $table->string('fbr_attachment')->nullable();
-            $table->string('kpra_attachment')->nullable();
-            $table->string('pec_attachment')->nullable();
-            $table->string('form_h_attachment')->nullable();
-            $table->string('pre_enlistment_attachment')->nullable();
             $table->text('deffered_reason');
             $table->boolean('is_agreed')->default(false);
             $table->boolean('status')->default(0);
