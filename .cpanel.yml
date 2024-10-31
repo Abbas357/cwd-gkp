@@ -1,4 +1,5 @@
+---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/username/public_html
+    - export DEPLOYPATH=/home/cwdgkp1/public_html/app.cwd.gkp.pk
     - /bin/cp -R * $DEPLOYPATH
