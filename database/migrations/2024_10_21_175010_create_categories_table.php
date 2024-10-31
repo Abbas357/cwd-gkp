@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('name', 191);
             $table->string('type', 191);
             $table->timestamps();
-        
-            $table->unique(['name', 'type'], 'categories_name_type_unique', 100);
+            
+            $table->index(['name', 'type'], 'categories_name_type_unique');
         });
     }
 
