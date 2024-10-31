@@ -8,7 +8,7 @@ use App\Http\Controllers\Site\UserController;
 use App\Http\Controllers\Site\StoryController;
 use App\Http\Controllers\Site\SliderController;
 use App\Http\Controllers\Site\GalleryController;
-use App\Http\Controllers\site\ProjectController;
+use App\Http\Controllers\Site\ProjectController;
 use App\Http\Controllers\Site\DownloadController;
 use App\Http\Controllers\Site\NewsLetterController;
 use App\Http\Controllers\Site\PublicContactController;
