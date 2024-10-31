@@ -17,7 +17,11 @@ class CreateActivityLogTable extends Migration
             $table->longText('properties')->nullable(); 
             $table->timestamps();
             $table->index('log_name');  
+        
+            $table->string('subject_type', 191);
+            $table->unsignedBigInteger('subject_id');
         });
+        
     }
 
     public function down()
