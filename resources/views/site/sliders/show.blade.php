@@ -16,7 +16,7 @@
         <!-- Responsive Image -->
         <img 
             src="{{ $sliderData['image']['large'] }}" 
-            srcset="{{ $sliderData['image']['small'] }} 400w, {{ $sliderData['image']['medium'] }} 800w, {{ $sliderData['image']['large'] }} 1200w" 
+            srcset="{{ $sliderData['image']['medium'] }} 800w, {{ $sliderData['image']['large'] }} 1200w" 
             sizes="(max-width: 600px) 400px, (max-width: 1200px) 800px, 1200px" 
             class="img-fluid my-4" 
             alt="{{ $sliderData['title'] }}">
