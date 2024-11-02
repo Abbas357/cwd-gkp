@@ -30,11 +30,11 @@ class SearchBuilder
         '!between' => 'not between',
     ];
 
-    public function __construct(Request $request, $query, array $mapColumns = [])
+    public function __construct(Request $request, $query, array $allowedColumns = [], array $mapColumns = [])
     {
         $this->request = $request;
         $this->query = $query;
-        $this->allowedColumns = \Illuminate\Support\Facades\Schema::getColumnListing($query->getModel()->getTable());
+        $this->allowedColumns = !empty($allowedColumns) ? $allowedColumns : \Illuminate\Support\Facades\Schema::getColumnListing($query->getModel()->getTable());
         $this->mapColumns = $mapColumns;
     }
 

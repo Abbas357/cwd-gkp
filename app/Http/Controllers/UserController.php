@@ -47,12 +47,13 @@ class UserController extends Controller
                 })
                 ->rawColumns(['action']);
 
-            // if (!$request->input('search.value') && $request->has('searchBuilder')) {
-            //     $dataTable->filter(function ($query) use ($request) {
-            //         $sb = new \App\SearchBuilder($request, $query);
-            //         $sb->build();
-            //     });
-            // }
+            if (!$request->input('search.value') && $request->has('searchBuilder')) {
+                $dataTable->filter(function ($query) use ($request) {
+                    $allowedColumns = ['name', 'email', 'created_at'];
+                    $sb = new \App\SearchBuilder($request, $query, $allowedColumns);
+                    $sb->build();
+                });
+            }
 
             return $dataTable->toJson();
         }
