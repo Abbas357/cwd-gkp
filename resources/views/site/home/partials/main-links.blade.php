@@ -6,7 +6,7 @@
                     <div class="action-button">
                         <i class="bi-briefcase action-icon"></i>
                         <div class="action-label">E-Registration</div>
-                        <small class="explanation-text">Contactor Registration</small>
+                        <small class="explanation-text">(Contractor Registration)</small>
                     </div>
                 </a>
             </div>
@@ -15,7 +15,7 @@
                     <div class="action-button">
                         <i class="bi-award action-icon"></i>
                         <div class="action-label">E-Standardization</div>
-                        <small class="explanation-text">Engineering Products</small>
+                        <small class="explanation-text">(Engineering Products)</small>
                     </div>
                 </a>
             </div>
@@ -24,7 +24,7 @@
                     <div class="action-button">
                         <i class="bi-wallet2 action-icon"></i>
                         <div class="action-label">E-bidding</div>
-                        <small class="explanation-text">Online Bidding System</small>
+                        <small class="explanation-text">(Online Bidding System)</small>
                     </div>
                 </a>
             </div>
@@ -33,7 +33,7 @@
                     <div class="action-button">
                         <i class="bi-shield-lock action-icon"></i>
                         <div class="action-label">Contractor Login</div>
-                        <small class="explanation-text">Access Contracts</small>
+                        <small class="explanation-text">Contractor Dashboard</small>
                     </div>
                 </a>
             </div>

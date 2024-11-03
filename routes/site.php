@@ -6,6 +6,7 @@ use App\Http\Controllers\Site\NewsController;
 use App\Http\Controllers\Site\PageController;
 use App\Http\Controllers\Site\UserController;
 use App\Http\Controllers\Site\StoryController;
+use App\Http\Controllers\Site\SearchController;
 use App\Http\Controllers\Site\SliderController;
 use App\Http\Controllers\Site\GalleryController;
 use App\Http\Controllers\Site\ProjectController;
@@ -86,3 +87,5 @@ Route::prefix('downloads')->as('downloads.')->group(function () {
 Route::prefix('projects')->as('projects.')->group(function () {
     Route::get('/{name}', [ProjectController::class, 'showProject'])->name('show');
 });
+
+Route::get('/search', [SearchController::class, 'search'])->name('search');

@@ -132,6 +132,9 @@ class HomeController extends Controller
             ->limit(3)
             ->get()
             ->map(function ($news) {
+                $media = $news->getFirstMedia('news_attachments');
+                $fileType = $media ? $media->mime_type : null;
+
                 return [
                     'id' => $news->id,
                     'title' => $news->title,
@@ -142,12 +145,14 @@ class HomeController extends Controller
                     'author' => $news->user->designation,
                     'created' => $news->created_at->diffForHumans(),
                     'published_at' => $news->published_at->format('M d, Y'),
-                    'image' => $news->getFirstMediaUrl('news_attachments', 'small')
-                        ?: asset('admin/images/no-image.jpg'),
+                    'image' => $media ? $media->getUrl() : asset('admin/images/no-image.jpg'),
+                    'file_type' => $fileType,
                 ];
             });
+
         return view('site.home.partials.blogs', compact('allNews'));
     }
+
 
     public function teamPartial()
     {

@@ -41,7 +41,7 @@
                                 <div class="list-component list-loader"></div>
                             </div>
                         </div>
-                        <ul id="content"></ul>
+                        <div id="content"></div>
                     </div>
                 </div>
             </div>

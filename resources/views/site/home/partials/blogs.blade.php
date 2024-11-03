@@ -9,10 +9,18 @@
                     <div class="blog-item">
                         <div class="blog-img">
                             <div class="blog-img-inner">
-                                <!-- Dynamic image from $news with fallback -->
-                                <img class="img-fluid w-100 rounded-top" src="{{ $news['image'] }}" alt="{{ $news['title'] }}">
+                                @if (str_starts_with($news['file_type'], 'image'))
+                                    <!-- Display image if the file is an image -->
+                                    <img class="img-fluid w-100 rounded-top" src="{{ $news['image'] }}" alt="{{ $news['title'] }}">
+                                @else
+                                    <!-- Display a placeholder if the file is not an image -->
+                                    <img class="img-fluid w-100 rounded-top" src="{{ asset('admin/images/no-image.jpg') }}" alt="File Placeholder">
+                                @endif
+                                
                                 <div class="blog-icon">
-                                    <a href="{{ route('news.show', $news['slug']) }}" class="my-auto"><i class="bi bi-link fs-1 text-white"></i></a>
+                                    <a href="{{ route('news.show', $news['slug']) }}" class="my-auto">
+                                        <i class="bi bi-link fs-1 text-white"></i>
+                                    </a>
                                 </div>
                             </div>
                             <div class="blog-info bg-secondary d-flex align-items-center border border-start-0 border-end-0">

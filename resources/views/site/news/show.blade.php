@@ -36,9 +36,7 @@
                     
                     {{-- If the file is a PDF --}}
                     @elseif (str_contains($newsData['file_type'], 'pdf'))
-                        <object data="{{ $newsData['file_url'] }}" type="application/pdf" width="100%" height="600px">
-                            <p>Your browser does not support PDF viewing. You can <a href="{{ $newsData['file_url'] }}" target="_blank">download the PDF</a> instead.</p>
-                        </object>
+                        
 
                     {{-- For other file types, provide download link only --}}
                     @else

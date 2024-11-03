@@ -77,14 +77,14 @@
 				if (input.value.length > 2) {
 					CWD.openSearch(input);
 					$.ajax({
-						url: "https://restcountries.com/v3.1/name/" + input.value,
+						url: "/search",
+						data: { query: input.value },
 						method: "GET",
-						success: function (data) {
-							CWD.searchWidget.css("display", "none");
-							CWD.displayResults(data);
-						},
-						error: function (err) {
-							CWD.displayErrors(err);
+						success: function (response) {
+							if (response.success) {
+								CWD.searchWidget.css("display", "none");
+								CWD.displayResults(response.data);
+							}
 						},
 						complete: function () {
 							CWD.inputLoading.removeClass("cw-animated-border");
@@ -101,20 +101,8 @@
 			CWD.sugsContent.empty();
 			CWD.inputLoading.removeClass("cw-animated-border");
 			CWD.searchWidget.css("display", "none");
-
-			data.forEach((item) => {
-				const li = $("<li>").addClass("cw-search-item");
-				const img = $("<img>")
-					.addClass("cw-search-item-image")
-					.attr("src", item.flags.png);
-
-				const div = $("<div>").html(
-					`${item.name.common} (${item.name.official}) (<b>${item.capital}</b>)`
-				);
-
-				li.append(img).append(div);
-				CWD.sugsContent.append(li);
-			});
+			console.log(data.result)
+			CWD.sugsContent.html(data.result);
 		},
 
 		displayErrors() {

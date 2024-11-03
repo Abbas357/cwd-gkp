@@ -37,10 +37,17 @@
             font-weight: bold;
         }
     </style>
+    <x-slot name="breadcrumbTitle">
+        Previous List ({{ ucfirst($designation) }})
+    </x-slot>
+
+    <x-slot name="breadcrumbItems">
+        <li class="breadcrumb-item active">Positions</li>
+    </x-slot>
     @endpush
     <div class="container mt-3">
         <div class="row">
-            <h1 class="display-6 py-2 bg-light">Previous List ({{ ucfirst($designation) }})</h1>
+            <h1 class="display-6 py-2 bg-light"></h1>
             @foreach ($userData as $user)
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-3">
                 <div class="card user-card shadow-sm rounded border-0 overflow-hidden">
