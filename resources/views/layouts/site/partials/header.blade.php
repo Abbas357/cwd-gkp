@@ -18,19 +18,9 @@
                         <span></span>
                     </span>
                 </button>
-                <div class="cw-logo material">
-                    <a class="LogoWrapper dynamic-link" href="{{ route('site') }}" aria-label="Home">
-                        <div>
-                            <div class="cw-show-DeskTop-Tab">
-                                <img src="{{ asset('site/img/logo-desktop.gif') }}" class="desktop-logo" style="border-top-right-radius: 30px; border-bottom-left-radius: 20px" alt="CWD DEPT" />
-                            </div>
 
-                            <div class="cw-show-Mobile">
-                                <img src="{{ asset('site/img/logo-mobile.png') }}" class="mobile-logo" alt="CWD DEPT" />
-                            </div>
-                        </div>
-                    </a>
-                </div>
+                @include("layouts.site.partials.logo")
+                
                 <div class="cw-search cw-search-temp-wrapper cw-mobile-search" role="search">
                     <div class="cw-input-container">
                         <input id="cw-search-input" type="search" class="cw-search-input" aria-label="Search..." placeholder="Search..." tabindex="0" autocomplete="off" />
