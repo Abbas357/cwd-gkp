@@ -15,7 +15,7 @@ class CheckMaintenanceMode
             return Setting::first();
         });
 
-        if ($settings && $settings->maintenance_mode || config('app.debug')) {
+        if (($settings && $settings->maintenance_mode) || (config('app.env') === 'production' && config('app.debug'))) {
             $secret = $settings->secret_key;
 
             if ($request->query('key') === $secret) {
