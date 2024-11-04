@@ -1,6 +1,13 @@
 <x-main-layout title="Team">
     @push('style')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/perfect-scrollbar/1.5.3/css/perfect-scrollbar.min.css" />
+    <style>
+        .user-card {
+            background-color: #F2F3F4 !important;
+            box-shadow: 5px 5px 5px #eee;
+            border: 1px solid #ddd;
+            border-radius: 10px
+        }
+    </style>
     @endpush
     <x-slot name="breadcrumbTitle">
         Our Team
@@ -14,7 +21,7 @@
         <div class="row">
             @foreach ($users as $user)
             <div class="col-sm-12 col-md-4 col-lg-3 col-xl-2 mb-4">
-                <div class="team-item h-100">
+                <div class="team-item h-100 user-card">
                     <div class="team-img">
                         <div class="team-img-efects">
                             <img src="{{ $user['image'] }}" class="img-fluid w-100 rounded-top" alt="{{ $user['name'] }}">
@@ -26,7 +33,7 @@
                             <a class="btn btn-square btn-secondary rounded-circle mx-1" href="tel:{{ $user['mobile_number'] }}" target="_blank"><i class="bi bi-telephone"></i></a>
                         </div>
                     </div>
-                    <div class="team-title text-center rounded-bottom p-4 d-flex flex-column" style="height: 220px; overflow: hidden;">
+                    <div class="team-title text-center rounded-bottom p-4 d-flex flex-column" style="height:220px; overflow: hidden;">
                         <div class="team-title-inner mb-auto" style="overflow-y: auto;">
                             <h5 class="fs-6 mt-3">{{ $user['name'] }}</h5>
                             <p class="mb-3">{{ $user['designation'] }}</p>
@@ -38,16 +45,4 @@
             @endforeach
         </div>
     </div>
-    @push('script')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/perfect-scrollbar/1.5.3/perfect-scrollbar.min.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const ps = new PerfectScrollbar('.team-title-inner', {
-                wheelSpeed: 2,
-                wheelPropagation: true,
-                minScrollbarLength: 20
-            });
-        });
-    </script>
-    @endpush
 </x-main-layout>
