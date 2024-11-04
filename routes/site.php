@@ -88,4 +88,5 @@ Route::prefix('projects')->as('projects.')->group(function () {
     Route::get('/{name}', [ProjectController::class, 'showProject'])->name('show');
 });
 
+Route::get('/team', [UserController::class, 'team'])->name('team');
 Route::get('/search', [SearchController::class, 'search'])->name('search');

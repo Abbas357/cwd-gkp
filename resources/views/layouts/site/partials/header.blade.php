@@ -278,7 +278,7 @@
                             </a>
                         </li>
                         <li role="none" class="cw-top-menu" data-tier-id="4">
-                            <a href="#" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
+                            <a href="{{ route('team') }}" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>OUR TEAM</span>
                             </a>
                         </li>

@@ -12,14 +12,23 @@ class UserController extends Controller
     {
         $offices = User::select('office')
             ->distinct()
-            ->orderBy('office')
             ->pluck('office');
 
-        $contactsByOffice = $offices->mapWithKeys(function ($office) {
-            $contacts = User::select('name', 'designation', 'office', 'mobile_number', 'landline_number', 'facebook', 'twitter', 'whatsapp')
+        $contactsByOffice = $offices->sortByDesc(function ($office) {
+            $contactWithMaxBps = User::where('office', $office)
+                ->orderByDesc('bps')
+                ->orderBy('designation')
+                ->first();
+
+            return [$contactWithMaxBps->bps, $contactWithMaxBps->designation];
+        })->mapWithKeys(function ($office) {
+            $contacts = User::select('name', 'designation', 'office', 'bps', 'mobile_number', 'landline_number', 'facebook', 'twitter', 'whatsapp')
                 ->where('office', $office)
+                ->orderByDesc('bps')
+                ->orderBy('designation')
                 ->orderBy('name')
                 ->get();
+
             return [$office => $contacts];
         });
 
@@ -88,5 +97,31 @@ class UserController extends Controller
                 'result' => $html,
             ],
         ]);
+    }
+
+    public function team()
+    {
+        $users = User::select('id', 'name', 'title', 'designation', 'bps')
+            ->whereIn('bps', ['BPS-18', 'BPS-19', 'BPS-20'])
+            ->with('media')
+            ->latest('created_at')
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'title' => $user->title ?? 'N/A',
+                    'designation' => $user->designation ?? 'N/A',
+                    'facebook' => $user->facebook ?? '#',
+                    'twitter' => $user->twitter ?? '#',
+                    'whatsapp' => $user->whatsapp ?? '#',
+                    'mobile_number' => $user->mobile_number ?? '#',
+                    'landline_number' => $user->landline_number ?? '#',
+                    'image' => $user->getFirstMediaUrl('profile_pictures', 'small')
+                        ?: asset('admin/images/no-profile.png')
+                ];
+            });
+
+        return view('site.users.team', compact('users'));
     }
 }

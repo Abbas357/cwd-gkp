@@ -14,7 +14,7 @@
                 <ul class="nav nav-pills flex-column bg-light rounded p-3 shadow-sm" id="officeTabs" role="tablist">
                     @foreach ($contactsByOffice as $office => $contacts)
                         <li class="nav-item mb-2" role="presentation">
-                            <a class="nav-link @if($loop->first) active @endif text-center p-2 fw-bold" 
+                            <a class="nav-link @if($loop->first) active @endif p-2 fw-bold" 
                                id="tab-{{ Str::slug($office) }}" 
                                data-bs-toggle="tab" 
                                href="#{{ Str::slug($office) }}" 
@@ -60,9 +60,9 @@
                                                 <td>{{ $contact->landline_number }}</td>
                                                 <td>
                                                     <div>
-                                                    <a href="https://facebook.com/{{ $contact->facebook ?? '#'}}"><i class="bi bi-facebook fs-4 me-2"></i></a>
-                                                    <a href="https://twitter.com/{{ $contact->twitter ?? '#'}}"><i class="bi bi-twitter fs-4 me-2"></i></a>
-                                                    <a href="https://youtube.com/{{ $contact->whatsapp ?? '#'}}"><i class="bi bi-whatsapp fs-4 me-2"></i> </a>
+                                                    <a href="https://facebook.com/{{ $contact->facebook ?? '#'}}"><i class="bi bi-facebook fs-4 me-2" style="color: #3b5998"></i></a>
+                                                    <a href="https://twitter.com/{{ $contact->twitter ?? '#'}}"><i class="bi bi-twitter fs-4 me-2" style="color: #1da1f2"></i></a>
+                                                    <a href="https://youtube.com/{{ $contact->whatsapp ?? '#'}}"><i class="bi bi-whatsapp fs-4 me-2" style="color: #25d366"></i> </a>
                                                 </div></td>
                                             </tr>
                                         @endforeach
