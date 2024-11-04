@@ -6,7 +6,7 @@
             </div>
 
             <div class="cw-show-Mobile">
-                <img src="{{ asset('site/img/logo-mobile.png') }}" class="mobile-logo" alt="CWD DEPT" />
+                <img src="{{ asset('site/images/logo-mobile.png') }}" class="mobile-logo" alt="CWD DEPT" />
             </div>
         </div>
     </a>

@@ -34,7 +34,7 @@
                 <div class="card overflow-hidden login-box border-0 shadow-lg" style="border-radius: 15px;">
                     <div class="card-body p-4 position-relative">
                         <div class="bg-light text-center py-4 rounded-top">
-                            <img src="{{ asset('site/img/logo-desktop.gif') }}" class="d-block mx-auto mb-2 rounded" width="350" alt="Logo">
+                            <img src="{{ asset('site/images/logo-desktop.gif') }}" class="d-block mx-auto mb-2 rounded" width="350" alt="Logo">
                             <h4 class="fw-bold mb-0">Welcome Back!</h4>
                             <p class="small mb-0">Please login to continue</p>
                         </div>

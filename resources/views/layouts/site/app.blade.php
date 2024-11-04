@@ -25,11 +25,11 @@
     <meta property="og:image" content="{{ $ogImage }}">
     <meta property="og:site_name" content="{{ $title }}">
     <meta property="og:url" content="{{ request()->url() }}">
-    <meta property="og:logo" content="{{ asset('site/img/logo-mobile.png') }}">
+    <meta property="og:logo" content="{{ asset('site/images/logo-mobile.png') }}">
     <link rel="canonical" href="{{ request()->url() }}">
 
     <!-- Favicon -->
-    <link rel="icon" href="{{ asset('site/img/favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('site/images/favicon.ico') }}" type="image/x-icon">
 
     <!-- Preconnect for Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
