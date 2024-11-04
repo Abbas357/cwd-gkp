@@ -444,7 +444,7 @@ a {
 .bg-breadcrumb {
     background: 
         linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)),
-        url(../img/breadcrumb-bg.png) repeat;
+        url(../images/breadcrumb-bg.png) repeat;
     background-blend-mode: overlay;
     padding: 1.2rem 0 1rem 0;
     color: #000;
@@ -559,7 +559,7 @@ a {
 
 /*** Tour Booking Start ***/
 .booking {
-    background: linear-gradient(rgba(19, 53, 123, .8), rgba(19, 53, 123, .8)), url(../img/bg-general.jpg);
+    background: linear-gradient(rgba(19, 53, 123, .8), rgba(19, 53, 123, .8)), url(../images/bg-general.jpg);
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;

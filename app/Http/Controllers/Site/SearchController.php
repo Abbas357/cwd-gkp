@@ -20,11 +20,11 @@ class SearchController extends Controller
                 $mediaItem = $news->getFirstMedia('news_attachments');
 
                 if ($mediaItem && $mediaItem->mime_type === 'application/pdf') {
-                    $news->image_url = asset('site/img/pdf-placeholder.png');
+                    $news->image_url = asset('site/images/pdf-placeholder.png');
                 } elseif ($mediaItem) {
                     $news->image_url = $mediaItem->getUrl();
                 } else {
-                    $news->image_url = asset('site/img/file-placeholder.png');
+                    $news->image_url = asset('site/images/file-placeholder.png');
                 }
 
                 return $news;

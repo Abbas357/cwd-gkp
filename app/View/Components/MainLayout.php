@@ -20,7 +20,7 @@ class MainLayout extends Component
             ? $title .' | ' . ($this->settings->site_name ?? config('app.name'))
             : ($this->settings->site_name ?? config('app.name'));
         
-        $this->ogImage = $ogImage ?? asset('site/img/logo-mobile.png');
+        $this->ogImage = $ogImage ?? asset('site/images/logo-mobile.png');
     }
 
     public function render(): View
