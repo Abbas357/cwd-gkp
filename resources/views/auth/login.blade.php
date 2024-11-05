@@ -25,16 +25,21 @@
         .shadow-lg {
             box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
         }
+        .login-box {
+            border-radius: 10px;
+            background: #ffffff99; 
+            box-shadow:  20px 20px 60px #bebebe,-20px -20px 60px #ffffff;
+            border: 1px solid #ddd;
+        }
     </style>
     @endpush
     
     <div class="container-fluid my-5">
         <div class="row">
             <div class="col-12 col-md-8 col-lg-6 col-xl-5 col-xxl-4 mx-auto">
-                <div class="card overflow-hidden login-box border-0 shadow-lg" style="border-radius: 15px;">
+                <div class="card overflow-hidden login-box">
                     <div class="card-body p-4 position-relative">
                         <div class="bg-light text-center py-4 rounded-top">
-                            <img src="{{ asset('site/images/logo-desktop.gif') }}" class="d-block mx-auto mb-2 rounded" width="350" alt="Logo">
                             <h4 class="fw-bold mb-0">Welcome Back!</h4>
                             <p class="small mb-0">Please login to continue</p>
                         </div>
@@ -61,7 +66,7 @@
                                     <label for="password" class="form-label text-secondary">Password</label>
                                     <div class="input-group" id="show_hide_password">
                                         <input type="password" class="form-control shadow-sm" id="password" placeholder="Enter Password" name="password" required autocomplete="current-password">
-                                        <button type="button" class="input-group-text bg-transparent border-0" onclick="togglePasswordVisibility()">
+                                        <button type="button" class="input-group-text bg-white" style="border: 1px solid #999 onclick="togglePasswordVisibility()">
                                             <i class="bi bi-eye-fill" id="togglePasswordIcon"></i>
                                         </button>
                                     </div>

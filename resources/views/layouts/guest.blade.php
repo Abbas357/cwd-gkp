@@ -18,6 +18,30 @@
     <link href="{{ asset('admin/css/custom.css') }}" rel="stylesheet">
 </head>
 <body class="bg-image">
+    <header>
+        <div class="px-3 py-2 border-bottom">
+          <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+              <a href="/" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
+                <img src="{{ asset('site/images/logo-mobile.png') }}" style="width: 200px" alt="">
+              </a>
+    
+              <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
+                <li>
+                  <a href="{{ route('site') }}" class="nav-link text-secondary">
+                    Home
+                  </a>
+                </li>
+                <li>
+                  <a class="nav-link text-secondary" onclick="history.back()">
+                    Go Back
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </header>
     <div class="wrapper mt-3">
         @if (session('success'))
         <div class="alert alert-success">
