@@ -48,7 +48,8 @@ class UserController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'title' => $user->title,
-                'profile_pictures' => $user->getFirstMediaUrl('profile_pictures'),
+                'profile_pictures' => $user->getFirstMediaUrl('profile_pictures', 'small')
+                    ?: asset('admin/images/no-profile.png'),
             ];
         });
 
