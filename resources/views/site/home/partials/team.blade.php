@@ -12,9 +12,8 @@
                 </div>
                 <div class="team-icon rounded-pill p-2">
                     <a class="btn btn-square btn-primary rounded-circle mx-1" href="{{ $user['facebook'] }}" target="_blank"><i class="bi bi-facebook"></i></a>
-                    <a class="btn btn-square btn-primary rounded-circle mx-1" href="{{ $user['twitter'] }}" target="_blank"><i class="bi bi-twitter"></i></a>
+                    <a class="btn btn-square btn-primary rounded-circle mx-1" href="{{ $user['twitter'] }}" target="_blank"><i class="bi bi-twitter-x"></i></a>
                     <a class="btn btn-square btn-primary rounded-circle mx-1" href="https://wa.me/{{ $user['whatsapp'] }}" target="_blank"><i class="bi bi-whatsapp"></i></a>
-                    <a class="btn btn-square btn-primary rounded-circle mx-1" href="tel:{{ $user['mobile_number'] }}" target="_blank"><i class="bi bi-telephone"></i></a>
                 </div>
             </div>
             <div class="team-title text-center rounded-bottom p-4">

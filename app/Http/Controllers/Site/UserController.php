@@ -37,9 +37,9 @@ class UserController extends Controller
 
     public function showPositions($designation)
     {
-        $users = User::where('designation', $designation)
+        $users = User::withoutGlobalScope('active')->where('designation', $designation)
             ->with(['media' => function ($query) {
-                $query->whereIn('collection_name', ['profile_pictures', 'posting_orders', 'exit_orders']);
+                $query->whereIn('collection_name', ['profile_pictures']);
             }])
             ->get();
 
@@ -48,8 +48,6 @@ class UserController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'title' => $user->title,
-                'posting_date' => $user->posting_date ? $user->posting_date->format('j, F Y') : 'N/A',
-                'exit_date' => $user->exit_date ? $user->exit_date->format('j, F Y') : 'N/A',
                 'profile_pictures' => $user->getFirstMediaUrl('profile_pictures'),
             ];
         });
@@ -59,7 +57,7 @@ class UserController extends Controller
 
     public function getUserDetails($id)
     {
-        $user = User::find($id);
+        $user = User::withoutGlobalScope('active')->findOrFail($id);
 
         if (!$user) {
             return response()->json(['success' => false, 'message' => 'User not found.'], 404);
@@ -68,7 +66,6 @@ class UserController extends Controller
         $userData = [
             'id' => $user->id,
             'name' => $user->name ?? 'N/A',
-            'cnic' => $user->cnic ?? 'N/A',
             'email' => $user->email ?? 'N/A',
             'mobile_number' => $user->mobile_number ?? 'N/A',
             'landline_number' => $user->landline_number ?? 'N/A',
@@ -81,6 +78,7 @@ class UserController extends Controller
             'posting_date' => $user->posting_date ? $user->posting_date->format('j, F Y') : 'N/A',
             'exit_type' => $user->exit_type ?? 'N/A',
             'exit_date' => $user->exit_date ? $user->exit_date->format('j, F Y') : 'N/A',
+            'is_active' => $user->is_active,
             'media' => [
                 'profile_pictures' => $user->getFirstMediaUrl('profile_pictures', 'small')
                     ?: asset('admin/images/no-profile.png'),

@@ -151,12 +151,15 @@ class UserController extends Controller
             $user->is_active = 0;
             $message = 'User has been Deactivate.';
         }
+        Cache::forget('message_partial');
+        Cache::forget('team_partial');
         $user->save();
         return response()->json(['success' => $message], 200);
     }
 
-    public function edit(User $user)
+    public function edit($userId)
     {
+        $user = User::withoutGlobalScope('active')->findOrFail($userId);
         if (!$user) {
             return response()->json([
                 'success' => false,
@@ -186,8 +189,9 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UpdateUserRequest $request, $userId)
     {
+        $user = User::withoutGlobalScope('active')->findOrFail($userId);
         $validated = $request->validated();
         $user->fill(array_filter($validated, function ($value) {
             return $value !== null;

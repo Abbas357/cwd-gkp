@@ -43,7 +43,7 @@
                         <div class="row">
                             <div class="col-lg-6 mb-3">
                                 <label for="name">Name</label>
-                                <input type="text" class="form-control" id="name" value="{{ old('name', $data['user']->name) }}" placeholder="Full Name" name="name" required>
+                                <input type="text" class="form-control" id="name" value="{{ old('name', $data['user']->name) }}" placeholder="Full Name" name="name">
                             </div>
                             <div class="col-lg-6 mb-3">
                                 <label for="username">Username</label>
@@ -53,7 +53,7 @@
                         <div class="row">
                             <div class="col-lg-6 mb-3">
                                 <label for="email">Email Address</label>
-                                <input type="email" class="form-control" id="email" value="{{ old('email', $data['user']->email) }}" placeholder="Email Address" name="email" required>
+                                <input type="email" class="form-control" id="email" value="{{ old('email', $data['user']->email) }}" placeholder="Email Address" name="email">
                             </div>
                             <div class="col-lg-6 mb-3">
                                 <label for="password">Password</label>
@@ -79,7 +79,7 @@
                 <div class="row mb-3">
                     <div class="col-lg-6">
                         <label for="designation">Designation</label>
-                        <select class="form-select" id="designation" name="designation" required>
+                        <select class="form-select" id="designation" name="designation">
                             <option value="">Choose Designation</option>
                             @foreach($data['allDesignations'] as $designation)
                             <option value="{{ $designation->name }}" {{ $designation->name === $data['user']->designation ? 'selected' : '' }}> {{ $designation->name }}</option>
@@ -88,7 +88,7 @@
                     </div>
                     <div class="col-lg-6">
                         <label for="office">Office</label>
-                        <select class="form-select" id="office" name="office" required>
+                        <select class="form-select" id="office" name="office">
                             <option value="">Choose Office</option>
                             @foreach($data['allOffices'] as $office)
                             <option value="{{ $office->name }}" {{ $office->name === $data['user']->office ? 'selected' : '' }}> {{ $office->name }}</option>
@@ -99,7 +99,7 @@
                 <div class="row mb-3">
                     <div class="col-lg-6">
                         <label for="bps">BPS</label>
-                        <select class="form-select" id="bps" name="bps" required>
+                        <select class="form-select" id="bps" name="bps">
                             <option value="">Choose Designation</option>
                             @foreach($data['bps'] as $bps)
                             <option value="{{ $bps->name }}" {{ $bps->name === $data['user']->bps ? 'selected' : '' }}> {{ $bps->name }}</option>

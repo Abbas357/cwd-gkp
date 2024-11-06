@@ -1,12 +1,8 @@
 <style>
-    .container {
-        max-width: 90%;
-        margin: 0 auto;
-    }
-
     .message .card-row {
         display: flex;
         gap: 20px;
+        justify-content: center;
         flex-wrap: wrap;
     }
 
@@ -114,9 +110,9 @@
     <div class="mx-auto text-center mb-5" style="max-width: 900px;">
         <h5 class="section-title px-3">Message</h5>
     </div>
-    <div class="card-row">
+    <div class="card-row row">
         @if($ministerData)
-        <div class="card">
+        <div class="col card">
             <div class="card-body">
                 <div class="card-text">
                     <h4 class="card-title">{{ $ministerData['title'] }}</h4>
@@ -161,7 +157,7 @@
     </div>
 </div>
 <script>
-    const maxCharacters = 400;
+    const maxCharacters = 300;
 
     $('.message-text-content').each(function() {
         const $textContent = $(this);

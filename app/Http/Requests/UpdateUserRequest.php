@@ -14,18 +14,19 @@ class UpdateUserRequest extends FormRequest
 
     public function rules(): array
     {
+        $userId = $this->route('user');
         return [
             'name' => 'required|min:5',
             'username' => [
                 'nullable',
                 'min:5',
-                Rule::unique('users')->ignore(request()->user->id),
+                Rule::unique('users')->ignore($userId),
             ],
             'email' => 'required|email|unique:users',
             'email' => [
                 'required',
                 'email',
-                Rule::unique('users')->ignore(request()->user->id),
+                Rule::unique('users')->ignore($userId),
             ],
             'title'=> 'nullable',
             'bps'=> 'nullable',
@@ -33,8 +34,8 @@ class UpdateUserRequest extends FormRequest
             'mobile_number'=> 'nullable|min:11',
             'landline_number'=> 'nullable|min:9',
             'cnic'=> 'nullable|min:13',
-            'designation'=> 'required',
-            'office'=> 'required',
+            'designation'=> 'nullable',
+            'office'=> 'nullable',
             'posting_type'=> 'nullable',
             'posting_date'=> 'nullable',
             'exit_type'=> 'nullable',
