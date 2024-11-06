@@ -55,6 +55,16 @@
                     <div class="card-body text-center p-2">
                         <h5 class="card-title font-weight-bold text-primary mb-2">{{ $user['name'] }}</h5>
                         <p class="card-text text-muted mb-1 fs-5">{{ $user['title'] }}</p>
+                        <div>
+                            <span class="badge text-bg-light">
+                                @if($user['is_active'])
+                                Since {{ $user['from'] ?? 'unknown' }}
+                                @else
+                                From {{ $user['from'] ?? 'unknown' }} to {{ $user['to'] ?? 'unknown' }}
+                                @endif
+                            </span>
+                        </div>
+                        
                         <button class="btn-animate view-details-btn mt-1 px-2 py-1" data-id="{{ $user['id'] }}">
                             View Details
                         </button>

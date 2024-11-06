@@ -48,6 +48,9 @@ class UserController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'title' => $user->title,
+                'is_active' => $user->is_active,
+                'from' => $user->posting_date?->format('j, F Y'),
+                'to' => $user->exit_date?->format('j, F Y'),
                 'profile_pictures' => $user->getFirstMediaUrl('profile_pictures', 'small')
                     ?: asset('admin/images/no-profile.png'),
             ];
