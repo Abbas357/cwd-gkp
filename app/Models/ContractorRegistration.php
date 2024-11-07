@@ -40,5 +40,7 @@ class ContractorRegistration extends Model implements HasMedia
         $this->addMediaCollection('pec_attachments')->singleFile();
         $this->addMediaCollection('form_h_attachments')->singleFile();
         $this->addMediaCollection('pre_enlistment_attachments')->singleFile();
+        $this->addMediaCollection('pre_enlistment_attachments')->singleFile();
+        $this->addMediaCollection('contractor_pictures')->singleFile();
     }
 }

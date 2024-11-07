@@ -337,7 +337,7 @@
         button.addEventListener('click', function() {
             let storiesContent = document.querySelector('#stories-content');
             let spinner = document.querySelector('#stories-spinner');
-            let errorMessage = "<div class='alert alert-warning' role='alert'>There are currently no stories</div>";
+            let errorMessage = "<div class='alert alert-warning' role='alert' style='margin-bottom:0px'>There are currently no stories</div>";
 
             loadZuckLibraries(function() {
                 storiesContent.classList.toggle('d-none');

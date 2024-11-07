@@ -1,5 +1,5 @@
 <div class="container-md">
-    <div class="position-relative rounded w-100 mx-auto p-3" style="background: #fbb03444; overflow-x: auto; white-space: nowrap; border-radius: 50px; border: 1px solid #fbb03444; box-shadow: 10px 10px 30px #fbb03444">
+    <div class="position-relative rounded w-100 mx-auto p-3" style="background: #a4c63955; overflow-x: auto; white-space: nowrap; border-radius: 50px; border: 1px solid #a4c63955; box-shadow: 10px 10px 30px #a4c63955">
         <div class="d-flex text-center gap-2 menu-container">
             <div class="col action-container">
                 <a href="{{ route('registrations.create') }}" class="action-link">

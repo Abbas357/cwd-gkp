@@ -29,14 +29,14 @@ class StoreContractorRegistrationRequest extends FormRequest
             'pre_enlistment' => 'nullable|array',
             'pre_enlistment.*' => 'string|max:255',
             'is_limited' => 'required|in:yes,no',
-            'cnic_front_attachment' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            'cnic_back_attachment' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            'fbr_attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'kpra_attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'pec_attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'form_h_attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'pre_enlistment_attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'is_agreed' => 'required|accepted',
+            'card_picture' => 'nullable|file|mimes:jpg,jpeg,png|max:5000',
+            'cnic_front_attachment' => 'nullable|file|mimes:jpg,jpeg,png|max:5000',
+            'cnic_back_attachment' => 'nullable|file|mimes:jpg,jpeg,png|max:5000',
+            'fbr_attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5000',
+            'kpra_attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5000',
+            'pec_attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5000',
+            'form_h_attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5000',
+            'pre_enlistment_attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5000',
         ];
     }
 }

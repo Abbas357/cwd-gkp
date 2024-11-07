@@ -194,8 +194,17 @@
                                         <h3 class="card-title">Upload relevant documents</h3>
 
                                         <div class="mb-3">
+                                            <label for="contractor_picture">Contractor Picture (Picture on Card)</label>
+                                            <input type="file" class="form-control" id="contractor_picture" name="contractor_picture">
+                                            @error('contractor_picture')
+                                            <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                            <img id="previewContractorPicture" src="#" alt="Contractor Picture Preview" style="display:none; margin-top: 10px; max-height: 100px;">
+                                        </div>
+
+                                        <div class="mb-3">
                                             <label for="cnic_front_attachment">CNIC (Front Side)</label>
-                                            <input type="file" class="form-control" id="cnic_front_attachment" name="cnic_front_attachment" onchange="$('#previewCnicFront').show()">
+                                            <input type="file" class="form-control" id="cnic_front_attachment" name="cnic_front_attachment">
                                             @error('cnic_front_attachment')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -204,7 +213,7 @@
 
                                         <div class="mb-3">
                                             <label for="cnic_back_attachment">CNIC (Back Side)</label>
-                                            <input type="file" class="form-control" id="cnic_back_attachment" name="cnic_back_attachment" onchange="$('#previewCnicBack').show()">
+                                            <input type="file" class="form-control" id="cnic_back_attachment" name="cnic_back_attachment">
                                             @error('cnic_back_attachment')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -213,7 +222,7 @@
 
                                         <div class="mb-3">
                                             <label for="fbr_attachment">FBR Registration</label>
-                                            <input type="file" class="form-control" id="fbr_attachment" name="fbr_attachment" onchange="$('#previewFbrRegistration').show()">
+                                            <input type="file" class="form-control" id="fbr_attachment" name="fbr_attachment">
                                             @error('fbr_attachment')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -222,7 +231,7 @@
 
                                         <div class="mb-3">
                                             <label for="kpra_attachment">KIPPRA Certificate</label>
-                                            <input type="file" class="form-control" id="kpra_attachment" name="kpra_attachment" onchange="$('#previewKippraCertificate').show()">
+                                            <input type="file" class="form-control" id="kpra_attachment" name="kpra_attachment">
                                             @error('kpra_attachment')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -231,7 +240,7 @@
 
                                         <div class="mb-3">
                                             <label for="pec_attachment">PEC - 2020</label>
-                                            <input type="file" class="form-control" id="pec_attachment" name="pec_attachment" onchange="$('#previewPecCert').show()">
+                                            <input type="file" class="form-control" id="pec_attachment" name="pec_attachment">
                                             @error('pec_attachment')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -240,7 +249,7 @@
 
                                         <div class="mb-3">
                                             <label for="form_h_attachment">Form - H (In case of Company)</label>
-                                            <input type="file" class="form-control" id="form_h_attachment" name="form_h_attachment" onchange="$('#previewFormH').show()">
+                                            <input type="file" class="form-control" id="form_h_attachment" name="form_h_attachment">
                                             @error('form_h_attachment')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -249,30 +258,17 @@
 
                                         <div class="mb-3">
                                             <label for="pre_enlistment_attachment">Previous Enlistment (Not for fresh contractors)</label>
-                                            <input type="file" class="form-control" id="pre_enlistment_attachment" name="pre_enlistment_attachment" onchange="$('#previewPreviousEnlistment').show()">
+                                            <input type="file" class="form-control" id="pre_enlistment_attachment" name="pre_enlistment_attachment">
                                             @error('pre_enlistment_attachment')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                             <img id="previewPreviousEnlistment" src="#" alt="Previous Enlistment Preview" style="display:none; margin-top: 10px; max-height: 100px;">
                                         </div>
 
-                                        <div class="form-group">
-                                            <label for="is_agreed">Declaration</label>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="yes" name="is_agreed" id="is_agreed" required>
-                                                <label class="form-check-label" for="is_agreed">
-                                                    I Certify that the information given in this application form is correct to the best of
-                                                    my knowledge & belief and I further understand that in case any information is found to be incorrect later on, my enlistment is liable to be cancelled.
-                                                </label>
-                                                @error('is_agreed')
-                                                <div class="text-danger">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-
                                         <div class="form-actions">
                                             <button class="btn btn-primary btn-block" type="submit" id="submitBtn">Apply</button>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -291,45 +287,75 @@
         $(document).ready(function() {
 
             imageCropper({
+                fileInput: "#contractor_picture"
+                , inputLabelPreview: "#previewContractorPicture"
+                , aspectRatio: 5 / 6
+                , onComplete() {
+                    $("#previewContractorPicture").show();
+                }
+            });
+
+            imageCropper({
                 fileInput: "#cnic_front_attachment"
                 , inputLabelPreview: "#previewCnicFront"
                 , aspectRatio: 1.58 / 1
+                , onComplete() {
+                    $("#previewCnicFront").show();
+                }
             });
 
             imageCropper({
                 fileInput: "#cnic_back_attachment"
                 , inputLabelPreview: "#previewCnicBack"
                 , aspectRatio: 1.58 / 1
+                , onComplete() {
+                    $("#previewCnicBack").show();
+                }
             });
 
             imageCropper({
                 fileInput: "#fbr_attachment"
                 , inputLabelPreview: "#previewFbrRegistration"
                 , aspectRatio: 1 / 1.6471
+                , onComplete() {
+                    $("#previewFbrRegistration").show();
+                }
             });
 
             imageCropper({
                 fileInput: "#kpra_attachment"
                 , inputLabelPreview: "#previewKippraCertificate"
                 , aspectRatio: 1 / 1.6471
+                , onComplete() {
+                    $("#previewKippraCertificate").show();
+                }
             });
 
             imageCropper({
                 fileInput: "#pec_attachment"
                 , inputLabelPreview: "#previewPecCert"
                 , aspectRatio: 1 / 1.6471
+                , onComplete() {
+                    $("#previewPecCert").show();
+                }
             });
 
             imageCropper({
                 fileInput: "#form_h_attachment"
                 , inputLabelPreview: "#previewFormH"
                 , aspectRatio: 1 / 1.6471
+                , onComplete() {
+                    $("#previewFormH").show();
+                }
             });
 
             imageCropper({
                 fileInput: "#pre_enlistment_attachment"
                 , inputLabelPreview: "#previewPreviousEnlistment"
                 , aspectRatio: 1 / 1.6471
+                , onComplete() {
+                    $("#previewPreviousEnlistment").show();
+                }
             });
             var forms = document.querySelectorAll('.needs-validation')
 

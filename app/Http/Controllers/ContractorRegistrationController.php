@@ -64,14 +64,14 @@ class ContractorRegistrationController extends Controller
     public function defer(Request $request, ContractorRegistration $ContractorRegistration)
     {
         $ContractorRegistration->deffered_reason = $request->reason;
-        if ($ContractorRegistration->status == 0) {
-            $ContractorRegistration->status = 1;
+        if ($ContractorRegistration->status == "fresh") {
+            $ContractorRegistration->status = "deffered_one";
             Mail::to($ContractorRegistration->email)->queue(new ContractorRegistrationDeferredFirstMail($ContractorRegistration, $request->reason));
-        } elseif ($ContractorRegistration->status == 1) {
-            $ContractorRegistration->status = 2;
+        } elseif ($ContractorRegistration->status == "deffered_one") {
+            $ContractorRegistration->status = "deffered_two";
             Mail::to($ContractorRegistration->email)->queue(new ContractorRegistrationDeferredSecondMail($ContractorRegistration, $request->reason));
-        } elseif ($ContractorRegistration->status == 2) {
-            $ContractorRegistration->status = 3;
+        } elseif ($ContractorRegistration->status == "deffered_two") {
+            $ContractorRegistration->status = "deffered_three";;
             Mail::to($ContractorRegistration->email)->queue(new ContractorRegistrationDeferredThirdMail($ContractorRegistration, $request->reason));
         }
         if($ContractorRegistration->save()) {
@@ -83,8 +83,8 @@ class ContractorRegistrationController extends Controller
 
     public function approve(Request $request, ContractorRegistration $ContractorRegistration)
     {
-        if (!in_array($ContractorRegistration->status, [3, 4])) {
-            $ContractorRegistration->status = 4;
+        if (!in_array($ContractorRegistration->status, ["deffered_three", 'approved'])) {
+            $ContractorRegistration->status = 'approved';
             $ContractorRegistration->save();
             Mail::to($ContractorRegistration->email)->queue(new ContractorRegistrationApprovedMail($ContractorRegistration));
             return response()->json(['success' => 'Registration has been approved successfully.']);

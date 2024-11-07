@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('contractor_registrations', function (Blueprint $table) {
@@ -28,18 +25,16 @@ return new class extends Migration
             $table->string('pre_enlistment')->nullable();
             $table->boolean('is_limited')->default(false);
             $table->text('deffered_reason');
-            $table->boolean('is_agreed')->default(false);
-            $table->boolean('status')->default(0);
+            $table->enum('status', ['fresh', 'deffered_one', 'deffered_two', 'deffered_three', 'approved'])->default('fresh');
+            $table->string('reg_no', 45)->nullable();
+            $table->timestamp('issue_date')->nullable()->default(null);
+            $table->timestamp('expiry_date')->nullable()->default(null);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('contractor_registrations');
-        Schema::dropIfExists('contractor_deferments');
     }
 };

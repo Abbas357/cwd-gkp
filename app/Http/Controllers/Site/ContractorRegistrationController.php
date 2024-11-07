@@ -44,10 +44,14 @@ class ContractorRegistrationController extends Controller
         $registration->email = $request->input('email');
         $registration->mobile_number = $request->input('mobile_number');
         $registration->is_limited = $request->input('is_limited');
-        $registration->is_agreed = $request->input('is_agreed');
 
         if ($request->has('pre_enlistment')) {
             $registration->pre_enlistment = json_encode($request->input('pre_enlistment'));
+        }
+
+        if ($request->hasFile('contractor_picture')) {
+            $registration->addMedia($request->file('contractor_picture'))
+                ->toMediaCollection('contractor_pictures');
         }
 
         if ($request->hasFile('cnic_front_attachment')) {

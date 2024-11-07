@@ -22,7 +22,7 @@
                 <th class="table-cell">Owner Name</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-owner_name">{{ $ContractorRegistration->owner_name }}</span>
-                    @if (!in_array($ContractorRegistration->status, [3, 4]))
+                    @if (!in_array($ContractorRegistration->status, ['deferred_three', 'approved']))
                         <input type="text" id="input-owner_name" value="{{ $ContractorRegistration->owner_name }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('owner_name', {{ $ContractorRegistration->id }})" />
                         <button id="save-btn-owner_name" class="btn btn-sm btn-light d-none" onclick="updateField('owner_name', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
                         <button class="no-print btn btn-sm edit-button" onclick="enableEditing('owner_name')"><i class="bi-pencil fs-6"></i></button>
@@ -33,7 +33,7 @@
                 <th class="table-cell">District</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-district">{{ $ContractorRegistration->district }}</span>
-                    @if (!in_array($ContractorRegistration->status, [3, 4]))
+                    @if (!in_array($ContractorRegistration->status, ['deferred_three', 'approved']))
                         <select id="input-district" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('district', {{ $ContractorRegistration->id }})">
                             @foreach($cat['districts'] as $district)
                             <option value="{{ $district->name }}" {{ $ContractorRegistration->district == $district->name ? 'selected' : '' }}>{{ $district->name }}</option>
@@ -48,7 +48,7 @@
                 <th class="table-cell">PEC Number</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-pec_number">{{ $ContractorRegistration->pec_number }}</span>
-                    @if (!in_array($ContractorRegistration->status, [3, 4]))
+                    @if (!in_array($ContractorRegistration->status, ['deferred_three', 'approved']))
                         <input type="text" id="input-pec_number" value="{{ $ContractorRegistration->pec_number }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('pec_number', {{ $ContractorRegistration->id }})" />
                         <button id="save-btn-pec_number" class="btn btn-sm btn-light d-none" onclick="updateField('pec_number', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
                         <button class="no-print btn btn-sm edit-button" onclick="enableEditing('pec_number')"><i class="bi-pencil fs-6"></i></button>
@@ -59,7 +59,7 @@
                 <th class="table-cell">Category Applied</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-category_applied">{{ $ContractorRegistration->category_applied }}</span>
-                    @if (!in_array($ContractorRegistration->status, [3, 4]))
+                    @if (!in_array($ContractorRegistration->status, ['deferred_three', 'approved']))
                         <select id="input-category_applied" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('category_applied', {{ $ContractorRegistration->id }})">
                             @foreach($cat['contractor_category'] as $category)
                             <option value="{{ $category->name }}" {{ $ContractorRegistration->category_applied == $category->name ? 'selected' : '' }}>{{ $category->name }}</option>
@@ -74,7 +74,7 @@
                 <th class="table-cell">Contractor Name</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-contractor_name">{{ $ContractorRegistration->contractor_name }}</span>
-                    @if (!in_array($ContractorRegistration->status, [3, 4]))
+                    @if (!in_array($ContractorRegistration->status, ['deferred_three', 'approved']))
                     <input type="text" id="input-contractor_name" value="{{ $ContractorRegistration->contractor_name }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('contractor_name', {{ $ContractorRegistration->id }})" />
                     <button id="save-btn-contractor_name" class="btn btn-sm btn-light d-none" onclick="updateField('contractor_name', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('contractor_name')"><i class="bi-pencil fs-6"></i></button>
@@ -85,7 +85,7 @@
                 <th class="table-cell">Address</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-address">{{ $ContractorRegistration->address }}</span>
-                    @if (!in_array($ContractorRegistration->status, [3, 4]))
+                    @if (!in_array($ContractorRegistration->status, ['deferred_three', 'approved']))
                     <input type="text" id="input-address" value="{{ $ContractorRegistration->address }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('address', {{ $ContractorRegistration->id }})" />
                     <button id="save-btn-address" class="btn btn-sm btn-light d-none" onclick="updateField('address', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('address')"><i class="bi-pencil fs-6"></i></button>
@@ -96,7 +96,7 @@
                 <th class="table-cell">PEC Category</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-pec_category">{{ $ContractorRegistration->pec_category }}</span>
-                    @if (!in_array($ContractorRegistration->status, [3, 4]))
+                    @if (!in_array($ContractorRegistration->status, ['deferred_three', 'approved']))
                     <select id="input-pec_category" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('pec_category', {{ $ContractorRegistration->id }})">
                         @foreach($cat['contractor_category'] as $category)
                         <option value="{{ $category->name }}" {{ $ContractorRegistration->pec_category == $category->name ? 'selected' : '' }}>{{ $category->name }}</option>
@@ -111,7 +111,7 @@
                 <th class="table-cell">CNIC Number</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-cnic">{{ $ContractorRegistration->cnic }}</span>
-                    @if (!in_array($ContractorRegistration->status, [3, 4]))
+                    @if (!in_array($ContractorRegistration->status, ['deferred_three', 'approved']))
                     <input type="text" id="input-cnic" value="{{ $ContractorRegistration->cnic }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('cnic', {{ $ContractorRegistration->id }})" />
                     <button id="save-btn-cnic" class="btn btn-sm btn-light d-none" onclick="updateField('cnic', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('cnic')"><i class="bi-pencil fs-6"></i></button>
@@ -122,7 +122,7 @@
                 <th class="table-cell">NTN Number</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-fbr_ntn">{{ $ContractorRegistration->fbr_ntn }}</span>
-                    @if (!in_array($ContractorRegistration->status, [3, 4]))
+                    @if (!in_array($ContractorRegistration->status, ['deferred_three', 'approved']))
                     <input type="text" id="input-fbr_ntn" value="{{ $ContractorRegistration->fbr_ntn }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('fbr_ntn', {{ $ContractorRegistration->id }})" />
                     <button id="save-btn-fbr_ntn" class="btn btn-sm btn-light d-none" onclick="updateField('fbr_ntn', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('fbr_ntn')"><i class="bi-pencil fs-6"></i></button>
@@ -133,7 +133,7 @@
                 <th class="table-cell">KPPRA Registration Number</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-kpra_reg_no">{{ $ContractorRegistration->kpra_reg_no }}</span>
-                    @if (!in_array($ContractorRegistration->status, [3, 4]))
+                    @if (!in_array($ContractorRegistration->status, ['deferred_three', 'approved']))
                     <input type="text" id="input-kpra_reg_no" value="{{ $ContractorRegistration->kpra_reg_no }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('kpra_reg_no', {{ $ContractorRegistration->id }})" />
                     <button id="save-btn-kpra_reg_no" class="btn btn-sm btn-light d-none" onclick="updateField('kpra_reg_no', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('kpra_reg_no')"><i class="bi-pencil fs-6"></i></button>
@@ -144,7 +144,7 @@
                 <th class="table-cell">Email</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-email">{{ $ContractorRegistration->email }}</span>
-                    @if (!in_array($ContractorRegistration->status, [3, 4]))
+                    @if (!in_array($ContractorRegistration->status, ['deferred_three', 'approved']))
                     <input type="text" id="input-email" value="{{ $ContractorRegistration->email }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('email', {{ $ContractorRegistration->id }})" />
                     <button id="save-btn-email" class="btn btn-sm btn-light d-none" onclick="updateField('email', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('email')"><i class="bi-pencil fs-6"></i></button>
@@ -155,7 +155,7 @@
                 <th class="table-cell">Mobile Number</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-mobile_number">{{ $ContractorRegistration->mobile_number }}</span>
-                    @if (!in_array($ContractorRegistration->status, [3, 4]))
+                    @if (!in_array($ContractorRegistration->status, ['deferred_three', 'approved']))
                     <input type="text" id="input-mobile_number" value="{{ $ContractorRegistration->mobile_number }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('mobile_number', {{ $ContractorRegistration->id }})" />
                     <button id="save-btn-mobile_number" class="btn btn-sm btn-light d-none" onclick="updateField('mobile_number', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('mobile_number')"><i class="bi-pencil fs-6"></i></button>
@@ -168,7 +168,7 @@
                     <span id="text-pre_enlistment">
                         {{ is_array(json_decode($ContractorRegistration->pre_enlistment)) ? implode(', ', json_decode($ContractorRegistration->pre_enlistment)) : $ContractorRegistration->pre_enlistment }}
                     </span>
-                    @if (!in_array($ContractorRegistration->status, [3, 4]))
+                    @if (!in_array($ContractorRegistration->status, ['deferred_three', 'approved']))
                     <select id="input-pre_enlistment" class="d-none form-control" multiple onkeypress="if (event.key === 'Enter') updateField('pre_enlistment', {{ $ContractorRegistration->id }})">
                         @foreach($cat['provincial_entities'] as $category)
                         <option value="{{ $category->name }}" {{ is_array(json_decode($ContractorRegistration->pre_enlistment)) && in_array($category->name, json_decode($ContractorRegistration->pre_enlistment)) ? 'selected' : '' }}>
@@ -190,9 +190,24 @@
                 </td>
             </tr>
             <tr>
-                <th class="table-cell">Is Agreed</th>
+                <th class="table-cell">Expiry Date</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
-                    {{ $ContractorRegistration->is_agreed === 0 ? 'No' : 'Yes' }}
+                    <span id="text-expiry_date">{{ $ContractorRegistration->expiry_date }}</span>
+                    @if ($ContractorRegistration->status === 'approved')
+                    <input type="text" id="input-expiry_date" value="{{ $ContractorRegistration->expiry_date }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('expiry_date', {{ $ContractorRegistration->id }})" />
+                    <button id="save-btn-expiry_date" class="btn btn-sm btn-light d-none" onclick="updateField('expiry_date', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
+                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('expiry_date')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <th class="table-cell">Issue Date</th>
+                <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
+                    @if ($ContractorRegistration->status === 'approved')
+                    <input type="text" id="input-issue_date" value="{{ $ContractorRegistration->issue_date }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('issue_date', {{ $ContractorRegistration->id }})" />
+                    <button id="save-btn-issue_date" class="btn btn-sm btn-light d-none" onclick="updateField('issue_date', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
+                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('issue_date')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
         </table>
@@ -200,6 +215,7 @@
         <div class="row mt-3 mx-1">
             @php
             $uploads = [
+            'contractor_pictures',
             'cnic_front_attachments',
             'cnic_back_attachments',
             'fbr_attachments',
@@ -215,7 +231,7 @@
                     <tr>
                         <th>Name</th>
                         <th>Link</th>
-                        @if (!in_array($ContractorRegistration->status, [3, 4]))
+                        @if (!in_array($ContractorRegistration->status, ['deferred_three', 'approved']))
                         <th class="no-print text-center">Add / Update Attachment</th>
                         @endif
                     </tr>
@@ -233,7 +249,7 @@
                             <span>Not Uploaded</span>
                             @endif
                         </td>
-                        @if (!in_array($ContractorRegistration->status, [3, 4]))
+                        @if (!in_array($ContractorRegistration->status, ['deferred_three', 'approved']))
                         <td class="no-print text-center">
                             <label for="{{ $upload }}" class="btn btn-sm btn-light">
                                 <span class="d-flex align-items-center">{!! $ContractorRegistration->hasMedia($upload) ? '<i class="bi-pencil-square"></i>&nbsp; Update' : '<i class="bi-plus-circle"></i>&nbsp; Add' !!}</span>
