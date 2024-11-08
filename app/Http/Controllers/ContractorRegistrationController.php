@@ -38,13 +38,10 @@ class ContractorRegistrationController extends Controller
                     return view('admin.cont_registrations.partials.buttons', compact('row'))->render();
                 })
                 ->editColumn('created_at', function ($row) {
-                    return $row->created_at->diffForHumans();
+                    return $row->created_at?->format('j, F Y');
                 })
                 ->editColumn('updated_at', function ($row) {
                     return $row->updated_at->diffForHumans();
-                })
-                ->editColumn('status', function ($row) {
-                    return $row->status === 1 ? 'Deferred 1 time' : ($row->status === 2 ? 'Deferred 2 time' : ($row->status === 3 ? 'Deferred 3 time' : ($row->status === 4 ? 'Approved' : 'Nil')));
                 })
                 ->rawColumns(['action']);
 
@@ -129,7 +126,7 @@ class ContractorRegistrationController extends Controller
 
     public function showCard(ContractorRegistration $ContractorRegistration)
     {
-        if ($ContractorRegistration->status !== 4) {
+        if ($ContractorRegistration->status !== 'approved') {
             return response()->json([
                 'success' => false,
                 'data' => [
@@ -165,11 +162,11 @@ class ContractorRegistrationController extends Controller
         ]);
 
         $ContractorRegistration = ContractorRegistration::find($request->id);
-        if (in_array($ContractorRegistration->status, [3, 4])) {
+        if (($request->has('reg_no') || $request->has('expiry_date') || $request->has('issue_date')) && in_array($ContractorRegistration->status, ['approved_three', 'approved'])) {
             return response()->json(['error' => 'Approved or Rejected Registrations cannot be updated']);
         }
         if ($request->field === 'pec_number') {
-            if (ContractorRegistration::where('pec_number', $request->value)->where('status', '!=', 3)->exists()) {
+            if (ContractorRegistration::where('pec_number', $request->value)->where('status', '!=', 'approved')->exists()) {
                 return response()->json(['error' => 'PEC number already exists']);
             }
         }
@@ -185,7 +182,7 @@ class ContractorRegistrationController extends Controller
     public function uploadFile(Request $request)
     {
         $ContractorRegistration = ContractorRegistration::find($request->id);
-        if ($ContractorRegistration->status === 1 && $ContractorRegistration->defer_status === 3) {
+        if ($request->hasFile('contractor_pictures') && in_array($ContractorRegistration->status, ['approved_three', 'approved'])) {
             return response()->json(['error' => 'Approved or Rejected Registrations cannot be updated']);
         }
         $file = $request->file;

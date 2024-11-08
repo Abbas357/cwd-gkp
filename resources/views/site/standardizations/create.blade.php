@@ -1,7 +1,6 @@
 <x-main-layout title="Standardization of Engineering Products / Materials">
     @push('style')
     <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
     @endpush
 
     <x-slot name="breadcrumbTitle">
@@ -11,7 +10,7 @@
     <x-slot name="breadcrumbItems">
         <li class="breadcrumb-item active">Standardization</li>
     </x-slot>
-    
+
     <div class="wrapper mt-2">
         <div class="page container">
             <div class="page-inner">
@@ -37,7 +36,7 @@
                                         <div class="row mb-3">
                                             <div class="col">
                                                 <label for="specification_details">Specification Details <abbr title="Required">*</abbr></label>
-                                                <textarea name="specification_details" id="specification_details" class="form-control w-100"></textarea>
+                                                <textarea name="specification_details" id="specification_details" class="form-control w-100" style="min-height:150px"></textarea>
                                                 @error('specification_details')
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @enderror
@@ -133,8 +132,17 @@
                                         <h3 class="card-title">Upload relevant documents</h3>
 
                                         <div class="mb-3">
+                                            <label for="firm_picture">Firm Picture (Logo or Other picture representing firm or product)</label>
+                                            <input type="file" class="form-control" id="firm_picture" name="firm_picture">
+                                            @error('firm_picture')
+                                            <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                            <img id="firmPicture" src="#" alt="SECP Certificate" style="display:none; margin-top: 10px; max-height: 100px;">
+                                        </div>
+
+                                        <div class="mb-3">
                                             <label for="secp_certificate">SECP Certificate</label>
-                                            <input type="file" class="form-control" id="secp_certificate" name="secp_certificate" onchange="$('#CECPCertificate').show()">
+                                            <input type="file" class="form-control" id="secp_certificate" name="secp_certificate">
                                             @error('secp_certificate')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -143,7 +151,7 @@
 
                                         <div class="mb-3">
                                             <label for="iso_certificate">ISO Certificate</label>
-                                            <input type="file" class="form-control" id="iso_certificate" name="iso_certificate" onchange="$('#ISOCertificate').show()">
+                                            <input type="file" class="form-control" id="iso_certificate" name="iso_certificate">
                                             @error('iso_certificate')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -152,7 +160,7 @@
 
                                         <div class="mb-3">
                                             <label for="commerce_membership">Commerce Membership</label>
-                                            <input type="file" class="form-control" id="commerce_membership" name="commerce_membership" onchange="$('#CommerceMembership').show()">
+                                            <input type="file" class="form-control" id="commerce_membership" name="commerce_membership">
                                             @error('commerce_membership')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -161,7 +169,7 @@
 
                                         <div class="mb-3">
                                             <label for="pec_certificate">PEC Certificate</label>
-                                            <input type="file" class="form-control" id="pec_certificate" name="pec_certificate" onchange="$('#PECCertificate').show()">
+                                            <input type="file" class="form-control" id="pec_certificate" name="pec_certificate">
                                             @error('pec_certificate')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -170,7 +178,7 @@
 
                                         <div class="mb-3">
                                             <label for="annual_tax_returns">Annual Tax Returns</label>
-                                            <input type="file" class="form-control" id="annual_tax_returns" name="annual_tax_returns" onchange="$('#AnnualTaxReturns').show()">
+                                            <input type="file" class="form-control" id="annual_tax_returns" name="annual_tax_returns">
                                             @error('annual_tax_returns')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -179,7 +187,7 @@
 
                                         <div class="mb-3">
                                             <label for="audited_financial">Audited Financial</label>
-                                            <input type="file" class="form-control" id="audited_financial" name="audited_financial" onchange="$('#AuditedFinancial').show()">
+                                            <input type="file" class="form-control" id="audited_financial" name="audited_financial">
                                             @error('audited_financial')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -188,7 +196,7 @@
 
                                         <div class="mb-3">
                                             <label for="dept_org_cert">Department / Organization Registrations</label>
-                                            <input type="file" class="form-control" id="dept_org_cert" name="dept_org_cert" onchange="$('#DepartmentRegistrations').show()">
+                                            <input type="file" class="form-control" id="dept_org_cert" name="dept_org_cert">
                                             @error('dept_org_cert')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -197,7 +205,7 @@
 
                                         <div class="mb-3">
                                             <label for="performance_certificate">Performance Certificate</label>
-                                            <input type="file" class="form-control" id="performance_certificate" name="performance_certificate" onchange="$('#PerformanceCertificate').show()">
+                                            <input type="file" class="form-control" id="performance_certificate" name="performance_certificate">
                                             @error('performance_certificate')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -207,7 +215,7 @@
                                         <div class="form-actions">
                                             <button class="btn btn-primary btn-block" type="submit" id="submitBtn">Apply</button>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -222,61 +230,89 @@
     <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/jquery-mask/jquery.mask.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
-    <script src="{{ asset('admin/plugins/summernote/summernote-bs5.min.js') }}"></script>
     <script>
         $(document).ready(function() {
 
-            $('#specification_details').summernote({
-                height: 200,
+            imageCropper({
+                fileInput: "#firm_picture"
+                , inputLabelPreview: "#firmPicture"
+                , aspectRatio: 1 / 1
+                , onComplete() {
+                    $("#firmPicture").show();
+                }
             });
 
             imageCropper({
-                fileInput: "#secp_certificate",
-                inputLabelPreview: "#CECPCertificate",
-                aspectRatio: 1 / 1.6471
+                fileInput: "#secp_certificate"
+                , inputLabelPreview: "#CECPCertificate"
+                , aspectRatio: 1 / 1.6471
+                , onComplete() {
+                    $("#CECPCertificate").show();
+                }
             });
 
             imageCropper({
-                fileInput: "#iso_certificate",
-                inputLabelPreview: "#ISOCertificate",
-                aspectRatio: 1 / 1.6471
+                fileInput: "#iso_certificate"
+                , inputLabelPreview: "#ISOCertificate"
+                , aspectRatio: 1 / 1.6471
+                , onComplete() {
+                    $("#ISOCertificate").show();
+                }
             });
 
 
             imageCropper({
-                fileInput: '#commerce_membership',
-                inputLabelPreview: '#CommerceMembership',
-                aspectRatio: 1 / 1.6471
+                fileInput: '#commerce_membership'
+                , inputLabelPreview: '#CommerceMembership'
+                , aspectRatio: 1 / 1.6471
+                , onComplete() {
+                    $("#CommerceMembership").show();
+                }
             });
 
             imageCropper({
-                fileInput: '#pec_certificate',
-                inputLabelPreview: '#PECCertificate',
-                aspectRatio: 1 / 1.6471
+                fileInput: '#pec_certificate'
+                , inputLabelPreview: '#PECCertificate'
+                , aspectRatio: 1 / 1.6471
+                , onComplete() {
+                    $("#PECCertificate").show();
+                }
             });
 
             imageCropper({
-                fileInput: '#annual_tax_returns',
-                inputLabelPreview: '#AnnualTaxReturns',
-                aspectRatio: 1 / 1.6471
+                fileInput: '#annual_tax_returns'
+                , inputLabelPreview: '#AnnualTaxReturns'
+                , aspectRatio: 1 / 1.6471
+                , onComplete() {
+                    $("#AnnualTaxReturns").show();
+                }
             });
 
             imageCropper({
-                fileInput: '#audited_financial',
-                inputLabelPreview: '#AuditedFinancial',
-                aspectRatio: 1 / 1.6471
+                fileInput: '#audited_financial'
+                , inputLabelPreview: '#AuditedFinancial'
+                , aspectRatio: 1 / 1.6471
+                , onComplete() {
+                    $("#AuditedFinancial").show();
+                }
             });
 
             imageCropper({
-                fileInput: '#dept_org_cert',
-                inputLabelPreview: '#DepartmentRegistrations',
-                aspectRatio: 1 / 1.6471
+                fileInput: '#dept_org_cert'
+                , inputLabelPreview: '#DepartmentRegistrations'
+                , aspectRatio: 1 / 1.6471
+                , onComplete() {
+                    $("#DepartmentRegistrations").show();
+                }
             });
 
             imageCropper({
-                fileInput: '#performance_certificate',
-                inputLabelPreview: '#PerformanceCertificate',
-                aspectRatio: 1 / 1.6471
+                fileInput: '#performance_certificate'
+                , inputLabelPreview: '#PerformanceCertificate'
+                , aspectRatio: 1 / 1.6471
+                , onComplete() {
+                    $("#PerformanceCertificate").show();
+                }
             });
 
             var forms = document.querySelectorAll('.needs-validation')

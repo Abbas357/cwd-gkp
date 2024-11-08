@@ -190,11 +190,22 @@
                 </td>
             </tr>
             <tr>
+                <th class="table-cell">Reg. No</th>
+                <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
+                    <span id="text-reg_no">{{ $ContractorRegistration->reg_no }}</span>
+                    @if ($ContractorRegistration->status === 'approved')
+                    <input type="text" id="input-reg_no" value="{{ $ContractorRegistration->reg_no }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('reg_no', {{ $ContractorRegistration->id }})" />
+                    <button id="save-btn-reg_no" class="btn btn-sm btn-light d-none" onclick="updateField('reg_no', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
+                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('reg_no')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
+                </td>
+            </tr>
+            <tr>
                 <th class="table-cell">Expiry Date</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-expiry_date">{{ $ContractorRegistration->expiry_date }}</span>
                     @if ($ContractorRegistration->status === 'approved')
-                    <input type="text" id="input-expiry_date" value="{{ $ContractorRegistration->expiry_date }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('expiry_date', {{ $ContractorRegistration->id }})" />
+                    <input type="date" id="input-expiry_date" value="{{ $ContractorRegistration->expiry_date }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('expiry_date', {{ $ContractorRegistration->id }})" />
                     <button id="save-btn-expiry_date" class="btn btn-sm btn-light d-none" onclick="updateField('expiry_date', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('expiry_date')"><i class="bi-pencil fs-6"></i></button>
                     @endif
@@ -203,8 +214,9 @@
             <tr>
                 <th class="table-cell">Issue Date</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
+                    <span id="text-issue_date">{{ $ContractorRegistration->issue_date }}</span>
                     @if ($ContractorRegistration->status === 'approved')
-                    <input type="text" id="input-issue_date" value="{{ $ContractorRegistration->issue_date }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('issue_date', {{ $ContractorRegistration->id }})" />
+                    <input type="date" id="input-issue_date" value="{{ $ContractorRegistration->issue_date }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('issue_date', {{ $ContractorRegistration->id }})" />
                     <button id="save-btn-issue_date" class="btn btn-sm btn-light d-none" onclick="updateField('issue_date', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('issue_date')"><i class="bi-pencil fs-6"></i></button>
                     @endif
@@ -215,7 +227,6 @@
         <div class="row mt-3 mx-1">
             @php
             $uploads = [
-            'contractor_pictures',
             'cnic_front_attachments',
             'cnic_back_attachments',
             'fbr_attachments',
@@ -237,6 +248,26 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td style="max-width: 200px">Contractor Picture</td>
+                        <td>
+                            @if($ContractorRegistration->hasMedia('contractor_pictures'))
+                            <a href="{{ $ContractorRegistration->getFirstMediaUrl('contractor_pictures') }}" target="_blank" title="Contractor Pictures" class="d-flex align-items-center gap-2">
+                                View
+                            </a>
+                            @else
+                            <span>Not Uploaded</span>
+                            @endif
+                        </td>
+                        @if ($ContractorRegistration->status === 'approved')
+                        <td class="no-print text-center">
+                            <label for="contractor_pictures" class="btn btn-sm btn-light">
+                                <span class="d-flex align-items-center">{!! $ContractorRegistration->hasMedia('contractor_pictures') ? '<i class="bi-pencil-square"></i>&nbsp; Update' : '<i class="bi-plus-circle"></i>&nbsp; Add' !!}</span>
+                            </label>
+                            <input type="file" id="contractor_pictures" name="contractor_pictures" class="d-none file-input" data-collection="contractor_pictures">
+                        </td>
+                        @endif
+                    </tr>
                     @foreach($uploads as $upload)
                     <tr>
                         <td style="max-width: 200px">{{ str_replace('_', ' ', ucwords($upload)) }}</td>

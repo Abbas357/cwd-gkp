@@ -41,5 +41,6 @@ class EStandardization extends Model implements HasMedia
         $this->addMediaCollection('audited_financials')->singleFile();
         $this->addMediaCollection('organization_registrations')->singleFile();
         $this->addMediaCollection('performance_certificate')->singleFile();
+        $this->addMediaCollection('firm_pictures')->singleFile();
     }
 }

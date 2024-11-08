@@ -11,7 +11,8 @@
         <h6 class="card-main-title">Contractor Registration Card</h6>
 
         <div class="d-flex align-items-center gap-3 mt-4">
-            <img src="{{ getProfilePic(auth()->user()) }}" class="company-logo" alt="Contractor Name">
+            <img src="{{ $ContractorRegistration->getFirstMediaUrl('contractor_pictures') ?: asset('admin/images/no-profile.png') }}
+" class="company-logo" alt="{{ $ContractorRegistration->contractor_name }}">
             <div class="body align-self-start mt-3 ml-5">
                 <h5>{{ $ContractorRegistration->contractor_name }}</h5>
                 <p> Enlistment No: {{ $ContractorRegistration->pec_number }} </p>

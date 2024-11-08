@@ -23,7 +23,9 @@ return new class extends Migration
             $table->enum('locality', ['Local', 'Foreign'])->default('Local');
             $table->string('ntn_number');
             $table->enum('location_type', ['Factory', 'Warehouse'])->default('Factory');
-            $table->boolean('status')->default(0);
+            $table->enum('status', ['new', 'approved', 'rejected'])->default('new');
+            $table->timestamp('issue_date')->nullable()->default(null);
+            $table->timestamp('expiry_date')->nullable()->default(null);
             $table->text('rejection_reason');
             $table->timestamps();
         });

@@ -33,6 +33,11 @@ class EStandardizationController extends Controller
         $standardization->ntn_number = $request->input('ntn_number');
         $standardization->location_type = $request->input('location_type');
 
+        if ($request->hasFile('firm_picture')) {
+            $standardization->addMedia($request->file('firm_picture'))
+                ->toMediaCollection('firm_pictures');
+        }
+
         if ($request->hasFile('secp_certificate')) {
             $standardization->addMedia($request->file('secp_certificate'))
                 ->toMediaCollection('secp_certificates');

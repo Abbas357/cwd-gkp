@@ -32,13 +32,10 @@ class EStandardizationController extends Controller
                     return view('admin.standardizations.partials.buttons', compact('row'))->render();
                 })
                 ->editColumn('created_at', function ($row) {
-                    return $row->created_at->diffForHumans();
+                    return $row->created_at?->format('j, F Y');
                 })
                 ->editColumn('updated_at', function ($row) {
                     return $row->updated_at->diffForHumans();
-                })
-                ->editColumn('status', function ($row) {
-                    return $row->status === 1 ? 'Approved' : 'Not Approved';
                 })
                 ->rawColumns(['action']);
 
@@ -86,7 +83,7 @@ class EStandardizationController extends Controller
 
     public function showCard(EStandardization $EStandardization)
     {
-        if ($EStandardization->status !== 1) {
+        if ($EStandardization->status !== 'approved') {
             return response()->json([
                 'success' => false,
                 'data' => [
@@ -116,8 +113,8 @@ class EStandardizationController extends Controller
 
     public function approve(Request $request, EStandardization $EStandardization)
     {
-        if ($EStandardization->status !== 1) {
-            $EStandardization->status = 1;
+        if ($EStandardization->status !== 'approved') {
+            $EStandardization->status = 'approved';
             if($EStandardization->save()) {
                 Mail::to($EStandardization->email)->queue(new StandardizationApprovedMail($EStandardization));
                 return response()->json(['success' => 'Product has been approved successfully.']);
@@ -128,8 +125,8 @@ class EStandardizationController extends Controller
 
     public function reject(Request $request, EStandardization $EStandardization)
     {
-        if (!in_array($EStandardization->status, [1, 2])) {
-            $EStandardization->status = 2;
+        if (!in_array($EStandardization->status, ['approved', 'rejected'])) {
+            $EStandardization->status = 'rejected';
             $EStandardization->rejection_reason = $request->reason;
 
             if($EStandardization->save()) {
@@ -148,7 +145,7 @@ class EStandardizationController extends Controller
         ]);
 
         $EStandardization = EStandardization::find($request->id);
-        if($EStandardization->status !== 0) {
+        if(($request->has('expiry_date') || $request->has('issue_date')) && $EStandardization->status !== 'new') {
             return response()->json(['error' => 'Approved or Rejected Products cannot be updated']);
         }
         $EStandardization->{$request->field} = $request->value;
@@ -160,7 +157,7 @@ class EStandardizationController extends Controller
     public function uploadFile(Request $request)
     {
         $standardization = EStandardization::find($request->id);
-        if($standardization->status !== 0) {
+        if($request->hasFile('firm_pictures') && $standardization->status !== 'new') {
             return response()->json(['error' => 'Approved or Rejected Products cannot be updated']);
         }
         $file = $request->file;

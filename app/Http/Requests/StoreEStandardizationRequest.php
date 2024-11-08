@@ -32,6 +32,16 @@ class StoreEStandardizationRequest extends FormRequest
             'locality' => 'required',
             'ntn_number' => 'required',
             'location_type' => 'required',
+
+            'firm_picture' => 'nullable|file|mimes:jpg,jpeg,png|max:5000', 
+            'secp_certificate' => 'nullable|file|mimes:jpg,jpeg,png|max:5000', 
+            'iso_certificate' => 'nullable|file|mimes:jpg,jpeg,png|max:5000', 
+            'commerce_membership' => 'nullable|file|mimes:jpg,jpeg,png|max:5000', 
+            'pec_certificate' => 'nullable|file|mimes:jpg,jpeg,png|max:5000', 
+            'annual_tax_returns' => 'nullable|file|mimes:jpg,jpeg,png|max:5000', 
+            'audited_financial' => 'nullable|file|mimes:jpg,jpeg,png|max:5000', 
+            'dept_org_cert' => 'nullable|file|mimes:jpg,jpeg,png|max:5000', 
+            'performance_certificate' => 'nullable|file|mimes:jpg,jpeg,png|max:5000', 
         ];
     }
 }

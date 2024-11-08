@@ -9,16 +9,16 @@
     <div class="card-header mb-3">
         <ul class="nav nav-tabs nav-tabs-table">
             <li class="nav-item">
-                <a id="defer-0-tab" class="nav-link" data-bs-toggle="tab" href="#fresh">Not Deferred</a>
+                <a id="new-tab" class="nav-link" data-bs-toggle="tab" href="#new">New</a>
             </li>
             <li class="nav-item">
-                <a id="defer-1-tab" class="nav-link" data-bs-toggle="tab" href="#deferred1">Deferred 1</a>
+                <a id="deferred-one-tab" class="nav-link" data-bs-toggle="tab" href="#deferred1">Deferred 1</a>
             </li>
             <li class="nav-item">
-                <a id="defer-2-tab" class="nav-link" data-bs-toggle="tab" href="#deferred2">Deferred 2</a>
+                <a id="deferred-two-tab" class="nav-link" data-bs-toggle="tab" href="#deferred2">Deferred 2</a>
             </li>
             <li class="nav-item">
-                <a id="defer-3-tab" class="nav-link" data-bs-toggle="tab" href="#deferred3">Deferred 3</a>
+                <a id="deferred-three-tab" class="nav-link" data-bs-toggle="tab" href="#deferred3">Deferred 3</a>
             </li>
             <li class="nav-item">
                 <a id="approved-tab" class="nav-link" data-bs-toggle="tab" href="#approved">Approved</a>
@@ -43,8 +43,6 @@
                 <th scope="col" class="p-3">FBR NTN</th>
                 <th scope="col" class="p-3">KPRA Registration</th>
                 <th scope="col" class="p-3">Registration Limited</th>
-                <th scope="col" class="p-3">Terms Accepted</th>
-                <th scope="col" class="p-3">Status</th>
                 <th scope="col" class="p-3">Created At</th>
                 <th scope="col" class="p-3">Updated At</th>
                 <th scope="col" class="p-3">Actions</th>
@@ -121,14 +119,6 @@
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "is_agreed"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "status"
-                        , searchBuilderType: "string"
-                    }
-                    , {
                         data: "created_at"
                         , searchBuilderType: "date"
                     }
@@ -146,7 +136,7 @@
                 , defaultOrderColumn: 17
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
-                    targets: [0, 2, 3, 6, 11, 12, 13, 14, 15, 16]
+                    targets: [0, 2, 3, 6, 11, 12, 13, 14, 15]
                     , visible: false
                 }]
             });
@@ -196,30 +186,30 @@
                 table: table
                 , dataTableUrl: "{{ route('admin.registrations.index') }}"
                 , tabToHashMap: {
-                    "#defer-0-tab": '#fresh'
-                    , "#defer-1-tab": '#deferred1'
-                    , "#defer-2-tab": '#deferred2'
-                    , "#defer-3-tab": '#deferred3'
+                    "#new-tab": '#new'
+                    , "#deferred-one-tab": '#deferred1'
+                    , "#deferred-two-tab": '#deferred2'
+                    , "#deferred-three-tab": '#deferred3'
                     , "#approved-tab": '#approved'
                 , }
                 , hashToParamsMap: {
-                    '#fresh': {
-                        status: 0
+                    '#new': {
+                        status: 'new'
                     }
                     , '#deferred1': {
-                        status: 1
+                        status: 'deffered_one'
                     }
                     , '#deferred2': {
-                        status: 2
+                        status: 'deffered_two'
                     }
                     , '#deferred3': {
-                        status: 3
+                        status: 'deffered_three'
                     }
                     , '#approved': {
-                        status: 4
+                        status: 'approved'
                     }
                 , }
-                , defaultHash: '#fresh'
+                , defaultHash: '#new'
             });
 
             $('#registrations-datatable').colResizable({

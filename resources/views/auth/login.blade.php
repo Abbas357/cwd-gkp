@@ -37,7 +37,7 @@
     <div class="container-fluid my-5">
         <div class="row">
             <div class="col-12 col-md-8 col-lg-6 col-xl-5 col-xxl-4 mx-auto">
-                <div class="card overflow-hidden login-box">
+                <div class="card p-3 overflow-hidden login-box">
                     <div class="card-body p-4 position-relative">
                         <div class="bg-light text-center py-4 rounded-top">
                             <h4 class="fw-bold mb-0">Welcome Back!</h4>
@@ -66,7 +66,7 @@
                                     <label for="password" class="form-label text-secondary">Password</label>
                                     <div class="input-group" id="show_hide_password">
                                         <input type="password" class="form-control shadow-sm" id="password" placeholder="Enter Password" name="password" required autocomplete="current-password">
-                                        <button type="button" class="input-group-text bg-white" style="border: 1px solid #999 onclick="togglePasswordVisibility()">
+                                        <button type="button" class="input-group-text bg-white" style="border: 1px solid #999" onclick="togglePasswordVisibility()">
                                             <i class="bi bi-eye-fill" id="togglePasswordIcon"></i>
                                         </button>
                                     </div>

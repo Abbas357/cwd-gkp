@@ -22,7 +22,7 @@
                 <th class="table-cell">Product Name</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-product_name">{{ $EStandardization->product_name }}</span>
-                    @if (!in_array($EStandardization->status, [1,2]))
+                    @if (!in_array($EStandardization->status, ['approved', 'rejected']))
                     <input type="text" id="input-product_name" value="{{ $EStandardization->product_name }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') 
                     
                     ('product_name', {{ $EStandardization->id }})" />
@@ -37,7 +37,7 @@
                 <th class="table-cell">Specification Details</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-specification_details">{{ $EStandardization->specification_details }}</span>
-                    @if (!in_array($EStandardization->status, [1,2]))
+                    @if (!in_array($EStandardization->status, ['approved', 'rejected']))
                     <input type="text" id="input-specification_details" value="{{ $EStandardization->specification_details }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') 
                     
                     ('specification_details', {{ $EStandardization->id }})" />
@@ -52,7 +52,7 @@
                 <th class="table-cell">Firm Name</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-firm_name">{{ $EStandardization->firm_name }}</span>
-                    @if (!in_array($EStandardization->status, [1,2]))
+                    @if (!in_array($EStandardization->status, ['approved', 'rejected']))
                     <input type="text" id="input-firm_name" value="{{ $EStandardization->firm_name }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') 
                     
                     ('firm_name', {{ $EStandardization->id }})" />
@@ -67,7 +67,7 @@
                 <th class="table-cell">Address</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-address">{{ $EStandardization->address }}</span>
-                    @if (!in_array($EStandardization->status, [1,2]))
+                    @if (!in_array($EStandardization->status, ['approved', 'rejected']))
                     <input type="text" id="input-address" value="{{ $EStandardization->address }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') 
                     
                     ('address', {{ $EStandardization->id }})" />
@@ -82,7 +82,7 @@
                 <th class="table-cell">Mobile Number</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-mobile_number">{{ $EStandardization->mobile_number }}</span>
-                    @if (!in_array($EStandardization->status, [1,2]))
+                    @if (!in_array($EStandardization->status, ['approved', 'rejected']))
                     <input type="text" id="input-mobile_number" value="{{ $EStandardization->mobile_number }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') 
                     
                     ('mobile_number', {{ $EStandardization->id }})" />
@@ -97,7 +97,7 @@
                 <th class="table-cell">Phone Number</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-phone_number">{{ $EStandardization->phone_number }}</span>
-                    @if (!in_array($EStandardization->status, [1,2]))
+                    @if (!in_array($EStandardization->status, ['approved', 'rejected']))
                     <input type="text" id="input-phone_number" value="{{ $EStandardization->phone_number }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') 
                     
                     ('phone_number', {{ $EStandardization->id }})" />
@@ -112,7 +112,7 @@
                 <th class="table-cell">Email</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-email">{{ $EStandardization->email }}</span>
-                    @if (!in_array($EStandardization->status, [1,2]))
+                    @if (!in_array($EStandardization->status, ['approved', 'rejected']))
                     <input type="text" id="input-email" value="{{ $EStandardization->email }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') 
                     
                     ('email', {{ $EStandardization->id }})" />
@@ -127,7 +127,7 @@
                 <th class="table-cell">NTN Number</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-ntn_number">{{ $EStandardization->ntn_number }}</span>
-                    @if (!in_array($EStandardization->status, [1,2]))
+                    @if (!in_array($EStandardization->status, ['approved', 'rejected']))
                     <input type="text" id="input-ntn_number" value="{{ $EStandardization->ntn_number }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') 
                     
                     ('ntn_number', {{ $EStandardization->id }})" />
@@ -142,7 +142,7 @@
                 <th class="table-cell">Locality</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-locality">{{ $EStandardization->locality }}</span>
-                    @if (!in_array($EStandardization->status, [1,2]))
+                    @if (!in_array($EStandardization->status, ['approved', 'rejected']))
                     <select id="input-locality" class="d-none form-control" onkeypress="if (event.key === 'Enter') 
                     
                     ('locality', {{ $EStandardization->id }})">
@@ -160,7 +160,7 @@
                 <th class="table-cell">Location Type</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-location_type">{{ $EStandardization->location_type }}</span>
-                    @if (!in_array($EStandardization->status, [1,2]))
+                    @if (!in_array($EStandardization->status, ['approved', 'rejected']))
                     <select id="input-location_type" class="d-none form-control" onkeypress="if (event.key === 'Enter') 
                     
                     ('location_type', {{ $EStandardization->id }})">
@@ -171,6 +171,28 @@
                     
                     ('location_type', {{ $EStandardization->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('location_type')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <th class="table-cell">Expiry Date</th>
+                <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
+                    <span id="text-expiry_date">{{ $EStandardization->expiry_date }}</span>
+                    @if ($EStandardization->status === 'approved')
+                    <input type="date" id="input-expiry_date" value="{{ $EStandardization->expiry_date }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('expiry_date', {{ $EStandardization->id }})" />
+                    <button id="save-btn-expiry_date" class="btn btn-sm btn-light d-none" onclick="updateField('expiry_date', {{ $EStandardization->id }})"><i class="bi-send-fill"></i></button>
+                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('expiry_date')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <th class="table-cell">Issue Date</th>
+                <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
+                    <span id="text-issue_date">{{ $EStandardization->issue_date }}</span>
+                    @if ($EStandardization->status === 'approved')
+                    <input type="date" id="input-issue_date" value="{{ $EStandardization->issue_date }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('issue_date', {{ $EStandardization->id }})" />
+                    <button id="save-btn-issue_date" class="btn btn-sm btn-light d-none" onclick="updateField('issue_date', {{ $EStandardization->id }})"><i class="bi-send-fill"></i></button>
+                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('issue_date')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
             </tr>
@@ -195,12 +217,32 @@
                     <tr>
                         <th>Name</th>
                         <th>Link</th>
-                        @if (!in_array($EStandardization->status, [1,2]))
+                        @if (!in_array($EStandardization->status, ['approved', 'rejected']))
                         <th class="no-print text-center">Add / Update Attachment</th>
                         @endif
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td style="max-width: 200px">Firm Picture</td>
+                        <td>
+                            @if($EStandardization->hasMedia('firm_pictures'))
+                            <a href="{{ $EStandardization->getFirstMediaUrl('firm_pictures') }}" target="_blank" title="Firm Picture" class="d-flex align-items-center gap-2">
+                                View
+                            </a>
+                            @else
+                            <span>Not Uploaded</span>
+                            @endif
+                        </td>
+                        @if ($EStandardization->status === 'approved')
+                        <td class="no-print text-center">
+                            <label for="firm_pictures" class="btn btn-sm btn-light">
+                                <span class="d-flex align-items-center">{!! $EStandardization->hasMedia('firm_pictures') ? '<i class="bi-pencil-square"></i>&nbsp; Update' : '<i class="bi-plus-circle"></i>&nbsp; Add' !!}</span>
+                            </label>
+                            <input type="file" id="firm_pictures" name="firm_pictures" class="d-none file-input" data-collection="firm_pictures">
+                        </td>
+                        @endif
+                    </tr>
                     @foreach($uploads as $upload)
                     <tr>
                         <td style="max-width: 200px">{{ str_replace('_', ' ', ucwords($upload)) }}</td>
@@ -213,7 +255,7 @@
                             <span>Not Uploaded</span>
                             @endif
                         </td>
-                        @if (!in_array($EStandardization->status, [1,2]))
+                        @if (!in_array($EStandardization->status, ['approved', 'rejected']))
                         <td class="no-print text-center">
                             <label for="{{ $upload }}" class="btn btn-sm btn-light">
                                 <span class="d-flex align-items-center">{!! $EStandardization->hasMedia($upload) ? '<i class="bi-pencil-square"></i>&nbsp; Update' : '<i class="bi-plus-circle"></i>&nbsp; Add' !!}</span>

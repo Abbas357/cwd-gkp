@@ -1,4 +1,4 @@
-<x-guest-layout title="The registration is {{ $registration->status === 1 ? 'Approved' : 'Not Approved' }}">
+<x-guest-layout title="The registration is {{ $registration->status === 'approved' ? 'Approved' : 'Not Approved' }}">
     <div class="container mt-2">
         
         <div class="row standardization-details">
@@ -15,9 +15,9 @@
                 <table class="table table-bordered">
                     <tr>
                         <th>Status</th>
-                        <td>{!! $registration->status === 4 ? '<span class="badge fs-6 bg-success">Approved</span>' : '<span class="badge fs-6 bg-danger">Not Approved</span>' !!}</td>
+                        <td>{!! $registration->status === 'approved' ? '<span class="badge fs-6 bg-success">Approved</span>' : '<span class="badge fs-6 bg-danger">Not Approved</span>' !!}</td>
                     </tr>
-                    @if($registration->status === 4)
+                    @if($registration->status === 'approved')
                     <tr>
                         <th>Issue Date</th>
                         <td>{{ $registration->updated_at->format('d-M-Y') }} ({{ $registration->updated_at->diffForHumans() }})</td>

@@ -171,13 +171,13 @@
                 , }
                 , hashToParamsMap: {
                     '#new': {
-                        status: 0
+                        status: 'new'
                     }
                     , '#approved': {
-                        status: 1
+                        status: 'approved'
                     }
                     , '#rejected': {
-                        status: 2
+                        status: 'rejected'
                     }
                 , }
                 , defaultHash: '#new'
