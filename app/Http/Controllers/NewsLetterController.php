@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\NewsLetter;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Yajra\DataTables\DataTables;
-use App\Mail\MassNewsletterEmail;
+use App\Mail\Newsletter\MassEmail;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 
 class NewsLetterController extends Controller
 {
@@ -79,7 +80,7 @@ class NewsLetterController extends Controller
 
                 $unsubscribeLink = route('newsletter.unsubscribe', ['token' => $subscriber->unsubscribe_token]);
 
-                $mailable = new MassNewsletterEmail($emailContent, $unsubscribeLink);
+                $mailable = new MassEmail($emailContent, $unsubscribeLink);
 
                 if ($attachment) {
                     $mailable->attach($attachment->getRealPath(), [

@@ -1,5 +1,5 @@
 <?php
-namespace App\Mail;
+namespace App\Mail\Query;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class QueryReliefNotGrantedMail extends Mailable implements ShouldQueue
+class ReliefGrantedMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -24,14 +24,14 @@ class QueryReliefNotGrantedMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Relief Not Granted',
+            subject: 'Relief Granted',
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'emails.public_contact.relief-not-granted',
+            view: 'emails.public_contact.relief-granted',
             with: [
                 'name' => $this->public_contact->name,
                 'submission_date' => now()->format('Y-m-d'),

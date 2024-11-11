@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 use App\Models\Category;
 use App\Models\District;
-use App\Models\ContractorRegistration;
+use Illuminate\Http\Request;
 
 use Yajra\DataTables\DataTables;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
-use Endroid\QrCode\Encoding\Encoding;
-
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ContractorRegistrationApprovedMail;
-use App\Mail\ContractorRegistrationDeferredFirstMail;
-use App\Mail\ContractorRegistrationDeferredThirdMail;
-use App\Mail\ContractorRegistrationDeferredSecondMail;
+
+use Endroid\QrCode\Encoding\Encoding;
+use App\Models\ContractorRegistration;
+use App\Mail\ContractorRegistration\RenewedMail;
+use App\Mail\ContractorRegistration\ApprovedMail;
+use App\Mail\ContractorRegistration\DeferredFirstMail;
+use App\Mail\ContractorRegistration\DeferredThirdMail;
+use App\Mail\ContractorRegistration\DeferredSecondMail;
 
 class ContractorRegistrationController extends Controller
 {
@@ -63,13 +65,13 @@ class ContractorRegistrationController extends Controller
         $ContractorRegistration->deffered_reason = $request->reason;
         if ($ContractorRegistration->status == "fresh") {
             $ContractorRegistration->status = "deffered_one";
-            Mail::to($ContractorRegistration->email)->queue(new ContractorRegistrationDeferredFirstMail($ContractorRegistration, $request->reason));
+            Mail::to($ContractorRegistration->email)->queue(new DeferredFirstMail($ContractorRegistration, $request->reason));
         } elseif ($ContractorRegistration->status == "deffered_one") {
             $ContractorRegistration->status = "deffered_two";
-            Mail::to($ContractorRegistration->email)->queue(new ContractorRegistrationDeferredSecondMail($ContractorRegistration, $request->reason));
+            Mail::to($ContractorRegistration->email)->queue(new DeferredSecondMail($ContractorRegistration, $request->reason));
         } elseif ($ContractorRegistration->status == "deffered_two") {
             $ContractorRegistration->status = "deffered_three";;
-            Mail::to($ContractorRegistration->email)->queue(new ContractorRegistrationDeferredThirdMail($ContractorRegistration, $request->reason));
+            Mail::to($ContractorRegistration->email)->queue(new DeferredThirdMail($ContractorRegistration, $request->reason));
         }
         if($ContractorRegistration->save()) {
             return response()->json(['success' => 'Registration has been deferred successfully.']);
@@ -82,11 +84,36 @@ class ContractorRegistrationController extends Controller
     {
         if (!in_array($ContractorRegistration->status, ["deffered_three", 'approved'])) {
             $ContractorRegistration->status = 'approved';
+            $ContractorRegistration->card_issue_date = Carbon::now();
+            $ContractorRegistration->card_expiry_date = Carbon::now()->addYears(1);
             $ContractorRegistration->save();
-            Mail::to($ContractorRegistration->email)->queue(new ContractorRegistrationApprovedMail($ContractorRegistration));
+            Mail::to($ContractorRegistration->email)->queue(new ApprovedMail($ContractorRegistration));
             return response()->json(['success' => 'Registration has been approved successfully.']);
         }
         return response()->json(['error' => 'Registration can\'t be approved.']);
+    }
+
+    public function renew(Request $request, ContractorRegistration $ContractorRegistration)
+    {
+        $currentDate = Carbon::now();
+
+        if ($ContractorRegistration->status === 'approved') {
+            if ($currentDate->greaterThanOrEqualTo($ContractorRegistration->card_expiry_date)) {
+                $ContractorRegistration->card_issue_date = $request->issue_date ?? $currentDate;
+                $ContractorRegistration->card_expiry_date = Carbon::parse($ContractorRegistration->card_issue_date)->addYears(1);
+
+                if ($ContractorRegistration->save()) {
+                    Mail::to($ContractorRegistration->email)->queue(new RenewedMail($ContractorRegistration));
+                    return response()->json(['success' => 'Contractor card has been renewed successfully.']);
+                } else {
+                    return response()->json(['error' => 'An error occurred while saving the card data. Please try again.']);
+                }
+            } else {
+                return response()->json(['error' => 'Contractor card cannot be renewed because it has not yet expired.']);
+            }
+        } else {
+            return response()->json(['error' => 'Contractor card status does not allow renewal.']);
+        }
     }
 
     public function show(ContractorRegistration $ContractorRegistration)

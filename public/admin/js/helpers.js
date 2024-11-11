@@ -4,7 +4,7 @@ function showMessage(message, type = "success", options = {}) {
         icon: type,
         title: message,
         showConfirmButton: options.showConfirmButton || false,
-        timer: options.timer || 2000,
+        timer: options.timer || 3000,
         ...options,
     });
 }
@@ -35,7 +35,7 @@ async function confirmWithInput({
 } = {}) {
     const options = {
         title: text,
-        input: inputType === 'textarea' ? 'textarea' : inputType,  // Checks if textarea is needed
+        input: inputType === 'textarea' ? 'textarea' : inputType,
         inputPlaceholder: inputPlaceholder,
         showCancelButton: true,
         confirmButtonColor: "#3085d6",

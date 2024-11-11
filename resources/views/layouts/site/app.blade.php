@@ -50,10 +50,10 @@
     @include("layouts.site.partials.header")
 
     @if(isset($breadcrumbTitle) || isset($breadcrumbItems))
-    <div class="container-fluid bg-breadcrumb">
+    <div class="container-fluid bg-breadcrumb mb-1">
         <div class="container text-center d-flex justify-content-between align-items-center">
             @isset($breadcrumbTitle)
-                <h3 class="fs-2 fw-bold">
+                <h3 class="fs-3 fw-bold">
                     {{ $breadcrumbTitle }}
                 </h3>
             @endisset

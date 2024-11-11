@@ -1,5 +1,5 @@
 <style>
-    .product-card {
+    .service-card {
         border: 2px solid #ddd;
         border-radius: 10px;
         padding: .5rem;
@@ -9,8 +9,8 @@
         margin-bottom: .3rem
     }
 
-    .product-card_front {
-        background-image: url('{{ asset('admin/images/cards/product-card-front.png') }}');
+    .service-card_front {
+        background-image: url('{{ asset('admin/images/cards/service-card-front.png') }}');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;
@@ -70,7 +70,7 @@
         .main {
             position: absolute;
             top: 4.5rem;
-            left: 8.6rem;
+            left: 8.2rem;
             text-transform: uppercase;
             text-align: left;
 
@@ -95,7 +95,7 @@
         .image {
             position: absolute;
             top: 4.5rem;
-            left: 1rem;
+            left: 1.1rem;
             text-transform: uppercase;
             font-weight: bold;
             font-size: 50%;
@@ -117,8 +117,7 @@
             width: 130px;
             text-align: center;
             margin-right: 3rem;
-            white-space: nowrap;
-            font-size: 65%;
+            font-size: 75%;
         }
 
         .qr-code {
@@ -142,13 +141,12 @@
         .bottom-text {
             position: absolute;
             bottom: -1px;
-            left: 5%;
+            left: 17%;
             h1 {
                 text-transform: uppercase;
                 font-size: 1.1rem;
                 margin: 0px;
                 letter-spacing: 1px;
-                white-space: nowrap;
                 font-weight: bold;
                 color: #fff;
                 transform: scale(.7, 1);
@@ -157,8 +155,8 @@
         
     }
 
-    .product-card_back {
-        background-image: url('{{ asset('admin/images/cards/product-card-back.png') }}');
+    .service-card_back {
+        background-image: url('{{ asset('admin/images/cards/service-card-back.png') }}');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;
@@ -166,8 +164,8 @@
 
         .back-heading {
             position: absolute;
-            top: .5rem;
-            left: 15%;
+            top: .7rem;
+            left: 20%;
 
             h1 {
                 text-transform: uppercase;
@@ -181,20 +179,17 @@
         }
         .back-main {
             position: absolute;
-            top: 2rem;
+            top: 3rem;
             width:94%;
-            text-align: justify;
-            font-size: 9px;
         }
         .back-footer {
             position: absolute;
-            bottom: 5px;
-            left: .4rem;
+            bottom: .3rem;
             p {
                 margin: 0px;
                 color: #575757;
                 text-align: center;
-                font-size: 10px;
+                font-size: 9px;
                 font-weight:normal;
             }
         }
@@ -208,7 +203,7 @@
 </style>
 
 <div id="capture">
-    <div class="product-card product-card_front text-center">
+    <div class="service-card service-card_front text-center">
 
         <div class="header-left">
             <img src="{{ asset('admin/images/logo-square.png') }}" alt="">
@@ -220,17 +215,17 @@
         </div>
 
         <div class="header-right">
-            <span class="expires">EXPIRES: {{ $EStandardization->card_expiry_date->format('j, M Y'); }}</span>
+            <span class="expires">EXPIRES: {{ $user->card_expiry_date->format('j, M Y'); }}</span>
         </div>
 
         <div class="image">
-            <img src="{{ $EStandardization->getFirstMediaUrl('firm_pictures') ?: asset('admin/images/no-profile.png') }}" alt="{{ $EStandardization->product_name }}">
+            <img src="{{ $user->getFirstMediaUrl('profile_pictures') ?? '' }}" alt="{{ $user->name }}">
         </div>
 
         <div class="main">
-            <h1>{{ $EStandardization->firm_name }}</h1>
-            <h2> {{ $EStandardization->product_name }}</h2>
-            <h3> Locality: {{ $EStandardization->locality }}</h3>
+            <h1>{{ $user->name }}</h1>
+            <h2> {{ $user->designation }}</h2>
+            <h3> OFFICE: {{ $user->office }}</h3>
         </div>
 
         <div class="footer">
@@ -246,40 +241,71 @@
         </div>
 
         <div class="bottom-text">
-            <h1>Product Standardization Card</h1>
+            <h1>Service Identity Card</h1>
         </div>
 
     </div>
 
     <!-- Back Side -->
-    <div class="card product-card product-card_back">
+    <div class="card service-card service-card_back">
         <div class="mx-1 mt-5">
             <div class="back-heading">
-                <h1>Terms and Conditions</h1>
+                <h1>Employee Detail</h1>
             </div>
 
             <div class="back-main">
-                <div class="d-flex justify-content-start align-items-center border-bottom border-secondary">
-                    1. The manufacturer authorized dealers will be bound to issue sales tax invoice for each consignment supplied to the contractor with the name of purchaser and name of work.
+                <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="fw-bold">Personnel No: &emsp;</div>
+                        <div>{{ $user->personnel_number }}</div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center ml-auto">
+                        <div class="fw-bold">Issue Date: &emsp;</div>
+                        <div>{{ $user->card_issue_date->format('d/m/Y') }}</div>
+                    </div>
                 </div>
-                <div class="d-flex justify-content-start align-items-center border-bottom border-secondary">
-                    2. The firm will be bound to provide test reports (along with other documents) of the product supplied on the request of concerned Divisional officer of PHED/concerned department Khyber Pakhtunkhwa.
+                <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
+                    <div class="d-flex justify-content-around align-items-center">
+                        <div class="fw-bold">Father Name: &emsp;</div>
+                        <div>{{ $user->father_name }}</div>
+                    </div>
+                    <div class="d-flex justify-content-around align-items-center ml-auto">
+                        <div class="fw-bold">Blood Group: &emsp;</div>
+                        <div>{{ $user->blood_group }}</div>
+                    </div>
                 </div>
-                <div class="d-flex justify-content-start align-items-center border-bottom border-secondary">
-                    3. For Pipe, each pipe will bear the stamp of the manufacturer with pipe classification, identification code as per international standard specifications.
+                <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
+                    <div class="d-flex justify-content-around align-items-center">
+                        <div class="fw-bold">Date of Birth: &emsp;</div>
+                        <div>{{ $user->date_of_birth->format('d/m/Y') }}</div>
+                    </div>
+                    <div class="d-flex justify-content-around align-items-center ml-auto">
+                        <div class="fw-bold">Identification Mark: &emsp;</div>
+                        <div style="overflow: hidden; text-overflow: ellipsis;">{{ $user->mark_of_identification }}</div>
+                    </div>
                 </div>
-                <div class="d-flex justify-content-start align-items-center border-bottom border-secondary">
-                    4. The firm will be responsible for the quality of the product supplied to the contractor.
+                <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
+                    <div class="d-flex justify-content-around align-items-center">
+                        <div class="fw-bold">CNIC: &emsp;</div>
+                        <div style="overflow: hidden; text-overflow: ellipsis;">{{ $user->cnic }}</div>
+                    </div>
+                    <div class="d-flex justify-content-around align-items-center ml-auto">
+                        <div class="fw-bold">Emergency #: &emsp;</div>
+                        <div style="overflow: hidden; text-overflow: ellipsis;">{{ $user->emergency_contact }}</div>
+                    </div>
                 </div>
-                <div class="d-flex justify-content-start align-items-center border-bottom border-secondary">
-                    5. Unsatisfactory performance and below specification product supplied to contractors will result in legal action, rejection of material supplied and blacklisting of the firm.
+                
+                <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
+                    <div class="fw-bold">Present Address: &emsp;</div>
+                    <div style="overflow: hidden; text-overflow: ellipsis;">{{ $user->present_address }}</div>
                 </div>
             </div>
             
             <div class="back-footer">
-                <p class="text-danger" style="white-space: nowrap"><strong>Note:</strong> Cardholder is a Standardized Firm, not a government entity / official.</p>
                 <p>
-                    Issued by IT Cell, C&W Department Govt. of Khyber Pakhtunkhwa.<br />
+                    Issued by Communication and Works Department Govt. of Khyber Pakhtunkhwa.<br />
+                    For Information / Verification, scan QR code or contact IT Cell, C&W Department.<br />
+                    If found please drop into the nearest letter box.
                 </p>
             </div>
         </div>

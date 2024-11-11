@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers\Site;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\StorePublicContactRequest;
-
+use Jenssegers\Agent\Agent;
 use App\Models\PublicContact;
 
+use App\Mail\Query\SubmittedMail;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\QuerySubmittedMail;
-
-use Jenssegers\Agent\Agent;
+use App\Http\Requests\StorePublicContactRequest;
 
 class PublicContactController extends Controller
 {
@@ -26,7 +24,7 @@ class PublicContactController extends Controller
         $userAgent = $request->header('User-Agent');
         $public_contact->device_info = $this->getDeviceInfo($userAgent);
         if($public_contact->save()) {
-            Mail::to($public_contact->email)->queue(new QuerySubmittedMail($public_contact));
+            Mail::to($public_contact->email)->queue(new SubmittedMail($public_contact));
             return redirect()->back()->with('success', 'Your message has been sent successfully! You will be informed via Email about your query Status');
         }
     }

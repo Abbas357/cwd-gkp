@@ -17,6 +17,14 @@ class ContractorRegistration extends Model implements HasMedia
     protected $guarded = [];
 
     protected static $recordEvents = ['updated', 'deleted'];
+
+    protected function casts(): array
+    {
+        return [
+            'card_issue_date' => 'datetime',
+            'card_expiry_date' => 'datetime',
+        ];
+    }
     
     public function getActivitylogOptions(): LogOptions
     {

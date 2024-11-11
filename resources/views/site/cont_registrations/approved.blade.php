@@ -1,10 +1,16 @@
-<x-guest-layout title="The registration is {{ $registration->status === 'approved' ? 'Approved' : 'Not Approved' }}">
+<x-main-layout title="The registration is {{ $registration->status === 'approved' ? 'Approved' : 'Not Approved' }}">
     <div class="container mt-2">
-        
+        <x-slot name="breadcrumbTitle">
+            Contractor Details
+        </x-slot>
+    
+        <x-slot name="breadcrumbItems">
+            <li class="breadcrumb-item active">Contractor Card</li>
+        </x-slot>
         <div class="row standardization-details">
             <div class="col-md-12">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h2 class="mb-4">Contractor Details</h2>
+                <div class="d-flex justify-content-between align-items-center no-print">
+                    <h2 class="mb-4"></h2>
                     <button type="button" id="print-standardization" class="btn btn-light text-gray-900 border border-gray-300 float-end me-2 mb-2">
                         <span class="d-flex align-items-center">
                             <i class="bi-print"></i>
@@ -89,4 +95,4 @@
 
         </script>
         @endpush
-</x-guest-layout>
+</x-main-layout>

@@ -203,22 +203,22 @@
             <tr>
                 <th class="table-cell">Expiry Date</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
-                    <span id="text-expiry_date">{{ $ContractorRegistration->expiry_date }}</span>
+                    <span id="text-card_expiry_date">{{ $ContractorRegistration->card_expiry_date }}</span>
                     @if ($ContractorRegistration->status === 'approved')
-                    <input type="date" id="input-expiry_date" value="{{ $ContractorRegistration->expiry_date }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('expiry_date', {{ $ContractorRegistration->id }})" />
-                    <button id="save-btn-expiry_date" class="btn btn-sm btn-light d-none" onclick="updateField('expiry_date', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
-                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('expiry_date')"><i class="bi-pencil fs-6"></i></button>
+                    <input type="date" id="input-card_expiry_date" value="{{ $ContractorRegistration->card_expiry_date }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('card_expiry_date', {{ $ContractorRegistration->id }})" />
+                    <button id="save-btn-card_expiry_date" class="btn btn-sm btn-light d-none" onclick="updateField('card_expiry_date', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
+                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('card_expiry_date')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
             </tr>
             <tr>
                 <th class="table-cell">Issue Date</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
-                    <span id="text-issue_date">{{ $ContractorRegistration->issue_date }}</span>
+                    <span id="text-card_issue_date">{{ $ContractorRegistration->card_issue_date }}</span>
                     @if ($ContractorRegistration->status === 'approved')
-                    <input type="date" id="input-issue_date" value="{{ $ContractorRegistration->issue_date }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('issue_date', {{ $ContractorRegistration->id }})" />
-                    <button id="save-btn-issue_date" class="btn btn-sm btn-light d-none" onclick="updateField('issue_date', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
-                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('issue_date')"><i class="bi-pencil fs-6"></i></button>
+                    <input type="date" id="input-card_issue_date" value="{{ $ContractorRegistration->card_issue_date }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('card_issue_date', {{ $ContractorRegistration->id }})" />
+                    <button id="save-btn-card_issue_date" class="btn btn-sm btn-light d-none" onclick="updateField('card_issue_date', {{ $ContractorRegistration->id }})"><i class="bi-send-fill"></i></button>
+                    <button class="no-print btn btn-sm edit-button" onclick="enableEditing('card_issue_date')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
             </tr>

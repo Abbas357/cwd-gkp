@@ -24,11 +24,11 @@ return new class extends Migration
             $table->string('kpra_reg_no', 45)->nullable();
             $table->string('pre_enlistment')->nullable();
             $table->boolean('is_limited')->default(false);
-            $table->text('deffered_reason');
             $table->enum('status', ['new', 'deffered_one', 'deffered_two', 'deffered_three', 'approved'])->default('new');
+            $table->text('deffered_reason');
             $table->string('reg_no', 45)->nullable();
-            $table->timestamp('issue_date')->nullable()->default(null);
-            $table->timestamp('expiry_date')->nullable()->default(null);
+            $table->timestamp('card_issue_date')->nullable()->default(null);
+            $table->timestamp('card_expiry_date')->nullable()->default(null);
             $table->timestamps();
         });
     }

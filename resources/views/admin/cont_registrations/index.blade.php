@@ -169,6 +169,31 @@
                 }
             });
 
+            $("#registrations-datatable").on('click', '.renew-btn', async function() {
+                const registrationId = $(this).data("id");
+                const url = "{{ route('admin.registrations.renew', ':id') }}".replace(':id', registrationId);
+
+                const {
+                    value: issue_date
+                } = await confirmWithInput({
+                    inputType: "date"
+                    , text: 'Renew! (Issue Date is Optional)'
+                    , inputValidator: (value) => {}
+                    , inputPlaceholder: 'Enter the issue date (optional)'
+                    , confirmButtonText: 'Renew'
+                    , cancelButtonText: 'Cancel'
+                });
+
+                if (issue_date === '' || issue_date) {
+                    const success = await fetchRequest(url, 'PATCH', {
+                        issue_date
+                    });
+                    if (success) {
+                        $("#registrations-datatable").DataTable().ajax.reload();
+                    }
+                }
+            });
+
             $("#registrations-datatable").on('click', '.approve-btn', async function() {
                 const registrationId = $(this).data("id");
                 const url = "{{ route('admin.registrations.approve', ':id') }}".replace(':id', registrationId);

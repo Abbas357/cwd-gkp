@@ -1,5 +1,5 @@
 <?php
-namespace App\Mail;
+namespace App\Mail\ContractorRegistration;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ContractorRegistrationApprovedMail extends Mailable implements ShouldQueue
+class RenewedMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -22,7 +22,7 @@ class ContractorRegistrationApprovedMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your Registration is Approved',
+            subject: 'Your Registration card is Renewed',
         );
     }
 

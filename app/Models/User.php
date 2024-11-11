@@ -36,6 +36,9 @@ class User extends Authenticatable implements HasMedia
             'password' => 'hashed',
             'posting_date' => 'datetime',
             'exit_date' => 'datetime',
+            'date_of_birth' => 'datetime',
+            'card_issue_date' => 'datetime',
+            'card_expiry_date' => 'datetime',
         ];
     }
 

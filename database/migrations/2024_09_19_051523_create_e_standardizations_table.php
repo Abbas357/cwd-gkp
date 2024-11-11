@@ -24,9 +24,9 @@ return new class extends Migration
             $table->string('ntn_number');
             $table->enum('location_type', ['Factory', 'Warehouse'])->default('Factory');
             $table->enum('status', ['new', 'approved', 'rejected'])->default('new');
-            $table->timestamp('issue_date')->nullable()->default(null);
-            $table->timestamp('expiry_date')->nullable()->default(null);
             $table->text('rejection_reason');
+            $table->timestamp('card_issue_date')->nullable()->default(null);
+            $table->timestamp('card_expiry_date')->nullable()->default(null);
             $table->timestamps();
         });
     }

@@ -18,6 +18,7 @@
                 </a>
                 <ul>
                     <li><a href="{{ route('admin.users.index') }}"><i class="bi-arrow-right-short"></i>List</a></li>
+                    <li><a href="{{ route('admin.users.cards') }}"><i class="bi-arrow-right-short"></i>Cards</a></li>
                     <li><a href="{{ route('admin.users.create') }}"><i class="bi-arrow-right-short"></i>Create</a></li>
                     <li><a href="{{ route('admin.roles.index') }}"><i class="bi-arrow-right-short"></i>Roles</a></li>
                     <li><a href="{{ route('admin.permissions.index') }}"><i class="bi-arrow-right-short"></i>Permissions</a></li>

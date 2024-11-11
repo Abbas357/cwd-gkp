@@ -10,7 +10,7 @@ use App\Models\District;
 use App\Models\ContractorRegistration;
 
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ContractorRegistrationAppliedMail;
+use App\Mail\ContractorRegistration\AppliedMail;
 use App\Http\Requests\StoreContractorRegistrationRequest;
 
 class ContractorRegistrationController extends Controller
@@ -90,7 +90,7 @@ class ContractorRegistrationController extends Controller
         }
 
         if ($registration->save()) {
-            Mail::to($registration->email)->queue(new ContractorRegistrationAppliedMail($registration));
+            Mail::to($registration->email)->queue(new AppliedMail($registration));
             return redirect()->route('registrations.create')->with('success', 'Your form has been submitted successfully');
         }
         return redirect()->route('registrations.create')->with('danger', 'There is an error submitting your data');
@@ -106,6 +106,6 @@ class ContractorRegistrationController extends Controller
     public function approvedContractors(Request $request, $id)
     {
         $registration = ContractorRegistration::find($id);
-        return view('admin.cont_registrations.approved', compact('registration'));
+        return view('site.cont_registrations.approved', compact('registration'));
     }
 }

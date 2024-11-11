@@ -6,11 +6,9 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreEStandardizationRequest;
-
 use App\Models\EStandardization;
-
 use Illuminate\Support\Facades\Mail;
-use App\Mail\StandardizationAppliedMail;
+use App\Mail\Standardization\AppliedMail;
 
 class EStandardizationController extends Controller
 {
@@ -79,7 +77,7 @@ class EStandardizationController extends Controller
         }
 
         if ($standardization->save()) {
-            Mail::to($standardization->email)->queue(new StandardizationAppliedMail($standardization));
+            Mail::to($standardization->email)->queue(new AppliedMail($standardization));
             return redirect()->route('standardizations.create')->with('success', 'Your form has been submitted successfully');
         }
         return redirect()->route('standardizations.create')->with('danger', 'There is an error submitting your data');
@@ -88,6 +86,6 @@ class EStandardizationController extends Controller
     public function approvedProducts(Request $request, $id)
     {
         $product = EStandardization::find($id);
-        return view('admin.standardizations.approved', compact('product'));
+        return view('site.standardizations.approved', compact('product'));
     }
 }

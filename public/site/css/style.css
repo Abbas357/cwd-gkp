@@ -154,6 +154,11 @@ a {
     }
 }
 
+span[class="help"] {
+    color: red !important;
+    cursor: help;
+}
+
 /*** Topbar End ***/
 
 
@@ -449,9 +454,10 @@ a {
     padding: 1.2rem 0 1rem 0;
     color: #000;
     opacity: .8;
-    box-shadow: 0 0 1rem #00000022;
-    border-bottom-left-radius: 3rem;
-    border-bottom-right-radius: 3rem;
+    box-shadow: 0 0 1rem #00000033;
+    border-bottom-left-radius: 1.5rem;
+    border-bottom-right-radius: 1.5rem;
+    border-bottom: 1px solid #ccc;
 }
 
 
@@ -938,3 +944,9 @@ a {
     margin-top: 4px;
     line-height: 1.2;
 }
+
+@media print {
+    .no-print {
+      display: none !important;
+    }
+  }

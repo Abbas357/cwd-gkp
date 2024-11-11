@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\EStandardization;
-use Yajra\DataTables\DataTables;
 
+use Yajra\DataTables\DataTables;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Support\Facades\Mail;
 use Endroid\QrCode\Encoding\Encoding;
-use App\Mail\StandardizationApprovedMail;
-use App\Mail\StandardizationRejectedMail;
+use App\Mail\Standardization\RenewedMail;
+use App\Mail\Standardization\ApprovedMail;
+use App\Mail\Standardization\RejectedMail;
 
 class EStandardizationController extends Controller
 {
@@ -115,12 +117,37 @@ class EStandardizationController extends Controller
     {
         if ($EStandardization->status !== 'approved') {
             $EStandardization->status = 'approved';
+            $EStandardization->card_issue_date = Carbon::now();
+            $EStandardization->card_expiry_date = Carbon::now()->addYears(1);
             if($EStandardization->save()) {
-                Mail::to($EStandardization->email)->queue(new StandardizationApprovedMail($EStandardization));
+                Mail::to($EStandardization->email)->queue(new ApprovedMail($EStandardization));
                 return response()->json(['success' => 'Product has been approved successfully.']);
             }
         }
         return response()->json(['error' => 'Product can\'t be approved.']);
+    }
+
+    public function renew(Request $request, EStandardization $EStandardization)
+    {
+        $currentDate = Carbon::now();
+
+        if ($EStandardization->status === 'approved') {
+            if ($currentDate->greaterThanOrEqualTo($EStandardization->card_expiry_date)) {
+                $EStandardization->card_issue_date = $request->issue_date ?? $currentDate;
+                $EStandardization->card_expiry_date = Carbon::parse($EStandardization->card_issue_date)->addYears(1);
+
+                if ($EStandardization->save()) {
+                    Mail::to($EStandardization->email)->queue(new RenewedMail($EStandardization));
+                    return response()->json(['success' => 'Card has been renewed successfully.']);
+                } else {
+                    return response()->json(['error' => 'An error occurred while saving the card data. Please try again.']);
+                }
+            } else {
+                return response()->json(['error' => 'Card cannot be renewed because it has not yet expired.']);
+            }
+        } else {
+            return response()->json(['error' => 'Card status does not allow renewal.']);
+        }
     }
 
     public function reject(Request $request, EStandardization $EStandardization)
@@ -130,7 +157,7 @@ class EStandardizationController extends Controller
             $EStandardization->rejection_reason = $request->reason;
 
             if($EStandardization->save()) {
-                Mail::to($EStandardization->email)->queue(new StandardizationRejectedMail($EStandardization, $$request->reason));
+                Mail::to($EStandardization->email)->queue(new RejectedMail($EStandardization, $request->reason));
                 return response()->json(['success' => 'Product has been rejected.']);
             }
         }
@@ -156,6 +183,7 @@ class EStandardizationController extends Controller
 
     public function uploadFile(Request $request)
     {
+        dd('dddk');
         $standardization = EStandardization::find($request->id);
         if($request->hasFile('firm_pictures') && $standardization->status !== 'new') {
             return response()->json(['error' => 'Approved or Rejected Products cannot be updated']);

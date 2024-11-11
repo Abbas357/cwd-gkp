@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Site;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\NewsLetter;
 use Illuminate\Support\Str;
 use Jenssegers\Agent\Agent;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\SubscriptionConfirmation;
+use App\Mail\Newsletter\SubscriptionConfirmation;
 
 class NewsLetterController extends Controller
 {

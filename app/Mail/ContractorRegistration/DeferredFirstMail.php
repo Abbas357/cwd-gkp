@@ -1,5 +1,5 @@
 <?php
-namespace App\Mail;
+namespace App\Mail\ContractorRegistration;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ContractorRegistrationDeferredSecondMail extends Mailable implements ShouldQueue
+class DeferredFirstMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -24,14 +24,14 @@ class ContractorRegistrationDeferredSecondMail extends Mailable implements Shoul
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Contractor Registration Deferred - Second Notification',
+            subject: 'Contractor Registration Deferred - First Notification',
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'emails.registration.second-deferment',
+            view: 'emails.registration.first-deferment',
             with: [
                 'owner_name' => $this->registration->owner_name,
                 'contractor_name' => $this->registration->contractor_name,

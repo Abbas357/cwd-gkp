@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\PublicContact;
-use App\Mail\QueryDroppedMail;
+use App\Mail\Query\DroppedMail;
 use Yajra\DataTables\DataTables;
-use App\Mail\QueryReliefGrantedMail;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\QueryReliefNotGrantedMail;
+use App\Mail\Query\ReliefGrantedMail;
+use App\Mail\Query\ReliefNotGrantedMail;
 
 class PublicContactController extends Controller
 {
@@ -57,7 +58,7 @@ class PublicContactController extends Controller
             $PublicContact->action_at = now();
 
             if($PublicContact->save()) {
-                Mail::to($PublicContact->email)->queue(new QueryReliefGrantedMail($PublicContact, $request->remarks));
+                Mail::to($PublicContact->email)->queue(new ReliefGrantedMail($PublicContact, $request->remarks));
                 return response()->json(['success' => 'Relief Granted.']);
             }
         }
@@ -72,7 +73,7 @@ class PublicContactController extends Controller
             $PublicContact->action_at = now();
 
             if($PublicContact->save()) {
-                Mail::to($PublicContact->email)->queue(new QueryReliefNotGrantedMail($PublicContact, $request->remarks));
+                Mail::to($PublicContact->email)->queue(new ReliefNotGrantedMail($PublicContact, $request->remarks));
                 return response()->json(['success' => 'Relief Not Granted.']);
             }
         }
@@ -88,7 +89,7 @@ class PublicContactController extends Controller
             $PublicContact->action_at = now();
 
             if($PublicContact->save()) {
-                Mail::to($PublicContact->email)->queue(new QueryDroppedMail($PublicContact, $request->remarks));
+                Mail::to($PublicContact->email)->queue(new DroppedMail($PublicContact, $request->remarks));
                 return response()->json(['success' => 'Dropped.']);
             }
         }

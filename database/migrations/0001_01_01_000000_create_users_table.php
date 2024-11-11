@@ -16,23 +16,42 @@ return new class extends Migration
             $table->string('name');
             $table->string('username', 191)->unique();
             $table->string('cnic')->nullable();
+            
             $table->string('email', 191)->unique();
             $table->string('mobile_number')->nullable();
             $table->string('landline_number')->nullable();
             $table->string('whatsapp')->nullable();
             $table->string('facebook')->nullable();
             $table->string('twitter')->nullable();
-            $table->string('designation')->nullable();
+            
             $table->string('title')->nullable();
-            $table->enum('bps', ['BPS-17', 'BPS-18', 'BPS-19', 'BPS-20', 'BPS-21', 'BPS-22'])->nullable();
+            $table->string('designation')->nullable();
             $table->string('office')->nullable();
+
+            $table->enum('bps', ['BPS-17', 'BPS-18', 'BPS-19', 'BPS-20', 'BPS-21', 'BPS-22'])->nullable();
             $table->enum('posting_type', ['appointment', 'transfer'])->nullable();
             $table->date('posting_date')->nullable();
             $table->enum('exit_type', ['transfer', 'retired'])->nullable();
             $table->date('exit_date')->nullable();
-            $table->text('message')->nullable();
-            $table->boolean('is_active')->default(0);
+            
             $table->string('otp')->nullable();
+            $table->boolean('is_active')->default(0);
+            $table->text('message')->nullable();
+
+            // Identity Card
+            $table->timestamp('date_of_birth')->nullable();
+            $table->string('father_name')->nullable();
+            $table->string('parmanent_address')->nullable();
+            $table->string('present_address')->nullable();
+            $table->string('personnel_number')->nullable();
+            $table->string('emergency_contact')->nullable();
+            $table->string('blood_group')->nullable();
+            $table->string('mark_of_identification')->nullable();
+            $table->timestamp('card_issue_date')->nullable();
+            $table->timestamp('card_expiry_date')->nullable();
+            $table->enum('card_status', ['new', 'verified', 'rejected'])->nullable();
+            $table->text('rejection_reason')->nullable();
+
             $table->string('password');
             $table->timestamp('password_updated_at')->nullable();
             $table->rememberToken();

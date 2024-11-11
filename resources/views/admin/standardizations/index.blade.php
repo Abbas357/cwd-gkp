@@ -132,6 +132,31 @@
                 }
             });
 
+            $("#standardizations-datatable").on('click', '.renew-btn', async function() {
+                const standardizationId = $(this).data("id");
+                const url = "{{ route('admin.standardizations.renew', ':id') }}".replace(':id', standardizationId);
+
+                const {
+                    value: issue_date
+                } = await confirmWithInput({
+                    inputType: "date"
+                    , text: 'Renew! (Issue Date is Optional)'
+                    , inputValidator: (value) => {}
+                    , inputPlaceholder: 'Enter the issue date (optional)'
+                    , confirmButtonText: 'Renew'
+                    , cancelButtonText: 'Cancel'
+                });
+
+                if (issue_date === '' || issue_date) {
+                    const success = await fetchRequest(url, 'PATCH', {
+                        issue_date
+                    });
+                    if (success) {
+                        $("#standardizations-datatable").DataTable().ajax.reload();
+                    }
+                }
+            });
+
             $("#standardizations-datatable").on('click', '.reject-btn', async function() {
                 const standardizationId = $(this).data("id");
                 const url = "{{ route('admin.standardizations.reject', ':id') }}".replace(':id', standardizationId);

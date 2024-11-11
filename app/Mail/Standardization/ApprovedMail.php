@@ -1,6 +1,5 @@
 <?php
-
-namespace App\Mail;
+namespace App\Mail\Standardization;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -9,7 +8,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class StandardizationApprovedMail extends Mailable implements ShouldQueue
+class ApprovedMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 

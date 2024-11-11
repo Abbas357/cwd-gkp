@@ -41,6 +41,16 @@ Route::middleware('auth')->group(function () {
             Route::get('/{user}', [UserController::class, 'show'])->name('show');
             Route::patch('/{user}', [UserController::class, 'update'])->name('update');
             Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
+            
+            Route::get('/get/cards', [UserController::class, 'cards'])->name('cards');
+            Route::get('/get/{user}', [UserController::class, 'showDetail'])->name('detail');
+            Route::get('/card/{user}', [UserController::class, 'showCard'])->name('showCard');
+            Route::patch('/verify/{user}', [UserController::class, 'verify'])->name('verify');
+            Route::patch('/reject/{user}', [UserController::class, 'reject'])->name('reject');
+            Route::patch('/restore/{user}', [UserController::class, 'restore'])->name('restore');
+            Route::patch('/renew/{user}', [UserController::class, 'renew'])->name('renew');
+            Route::patch('/update/field', [UserController::class, 'updateField'])->name('updateField');
+            Route::patch('/upload/file', [UserController::class, 'uploadFile'])->name('uploadFile');
         });
 
         Route::prefix('registrations')->as('registrations.')->group(function () {
@@ -50,6 +60,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/{ContractorRegistration}', [ContractorRegistrationController::class, 'show'])->name('show');
             Route::get('/get/{ContractorRegistration}', [ContractorRegistrationController::class, 'showDetail'])->name('showDetail');
             Route::get('/card/{ContractorRegistration}', [ContractorRegistrationController::class, 'showCard'])->name('showCard');
+            Route::patch('/renew/{ContractorRegistration}', [ContractorRegistrationController::class, 'renew'])->name('renew');
             Route::patch('/update-field', [ContractorRegistrationController::class, 'updateField'])->name('updateField');
             Route::patch('/upload-file', [ContractorRegistrationController::class, 'uploadFile'])->name('uploadFile');
         });
@@ -61,6 +72,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/{EStandardization}', [EStandardizationController::class, 'show'])->name('show');
             Route::get('/get/{EStandardization}', [EStandardizationController::class, 'showDetail'])->name('detail');
             Route::get('/card/{EStandardization}', [EStandardizationController::class, 'showCard'])->name('card');
+            Route::patch('/renew/{EStandardization}', [EStandardizationController::class, 'renew'])->name('renew');
             Route::patch('/update/field', [EStandardizationController::class, 'updateField'])->name('updateField');
             Route::patch('/upload/file', [EStandardizationController::class, 'uploadFile'])->name('uploadFile');
         });

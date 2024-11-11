@@ -1,5 +1,5 @@
 <?php
-namespace App\Mail;
+namespace App\Mail\Query;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -8,35 +8,32 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class QueryDroppedMail extends Mailable implements ShouldQueue
+class SubmittedMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     public $public_contact;
-    public $remarks;
 
-    public function __construct($public_contact, $remarks)
+    public function __construct($public_contact)
     {
         $this->public_contact = $public_contact;
-        $this->remarks = $remarks;
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your Complaint / Message is Dropped',
+            subject: 'Your message is submitted',
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'emails.public_contact.dropped',
+            view: 'emails.public_contact.submitted',
             with: [
                 'name' => $this->public_contact->name,
                 'submission_date' => now()->format('Y-m-d'),
                 'cnic' => $this->public_contact->cnic,
-                'remarks' => $this->remarks,
             ],
         );
     }

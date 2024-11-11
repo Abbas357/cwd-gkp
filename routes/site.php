@@ -26,14 +26,14 @@ Route::prefix('partials')->as('partials.')->group(function () {
 });
 
 Route::prefix('registrations')->as('registrations.')->group(function () {
-    Route::get('/create', [ContractorRegistrationController::class, 'create'])->name('create');
+    Route::get('/apply', [ContractorRegistrationController::class, 'create'])->name('create');
     Route::post('/', [ContractorRegistrationController::class, 'store'])->name('store');
     Route::post('/check-pec', [ContractorRegistrationController::class, 'checkPEC'])->name('checkPEC');
     Route::get('/approved/{id}', [ContractorRegistrationController::class, 'approvedContractors'])->name('approved');
 });
 
 Route::prefix('standardizations')->as('standardizations.')->group(function () {
-    Route::get('/create', [EStandardizationController::class, 'create'])->name('create');
+    Route::get('/apply', [EStandardizationController::class, 'create'])->name('create');
     Route::post('/', [EStandardizationController::class, 'store'])->name('store');
     Route::get('/approved/{id}', [EStandardizationController::class, 'approvedProducts'])->name('approved');
 });
@@ -63,6 +63,12 @@ Route::prefix('positions')->as('positions.')->group(function () {
 
 Route::prefix('contacts')->as('contacts.')->group(function () {
     Route::get('/', [UserController::class, 'contacts'])->name('index');
+});
+
+Route::prefix('card')->as('card.')->group(function () {
+    Route::get('/apply', [UserController::class, 'createCard'])->name('createCard');
+    Route::post('/', [UserController::class, 'storeCard'])->name('storeCard');
+    Route::get('/verified/{id}', [UserController::class, 'verifiedUsers'])->name('verified');
 });
 
 Route::prefix('news')->as('news.')->group(function () {

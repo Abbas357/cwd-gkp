@@ -1,5 +1,5 @@
 <?php
-namespace App\Mail;
+namespace App\Mail\Standardization;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class StandardizationAppliedMail extends Mailable implements ShouldQueue
+class RenewedMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -22,20 +22,18 @@ class StandardizationAppliedMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Contractor standardization Submitted',
+            subject: 'Your Product card is renewed',
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'emails.standardization.applied',
+            view: 'emails.standardization.approved',
             with: [
                 'product_name' => $this->standardization->product_name,
                 'firm_name' => $this->standardization->firm_name,
                 'specification_details' => $this->standardization->specification_details,
-                'applied_date' => now()->format('Y-m-d'),
-                'email' => $this->standardization->email,
             ],
         );
     }
