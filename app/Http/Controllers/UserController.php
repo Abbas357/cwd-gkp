@@ -126,6 +126,18 @@ class UserController extends Controller
         ]);
     }
 
+    // public function create()
+    // {
+    //     $cat = [
+    //         'designations' => Category::where('type', 'designation')->get(),
+    //         'offices' => Category::where('type', 'office')->get(),
+    //         'bps' => Category::where('type', 'bps')->get(),
+    //         'roles' => Role::all(),
+    //         'permissions' => Permission::all()
+    //     ];
+    //     return view('admin.users.create', compact('cat'));
+    // }
+
     public function create()
     {
         $cat = [
@@ -134,7 +146,7 @@ class UserController extends Controller
             'bps' => Category::where('type', 'bps')->get(),
         ];
 
-        $html = view('admin.users.create', compact('cat'))->render();
+        $html = view('admin.users.partials.create', compact('cat'))->render();
 
         return response()->json([
             'success' => true,
@@ -143,7 +155,6 @@ class UserController extends Controller
             ],
         ]);
     }
-
 
     public function store(StoreUserRequest $request)
     {
@@ -203,7 +214,7 @@ class UserController extends Controller
     {
         $user = User::withoutGlobalScope('active')->findOrFail($userId);
         if ($user->is_active ===  0) {
-            $user->is_active = 1;
+            $user->is_active = 1;    
             $message = 'User has been Activated successfully.';
         } else {
             $user->is_active = 0;
@@ -335,7 +346,7 @@ class UserController extends Controller
             $user->card_status = 'verified';
             $user->card_issue_date = Carbon::now();
             $user->card_expiry_date = Carbon::now()->addYears(3);
-            if ($user->save()) {
+            if($user->save()) {
                 Mail::to($user->email)->queue(new VerifiedMail($user));
                 return response()->json(['success' => 'User has been verified successfully.']);
             }
@@ -348,7 +359,7 @@ class UserController extends Controller
         $user = User::withoutGlobalScope('active')->findOrFail($userId);
         if ($user->card_status === 'rejected') {
             $user->card_status = 'new';
-            if ($user->save()) {
+            if($user->save()) {
                 return response()->json(['success' => 'User has been restored successfully.']);
             }
         }
@@ -362,7 +373,7 @@ class UserController extends Controller
             $user->card_status = 'rejected';
             $user->rejection_reason = $request->reason;
 
-            if ($user->save()) {
+            if($user->save()) {
                 Mail::to($user->email)->queue(new RejectedMail($user, $request->reason));
                 return response()->json(['success' => 'User has been rejected.']);
             }
@@ -410,15 +421,7 @@ class UserController extends Controller
             'designations' => Category::where('type', 'designation')->get(),
             'offices' => Category::where('type', 'office')->get(),
             'bps' => Category::where('type', 'bps')->get(),
-            'blood_groups' => [
-                "A+",
-                "A-",
-                "B+",
-                "B-",
-                "AB+",
-                "AB-",
-                "O+",
-                "O-"
+            'blood_groups' => ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"
             ]
         ];
 
@@ -490,13 +493,13 @@ class UserController extends Controller
     {
         $request->validate([
             'id'   => 'required|integer|exists:users,id',
-            'image' => 'required|image|mimes:jpeg,jpg,png,gif|max:5000',
+            'image' => 'required|image|mimes:jpeg,jpg,png,gif|max:5000', 
         ]);
 
         $user = User::withoutGlobalScope('active')->findOrFail($request->id);
 
         if (in_array($user->cart_status, ['verified', 'rejected'])) {
-            return response()->json(['error' => 'Verified or Rejected user cannot be updated'], 403);
+            return response()->json(['error' => 'Verified or Rejected user cannot be updated'], 403); 
         }
 
         try {
