@@ -41,7 +41,18 @@
         <tbody>
         </tbody>
     </table>
-    <form action=""></form>
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="Add User" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="customModalLabel">Add User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                </div>
+            </div>
+        </div>
+    </div>
     <!--end row-->
     @push('script')
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
@@ -101,7 +112,30 @@
                     targets: [7, 8, 9]
                     , visible: false
                 }]
-            });
+                , customButton: {
+                    text: `<span class="symbol-container"><i class="bi-plus-circle"></i>&nbsp; Add User</span>`
+                    , action: function(e, dt, node, config) {
+                        fetch("{{ route('admin.users.create') }}")
+                            .then(response => {
+                                if (!response.ok) throw new Error("Network response was not ok");
+                                return response.json();
+                            })
+                            .then(data => {
+                                if (data.success) {
+                                    const modalBody = document.querySelector("#addUserModal .modal-body");
+                                    modalBody.innerHTML = data.data.result;
+                                    $("#addUserModal").modal("show"); // Show the modal
+                                } else {
+                                    console.error("Error: Failed to load content");
+                                }
+                            })
+                            .catch(error => {
+                                console.error("Error fetching modal content:", error);
+                            });
+                    },
+
+                }
+            , });
 
             hashTabsNavigator({
                 table: table

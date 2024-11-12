@@ -267,6 +267,7 @@ function initDataTable(selector, options = {}) {
                             });
                         },
                     },
+                    ...(options.customButton ? [options.customButton] : []),
                 ],
             },
             top1Start: {

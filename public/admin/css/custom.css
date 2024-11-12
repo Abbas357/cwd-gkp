@@ -331,7 +331,7 @@ div.dt-container {
 
   @media only screen and (min-width: 1200px) {
     .dt-search input {
-      width: 30rem !important;
+      width: 25rem !important;
     }
   }
 
