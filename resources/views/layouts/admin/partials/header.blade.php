@@ -1,10 +1,16 @@
 <header class="top-header">
-    <nav class="navbar navbar-expand align-items-center gap-2">
+    <nav class="navbar navbar-expand align-items-center gap-2" style="{{ !$showAside ? 'left: 0;' : '' }}">
         <div class="d-flex flex-grow-1 justify-content-between align-items-center">
             <div class="d-flex flex-start align-items-center gap-3">
+                @if($showAside)
                 <div class="btn-toggle user-select-none cursor-pointer">
                     <i class="bi-three-dots-vertical"></i>
                 </div>
+                @else
+                <a href="{{ route('admin.dashboard') }}" class="logo-icon">
+                    <img src="{{ asset('admin/images/logo.png') }}" style="width:190px; border-radius:5px" alt="Logo Desktop">
+                </a>
+                @endif
                 @if (isset($header))
                 <div class="page-breadcrumb d-none d-sm-flex align-items-center bg-light px-2 shadow-sm">
                     <div class="breadcrumb-title pe-2"><a href="{{ route('admin.dashboard') }}">Home</a></div> <span class="fs-5">/</span>

@@ -75,9 +75,11 @@
     <div class="page-loader"></div>
     
     @include("layouts.admin.partials.header")
-    @include("layouts.admin.partials.aside")
+    @if ($showAside)
+        @include("layouts.admin.partials.aside")
+    @endif
 
-    <main class="main-wrapper">
+    <main class="main-wrapper" style="{{ !$showAside ? 'margin-left: 0;' : '' }}">
         <div class="main-content">
             @if (session('success'))
                 <script>
