@@ -68,6 +68,12 @@
                     targets: [0]
                     , visible: false
                 }]
+                , customButton: {
+                    text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Project</span>`
+                    , action: function(e, dt, node, config) {
+                        window.location.href = "{{ route('admin.projects.create') }}";
+                    },
+                }
             });
 
             $("#projects-datatable").on('click', '.delete-btn', async function() {

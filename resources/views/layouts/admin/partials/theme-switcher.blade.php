@@ -1,4 +1,4 @@
-<button class="btn btn-primary rounded-10 position-fixed bottom-0 end-0 m-3 d-flex align-items-center gap-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop">
+<button class="btn btn-primary rounded-10 position-fixed bottom-0 end-0 m-3 d-flex align-items-center gap-2" style="z-index:9999" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop">
     <i class="bi-gear-fill"></i>
 </button>
 

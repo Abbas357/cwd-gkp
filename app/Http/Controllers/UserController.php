@@ -126,34 +126,16 @@ class UserController extends Controller
         ]);
     }
 
-    // public function create()
-    // {
-    //     $cat = [
-    //         'designations' => Category::where('type', 'designation')->get(),
-    //         'offices' => Category::where('type', 'office')->get(),
-    //         'bps' => Category::where('type', 'bps')->get(),
-    //         'roles' => Role::all(),
-    //         'permissions' => Permission::all()
-    //     ];
-    //     return view('admin.users.create', compact('cat'));
-    // }
-
     public function create()
     {
         $cat = [
             'designations' => Category::where('type', 'designation')->get(),
             'offices' => Category::where('type', 'office')->get(),
             'bps' => Category::where('type', 'bps')->get(),
+            'roles' => Role::all(),
+            'permissions' => Permission::all()
         ];
-
-        $html = view('admin.users.partials.create', compact('cat'))->render();
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'result' => $html,
-            ],
-        ]);
+        return view('admin.users.create', compact('cat'));
     }
 
     public function store(StoreUserRequest $request)

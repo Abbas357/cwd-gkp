@@ -92,6 +92,12 @@
                     targets: [0]
                     , visible: false
                 }]
+                , customButton: {
+                    text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Sliders</span>`
+                    , action: function(e, dt, node, config) {
+                        window.location.href = "{{ route('admin.sliders.create') }}";
+                    },
+                }
             });
 
             $("#sliders-datatable").on('click', '.publish-btn', async function() {

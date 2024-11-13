@@ -16,7 +16,10 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-8">
-                            <h3 class="card-title pb-4">Fill all the fields</h3>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h3 class="card-title pb-4">Add User</h3>
+                                <a class="btn btn-success shadow-sm" href="{{ route('admin.users.index') }}">All Users</a>
+                            </div>
                             <div class="row">
                                 <div class="col-md-4 d-flex justify-content-center align-items-center">
                                     <label class="label" data-toggle="tooltip" title="Change Profile Picture">

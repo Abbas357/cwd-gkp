@@ -17,9 +17,10 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-8">
-                            <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="text-secondary">Fill all the fields</span>
-                            </h4>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h3 class="card-title pb-4">Add Home Slider</h3>
+                                <a class="btn btn-success shadow-sm" href="{{ route('admin.sliders.index') }}">All Sliders</a>
+                            </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="title">Title</label>

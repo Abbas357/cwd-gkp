@@ -16,7 +16,7 @@
             border-radius: 50px;
             font-size: 1em;
             position: relative;
-            z-index: 9999;
+            z-index: 999;
         }
 
         .app-grid {
@@ -30,12 +30,14 @@
             background-color: #f1f1f1;
             padding: .7rem 0;
             border-radius: 8px;
-            box-shadow: 1px 3px 5px inset rgba(0, 0, 0, 0.1), 1px 3px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 5px 5px 2px inset rgba(0, 0, 0, 0.1);
             text-align: center;
             transition: transform 0.1s;
             cursor: pointer;
             position: relative;
-            z-index: 9999;
+            z-index: 999;
+            transtion: all 0.5s ease-in-out;
+            border: 1px solid #ddd;
         }
 
         [data-bs-theme=dark] .app-tile {
@@ -43,8 +45,8 @@
         }
 
         .app-tile:hover {
-            transform: translateY(-5px);
-            animation: shadow-drop-2-center 0.4s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+            /* transform: rotate(360deg); */
+            box-shadow: 5px 5px 2px rgba(0, 0, 0, 0.1);;
         }
 
         .app-tile p {

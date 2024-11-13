@@ -1,12 +1,15 @@
 <aside class="sidebar-wrapper">
-    <div class="sidebar-header">
-        <a href="{{ route('admin.dashboard') }}" class="logo-icon">
-            <img src="{{ asset('admin/images/logo.png') }}" style="width:190px; border-radius:5px" class="mt-2" alt="Logo Desktop">
-        </a>
+    <a href="{{ route('admin.dashboard') }}" class="sidebar-header d-flex align-items-center">
+        <div class="logo-icon">
+            <img src="{{ asset('admin/images/logo-square.png') }}" style="width:40px; border-radius:5px" class="mt-2" alt="Logo Desktop">
+        </div>
+        <div class="logo-name flex-grow-1 mt-2">
+            <h5 class="mb-0 fs-6 fw-bold">C&W Department</h5>
+        </div>
         <div class="sidebar-close">
             <span class="bi-layout-sidebar"></span>
         </div>
-    </div>
+    </a>
     <div class="sidebar-nav" data-simplebar="true">
 
         <!--navigation-->

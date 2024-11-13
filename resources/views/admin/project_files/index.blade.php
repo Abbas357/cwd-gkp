@@ -97,6 +97,12 @@
                     targets: [0]
                     , visible: false
                 }]
+                , customButton: {
+                    text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Project Files</span>`
+                    , action: function(e, dt, node, config) {
+                        window.location.href = "{{ route('admin.project_files.create') }}";
+                    },
+                }
             });
 
             $("#downloads-datatable").on('click', '.publish-btn', async function() {
