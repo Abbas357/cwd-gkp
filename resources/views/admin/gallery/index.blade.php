@@ -27,7 +27,7 @@
                 <th scope="col" class="p-3">Title</th>
                 <th scope="col" class="p-3">Type</th>
                 <th scope="col" class="p-3">Description</th>
-                <th scope="col" class="p-3">Image</th>
+                <th scope="col" class="p-3">Items</th>
                 <th scope="col" class="p-3">Uploaded By</th>
                 <th scope="col" class="p-3">Status</th>
                 <th scope="col" class="p-3">Created At</th>
@@ -65,7 +65,7 @@
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "image"
+                        data: "items"
                         , searchBuilderType: "string"
                     }
                     , {

@@ -101,8 +101,6 @@ class HomeController extends Controller
     public function galleryPartial()
     {
         $latestTypeSubquery = Gallery::select('type', 'published_at')
-            ->where('status', 'published')
-            ->whereNotNull('published_at')
             ->orderBy('published_at', 'desc')
             ->limit(100)
             ->get()
@@ -113,8 +111,6 @@ class HomeController extends Controller
         $galleriesByType = $latestTypeSubquery->mapWithKeys(function ($type) {
             $galleries = Gallery::with('media')
                 ->where('type', $type)
-                ->where('status', 'published')
-                ->whereNotNull('published_at')
                 ->orderBy('published_at', 'desc')
                 ->limit(5)
                 ->get();

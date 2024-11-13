@@ -31,9 +31,6 @@ class GalleryController extends Controller
                 ->editColumn('status', function ($row) {
                     return view('admin.gallery.partials.status', compact('row'))->render();
                 })
-                ->addColumn('image', function ($row) {
-                    return '<a target="_blank" href="' . $row->getFirstMediaUrl('gallery') . '" class="btn btn-light bi bi-image fs-4"></span>';
-                })
                 ->addColumn('uploaded_by', function ($row) {
                     return $row->user ? $row->user->name . ' (' . $row->user->designation . ' - ' . $row->user->office  . ')' : 'N/A';
                 })
@@ -43,7 +40,7 @@ class GalleryController extends Controller
                 ->editColumn('updated_at', function ($row) {
                     return $row->updated_at->diffForHumans();
                 })
-                ->rawColumns(['action', 'status', 'image']);
+                ->rawColumns(['action', 'status']);
 
             // if (!$request->input('search.value') && $request->has('searchBuilder')) {
             //     $dataTable->filter(function ($query) use ($request) {
@@ -78,20 +75,31 @@ class GalleryController extends Controller
         $gallery->title = $request->title;
         $gallery->type = $request->type;
         $gallery->description = $request->description;
-        $gallery->slug = Str::slug($request->title) . '-' . substr(uniqid(), -6). '-' . date('d-m-Y');
-        
+        $gallery->slug = Str::slug($request->title) . '-' . substr(uniqid(), -6) . '-' . date('d-m-Y');
         $gallery->status = 'draft';
-        
-        if ($request->hasFile('file')) {
-            $gallery->addMedia($request->file('file'))
-                ->toMediaCollection('gallery');
+
+        $images = $request->file('images');
+
+        if ($request->hasFile('cover_photo')) {
+            $gallery->addMedia($request->file('cover_photo'))->toMediaCollection('gallery_covers');
+        } else {
+            $gallery->addMedia($images[0])->toMediaCollection('gallery_covers');
         }
 
-        if ($request->user()->gallery()->save($gallery)) {
-            return redirect()->route('admin.gallery.create')->with('success', 'Gallery Added successfully');
+        if ($images) {
+            $gallery->items = count($images);
+            foreach ($images as $image) {
+                $gallery->addMedia($image)->toMediaCollection('gallery');
+            }
         }
-        return redirect()->route('admin.gallery.create')->with('danger', 'There is an error adding your Gallery');
+        
+        if ($request->user()->gallery()->save($gallery)) {
+            return redirect()->route('admin.gallery.create')->with('success', 'Gallery added successfully');
+        }
+
+        return redirect()->route('admin.gallery.create')->with('error', 'There was an error adding your Gallery');
     }
+
 
     public function show(Gallery $Gallery)
     {
@@ -176,13 +184,13 @@ class GalleryController extends Controller
     public function uploadFile(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|mimes:jpg,png,jpeg,gif|max:10240', 
+            'file' => 'required|file|mimes:jpg,png,jpeg,gif|max:10240',
         ]);
 
         $gallery = Gallery::withoutGlobalScope('published')->findOrFail($request->id);
 
         if (in_array($gallery->status, ['published', 'archived'])) {
-            return response()->json(['error' => 'Published or Archived gallery cannot be updated'], 403); 
+            return response()->json(['error' => 'Published or Archived gallery cannot be updated'], 403);
         }
 
         try {

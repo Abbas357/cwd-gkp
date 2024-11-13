@@ -14,7 +14,6 @@ class GalleryController extends Controller
 
         $galleriesByType = $galleryTypes->mapWithKeys(function ($type) {
             $galleries = Gallery::where('type', $type)
-                ->where('status', 'published')
                 ->orderBy('published_at', 'desc')
                 ->with('media')
                 ->limit(5)

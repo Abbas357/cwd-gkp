@@ -82,9 +82,8 @@
                         <div class="col-md-4 d-none d-sm-block">
                             <div class="row g-5">
                                 <div class="col-md-12 col-lg-12 order-md-last">
-                                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                    <h4 class="mb-3">
                                         <span class="text-secondary">Statistics</span>
-                                        <a class="btn btn-light" href="{{ route('admin.news.index') }}">All News</a>
                                     </h4>
                                     <ul class="list-group mb-3">
                                         <li class="list-group-item d-flex justify-content-between lh-lg">

@@ -1,6 +1,7 @@
 <x-app-layout title="Add Gallery">
     @push('style')
     <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
     @endpush
 
     <x-slot name="header">
@@ -19,15 +20,6 @@
                                 <a class="btn btn-success shadow-sm" href="{{ route('admin.gallery.index') }}">All galleries</a>
                             </div>
                             <div class="row">
-                                <div class="col-md-12 mb-4">
-                                    <label for="title">Title</label>
-                                    <input type="text" class="form-control" id="title" value="{{ old('title') }}" placeholder="File Name" name="title" required>
-                                    @error('title')
-                                    <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <label for="type">Gallery Type</label>
                                     <select class="form-select form-select-md" id="type" name="type" required>
@@ -41,12 +33,28 @@
                                     @enderror
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <label for="file">File</label>
-                                    <input type="file" class="form-control" id="file" name="file" required>
-                                    @error('file')
+                                    <label for="title">Title</label>
+                                    <input type="text" class="form-control" id="title" value="{{ old('title') }}" placeholder="File Name" name="title" required>
+                                    @error('title')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
-                                    <img src="#" style="width:140px; border-radius:5px" class="mt-2" id="previewGallery" alt="Gallery">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label for="cover_photo">Cover Photo</label>
+                                    <input type="file" class="form-control" id="cover_photo" name="cover_photo">
+                                    @error('cover_photo')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                    <img id="previewCover" src="#" alt="Preview Cover" style="display:none; margin-top: 10px; max-height: 100px;">
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <label for="file">Images</label>
+                                    <input type="file" class="form-control" id="images" name="images[]" multiple required>
+                                    @error('images')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="row">
@@ -64,9 +72,8 @@
                         <div class="col-md-4 d-none d-sm-block">
                             <div class="row g-5">
                                 <div class="col-md-12 col-lg-12 order-md-last">
-                                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                    <h4 class="mb-3">
                                         <span class="text-secondary">Statistics</span>
-                                        <a class="btn btn-light" href="{{ route('admin.gallery.index') }}">All Galleries</a>
                                     </h4>
                                     <ul class="list-group mb-3">
                                         <li class="list-group-item d-flex justify-content-between lh-lg">
@@ -105,13 +112,20 @@
     </div>
     @push('script')
     <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
+    <script src="{{ asset('admin/plugins/summernote/summernote-bs5.min.js') }}"></script>
     <script>
         $(document).ready(function() {
+            $('#description').summernote({
+                height: 300,
+            });
 
             imageCropper({
-                fileInput: "#file"
-                , inputLabelPreview: "#previewGallery"
-                , aspectRatio: 4 / 3
+                fileInput: "#cover_photo"
+                , inputLabelPreview: "#previewCover"
+                , aspectRatio: 1 / 1
+                , onComplete() {
+                    $("#previewCover").show();
+                }
             });
 
             var forms = document.querySelectorAll('.needs-validation')

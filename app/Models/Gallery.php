@@ -40,14 +40,13 @@ class Gallery extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('gallery')
-            ->singleFile()
             ->acceptsMimeTypes([
                 'image/jpeg',
                 'image/png',
                 'image/gif'
             ]);
 
-        $this->addMediaCollection('cover_images')
+        $this->addMediaCollection('gallery_covers')
             ->singleFile()
             ->acceptsMimeTypes([
                 'image/jpeg',

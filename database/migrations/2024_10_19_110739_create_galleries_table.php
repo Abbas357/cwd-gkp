@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->mediumText('description')->nullable();
             $table->string('slug', 191)->unique()->nullable();
+            $table->integer('items')->nullable();
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamp('published_at')->nullable()->default(null);
