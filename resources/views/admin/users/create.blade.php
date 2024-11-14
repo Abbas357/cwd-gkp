@@ -117,7 +117,7 @@
                                     <select class="form-select" id="bps" name="bps" required>
                                         <option value="">Choose...</option>
                                         @foreach ($cat['bps'] as $bps)
-                                        <option value="{{ $bps->name }}">{{ $bps->name }}</option>
+                                        <option value="{{ $bps }}">{{ $bps}}</option>
                                         @endforeach
                                     </select>
                                     @error('bps')

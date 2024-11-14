@@ -30,12 +30,12 @@
             background-color: #f1f1f1;
             padding: .7rem 0;
             border-radius: 8px;
-            box-shadow:  5px 5px 5px rgba(0, 0, 0, 0.1);
+            box-shadow:  5px 5px 1px rgba(0, 0, 0, 0.3);
             text-align: center;
             cursor: pointer;
             position: relative;
             z-index: 999;
-            transition: all .5s ease-in-out;
+            transition: all .1s ease-in-out;
             border: 1px solid #ccc;
         }
 
@@ -46,7 +46,7 @@
         }
 
         .app-tile:hover {
-            box-shadow: 5px 5px 15px inset rgba(0, 0, 0, 0.1);
+            box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3), 5px 5px 10px inset rgba(0, 0, 0, 0.1);
         }
 
         [data-bs-theme=dark] .app-tile:hover {
@@ -152,6 +152,10 @@
                 <i class="bi bi-activity" style="color: #ce1126"></i>
                 <p>Activity Log</p>
             </a>
+            <a href="{{ route('admin.seniority.index') }}" class="app-tile">
+                <i class="bi bi-graph-up-arrow" style="color: #790bdf"></i>
+                <p>Seniority List</p>
+            </a>
         </div>
     </div>
 
@@ -160,6 +164,10 @@
     <script src="{{ asset('admin/plugins/particles.js/particles.min.js') }}"></script>
 
     <script>
+        $('a.app-tile').on('click', () => {
+            document.querySelector('.page-loader').classList.remove('hidden');
+        });
+        
         particlesJS("particles-js", {
             "particles": {
                 "number": {

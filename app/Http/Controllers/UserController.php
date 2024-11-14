@@ -128,12 +128,15 @@ class UserController extends Controller
 
     public function create()
     {
+        $bps = [];
+        for ($i = 1; $i <= 22; $i++) {
+            $bps[] = sprintf("BPS-%02d", $i);
+        }
+
         $cat = [
             'designations' => Category::where('type', 'designation')->get(),
             'offices' => Category::where('type', 'office')->get(),
-            'bps' => Category::where('type', 'bps')->get(),
-            'roles' => Role::all(),
-            'permissions' => Permission::all()
+            'bps' => $bps,
         ];
         return view('admin.users.create', compact('cat'));
     }

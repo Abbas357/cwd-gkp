@@ -29,6 +29,7 @@
                     <li><a href="{{ route('admin.news.index') }}"><i class="bi-newspaper fs-6"></i>&nbsp; News</a></li>
                     <li><a href="{{ route('admin.projects.index') }}"><i class="bi-kanban fs-6"></i>&nbsp; Projects</a></li>
                     <li><a href="{{ route('admin.project_files.index') }}"><i class="bi-folder fs-6"></i>&nbsp; Project Files</a></li>
+                    <li><a href="{{ route('admin.seniority.index') }}"><i class="bi-graph-up-arrow fs-6"></i>&nbsp; Seniority</a></li>
                 </ul>
             </li>
             <li>
@@ -43,7 +44,7 @@
                 </ul>
             </li>
             <li class="menu-label">Others</li>
-            <li class="px-2">
+            <li>
                 <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="bi-collection"></i></div>
                     <div class="menu-title">Collections</div>

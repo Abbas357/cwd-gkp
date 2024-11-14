@@ -78,7 +78,6 @@ class NewsController extends Controller
         $news->category = $request->news_category;
         $news->summary = $request->summary;
         $news->content = $request->content;
-        $news->user_id = $request->user;
         $news->slug = Str::slug($request->title) . '-' . substr(uniqid(), -6). '-' . date('d-m-Y');
         $news->status = 'draft';
 

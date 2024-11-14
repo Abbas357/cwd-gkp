@@ -14,12 +14,14 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DownloadController;
+use App\Http\Controllers\SeniorityController;
 use App\Http\Controllers\NewsLetterController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\ProjectFileController;
 use App\Http\Controllers\PublicContactController;
 use App\Http\Controllers\EStandardizationController;
+use App\Http\Controllers\DevelopmentProjectController;
 use App\Http\Controllers\ContractorRegistrationController;
 
 Route::middleware('auth')->group(function () { 
@@ -127,6 +129,30 @@ Route::middleware('auth')->group(function () {
             Route::patch('/update/field', [NewsController::class, 'updateField'])->name('updateField');
             Route::patch('/upload/file', [NewsController::class, 'uploadFile'])->name('uploadFile');
             Route::delete('/{news}', [NewsController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('seniority')->as('seniority.')->group(function () {
+            Route::get('/', [SeniorityController::class, 'index'])->name('index');
+            Route::get('/create', [SeniorityController::class, 'create'])->name('create');
+            Route::post('/', [SeniorityController::class, 'store'])->name('store');
+            Route::get('/{seniority}', [SeniorityController::class, 'show'])->name('show');
+            Route::get('/get/{seniority}', [SeniorityController::class, 'showDetail'])->name('detail');
+            Route::patch('/publish/{seniority}', [SeniorityController::class, 'publishSeniority'])->name('publish');
+            Route::patch('/archive/{seniority}', [SeniorityController::class, 'archiveSeniority'])->name('archive');
+            Route::patch('/update/field', [SeniorityController::class, 'updateField'])->name('updateField');
+            Route::patch('/upload/file', [SeniorityController::class, 'uploadFile'])->name('uploadFile');
+            Route::delete('/{seniority}', [SeniorityController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('development_projects')->as('development_projects.')->group(function () {
+            Route::get('/', [DevelopmentProjectController::class, 'index'])->name('index');
+            Route::get('/create', [DevelopmentProjectController::class, 'create'])->name('create');
+            Route::post('/', [DevelopmentProjectController::class, 'store'])->name('store');
+            Route::get('/{DevelopmentProject}', [DevelopmentProjectController::class, 'show'])->name('show');
+            Route::get('/get/{DevelopmentProject}', [DevelopmentProjectController::class, 'showDetail'])->name('detail');
+            Route::patch('/update/field', [DevelopmentProjectController::class, 'updateField'])->name('updateField');
+            Route::patch('/upload/file', [DevelopmentProjectController::class, 'uploadFile'])->name('uploadFile');
+            Route::delete('/{DevelopmentProject}', [DevelopmentProjectController::class, 'destroy'])->name('destroy');
         });
 
         Route::prefix('projects')->as('projects.')->group(function () {
