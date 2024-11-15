@@ -77,7 +77,7 @@
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
                         <label for="designation">Designation</label>
                         <select class="form-select" id="designation" name="designation">
                             <option value="">Choose Designation</option>
@@ -86,7 +86,16 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
+                        <label for="position">Position</label>
+                        <select class="form-select" id="position" name="position">
+                            <option value="">Choose Position</option>
+                            @foreach($data['allPositions'] as $position)
+                            <option value="{{ $position->name }}" {{ $position->name === $data['user']->position ? 'selected' : '' }}> {{ $position->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-lg-4">
                         <label for="office">Office</label>
                         <select class="form-select" id="office" name="office">
                             <option value="">Choose Office</option>
@@ -242,6 +251,11 @@
     $('#designation').select2({
         theme: "bootstrap-5"
         , dropdownParent: $('#designation').parent()
+    , });
+
+    $('#position').select2({
+        theme: "bootstrap-5"
+        , dropdownParent: $('#position').parent()
     , });
     $('#office').select2({
         theme: "bootstrap-5"

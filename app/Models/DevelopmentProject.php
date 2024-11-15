@@ -52,7 +52,7 @@ class DevelopmentProject extends Model implements HasMedia
     }
 
     public function chiefEngineer() {
-        return $this->belongsTo(User::class, 'ce_id');
+        return $this->belongsTo(User::class, 'ce_id', 'id');
     }
 
     public function superintendentEngineer() {

@@ -36,9 +36,9 @@
                     <div class="team-title text-center rounded-bottom p-4 d-flex flex-column" style="height:220px; overflow: hidden;">
                         <div class="team-title-inner mb-auto" style="overflow-y: auto;">
                             <h5 class="fs-6 mt-3">{{ $user['name'] }}</h5>
-                            <p class="mb-3">{{ $user['designation'] }}</p>
+                            <p class="mb-3">{{ $user['position'] }}</p>
                         </div>
-                        <a href="{{ route('positions.show', ['designation' => $user['designation']]) }}" class="btn-animate mt-3">View Previous</a>
+                        <a href="{{ route('positions.show', ['position' => $user['position']]) }}" class="btn-animate mt-3">View Previous</a>
                     </div>
                 </div>
             </div>

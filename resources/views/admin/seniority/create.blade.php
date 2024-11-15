@@ -1,5 +1,7 @@
 <x-app-layout title="Add Seniority">
-
+    @push('style')
+    <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
+    @endpush
     <x-slot name="header">
         <li class="breadcrumb-item active" aria-current="page"> Add Seniority</li>
     </x-slot>
@@ -64,6 +66,7 @@
                                     @error('attachment')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
+                                    <img id="previewImage" src="#" alt="Preview Image" style="display:none; margin-top: 10px; max-height: 100px;">
                                 </div>
                             </div>
                             <div class="form-actions mb-4 mt-2">
@@ -110,4 +113,19 @@
                 </div>
         </form>
     </div>
+
+    @push('script')
+    <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
+    <script>
+        imageCropper({
+                fileInput: "#attachment"
+                , inputLabelPreview: "#previewImage"
+                , aspectRatio: 2 / 3
+                , onComplete() {
+                    $("#previewImage").show();
+                }
+            });
+    </script>
+    @endpush
+
 </x-app-layout>

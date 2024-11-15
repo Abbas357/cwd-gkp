@@ -2,6 +2,7 @@
     @push('style')
     <link href="{{ asset('site/lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
     <link href="{{ asset('site/lib/newsticker/news-ticker.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('site/css/dashboard.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header"></x-slot>
 
@@ -40,6 +41,15 @@
     <div id="gallery-section" style="min-height: 400px">
         <div class="d-flex justify-content-center">
             <div class="spinner-border text-primary" role="status" id="gallery-spinner">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Placeholder for Blogs Section -->
+    <div id="events-section" style="min-height: 400px">
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border text-primary" role="status" id="events-spinner">
                 <span class="visually-hidden">Loading...</span>
             </div>
         </div>
@@ -145,6 +155,16 @@
             element: document.getElementById('gallery-section'),
             handler: function(direction) {
                 loadPartial('{{ route('partials.gallery') }}', 'gallery-section', 'gallery-spinner');
+                this.destroy();
+            },
+            offset: '100%'
+        });
+
+        // Waypoint for Events Section
+        new Waypoint({
+            element: document.getElementById('events-section'),
+            handler: function(direction) {
+                loadPartial('{{ route('partials.events') }}', 'events-section', 'events-spinner');
                 this.destroy();
             },
             offset: '100%'

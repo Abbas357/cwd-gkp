@@ -135,6 +135,7 @@ class UserController extends Controller
 
         $cat = [
             'designations' => Category::where('type', 'designation')->get(),
+            'positions' => Category::where('type', 'position')->get(),
             'offices' => Category::where('type', 'office')->get(),
             'bps' => $bps,
         ];
@@ -150,6 +151,7 @@ class UserController extends Controller
         $user->password = bcrypt($request->password);
 
         $user->designation = $request->designation;
+        $user->position = $request->position;
         $user->office = $request->office;
         $user->title = $request->title ?? null;
         $user->bps = $request->bps ?? null;
@@ -230,6 +232,7 @@ class UserController extends Controller
             'allRoles' => Role::all(),
             'allPermissions' => Permission::all(),
             'allDesignations' => Category::where('type', 'designation')->get(),
+            'allPositions' => Category::where('type', 'position')->get(),
             'allOffices' => Category::where('type', 'office')->get(),
             'bps' => Category::where('type', 'bps')->get(),
         ];
@@ -403,10 +406,11 @@ class UserController extends Controller
         }
 
         $cat = [
-            'designations' => Category::where('type', 'designation')->get(),
-            'offices' => Category::where('type', 'office')->get(),
-            'bps' => Category::where('type', 'bps')->get(),
-            'blood_groups' => ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"
+                'designations' => Category::where('type', 'designation')->get(),
+                'positions' => Category::where('type', 'position')->get(),
+                'offices' => Category::where('type', 'office')->get(),
+                'bps' => Category::where('type', 'bps')->get(),
+                'blood_groups' => ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"
             ]
         ];
 

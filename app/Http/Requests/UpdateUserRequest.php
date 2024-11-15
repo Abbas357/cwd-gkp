@@ -35,6 +35,7 @@ class UpdateUserRequest extends FormRequest
             'landline_number'=> 'nullable|min:9',
             'cnic'=> 'nullable|min:13',
             'designation'=> 'nullable',
+            'position'=> 'nullable',
             'office'=> 'nullable',
             'posting_type'=> 'nullable',
             'posting_date'=> 'nullable',

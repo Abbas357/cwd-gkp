@@ -51,21 +51,33 @@
                     @endif
                 </td>
             </tr>
+            
+            <tr>
+                <th class="table-cell">Total Cost</th>
+                <td class="d-flex justify-content-between align-items-center gap-2">
+                    <span id="text-total_cost">{{ $DevelopmentProject->total_cost }}</span>
+                    @if ($DevelopmentProject->status !== ['Completed'])
+                    <input type="text" id="input-total_cost" value="{{ $DevelopmentProject->total_cost }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('total_cost', {{ $DevelopmentProject->id }})" />
+                    <button id="save-btn-total_cost" class="btn btn-sm btn-light d-none" onclick="updateField('total_cost', {{ $DevelopmentProject->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="edit-btn-total_cost" class="no-print btn btn-sm edit-button" onclick="enableEditing('total_cost')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
+                </td>
+            </tr>
 
             <tr>
                 <th class="table-cell">District</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-district">{{ $DevelopmentProject->district->name }}</span>
+                    <span id="text-district_id">{{ $DevelopmentProject->district->name }}</span>
                     @if ($DevelopmentProject->status !== ['Completed'])
-                    <select id="input-district" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('district', {{ $DevelopmentProject->id }})">
+                    <select id="input-district_id" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('district_id', {{ $DevelopmentProject->id }})">
                         @foreach ($cat['districts'] as $district)
                         <option value="{{ $district->id }}" {{ $DevelopmentProject->district_id == $district->id ? 'selected' : '' }}>
                             {{ $district->name }}
                         </option>
                         @endforeach
                     </select>
-                    <button id="save-btn-district" class="btn btn-sm btn-light d-none" onclick="updateField('district', {{ $DevelopmentProject->id }})"><i class="bi-send-fill"></i></button>
-                    <button id="edit-btn-district" class="no-print btn btn-sm edit-button" onclick="enableEditing('district')"><i class="bi-pencil fs-6"></i></button>
+                    <button id="save-btn-district_id" class="btn btn-sm btn-light d-none" onclick="updateField('district_id', {{ $DevelopmentProject->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="edit-btn-district_id" class="no-print btn btn-sm edit-button" onclick="enableEditing('district_id')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
             </tr>
@@ -73,12 +85,12 @@
             <tr>
                 <th class="table-cell">Chief Engineer</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-ce_id">{{ $DevelopmentProject->chiefEngineer?->position }}</span>
+                    <span id="text-ce_id">{{ $DevelopmentProject->chiefEngineer?->name }}</span>
                     @if ($DevelopmentProject->status !== ['Completed'])
                     <select id="input-ce_id" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('ce_id', {{ $DevelopmentProject->id }})">
                         @foreach ($cat['chiefEngineers'] as $chief)
                         <option value="{{ $chief->id }}" {{ $DevelopmentProject->ce_id == $chief->id ? 'selected' : '' }}>
-                            {{ $DevelopmentProject->chiefEngineer?->position }}
+                            {{ $chief->name }}
                         </option>
                         @endforeach
                     </select>
@@ -125,7 +137,7 @@
 
     async function updateField(field, id) {
         const newValue = (field === 'introduction') ? $('#input-' + field).summernote('code') : $('#input-' + field).val();
-        const url = "{{ route('admin.events.updateField') }}";
+        const url = "{{ route('admin.development_projects.updateField') }}";
         const data = {
             id: id
             , field: field

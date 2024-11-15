@@ -273,11 +273,6 @@
                             </a>
                         </li>
                         <li role="none" class="cw-top-menu" data-tier-id="4">
-                            <a href="{{ route('news.index') }}" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
-                                <span>NEWS</span>
-                            </a>
-                        </li>
-                        <li role="none" class="cw-top-menu" data-tier-id="4">
                             <a href="{{ route('team') }}" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>OUR TEAM</span>
                             </a>
@@ -286,6 +281,54 @@
                             <a href="{{ route('contacts.index') }}" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>CONTACTS</span>
                             </a>
+                        </li>
+
+                        <li role="none" class="cw-top-menu child-nav" data-tier-id="4">
+                            <button role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
+                                <span>UPDATES</span>
+                            </button>
+
+                            <ul class="sub-nav" aria-label="Support" role="menu" data-tier-id="4" aria-orientation="vertical">
+                                <li role="none" class="cw-back-list-item">
+                                    <button role="menuitem" class="cw-back-button" tabindex="0">
+                                        <span class="cw-menu-chevron left chevron-right"></span>
+                                        <span class="cw-back-button-label">Back </span>
+                                    </button>
+                                </li>
+                                <li role="menuitem" class="cw-hide-mob-links cw-plateTitle">
+                                    UPDATES
+                                </li>
+                                <li role="none" data-tier-id="4">
+                                    <a href="{{ route('news.index') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="4" tabindex="0">NEWS</a>
+                                </li>
+                                <li role="none" data-tier-id="4">
+                                    <a href="{{ route('events.index') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="4" tabindex="0">EVENTS</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li role="none" class="cw-top-menu child-nav" data-tier-id="4">
+                            <button role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
+                                <span>MORE</span>
+                            </button>
+
+                            <ul class="sub-nav" aria-label="Support" role="menu" data-tier-id="4" aria-orientation="vertical">
+                                <li role="none" class="cw-back-list-item">
+                                    <button role="menuitem" class="cw-back-button" tabindex="0">
+                                        <span class="cw-menu-chevron left chevron-right"></span>
+                                        <span class="cw-back-button-label">Back </span>
+                                    </button>
+                                </li>
+                                <li role="menuitem" class="cw-hide-mob-links cw-plateTitle">
+                                    MORE
+                                </li>
+                                <li role="none" data-tier-id="4">
+                                    <a href="{{ route('seniority.index') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="4" tabindex="0">SENIORITY</a>
+                                </li>
+                                <li role="none" data-tier-id="4">
+                                    <a href="{{ route('development_projects.index') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="4" tabindex="0">DEVELOPMENT PROJECTS</a>
+                                </li>
+                            </ul>
                         </li>
 
                         <li role="menuitem" aria-hidden="true" class="divider cw-onlyMobileTab"></li>

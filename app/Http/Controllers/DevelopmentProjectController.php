@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\District;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Models\DevelopmentProject;
@@ -72,12 +73,14 @@ class DevelopmentProjectController extends Controller
     {
         $dev_project = new DevelopmentProject();
         $dev_project->name = $request->name;
+        $dev_project->slug = Str::slug($request->name) . '-' . substr(uniqid(), -6). '-' . date('d-m-Y');
         $dev_project->introduction = $request->introduction;
+        $dev_project->total_cost = $request->total_cost;
         $dev_project->commencement_date = $request->commencement_date;
         $dev_project->district_id = $request->district_id;
         $dev_project->work_location = $request->work_location;
-        $dev_project->ce_id = $request->ce_id;
-        $dev_project->se_id = $request->se_id;
+        $dev_project->ce_id = $request->chiefEnginner;
+        $dev_project->se_id = $request->superintendentEngineer;
         $dev_project->progress_percentage = $request->progress_percentage;
         $dev_project->year_of_completion = $request->year_of_completion;
         $dev_project->status = 'In-Progress';

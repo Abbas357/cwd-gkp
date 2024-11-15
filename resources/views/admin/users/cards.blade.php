@@ -36,6 +36,7 @@
                 <th scope="col" class="p-3">Mobile Number</th>
                 <th scope="col" class="p-3">Landline Number</th>
                 <th scope="col" class="p-3">Designation</th>
+                <th scope="col" class="p-3">Position</th>
                 <th scope="col" class="p-3">BPS</th>
                 <th scope="col" class="p-3">Office</th>
                 <th scope="col" class="p-3">Mark Of Identification</th>
@@ -93,6 +94,9 @@
                     , searchBuilderType: "date"
                 }, {
                     data: "designation"
+                    , searchBuilderType: "string"
+                }, {
+                    data: "position"
                     , searchBuilderType: "string"
                 }, {
                     data: "bps"

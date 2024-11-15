@@ -1,6 +1,6 @@
 <x-main-layout title="{{ $galleryData['title'] }}">
     @push('style')
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" />
+        <link rel="stylesheet" href="{{ asset('admin/plugins/lightbox/lightbox.min.css') }}" />
     @endpush
     <x-slot name="breadcrumbTitle">
         {{ $galleryData['title'] }}
@@ -35,7 +35,7 @@
     </div>
 
     @push('script')
-        <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox.min.js"></script>
+        <script src="{{ asset('admin/plugins/lightbox/lightbox.min.js') }}"></script>
         <script>
             lightbox.option({
                 'resizeDuration': 200,

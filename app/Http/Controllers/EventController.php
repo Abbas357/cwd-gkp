@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use App\Models\Event;
+use App\Models\Category;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Requests\StoreEventRequest;
@@ -78,6 +79,7 @@ class EventController extends Controller
     {
         $event = new Event();
         $event->title = $request->title;
+        $event->slug = Str::slug($request->title) . '-' . substr(uniqid(), -6). '-' . date('d-m-Y');
         $event->description = $request->description;
         $event->start_datetime = $request->start_datetime;
         $event->end_datetime = $request->end_datetime;

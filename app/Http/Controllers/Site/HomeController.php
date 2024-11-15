@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Site;
 
-use App\Http\Controllers\Controller;
-
 use App\Models\News;
+
 use App\Models\Page;
 use App\Models\User;
+use App\Models\Event;
 use App\Models\Slider;
 use App\Models\Gallery;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
@@ -147,6 +148,36 @@ class HomeController extends Controller
             });
 
         return view('site.home.partials.blogs', compact('allNews'));
+    }
+
+    public function eventsPartial()
+    {
+        $events = Event::with(['media', 'user'])
+            ->latest('published_at')
+            ->limit(3)
+            ->get()
+            ->map(function ($event) {
+                $media = $event->getFirstMediaUrl('events_pictures');
+                return [
+                    'id' => $event->id,
+                    'title' => $event->title,
+                    'slug' => $event->slug,
+                    'start_datetime' => $event->start_datetime,
+                    'end_datetime' => $event->end_datetime,
+                    'location' => $event->location,
+                    'organizer' => $event->organizer,
+                    'chairperson' => $event->chairperson,
+                    'participants_type' => $event->participants_type,
+                    'no_of_participants' => $event->no_of_participants,
+                    'event_type' => $event->event_type,
+                    'user' => $event->user->designation,
+                    'created' => $event->created_at->diffForHumans(),
+                    'published_at' => $event->published_at->format('M d, Y'),
+                    'image' => $media,
+                ];
+            });
+
+        return view('site.home.partials.events', compact('events'));
     }
 
 
