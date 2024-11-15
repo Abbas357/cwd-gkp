@@ -26,7 +26,6 @@ return new class extends Migration
             $table->string('organizer')->nullable();
             $table->string('chairperson')->nullable();
             $table->string('participants_type')->nullable();
-            $table->enum('participants_type', ['review_meeting', 'conference', 'workshop', 'seminar', 'webinar', 'training'])->nullable();
             $table->integer('no_of_participants')->nullable();
             $table->enum('event_type', ['review_meeting', 'conference', 'workshop', 'seminar', 'webinar', 'training'])->nullable();
             $table->boolean('is_featured')->default(false);
