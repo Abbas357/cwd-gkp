@@ -26,8 +26,7 @@
                 <th scope="col" class="p-3">ID</th>
                 <th scope="col" class="p-3">Name</th>
                 <th scope="col" class="p-3">Email</th>
-                <th scope="col" class="p-3">Mobile Number</th>
-                <th scope="col" class="p-3">Landline Number</th>
+                <th scope="col" class="p-3">Designation</th>
                 <th scope="col" class="p-3">Position</th>
                 <th scope="col" class="p-3">Office</th>
                 <th scope="col" class="p-3">Password Updated</th>
@@ -61,10 +60,7 @@
                     data: "email"
                     , searchBuilderType: "string"
                 }, {
-                    data: "mobile_number"
-                    , searchBuilderType: "string"
-                }, {
-                    data: "landline_number"
+                    data: "designation"
                     , searchBuilderType: "string"
                 }, {
                     data: "position"

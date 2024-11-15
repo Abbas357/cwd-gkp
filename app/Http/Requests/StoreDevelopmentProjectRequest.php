@@ -24,8 +24,6 @@ class StoreDevelopmentProjectRequest extends FormRequest
         return [
             'name' => 'required',
             'commencement_date' => 'required',
-            'total_cost' => 'required',
-            'progress_percentage' => 'required',
         ];
     }
 }

@@ -44,7 +44,7 @@
                                         <tr>
                                             <th>S#</th>
                                             <th>Name</th>
-                                            <th>Designation</th>
+                                            <th>Position</th>
                                             <th>Mobile Number</th>
                                             <th>Landline Number</th>
                                             <th>Social Media</th>
@@ -55,9 +55,9 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $contact->name }}</td>
-                                                <td>{{ $contact->designation }}</td>
-                                                <td>{{ $contact->mobile_number }}</td>
-                                                <td>{{ $contact->landline_number }}</td>
+                                                <td>{{ $contact->position }}</td>
+                                                <td>{{ $contact->mobile_number ?? "N/A" }}</td>
+                                                <td>{{ $contact->landline_number ?? "N/A" }}</td>
                                                 <td>
                                                     <div>
                                                         <a href="https://facebook.com/{{ $contact->facebook ?? '#'}}"><i class="bi bi-facebook fs-4 me-2" style="color: #3b5998"></i></a>

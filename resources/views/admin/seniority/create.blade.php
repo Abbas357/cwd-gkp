@@ -29,7 +29,7 @@
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <label for="bps">BPS</label>
-                                    <select class="form-select form-select-md" id="bps" name="bps" required>
+                                    <select class="form-select form-select-md" id="bps" name="bps">
                                         <option value="">Select Option</option>
                                         @foreach ($cat['bps'] as $bps)
                                         <option value="{{ $bps }}">{{ $bps }}</option>
@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="col-md-6 mb-4">
                                     <label for="designation">Designation</label>
-                                    <select class="form-select form-select-md" id="designation" name="designation" required>
+                                    <select class="form-select form-select-md" id="designation" name="designation">
                                         <option value="">Select Option</option>
                                         @foreach ($cat['designations'] as $designation)
                                         <option value="{{ $designation->name }}">{{ $designation->name }}</option>
@@ -55,7 +55,7 @@
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <label for="seniority_date">Seniority Date</label>
-                                    <input type="date" class="form-control" id="seniority_date" name="seniority_date" required>
+                                    <input type="date" class="form-control" id="seniority_date" name="seniority_date">
                                     @error('seniority_date')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror

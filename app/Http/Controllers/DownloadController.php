@@ -33,7 +33,7 @@ class DownloadController extends Controller
                     return '<a target="_blank" href="' . $row->getFirstMediaUrl('downloads') . '" class="btn btn-light bi bi-file-earmark fs-4"></span>';
                 })
                 ->addColumn('uploaded_by', function ($row) {
-                    return $row->user ? $row->user->name . ' (' . $row->user->designation . ' - ' . $row->user->office  . ')' : 'N/A';
+                    return $row->user ? $row->user->designation : 'N/A';
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');
@@ -66,7 +66,7 @@ class DownloadController extends Controller
         ];
         $cat = [
             'file_type' => Category::where('type', 'file_type')->get(),
-            'file_category' => Category::where('type', 'file_category')->get(),
+            'download_category' => Category::where('type', 'download_category')->get(),
         ];
         return view('admin.downloads.create', compact('stats', 'cat'));
     }
@@ -76,7 +76,7 @@ class DownloadController extends Controller
         $download = new Download();
         $download->file_name = $request->file_name;
         $download->file_type = $request->file_type;
-        $download->file_category = $request->file_category;
+        $download->category = $request->category;
         $download->status = 'draft';
 
         if ($request->hasFile('file')) {
@@ -135,7 +135,7 @@ class DownloadController extends Controller
 
         $cat = [
             'file_type' => Category::where('type', 'file_type')->get(),
-            'file_category' => Category::where('type', 'file_category')->get(),
+            'download_category' => Category::where('type', 'download_category')->get(),
         ];
 
         $html = view('admin.downloads.partials.detail', compact('download', 'cat'))->render();

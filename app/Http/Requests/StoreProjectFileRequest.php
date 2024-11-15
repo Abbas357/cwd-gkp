@@ -26,7 +26,6 @@ class StoreProjectFileRequest extends FormRequest
             'file_type' => ['nullable', 'string', 'max:50'],
             'file_link' => ['nullable', 'url'],
             'project_id' => ['required', 'exists:projects,id'],
-            'status' => ['nullable', 'in:draft,published,archived'],
         ];
     }
 }

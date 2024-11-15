@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('file_name');
             $table->string('file_type');
-            $table->string('file_category');
+            $table->string('category');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamp('downloaded_at')->useCurrent();
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');

@@ -1,6 +1,6 @@
 <x-app-layout class="Add Categories">
     <x-slot name="header">
-        <li class="breadcrumb-item active" aria-current="page"> Permissions</li>
+        <li class="breadcrumb-item active" aria-current="page"> Categories</li>
     </x-slot>
 
     @push('style')

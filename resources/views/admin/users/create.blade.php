@@ -87,18 +87,6 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-4 mb-3">
-                                    <label for="position">Position</label>
-                                    <select class="form-select" id="position" name="position" required>
-                                        <option value="">Choose...</option>
-                                        @foreach ($cat['positions'] as $position)
-                                        <option value="{{ $position->name }}">{{ $position->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('position')
-                                    <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="col-md-4 mb-3">
                                     <label for="designation">Designation</label>
                                     <select class="form-select" id="designation" name="designation" required>
                                         <option value="">Choose...</option>
@@ -107,6 +95,18 @@
                                         @endforeach
                                     </select>
                                     @error('designation')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="position">Position</label>
+                                    <select class="form-select" id="position" name="position" required>
+                                        <option value="">Choose...</option>
+                                        @foreach ($cat['positions'] as $position)
+                                        <option value="{{ $position->name }}">{{ $position->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('position')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -263,10 +263,10 @@
                 placeholder: "____-_______"
             });
 
-            $('#landline_number').mask('000-0000000', {
-                placeholder: "___-_______"
+            $('#landline_number').mask('0000000000', {
+                placeholder: "__________"
             });
-
+            
             $('#cnic').mask('00000-0000000-0', {
                 placeholder: "_____-_______-_"
             });

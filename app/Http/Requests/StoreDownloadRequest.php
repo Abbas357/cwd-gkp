@@ -15,8 +15,7 @@ class StoreDownloadRequest extends FormRequest
     {
         return [
             'file_name' => 'required',
-            'file_type' => 'required',
-            'file_category' => 'required',
+            'category' => 'required',
             'file' => 'required',
         ];
     }

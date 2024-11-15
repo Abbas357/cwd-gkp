@@ -26,7 +26,7 @@
                 <th scope="col" class="p-3">ID</th>
                 <th scope="col" class="p-3">File Name</th>
                 <th scope="col" class="p-3">File Type</th>
-                <th scope="col" class="p-3">File Category</th>
+                <th scope="col" class="p-3">Category</th>
                 <th scope="col" class="p-3">File</th>
                 <th scope="col" class="p-3">Uploaded By</th>
                 <th scope="col" class="p-3">Status</th>
@@ -61,7 +61,7 @@
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "file_category"
+                        data: "category"
                         , searchBuilderType: "string"
                     }
                     , {

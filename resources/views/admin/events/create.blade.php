@@ -21,7 +21,7 @@
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <label for="title">Title</label>
-                                    <input type="text" class="form-control" id="title" value="{{ old('title') }}" placeholder="Title" name="title">
+                                    <input type="text" class="form-control" id="title" value="{{ old('title') }}" placeholder="Title" name="title" required>
                                     @error('title')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror

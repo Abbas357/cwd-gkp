@@ -240,8 +240,8 @@
         placeholder: "____-_______"
     });
 
-    $('#landline_number').mask('000-0000000', {
-        placeholder: "___-_______"
+    $('#landline_number').mask('0000000000', {
+        placeholder: "__________"
     });
 
     $('#cnic').mask('00000-0000000-0', {

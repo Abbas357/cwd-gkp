@@ -15,7 +15,6 @@
                         <th>Designation</th>
                         <th>BPS</th>
                         <th>Seniority Date</th>
-                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -27,7 +26,6 @@
                             <td>{{ $seniority->designation }}</td>
                             <td>{{ $seniority->bps }}</td>
                             <td>{{ \Carbon\Carbon::parse($seniority->seniority_date)->format('M d, Y') }}</td>
-                            <td>{{ ucfirst($seniority->status) }}</td>
                             <td>
                                 <a href="{{ route('seniority.show', $seniority->slug) }}" class="btn btn-info btn-sm">View Details</a>
                             </td>

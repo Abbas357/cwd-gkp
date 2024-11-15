@@ -14,7 +14,7 @@ class CategoryController extends Controller
 
         $categories = Category::when($type, function ($query, $type) {
             return $query->where('type', $type);
-        })->paginate(10);
+        })->paginate(100);
 
         return view('admin.categories.index', compact('categories'));
     }

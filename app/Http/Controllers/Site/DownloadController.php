@@ -10,20 +10,16 @@ class DownloadController extends Controller
 {
     public function index()
     {
-        $latestCategorySubquery = Download::select('file_category', 'published_at')
-            ->where('status', 'published')
-            ->whereNotNull('published_at')
+        $latestCategorySubquery = Download::select('category', 'published_at')
             ->orderBy('published_at', 'desc')
             ->limit(100)
             ->get()
-            ->unique('file_category')
+            ->unique('category')
             ->take(5)
-            ->pluck('file_category');
+            ->pluck('category');
 
         $downloadsByCategory = $latestCategorySubquery->mapWithKeys(function ($category) {
-            $downloads = Download::where('file_category', $category)
-                ->where('status', 'published')
-                ->whereNotNull('published_at')
+            $downloads = Download::where('category', $category)
                 ->orderBy('published_at', 'desc')
                 ->limit(5)
                 ->get();

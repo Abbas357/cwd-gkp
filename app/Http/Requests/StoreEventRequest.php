@@ -18,7 +18,6 @@ class StoreEventRequest extends FormRequest
             'start_datetime' => 'required',
             'end_datetime' => 'required',
             'description' => 'required',
-            'event_type' => 'required',
         ];
     }
 }

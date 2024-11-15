@@ -43,19 +43,19 @@
 
             <!-- File Category -->
             <tr>
-                <th class="table-cell">Category Type</th>
+                <th class="table-cell">Category</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-file_category">{{ $download->file_category }}</span>
+                    <span id="text-category">{{ $download->category }}</span>
                     @if (!in_array($download->status, ['published', 'archived']))
-                    <select id="input-file_category" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('file_category', {{ $download->id }})">
-                        @foreach ($cat['file_category'] as $file_category)
-                        <option value="{{ $file_category->name }}" {{ $download->file_category == $file_category->name ? 'selected' : '' }}>
-                            {{ $file_category->name }}
+                    <select id="input-category" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('category', {{ $download->id }})">
+                        @foreach ($cat['download_category'] as $category)
+                        <option value="{{ $category->name }}" {{ $download->category == $category->name ? 'selected' : '' }}>
+                            {{ $category->name }}
                         </option>
                         @endforeach
                     </select>
-                    <button id="save-btn-file_category" class="btn btn-sm btn-light d-none" onclick="updateField('file_category', {{ $download->id }})"><i class="bi-send-fill"></i></button>
-                    <button id="edit-btn-file_category" class="no-print btn btn-sm edit-button" onclick="enableEditing('file_category')"><i class="bi-pencil fs-6"></i></button>
+                    <button id="save-btn-category" class="btn btn-sm btn-light d-none" onclick="updateField('category', {{ $download->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="edit-btn-category" class="no-print btn btn-sm edit-button" onclick="enableEditing('category')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
             </tr>

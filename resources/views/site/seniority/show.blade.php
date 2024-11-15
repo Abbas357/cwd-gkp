@@ -1,7 +1,7 @@
 <x-main-layout title="{{ $seniorityData['title'] }}">
 
     @push('style')
-        <link rel="stylesheet" href="{{ asset('admin/plugins/lightbox/lightbox.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('admin/plugins/lightbox/lightbox.min.css') }}" />
     @endpush
 
     <x-slot name="breadcrumbTitle">{{ $seniorityData['title'] }}</x-slot>
@@ -32,34 +32,30 @@
                         <th>Seniority Date</th>
                         <td>{{ $seniorityData['seniority_date'] }}</td>
                     </tr>
-                    <tr>
-                        <th>Status</th>
-                        <td>{{ ucfirst($seniorityData['status']) }}</td>
-                    </tr>
                 </tbody>
             </table>
         </div>
 
         <!-- Attachment (Media) Section with Lightbox -->
         @if ($seniorityData['attachment'])
-            <div class="mt-4">
-                <h5>Attachment</h5>
-                <a href="{{ $seniorityData['attachment'] }}" data-lightbox="seniority-attachment" data-title="{{ $seniorityData['title'] }}">
-                    <img src="{{ $seniorityData['attachment'] }}" class="img-fluid" alt="Seniority Attachment">
-                </a>
-            </div>
+        <div class="mt-4">
+            <h5>Attachment</h5>
+            <a href="{{ $seniorityData['attachment'] }}" download>
+                Download Attachment
+            </a>
+        </div>
         @endif
     </div>
 
     @push('script')
-        <script src="{{ asset('admin/plugins/lightbox/lightbox.min.js') }}"></script>
-        <script>
-            lightbox.option({
-                'resizeDuration': 200,
-                'wrapAround': true,
-                'disableScrolling': true,
-            });
-        </script>
+    <script src="{{ asset('admin/plugins/lightbox/lightbox.min.js') }}"></script>
+    <script>
+        lightbox.option({
+            'resizeDuration': 200,
+            'wrapAround': true,
+            'disableScrolling': true,
+        });
+    </script>
     @endpush
 
 </x-main-layout>

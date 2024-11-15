@@ -85,15 +85,15 @@ class UserController extends Controller
         $contactsByOffice = $offices->sortByDesc(function ($office) {
             $contactWithMaxBps = User::where('office', $office)
                 ->orderByDesc('bps')
-                ->orderBy('designation')
+                ->orderBy('position')
                 ->first();
 
-            return [$contactWithMaxBps->bps, $contactWithMaxBps->designation];
+            return [$contactWithMaxBps->bps, $contactWithMaxBps->position];
         })->mapWithKeys(function ($office) {
-            $contacts = User::select('name', 'designation', 'office', 'bps', 'mobile_number', 'landline_number', 'facebook', 'twitter', 'whatsapp')
+            $contacts = User::select('name', 'position', 'office', 'bps', 'mobile_number', 'landline_number', 'facebook', 'twitter', 'whatsapp')
                 ->where('office', $office)
                 ->orderByDesc('bps')
-                ->orderBy('designation')
+                ->orderBy('position')
                 ->orderBy('name')
                 ->get();
 

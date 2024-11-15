@@ -38,14 +38,14 @@
                                     @enderror
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <label for="file_category">Category Type</label>
-                                    <select class="form-select form-select-md" id="file_category" name="file_category" required>
+                                    <label for="category">Category</label>
+                                    <select class="form-select form-select-md" id="category" name="category" required>
                                         <option value="">Select Option</option>
-                                        @foreach ($cat['file_category'] as $file_category)
-                                        <option value="{{ $file_category->name }}">{{ $file_category->name }}</option>
+                                        @foreach ($cat['download_category'] as $category)
+                                        <option value="{{ $category->name }}">{{ $category->name }}</option>
                                         @endforeach
                                     </select>
-                                    @error('file_category')
+                                    @error('category')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
