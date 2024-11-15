@@ -1,10 +1,11 @@
 .CWD {
     --cw-menu-width: 1325px;
-    --cw-primary: #237f52;
+    --cw-primary: #0b7240;
     /* --cw-primary: #6e2585; */
     /* --cw-primary: #026466; */
-    /* --cw-primary: #685bc7; */ 
+    /* --cw-primary: #685bc7;  */
     --cw-primary-light: #32b877;
+    --cw-menu-text-color: #fff;
     --cw-primary-deep: #0b6137;
     --cw-dense: #232323;
     --cw-simple: #FCFCFC;
@@ -918,7 +919,7 @@ header#integrated-plate {
         padding: 15px 18px 14px 16px;
         position: relative;
         font-weight: bold;
-        color: #E0E0E0;
+        color: var(--cw-menu-text-color);
         letter-spacing: 1px;
     }
 
