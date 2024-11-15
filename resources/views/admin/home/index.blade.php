@@ -156,14 +156,35 @@
                 <i class="bi bi-graph-up-arrow" style="color: #790bdf"></i>
                 <p>Seniority List</p>
             </a>
+            <a href="{{ route('admin.development_projects.index') }}" class="app-tile">
+                <i class="bi bi-buildings" style="color: #0096a0"></i>
+                <p>Dev. Projects</p>
+            </a>
+            <a href="{{ route('admin.events.index') }}" class="app-tile">
+                <i class="bi bi-calendar2-event" style="color: #96bb05"></i>
+                <p>Events</p>
+            </a>
         </div>
     </div>
+    <audio id="hoverSound" src="{{ asset('admin/click.wav') }}" preload="auto"></audio>
 
     @push('script')
 
     <script src="{{ asset('admin/plugins/particles.js/particles.min.js') }}"></script>
 
     <script>
+        
+
+        const appTiles = document.querySelectorAll('.app-tile');
+        const hoverSound = document.getElementById('hoverSound');
+
+        appTiles.forEach(tile => {
+            tile.addEventListener('mouseenter', () => {
+                hoverSound.currentTime = 0;
+                hoverSound.play();
+            });
+        });
+
         $('a.app-tile').on('click', () => {
             document.querySelector('.page-loader').classList.remove('hidden');
         });

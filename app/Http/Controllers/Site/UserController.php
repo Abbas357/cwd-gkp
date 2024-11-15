@@ -103,9 +103,9 @@ class UserController extends Controller
         return view('site.users.contacts', compact('contactsByOffice'));
     }
 
-    public function showPositions($designation)
+    public function showPositions($position)
     {
-        $users = User::withoutGlobalScope('active')->where('designation', $designation)
+        $users = User::withoutGlobalScope('active')->where('position', $position)
             ->with(['media' => function ($query) {
                 $query->whereIn('collection_name', ['profile_pictures']);
             }])
@@ -124,7 +124,7 @@ class UserController extends Controller
             ];
         });
 
-        return view('site.users.list', compact('userData', 'designation'));
+        return view('site.users.list', compact('userData', 'position'));
     }
 
     public function getUserDetails($id)

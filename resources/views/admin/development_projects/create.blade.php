@@ -19,7 +19,7 @@
                         <div class="col-md-12">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h3 class="card-title pb-4">Add Developmental Project</h3>
-                                <a class="btn btn-success shadow-sm" href="{{ route('admin.development_projects.index') }}">All  Projects</a>
+                                <a class="btn btn-success shadow-sm" href="{{ route('admin.development_projects.index') }}">All Dev. Projects</a>
                             </div>
                             <div class="row">
                                 <div class="col-md-4 mb-3">
@@ -147,6 +147,10 @@
                 , inputLabelPreview: "#previewProject"
                 , aspectRatio: 4 / 3
             });
+
+            $('#introduction').summernote({
+                height:150
+            })
 
             const rangeInput = document.getElementById('progress_percentage');
             const rangeDisplay = document.getElementById('progress_value');

@@ -39,7 +39,7 @@ class Seniority extends Model implements HasMedia
             ->logExcept(['id', 'updated_at', 'created_at'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
-            ->useLogName('pages')
+            ->useLogName('seniority')
             ->setDescriptionForEvent(function (string $eventName) {
                 return "Seniority has been {$eventName}";
             });

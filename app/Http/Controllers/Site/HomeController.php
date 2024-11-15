@@ -153,7 +153,7 @@ class HomeController extends Controller
     public function teamPartial()
     {
         $users = Cache::remember('team_partial', 43200, function () {
-            return User::select('id', 'name', 'title', 'designation', 'bps')
+            return User::select('id', 'name', 'title', 'position', 'bps')
                 ->whereIn('bps', ['BPS-19', 'BPS-20'])
                 ->with('media')
                 ->latest('created_at')
@@ -164,6 +164,7 @@ class HomeController extends Controller
                         'name' => $user->name,
                         'title' => $user->title ?? 'N/A',
                         'designation' => $user->designation ?? 'N/A',
+                        'position' => $user->position ?? 'N/A',
                         'facebook' => $user->facebook ?? '#',
                         'twitter' => $user->twitter ?? '#',
                         'whatsapp' => $user->whatsapp ?? '#',

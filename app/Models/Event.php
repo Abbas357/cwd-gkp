@@ -2,16 +2,15 @@
 
 namespace App\Models;
 
-use App\Models\User;
 use Spatie\MediaLibrary\HasMedia;
-use Spatie\Activitylog\LogOptions;
-use Illuminate\Database\Eloquent\Model;
-
-use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
-class DevelopmentProject extends Model implements HasMedia
+class Event extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, LogsActivity;
 
@@ -20,8 +19,9 @@ class DevelopmentProject extends Model implements HasMedia
     protected function casts(): array
     {
         return [
-            'commencement_date' => 'datetime',
-            'year_of_completion' => 'datetime',
+            'start_datetime' => 'datetime',
+            'end_datetime' => 'datetime',
+            'published_at' => 'datetime',
         ];
     }
 
@@ -32,31 +32,29 @@ class DevelopmentProject extends Model implements HasMedia
             ->logExcept(['id', 'updated_at', 'created_at'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
-            ->useLogName('development_projects')
+            ->useLogName('events')
             ->setDescriptionForEvent(function (string $eventName) {
-                return "Development Project has been {$eventName}";
+                return "Event has been {$eventName}";
             });
+    }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('published', function (Builder $builder) {
+            $builder->where('status', 'published')->whereNotNull('published_at');
+        });
     }
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('development_projects_attachments');
+        $this->addMediaCollection('events_pictures');
     }
 
     public function user() {
         return $this->belongsTo(User::class);
     }
 
-    public function district() {
-        return $this->belongsTo(District::class);
+    public function publishBy() {
+        return $this->belongsTo(User::class, 'published_by');
     }
-
-    public function chiefEngineer() {
-        return $this->belongsTo(User::class, 'ce_id');
-    }
-
-    public function superintendentEngineer() {
-        return $this->belongsTo(User::class, 'se_id');
-    }
-
 }

@@ -23,7 +23,7 @@ return new class extends Migration
             $table->foreignId('se_id')->constrained('users')->nullable();
             $table->foreignId('user_id')->constrained('users')->nullable();
             $table->string('progress_percentage')->nullable();
-            $table->enum('status', ['Planned ', 'In-Progress', 'On-Hold', 'Completed'])->default('In-Progress');    
+            $table->enum('status', ['In-Progress', 'On-Hold', 'Completed'])->default('In-Progress');    
             $table->date('year_of_completion')->nullable();
             $table->timestamps();
         });

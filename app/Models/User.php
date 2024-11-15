@@ -122,6 +122,11 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(News::class);
     }
 
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
+
     public function seniority()
     {
         return $this->hasMany(Seniority::class);

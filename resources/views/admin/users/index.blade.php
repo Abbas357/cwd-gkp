@@ -28,8 +28,7 @@
                 <th scope="col" class="p-3">Email</th>
                 <th scope="col" class="p-3">Mobile Number</th>
                 <th scope="col" class="p-3">Landline Number</th>
-                <th scope="col" class="p-3">Designation</th>
-                <th scope="col" class="p-3">CNIC</th>
+                <th scope="col" class="p-3">Position</th>
                 <th scope="col" class="p-3">Office</th>
                 <th scope="col" class="p-3">Password Updated</th>
                 <th scope="col" class="p-3">Active</th>
@@ -68,10 +67,7 @@
                     data: "landline_number"
                     , searchBuilderType: "string"
                 }, {
-                    data: "designation"
-                    , searchBuilderType: "string"
-                }, {
-                    data: "cnic"
+                    data: "position"
                     , searchBuilderType: "string"
                 }, {
                     data: "office"

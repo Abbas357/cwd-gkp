@@ -16,6 +16,6 @@ function categoryType()
 {
     return [
         'designation', 'office', 'file_type', 'file_category', 'contractor_category',
-        'provincial_entity', 'gallery_type', 'news_category', 'page_type', 'bps',
+        'provincial_entity', 'gallery_type', 'news_category', 'page_type',
     ];
 }

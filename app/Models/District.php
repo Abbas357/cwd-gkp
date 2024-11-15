@@ -15,4 +15,9 @@ class District extends Model
     {
         return $this->belongsToMany(User::class, 'district_user', 'district_id', 'user_id');
     }
+
+    public function developmentProjects()
+    {
+        return $this->hasMany(DevelopmentProject::class);
+    }
 }

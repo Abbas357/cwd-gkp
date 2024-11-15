@@ -20,8 +20,8 @@
                 <div class="team-title-inner">
                     <!-- Name and Designation -->
                     <h4 class="mt-3">{{ $user['name'] }}</h4>
-                    <p class="mb-3">{{ $user['designation'] }}</p>
-                    <a href="{{ route('positions.show', ['designation' => $user['designation']]) }}" class="btn-animate">View Previous</a>
+                    <p class="mb-3">{{ $user['position'] }}</p>
+                    <a href="{{ route('positions.show', ['position' => $user['position']]) }}" class="btn-animate">View Previous</a>
                 </div>
             </div>
         </div>

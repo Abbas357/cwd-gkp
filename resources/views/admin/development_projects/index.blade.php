@@ -6,15 +6,33 @@
         <li class="breadcrumb-item active" aria-current="page">Projects</li>
     </x-slot>
 
-    <table id="projects-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+    <div class="card-header mb-3">
+        <ul class="nav nav-tabs nav-tabs-table">
+            <li class="nav-item">
+                <a id="inprogress-tab" class="nav-link" data-bs-toggle="tab" href="#inprogress">In-Progress</a>
+            </li>
+            <li class="nav-item">
+                <a id="onhold-tab" class="nav-link" data-bs-toggle="tab" href="#onhold">On-Hold</a>
+            </li>
+            <li class="nav-item">
+                <a id="completed-tab" class="nav-link" data-bs-toggle="tab" href="#completed">Completed</a>
+            </li>
+        </ul>
+    </div>
+
+    <table id="dev-projects-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
         <thead>
             <tr>
                 <th scope="col" class="p-3">ID</th>
                 <th scope="col" class="p-3">Name</th>
-                <th scope="col" class="p-3">Funding Source</th>
-                <th scope="col" class="p-3">Location</th>
-                <th scope="col" class="p-3">Start Date</th>
-                <th scope="col" class="p-3">End Date</th>
+                <th scope="col" class="p-3">Commencement Date</th>
+                <th scope="col" class="p-3">Total Cost (Millions)</th>
+                <th scope="col" class="p-3">District</th>
+                <th scope="col" class="p-3">Chief Engineer</th>
+                <th scope="col" class="p-3">Progress Percentage</th>
+                <th scope="col" class="p-3">Year of Completion</th>
+                <th scope="col" class="p-3">Created At</th>
+                <th scope="col" class="p-3">Updated At</th>
                 <th scope="col" class="p-3">Actions</th>
             </tr>
         </thead>
@@ -29,8 +47,8 @@
 
     <script>
         $(document).ready(function() {
-            var table = initDataTable('#projects-datatable', {
-                ajaxUrl: "{{ route('admin.projects.index') }}"
+            var table = initDataTable('#dev-projects-datatable', {
+                ajaxUrl: "{{ route('admin.development_projects.index') }}"
                 , columns: [{
                         data: "id"
                         , searchBuilderType: "num"
@@ -40,21 +58,37 @@
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "funding_source"
+                        data: "commencement_date"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "location"
+                        data: "total_cost"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "start_date"
+                        data: "district"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "end_date"
+                        data: "chief_engineer"
                         , searchBuilderType: "string"
-                    }                    
+                    }
+                    , {
+                        data: "progress_percentage"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "year_of_completion"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "created_at"
+                        , searchBuilderType: "date"
+                    }
+                    , {
+                        data: "updated_at"
+                        , searchBuilderType: "date"
+                    }
                     , {
                         data: 'action'
                         , orderable: false
@@ -69,27 +103,49 @@
                     , visible: false
                 }]
                 , customButton: {
-                    text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Project</span>`
+                    text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Dev. Project</span>`
                     , action: function(e, dt, node, config) {
-                        window.location.href = "{{ route('admin.projects.create') }}";
-                    },
-                }
+                        window.location.href = "{{ route('admin.development_projects.create') }}";
+                    }
+                , }
             });
 
-            $("#projects-datatable").on('click', '.delete-btn', async function() {
+            hashTabsNavigator({
+                table: table
+                , dataTableUrl: "{{ route('admin.development_projects.index') }}"
+                , tabToHashMap: {
+                    "#inprogress-tab": '#inprogress'
+                    , "#onhold-tab": '#onhold'
+                    , "#completed-tab": '#completed'
+                , }
+                , hashToParamsMap: {
+                    '#inprogress': {
+                        status: 'In-Progress'
+                    }
+                    , '#onhold': {
+                        status: 'On-Hold'
+                    }
+                    , '#completed': {
+                        status: 'Completed'
+                    }
+                , }
+                , defaultHash: '#inprogress'
+            });
+
+            $("#dev-projects-datatable").on('click', '.delete-btn', async function() {
                 const projectsId = $(this).data("id");
-                const url = "{{ route('admin.projects.destroy', ':id') }}".replace(':id', projectsId);
+                const url = "{{ route('admin.development_projects.destroy', ':id') }}".replace(':id', projectsId);
 
                 const result = await confirmAction(`Do you want to delete this projects?`);
                 if (result && result.isConfirmed) {
                     const success = await fetchRequest(url, 'DELETE');
                     if (success) {
-                        $("#projects-datatable").DataTable().ajax.reload();
+                        $("#dev-projects-datatable").DataTable().ajax.reload();
                     }
                 }
             });
 
-            $('#projects-datatable').colResizable({
+            $('#dev-projects-datatable').colResizable({
                 liveDrag: true
                 , resizeMode: 'overflow'
                 , postbackSafe: true
@@ -99,12 +155,12 @@
             , });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.projects.detail', ':id') }}",
-                btnSelector: '.view-btn',
-                title: 'Projects Details',
-                modalSize: 'lg',
-            });
-            
+                fetchUrl: "{{ route('admin.development_projects.detail', ':id') }}"
+                , btnSelector: '.view-btn'
+                , title: 'Projects Details'
+                , modalSize: 'lg'
+            , });
+
         });
 
     </script>

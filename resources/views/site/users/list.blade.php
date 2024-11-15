@@ -1,4 +1,4 @@
-<x-main-layout title="List of All positions based on {{ $designation }}">
+<x-main-layout title="List of All positions based on {{ $position }}">
     @push('style')
     <style>
         .user-card {
@@ -38,7 +38,7 @@
         }
     </style>
     <x-slot name="breadcrumbTitle">
-        Previous List ({{ ucfirst($designation) }})
+        Previous List ({{ ucfirst($position) }})
     </x-slot>
 
     <x-slot name="breadcrumbItems">
@@ -54,7 +54,7 @@
                     <img src="{{ $user['profile_pictures'] }}" class="card-img-top img-fluid" style="object-fit: cover;" alt="{{ $user['name'] }}">
                     <div class="card-body text-center p-2">
                         <h5 class="card-title font-weight-bold text-primary mb-2">{{ $user['name'] }}</h5>
-                        <p class="card-text text-muted mb-1 fs-5">{{ $user['title'] }}</p>
+                        <p class="card-text text-muted mb-1 fs-5">{{ $position }}</p>
                         <div>
                             <span class="badge text-bg-light">
                                 @if($user['is_active'])

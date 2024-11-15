@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Category;
 use App\Models\District;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -15,13 +14,41 @@ class DevelopmentProjectController extends Controller
 {
     public function index(Request $request)
     {
+        $status = $request->query('status', null);
+
+        $projects = DevelopmentProject::query();
+
+        $projects->when($status !== null, function ($query) use ($status) {
+            $query->where('status', $status);
+        });
+
         if ($request->ajax()) {
-            $projects = DevelopmentProject::query();
 
             return DataTables::of($projects)
                 ->addIndexColumn()
+                ->addColumn('district', function ($row) {
+                    return $row->district->name;
+                })
+                ->addColumn('chief_engineer', function ($row) {
+                    return $row->chiefEngineer?->position;
+                })
+                ->editColumn('year_of_completion', function($row) {
+                    return date('Y');
+                })
+                ->editColumn('commencement_date', function($row) {
+                    return $row->commencement_date->format('j, F Y');
+                })
+                ->editColumn('progress_percentage', function($row) {
+                    return $row->progress_percentage . '%';
+                })
                 ->addColumn('action', function ($row) {
                     return view('admin.development_projects.partials.buttons', compact('row'))->render();
+                })
+                ->editColumn('created_at', function ($row) {
+                    return $row->created_at->format('j, F Y');
+                })
+                ->editColumn('updated_at', function ($row) {
+                    return $row->updated_at->diffForHumans();
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -34,10 +61,10 @@ class DevelopmentProjectController extends Controller
     {
         $cat = [
             'districts' => District::all(),
-            'chiefEngineers' => User::where('designation', 'LIKE', '%Chief%')->get(),
-            'superintendentEngineers' => User::where('designation', 'LIKE', '%Superintendent%')->get(),
+            'chiefEngineers' => User::where('designation', 'Chief Engineer')->get(),
+            'superintendentEngineers' => User::where('designation', 'Superintendent Engineer')->get(),
         ];
-        dd($cat);
+        
         return view('admin.development_projects.create', compact('cat'));
     }
 
@@ -79,8 +106,8 @@ class DevelopmentProjectController extends Controller
     {
         $cat = [
             'districts' => District::all(),
-            'chiefEngineers' => User::where('designation', 'LIKE', '%Chief%')->get(),
-            'superintendentEngineers' => User::where('designation', 'LIKE', '%Superintendent%')->get(),
+            'chiefEngineers' => User::where('designation', 'Chief Engineer')->get(),
+            'superintendentEngineers' => User::where('designation', 'Superintendent Engineer')->get(),
         ];
 
         $html = view('admin.development_projects.partials.detail', compact('DevelopmentProject', 'cat'))->render();

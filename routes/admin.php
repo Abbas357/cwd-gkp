@@ -5,6 +5,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\StoryController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\GalleryController;
@@ -90,6 +91,19 @@ Route::middleware('auth')->group(function () {
             Route::patch('/update/field', [DownloadController::class, 'updateField'])->name('updateField');
             Route::patch('/upload/file', [DownloadController::class, 'uploadFile'])->name('uploadFile');
             Route::delete('/{download}', [DownloadController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('events')->as('events.')->group(function () {
+            Route::get('/', [EventController::class, 'index'])->name('index');
+            Route::get('/create', [EventController::class, 'create'])->name('create');
+            Route::post('/', [EventController::class, 'store'])->name('store');
+            Route::get('/{event}', [EventController::class, 'show'])->name('show');
+            Route::get('/get/{event}', [EventController::class, 'showDetail'])->name('detail');
+            Route::patch('/publish/{event}', [EventController::class, 'publishEvent'])->name('publish');
+            Route::patch('/archive/{event}', [EventController::class, 'archiveEvent'])->name('archive');
+            Route::patch('/update/field', [EventController::class, 'updateField'])->name('updateField');
+            Route::patch('/upload/file', [EventController::class, 'uploadFile'])->name('uploadFile');
+            Route::delete('/{event}', [EventController::class, 'destroy'])->name('destroy');
         });
 
         Route::prefix('gallery')->as('gallery.')->group(function () {

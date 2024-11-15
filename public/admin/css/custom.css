@@ -614,3 +614,28 @@ div.dt-container {
 .cw-switch input:checked[type="checkbox"]::after {
   left: 50%;
 }
+
+.menu-items {
+  background-color: rgba(0, 167, 111, 0.03) !important;
+  border: 1px solid rgba(0, 167, 111, 0.2);
+}
+
+.menu-items::before {
+  position: absolute;
+  content: '';
+  top: 2.4rem;
+  left: 48%;
+  width:0px;
+  height:0px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: rgba(0, 167, 111, 0.2) transparent transparent transparent
+}
+
+.gradient-text {
+  background: linear-gradient(to left, rgb(253, 185, 59), rgb(13, 212, 13)); /* Gradient from green on the right to orange on the left */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}

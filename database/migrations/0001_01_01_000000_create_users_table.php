@@ -24,11 +24,12 @@ return new class extends Migration
             $table->string('facebook')->nullable();
             $table->string('twitter')->nullable();
             
-            $table->string('title')->nullable();
             $table->string('designation')->nullable();
+            $table->string('position')->nullable();
             $table->string('office')->nullable();
+            $table->string('title')->nullable();
 
-            $table->enum('bps', ['BPS-17', 'BPS-18', 'BPS-19', 'BPS-20', 'BPS-21', 'BPS-22'])->nullable();
+            $table->string('bps')->nullable();
             $table->enum('posting_type', ['appointment', 'transfer'])->nullable();
             $table->date('posting_date')->nullable();
             $table->enum('exit_type', ['transfer', 'retired'])->nullable();
