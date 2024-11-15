@@ -126,13 +126,12 @@
                 </div>
             </div>
             <div class="card-footer-row">
-                <a href="{{ route('positions.show', ['designation' => $ministerData['designation']]) }}" class="btn-animate">View Previous</a>
+                <a href="{{ route('positions.show', ['position' => $ministerData['position']]) }}" class="btn-animate">View Previous</a>
                 <span class="person-name">{{ $ministerData['name'] }}</span>
             </div>
         </div>
         @endif
 
-        <!-- Card 2: Secretary -->
         @if($secretaryData)
         <div class="card">
             <div class="card-body">
@@ -148,7 +147,7 @@
                 </div>
             </div>
             <div class="card-footer-row">
-                <a href="{{ route('positions.show', ['designation' => $secretaryData['designation']]) }}" class="btn-animate">View Previous</a>
+                <a href="{{ route('positions.show', ['position' => $secretaryData['position']]) }}" class="btn-animate">View Previous</a>
                 <span class="person-name">{{ $secretaryData['name'] }}</span>
             </div>
         </div>

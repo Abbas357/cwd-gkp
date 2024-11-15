@@ -45,14 +45,14 @@ class HomeController extends Controller
     public function messagePartial()
     {
         $data = Cache::remember('message_partial', 1440, function () {
-            $minister = User::select('id', 'name', 'title', 'designation', 'message')
-                ->where('designation', 'minister')
+            $minister = User::select('id', 'name', 'title', 'designation', 'position', 'message')
+                ->where('position', 'minister')
                 ->with('media')
                 ->latest('created_at')
                 ->first();
 
-            $secretary = User::select('id', 'name', 'title', 'designation', 'message')
-                ->where('designation', 'secretary')
+            $secretary = User::select('id', 'name', 'title', 'designation', 'position', 'message')
+                ->where('position', 'secretary')
                 ->with('media')
                 ->latest('created_at')
                 ->first();
@@ -61,6 +61,7 @@ class HomeController extends Controller
                 'name' => $minister->name,
                 'title' => $minister->title,
                 'designation' => $minister->designation,
+                'position' => $minister->position,
                 'message' => $minister->message,
                 'image' => $minister->getFirstMediaUrl('profile_pictures', 'small')
             ] : null;
@@ -69,6 +70,7 @@ class HomeController extends Controller
                 'name' => $secretary->name,
                 'title' => $secretary->title,
                 'designation' => $secretary->designation,
+                'position' => $secretary->position,
                 'message' => $secretary->message,
                 'image' => $secretary->getFirstMediaUrl('profile_pictures', 'small')
             ] : null;
