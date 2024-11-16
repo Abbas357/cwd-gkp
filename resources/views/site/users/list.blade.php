@@ -60,7 +60,7 @@
                                 @if($user['is_active'])
                                 Since {{ $user['from'] ?? 'unknown' }}
                                 @else
-                                From {{ $user['from'] ?? 'unknown' }} to {{ $user['to'] ?? 'unknown' }}
+                                From {{ $user['from'] ?? '...' }} to {{ $user['to'] ?? '...' }}
                                 @endif
                             </span>
                         </div>
