@@ -161,6 +161,10 @@
                 </div>
             </div>
             <div class="col-lg-4">
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured" style="scale: 1.3" {{ $data['user']->is_featured ? 'checked' : '' }}>
+                    <label class="form-check-label" for="is_featured" style="margin-left:.5rem">Featured on Site</label>
+                </div>
                 <label for="message">Message</label>
                 <div class="mb-3">
                     <textarea name="message" id="message" class="form-control" style="height:190px">{{ old('message', $data['user']->message) }}</textarea>
@@ -210,7 +214,7 @@
             @endforeach
         </div>
     </div>
-    
+
 </div>
 
 
@@ -265,10 +269,10 @@
     document.getElementById('roleSearch').addEventListener('keyup', function() {
         let searchQuery = this.value.toLowerCase();
         let roleItems = document.querySelectorAll('.role-item');
-        
+
         roleItems.forEach(function(item) {
             let label = item.querySelector('label').innerText.toLowerCase();
-            
+
             if (label.includes(searchQuery)) {
                 item.style.display = '';
             } else {
@@ -280,10 +284,10 @@
     document.getElementById('permissionSearch').addEventListener('keyup', function() {
         let searchQuery = this.value.toLowerCase();
         let permissionItems = document.querySelectorAll('.permission-item');
-        
+
         permissionItems.forEach(function(item) {
             let label = item.querySelector('label').innerText.toLowerCase();
-            
+
             if (label.includes(searchQuery)) {
                 item.style.display = '';
             } else {
@@ -291,4 +295,5 @@
             }
         });
     });
+
 </script>

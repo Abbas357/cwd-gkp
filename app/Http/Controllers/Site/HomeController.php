@@ -187,7 +187,7 @@ class HomeController extends Controller
     {
         $users = Cache::remember('team_partial', 43200, function () {
             return User::select('id', 'name', 'title', 'position', 'bps')
-                ->whereIn('bps', ['BPS-19', 'BPS-20'])
+                ->featured()
                 ->with('media')
                 ->latest('created_at')
                 ->get()

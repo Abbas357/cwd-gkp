@@ -97,6 +97,11 @@ class User extends Authenticatable implements HasMedia
         });
     }
 
+    public function scopeFeatured($query)
+    {
+        return $query->where('is_featured', 1);
+    }
+
     public function logs()
     {
         return $this->hasMany(Activity::class, 'causer_id');

@@ -107,6 +107,7 @@ Route::prefix('pages')->as('pages.')->group(function () {
 
 Route::prefix('downloads')->as('downloads.')->group(function () {
     Route::get('/', [DownloadController::class, 'index'])->name('index');
+    Route::post('/fetch-category', [DownloadController::class, 'fetchCategory'])->name('fetch-category');
 });
 
 Route::prefix('projects')->as('projects.')->group(function () {

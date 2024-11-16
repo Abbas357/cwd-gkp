@@ -10,20 +10,42 @@ class DownloadController extends Controller
 {
     public function index()
     {
-        $latestCategorySubquery = Download::select('category', 'published_at')
-            ->orderBy('published_at', 'desc')
-            ->limit(100)
-            ->get()
-            ->unique('category')
+        $categories = Download::select('category')
+            ->distinct()
+            ->orderBy('category', 'asc')
             ->pluck('category');
 
-        $downloadsByCategory = $latestCategorySubquery->mapWithKeys(function ($category) {
-            $downloads = Download::where('category', $category)
+        $firstCategory = $categories->first();
+        $firstCategoryDownloads = collect();
+
+        if ($firstCategory) {
+            $firstCategoryDownloads = Download::where('category', $firstCategory)
                 ->orderBy('published_at', 'desc')
                 ->get();
-            return [$category => $downloads];
-        });
+        }
 
-        return view('site.downloads.index', compact('downloadsByCategory'));
+        return view('site.downloads.index', compact('categories', 'firstCategory', 'firstCategoryDownloads'));
+    }
+
+    public function fetchCategory(Request $request)
+    {
+        $category = $request->input('category');
+
+        if (!$category) {
+            return response()->json([
+                'downloads' => '<p class="text-center text-danger">Invalid category.</p>',
+            ]);
+        }
+
+        $downloads = Download::where('category', $category)
+            ->orderBy('published_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'downloads' => view('site.downloads.partials.downloads_table', [
+                'downloads' => $downloads,
+                'category' => $category,
+            ])->render(),
+        ]);
     }
 }

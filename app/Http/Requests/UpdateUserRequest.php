@@ -45,6 +45,7 @@ class UpdateUserRequest extends FormRequest
             'whatsapp'=> 'nullable',
             'facebook'=> 'nullable',
             'twitter'=> 'nullable',
+            'is_featured' => 'nullable',
         ];
     }
 }
