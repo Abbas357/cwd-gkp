@@ -175,10 +175,10 @@
                 }
                 , minimumInputLength: 0
                 , templateResult(user) {
-                    return user.designation;
+                    return user.position;
                 }
                 , templateSelection(user) {
-                    return user.designation;
+                    return user.position;
                 }
             });
 

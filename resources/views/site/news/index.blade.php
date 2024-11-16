@@ -50,13 +50,13 @@
                         <div class="col-md-10">
                             <div class="d-flex justify-content-between align-items-center">
                                 <a href="{{ route('news.show', $news->slug) }}"><h5 class="mt-0">{{ $news->title }}</h5></a>
-                                <small class="text-muted">{{ $news->published_at->format('M d, Y') }}</small>
+                                <small class="text-muted">{{ $news->published_at->format('M d, Y') ?? 'N/A' }}</small>
                             </div>
                             <p class="mb-1">
                                 <a href="{{ route('news.index', ['category' => $news->category]) }}" class="text-decoration-none text-primary">
                                     {{ $news->category ?? 'General' }}
                                 </a> | 
-                                <span>{{ $news->user->designation ?? 'Author' }}</span>
+                                <span>{{ $news->user->designation ?? 'Admin' }}</span>
                             </p>
                             <p>{{ Str::limit($news->summary ?? 'No summary available.', 150) }}</p>
                             <a href="{{ route('news.show', $news->slug) }}" class="btn btn-primary btn-sm">Read More</a>

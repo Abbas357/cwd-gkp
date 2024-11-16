@@ -30,9 +30,9 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $project->name }}</td>
                         <td>{!! Str::limit($project->introduction, 50) !!}</td>
-                        <td>${{ number_format($project->total_cost, 2) }}</td>
-                        <td>{{ $project->commencement_date->format('M d, Y') }}</td>
-                        <td>{{ $project->progress_percentage }}%</td>
+                        <td>${{ number_format($project->total_cost, 2) ?? 'N/A' }}</td>
+                        <td>{{ $project->commencement_date->format('M d, Y') ?? 'N/A' }}</td>
+                        <td>{{ $project->progress_percentage ?? '50%' }}%</td>
                         <td>{{ $project->status }}</td>
                         <td>
                             <a href="{{ route('development_projects.show', $project->slug) }}" class="btn btn-primary btn-sm">View Details</a>

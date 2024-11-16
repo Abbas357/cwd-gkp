@@ -25,43 +25,43 @@
                 <tbody>
                     <tr>
                         <th>Start Date</th>
-                        <td>{{ \Carbon\Carbon::parse($eventData['start_datetime'])->format('M d, Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($eventData['start_datetime'])->format('M d, Y') ?? 'N/A' }}</td>
                     </tr>
                     <tr>
                         <th>End Date</th>
-                        <td>{{ \Carbon\Carbon::parse($eventData['end_datetime'])->format('M d, Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($eventData['end_datetime'])->format('M d, Y') ?? 'N/A' }}</td>
                     </tr>
                     <tr>
                         <th>Start Time</th>
-                        <td>{{ \Carbon\Carbon::parse($eventData['start_datetime'])->format('h:i A') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($eventData['start_datetime'])->format('h:i A') ?? 'N/A' }}</td>
                     </tr>
                     <tr>
                         <th>End Time</th>
-                        <td>{{ \Carbon\Carbon::parse($eventData['end_datetime'])->format('h:i A') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($eventData['end_datetime'])->format('h:i A') ?? 'N/A' }}</td>
                     </tr>
                     <tr>
                         <th>Location</th>
-                        <td>{{ $eventData['location'] }}</td>
+                        <td>{{ $eventData['location'] ?? 'N/A' }}</td>
                     </tr>
                     <tr>
                         <th>Organizer</th>
-                        <td>{{ $eventData['organizer'] }}</td>
+                        <td>{{ $eventData['organizer'] ?? 'N/A' }}</td>
                     </tr>
                     <tr>
                         <th>Chairperson</th>
-                        <td>{{ $eventData['chairperson'] }}</td>
+                        <td>{{ $eventData['chairperson'] ?? 'N/A' }}</td>
                     </tr>
                     <tr>
                         <th>Participants Type</th>
-                        <td>{{ $eventData['participants_type'] }}</td>
+                        <td>{{ $eventData['participants_type'] ?? 'N/A' }}</td>
                     </tr>
                     <tr>
                         <th>Number of Participants</th>
-                        <td>{{ $eventData['no_of_participants'] }}</td>
+                        <td>{{ $eventData['no_of_participants'] ?? 'N/A' }}</td>
                     </tr>
                     <tr>
                         <th>Event Type</th>
-                        <td>{{ $eventData['event_type'] }}</td>
+                        <td>{{ $eventData['event_type'] ?? 'N/A' }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -84,7 +84,7 @@
         <!-- Description Section -->
         <div class="description mt-4">
             <h2>Description</h2>
-            <p>{!! nl2br($eventData['description']) !!}</p>
+            <p>{!! nl2br($eventData['description']) ?? 'N/A' !!}</p>
         </div>
     </div>
 

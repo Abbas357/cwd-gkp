@@ -35,31 +35,31 @@
                     </tr>
                     <tr>
                         <th>Total Cost</th>
-                        <td>${{ number_format($projectData['total_cost'], 2) }}</td>
+                        <td>${{ number_format($projectData['total_cost'], 2) ?? 'N/A' }}</td>
                     </tr>
                     <tr>
                         <th>Commencement Date</th>
-                        <td>{{ \Carbon\Carbon::parse($projectData['commencement_date'])->format('M d, Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($projectData['commencement_date'])->format('M d, Y') ?? 'N/A' }}</td>
                     </tr>
                     <tr>
                         <th>District</th>
-                        <td>{{ $projectData['district'] }}</td>
+                        <td>{{ $projectData['district'] ?? 'N/A' }}</td>
                     </tr>
                     <tr>
                         <th>Work Location</th>
-                        <td>{{ $projectData['work_location'] }}</td>
+                        <td>{{ $projectData['work_location'] ?? 'N/A' }}</td>
                     </tr>
                     <tr>
                         <th>Progress Percentage</th>
-                        <td>{{ $projectData['progress_percentage'] }}%</td>
+                        <td>{{ $projectData['progress_percentage'] ?? 'N/A' }}%</td>
                     </tr>
                     <tr>
                         <th>Year of Completion</th>
-                        <td>{{ $projectData['year_of_completion'] }}</td>
+                        <td>{{ $projectData['year_of_completion'] ?? 'N/A' }}</td>
                     </tr>
                     <tr>
                         <th>Status</th>
-                        <td>{{ $projectData['status'] }}</td>
+                        <td>{{ $projectData['status'] ?? 'N/A' }}</td>
                     </tr>
                 </tbody>
             </table>

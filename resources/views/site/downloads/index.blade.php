@@ -41,7 +41,7 @@
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         <span>{{ $loop->iteration }}</span>
                                         <span>{{ $download->file_name }}</span>
-                                        <span class="badge bg-primary rounded-pill">{{ $download->file_type }}</span>
+                                        <span class="badge bg-primary rounded-pill">{{ $download->file_type ?? 'N/A' }}</span>
                                         @if ($media = $download->getFirstMediaUrl('downloads'))
                                         <a href="{{ $media }}" class="btn-animate"><i class="bi-cloud-arrow-down"></i> Download</a>
                                         @else

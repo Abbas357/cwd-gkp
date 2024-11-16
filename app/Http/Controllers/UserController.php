@@ -114,8 +114,8 @@ class UserController extends Controller
     public function users(Request $request)
     {
         $search = $request->get('q');
-        $users = User::where('designation', 'LIKE', "%{$search}%")
-            ->select('id', 'designation')
+        $users = User::where('position', 'LIKE', "%{$search}%")
+            ->select('id', 'position')
             ->paginate(10);
 
         return response()->json([

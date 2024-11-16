@@ -29,7 +29,7 @@
             
             <div class="description mt-4">
                 <h2>Description</h2>
-                <p>{!! nl2br($galleryData['description']) !!}</p>
+                <p>{!! nl2br($galleryData['description']) ?? 'N/A' !!}</p>
             </div>
         </div>
     </div>

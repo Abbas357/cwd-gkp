@@ -19,7 +19,7 @@
                         <div class="col-md-2">
                             @if ($event->getFirstMedia('events_pictures') && $event->getFirstMedia('events_pictures')->mime_type === 'image/jpeg')
                                 <img src="{{ $event->getFirstMediaUrl('events_pictures') }}" 
-                                     alt="{{ $event->title }}" 
+                                     alt="{{ $event->title }}"
                                      class="img-fluid rounded" 
                                      style="max-height: 100px; width: auto;">
                             @else
@@ -37,11 +37,11 @@
                                 <small class="text-muted">{{ $event->published_at->format('M d, Y') }}</small>
                             </div>
                             <p class="mb-1">
-                                <span>Organizer: {{ $event->organizer ?? 'Organizer' }}</span> - <span>Chairperson: {{ $event->chairperson ?? 'Chair' }}</span>
+                                <span>Organizer: {{ $event->organizer ?? 'N/A'  }}</span> - <span>Chairperson: {{ $event->chairperson ?? 'N/A' }}</span>
                             </p>
                             <div>
-                                <strong>Date:</strong> {{ $event->start_datetime->format('M d, Y') }} to  {{ $event->end_datetime->format('M d, Y') }}<br>
-                                <strong>Time:</strong> {{ $event->start_datetime->format('h:i A') }} to {{ $event->end_datetime->format('h:i A') }}<br>
+                                <strong>Date:</strong> {{ $event->start_datetime->format('M d, Y') ?? 'N/A' }} to  {{ $event->end_datetime->format('M d, Y') ?? 'N/A' }}<br>
+                                <strong>Time:</strong> {{ $event->start_datetime->format('h:i A') ?? 'N/A' }} to {{ $event->end_datetime->format('h:i A') ?? 'N/A' }}<br>
                             </div>
 
                             <a href="{{ route('events.show', $event->slug) }}" class="btn btn-primary btn-sm">Read More</a>
