@@ -106,54 +106,50 @@
 
 </style>
 
-<div class="container message pb-5">
-    <div class="mx-auto text-center mb-5" style="max-width: 900px;">
-        <h5 class="section-title px-3">Message</h5>
-    </div>
-    <div class="card-row row">
-        @if($ministerData)
-        <div class="col card">
-            <div class="card-body">
-                <div class="card-text">
-                    <h4 class="card-title">{{ $ministerData['title'] }}</h4>
-                    <p class="message-text-content" data-full-text="{{ $ministerData['message'] }}">
-                        {{ Str::limit($ministerData['message'], 100) }}
-                    </p>
-                    <button class="show-more-inline">Show More</button>
-                </div>
-                <div class="card-image">
-                    <img src="{{ $ministerData['image'] }}" alt="Minister Image" />
-                </div>
+
+<div class="card-row row">
+    @if($ministerData)
+    <div class="col card">
+        <div class="card-body">
+            <div class="card-text">
+                <h4 class="card-title">{{ $ministerData['title'] }}</h4>
+                <p class="message-text-content" data-full-text="{{ $ministerData['message'] }}">
+                    {{ Str::limit($ministerData['message'], 100) }}
+                </p>
+                <button class="show-more-inline">Show More</button>
             </div>
-            <div class="card-footer-row">
-                <a href="{{ route('positions.show', ['position' => $ministerData['position']]) }}" class="btn-animate">View Previous</a>
-                <span class="person-name">{{ $ministerData['name'] }}</span>
+            <div class="card-image">
+                <img src="{{ $ministerData['image'] }}" alt="Minister Image" />
             </div>
         </div>
-        @endif
+        <div class="card-footer-row">
+            <a href="{{ route('positions.show', ['position' => $ministerData['position']]) }}" class="btn-animate">View Previous</a>
+            <span class="person-name">{{ $ministerData['name'] }}</span>
+        </div>
+    </div>
+    @endif
 
-        @if($secretaryData)
-        <div class="card">
-            <div class="card-body">
-                <div class="card-text">
-                    <h4 class="card-title">{{ $secretaryData['title'] }}</h4>
-                    <p class="message-text-content" data-full-text="{{ $secretaryData['message'] }}">
-                        {{ Str::limit($secretaryData['message'], 100) }}
-                    </p>
-                    <button class="show-more-inline">Show More</button>
-                </div>
-                <div class="card-image">
-                    <img src="{{ $secretaryData['image'] }}" alt="Secretary Image" />
-                </div>
+    @if($secretaryData)
+    <div class="card">
+        <div class="card-body">
+            <div class="card-text">
+                <h4 class="card-title">{{ $secretaryData['title'] }}</h4>
+                <p class="message-text-content" data-full-text="{{ $secretaryData['message'] }}">
+                    {{ Str::limit($secretaryData['message'], 100) }}
+                </p>
+                <button class="show-more-inline">Show More</button>
             </div>
-            <div class="card-footer-row">
-                <a href="{{ route('positions.show', ['position' => $secretaryData['position']]) }}" class="btn-animate">View Previous</a>
-                <span class="person-name">{{ $secretaryData['name'] }}</span>
+            <div class="card-image">
+                <img src="{{ $secretaryData['image'] }}" alt="Secretary Image" />
             </div>
         </div>
-        @endif
-
+        <div class="card-footer-row">
+            <a href="{{ route('positions.show', ['position' => $secretaryData['position']]) }}" class="btn-animate">View Previous</a>
+            <span class="person-name">{{ $secretaryData['name'] }}</span>
+        </div>
     </div>
+    @endif
+
 </div>
 <script>
     const maxCharacters = 300;
@@ -181,5 +177,5 @@
             $showMoreButton.hide();
         }
     });
-</script>
 
+</script>

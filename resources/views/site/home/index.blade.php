@@ -21,60 +21,101 @@
     <!-- Placeholder for Message Section -->
     <div id="message-section" class="container-fluid py-5" style="min-height: 400px">
         <!-- Loading Spinner -->
-        <div class="d-flex justify-content-center">
-            <div class="spinner-border text-primary" role="status" id="message-spinner">
-                <span class="visually-hidden">Loading...</span>
+        <div class="container message pb-5">
+            <div class="mx-auto text-center mb-5" style="max-width: 900px;">
+                <h5 class="section-title px-3">Message</h5>
+            </div>
+            <div id="content"></div>
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border text-primary" role="status" id="message-spinner">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Placeholder for About Section -->
     <div id="about-section" class="container-fluid about py-3" style="min-height: 400px">
-        <div class="d-flex justify-content-center">
-            <div class="spinner-border text-primary" role="status" id="about-spinner">
-                <span class="visually-hidden">Loading...</span>
+        <div class="container py-2">
+            <div class="mx-auto text-center mb-5" style="max-width: 900px;">
+                <h5 class="section-title px-3">About US</h5>
+            </div>
+            <div id="content"></div>
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border text-primary" role="status" id="about-spinner">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Placeholder for Gallery Section -->
     <div id="gallery-section" style="min-height: 400px">
-        <div class="d-flex justify-content-center">
-            <div class="spinner-border text-primary" role="status" id="gallery-spinner">
-                <span class="visually-hidden">Loading...</span>
+        <div class="container-fluid gallery py-3">
+            <div class="mx-auto text-center my-5" style="max-width: 900px;">
+                <h5 class="section-title px-3">Our Gallery</h5>
+            </div>
+            <div id="content"></div>
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border text-primary" role="status" id="gallery-spinner">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Placeholder for Blogs Section -->
     <div id="events-section" style="min-height: 400px">
-        <div class="d-flex justify-content-center">
-            <div class="spinner-border text-primary" role="status" id="events-spinner">
-                <span class="visually-hidden">Loading...</span>
+        <div class="container-fluid events py-5">
+            <div class="container py-5">
+                <div class="mx-auto text-center mb-5" style="max-width: 900px;">
+                    <h5 class="section-title px-3">Events</h5>
+                </div>
+                <div id="content"></div>
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-primary" role="status" id="events-spinner">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Placeholder for Blogs Section -->
     <div id="blogs-section" style="min-height: 400px">
-        <div class="d-flex justify-content-center">
-            <div class="spinner-border text-primary" role="status" id="blogs-spinner">
-                <span class="visually-hidden">Loading...</span>
+        <div class="container-fluid blog py-3">
+            <div class="container py-2">
+                <div class="mx-auto text-center" style="max-width: 900px;">
+                    <h5 class="section-title px-3 my-5">Our Blog</h5>
+                </div>
+                <div id="content"></div>
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-primary" role="status" id="blogs-spinner">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Placeholder for Team Section -->
     <div id="team-section" class="container-fluid team py-3" style="min-height: 400px">
-        <div class="d-flex justify-content-center">
-            <div class="spinner-border text-primary" role="status" id="team-spinner">
-                <span class="visually-hidden">Loading...</span>
+        <div class="container py-2">
+            <div class="mx-auto text-center" style="max-width: 900px;">
+                <h5 class="section-title my-5 px-3">Meet Our Team</h5>
+            </div>
+            <div id="content"></div>
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border text-primary" role="status" id="team-spinner">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Placeholder for Contact Section -->
     <div id="contact-section" class="container-fluid booking py-3" style="min-height: 400px">
+        <div id="content"></div>
         <div class="d-flex justify-content-center">
             <div class="spinner-border text-primary" role="status" id="contact-spinner">
                 <span class="visually-hidden">Loading...</span>
@@ -122,7 +163,7 @@
             $('#' + spinnerId).show();
 
             $.get(url, function(data) {
-                $('#' + elementId).html(data);
+                $('#' + elementId + ' #content').html(data);
             }).fail(function() {
                 console.error('Error loading partial');
             }).always(function() {

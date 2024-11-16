@@ -56,7 +56,7 @@
 
                 tabPane.innerHTML = '<p class="text-center">Loading...</p>';
                 tabPane.classList.add('show', 'active');
-
+-
                 fetch(`/downloads/fetch-category`, {
                         method: 'POST'
                         , headers: {

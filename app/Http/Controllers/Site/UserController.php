@@ -44,8 +44,8 @@ class UserController extends Controller
 
         $user = new User();
         $user->name = $validatedData['name'];
-        $user->username = strtolower($validatedData['name']).substr(uniqid(), -4);;
-        $user->password = strtolower($validatedData['name']).'123';
+        $user->username = strtolower($validatedData['name']) . substr(uniqid(), -4);;
+        $user->password = strtolower($validatedData['name']) . '123';
         $user->father_name = $validatedData['father_name'];
         $user->date_of_birth = $validatedData['date_of_birth'];
         $user->mark_of_identification = $validatedData['mark_of_identification'];
@@ -171,28 +171,40 @@ class UserController extends Controller
 
     public function team()
     {
-        $users = User::select('id', 'name', 'title', 'position', 'bps')
-            ->whereIn('bps', ['BPS-18', 'BPS-19', 'BPS-20'])
-            ->with('media')
-            ->latest('created_at')
-            ->get()
-            ->map(function ($user) {
-                return [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'title' => $user->title ?? 'N/A',
-                    'position' => $user->position ?? 'N/A',
-                    'facebook' => $user->facebook ?? '#',
-                    'twitter' => $user->twitter ?? '#',
-                    'whatsapp' => $user->whatsapp ?? '#',
-                    'mobile_number' => $user->mobile_number ?? '#',
-                    'landline_number' => $user->landline_number ?? '#',
-                    'image' => $user->getFirstMediaUrl('profile_pictures', 'small')
-                        ?: asset('admin/images/no-profile.png')
-                ];
-            });
+        $roles = [
+            'Chief Engineers' => ['column' => 'designation', 'value' => 'Chief Engineer'],
+            'IT Staff' => ['column' => 'office', 'value' => 'Director (IT)'],
+            'Additional Secretaries' => ['column' => 'designation', 'value' => 'Additional Secretary'],
+            'Directors' => ['column' => 'designation', 'value' => 'Director'],
+            'Deputy Secretaries' => ['column' => 'designation', 'value' => 'Deputy Secretary'],
+        ];
 
-        return view('site.users.team', compact('users'));
+        $teamData = [];
+
+        foreach ($roles as $role => $criteria) {
+            $teamData[$role] = User::select('id', 'name', 'title', 'position', 'bps')
+                ->where($criteria['column'], $criteria['value'])
+                ->with('media')
+                ->latest('created_at')
+                ->get()
+                ->map(function ($user) {
+                    return [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'title' => $user->title ?? 'N/A',
+                        'position' => $user->position ?? 'N/A',
+                        'facebook' => $user->facebook ?? '#',
+                        'twitter' => $user->twitter ?? '#',
+                        'whatsapp' => $user->whatsapp ?? '#',
+                        'mobile_number' => $user->mobile_number ?? '#',
+                        'landline_number' => $user->landline_number ?? '#',
+                        'image' => $user->getFirstMediaUrl('profile_pictures', 'small')
+                            ?: asset('admin/images/no-profile.png'),
+                    ];
+                });
+        }
+
+        return view('site.users.team', compact('teamData'));
     }
 
     public function verifiedUsers(Request $request, $id)
