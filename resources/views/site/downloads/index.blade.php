@@ -10,19 +10,19 @@
         <div class="row">
             <div class="col-md-3">
                 <!-- Left-aligned Tabs -->
-                <ul class="nav nav-pills flex-column" id="categoryTabs" role="tablist">
+                <ul class="nav nav-pills nav-sm flex-column" id="categoryTabs" role="tablist">
                     @foreach ($downloadsByCategory as $category => $downloads)
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link p-3 @if($loop->first) active @endif" 
-                               id="tab-{{ Str::slug($category) }}" 
-                               data-bs-toggle="tab" 
-                               href="#{{ Str::slug($category) }}" 
-                               role="tab" 
-                               aria-controls="{{ Str::slug($category) }}" 
-                               aria-selected="{{ $loop->first ? 'true' : 'false' }}">
-                                {{ $category }}
-                            </a>
-                        </li>
+                    <li class="nav-item bg-light mb-1" role="presentation">
+                        <a class="nav-link p-2 @if($loop->first) active @endif"
+                            id="tab-{{ Str::slug($category) }}"
+                            data-bs-toggle="tab"
+                            href="#{{ Str::slug($category) }}"
+                            role="tab"
+                            aria-controls="{{ Str::slug($category) }}"
+                            aria-selected="{{ $loop->first ? 'true' : 'false' }}">
+                            <i class="bi-arrow-right-circle"></i> &nbsp; {{ $category }}
+                        </a>
+                    </li>
                     @endforeach
                 </ul>
             </div>
@@ -30,31 +30,48 @@
                 <!-- Right-aligned Tab Content -->
                 <div class="tab-content" id="categoryTabContent">
                     @foreach ($downloadsByCategory as $category => $downloads)
-                        <div class="tab-pane fade @if($loop->first) show active @endif" 
-                             id="{{ Str::slug($category) }}" 
-                             role="tabpanel" 
-                             aria-labelledby="tab-{{ Str::slug($category) }}">
-                             
-                            <h4>{{ $category }} Downloads</h4>
-                            <ul class="list-group">
+                    <div class="tab-pane fade @if($loop->first) show active @endif"
+                        id="{{ Str::slug($category) }}"
+                        role="tabpanel"
+                        aria-labelledby="tab-{{ Str::slug($category) }}">
+
+                        <h4>{{ $category }} Downloads</h4>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>File Name</th>
+                                    <th>File Type</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 @forelse ($downloads as $download)
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <span>{{ $loop->iteration }}</span>
-                                        <span>{{ $download->file_name }}</span>
-                                        <span class="badge bg-primary rounded-pill">{{ $download->file_type ?? 'N/A' }}</span>
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $download->file_name }}</td>
+                                    <td>{{ $download->file_type ?? 'N/A' }}</td>
+                                    <td>
                                         @if ($media = $download->getFirstMediaUrl('downloads'))
-                                        <a href="{{ $media }}" class="btn-animate"><i class="bi-cloud-arrow-down"></i> Download</a>
+                                        <a href="{{ $media }}" class="btn btn-primary btn-sm btn-animate" style="white-space: nowrap">
+                                            <i class="bi-cloud-arrow-down"></i> Download
+                                        </a>
                                         @else
-                                            <span class="text-muted">No file available</span>
+                                        <span class="text-muted">No file available</span>
                                         @endif
-                                    </li>
+                                    </td>
+                                </tr>
                                 @empty
-                                    <li class="list-group-item">No downloads available in this category.</li>
+                                <tr>
+                                    <td colspan="4" class="text-center">No downloads available in this category.</td>
+                                </tr>
                                 @endforelse
-                            </ul>
-                        </div>
+                            </tbody>
+                        </table>
+                    </div>
                     @endforeach
                 </div>
+
             </div>
         </div>
     </div>

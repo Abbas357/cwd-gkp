@@ -38,7 +38,7 @@
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="total_cost">Total Cost (in Millions)</label>
-                                    <input type="number" class="form-control" id="total_cost" value="{{ old('total_cost') }}" placeholder="eg. 325" name="total_cost">
+                                    <input type="text" class="form-control" id="total_cost" value="{{ old('total_cost') }}" placeholder="eg. 325" name="total_cost">
                                     @error('total_cost')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
@@ -119,7 +119,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="year_of_completion">Year of Completion</label>
-                                    <input type="date" class="form-control" id="year_of_completion" value="{{ old('year_of_completion') }}" placeholder="Funding Source" name="year_of_completion">
+                                    <input type="date" class="form-control" id="year_of_completion" value="{{ old('year_of_completion') }}" name="year_of_completion">
                                     @error('year_of_completion')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror

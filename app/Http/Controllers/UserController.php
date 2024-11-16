@@ -215,6 +215,11 @@ class UserController extends Controller
 
     public function edit($userId)
     {
+        $bps = [];
+        for ($i = 1; $i <= 22; $i++) {
+            $bps[] = sprintf("BPS-%02d", $i);
+        }
+
         $user = User::withoutGlobalScope('active')->findOrFail($userId);
         if (!$user) {
             return response()->json([
@@ -234,7 +239,7 @@ class UserController extends Controller
             'allDesignations' => Category::where('type', 'designation')->get(),
             'allPositions' => Category::where('type', 'position')->get(),
             'allOffices' => Category::where('type', 'office')->get(),
-            'bps' => Category::where('type', 'bps')->get(),
+            'bps' => $bps,
         ];
 
         $html = view('admin.users.partials.edit', compact('data'))->render();

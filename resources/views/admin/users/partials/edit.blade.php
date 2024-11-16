@@ -109,9 +109,9 @@
                     <div class="col-lg-6">
                         <label for="bps">BPS</label>
                         <select class="form-select" id="bps" name="bps">
-                            <option value="">Choose Designation</option>
+                            <option value="">Choose BPS</option>
                             @foreach($data['bps'] as $bps)
-                            <option value="{{ $bps->name }}" {{ $bps->name === $data['user']->bps ? 'selected' : '' }}> {{ $bps->name }}</option>
+                            <option value="{{ $bps }}" {{ $data['user']->bps === $bps ? 'selected' : '' }}> {{ $bps }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -240,9 +240,9 @@
         placeholder: "____-_______"
     });
 
-    $('#landline_number').mask('0000000000', {
-        placeholder: "__________"
-    });
+    // $('#landline_number').mask('0000000000', {
+    //     placeholder: "__________"
+    // });
 
     $('#cnic').mask('00000-0000000-0', {
         placeholder: "_____-_______-_"

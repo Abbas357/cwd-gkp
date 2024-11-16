@@ -263,9 +263,9 @@
                 placeholder: "____-_______"
             });
 
-            $('#landline_number').mask('0000000000', {
-                placeholder: "__________"
-            });
+            // $('#landline_number').mask('00000000000', {
+            //     placeholder: "___________"
+            // });
             
             $('#cnic').mask('00000-0000000-0', {
                 placeholder: "_____-_______-_"

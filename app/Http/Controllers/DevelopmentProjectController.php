@@ -28,16 +28,16 @@ class DevelopmentProjectController extends Controller
             return DataTables::of($projects)
                 ->addIndexColumn()
                 ->addColumn('district', function ($row) {
-                    return $row->district->name;
+                    return $row->district?->name;
                 })
                 ->addColumn('chief_engineer', function ($row) {
                     return $row->chiefEngineer?->position;
                 })
                 ->editColumn('year_of_completion', function($row) {
-                    return date('Y');
+                    return $row->year_of_completion?->format('j, F Y');
                 })
                 ->editColumn('commencement_date', function($row) {
-                    return $row->commencement_date->format('j, F Y');
+                    return $row->commencement_date?->format('j, F Y');
                 })
                 ->editColumn('progress_percentage', function($row) {
                     return $row->progress_percentage . '%';
@@ -73,7 +73,8 @@ class DevelopmentProjectController extends Controller
     {
         $dev_project = new DevelopmentProject();
         $dev_project->name = $request->name;
-        $dev_project->slug = Str::slug($request->name) . '-' . substr(uniqid(), -6). '-' . date('d-m-Y');
+        $name = collect(explode(' ', $request->name))->take(5)->join(' ');
+        $dev_project->slug = Str::slug($name) . '-' . substr(uniqid(), -6) . '-' . date('d-m-Y');
         $dev_project->introduction = $request->introduction;
         $dev_project->total_cost = $request->total_cost;
         $dev_project->commencement_date = $request->commencement_date;

@@ -38,6 +38,7 @@ return new class extends Migration
             $table->string('otp')->nullable();
             $table->boolean('is_active')->default(0);
             $table->text('message')->nullable();
+            $table->boolean('is_featured')->default(0);
 
             // Identity Card
             $table->timestamp('date_of_birth')->nullable();

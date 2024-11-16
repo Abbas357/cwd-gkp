@@ -9,7 +9,6 @@
 
     <x-slot name="breadcrumbItems">
         <li class="breadcrumb-item"><a href="{{ route('events.index') }}">Events</a></li>
-        <li class="breadcrumb-item active">{{ $eventData['title'] }}</li>
     </x-slot>
     
     <div class="container mt-3">

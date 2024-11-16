@@ -10,7 +10,6 @@
 
     <x-slot name="breadcrumbItems">
         <li class="breadcrumb-item"><a href="{{ route('development_projects.index') }}">Development Projects</a></li>
-        <li class="breadcrumb-item active">{{ $projectData['name'] }}</li>
     </x-slot>
 
     <div class="container mt-3">
@@ -35,7 +34,7 @@
                     </tr>
                     <tr>
                         <th>Total Cost</th>
-                        <td>${{ number_format($projectData['total_cost'], 2) ?? 'N/A' }}</td>
+                        <td>&#8360; {{ number_format($projectData['total_cost'], 2) ?? 'N/A' }} (Millions)</td>
                     </tr>
                     <tr>
                         <th>Commencement Date</th>

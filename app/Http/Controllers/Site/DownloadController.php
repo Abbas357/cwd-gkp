@@ -15,13 +15,11 @@ class DownloadController extends Controller
             ->limit(100)
             ->get()
             ->unique('category')
-            ->take(5)
             ->pluck('category');
 
         $downloadsByCategory = $latestCategorySubquery->mapWithKeys(function ($category) {
             $downloads = Download::where('category', $category)
                 ->orderBy('published_at', 'desc')
-                ->limit(5)
                 ->get();
             return [$category => $downloads];
         });

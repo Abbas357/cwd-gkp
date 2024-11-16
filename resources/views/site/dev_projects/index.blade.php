@@ -16,12 +16,11 @@
                 <tr>
                     <th>#</th>
                     <th>Name</th>
-                    <th>Introduction</th>
                     <th>Total Cost</th>
                     <th>Commencement Date</th>
                     <th>Progress</th>
                     <th>Status</th>
-                    <th>Action</th>
+                    <th>Details</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,11 +28,10 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $project->name }}</td>
-                        <td>{!! Str::limit($project->introduction, 50) !!}</td>
-                        <td>${{ number_format($project->total_cost, 2) ?? 'N/A' }}</td>
-                        <td>{{ $project->commencement_date->format('M d, Y') ?? 'N/A' }}</td>
-                        <td>{{ $project->progress_percentage ?? '50%' }}%</td>
-                        <td>{{ $project->status }}</td>
+                        <td>{{ $project->total_cost }}</td>
+                        <td>{{ $project->commencement_date->format('M d, Y') }}</td>
+                        <td>{{ $project->progress_percentage }}%</td>
+                        <td>{{ $project->status }} <div class="fw-bold text-success">{{ $project->year_of_completion ? $project->year_of_completion->format('M d, Y') : '' }}</div></td>
                         <td>
                             <a href="{{ route('development_projects.show', $project->slug) }}" class="btn btn-primary btn-sm">View Details</a>
                         </td>
