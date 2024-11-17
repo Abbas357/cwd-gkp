@@ -243,20 +243,21 @@
     <script>
         $(document).ready(function() {
             imageCropper({
-                fileInput: '#image'
-                , inputLabelPreview: '#image-label-preview'
-            , });
-
-            imageCropper({
-                fileInput: "#posting_order"
-                , inputLabelPreview: "#posting_order"
-                , aspectRatio: 1 / 1.58
+                fileInput: '#image',
+                inputLabelPreview: '#image-label-preview',
+                aspectRatio: 9 / 10,
             });
 
             imageCropper({
-                fileInput: "#exit_order"
-                , inputLabelPreview: "#exit_order"
-                , aspectRatio: 1 / 1.58
+                fileInput: "#posting_order",
+                inputLabelPreview: "#posting_order",
+                aspectRatio: 5 / 6
+            });
+
+            imageCropper({
+                fileInput: "#exit_order",
+                inputLabelPreview: "#exit_order",
+                aspectRatio: 5 / 6
             });
 
             $('#mobile_number').mask('0000-0000000', {
@@ -266,7 +267,7 @@
             // $('#landline_number').mask('00000000000', {
             //     placeholder: "___________"
             // });
-            
+
             $('#cnic').mask('00000-0000000-0', {
                 placeholder: "_____-_______-_"
             });
@@ -276,44 +277,43 @@
             });
 
             $('#office').select2({
-                theme: "bootstrap-5"
-                , placeholder: "Choose office"
-                , dropdownParent: $('#office').parent()
-                , allowClear: true
+                theme: "bootstrap-5",
+                placeholder: "Choose office",
+                dropdownParent: $('#office').parent(),
+                allowClear: true
             });
 
             $('#designation').select2({
-                theme: "bootstrap-5"
-                , placeholder: "Choose designation"
-                , dropdownParent: $('#designation').parent()
-                , allowClear: true
-            , });
+                theme: "bootstrap-5",
+                placeholder: "Choose designation",
+                dropdownParent: $('#designation').parent(),
+                allowClear: true,
+            });
 
             $('#position').select2({
-                theme: "bootstrap-5"
-                , placeholder: "Choose position"
-                , dropdownParent: $('#position').parent()
-                , allowClear: true
-            , });
+                theme: "bootstrap-5",
+                placeholder: "Choose position",
+                dropdownParent: $('#position').parent(),
+                allowClear: true,
+            });
 
             $('#roles').select2({
-                theme: "bootstrap-5"
-                , placeholder: "Choose Roles"
-                , dropdownParent: $('#roles').parent()
-                , allowClear: true
-                , closeOnSelect: false
+                theme: "bootstrap-5",
+                placeholder: "Choose Roles",
+                dropdownParent: $('#roles').parent(),
+                allowClear: true,
+                closeOnSelect: false
             });
 
             $('#permissions').select2({
-                theme: "bootstrap-5"
-                , placeholder: "Choose Permissions"
-                , dropdownParent: $('#permissions').parent()
-                , allowClear: true
-                , closeOnSelect: false
+                theme: "bootstrap-5",
+                placeholder: "Choose Permissions",
+                dropdownParent: $('#permissions').parent(),
+                allowClear: true,
+                closeOnSelect: false
             });
 
         });
-
     </script>
     @endpush
 </x-app-layout>

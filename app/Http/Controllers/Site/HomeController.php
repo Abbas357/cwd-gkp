@@ -20,6 +20,7 @@ class HomeController extends Controller
             return Slider::select('id', 'title', 'slug', 'summary')
                 ->with('media')
                 ->limit(5)
+                ->orderBy('order')
                 ->get()
                 ->map(function ($slider) {
                     return [
@@ -204,7 +205,7 @@ class HomeController extends Controller
                         'mobile_number' => $user->mobile_number ?? '#',
                         'landline_number' => $user->landline_number ?? '#',
                         'image' => $user->getFirstMediaUrl('profile_pictures', 'small')
-                            ?: asset('admin/images/no-profile.png')
+                            ?: asset('admin/images/default-avatar.jpg')
                     ];
                 });
         });

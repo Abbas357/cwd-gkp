@@ -1,4 +1,4 @@
-<x-main-layout title="Development Projects">
+    <x-main-layout title="Development Projects">
 
     <x-slot name="breadcrumbTitle">
         Development Projects
@@ -26,14 +26,14 @@
             <tbody>
                 @foreach ($projects as $project)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ ($projects->currentPage() - 1) * $projects->perPage() + $loop->iteration }}</td>
                         <td>{{ $project->name }}</td>
                         <td>{{ $project->total_cost }}</td>
                         <td>{{ $project->commencement_date->format('M d, Y') }}</td>
                         <td>{{ $project->progress_percentage }}%</td>
                         <td>{{ $project->status }} <div class="fw-bold text-success">{{ $project->year_of_completion ? $project->year_of_completion->format('M d, Y') : '' }}</div></td>
                         <td>
-                            <a href="{{ route('development_projects.show', $project->slug) }}" class="btn btn-primary btn-sm">View Details</a>
+                            <a href="{{ route('development_projects.show', $project->slug) }}" class="btn btn-animate text-no-overflow btn-sm">View Details</a>
                         </td>
                     </tr>
                 @endforeach
@@ -41,7 +41,7 @@
         </table>
 
         <!-- Pagination links -->
-        <div class="d-flex justify-content-center mt-4">
+        <div class="d-flex justify-content-around mt-4">
             {{ $projects->links() }}
         </div>
     </div>

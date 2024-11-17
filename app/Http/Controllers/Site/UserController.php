@@ -120,7 +120,7 @@ class UserController extends Controller
                 'from' => $user->posting_date?->format('j, F Y'),
                 'to' => $user->exit_date?->format('j, F Y'),
                 'profile_pictures' => $user->getFirstMediaUrl('profile_pictures', 'small')
-                    ?: asset('admin/images/no-profile.png'),
+                    ?: asset('admin/images/default-avatar.jpg'),
             ];
         });
 
@@ -153,7 +153,7 @@ class UserController extends Controller
             'is_active' => $user->is_active,
             'media' => [
                 'profile_pictures' => $user->getFirstMediaUrl('profile_pictures', 'small')
-                    ?: asset('admin/images/no-profile.png'),
+                    ?: asset('admin/images/default-avatar.jpg'),
                 'posting_orders' => $user->getFirstMediaUrl('posting_orders'),
                 'exit_orders' => $user->getFirstMediaUrl('exit_orders'),
             ],
@@ -173,10 +173,11 @@ class UserController extends Controller
     {
         $roles = [
             'Chief Engineers' => ['column' => 'designation', 'value' => 'Chief Engineer'],
-            'IT Staff' => ['column' => 'office', 'value' => 'Director (IT)'],
             'Additional Secretaries' => ['column' => 'designation', 'value' => 'Additional Secretary'],
             'Directors' => ['column' => 'designation', 'value' => 'Director'],
             'Deputy Secretaries' => ['column' => 'designation', 'value' => 'Deputy Secretary'],
+            'Principal Architact' => ['column' => 'position', 'value' => 'Principal Architact'],
+            'IT Professionals' => ['column' => 'office', 'value' => 'Director (IT)'],
         ];
 
         $teamData = [];
@@ -199,7 +200,7 @@ class UserController extends Controller
                         'mobile_number' => $user->mobile_number ?? '#',
                         'landline_number' => $user->landline_number ?? '#',
                         'image' => $user->getFirstMediaUrl('profile_pictures', 'small')
-                            ?: asset('admin/images/no-profile.png'),
+                            ?: asset('admin/images/default-avatar.jpg'),
                     ];
                 });
         }

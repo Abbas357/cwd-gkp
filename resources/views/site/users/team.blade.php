@@ -7,6 +7,10 @@
             border: 1px solid #ddd;
             border-radius: 10px
         }
+        .text-no-overflow {
+            white-space:nowrap;
+            text-overflow: ellipsis;
+        }
     </style>
     @endpush
     <x-slot name="breadcrumbTitle">
@@ -18,35 +22,51 @@
     </x-slot>
 
     <div class="container py-2">
+    <ul class="nav nav-tabs mb-4" id="teamTabs" role="tablist">
         @foreach ($teamData as $role => $users)
-            <h3>{{ $role }}</h3>
-            <div class="row">
-                @foreach ($users as $user)
-                    <div class="col-sm-12 col-md-4 col-lg-3 col-xl-2 mb-4">
-                        <div class="team-item h-100 user-card">
-                            <div class="team-img">
-                                <div class="team-img-efects">
-                                    <img src="{{ $user['image'] }}" class="img-fluid w-100 rounded-top" alt="{{ $user['name'] }}">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="{{ Str::slug($role, '-') }}-tab" 
+                        data-bs-toggle="tab" data-bs-target="#{{ Str::slug($role, '-') }}" 
+                        type="button" role="tab" aria-controls="{{ Str::slug($role, '-') }}" 
+                        aria-selected="{{ $loop->first ? 'true' : 'false' }}">
+                    {{ $role }}
+                </button>
+            </li>
+        @endforeach
+    </ul>
+    <div class="tab-content" id="teamTabsContent">
+        @foreach ($teamData as $role => $users)
+            <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="{{ Str::slug($role, '-') }}" 
+                 role="tabpanel" aria-labelledby="{{ Str::slug($role, '-') }}-tab">
+                <div class="row">
+                    @foreach ($users as $user)
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4">
+                            <div class="team-item h-100 user-card">
+                                <div class="team-img">
+                                    <div class="team-img-efects">
+                                        <img src="{{ $user['image'] }}" class="img-fluid w-100 rounded-top" alt="{{ $user['name'] }}">
+                                    </div>
+                                    <div class="team-icon rounded-pill p-2 d-flex justify-content-center align-items-center">
+                                        <a class="btn btn-square btn-primary rounded-circle mx-1" href="{{ $user['facebook'] }}" target="_blank"><i class="bi bi-facebook"></i></a>
+                                        <a class="btn btn-square btn-success rounded-circle mx-1" href="https://wa.me/{{ $user['whatsapp'] }}" target="_blank"><i class="bi bi-whatsapp"></i></a>
+                                        <a class="btn btn-square btn-secondary rounded-circle mx-1" href="tel:{{ $user['mobile_number'] }}" target="_blank"><i class="bi bi-telephone"></i></a>
+                                    </div>
                                 </div>
-                                <div class="team-icon rounded-pill p-2 d-flex justify-content-center align-items-center">
-                                    <a class="btn btn-square btn-primary rounded-circle mx-1" href="{{ $user['facebook'] }}" target="_blank"><i class="bi bi-facebook"></i></a>
-                                    <a class="btn btn-square btn-info rounded-circle mx-1" href="{{ $user['twitter'] }}" target="_blank"><i class="bi bi-twitter"></i></a>
-                                    <a class="btn btn-square btn-success rounded-circle mx-1" href="https://wa.me/{{ $user['whatsapp'] }}" target="_blank"><i class="bi bi-whatsapp"></i></a>
-                                    <a class="btn btn-square btn-secondary rounded-circle mx-1" href="tel:{{ $user['mobile_number'] }}" target="_blank"><i class="bi bi-telephone"></i></a>
+                                <div class="team-title text-center rounded-bottom p-1 d-flex flex-column" style="overflow: hidden;">
+                                    <div class="team-title-inner mb-auto">
+                                        <h5 class="fs-6 mt-1 text-no-overflow">{{ $user['name'] }}</h5>
+                                        <p class="mb-1 text-no-overflow">{{ $user['position'] }}</p>
+                                    </div>
+                                    <a href="{{ route('positions.show', ['position' => $user['position']]) }}" class="btn-animate mt-1">View Previous</a>
                                 </div>
-                            </div>
-                            <div class="team-title text-center rounded-bottom p-4 d-flex flex-column" style="height:220px; overflow: hidden;">
-                                <div class="team-title-inner mb-auto" style="overflow-y: auto;">
-                                    <h5 class="fs-6 mt-3">{{ $user['name'] }}</h5>
-                                    <p class="mb-3">{{ $user['position'] }}</p>
-                                </div>
-                                <a href="{{ route('positions.show', ['position' => $user['position']]) }}" class="btn-animate mt-3">View Previous</a>
                             </div>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
         @endforeach
     </div>
+</div>
+
     
 </x-main-layout>

@@ -220,20 +220,21 @@
 
 <script>
     imageCropper({
-        fileInput: '#image'
-        , inputLabelPreview: '#image-label-preview'
-    , });
-
-    imageCropper({
-        fileInput: "#posting_order"
-        , inputLabelPreview: "#posting_order"
-        , aspectRatio: 1 / 1.58
+        fileInput: '#image',
+        inputLabelPreview: '#image-label-preview',
+        aspectRatio: 9 / 10,
     });
 
     imageCropper({
-        fileInput: "#exit_order"
-        , inputLabelPreview: "#exit_order"
-        , aspectRatio: 1 / 1.58
+        fileInput: "#posting_order",
+        inputLabelPreview: "#posting_order",
+        aspectRatio: 5 / 6
+    });
+
+    imageCropper({
+        fileInput: "#exit_order",
+        inputLabelPreview: "#exit_order",
+        aspectRatio: 5 / 6
     });
 
     $('#mobile_number').mask('0000-0000000', {
@@ -253,18 +254,18 @@
     });
 
     $('#designation').select2({
-        theme: "bootstrap-5"
-        , dropdownParent: $('#designation').parent()
-    , });
+        theme: "bootstrap-5",
+        dropdownParent: $('#designation').parent(),
+    });
 
     $('#position').select2({
-        theme: "bootstrap-5"
-        , dropdownParent: $('#position').parent()
-    , });
+        theme: "bootstrap-5",
+        dropdownParent: $('#position').parent(),
+    });
     $('#office').select2({
-        theme: "bootstrap-5"
-        , dropdownParent: $('#office').parent()
-    , });
+        theme: "bootstrap-5",
+        dropdownParent: $('#office').parent(),
+    });
 
     document.getElementById('roleSearch').addEventListener('keyup', function() {
         let searchQuery = this.value.toLowerCase();
@@ -295,5 +296,4 @@
             }
         });
     });
-
 </script>
