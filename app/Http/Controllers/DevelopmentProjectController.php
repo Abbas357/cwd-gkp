@@ -125,7 +125,7 @@ class DevelopmentProjectController extends Controller
         $dev_project = DevelopmentProject::findOrFail($dev_projectId);
         if ($dev_project->status != 'Draft') {
             $dev_project->status = 'Archived';
-            $dev_project->save();
+            $dev_project->save(); 
             return response()->json(['success' => 'Project has been archived successfully.'], 200);
         }
         return response()->json(['success' => 'Project cannot be archived.'], 403);

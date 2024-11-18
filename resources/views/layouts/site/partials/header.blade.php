@@ -73,7 +73,7 @@
                 <nav class="cw-top-nav">
                     <ul role="menu" class="cw-top-menu-nav aria-nav">
                         <li role="none" class="cw-top-menu child-nav" data-tier-id="4">
-                            <button role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
+                            <button role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true" onclick="window.location.href = '{{ route('site') }}'">
                                 <span>HOME</span>
                             </button>
 
@@ -84,7 +84,7 @@
                                         <span class="cw-back-button-label">Back </span>
                                     </button>
                                 </li>
-                                <li role="menuitem" class="cw-hide-mob-links cw-plateTitle">
+                                <li role="menuitem" class="cw-hide-mob-links cw-plateTitle" onclick="window.location.href = '{{ route('site') }}'">
                                     HOME
                                 </li>
                                 <li role="none" data-tier-id="4">
