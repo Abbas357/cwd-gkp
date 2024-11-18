@@ -64,7 +64,7 @@
                             <div class="row">
                                 <div class="col-md-12 mb-4">
                                     <label for="file">File</label>
-                                    <input type="file" class="form-control" id="file" name="file" required>
+                                    <input type="file" class="form-control" id="file" name="file">
                                     @error('file')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
