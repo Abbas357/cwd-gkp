@@ -105,7 +105,7 @@ class UserController extends Controller
 
     public function showPositions($position)
     {
-        $users = User::withoutGlobalScope('active')->where('position', $position)
+        $users = User::withoutGlobalScope('active')->where('is_active', 0)->where('position', $position)
             ->with(['media' => function ($query) {
                 $query->whereIn('collection_name', ['profile_pictures']);
             }])
