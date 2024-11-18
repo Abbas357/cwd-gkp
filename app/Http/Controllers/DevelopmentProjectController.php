@@ -17,7 +17,7 @@ class DevelopmentProjectController extends Controller
     {
         $status = $request->query('status', null);
 
-        $projects = DevelopmentProject::query();
+        $projects = DevelopmentProject::query()->withoutGlobalScope('published');
 
         $projects->when($status !== null, function ($query) use ($status) {
             $query->where('status', $status);
@@ -84,7 +84,7 @@ class DevelopmentProjectController extends Controller
         $dev_project->se_id = $request->superintendentEngineer;
         $dev_project->progress_percentage = $request->progress_percentage;
         $dev_project->year_of_completion = $request->year_of_completion;
-        $dev_project->status = 'In-Progress';
+        $dev_project->status = 'Draft';
 
         $attachments = $request->file('attachments');
 
@@ -104,6 +104,31 @@ class DevelopmentProjectController extends Controller
     public function show(DevelopmentProject $DevelopmentProject)
     {
         return response()->json($DevelopmentProject);
+    }
+
+    public function publishDevelopmentProject(Request $request, $dev_projectId)
+    {
+        $dev_project = DevelopmentProject::withoutGlobalScope('published')->findOrFail($dev_projectId);
+        if ($dev_project->status === 'Draft') {
+            $dev_project->status = $request->progress_percentage == 100 ? 'Completed' : 'In-Progress';
+            $message = 'Project has been published successfully.';
+        } else {
+            $dev_project->status = 'Draft';
+            $message = 'Project has been unpublished.';
+        }
+        $dev_project->save();
+        return response()->json(['success' => $message], 200);
+    }
+
+    public function archiveDevelopmentProject(Request $request, $dev_projectId)
+    {
+        $dev_project = DevelopmentProject::findOrFail($dev_projectId);
+        if ($dev_project->status != 'Draft') {
+            $dev_project->status = 'Archived';
+            $dev_project->save();
+            return response()->json(['success' => 'Project has been archived successfully.'], 200);
+        }
+        return response()->json(['success' => 'Project cannot be archived.'], 403);
     }
 
     public function showDetail(DevelopmentProject $DevelopmentProject)

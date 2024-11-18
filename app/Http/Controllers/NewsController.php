@@ -75,12 +75,13 @@ class NewsController extends Controller
     {
         $news = new News();
         $news->title = $request->title;
+        $title = collect(explode(' ', $request->title))->take(5)->join(' ');
+        $news->slug = Str::slug($title) . '-' . substr(uniqid(), -6) . '-' . date('d-m-Y');
         $news->category = $request->news_category;
         $news->summary = $request->summary;
         $news->content = $request->content;
-        $news->slug = Str::slug($request->title) . '-' . substr(uniqid(), -6). '-' . date('d-m-Y');
         $news->status = 'draft';
-
+        
         if ($request->hasFile('attachment')) {
             $news->addMedia($request->file('attachment'))
                 ->toMediaCollection('news_attachments');

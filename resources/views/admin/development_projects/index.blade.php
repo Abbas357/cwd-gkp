@@ -9,6 +9,9 @@
     <div class="card-header mb-3">
         <ul class="nav nav-tabs nav-tabs-table">
             <li class="nav-item">
+                <a id="draft-tab" class="nav-link" data-bs-toggle="tab" href="#draft">Draft</a>
+            </li>
+            <li class="nav-item">
                 <a id="inprogress-tab" class="nav-link" data-bs-toggle="tab" href="#inprogress">In-Progress</a>
             </li>
             <li class="nav-item">
@@ -16,6 +19,9 @@
             </li>
             <li class="nav-item">
                 <a id="completed-tab" class="nav-link" data-bs-toggle="tab" href="#completed">Completed</a>
+            </li>
+            <li class="nav-item">
+                <a id="archived-tab" class="nav-link" data-bs-toggle="tab" href="#archived">Archived</a>
             </li>
         </ul>
     </div>
@@ -114,12 +120,17 @@
                 table: table
                 , dataTableUrl: "{{ route('admin.development_projects.index') }}"
                 , tabToHashMap: {
-                    "#inprogress-tab": '#inprogress'
+                    "#draft-tab": '#draft'
+                    , "#inprogress-tab": '#inprogress'
                     , "#onhold-tab": '#onhold'
                     , "#completed-tab": '#completed'
+                    , "#archived-tab": '#archived'
                 , }
                 , hashToParamsMap: {
-                    '#inprogress': {
+                    '#draft': {
+                        status: 'Draft'
+                    }
+                    , '#inprogress': {
                         status: 'In-Progress'
                     }
                     , '#onhold': {
@@ -128,8 +139,38 @@
                     , '#completed': {
                         status: 'Completed'
                     }
+                    , '#archived': {
+                        status: 'Archived'
+                    }
                 , }
-                , defaultHash: '#inprogress'
+                , defaultHash: '#draft'
+            });
+
+            $("#dev-projects-datatable").on('click', '.publish-btn', async function() {
+                const dev_projectId = $(this).data("id");
+                const message = $(this).data("type");
+                const url = "{{ route('admin.development_projects.publish', ':id') }}".replace(':id', dev_projectId);
+
+                const result = await confirmAction(`Do you want to ${message} this Project?`);
+                if (result && result.isConfirmed) {
+                    const success = await fetchRequest(url, 'PATCH');
+                    if (success) {
+                        $("#dev-projects-datatable").DataTable().ajax.reload();
+                    }
+                }
+            });
+
+            $("#dev-projects-datatable").on('click', '.archive-btn', async function() {
+                const dev_projectId = $(this).data("id");
+                const url = "{{ route('admin.development_projects.archive', ':id') }}".replace(':id', dev_projectId);
+
+                const result = await confirmAction(`Do you want to archive this Project?`);
+                if (result && result.isConfirmed) {
+                    const success = await fetchRequest(url, 'PATCH');
+                    if (success) {
+                        $("#dev-projects-datatable").DataTable().ajax.reload();
+                    }
+                }
             });
 
             $("#dev-projects-datatable").on('click', '.delete-btn', async function() {

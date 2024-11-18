@@ -164,6 +164,8 @@ Route::middleware('auth')->group(function () {
             Route::post('/', [DevelopmentProjectController::class, 'store'])->name('store');
             Route::get('/{DevelopmentProject}', [DevelopmentProjectController::class, 'show'])->name('show');
             Route::get('/get/{DevelopmentProject}', [DevelopmentProjectController::class, 'showDetail'])->name('detail');
+            Route::patch('/publish/{DevelopmentProject}', [DevelopmentProjectController::class, 'publishDevelopmentProject'])->name('publish');
+            Route::patch('/archive/{DevelopmentProject}', [DevelopmentProjectController::class, 'archiveDevelopmentProject'])->name('archive');
             Route::patch('/update/field', [DevelopmentProjectController::class, 'updateField'])->name('updateField');
             Route::patch('/upload/file', [DevelopmentProjectController::class, 'uploadFile'])->name('uploadFile');
             Route::delete('/{DevelopmentProject}', [DevelopmentProjectController::class, 'destroy'])->name('destroy');

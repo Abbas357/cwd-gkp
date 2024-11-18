@@ -79,7 +79,8 @@ class EventController extends Controller
     {
         $event = new Event();
         $event->title = $request->title;
-        $event->slug = Str::slug($request->title) . '-' . substr(uniqid(), -6). '-' . date('d-m-Y');
+        $title = collect(explode(' ', $request->title))->take(5)->join(' ');
+        $event->slug = Str::slug($title) . '-' . substr(uniqid(), -6) . '-' . date('d-m-Y');
         $event->description = $request->description;
         $event->start_datetime = $request->start_datetime;
         $event->end_datetime = $request->end_datetime;

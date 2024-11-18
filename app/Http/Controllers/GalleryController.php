@@ -73,9 +73,10 @@ class GalleryController extends Controller
     {
         $gallery = new Gallery();
         $gallery->title = $request->title;
+        $title = collect(explode(' ', $request->title))->take(5)->join(' ');
+        $gallery->slug = Str::slug($title) . '-' . substr(uniqid(), -6) . '-' . date('d-m-Y');
         $gallery->type = $request->type;
         $gallery->description = $request->description;
-        $gallery->slug = Str::slug($request->title) . '-' . substr(uniqid(), -6) . '-' . date('d-m-Y');
         $gallery->status = 'draft';
 
         $images = $request->file('images');

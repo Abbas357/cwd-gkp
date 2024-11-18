@@ -7,6 +7,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,6 +24,13 @@ class DevelopmentProject extends Model implements HasMedia
             'commencement_date' => 'datetime',
             'year_of_completion' => 'datetime',
         ];
+    }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('published', function (Builder $builder) {
+            $builder->where('status', '!=', 'Draft')->where('status', '!=', 'Archived');
+        });
     }
 
     public function getActivitylogOptions(): LogOptions
