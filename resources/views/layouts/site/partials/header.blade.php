@@ -210,56 +210,21 @@
 
                                 <li role="none" class="child-nav" data-tier-id="3">
                                 <li role="none" data-tier-id="3">
-                                    <a href="{{ route('projects.show', 'KITE') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="3" tabindex="0">KP
-                                        KITE</a>
+                                    <a href="{{ route('projects.show', 'KITE') }}" role="menuitem" class="cw-menuItem" tabindex="0">KP KITE</a>
                                 </li>
-
                                 <li role="none" data-tier-id="3">
-                                    <a href="{{ route('projects.show', 'KP-PRIP') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="3" tabindex="0">KP
-                                        PRIP</a>
+                                    <a href="{{ route('projects.show', 'KP-PRIP') }}" role="menuitem" class="cw-menuItem" tabindex="0">KP PRIP</a>
                                 </li>
-
-                                <li href="{{ route('projects.show', 'KP-RIISP') }}" role="none" data-tier-id="3">
-                                    <a role="menuitem" class="cw-menuItem" href="#" data-tier-id="3" tabindex="0">KP
-                                        RIISP</a>
+                                <li role="none" data-tier-id="3">
+                                    <a href="{{ route('projects.show', 'KP-RIISP') }}" role="menuitem" class="cw-menuItem" tabindex="0">KP RIISP</a>
                                 </li>
-
-                                <li href="{{ route('projects.show', 'KP-RAP') }}" role="none" data-tier-id="3">
-                                    <a role="menuitem" class="cw-menuItem" href="#" data-tier-id="3" tabindex="0">KP
-                                        RAP</a>
+                                <li role="none" data-tier-id="3">
+                                    <a href="{{ route('projects.show', 'KP-RAP') }}" role="menuitem" class="cw-menuItem" tabindex="0">KP RAP</a>
+                                </li>
+                                <li role="none" data-tier-id="3">
+                                    <a href="{{ route('projects.show', 'PaRSA') }}" role="menuitem" class="cw-menuItem" tabindex="0">KP PaRSA</a>
                                 </li>
                                 
-                                <li href="{{ route('projects.show', 'PaRSA') }}" role="none" data-tier-id="3">
-                                    <a role="menuitem" class="cw-menuItem" href="#" data-tier-id="3" tabindex="0">KP
-                                        PaRSA</a>
-                                </li>
-
-                                {{-- <li role="none" class="child-nav" data-tier-id="3">
-                                    <button role="menuitem" class="cw-menuItem" data-tier-id="3" tabindex="0" aria-expanded="false" aria-haspopup="true">
-                                        PaRSA
-                                    </button>
-
-                                    <ul class="sub-nav" role="menu" data-tier-id="3" aria-label="Professional Services" aria-orientation="vertical">
-                                        <li role="none" class="cw-back-list-item">
-                                            <button role="menuitem" class="cw-back-button" tabindex="0">
-                                                <span class="cw-menu-chevron left chevron-right"></span>
-                                                <span class="cw-back-button-label">Back </span>
-                                            </button>
-                                        </li>
-                                        <li role="menuitem" class="cw-hide-mob-links cw-plateTitle">
-                                            PaRSA
-                                        </li>
-                                        <li role="none" data-tier-id="3">
-                                            <a role="menuitem" class="cw-menuItem" href="#" data-tier-id="3" tabindex="0">INTRODUCTION</a>
-                                        </li>
-                                        <li role="none" data-tier-id="3">
-                                            <a role="menuitem" class="cw-menuItem" href="#" data-tier-id="3" tabindex="0">STANDARDIZATION OF SCHOOLS</a>
-                                        </li>
-                                        <li role="none" data-tier-id="3">
-                                            <a role="menuitem" class="cw-menuItem" href="#" data-tier-id="3" tabindex="0">PRESENTATION</a>
-                                        </li>
-                                    </ul>
-                                </li> --}}
                             </ul>
                         </li>
                         <li role="none" class="cw-top-menu" data-tier-id="4">
