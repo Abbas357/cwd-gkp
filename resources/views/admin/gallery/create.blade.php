@@ -50,7 +50,7 @@
                                     <img id="previewCover" src="#" alt="Preview Cover" style="display:none; margin-top: 10px; max-height: 100px;">
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <label for="file">Images</label>
+                                    <label for="images">Images</label>
                                     <input type="file" class="form-control" id="images" name="images[]" multiple required>
                                     @error('images')
                                     <div class="text-danger">{{ $message }}</div>

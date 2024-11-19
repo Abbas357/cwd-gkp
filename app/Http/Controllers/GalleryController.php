@@ -83,24 +83,25 @@ class GalleryController extends Controller
 
         if ($request->hasFile('cover_photo')) {
             $gallery->addMedia($request->file('cover_photo'))->toMediaCollection('gallery_covers');
-        } else {
+        } elseif ($images && count($images) > 0) {
             $gallery->addMedia($images[0])->toMediaCollection('gallery_covers');
         }
 
-        if ($images) {
+        if ($images && count($images) > 0) {
             $gallery->items = count($images);
             foreach ($images as $image) {
                 $gallery->addMedia($image)->toMediaCollection('gallery');
             }
+        } else {
+            $gallery->items = 0;
         }
-        
+
         if ($request->user()->gallery()->save($gallery)) {
             return redirect()->route('admin.gallery.create')->with('success', 'Gallery added successfully');
         }
 
         return redirect()->route('admin.gallery.create')->with('error', 'There was an error adding your Gallery');
     }
-
 
     public function show(Gallery $Gallery)
     {

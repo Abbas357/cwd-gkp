@@ -25,25 +25,25 @@
         <div id="GalleryTab-All" class="tab-pane fade show p-0 active">
             <div class="row g-2">
                 @foreach($galleriesByType as $galleries)
-                @foreach($galleries as $gallery)
-                <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                    <div class="gallery-item h-100">
-                        <a href="{{ route('gallery.show', $gallery->slug) }}">
-                            <img src="{{ $gallery->getFirstMediaUrl('gallery_covers') ?? asset('admin/images/no-image.jpg') }}" alt="{{ $gallery->title }}" class="img-fluid rounded-top" />
-                        </a>
-                        <div class="gallery-content">
-                            <div class="gallery-info">
-                                <h5 class="text-white text-uppercase mb-2">{{ ucfirst(str_replace('_', ' ', $gallery->type)) }}</h5>
-                                <h6 class="text-white text-uppercase mb-2">Images: {{ $gallery->items }}</h6>
-                                <a href="{{ route('gallery.show', ['slug' => $gallery->slug]) }}" class="btn-hover text-white">View Detail <i class="bi bi-arrow-right ms-2"></i></a>
+                    @foreach($galleries as $gallery)
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                        <div class="gallery-item h-100">
+                            <a href="{{ route('gallery.show', $gallery->slug) }}">
+                                <img src="{{ $gallery->getFirstMediaUrl('gallery_covers') ?? asset('admin/images/no-image.jpg') }}" alt="{{ $gallery->title }}" class="img-fluid rounded-top" />
+                            </a>
+                            <div class="gallery-content">
+                                <div class="gallery-info">
+                                    <h5 class="text-white text-uppercase mb-2">{{ ucfirst(str_replace('_', ' ', $gallery->type)) }}</h5>
+                                    <h6 class="text-white text-uppercase mb-2">Images: {{ $gallery->items }}</h6>
+                                    <a href="{{ route('gallery.show', ['slug' => $gallery->slug]) }}" class="btn-hover text-white">View Detail <i class="bi bi-arrow-right ms-2"></i></a>
+                                </div>
+                            </div>
+                            <div class="gallery-plus-icon">
+                                <a href="{{ route('gallery.show', $gallery->slug) }}" class="text-white"><i class="bi-eye"></i></a>
                             </div>
                         </div>
-                        <div class="gallery-plus-icon">
-                            <a href="{{ route('gallery.show', $gallery->slug) }}" class="text-white"><i class="bi-eye"></i></a>
-                        </div>
                     </div>
-                </div>
-                @endforeach
+                    @endforeach
                 @endforeach
             </div>
         </div>

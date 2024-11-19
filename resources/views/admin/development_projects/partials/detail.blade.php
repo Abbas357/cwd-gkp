@@ -112,6 +112,22 @@
                 </td>
             </tr>
 
+            <tr>
+                <th class="table-cell">Status</th>
+                <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
+                    <span id="text-status">{{ $DevelopmentProject->status }}</span>
+                    @if (!in_array($DevelopmentProject->status, ['Completed']))
+                        <select id="input-status" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('status', {{ $DevelopmentProject->id }})">
+                            @foreach($cat['status'] as $status)
+                            <option value="{{ $status }}" {{ $DevelopmentProject->status == $status ? 'selected' : '' }}>{{ $status }}</option>
+                            @endforeach
+                        </select>
+                        <button id="save-btn-status" class="btn btn-sm btn-light d-none" onclick="updateField('status', {{ $DevelopmentProject->id }})"><i class="bi-send-fill"></i></button>
+                        <button class="no-print btn btn-sm edit-button" onclick="enableEditing('status')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
+                </td>
+            </tr>
+
         </table>
     </div>
 </div>

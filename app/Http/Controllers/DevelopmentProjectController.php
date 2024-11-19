@@ -137,6 +137,7 @@ class DevelopmentProjectController extends Controller
             'districts' => District::all(),
             'chiefEngineers' => User::where('designation', 'Chief Engineer')->get(),
             'superintendentEngineers' => User::where('designation', 'Superintendent Engineer')->get(),
+            'status' => ['In-Progess', 'On-Hold', 'Completed'],
         ];
 
         $html = view('admin.development_projects.partials.detail', compact('DevelopmentProject', 'cat'))->render();

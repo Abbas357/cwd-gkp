@@ -42,6 +42,8 @@ class Gallery extends Model implements HasMedia
         $this->addMediaCollection('gallery')
             ->acceptsMimeTypes([
                 'image/jpeg',
+                'image/webp',
+                'image/jpg',
                 'image/png',
                 'image/gif'
             ]);
@@ -50,6 +52,8 @@ class Gallery extends Model implements HasMedia
             ->singleFile()
             ->acceptsMimeTypes([
                 'image/jpeg',
+                'image/webp',
+                'image/jpg',
                 'image/png',
                 'image/gif'
             ]);
