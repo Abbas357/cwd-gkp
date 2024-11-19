@@ -8,11 +8,42 @@ use App\Http\Controllers\Controller;
 
 class DevelopmentProjectController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $projects = DevelopmentProject::paginate(10);
+        $validated = $request->validate([
+            'status' => 'nullable|in:In-Progress,On-Hold,Completed',
+            'search' => 'nullable|string|max:255',
+            'date_start' => 'nullable|date',
+            'date_end' => 'nullable|date|after_or_equal:date_start',
+            'district_id' => 'nullable|exists:districts,id',
+        ]);
+
+        $status = $request->query('status');
+
+        $projects = DevelopmentProject::when($status, function ($query, $status) {
+            $query->where('status', $status);
+        })
+            ->when($request->query('search'), function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%$search%")
+                        ->orWhere('total_cost', 'like', "%$search%")
+                        ->orWhere('work_location', 'like', "%$search%");
+                });
+            })
+            ->when($request->query('date_start'), function ($query, $dateStart) {
+                $query->whereDate('commencement_date', '>=', $dateStart);
+            })
+            ->when($request->query('date_end'), function ($query, $dateEnd) {
+                $query->whereDate('commencement_date', '<=', $dateEnd);
+            })
+            ->when($request->query('district_id'), function ($query, $districtId) {
+                $query->where('district_id', $districtId);
+            })
+            ->paginate(10);
+
         return view('site.dev_projects.index', compact('projects'));
     }
+
 
     public function showDevelopmentProject($slug)
     {
@@ -38,7 +69,7 @@ class DevelopmentProjectController extends Controller
             'progress_percentage' => $project->progress_percentage,
             'year_of_completion' => $project->year_of_completion,
             'status' => $project->status,
-            'images' => $mediaUrls, 
+            'images' => $mediaUrls,
         ];
 
         return view('site.dev_projects.show', compact('projectData'));
