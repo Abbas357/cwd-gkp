@@ -21,12 +21,11 @@
                 <div class="col-sm-6 col-md-3">
                     <div class="gallery-item h-100">
                         <a href="{{ route('gallery.show', $gallery->slug) }}">
-                            <img src="{{ $gallery->getFirstMediaUrl('gallery_covers') ?? asset('admin/images/no-image.jpg') }}" 
-                                 alt="{{ $gallery->title }}" class="img-fluid rounded-top" />
+                            <img src="{{ $gallery->getFirstMediaUrl('gallery_covers') ?? asset('admin/images/no-image.jpg') }}" alt="{{ $gallery->title }}" class="img-fluid rounded-top" />
                         </a>
                         <div class="gallery-content">
                             <div class="gallery-info">
-                                <h5 class="text-white text-uppercase mb-2">{{ ucfirst(str_replace('_', ' ', $gallery->type)) }}</h5>
+                                <h5 class="text-white text-uppercase mb-2">{{ $gallery->title }}</h5>
                                 <h6 class="text-white text-uppercase mb-2">Images: {{ $gallery->items }}</h6>
                                 <a href="{{ route('gallery.show', ['slug' => $gallery->slug]) }}" 
                                    class="btn-hover text-white">View Detail <i class="bi bi-arrow-right ms-2"></i></a>
