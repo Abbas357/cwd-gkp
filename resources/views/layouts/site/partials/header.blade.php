@@ -23,7 +23,7 @@
                 
                 <div class="cw-search cw-search-temp-wrapper cw-mobile-search" role="search">
                     <div class="cw-input-container">
-                        <input id="cw-search-input" type="search" class="cw-search-input" aria-label="Search..." placeholder="Search..." tabindex="0" autocomplete="off" />
+                        <input id="cw-search-input" type="search" class="cw-search-input" aria-label="AI Search..." placeholder="AI Search..." tabindex="0" autocomplete="off" />
                         <div class="input-loading"></div>
                         <button class="cw-search-btn cw-search-cancel" tabindex="0" aria-label="Cancel Search">
                             <i class="bi bi-x-circle"></i>
