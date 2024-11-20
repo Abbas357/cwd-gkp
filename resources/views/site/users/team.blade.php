@@ -40,7 +40,7 @@
                  role="tabpanel" aria-labelledby="{{ Str::slug($role, '-') }}-tab">
                 <div class="row">
                     @foreach ($users as $user)
-                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4">
+                        <div class="col-sm-12 col-md-3 mb-4" style="scale:.95">
                             <div class="team-item h-100 user-card">
                                 <div class="team-img">
                                     <div class="team-img-efects">

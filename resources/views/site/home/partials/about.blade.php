@@ -1,6 +1,6 @@
 <div class="row g-5 align-items-center">
     <div class="col-lg-5">
-        <div class="h-100" style="border: 30px solid; border-color: transparent #13357B transparent #13357B;">
+        <div class="h-100" style="border: 30px solid; border-color: transparent #dddddd transparent #dddddd;">
             <!-- Dynamic image from $aboutData with fallback -->
             <img src="{{ $aboutData['image'] }}" class="img-fluid w-100 h-100" alt="{{ $aboutData['title'] }}">
         </div>

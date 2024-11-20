@@ -104,25 +104,24 @@ class HomeController extends Controller
 
     public function galleryPartial()
     {
-        $latestTypeSubquery = Gallery::select('type', 'published_at')
+        $latestTypes = Gallery::select('type', 'published_at')
             ->orderBy('published_at', 'desc')
-            ->limit(100)
-            ->get()
-            ->unique('type')
-            ->take(5)
+            ->distinct('type')
+            ->limit(5)
             ->pluck('type');
 
-        $galleriesByType = $latestTypeSubquery->mapWithKeys(function ($type) {
+        $galleriesByType = $latestTypes->mapWithKeys(function ($type) {
             $galleries = Gallery::with('media')
                 ->where('type', $type)
                 ->orderBy('published_at', 'desc')
-                ->limit(5)
+                ->limit(4)
                 ->get();
             return [$type => $galleries];
         });
 
         return view('site.home.partials.gallery', compact('galleriesByType'));
     }
+
 
     public function blogsPartial()
     {

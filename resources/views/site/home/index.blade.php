@@ -51,7 +51,7 @@
 
     <!-- Placeholder for Gallery Section -->
     <div id="gallery-section" style="min-height: 400px">
-        <div class="container-fluid gallery py-3">
+        <div class="container gallery py-3">
             <div class="mx-auto text-center my-5" style="max-width: 900px;">
                 <h5 class="section-title px-3">Our Gallery</h5>
             </div>
