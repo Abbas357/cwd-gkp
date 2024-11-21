@@ -2,6 +2,11 @@
 
     @push('style')
         <link rel="stylesheet" href="{{ asset('admin/plugins/lightbox/lightbox.min.css') }}" />
+        <style>
+            table, td, th {
+                vertical-align: middle
+            }
+        </style>
     @endpush
 
     <x-slot name="breadcrumbTitle">

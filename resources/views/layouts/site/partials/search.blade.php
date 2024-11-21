@@ -1,7 +1,12 @@
-@if($newsResults->isEmpty() && $downloadResults->isEmpty() && $eventResults->isEmpty() && $projectResults->isEmpty() && $seniorityResults->isEmpty())
-    <p class="cw-no-results">No results found.</p>
-@else
-    @if(!$newsResults->isEmpty())
+@if(
+    (isset($newsResults) && !$newsResults->isEmpty()) ||
+    (isset($projectResults) && !$projectResults->isEmpty()) ||
+    (isset($downloadResults) && !$downloadResults->isEmpty()) ||
+    (isset($eventResults) && !$eventResults->isEmpty()) ||
+    (isset($seniorityResults) && !$seniorityResults->isEmpty()) ||
+    (isset($userResults) && !$userResults->isEmpty())
+)
+    @if(isset($newsResults) && !$newsResults->isEmpty())
         <h4 class="text-dark fs-4 px-3 py-1 border border-bottom bg-light">News</h4>
         <ul class="cw-search-results">
             @foreach($newsResults as $news)
@@ -15,7 +20,7 @@
         </ul>
     @endif
 
-    @if(!$projectResults->isEmpty())
+    @if(isset($projectResults) && !$projectResults->isEmpty())
         <h4 class="text-dark fs-4 px-3 py-1 border border-bottom bg-light">Projects</h4>
         <ul class="cw-search-results">
             @foreach($projectResults as $project)
@@ -28,7 +33,7 @@
         </ul>
     @endif
 
-    @if(!$downloadResults->isEmpty())
+    @if(isset($downloadResults) && !$downloadResults->isEmpty())
         <h4 class="text-dark fs-4 px-3 py-1 border border-bottom bg-light">Downloads</h4>
         <ul class="cw-search-results">
             @foreach($downloadResults as $download)
@@ -42,7 +47,7 @@
         </ul>
     @endif
 
-    @if(!$eventResults->isEmpty())
+    @if(isset($eventResults) && !$eventResults->isEmpty())
         <h4 class="text-dark fs-4 px-3 py-1 border border-bottom bg-light">Events</h4>
         <ul class="cw-search-results">
             @foreach($eventResults as $event)
@@ -55,7 +60,7 @@
         </ul>
     @endif
 
-    @if(!$seniorityResults->isEmpty())
+    @if(isset($seniorityResults) && !$seniorityResults->isEmpty())
         <h4 class="text-dark fs-4 px-3 py-1 border border-bottom bg-light">Seniority</h4>
         <ul class="cw-search-results">
             @foreach($seniorityResults as $seniority)
@@ -67,4 +72,23 @@
             @endforeach
         </ul>
     @endif
+
+    @if(isset($userResults) && !$userResults->isEmpty())
+        <h4 class="text-dark fs-4 px-3 py-1 border border-bottom bg-light">Team</h4>
+        <ul class="cw-search-results">
+            @foreach($userResults as $user)
+                <li class="cw-search-item">
+                    <a href="{{ url('/positions/' . $user->position . '/?id=' . $user->id . '&type=details') }}" class="cw-search-item-content">
+                        <h3 class="fs-5 cw-search-item-title">
+                            {{ $user->name }} 
+                            ({{ $user->position ? $user->position : $user->designation }})
+                        </h3>
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    @endif
+
+@else
+    <p class="cw-no-results">No results found.</p>
 @endif

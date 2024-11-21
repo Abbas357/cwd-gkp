@@ -25,7 +25,7 @@
     <meta property="og:image" content="{{ $ogImage }}">
     <meta property="og:site_name" content="{{ $title }}">
     <meta property="og:url" content="{{ request()->url() }}">
-    <meta property="og:logo" content="{{ asset('site/images/logo-mobile.png') }}">
+    <meta property="og:logo" content="{{ asset('site/images/logo-square.png') }}">
     <link rel="canonical" href="{{ request()->url() }}">
 
     <!-- Favicon -->
@@ -40,7 +40,6 @@
     <link rel="stylesheet" href="{{ asset('site/css/bootstrap-icons.min.css') }}">
     <link href="{{ asset('site/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('site/css/style.css') }}" rel="stylesheet">
-    <link href="{{ asset('site/css/menu.css') }}" rel="stylesheet">
     @stack('style')
     <link href="{{ asset('site/css/custom.css') }}" rel="stylesheet">
 </head>

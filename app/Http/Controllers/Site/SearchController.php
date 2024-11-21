@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Site;
 
 use App\Models\News;
+use App\Models\User;
 use App\Models\Event;
 use App\Models\Download;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\DevelopmentProject;
 use App\Models\Seniority;
+use Illuminate\Http\Request;
+use App\Models\DevelopmentProject;
+use App\Http\Controllers\Controller;
 
 class SearchController extends Controller
 {
@@ -20,13 +21,15 @@ class SearchController extends Controller
         $eventResults = $this->searchEvents($query);
         $projectResults = $this->searchDevelopmentProjects($query);
         $seniorityResults = $this->searchSeniority($query);
+        $userResults = $this->searchUsers($query);
 
         if (
             $newsResults->isEmpty() &&
             $downloadResults->isEmpty() &&
             $eventResults->isEmpty() &&
             $projectResults->isEmpty() &&
-            $seniorityResults->isEmpty()
+            $seniorityResults->isEmpty() &&
+            $userResults->isEmpty()
         ) {
             return response()->json([
                 'success' => true,
@@ -41,7 +44,8 @@ class SearchController extends Controller
             'downloadResults',
             'eventResults',
             'projectResults',
-            'seniorityResults'
+            'seniorityResults',
+            'userResults'
         ))->render();
 
         return response()->json([
@@ -50,6 +54,21 @@ class SearchController extends Controller
                 'result' => $html,
             ],
         ]);
+    }
+
+    private function searchUsers(string $query)
+    {
+        return User::withoutGlobalScope('active')
+            ->where(function ($subQuery) use ($query) {
+                $subQuery->where('name', 'LIKE', "%{$query}%")
+                    ->orWhere('designation', 'LIKE', "%{$query}%")
+                    ->orWhere('position', 'LIKE', "%{$query}%")
+                    ->orWhere('office', 'LIKE', "%{$query}%");
+            })
+            ->orderByRaw('is_active DESC')
+            ->latest()
+            ->limit(5)
+            ->get();
     }
 
     private function searchDevelopmentProjects(string $query)

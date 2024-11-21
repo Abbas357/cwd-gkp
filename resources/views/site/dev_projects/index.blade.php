@@ -1,4 +1,13 @@
 <x-main-layout title="Development Projects">
+    @push('style')
+    <style>
+        table,
+        td,
+        th {
+            vertical-align: middle
+        }
+    </style>
+    @endpush
     <x-slot name="breadcrumbTitle">
         Development Projects
     </x-slot>
@@ -25,47 +34,33 @@
                         <div class="row g-3 align-items-end">
                             <div class="col-md-3 col-sm-6 col-xs-12">
                                 <label for="search" class="form-label">Search</label>
-                                <input type="text" 
-                                       name="search" 
-                                       id="search" 
-                                       class="form-control" 
-                                       placeholder="Enter project name or keywords" 
-                                       value="{{ request('search') }}">
+                                <input type="text" name="search" id="search" class="form-control" placeholder="Enter project name or keywords" value="{{ request('search') }}">
                             </div>
-                
+
                             <div class="col-md-3 col-sm-6 col-xs-12">
                                 <label for="date_start" class="form-label">Start Date</label>
-                                <input type="date" 
-                                       name="date_start" 
-                                       id="date_start" 
-                                       class="form-control" 
-                                       value="{{ request('date_start') }}">
+                                <input type="date" name="date_start" id="date_start" class="form-control" value="{{ request('date_start') }}">
                             </div>
                             <div class="col-md-3 col-sm-6 col-xs-12">
                                 <label for="date_end" class="form-label">End Date</label>
-                                <input type="date" 
-                                       name="date_end" 
-                                       id="date_end" 
-                                       class="form-control" 
-                                       value="{{ request('date_end') }}">
+                                <input type="date" name="date_end" id="date_end" class="form-control" value="{{ request('date_end') }}">
                             </div>
-        
+
                             <input type="hidden" name="status" value="{{ request('status') }}">
-                
+
                             <!-- District Filter -->
                             <div class="col-md-3 col-sm-6 col-xs-12">
                                 <label for="district_id" class="form-label">District</label>
                                 <select name="district_id" id="district_id" class="form-select">
                                     <option value="">All Districts</option>
                                     @foreach (\App\Models\District::all() as $district)
-                                        <option value="{{ $district->id }}" 
-                                            {{ request('district_id') == $district->id ? 'selected' : '' }}>
-                                            {{ $district->name }}
-                                        </option>
+                                    <option value="{{ $district->id }}" {{ request('district_id') == $district->id ? 'selected' : '' }}>
+                                        {{ $district->name }}
+                                    </option>
                                     @endforeach
                                 </select>
                             </div>
-                
+
                             <!-- Filter Buttons -->
                             <div class="col-lg-12 text-end">
                                 <button type="submit" class="btn-animate">
@@ -135,6 +130,7 @@
                 icon.classList.add('bi-arrow-down-circle');
             });
         });
+
     </script>
     @endpush
 </x-main-layout>
