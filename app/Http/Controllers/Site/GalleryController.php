@@ -33,13 +33,13 @@ class GalleryController extends Controller
 
         $galleryData = [
             'id' => $gallery->id,
-            'title' => $gallery->title ?? 'No title available.',
+            'title' => $gallery->title,
             'slug' => $gallery->slug,
-            'description' => $gallery->description ?? 'No description available.',
+            'description' => $gallery->description,
             'type' => ucfirst(str_replace('_', ' ', $gallery->type)) ?? 'General',
-            'user' => $gallery->user->designation ?? 'Unknown',
-            'published_by' => $gallery->publishBy->designation ?? 'Unknown',
-            'published_at' => $gallery->published_at?->format('M d, Y') ?? 'Not published',
+            'user' => $gallery->user->designation,
+            'published_by' => $gallery->publishBy->designation,
+            'published_at' => $gallery->published_at?->format('M d, Y'),
             'images' => $gallery->getMedia('gallery')->map(function ($media) {
                 return $media->getUrl();
             })->toArray() ?: [asset('admin/images/no-image.jpg')],

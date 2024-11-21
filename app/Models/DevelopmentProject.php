@@ -60,11 +60,11 @@ class DevelopmentProject extends Model implements HasMedia
     }
 
     public function chiefEngineer() {
-        return $this->belongsTo(User::class, 'ce_id', 'id');
+        return $this->belongsTo(User::class, 'ce_id', 'id')->withoutGlobalScope('active');
     }
-
+    
     public function superintendentEngineer() {
-        return $this->belongsTo(User::class, 'se_id');
+        return $this->belongsTo(User::class, 'se_id', 'id')->withoutGlobalScope('active');
     }
 
 }

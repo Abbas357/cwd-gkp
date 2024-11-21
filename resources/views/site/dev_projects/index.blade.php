@@ -13,7 +13,7 @@
         <form method="GET" action="{{ route('development_projects.index') }}" class="mb-4">
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                    <button type="button" class="btn  p-0 w-100 text-start" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="{{ request('search') || request('date_start') || request('date_end') || request('district_id') ? 'true' : 'false' }}" aria-controls="filterCollapse">
+                    <button type="button" class="btn p-0 w-100 text-start" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="{{ request('search') || request('date_start') || request('date_end') || request('district_id') ? 'true' : 'false' }}" aria-controls="filterCollapse">
                         <div class="d-flex justify-content-between align-items-center w-100">
                             <h5 class="mb-0" style="text-decoration: none !important">Filter Projects</h5>
                             <i class="bi bi-arrow-down-circle fs-4" id="accordion-icon"></i>
@@ -80,7 +80,6 @@
                 </div>
             </div>
         </form>
-        
 
         <!-- Projects Table -->
         <table class="table table-bordered">
@@ -88,6 +87,7 @@
                 <tr>
                     <th>#</th>
                     <th>Name</th>
+                    <th>District</th>
                     <th>Total Cost</th>
                     <th>Commencement Date</th>
                     <th>Progress</th>
@@ -99,11 +99,12 @@
                 @foreach ($projects as $project)
                 <tr>
                     <td>{{ ($projects->currentPage() - 1) * $projects->perPage() + $loop->iteration }}</td>
-                    <td>{{ $project->name }}</td>
-                    <td>{{ $project->total_cost }}</td>
-                    <td>{{ $project->commencement_date->format('M d, Y') }}</td>
-                    <td>{{ $project->progress_percentage }}%</td>
-                    <td>{{ $project->status }}</td>
+                    <td>{{ $project->name ?? '' }}</td>
+                    <td>{{ $project->district->name ?? '' }}</td>
+                    <td>{{ $project->total_cost ? number_format($project->total_cost, 2) : '' }}</td>
+                    <td>{{ $project->commencement_date ? $project->commencement_date->format('M d, Y') : '' }}</td>
+                    <td>{{ isset($project->progress_percentage) ? $project->progress_percentage . '%' : '' }}</td>
+                    <td>{{ $project->status ?? '' }}</td>
                     <td>
                         <a href="{{ route('development_projects.show', $project->slug) }}" class="btn btn-sm btn-primary fs-6" style="white-space: nowrap"><i class="bi-eye"></i> View</a>
                     </td>
@@ -117,8 +118,8 @@
             {{ $projects->links() }}
         </div>
     </div>
-    @push('script')
 
+    @push('script')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const filterCollapse = document.getElementById('filterCollapse');
@@ -135,6 +136,5 @@
             });
         });
     </script>
-
     @endpush
 </x-main-layout>

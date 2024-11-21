@@ -14,57 +14,72 @@
 
     <div class="container mt-3">
 
-        <!-- Project Info -->
         <div class="d-flex justify-content-between">
             <p><strong>Chief Engineer:</strong> {{ $projectData['chief_engineer'] }}</p>
             <p><strong>Superintendent Engineer:</strong> {{ $projectData['superintendent_engineer'] }}</p>
         </div>
 
-        <!-- Project Details Table -->
         <div class="table-responsive mt-4">
             <table class="table table-bordered">
                 <tbody>
-                    <tr>
-                        <th>Name</th>
-                        <td>{{ $projectData['name'] }}</td>
-                    </tr>
-                    <tr>
-                        <th>Introduction</th>
-                        <td>{!! nl2br($projectData['introduction']) !!}</td>
-                    </tr>
-                    <tr>
-                        <th>Total Cost</th>
-                        <td>&#8360; {{ number_format($projectData['total_cost'], 2) ?? 'N/A' }} (Millions)</td>
-                    </tr>
-                    <tr>
-                        <th>Commencement Date</th>
-                        <td>{{ \Carbon\Carbon::parse($projectData['commencement_date'])->format('M d, Y') ?? 'N/A' }}</td>
-                    </tr>
-                    <tr>
-                        <th>District</th>
-                        <td>{{ $projectData['district'] ?? 'N/A' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Work Location</th>
-                        <td>{{ $projectData['work_location'] ?? 'N/A' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Progress Percentage</th>
-                        <td>{{ $projectData['progress_percentage'] ?? 'N/A' }}%</td>
-                    </tr>
-                    <tr>
-                        <th>Year of Completion</th>
-                        <td>{{ $projectData['year_of_completion'] ?? 'N/A' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Status</th>
-                        <td>{{ $projectData['status'] ?? 'N/A' }}</td>
-                    </tr>
+                    @if(!empty($projectData['name']))
+                        <tr>
+                            <th>Name</th>
+                            <td>{{ $projectData['name'] }}</td>
+                        </tr>
+                    @endif
+                    @if(!empty($projectData['introduction']))
+                        <tr>
+                            <th>Introduction</th>
+                            <td>{!! nl2br($projectData['introduction']) !!}</td>
+                        </tr>
+                    @endif
+                    @if(!empty($projectData['total_cost']))
+                        <tr>
+                            <th>Total Cost</th>
+                            <td>&#8360; {{ number_format($projectData['total_cost'], 2) }} (Millions)</td>
+                        </tr>
+                    @endif
+                    @if(!empty($projectData['commencement_date']))
+                        <tr>
+                            <th>Commencement Date</th>
+                            <td>{{ \Carbon\Carbon::parse($projectData['commencement_date'])->format('M d, Y') }}</td>
+                        </tr>
+                    @endif
+                    @if(!empty($projectData['district']))
+                        <tr>
+                            <th>District</th>
+                            <td>{{ $projectData['district'] }}</td>
+                        </tr>
+                    @endif
+                    @if(!empty($projectData['work_location']))
+                        <tr>
+                            <th>Work Location</th>
+                            <td>{{ $projectData['work_location'] }}</td>
+                        </tr>
+                    @endif
+                    @if(isset($projectData['progress_percentage']))
+                        <tr>
+                            <th>Progress Percentage</th>
+                            <td>{{ $projectData['progress_percentage'] }}%</td>
+                        </tr>
+                    @endif
+                    @if(!empty($projectData['year_of_completion']))
+                        <tr>
+                            <th>Year of Completion</th>
+                            <td>{{ $projectData['year_of_completion'] }}</td>
+                        </tr>
+                    @endif
+                    @if(!empty($projectData['status']))
+                        <tr>
+                            <th>Status</th>
+                            <td>{{ $projectData['status'] }}</td>
+                        </tr>
+                    @endif
                 </tbody>
             </table>
         </div>
 
-        <!-- Project Images with Lightbox -->
         <div class="images mt-4">
             <h5>Attached Images</h5>
             <div class="row">

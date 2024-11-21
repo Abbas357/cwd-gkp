@@ -39,10 +39,10 @@ class EventsController extends Controller
             'participants_type' => $event->participants_type,
             'no_of_participants' => $event->no_of_participants,
             'event_type' => $event->event_type,
-            'published_by' => $event->user->designation ?? 'N/A',
+            'published_by' => $event->user->designation,
             'published_at' => $event->published_at->format('M d, Y'),
             'description' => $event->description,
-            'images' => $mediaUrls, // Pass all images
+            'images' => $mediaUrls,
         ];
 
         return view('site.events.show', compact('eventData'));

@@ -15,14 +15,12 @@ class SearchController extends Controller
     public function search(Request $request)
     {
         $query = $request->input('query');
-
         $newsResults = $this->searchNews($query);
         $downloadResults = $this->searchDownloads($query);
         $eventResults = $this->searchEvents($query);
         $projectResults = $this->searchDevelopmentProjects($query);
         $seniorityResults = $this->searchSeniority($query);
 
-        // Check if all results are empty
         if (
             $newsResults->isEmpty() &&
             $downloadResults->isEmpty() &&
