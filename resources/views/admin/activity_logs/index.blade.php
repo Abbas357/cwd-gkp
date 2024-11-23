@@ -30,6 +30,7 @@
     <script>
         $(document).ready(function() {
             var table = initDataTable('#log-datatable', {
+                // serverSide: false,
                 ajaxUrl: "{{ route('admin.logs') }}"
                 , columns: [
                     { data: 'id', searchBuilderType: "num" },
@@ -46,6 +47,7 @@
                     targets: [0]
                     , visible: false
                 }]
+                // , pageLength: 25`
             });
             
         });

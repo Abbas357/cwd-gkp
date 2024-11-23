@@ -34,7 +34,9 @@ class NewsController extends Controller
                     return '<a target="_blank" href="' . $row->getFirstMediaUrl('news_attachments') . '" class="btn btn-light bi bi-file-earmark fs-4"></span>';
                 })
                 ->addColumn('user', function ($row) {
-                    return $row->user ? $row->user->name . ' (' . $row->user->designation . ' - ' . $row->user->office  . ')' : 'N/A';
+                    return $row->user?->position 
+                    ? '<a href="'.route('admin.users.show', $row->user->id).'" target="_blank">'.$row->user->position.'</a>' 
+                    : ($row->user?->designation ?? 'N/A');
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');
@@ -42,7 +44,7 @@ class NewsController extends Controller
                 ->editColumn('updated_at', function ($row) {
                     return $row->updated_at->diffForHumans();
                 })
-                ->rawColumns(['action', 'status', 'attachment']);
+                ->rawColumns(['action', 'status', 'attachment', 'user']);
 
             // if (!$request->input('search.value') && $request->has('searchBuilder')) {
             //     $dataTable->filter(function ($query) use ($request) {

@@ -37,6 +37,7 @@
                 <th scope="col" class="p-3">Chief Engineer</th>
                 <th scope="col" class="p-3">Progress Percentage</th>
                 <th scope="col" class="p-3">Year of Completion</th>
+                <th scope="col" class="p-3">Uploaded By</th>
                 <th scope="col" class="p-3">Created At</th>
                 <th scope="col" class="p-3">Updated At</th>
                 <th scope="col" class="p-3">Actions</th>
@@ -88,6 +89,10 @@
                         , searchBuilderType: "string"
                     }
                     , {
+                        data: "uploaded_by"
+                        , searchBuilderType: "string"
+                    }
+                    , {
                         data: "created_at"
                         , searchBuilderType: "date"
                     }
@@ -105,7 +110,7 @@
                 , defaultOrderColumn: 0
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
-                    targets: [0]
+                    targets: [0,3,5,6,7]
                     , visible: false
                 }]
                 , customButton: {

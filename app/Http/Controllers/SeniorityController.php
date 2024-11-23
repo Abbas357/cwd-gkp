@@ -35,7 +35,9 @@ class SeniorityController extends Controller
                     return view('admin.seniority.partials.status', compact('row'))->render();
                 })
                 ->addColumn('user', function ($row) {
-                    return $row->user ? $row->user->name . ' (' . $row->user->designation . ' - ' . $row->user->office  . ')' : 'N/A';
+                    return $row->user?->position 
+                    ? '<a href="'.route('admin.users.show', $row->user->id).'" target="_blank">'.$row->user->position.'</a>' 
+                    : ($row->user?->designation ?? 'N/A');
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');
@@ -43,7 +45,7 @@ class SeniorityController extends Controller
                 ->editColumn('updated_at', function ($row) {
                     return $row->updated_at->diffForHumans();
                 })
-                ->rawColumns(['action', 'status', 'attachment']);
+                ->rawColumns(['action', 'status', 'attachment', 'user']);
 
             // if (!$request->input('search.value') && $request->has('searchBuilder')) {
             //     $dataTable->filter(function ($query) use ($request) {

@@ -105,7 +105,6 @@ class HomeController extends Controller
     public function galleryPartial()
     {
         $latestTypes = Gallery::select('type', 'published_at')
-            ->orderBy('published_at', 'desc')
             ->distinct('type')
             ->limit(5)
             ->pluck('type');

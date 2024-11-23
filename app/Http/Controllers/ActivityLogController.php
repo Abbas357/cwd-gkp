@@ -22,7 +22,9 @@ class ActivityLogController extends Controller
                     return $row->description;
                 })
                 ->addColumn('causer', function ($row) {
-                    return optional($row->causer)->designation . ' ('. optional($row->causer)->name. ')' ?? 'System';
+                    return $row->causer?->position 
+                    ? '<a href="'.route('admin.users.show', $row->causer->id).'" target="_blank">'.$row->causer->position.'</a>' 
+                    : ($row->causer?->designation ?? 'System');
                 })
                 ->addColumn('subject', function ($row) {
                     return view('admin.activity_logs.partials.subject', [
@@ -36,7 +38,7 @@ class ActivityLogController extends Controller
                 ->addColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y').' ('.$row->created_at->diffForHumans().')';
                 })
-                ->rawColumns(['properties', 'subject']);
+                ->rawColumns(['properties', 'subject', 'causer']);
             // if (!$request->input('search.value') && $request->has('searchBuilder')) {
             //     $dataTable->filter(function ($query) use ($request) {
             //         $sb = new \App\SearchBuilder($request, $query);

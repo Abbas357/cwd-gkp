@@ -37,7 +37,9 @@ class EventController extends Controller
                     return \Carbon\Carbon::parse($row->end_datetime)->format('d, M Y (h:i A)');
                 })                
                 ->addColumn('uploaded_by', function ($row) {
-                    return $row->user ? $row->user->name . ' (' . $row->user->designation . ' - ' . $row->user->office  . ')' : 'N/A';
+                    return $row->user?->position 
+                    ? '<a href="'.route('admin.users.show', $row->user->id).'" target="_blank">'.$row->user->position.'</a>' 
+                    : ($row->user?->designation ?? 'N/A');
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');
@@ -45,7 +47,7 @@ class EventController extends Controller
                 ->editColumn('updated_at', function ($row) {
                     return $row->updated_at->diffForHumans();
                 })
-                ->rawColumns(['action', 'status']);
+                ->rawColumns(['action', 'status', 'uploaded_by']);
 
             // if (!$request->input('search.value') && $request->has('searchBuilder')) {
             //     $dataTable->filter(function ($query) use ($request) {
