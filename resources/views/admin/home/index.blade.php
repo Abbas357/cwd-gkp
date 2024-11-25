@@ -16,7 +16,7 @@
             border-radius: 50px;
             font-size: 1em;
             position: relative;
-            z-index: 999;
+            z-index: 1;
         }
 
         .app-grid {
@@ -34,7 +34,7 @@
             text-align: center;
             cursor: pointer;
             position: relative;
-            z-index: 999;
+            z-index: 1;
             transition: all .1s ease-in-out;
             border: 1px solid #ccc;
         }
@@ -100,7 +100,7 @@
                 <i class="bi bi-shield-lock" style="color: #49c0b6"></i>
                 <p>Standardization</p>
             </a>
-            <a href="{{ route('admin.users.cards') }}" class="app-tile">
+            <a href="{{ route('admin.service_cards.index') }}" class="app-tile">
                 <i class="bi bi-credit-card" style="color: #a4c649"></i>
                 <p>Service Card</p>
             </a>

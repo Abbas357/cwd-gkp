@@ -36,9 +36,6 @@ class User extends Authenticatable implements HasMedia
             'password' => 'hashed',
             'posting_date' => 'datetime',
             'exit_date' => 'datetime',
-            'date_of_birth' => 'datetime',
-            'card_issue_date' => 'datetime',
-            'card_expiry_date' => 'datetime',
         ];
     }
 
@@ -82,7 +79,7 @@ class User extends Authenticatable implements HasMedia
         //     src="{{ $user->getFirstMediaUrl('images', 'thumb') }}" 
         //     srcset="
         //         {{ $user->getFirstMediaUrl('images', 'thumb') }} 200w, 
-        //         {{ $user->getFirstMediaUrl('images', 'small') }} 400w, 
+        //         {{ $user->getFirstMediaUr('images', 'small') }} 400w, 
         //         {{ $user->getFirstMediaUrl('images', 'medium') }} 800w, 
         //         {{ $user->getFirstMediaUrl('images', 'large') }} 1200w" 
         //     sizes="(max-width: 600px) 200px, (max-width: 1000px) 400px, (max-width: 1400px) 800px, (max-width: 1800px) 1200px, 1200px"
@@ -93,7 +90,7 @@ class User extends Authenticatable implements HasMedia
     protected static function booted()
     {
         static::addGlobalScope('active', function (Builder $builder) {
-            $builder->where('is_active', 1);
+            $builder->where('status', 'Active');
         });
     }
 

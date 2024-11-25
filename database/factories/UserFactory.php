@@ -32,7 +32,7 @@ class UserFactory extends Factory
             'designation' => fake()->jobTitle,
             'cnic' => fake()->numerify('#####-#######-#'),
             'office' => fake()->company,
-            'is_active' => fake()->boolean,
+            'status' => 'Inactive',
             'password_updated_at' => fake()->dateTime,
             'password' => bcrypt('password'),
             'remember_token' => Str::random(10),

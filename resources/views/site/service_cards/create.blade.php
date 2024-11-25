@@ -1,21 +1,21 @@
-<x-main-layout title="Online apply for Identity Card">
+<x-main-layout title="Online apply for Service Card">
     @push('style')
     <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
     @endpush
 
     <x-slot name="breadcrumbTitle">
-        Online apply for Identity Card
+        Online apply for Service Card
     </x-slot>
 
     <x-slot name="breadcrumbItems">
-        <li class="breadcrumb-item active">Identity Card</li>
+        <li class="breadcrumb-item active">Service Card</li>
     </x-slot>
 
     <div class="wrapper mt-2">
         <div class="page container">
             <div class="page-inner">
                 <div class="page-section shadow-lg rounded bg-light" style="border:1px solid #dedede">
-                    <form class="needs-validation" action="{{ route('card.storeCard') }}" method="post" enctype="multipart/form-data" novalidate>
+                    <form class="needs-validation" action="{{ route('service_cards.store') }}" method="post" enctype="multipart/form-data" novalidate>
                         @csrf
                         <div class="row">
                             <div class="col-md-8">
@@ -101,7 +101,12 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="blood_group">Blood Group</label>
-                                                <input type="text" class="form-control" id="blood_group" value="{{ old('blood_group') }}" placeholder="Blood Group" name="blood_group">
+                                                <select class="form-select" id="blood_group" name="blood_group" required>
+                                                    <option value="">Choose...</option>
+                                                    @foreach ($cat['blood_groups'] as $blood_group)
+                                                    <option value="{{ $blood_group }}">{{ $blood_group }}</option>
+                                                    @endforeach
+                                                </select>
                                                 @error('blood_group')
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @enderror
@@ -153,7 +158,7 @@
                                                 <select class="form-select" id="bps" name="bps" required>
                                                     <option value="">Choose...</option>
                                                     @foreach ($cat['bps'] as $bps)
-                                                    <option value="{{ $bps->name }}">{{ $bps->name }}</option>
+                                                    <option value="{{ $bps }}">{{ $bps }}</option>
                                                     @endforeach
                                                 </select>
                                                 @error('bps')

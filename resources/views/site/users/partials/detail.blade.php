@@ -65,7 +65,7 @@ a i:hover {
         </div>
     </div>
     <div class="col-md-6">
-        @if($user['is_active'])
+        @if($user['status'] == 'Active')
         <div class="info-row">
             <span class="info-label">Posting Type:</span>
             <span class="info-value">{{ $user['posting_type'] }}</span>

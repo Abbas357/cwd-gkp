@@ -1,4 +1,4 @@
-<x-main-layout title="The card is {{ $user->card_status === 'verified' ? 'Verified' : 'Not Verified' }}">
+<x-main-layout title="The card is {{ $service_card->status === 'Verified' ? 'Verified' : 'Not Verified' }}">
     @push('style')
         <style>
             .avatar {
@@ -28,50 +28,50 @@
             </div>
 
             <div class="d-flex justify-content-center align-items-center">
-                <img src="{{ getProfilePic($user) }}"alt="avatar" class="avatar">
+                <img src="{{ $service_card->getFirstMediaUrl('service_card_pictures') }}"alt="avatar" class="avatar">
             </div>
-            <h3 class="display-3 fs-3 text-center"> {{ $user->name }}</h3>
-            <h3 class="fs-6 text-center"> {{ $user->designation }} ({{ $user->bps }})</h3>
+            <h3 class="display-3 fs-3 text-center"> {{ $service_card->name }}</h3>
+            <h3 class="fs-6 text-center"> {{ $service_card->designation }} ({{ $service_card->bps }})</h3>
             <hr />
 
             <div class="col-md-12">
                 <table class="table table-bordered">
                     <tr>
                         <th>Status</th>
-                        <td>{!! $user->card_status === 'verified' ? '<span class="badge fs-6 bg-success">Verified</span>' : '<span class="badge fs-6 bg-danger">Not Verified</span>' !!}</td>
+                        <td>{!! $service_card->status === 'Verified' ? '<span class="badge fs-6 bg-success">Verified</span>' : '<span class="badge fs-6 bg-danger">Not Verified</span>' !!}</td>
                     </tr>
-                    @if($user->card_status === 'verified')
+                    @if($service_card->status === 'Verified')
                     <tr>
                         <th>Issue Date</th>
-                        <td>{{ $user->updated_at->format('d-M-Y') }} ({{ $user->updated_at->diffForHumans() }})</td>
+                        <td>{{ $service_card->updated_at->format('d-M-Y') }} ({{ $service_card->updated_at->diffForHumans() }})</td>
                     </tr>
                     <tr>
                         <th>Expiration Date</th>
-                        <td>{{ $user->updated_at ->copy()->modify('+3 years')->format('d-M-Y') }} ({{ $user->updated_at->copy()->modify('+3 years')->diffForHumans() }})</td>
+                        <td>{{ $service_card->updated_at ->copy()->modify('+3 years')->format('d-M-Y') }} ({{ $service_card->updated_at->copy()->modify('+3 years')->diffForHumans() }})</td>
                     </tr>
                     <tr>
                         <th>Name</th>
-                        <td>{{ $user->name }}</td>
+                        <td>{{ $service_card->name }}</td>
                     </tr>
                     <tr>
                         <th>Designation</th>
-                        <td>{{ $user->designation }}</td>
+                        <td>{{ $service_card->designation }}</td>
                     </tr>
                     <tr>
                         <th>Address</th>
-                        <td>{{ $user->present_address }}</td>
+                        <td>{{ $service_card->present_address }}</td>
                     </tr>
                     <tr>
                         <th>Mobile Number</th>
-                        <td>{{ $user->mobile_number }}</td>
+                        <td>{{ $service_card->mobile_number }}</td>
                     </tr>
                     <tr>
                         <th>Landline Number</th>
-                        <td>{{ $user->landline_number }}</td>
+                        <td>{{ $service_card->landline_number }}</td>
                     </tr>
                     <tr>
                         <th>Email</th>
-                        <td>{{ $user->email }}</td>
+                        <td>{{ $service_card->email }}</td>
                     </tr>
                     @endif
                 </table>
@@ -82,7 +82,7 @@
         <script>
             $('#print-card').on('click', () => {
                 $(".card-details").printThis({
-                    pageTitle: "Card details of {{ $user->name }}"
+                    pageTitle: "Card details of {{ $service_card->name }}"
                 });
             });
 

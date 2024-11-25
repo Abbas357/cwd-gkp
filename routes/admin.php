@@ -20,6 +20,7 @@ use App\Http\Controllers\NewsLetterController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\ProjectFileController;
+use App\Http\Controllers\ServiceCardController;
 use App\Http\Controllers\PublicContactController;
 use App\Http\Controllers\EStandardizationController;
 use App\Http\Controllers\DevelopmentProjectController;
@@ -40,20 +41,24 @@ Route::middleware('auth')->group(function () {
             Route::get('/create', [UserController::class, 'create'])->name('create');
             Route::get('/edit/{user}', [UserController::class, 'edit'])->name('edit');
             Route::patch('/activate/{user}', [UserController::class, 'activateUser'])->name('activate');
+            Route::patch('/archive/{user}', [UserController::class, 'archiveUser'])->name('archive');
             Route::post('/', [UserController::class, 'store'])->name('store');
             Route::get('/{user}', [UserController::class, 'show'])->name('show');
             Route::patch('/{user}', [UserController::class, 'update'])->name('update');
             Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
-            
-            Route::get('/get/cards', [UserController::class, 'cards'])->name('cards');
-            Route::get('/get/{user}', [UserController::class, 'showDetail'])->name('detail');
-            Route::get('/card/{user}', [UserController::class, 'showCard'])->name('showCard');
-            Route::patch('/verify/{user}', [UserController::class, 'verify'])->name('verify');
-            Route::patch('/reject/{user}', [UserController::class, 'reject'])->name('reject');
-            Route::patch('/restore/{user}', [UserController::class, 'restore'])->name('restore');
-            Route::patch('/renew/{user}', [UserController::class, 'renew'])->name('renew');
-            Route::patch('/update/field', [UserController::class, 'updateField'])->name('updateField');
-            Route::patch('/upload/file', [UserController::class, 'uploadFile'])->name('uploadFile');
+        });
+
+        Route::prefix('service_cards')->as('service_cards.')->group(function () {            
+            Route::get('/', [ServiceCardController::class, 'index'])->name('index');
+            Route::get('/{id}', [ServiceCardController::class, 'show'])->name('show');
+            Route::get('/get/{id}', [ServiceCardController::class, 'showDetail'])->name('detail');
+            Route::get('/card/{id}', [ServiceCardController::class, 'showCard'])->name('showCard');
+            Route::patch('/verify/{id}', [ServiceCardController::class, 'verify'])->name('verify');
+            Route::patch('/reject/{id}', [ServiceCardController::class, 'reject'])->name('reject');
+            Route::patch('/restore/{id}', [ServiceCardController::class, 'restore'])->name('restore');
+            Route::patch('/renew/{id}', [ServiceCardController::class, 'renew'])->name('renew');
+            Route::patch('/update/field', [ServiceCardController::class, 'updateField'])->name('updateField');
+            Route::patch('/upload/file', [ServiceCardController::class, 'uploadFile'])->name('uploadFile');
         });
 
         Route::prefix('registrations')->as('registrations.')->group(function () {

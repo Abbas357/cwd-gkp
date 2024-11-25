@@ -1,4 +1,4 @@
-<x-app-layout title="Identity Cards">
+<x-app-layout title="Service Card">
     @push('style')
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
@@ -6,7 +6,7 @@
     <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header">
-        <li class="breadcrumb-item active" aria-current="page">Identity Cards</li>
+        <li class="breadcrumb-item active" aria-current="page">Service Card</li>
     </x-slot>
 
     <div class="card-header mb-3">
@@ -36,7 +36,6 @@
                 <th scope="col" class="p-3">Mobile Number</th>
                 <th scope="col" class="p-3">Landline Number</th>
                 <th scope="col" class="p-3">Designation</th>
-                <th scope="col" class="p-3">Position</th>
                 <th scope="col" class="p-3">BPS</th>
                 <th scope="col" class="p-3">Office</th>
                 <th scope="col" class="p-3">Mark Of Identification</th>
@@ -64,7 +63,7 @@
     <script>
         $(document).ready(function() {
             var table = initDataTable('#cards-datatable', {
-                ajaxUrl: "{{ route('admin.users.cards') }}"
+                ajaxUrl: "{{ route('admin.service_cards.index') }}"
                 , columns: [{
                     data: "id"
                     , searchBuilderType: "num"
@@ -95,10 +94,7 @@
                 }, {
                     data: "designation"
                     , searchBuilderType: "string"
-                }, {
-                    data: "position"
-                    , searchBuilderType: "string"
-                }, {
+                },  {
                     data: "bps"
                     , searchBuilderType: "string"
                 }, {
@@ -141,7 +137,7 @@
 
             hashTabsNavigator({
                 table: table
-                , dataTableUrl: "{{ route('admin.users.cards') }}"
+                , dataTableUrl: "{{ route('admin.service_cards.index') }}"
                 , tabToHashMap: {
                     "#new-tab": '#new'
                     , "#verified-tab": '#verified'
@@ -149,23 +145,23 @@
                 , }
                 , hashToParamsMap: {
                     '#new': {
-                        status: 'new'
+                        status: 'New'
                     }
                     , '#verified': {
-                        status: 'verified'
+                        status: 'Verified'
                     }
                     , '#rejected': {
-                        status: 'rejected'
+                        status: 'Rejected'
                     }
                 , }
                 , defaultHash: '#new'
             });
 
             $("#cards-datatable").on('click', '.verify-btn', async function() {
-                const userId = $(this).data("id");
-                const url = "{{ route('admin.users.verify', ':id') }}".replace(':id', userId);
+                const cardId = $(this).data("id");
+                const url = "{{ route('admin.service_cards.verify', ':id') }}".replace(':id', cardId);
 
-                const result = await confirmAction('Do you want to Verify this user?');
+                const result = await confirmAction('Do you want to Verify this service card?');
                 if (result && result.isConfirmed) {
                     const success = await fetchRequest(url, 'PATCH');
                     if (success) {
@@ -175,14 +171,14 @@
             });
 
             $("#cards-datatable").on('click', '.reject-btn', async function() {
-                const userId = $(this).data("id");
-                const url = "{{ route('admin.users.reject', ':id') }}".replace(':id', userId);
+                const cardId = $(this).data("id");
+                const url = "{{ route('admin.service_cards.reject', ':id') }}".replace(':id', cardId);
 
                 const {
                     value: reason
                 } = await confirmWithInput({
                     inputType: "textarea"
-                    , text: 'Do you want to reject this user?'
+                    , text: 'Do you want to reject this service card?'
                     , inputValidator: (value) => {
                         if (!value) {
                             return 'You need to provide a reason!';
@@ -204,8 +200,8 @@
             });
 
             $("#cards-datatable").on('click', '.renew-btn', async function() {
-                const userId = $(this).data("id");
-                const url = "{{ route('admin.users.renew', ':id') }}".replace(':id', userId);
+                const cardId = $(this).data("id");
+                const url = "{{ route('admin.service_cards.renew', ':id') }}".replace(':id', cardId);
 
                 const {
                     value: issue_date
@@ -229,10 +225,10 @@
             });
 
             $("#cards-datatable").on('click', '.restore-btn', async function() {
-                const userId = $(this).data("id");
-                const url = "{{ route('admin.users.restore', ':id') }}".replace(':id', userId);
+                const cardId = $(this).data("id");
+                const url = "{{ route('admin.service_cards.restore', ':id') }}".replace(':id', cardId);
 
-                const result = await confirmAction('Would you like to reconsider this user\'s status?');
+                const result = await confirmAction('Would you like to reconsider this service card\'s status?');
                 if (result && result.isConfirmed) {
                     const success = await fetchRequest(url, 'PATCH');
                     if (success) {
@@ -244,14 +240,14 @@
             resizableTable('#cards-datatable');
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.users.detail', ':id') }}"
+                fetchUrl: "{{ route('admin.service_cards.detail', ':id') }}"
                 , btnSelector: '.view-btn'
                 , title: 'User Details'
                 , modalSize: 'lg'
             , });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.users.showCard', ':id') }}"
+                fetchUrl: "{{ route('admin.service_cards.showCard', ':id') }}"
                 , btnSelector: '.card-btn'
                 , title: 'Service Card'
                 , modalSize: 'md'

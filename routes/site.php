@@ -18,6 +18,7 @@ use App\Http\Controllers\Site\EStandardizationController;
 use App\Http\Controllers\Site\ContractorRegistrationController;
 use App\Http\Controllers\Site\DevelopmentProjectController;
 use App\Http\Controllers\Site\SeniorityController;
+use App\Http\Controllers\Site\ServiceCardController;
 
 Route::prefix('partials')->as('partials.')->group(function () {
     Route::get('/message', [HomeController::class, 'messagePartial'])->name('message');
@@ -69,10 +70,10 @@ Route::prefix('contacts')->as('contacts.')->group(function () {
     Route::get('/', [UserController::class, 'contacts'])->name('index');
 });
 
-Route::prefix('card')->as('card.')->group(function () {
-    Route::get('/apply', [UserController::class, 'createCard'])->name('createCard');
-    Route::post('/', [UserController::class, 'storeCard'])->name('storeCard');
-    Route::get('/verified/{id}', [UserController::class, 'verifiedUsers'])->name('verified');
+Route::prefix('service_cards')->as('service_cards.')->group(function () {
+    Route::get('/apply', [ServiceCardController::class, 'create'])->name('create');
+    Route::post('/', [ServiceCardController::class, 'store'])->name('store');
+    Route::get('/verified/{id}', [ServiceCardController::class, 'verified'])->name('verified');
 });
 
 Route::prefix('news')->as('news.')->group(function () {

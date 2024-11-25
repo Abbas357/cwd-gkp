@@ -57,7 +57,7 @@
                         <p class="card-text text-muted mb-1 fs-5">{{ $position }}</p>
                         <div>
                             <span class="badge text-bg-light">
-                                @if($user['is_active'])
+                                @if($user['status'] == 'Active')
                                 Since {{ $user['from'] ?? 'unknown' }}
                                 @else
                                 From {{ $user['from'] ?? '...' }} to {{ $user['to'] ?? '...' }}

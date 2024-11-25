@@ -65,7 +65,13 @@ class SearchController extends Controller
                     ->orWhere('position', 'LIKE', "%{$query}%")
                     ->orWhere('office', 'LIKE', "%{$query}%");
             })
-            ->orderByRaw('is_active DESC')
+            ->orderByRaw("
+                CASE 
+                    WHEN status = 'Active' THEN 1 
+                    WHEN status = 'Inactive' THEN 2 
+                    ELSE 3 
+                END
+            ")
             ->latest()
             ->limit(5)
             ->get();

@@ -12,10 +12,13 @@
     <div class="card-header mb-3">
         <ul class="nav nav-tabs nav-tabs-table">
             <li class="nav-item">
-                <a id="inactive-tab" class="nav-link" data-bs-toggle="tab" href="#inactive">In Active</a>
+                <a id="inactive-tab" class="nav-link" data-bs-toggle="tab" href="#inactive">Inactive</a>
             </li>
             <li class="nav-item">
                 <a id="active-tab" class="nav-link" data-bs-toggle="tab" href="#active">Active</a>
+            </li>
+            <li class="nav-item">
+                <a id="archived-tab" class="nav-link" data-bs-toggle="tab" href="#archived">Archived</a>
             </li>
         </ul>
     </div>
@@ -30,7 +33,6 @@
                 <th scope="col" class="p-3">Position</th>
                 <th scope="col" class="p-3">Office</th>
                 <th scope="col" class="p-3">Password Updated</th>
-                <th scope="col" class="p-3">Active</th>
                 <th scope="col" class="p-3">Created At</th>
                 <th scope="col" class="p-3">Updated At</th>
                 <th scope="col" class="p-3">Actions</th>
@@ -72,9 +74,6 @@
                     data: "password_updated_at"
                     , searchBuilderType: "date"
                 }, {
-                    data: "is_active"
-                    , searchBuilderType: "string"
-                }, {
                     data: "created_at"
                     , searchBuilderType: "date"
                 }, {
@@ -89,7 +88,7 @@
                 , defaultOrderColumn: 11
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
-                    targets: [7, 8, 9]
+                    targets: [7, 8]
                     , visible: false
                 }]
                 , customButton: {
@@ -105,15 +104,19 @@
                 table: table
                 , dataTableUrl: "{{ route('admin.users.index') }}"
                 , tabToHashMap: {
-                    "#active-tab": '#active'
-                    , "#inactive-tab": '#inactive'
+                    "#inactive-tab": '#inactive'
+                    , "#active-tab": '#active'
+                    , '#archived-tab': '#archived'
                 }
                 , hashToParamsMap: {
-                    '#active': {
-                        active: 1
+                    '#inactive': {
+                        status: 'Inactive'
                     }
-                    , '#inactive': {
-                        active: 0
+                    , '#active': {
+                        status: 'Active'
+                    }
+                    , '#archived': {
+                        status: 'Archived'
                     }
                 }
                 , defaultHash: '#active'
@@ -139,6 +142,20 @@
                 const url = "{{ route('admin.users.activate', ':id') }}".replace(':id', userId);
 
                 const result = await confirmAction(`Do you want to ${message} this user?`);
+                if (result && result.isConfirmed) {
+                    const success = await fetchRequest(url, 'PATCH');
+                    if (success) {
+                        $("#users-datatable").DataTable().ajax.reload();
+                    }
+                }
+            });
+
+            $("#users-datatable").on('click', '.archive-btn', async function() {
+                const userId = $(this).data("id");
+                const message = $(this).data("type");
+                const url = "{{ route('admin.users.archive', ':id') }}".replace(':id', userId);
+
+                const result = await confirmAction(`Do you want to Archive this user?`);
                 if (result && result.isConfirmed) {
                     const success = await fetchRequest(url, 'PATCH');
                     if (success) {

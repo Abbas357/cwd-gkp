@@ -64,7 +64,7 @@
                     </button>
                 </div>
             </div>
-        </div>
+        </div>-
     </div>
     <div class="cw-bottom">
         <div class="cw-bottom-wrapper">

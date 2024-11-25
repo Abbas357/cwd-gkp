@@ -75,7 +75,7 @@
                     <div class="menu-title">Modules</div>
                 </a>
                 <ul class="p-2 menu-items">
-                    <li><a href="{{ route('admin.users.cards') }}"><i class="bi-credit-card fs-6"></i>&nbsp; Service Card</a></li>
+                    <li><a href="{{ route('admin.service_cards.index') }}"><i class="bi-credit-card fs-6"></i>&nbsp; Service Card</a></li>
                     <li><a href="{{ route('admin.registrations.index') }}"><i class="bi-person-vcard fs-6"></i>&nbsp; E-Registration</a></li>
                     <li><a href="{{ route('admin.standardizations.index') }}"><i class="bi-patch-check-fill fs-6"></i>&nbsp; E-Standardization</a></li>
                 </ul>

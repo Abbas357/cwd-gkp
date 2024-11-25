@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             'designation' => 'Assistant Director IT',
             'cnic' => '15701-2490811-7',
             'office' => 'IT',
-            'is_active' => 1,
+            'status' => 'Active',
             'password_updated_at' => fake()->dateTime,
             'password' => bcrypt('password'),
         ]);
