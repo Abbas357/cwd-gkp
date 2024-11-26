@@ -2,7 +2,6 @@
     <h1>Dear {{ $name }},</h1>
     <p>Thank you for submitting application.</p>
     <ul>
-        <li><strong>Designation:</strong> {{ $designation }}</li>
         <li><strong>Father:</strong> {{ $father_name }}</li>
         <li><strong>Personnel Number:</strong> {{ $personnel_number }}</li>
         <li><strong>Applied Date:</strong> {{ $applied_date }}</li>
