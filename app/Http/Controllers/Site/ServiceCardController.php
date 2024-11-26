@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\StoreServiceCardRequest;
-use App\Mail\ContractorRegistration\AppliedMail;
+use App\Mail\ServiceCard\AppliedMail;
 
 class ServiceCardController extends Controller
 {
@@ -24,8 +24,8 @@ class ServiceCardController extends Controller
             'offices' => Category::where('type', 'office')->get(),
             'bps' => $bps,
             'blood_groups' => ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
-
         ];
+        
         return view('site.service_cards.create', compact('cat'));
     }
 
@@ -56,7 +56,7 @@ class ServiceCardController extends Controller
         }
 
         if ($card->save()) {
-            // Mail::to($card->email)->queue(new AppliedMail($card));
+            Mail::to($card->email)->queue(new AppliedMail($card));
             return redirect()->route('service_cards.create')->with('success', 'Your ID card information has been submitted. We will notify you once your information is verified.');
         }
         return redirect()->route('service_cards.create')->with('error', 'There is an error submitting your data');

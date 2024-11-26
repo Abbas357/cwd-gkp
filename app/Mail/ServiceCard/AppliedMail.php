@@ -1,5 +1,5 @@
 <?php
-namespace App\Mail\User;
+namespace App\Mail\ServiceCard;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -8,32 +8,33 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class RenewedMail extends Mailable implements ShouldQueue
+class AppliedMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $user;
+    public $service_card;
 
-    public function __construct($user)
+    public function __construct($service_card)
     {
-        $this->user = $user;
+        $this->service_card = $service_card;
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your card is Renewed',
+            subject: 'Card Application Submitted',
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'emails.user.verified',
+            view: 'emails.service_card.applied',
             with: [
-                'name' => $this->user->name,
-                'father_name' => $this->user->father_name,
-                'personnel_number' => $this->user->personnel_number,
+                'name' => $this->service_card->name,
+                'father_name' => $this->service_card->father_name,
+                'personnel_number' => $this->service_card->personnel_number,
+                'applied_date' => now()->format('Y-m-d'),
             ],
         );
     }

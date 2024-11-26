@@ -1,5 +1,5 @@
 <?php
-namespace App\Mail\User;
+namespace App\Mail\ServiceCard;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,11 +12,11 @@ class VerifiedMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $user;
+    public $service_card;
 
-    public function __construct($user)
+    public function __construct($service_card)
     {
-        $this->user = $user;
+        $this->service_card = $service_card;
     }
 
     public function envelope(): Envelope
@@ -29,11 +29,11 @@ class VerifiedMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'emails.user.verified',
+            view: 'emails.service_card.verified',
             with: [
-                'name' => $this->user->name,
-                'father_name' => $this->user->father_name,
-                'personnel_number' => $this->user->personnel_number,
+                'name' => $this->service_card->name,
+                'father_name' => $this->service_card->father_name,
+                'personnel_number' => $this->service_card->personnel_number,
             ],
         );
     }

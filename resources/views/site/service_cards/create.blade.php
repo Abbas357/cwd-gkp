@@ -225,7 +225,7 @@
             imageCropper({
                 fileInput: "#profile_picture"
                 , inputLabelPreview: "#profile_picture_preview"
-                , aspectRatio: 1 / 1
+                , aspectRatio: 5 / 6
                 , onComplete() {
                     $("#profile_picture_preview").show();
                 }

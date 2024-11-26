@@ -1,5 +1,5 @@
 <?php
-namespace App\Mail\User;
+namespace App\Mail\ServiceCard;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,12 +12,12 @@ class RejectedMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user;
+    public $service_card;
     public $rejected_reason;
 
-    public function __construct($user, $rejected_reason)
+    public function __construct($service_card, $rejected_reason)
     {
-        $this->user = $user;
+        $this->service_card = $service_card;
         $this->rejected_reason = $rejected_reason;
     }
 
@@ -31,11 +31,11 @@ class RejectedMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.user.rejected',
+            view: 'emails.service_card.rejected',
             with: [
-                'name' => $this->user->name,
-                'father_name' => $this->user->father_name,
-                'personnel_number' => $this->user->personnel_number,
+                'name' => $this->service_card->name,
+                'father_name' => $this->service_card->father_name,
+                'personnel_number' => $this->service_card->personnel_number,
                 'rejected_reason' => $this->rejected_reason,
             ],
         );
