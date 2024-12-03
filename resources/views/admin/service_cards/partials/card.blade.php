@@ -237,7 +237,7 @@
                 ISSUING AUTHORITY
             </div>
             <div class="qr-code">
-                <img src="{{ $qrCodeUri }}" style="width: 75px;border:3px solid transparent; outline: 2px solid #aaa" alt="QR Code for verification">
+                <img src="{!! $qrCodeUri !!}" style="width: 75px;border:3px solid transparent; outline: 2px solid #aaa" alt="QR Code for verification">
             </div>
         </div>
 

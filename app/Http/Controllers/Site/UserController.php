@@ -109,6 +109,7 @@ class UserController extends Controller
             'Directors' => ['column' => 'designation', 'value' => 'Director'],
             'Deputy Secretaries' => ['column' => 'designation', 'value' => 'Deputy Secretary'],
             'Principal Consulting Architect' => ['column' => 'position', 'value' => 'Principal Consulting Architect'],
+            'Section Officers' => ['column' => 'designation', 'value' => 'Section Officer'],
             'Administrative Officers' => ['column' => 'designation', 'value' => 'Administrative Officer'],
             'IT Professionals' => ['column' => 'office', 'value' => 'Director (IT)'],
         ];

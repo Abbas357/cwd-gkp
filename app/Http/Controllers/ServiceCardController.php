@@ -7,16 +7,17 @@ use App\Models\User;
 use App\Models\Category;
 use App\Models\ServiceCard;
 use Illuminate\Http\Request;
-use App\Mail\ServiceCard\RenewedMail;
-use App\Mail\ServiceCard\RejectedMail;
-use App\Mail\ServiceCard\VerifiedMail;
 use Yajra\DataTables\DataTables;
+use Endroid\QrCode\Builder\Builder;
 use App\Http\Controllers\Controller;
 use Endroid\QrCode\Writer\PngWriter;
-use Endroid\QrCode\Builder\Builder;
-
+use Endroid\QrCode\Writer\SvgWriter;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\ServiceCard\RenewedMail;
+
 use Endroid\QrCode\Encoding\Encoding;
+use App\Mail\ServiceCard\RejectedMail;
+use App\Mail\ServiceCard\VerifiedMail;
 
 class ServiceCardController extends Controller
 {
@@ -143,7 +144,7 @@ class ServiceCardController extends Controller
                 ],
             ]);
         }
-        
+
         $bps = [];
         for ($i = 1; $i <= 22; $i++) {
             $bps[] = sprintf("BPS-%02d", $i);
@@ -169,6 +170,7 @@ class ServiceCardController extends Controller
     public function showCard($cardId)
     {
         $service_card = ServiceCard::findOrFail($cardId);
+
         if ($service_card->status !== 'Verified') {
             return response()->json([
                 'success' => false,
@@ -177,9 +179,10 @@ class ServiceCardController extends Controller
                 ],
             ]);
         }
+
         $data = route('service_cards.verified', ['id' => $service_card->id]);
         $qrCode = Builder::create()
-            ->writer(new PngWriter())
+            ->writer(new SvgWriter())
             ->data($data)
             ->encoding(new Encoding('UTF-8'))
             ->size(300)
@@ -189,6 +192,7 @@ class ServiceCardController extends Controller
         $qrCodeUri = $qrCode->getDataUri();
 
         $html = view('admin.service_cards.partials.card', compact('service_card', 'qrCodeUri'))->render();
+
         return response()->json([
             'success' => true,
             'data' => [
@@ -243,5 +247,4 @@ class ServiceCardController extends Controller
             return response()->json(['error' => 'Error uploading file: ' . $e->getMessage()], 500);
         }
     }
-
 }
