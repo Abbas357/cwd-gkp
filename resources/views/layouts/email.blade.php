@@ -1,46 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title }}</title>
 </head>
+ 
+<body>
+    <div style="font-family:verdana;font-size:12px;color:#555555;line-height:14pt">
+        <div style="width:590px">
+            <div style="background:url('https://ci3.googleusercontent.com/meips/ADKq_NbxychL5989Q-2P8WhD3zaZmExFOLHjdLeT5MrwjjlOVPOvxSpuQWNGPRMByF4vZvmtKK5fMGKQe2Os6kHKWlqPIbWmYpzaYnLq84ZyShRUP_UKf6W5Gg=s0-d-e1-ft#https://www.gstatic.com/android/market_images/email/email_top.png') no-repeat;width:100%;height:75px;display:block">
+                <div style="padding-top:30px;padding-left:50px;padding-right:50px">
+                    <a href="{{ route('site') }}" target="_blank">
+                        <img src="{{ $logo }}" alt="C&W Logo" style="border:none">
+                    </a>
+                </div>
+            </div>
+            <div style="background:url('https://ci3.googleusercontent.com/meips/ADKq_NYzAKgKbrls_po-Au9Y4mXCjRLC2A-BxL0CEgaamcmlzrAOgtxe-ncyBvLtrwVprDSm7dTXQfZQ8xJuP85Xg889qdYDqyvbVK5MbDwuUYtwmstb_ItNbQ=s0-d-e1-ft#https://www.gstatic.com/android/market_images/email/email_mid.png') repeat-y;width:100%;display:block">
+                <div style="padding-left:50px;padding-right:50px;padding-bottom:1px">
+                    <div style="border-bottom:1px solid #ededed"></div>
+                    Hello, <p><b>{{ $title }}</b></p>
 
-<body style="margin: 0; padding: 0; background-color: #ffffff;">
-    <center>
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
-            <tr>
-                <td align="center">
-                    <!-- Container -->
-                    <table width="600" border="0" cellspacing="0" cellpadding="0" style="border: 1px solid #e0e0e0; max-width: 600px;">
-                        <!-- Header -->
-                        <tr>
-                            <td align="center" style="background-color: #5caad2; padding: 20px;">
-                                <img src="{{ $logo }}" alt="Logo" width="100" style="margin-bottom: 20px;">
-                                <h1 style="font-size: 24px; color: #ffffff; margin: 0; font-family: Arial, sans-serif;">{{ $title }}</h1>
-                            </td>
-                        </tr>
+                    <div style="background:white;padding:3%">
+                        {{ $slot }}
+                    </div>
 
-                        <!-- Main Content -->
-                        <tr>
-                            <td style="padding: 20px; font-family: Arial, sans-serif; font-size: 16px; color: #333333;">
-                                {{ $slot }}
-                            </td>
-                        </tr>
-
-                        <!-- Footer -->
-                        <tr>
-                            <td style="font-size: 12px; color: #888888; padding: 10px; border-top: 1px solid #e0e0e0; text-align: center; font-family: Arial, sans-serif; background-color: #f7f7f7;">
-                                Contact us: <a href="mailto:{{ $contactEmail }}" style="color: #5caad2; text-decoration: none;">{{ $contactEmail }}</a><br>
-                                <a href="{{ url('unsubscribe') }}" style="color: #5caad2; text-decoration: none;">Unsubscribe</a>
-                            </td>
-                        </tr>
-                    </table>
-                    <!-- End Container -->
-                </td>
-            </tr>
-        </table>
-    </center>
+                    <p>If you don't want to receive further notifications you may <a href="#" style="font-weight:bold;text-decoration:none;color:#3aaaba" target="_blank">opt out</a>.</p>Sincerely,<br>IT Cell, C&W Department
+                </div>
+            </div>
+        </div>
+        <div style="background:url('https://ci3.googleusercontent.com/meips/ADKq_NZCNbMj80PICjpr2zti8M-OJ5bQFFEq78gd8Zfb4RFxb-ZVFDcvkdDPj2LN8YQBrVZYvx5x4GIf0IqhSlooPtMkWEGDJwcW9CoONq0AqGcGMhiIlN4brA5V0w=s0-d-e1-ft#https://www.gstatic.com/android/market_images/email/email_bottom.png') no-repeat;width:100%;min-height:50px;display:block" class="adL">
+            <div style="padding-left:50px;padding-right:50px"></div>
+        </div>
+    </div>
 </body>
 
 </html>

@@ -10,7 +10,9 @@ class ProjectController extends Controller
 {
     public function showProject($name)
     {
-        $project = Project::with('files')->where('name', $name)->firstOrFail();
+        $project = Project::with(['files' => function ($query) {
+            $query->orderBy('created_at', 'desc');
+        }])->where('name', $name)->firstOrFail();
 
         $project->files->each(function ($file) {
             $file->download_link = $file->file_link ?: $file->getFirstMediaUrl('project_files') ?: null;

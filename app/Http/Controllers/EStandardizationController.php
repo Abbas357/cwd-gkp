@@ -118,7 +118,7 @@ class EStandardizationController extends Controller
         if ($EStandardization->status !== 'approved') {
             $EStandardization->status = 'approved';
             $EStandardization->card_issue_date = Carbon::now();
-            $EStandardization->card_expiry_date = Carbon::now()->addYears(1);
+            $EStandardization->card_expiry_date = Carbon::now()->addYears(3);
             if($EStandardization->save()) {
                 Mail::to($EStandardization->email)->queue(new ApprovedMail($EStandardization));
                 return response()->json(['success' => 'Product has been approved successfully.']);
@@ -134,7 +134,7 @@ class EStandardizationController extends Controller
         if ($EStandardization->status === 'approved') {
             if ($currentDate->greaterThanOrEqualTo($EStandardization->card_expiry_date)) {
                 $EStandardization->card_issue_date = $request->issue_date ?? $currentDate;
-                $EStandardization->card_expiry_date = Carbon::parse($EStandardization->card_issue_date)->addYears(1);
+                $EStandardization->card_expiry_date = Carbon::parse($EStandardization->card_issue_date)->addYears(3);
 
                 if ($EStandardization->save()) {
                     Mail::to($EStandardization->email)->queue(new RenewedMail($EStandardization));
