@@ -188,27 +188,27 @@
                                 </li>
                             </ul>
                         </li>
-                        <li role="none" class="cw-top-menu" data-tier-id="5">
+                        <li role="none" class="cw-top-menu {{ request()->routeIs('downloads.index') ? 'uActived' : '' }}" data-tier-id="5">
                             <a href="{{ route('downloads.index') }}" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>DOWNLOADS</span>
                             </a>
                         </li>
-                        <li role="none" class="cw-top-menu" data-tier-id="6">
+                        <li role="none" class="cw-top-menu {{ request()->routeIs('seniority.index') ? 'uActived' : '' }}" data-tier-id="6">
                             <a href="{{ route('seniority.index') }}" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>SENIORITY</span>
                             </a>
                         </li>
-                        <li role="none" class="cw-top-menu" data-tier-id="7">
+                        <li role="none" class="cw-top-menu {{ request()->routeIs('gallery.index') ? 'uActived' : '' }}" data-tier-id="7">
                             <a href="{{ route('gallery.index') }}" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>GALLERY</span>
                             </a>
                         </li>
-                        <li role="none" class="cw-top-menu" data-tier-id="8">
+                        <li role="none" class="cw-top-menu {{ request()->routeIs('team') ? 'uActived' : '' }}" data-tier-id="8">
                             <a href="{{ route('team') }}" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>TEAM</span>
                             </a>
                         </li>
-                        <li role="none" class="cw-top-menu" data-tier-id="9">
+                        <li role="none" class="cw-top-menu {{ request()->routeIs('contacts.index') ? 'uActived' : '' }}" data-tier-id="9">
                             <a href="{{ route('contacts.index') }}" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>CONTACTS</span>
                             </a>

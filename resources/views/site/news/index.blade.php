@@ -2,6 +2,7 @@
     @push('style')
     <style>
         .list-group-item {
+            display: block !important;
             margin-block: .7rem;
             box-shadow: 2px 3px 5px #00000011, -2px -3px 5px #00000011;
         }

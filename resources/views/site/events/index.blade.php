@@ -2,6 +2,7 @@
     @push('style')
     <style>
         .list-group-item {
+            display: block !important;
             margin-block: .7rem;
             box-shadow: 2px 3px 5px #00000011, -2px -3px 5px #00000011;
         }
@@ -23,7 +24,7 @@
 
         <div class="list-group">
             @foreach ($newsItems as $event)
-            <div class="list-group-item py-4">
+            <div class="list-group-item py-2">
                 <div class="row p-1">
                     <div class="col-md-2">
                         @if ($event->getFirstMedia('events_pictures') && $event->getFirstMedia('events_pictures')->mime_type === 'image/jpeg')
