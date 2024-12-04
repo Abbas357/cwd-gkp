@@ -28,7 +28,7 @@ class ContractorRegistrationController extends Controller
     public function store(StoreContractorRegistrationRequest $request)
     {
         $registration = new ContractorRegistration();
-        if ($registration->where('pec_number', $request->input('pec_number'))->where('defer_status', '!=', 3)->exists()) {
+        if ($registration->where('pec_number', $request->input('pec_number'))->where('status', '!=', 'deffered_three')->exists()) {
             return redirect()->route('admin.registrations.create')->with('danger', 'User with this PEC Number already exists');
         }
         $registration->owner_name = $request->input('owner_name');

@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('title', 191);
             $table->string('slug', 191)->unique();
             $table->mediumText('content');
-            $table->boolean('is_active')->default(true);
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
     }

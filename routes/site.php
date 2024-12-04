@@ -117,3 +117,4 @@ Route::prefix('projects')->as('projects.')->group(function () {
 
 Route::get('/team', [UserController::class, 'team'])->name('team');
 Route::get('/search', [SearchController::class, 'search'])->name('search');
+Route::get('/fetch-popups', [HomeController::class, 'fetchPopups']);

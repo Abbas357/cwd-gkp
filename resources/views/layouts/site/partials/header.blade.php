@@ -20,7 +20,7 @@
                 </button>
 
                 @include("layouts.site.partials.logo")
-                
+
                 <div class="cw-search cw-search-temp-wrapper cw-mobile-search" role="search">
                     <div class="cw-input-container">
                         <input id="cw-search-input" type="search" class="cw-search-input" aria-label="AI Search..." placeholder="AI Search..." tabindex="0" autocomplete="off" />
@@ -162,7 +162,7 @@
                                 </li>
                                 <li role="none" data-tier-id="3">
                                     <a href="{{ route('development_projects.index') }}" role="menuitem" class="cw-menuItem" tabindex="0">All PROJECTS</a>
-                                </li>                                
+                                </li>
                             </ul>
                         </li>
                         <li role="none" class="cw-top-menu child-nav" data-tier-id="4">
@@ -231,13 +231,16 @@
         </div>
     </div>
     @if (session('success'))
-        <div class="container d-flex justify-content-center pt-2 bg-light">
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
+    <div class="container d-flex justify-content-center pt-2 bg-light">
+        <div class="alert alert-success">
+            {{ session('success') }}
         </div>
+    </div>
     @endif
 </header>
+
+<div id="modal-container"></div>
+
 <script>
     function loadZuckLibraries(callback) {
         if (!document.getElementById('zuck-css')) {
@@ -273,110 +276,181 @@
                 let seenUserIds = Object.keys(contentSeenItems);
 
                 fetch("{{ route('stories.get') }}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({
-                        seenUserIds: seenUserIds
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    spinner.classList.remove('show');
-                    if (data.success) {
-                        let storiesData = data.data.result;
-
-                        if (data.expiredUsers && data.expiredUsers.length > 0) {
-                            data.expiredUsers.forEach(userId => {
-                                delete contentSeenItems[userId];
-                            });
-                            localStorage.setItem('zuck-stories-content-seenItems', JSON.stringify(contentSeenItems));
+                        method: 'POST'
+                        , headers: {
+                            'Content-Type': 'application/json'
+                            , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                         }
+                        , body: JSON.stringify({
+                            seenUserIds: seenUserIds
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        spinner.classList.remove('show');
+                        if (data.success) {
+                            let storiesData = data.data.result;
 
-                        storiesContent.innerHTML = '';
+                            if (data.expiredUsers && data.expiredUsers.length > 0) {
+                                data.expiredUsers.forEach(userId => {
+                                    delete contentSeenItems[userId];
+                                });
+                                localStorage.setItem('zuck-stories-content-seenItems', JSON.stringify(contentSeenItems));
+                            }
 
-                        let unviewedSeenItems = localStorage.getItem('zuck-unviewed-stories-seenItems');
-                        contentSeenItems = localStorage.getItem('zuck-stories-content-seenItems');
+                            storiesContent.innerHTML = '';
 
-                        unviewedSeenItems = unviewedSeenItems ? JSON.parse(unviewedSeenItems) : {};
-                        contentSeenItems = contentSeenItems ? JSON.parse(contentSeenItems) : {};
+                            let unviewedSeenItems = localStorage.getItem('zuck-unviewed-stories-seenItems');
+                            contentSeenItems = localStorage.getItem('zuck-stories-content-seenItems');
 
-                        storiesData.sort((a, b) => {
-                            let aViewed = unviewedSeenItems[a.id] || contentSeenItems[a.id] || false;
-                            let bViewed = unviewedSeenItems[b.id] || contentSeenItems[b.id] || false;
+                            unviewedSeenItems = unviewedSeenItems ? JSON.parse(unviewedSeenItems) : {};
+                            contentSeenItems = contentSeenItems ? JSON.parse(contentSeenItems) : {};
 
-                            if (aViewed && !bViewed) return 1;
-                            if (!aViewed && bViewed) return -1;
-                            return 0;
-                        });
+                            storiesData.sort((a, b) => {
+                                let aViewed = unviewedSeenItems[a.id] || contentSeenItems[a.id] || false;
+                                let bViewed = unviewedSeenItems[b.id] || contentSeenItems[b.id] || false;
 
-                        new Zuck(storiesContent, {
-                            backNative: true,
-                            autoFullScreen: false,
-                            skin: 'snapgram',
-                            avatars: true,
-                            list: false,
-                            cubeEffect: true,
-                            localStorage: true,
-                            reactive: false,
-                            stories: storiesData,
-                            callbacks: {
-                                onView: function(storyId, callback) {
-                                    incrementViewCount(storyId);
-                                    if (typeof callback === 'function') {
+                                if (aViewed && !bViewed) return 1;
+                                if (!aViewed && bViewed) return -1;
+                                return 0;
+                            });
+
+                            new Zuck(storiesContent, {
+                                backNative: true
+                                , autoFullScreen: false
+                                , skin: 'snapgram'
+                                , avatars: true
+                                , list: false
+                                , cubeEffect: true
+                                , localStorage: true
+                                , reactive: false
+                                , stories: storiesData
+                                , callbacks: {
+                                    onView: function(storyId, callback) {
+                                        incrementViewCount(storyId);
+                                        if (typeof callback === 'function') {
+                                            callback();
+                                        }
+                                    }
+                                    , onClose: function(storyId, callback) {
                                         callback();
                                     }
-                                },
-                                onClose: function(storyId, callback) {
-                                    callback();
-                                },
-                                onOpen: function(storyId, callback) {
-                                    callback();
-                                },
-                                onNextItem: function(storyId, currentItem, callback) {
-                                    callback();
-                                },
-                                onEnd: function(storyId, callback) {
-                                    callback();
-                                },
-                                onNavigateItem: function(storyId, direction, callback) {
-                                    callback();
-                                },
-                                onDataUpdate: function(storyId, callback) {
-                                    callback();
-                                }
-                            }
-                        });
-
-                        function incrementViewCount(storyId) {
-                            const url = "{{ route('stories.viewed', ':id') }}".replace(':id', storyId);
-                            fetch(url, {
-                                    method: 'PATCH',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                    , onOpen: function(storyId, callback) {
+                                        callback();
                                     }
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    console.log('View count incremented:', data);
-                                })
-                                .catch(error => {
-                                    console.error('Error incrementing view count:', error);
-                                });
-                        }
+                                    , onNextItem: function(storyId, currentItem, callback) {
+                                        callback();
+                                    }
+                                    , onEnd: function(storyId, callback) {
+                                        callback();
+                                    }
+                                    , onNavigateItem: function(storyId, direction, callback) {
+                                        callback();
+                                    }
+                                    , onDataUpdate: function(storyId, callback) {
+                                        callback();
+                                    }
+                                }
+                            });
 
-                    } else {
+                            function incrementViewCount(storyId) {
+                                const url = "{{ route('stories.viewed', ':id') }}".replace(':id', storyId);
+                                fetch(url, {
+                                        method: 'PATCH'
+                                        , headers: {
+                                            'Content-Type': 'application/json'
+                                            , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                        }
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        console.log('View count incremented:', data);
+                                    })
+                                    .catch(error => {
+                                        console.error('Error incrementing view count:', error);
+                                    });
+                            }
+
+                        } else {
+                            storiesContent.innerHTML = errorMessage;
+                        }
+                    })
+                    .catch(error => {
+                        spinner.classList.remove('show');
                         storiesContent.innerHTML = errorMessage;
-                    }
-                })
-                .catch(error => {
-                    spinner.classList.remove('show');
-                    storiesContent.innerHTML = errorMessage;
-                });
+                    });
             });
         });
     });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const modalContainer = document.getElementById('modal-container');
+        const announcementSeen = sessionStorage.getItem('announcement_seen');
+        const newsSeen = sessionStorage.getItem('news_seen');
+
+        fetch('/fetch-popups')
+            .then(response => response.json())
+            .then(data => {
+                const {
+                    announcement
+                    , news
+                } = data;
+
+                if (announcement && !announcementSeen) {
+                    modalContainer.innerHTML += `
+                        <div id="announcement-modal" class="modal fade" tabindex="-1" role="dialog">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">${announcement.title}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <a href="{{ route('pages.show', 'Announcement') }}"><img src="${announcement.image}" style="width:100%" /></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    sessionStorage.setItem('announcement_seen', true);
+                    const announcementModal = new bootstrap.Modal(document.getElementById('announcement-modal'));
+                    announcementModal.show();
+                }
+
+                if (news.length && !newsSeen) {
+                    const newsList = news.map(item => `
+                    <li class="list-group-item d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <img src="${item.image}" alt="${item.title}" class="img-thumbnail news-image" />
+                            <a href="${item.url}" class="news-title ms-3">
+                                <strong>${item.title}</strong>
+                            </a>
+                        </div>
+                        <small class="news-date">${item.created_at}</small>
+                    </li>
+                `).join('');
+
+                    modalContainer.innerHTML += `
+                        <div id="news-modal" class="modal fade" tabindex="-1" role="dialog">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Latest News</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul class="list-group">${newsList}</ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    sessionStorage.setItem('news_seen', true);
+                    const newsModal = new bootstrap.Modal(document.getElementById('news-modal'));
+                    newsModal.show();
+                }
+            })
+            .catch(error => console.error('Error fetching modals:', error));
+    });
+
 </script>

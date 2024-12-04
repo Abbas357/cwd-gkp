@@ -168,13 +168,13 @@
                                                     <label>Is Your firm registered/ Limited</label>
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="is_limited_yes">
-                                                            <input class="form-check-input" type="radio" value="yes" name="is_limited" id="is_limited_yes" required>
+                                                            <input class="form-check-input" type="radio" value="1" name="is_limited" id="is_limited_yes" required>
                                                             Yes
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="is_limited_no">
-                                                            <input class="form-check-input" type="radio" value="no" name="is_limited" id="is_limited_no" required>
+                                                            <input class="form-check-input" type="radio" value="0" name="is_limited" id="is_limited_no" required>
                                                             No
                                                         </label>
                                                     </div>

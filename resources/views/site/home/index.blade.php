@@ -3,6 +3,9 @@
     <link href="{{ asset('site/lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
     <link href="{{ asset('site/lib/newsticker/news-ticker.min.css') }}" rel="stylesheet">
     <link href="{{ asset('site/css/dashboard.css') }}" rel="stylesheet">
+    <style>
+        
+    </style>
     @endpush
     <x-slot name="header"></x-slot>
 
@@ -86,7 +89,7 @@
         <div class="container-fluid blog py-3">
             <div class="container py-2">
                 <div class="mx-auto text-center" style="max-width: 900px;">
-                    <h5 class="section-title px-3 my-5">Our Blog</h5>
+                    <h5 class="section-title px-3 my-5">News</h5>
                 </div>
                 <div id="content"></div>
                 <div class="d-flex justify-content-center">

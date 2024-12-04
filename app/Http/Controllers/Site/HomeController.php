@@ -217,4 +217,41 @@ class HomeController extends Controller
     {
         return view('site.home.partials.contact');
     }
+
+    public function fetchPopups()
+    {
+        $announcement = Page::where('page_type', 'Announcement')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $announcementData = $announcement ? [
+            'id' => $announcement->id,
+            'title' => $announcement->title,
+            'image' => $announcement->getFirstMediaUrl('page_attachments') 
+                ?: asset('admin/images/no-image.jpg'),
+        ] : null;
+
+        $news = News::take(10)
+        ->latest()
+        ->get()
+        ->map(function ($newsItem) {
+            $media = $newsItem->getFirstMedia('news_attachments');
+            $isImage = $media && str_starts_with($media->mime_type, 'image/');
+
+            return [
+                'id' => $newsItem->id,
+                'title' => $newsItem->title,
+                'slug' => $newsItem->slug,
+                'created_at' => $newsItem->created_at->format('M d, Y'),
+                'url' => route('news.show', $newsItem->slug),
+                'image' => $isImage ? $media->getUrl() : asset('admin/images/no-image.jpg'),
+            ];
+        });
+
+        return response()->json([
+            'announcement' => $announcementData,
+            'news' => $news,
+        ]);
+    }
+
 }

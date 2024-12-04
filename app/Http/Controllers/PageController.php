@@ -91,12 +91,20 @@ class PageController extends Controller
     public function activatePage(Request $request, $pageId)
     {
         $page = Page::withoutGlobalScope('active')->findOrFail($pageId);
+        $existingActivePage = Page::withoutGlobalScope('active')
+            ->where('page_type', $page->page_type)
+            ->where('is_active', 1)
+            ->where('id', '!=', $pageId)
+            ->first();
+        if ($existingActivePage) {
+            return response()->json(['error' => 'Only one page of this type can be active at a time.'], 200);
+        }
         if ($page->is_active === 1) {
             $page->is_active = 0;
-            $message = 'Page activated successfully.';
+            $message = 'Page deactivated successfully.';
         } else {
             $page->is_active = 1;
-            $message = 'Page has been deactivated.';
+            $message = 'Page activated successfully.';
         }
         $page->save();
         return response()->json(['success' => $message], 200);
@@ -152,13 +160,13 @@ class PageController extends Controller
     {
         $request->validate([
             'id'   => 'required|integer|exists:pages,id',
-            'attachment' => 'required|file|mimes:pdf,docx,pptx,txt,jpeg,jpg,png,gif|max:10240', 
+            'attachment' => 'required|file|mimes:pdf,docx,pptx,txt,jpeg,jpg,png,gif|max:10240',
         ]);
 
         $page = Page::withoutGlobalScope('active')->findOrFail($request->id);
 
         if ($page->is_active === 1) {
-            return response()->json(['error' => 'Active page cannot be updated'], 403); 
+            return response()->json(['error' => 'Active page cannot be updated'], 403);
         }
 
         try {
