@@ -17,8 +17,8 @@ public_html/hot
 
 storage/*.key
 .env
-error_log
 php.ini
+error_log
 Homestead.yaml
 Homestead.json
 /.vagrant
