@@ -1,5 +1,0 @@
-[31-Oct-2024 17:56:30 UTC] PHP Warning:  copy(): https:// wrapper is disabled in the server configuration by allow_url_fopen=0 in Command line code on line 1
-[31-Oct-2024 17:56:30 UTC] PHP Warning:  copy(https://getcomposer.org/installer): Failed to open stream: no suitable wrapper could be found in Command line code on line 1
-[31-Oct-2024 17:56:30 UTC] PHP Warning:  hash_file(composer-setup.php): Failed to open stream: No such file or directory in Command line code on line 1
-[31-Oct-2024 17:56:30 UTC] PHP Warning:  unlink(composer-setup.php): No such file or directory in Command line code on line 1
-[31-Oct-2024 17:56:46 UTC] PHP Warning:  unlink(composer-setup.php): No such file or directory in Command line code on line 1

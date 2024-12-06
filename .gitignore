@@ -17,6 +17,7 @@ public_html/hot
 
 storage/*.key
 .env
+error_log
 php.ini
 Homestead.yaml
 Homestead.json
