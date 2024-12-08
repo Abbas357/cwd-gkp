@@ -15,25 +15,22 @@
             <p>{!! nl2br($pageData['content']) !!}</p>
         </div>
 
-        <div id="book"></div>
+        <div id="book" style="border: 1px solid #aaa"></div>
     </div>
     @push('script')
         <script src="{{ asset('site/lib/page-flip/script.min.js') }}"></script>
 
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-                // Array of image paths
                 const images = @json($pageData['attachments']); 
                 console.log(images)
 
-                // Initialize the PageFlip instance
                 const pageFlip = new St.PageFlip(document.getElementById('book'), {
                     width: 600,
                     height: 600,
                     size: "stretch"
                 });
 
-                // Load images into the flipbook
                 pageFlip.loadFromImages(images);
             });
         </script>

@@ -17,6 +17,7 @@ class StorePageRequest extends FormRequest
             'page_type' => 'required',
             'title' => 'required',
             'content' => 'required',
+            'attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:10240',
         ];
     }
 }

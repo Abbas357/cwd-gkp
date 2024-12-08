@@ -76,7 +76,11 @@ class PageController extends Controller
 
         if ($attachments) {
             foreach ($attachments as $attachment) {
-                $page->addMedia($attachment)->toMediaCollection('page_attachments');
+                if ($attachment->isValid()) {
+                    $page->addMedia($attachment)->toMediaCollection('page_attachments');
+                } else {
+                    return redirect()->route('admin.pages.create')->with('danger', 'One or more attachments are invalid.');
+                }
             }
         }
 
