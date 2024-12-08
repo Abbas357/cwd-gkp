@@ -44,13 +44,12 @@
                             </div>
                             <div class="row">
                                 <div class="col mb-3">
-                                    <label for="attachment">Attachment</label>
-                                    <input type="file" class="form-control" id="attachment" name="attachment" required>
-                                    @error('attachment')
+                                    <label for="attachments">Attachments</label>
+                                    <input type="file" class="form-control" id="attachments" name="attachments[]" multiple required>
+                                    @error('attachments')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <img src="#" style="width:100px" class="image-preview rounded d-none" />
                             </div>
 
                             <div class="row">
@@ -80,15 +79,6 @@
 
             $('#content').summernote({
                 height: 300,
-            });
-
-            imageCropper({
-                fileInput: "#attachment"
-                , inputLabelPreview: ".image-preview"
-                , aspectRatio: 1 / 1, 
-                onComplete(){
-                    $('.image-preview').removeClass('d-none')
-                }
             });
 
             var forms = document.querySelectorAll('.needs-validation')

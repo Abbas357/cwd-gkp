@@ -72,9 +72,12 @@ class PageController extends Controller
         $page->content = $request->content;
         $page->slug = Str::slug($request->title);
 
-        if ($request->hasFile('attachment')) {
-            $page->addMedia($request->file('attachment'))
-                ->toMediaCollection('page_attachments');
+        $attachments = $request->file('attachments');
+
+        if ($attachments) {
+            foreach ($attachments as $attachment) {
+                $page->addMedia($attachment)->toMediaCollection('page_attachments');
+            }
         }
 
         if ($page->save()) {

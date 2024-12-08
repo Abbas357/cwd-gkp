@@ -155,7 +155,7 @@ class HomeController extends Controller
     {
         $events = Event::with(['media', 'user'])
             ->latest('published_at')
-            ->limit(3)
+            ->limit(5)
             ->get()
             ->map(function ($event) {
                 $media = $event->getFirstMediaUrl('events_pictures');

@@ -14,13 +14,16 @@ class PageController extends Controller
             ->with('media')
             ->firstOrFail();
 
+        $mediaUrls = $page->getMedia('page_attachments')->map(function ($media) {
+                return $media->getUrl();
+        });
+
         $pageData = [
             'id' => $page->id,
             'title' => $page->title ?? 'No title available.',
             'type' => $page->page_type,
             'content' => $page->content ?? 'No content available.',
-            'image' => $page->getFirstMediaUrl('page_attachments')
-                ?: asset('admin/images/no-image.jpg'),
+            'attachments' => $mediaUrls,
         ];
 
         return view('site.pages.show', compact('pageData'));

@@ -36,51 +36,53 @@
         </div>
     </div>
 
-</x-main-layout>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const categoryTabs = document.querySelectorAll('.nav-link');
-
-        categoryTabs.forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                e.preventDefault();
-
-                const category = tab.getAttribute('data-category');
-                const tabPaneId = tab.getAttribute('href').substring(1); 
-                const tabPane = document.getElementById(tabPaneId);
-
-                if (tabPane && tabPane.children.length > 0) {
-                    return;
-                }
-
-                tabPane.innerHTML = `<div class="d-flex justify-content-center">
-                                        <div class="spinner-border text-primary" role="status">
-                                            <span class="visually-hidden">Loading...</span>
-                                        </div>
-                                    </div>`;
-                tabPane.classList.add('show', 'active');
--
-                fetch(`/downloads/fetch-category`, {
-                        method: 'POST'
-                        , headers: {
-                            'Content-Type': 'application/json'
-                            , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                        }
-                        , body: JSON.stringify({
-                            category
+    @push('script')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const categoryTabs = document.querySelectorAll('.nav-link');
+    
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    e.preventDefault();
+    
+                    const category = tab.getAttribute('data-category');
+                    const tabPaneId = tab.getAttribute('href').substring(1); 
+                    const tabPane = document.getElementById(tabPaneId);
+    
+                    if (tabPane && tabPane.children.length > 0) {
+                        return;
+                    }
+    
+                    tabPane.innerHTML = `<div class="d-flex justify-content-center">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </div>`;
+                    tabPane.classList.add('show', 'active');
+    -
+                    fetch(`/downloads/fetch-category`, {
+                            method: 'POST'
+                            , headers: {
+                                'Content-Type': 'application/json'
+                                , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                            }
+                            , body: JSON.stringify({
+                                category
+                            })
                         })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        tabPane.innerHTML = data.downloads;
-                    })
-                    .catch(error => {
-                        console.error('Error fetching category:', error);
-                        tabPane.innerHTML = '<p class="text-center text-danger">Failed to load content. Please try again.</p>';
-                    });
+                        .then(response => response.json())
+                        .then(data => {
+                            tabPane.innerHTML = data.downloads;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching category:', error);
+                            tabPane.innerHTML = '<p class="text-center text-danger">Failed to load content. Please try again.</p>';
+                        });
+                });
             });
         });
-    });
+    
+    </script>
+    @endpush
 
-</script>
+</x-main-layout>

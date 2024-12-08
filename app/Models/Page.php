@@ -40,7 +40,6 @@ class Page extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('page_attachments')
-        ->singleFile();
+        $this->addMediaCollection('page_attachments');
     }
 }

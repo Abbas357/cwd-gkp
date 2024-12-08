@@ -100,7 +100,7 @@
                                     <a href="{{ route('pages.show', 'functions') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="1" tabindex="0">FUNCTIONS</a>
                                 </li>
                                 <li role="none" data-tier-id="1">
-                                    <a href="#" role="menuitem" class="cw-menuItem" href="#" data-tier-id="4" tabindex="0">ORGANOGRAM</a>
+                                    <a href="{{ route('pages.show', 'organogram') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="4" tabindex="0">ORGANOGRAM</a>
                                 </li>
                             </ul>
                         </li>

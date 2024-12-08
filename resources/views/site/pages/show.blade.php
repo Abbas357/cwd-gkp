@@ -1,5 +1,7 @@
 <x-main-layout title="{{ $pageData['title'] }}">
-    
+    @push('style')
+        <link rel="stylesheet" href="{{ asset('site/lib/page-flip/style.min.css') }}">
+    @endpush
     <x-slot name="breadcrumbTitle">
         {{ $pageData['title'] }}
     </x-slot>
@@ -9,12 +11,31 @@
     </x-slot>
 
     <div class="container mt-3">
-        <h1 class="page-title fs-3 py-2 bg-light px-2">{{ $pageData['title'] }}</h1>
-        <img 
-            src="{{ $pageData['image']}}" style="width: 400px" class="my-4" alt="{{ $pageData['title'] }}">
         <div class="description mt-4">
-            <h2>Description</h2>
             <p>{!! nl2br($pageData['content']) !!}</p>
         </div>
+
+        <div id="book"></div>
     </div>
+    @push('script')
+        <script src="{{ asset('site/lib/page-flip/script.min.js') }}"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Array of image paths
+                const images = @json($pageData['attachments']); 
+                console.log(images)
+
+                // Initialize the PageFlip instance
+                const pageFlip = new St.PageFlip(document.getElementById('book'), {
+                    width: 600,
+                    height: 600,
+                    size: "stretch"
+                });
+
+                // Load images into the flipbook
+                pageFlip.loadFromImages(images);
+            });
+        </script>
+    @endpush
 </x-main-layout>
