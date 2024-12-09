@@ -200,6 +200,11 @@
                                 <span>TEAM</span>
                             </a>
                         </li>
+                        <li role="none" class="cw-top-menu {{ request()->routeIs('pages.show', 'achievements') ? 'uActived' : '' }}" data-tier-id="9">
+                            <a href="{{ route('pages.show', 'achievements') }}" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
+                                <span>ACHIEVEMENTS</span>
+                            </a>
+                        </li>
                         <li role="none" class="cw-top-menu {{ request()->routeIs('contacts.index') ? 'uActived' : '' }}" data-tier-id="9">
                             <a href="{{ route('contacts.index') }}" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>CONTACTS</span>
@@ -208,10 +213,10 @@
                         <li role="menuitem" aria-hidden="true" class="divider cw-onlyMobileTab"></li>
                     </ul>
                 </nav>
-                <button id="story-btn-lg" class="cw-top-nav-button d-none d-md-inline-block" style="padding: 9px; border: none;position: absolute; bottom: 2px; right:0px; border-radius: 50px">
+                {{-- <button id="story-btn-lg" class="cw-top-nav-button d-none d-md-inline-block" style="padding: 9px; border: none;position: absolute; bottom: 2px; right:0px; border-radius: 50px">
                     STORIES &nbsp;
                     <i class="bi-caret-down-fill mt-1"></i>
-                </button>
+                </button> --}}
             </div>
         </div>
     </div>
