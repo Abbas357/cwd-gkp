@@ -31,13 +31,16 @@
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('site/images/favicon.ico') }}" type="image/x-icon">
 
+    {{-- Loading Bar --}}
+    <link rel="stylesheet" href="{{ asset('site/lib/pace/loading-bar.css') }}">
+    <script src="{{ asset('site/lib/pace/pace.min.js') }}"></script>
+
     <!-- Preconnect for Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600&family=Roboto&display=swap" rel="stylesheet">
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="{{ asset('site/lib/pace/loading-bar.css') }}">
     <link rel="stylesheet" href="{{ asset('site/css/bootstrap-icons.min.css') }}">
     <link href="{{ asset('site/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('site/css/style.css') }}" rel="stylesheet">
@@ -71,11 +74,10 @@
     <main class="cw-main-content">
         {{ $slot }}
     </main>
-
+    
     @include("layouts.site.partials.footer")
-
+    
     <script src="{{ asset('site/js/jquery.min.js') }}"></script>
-    <script src="{{ asset('site/lib/pace/pace.min.js') }}"></script>
     <script src="{{ asset('site/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('site/js/menu.js') }}"></script>
     <script src="{{ asset('site/js/core.min.js') }}"></script>
