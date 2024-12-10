@@ -52,31 +52,33 @@
 <body>
     @include("layouts.site.partials.header")
 
+    <div id="modal-container"></div>
+
     @if(isset($breadcrumbTitle) || isset($breadcrumbItems))
     <div class="container-fluid bg-breadcrumb mb-1">
         <div class="container d-flex justify-content-between align-items-center">
             @isset($breadcrumbTitle)
-                <h3 class="fs-4" style="text-shadow: 3px 3px 3px #00000055">
-                    {{ $breadcrumbTitle }}
-                </h3>
+            <h3 class="fs-4" style="text-shadow: 3px 3px 3px #00000055">
+                {{ $breadcrumbTitle }}
+            </h3>
             @endisset
             <ol class="breadcrumb justify-content-center mb-0">
                 <li class="breadcrumb-item">
                     <a href="{{ route('site') }}" class="text-decoration-none sunken-text">Home</a>
-                </li>  
+                </li>
                 {{ $breadcrumbItems ?? '' }}
             </ol>
         </div>
     </div>
-    
+
     @endif
 
     <main class="cw-main-content">
         {{ $slot }}
     </main>
-    
+
     @include("layouts.site.partials.footer")
-    
+
     <script src="{{ asset('site/js/jquery.min.js') }}"></script>
     <script src="{{ asset('site/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('site/js/menu.js') }}"></script>
