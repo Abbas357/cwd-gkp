@@ -63,10 +63,10 @@
 
                 <div class="offcanvas offcanvas-top" tabindex="-1" id="storiesCanvas" aria-labelledby="storiesCanvasLabel" style="z-index: 9999">
                     <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="storiesCanvasLabel">Stories from Officers</h5>
+                        <h5 class="offcanvas-title" id="storiesCanvasLabel">Stories (Status)</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
-                    <div class="offcanvas-body d-flex justify-content-center pt-2 d-none" id="stories-content">
+                    <div class="offcanvas-body d-flex justify-content-center pt-2 d-none" id="stories-content" style="flex-grow: 0">
                         <div id="stories-spinner" class="show bg-white d-flex align-items-center justify-content-center">
                             <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
                                 <span class="visually-hidden">Loading...</span>
@@ -248,7 +248,7 @@
 <div id="modal-container"></div>
 
 <script>
-    (function () {
+    (function() {
         const leftColumn = document.querySelector(".left-column");
         const informationCanvas = document.querySelector("#informationCanvas .offcanvas-header");
 
@@ -278,6 +278,7 @@
                 <div id="content"></div>
             </div>
         `;
+
         function insertSearchElement() {
             if (window.innerWidth < 768) {
                 if (informationCanvas && searchElement.parentElement !== informationCanvas) {
@@ -319,7 +320,8 @@
         let errorMessage = "<div class='alert alert-warning' role='alert' style='margin-bottom:0px'>There are currently no stories</div>";
 
         loadZuckLibraries(function() {
-            storiesContent.classList.toggle('d-none');
+            storiesContent.classList.remove('d-none'); // Ensure content is visible
+            spinner.classList.add('show'); // Show spinner
 
             let contentSeenItems = localStorage.getItem('zuck-stories-content-seenItems');
             contentSeenItems = contentSeenItems ? JSON.parse(contentSeenItems) : {};
@@ -366,7 +368,7 @@
                             return 0;
                         });
 
-                        new Zuck(storiesContent, {
+                        const zuckInstance = new Zuck(storiesContent, {
                             backNative: true
                             , autoFullScreen: false
                             , skin: 'snapgram'
@@ -404,6 +406,8 @@
                             }
                         });
 
+                        storiesContent.zuckInstance = zuckInstance;
+
                         function incrementViewCount(storyId) {
                             const url = "{{ route('stories.viewed', ':id') }}".replace(':id', storyId);
                             fetch(url, {
@@ -414,12 +418,6 @@
                                     }
                                 })
                                 .then(response => response.json())
-                                .then(data => {
-                                    console.log('View count incremented:', data);
-                                })
-                                .catch(error => {
-                                    console.error('Error incrementing view count:', error);
-                                });
                         }
 
                     } else {
@@ -432,6 +430,20 @@
                 });
         });
     });
+
+    document.querySelector('#storiesCanvas').addEventListener('hidden.bs.offcanvas', function() {
+        let storiesContent = document.querySelector('#stories-content');
+
+        storiesContent.innerHTML = `
+        <div id="stories-spinner" class="show bg-white d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    `;
+        storiesContent.classList.add('d-none');
+    });
+
 
     document.addEventListener('DOMContentLoaded', () => {
         const modalContainer = document.getElementById('modal-container');
