@@ -61,9 +61,9 @@
                     </div>
                 </div>
 
-                <div class="offcanvas offcanvas-top" tabindex="-1" id="storiesCanvas" aria-labelledby="storiesCanvasLabel" style="z-index: 9999">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="storiesCanvasLabel">Stories (Status)</h5>
+                <div class="offcanvas offcanvas-top" tabindex="-1" id="storiesCanvas" aria-labelledby="storiesCanvasLabel" style="z-index: 9999; --bs-offcanvas-height: fit-content;">
+                    <div class="offcanvas-header" style="background: #f5f5f5">
+                        <h5 class="offcanvas-title" id="storiesCanvasLabel">Stories</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body d-flex justify-content-center pt-2 d-none" id="stories-content" style="flex-grow: 0">
@@ -320,8 +320,8 @@
         let errorMessage = "<div class='alert alert-warning' role='alert' style='margin-bottom:0px'>There are currently no stories</div>";
 
         loadZuckLibraries(function() {
-            storiesContent.classList.remove('d-none'); // Ensure content is visible
-            spinner.classList.add('show'); // Show spinner
+            storiesContent.classList.remove('d-none');
+            spinner.classList.add('show');
 
             let contentSeenItems = localStorage.getItem('zuck-stories-content-seenItems');
             contentSeenItems = contentSeenItems ? JSON.parse(contentSeenItems) : {};
@@ -410,14 +410,15 @@
 
                         function incrementViewCount(storyId) {
                             const url = "{{ route('stories.viewed', ':id') }}".replace(':id', storyId);
-                            fetch(url, {
-                                    method: 'PATCH'
-                                    , headers: {
-                                        'Content-Type': 'application/json'
-                                        , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                                    }
-                                })
-                                .then(response => response.json())
+                            fetch(url,
+                            {
+                                method: 'PATCH'
+                                , headers: {
+                                    'Content-Type': 'application/json'
+                                    , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                }
+                            })
+                            .then(response => response.json())
                         }
 
                     } else {
