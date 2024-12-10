@@ -145,6 +145,35 @@
     background-color: #999
 }
 
+.stories-indicator {
+    position: relative;
+}
+
+.stories-indicator::after {
+    content: '';
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    transform: translate(50%, -50%);
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    animation: blink-scale .7s infinite;
+}
+
+@keyframes blink-scale {
+    0%, 100% {
+        opacity: 1;
+        transform: translate(50%, -50%) scale(.2);
+    }
+    50% {
+        opacity: 0.5;
+        transform: translate(50%, -50%) scale(1);
+    }
+}
+
 .btn-animate {
     background-color: #a6f0a633;
     color: #000;

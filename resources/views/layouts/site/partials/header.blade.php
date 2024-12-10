@@ -294,7 +294,6 @@
         window.addEventListener("resize", insertSearchElement);
     })();
 
-
     function loadZuckLibraries(callback) {
         if (!document.getElementById('zuck-css')) {
             let cssLink = document.createElement('link');
@@ -314,7 +313,64 @@
             callback();
         }
     }
-    document.querySelector('#view-stories').addEventListener('click', function() {
+
+    document.addEventListener('DOMContentLoaded', function() {
+        let btn = document.querySelector('#view-stories');
+        let contentSeenItems = JSON.parse(localStorage.getItem('zuck-stories-content-seenItems') || '{}');
+        let seenUserIds = Object.keys(contentSeenItems);
+
+        fetch("{{ route('stories.get') }}", {
+                method: 'POST'
+                , headers: {
+                    'Content-Type': 'application/json'
+                    , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                , }
+                , body: JSON.stringify({
+                    seenUserIds
+                })
+            , })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    let storiesData = data.data.result;
+
+                    if (data.expiredUsers && data.expiredUsers.length > 0) {
+                        data.expiredUsers.forEach(userId => {
+                            delete contentSeenItems[userId];
+                        });
+                        localStorage.setItem('zuck-stories-content-seenItems', JSON.stringify(contentSeenItems));
+                    }
+
+                    let unviewedSeenItems = JSON.parse(localStorage.getItem('zuck-unviewed-stories-seenItems') || '{}');
+
+                    storiesData.sort((a, b) => {
+                        let aViewed = unviewedSeenItems[a.id] || contentSeenItems[a.id] || false;
+                        let bViewed = unviewedSeenItems[b.id] || contentSeenItems[b.id] || false;
+
+                        return aViewed === bViewed ? 0 : aViewed ? 1 : -1;
+                    });
+
+                    if (storiesData.some(story => !contentSeenItems[story.id])) {
+                        btn.classList.add('stories-indicator');
+                    } else {
+                        if (btn.classList.contains('stories-indicator')) {
+                            btn.classList.remove('stories-indicator');
+                        }
+                    }
+                } else {
+                    if (btn.classList.contains('stories-indicator')) {
+                        btn.classList.remove('stories-indicator');
+                    }
+                }
+            })
+    });
+
+
+    document.querySelector('#view-stories').addEventListener('click', function(e) {
+        let btn = document.querySelector('#view-stories');
+        if (btn.classList.contains('stories-indicator')) {
+            btn.classList.remove('stories-indicator');
+        }
         let storiesContent = document.querySelector('#stories-content');
         let spinner = document.querySelector('#stories-spinner');
         let errorMessage = "<div class='alert alert-warning' role='alert' style='margin-bottom:0px'>There are currently no stories</div>";
@@ -367,7 +423,6 @@
                             if (!aViewed && bViewed) return -1;
                             return 0;
                         });
-
                         const zuckInstance = new Zuck(storiesContent, {
                             backNative: true
                             , autoFullScreen: false
@@ -410,15 +465,14 @@
 
                         function incrementViewCount(storyId) {
                             const url = "{{ route('stories.viewed', ':id') }}".replace(':id', storyId);
-                            fetch(url,
-                            {
-                                method: 'PATCH'
-                                , headers: {
-                                    'Content-Type': 'application/json'
-                                    , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                                }
-                            })
-                            .then(response => response.json())
+                            fetch(url, {
+                                    method: 'PATCH'
+                                    , headers: {
+                                        'Content-Type': 'application/json'
+                                        , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                    }
+                                })
+                                .then(response => response.json())
                         }
 
                     } else {
