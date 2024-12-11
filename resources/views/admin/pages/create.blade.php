@@ -45,13 +45,12 @@
                             <div class="row">
                                 <div class="col mb-3">
                                     <label for="attachments">Attachments</label>
-                                    <input type="file" class="form-control" id="attachments" name="attachments[]" multiple required>
+                                    <input type="file" class="form-control" id="attachments" name="attachments[]" multiple>
                                     @error('attachments')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-md-12 mb-3">
                                     <label for="content">Content</label>
@@ -60,7 +59,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="form-actions mb-3 mt-2">
                                 <button class="btn btn-primary btn-block" type="submit" id="submitBtn">Add Page</button>
                             </div>
@@ -79,6 +77,8 @@
 
             $('#content').summernote({
                 height: 300,
+                spellCheck: true,
+                codeviewFilter: false,
             });
 
             var forms = document.querySelectorAll('.needs-validation')

@@ -1,7 +1,9 @@
 <x-main-layout title="{{ $pageData['title'] }}">
+
     @push('style')
-        <link rel="stylesheet" href="{{ asset('site/lib/page-flip/style.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('admin/plugins/lightbox/lightbox.min.css') }}" />
     @endpush
+
     <x-slot name="breadcrumbTitle">
         {{ $pageData['title'] }}
     </x-slot>
@@ -11,27 +13,33 @@
     </x-slot>
 
     <div class="container mt-3">
+
         <div class="description mt-4">
             <p>{!! nl2br($pageData['content']) !!}</p>
         </div>
 
-        <div id="book" style="border: 1px solid #aaa"></div>
+        <div class="images mt-4">
+            <h5>Images</h5>
+            <div class="row">
+                @foreach($pageData['attachments'] as $image)
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ $image }}" data-lightbox="page-attachments" data-title="{{ $pageData['title'] }}">
+                            <img src="{{ $image }}" class="img-fluid rounded mb-3" alt="{{ $pageData['title'] }}">
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
     </div>
+
     @push('script')
-        <script src="{{ asset('site/lib/page-flip/script.min.js') }}"></script>
-
+        <script src="{{ asset('admin/plugins/lightbox/lightbox.min.js') }}"></script>
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const images = @json($pageData['attachments']); 
-                console.log(images)
-
-                const pageFlip = new St.PageFlip(document.getElementById('book'), {
-                    width: 600,
-                    height: 600,
-                    size: "stretch"
-                });
-
-                pageFlip.loadFromImages(images);
+            lightbox.option({
+                'resizeDuration': 200,
+                'wrapAround': true,
+                'disableScrolling': true,
             });
         </script>
     @endpush
