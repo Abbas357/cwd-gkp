@@ -84,12 +84,12 @@
             <div id="integrated-plate-navigation" class="cw-nav" component="integrated-plate-navigation">
                 <nav class="cw-top-nav">
                     <ul role="menu" class="cw-top-menu-nav aria-nav">
-                        <li role="none" class="cw-top-menu child-nav" data-tier-id="1">
+                        <li role="none" class="cw-top-menu child-nav" data-tier-id="0">
                             <button role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true" onclick="window.location.href = '{{ route('site') }}'">
                                 <span>HOME</span>
                             </button>
 
-                            <ul class="sub-nav" aria-label="Support" role="menu" data-tier-id="1" aria-orientation="vertical">
+                            <ul class="sub-nav" aria-label="Support" role="menu" data-tier-id="0" aria-orientation="vertical">
                                 <li role="none" class="cw-back-list-item">
                                     <button role="menuitem" class="cw-back-button" tabindex="0">
                                         <span class="cw-menu-chevron left chevron-right"></span>
@@ -99,61 +99,28 @@
                                 <li role="menuitem" class="cw-hide-mob-links cw-plateTitle" onclick="window.location.href = '{{ route('site') }}'">
                                     HOME
                                 </li>
-                                <li role="none" data-tier-id="1">
-                                    <a href="{{ route('pages.show', 'about_us') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="1" tabindex="0">ABOUT</a>
+                                <li role="none" data-tier-id="0">
+                                    <a href="{{ route('pages.show', 'about_us') }}" data-tier-id="0" role="menuitem" class="cw-menuItem" href="#" tabindex="0">ABOUT</a>
                                 </li>
-                                <li role="none" data-tier-id="1">
-                                    <a href="{{ route('pages.show', 'introduction') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="1" tabindex="0">INTRODUCTION</a>
+                                <li role="none" data-tier-id="0">
+                                    <a href="{{ route('pages.show', 'introduction') }}" data-tier-id="0" role="menuitem" class="cw-menuItem" href="#" tabindex="0">INTRODUCTION</a>
                                 </li>
-                                <li role="none" data-tier-id="1">
-                                    <a href="{{ route('pages.show', 'vision') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="1" tabindex="0">VISION</a>
+                                <li role="none" data-tier-id="0">
+                                    <a href="{{ route('pages.show', 'vision') }}" data-tier-id="0" role="menuitem" class="cw-menuItem" href="#" tabindex="0">VISION</a>
                                 </li>
-                                <li role="none" data-tier-id="1">
-                                    <a href="{{ route('pages.show', 'functions') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="1" tabindex="0">FUNCTIONS</a>
+                                <li role="none" data-tier-id="0">
+                                    <a href="{{ route('pages.show', 'functions') }}" data-tier-id="0" role="menuitem" class="cw-menuItem" href="#" tabindex="0">FUNCTIONS</a>
                                 </li>
-                                <li role="none" data-tier-id="1">
-                                    <a href="{{ route('pages.show', 'organogram') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="4" tabindex="0">ORGANOGRAM</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li role="none" class="cw-top-menu child-nav" data-tier-id="2">
-                            <button role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
-                                <span>FUNDED PROJECTS</span>
-                            </button>
-
-                            <ul class="sub-nav" aria-label="Services" role="menu" data-tier-id="2" aria-orientation="vertical">
-                                <li role="none" class="cw-back-list-item">
-                                    <button role="menuitem" class="cw-back-button" tabindex="0">
-                                        <span class="cw-menu-chevron left chevron-right"></span>
-                                        <span class="cw-back-button-label">Back </span>
-                                    </button>
-                                </li>
-                                <li role="menuitem" class="cw-hide-mob-links cw-plateTitle">
-                                    FUNDED PROJECTS
-                                </li>
-                                <li role="none" data-tier-id="2">
-                                    <a href="{{ route('projects.show', 'KITE') }}" role="menuitem" class="cw-menuItem" tabindex="0">KP KITE</a>
-                                </li>
-                                <li role="none" data-tier-id="2">
-                                    <a href="{{ route('projects.show', 'KP-PRIP') }}" role="menuitem" class="cw-menuItem" tabindex="0">KP PRIP</a>
-                                </li>
-                                <li role="none" data-tier-id="2">
-                                    <a href="{{ route('projects.show', 'KP-RIISP') }}" role="menuitem" class="cw-menuItem" tabindex="0">KP RIISP</a>
-                                </li>
-                                <li role="none" data-tier-id="2">
-                                    <a href="{{ route('projects.show', 'KP-RAP') }}" role="menuitem" class="cw-menuItem" tabindex="0">KP RAP</a>
-                                </li>
-                                <li role="none" data-tier-id="2">
-                                    <a href="{{ route('projects.show', 'PaRSA') }}" role="menuitem" class="cw-menuItem" tabindex="0">KP PaRSA</a>
+                                <li role="none" data-tier-id="0">
+                                    <a href="{{ route('pages.show', 'organogram') }}" data-tier-id="0" role="menuitem" class="cw-menuItem" href="#" tabindex="0">ORGANOGRAM</a>
                                 </li>
                             </ul>
                         </li>
-                        <li role="none" class="cw-top-menu child-nav" data-tier-id="3">
+                        <li role="none" class="cw-top-menu child-nav" data-tier-id="1">
                             <button role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>PROJECTS</span>
                             </button>
-
-                            <ul class="sub-nav" aria-label="Support" role="menu" data-tier-id="3" aria-orientation="vertical">
+                            <ul class="sub-nav" role="menu" data-tier-id="1" aria-label="Professional Services" aria-orientation="vertical">
                                 <li role="none" class="cw-back-list-item">
                                     <button role="menuitem" class="cw-back-button" tabindex="0">
                                         <span class="cw-menu-chevron left chevron-right"></span>
@@ -163,26 +130,75 @@
                                 <li role="menuitem" class="cw-hide-mob-links cw-plateTitle">
                                     PROJECTS
                                 </li>
-                                <li role="none" data-tier-id="3">
-                                    <a href="{{ route('development_projects.index', ['status' => 'In-Progress']) }}" role="menuitem" class="cw-menuItem" tabindex="0">IN PROGRESS</a>
+                                <li role="none" class="child-nav" data-tier-id="1">
+                                    <button role="menuitem" class="cw-menuItem" data-tier-id="1" tabindex="0" aria-expanded="false" aria-haspopup="true">
+                                        FOREIGN FUNDED
+                                    </button>
+                                    <ul class="sub-nav" role="menu" data-tier-id="1" aria-label="Professional Services" aria-orientation="vertical">
+                                        <li role="none" class="cw-back-list-item">
+                                            <button role="menuitem" class="cw-back-button" tabindex="0">
+                                                <span class="cw-menu-chevron left chevron-right"></span>
+                                                <span class="cw-back-button-label">Back
+                                                </span>
+                                            </button>
+                                        </li>
+                                        <li role="menuitem" class="cw-hide-mob-links cw-plateTitle">
+                                            FOREIGN FUNDED
+                                        </li>
+                                        <li role="none" data-tier-id="1">
+                                            <a href="{{ route('projects.show', 'KITE') }}" data-tier-id="1" role="menuitem" class="cw-menuItem" tabindex="0">KP KITE</a>
+                                        </li>
+                                        <li role="none" data-tier-id="1">
+                                            <a href="{{ route('projects.show', 'KP-PRIP') }}" data-tier-id="1" role="menuitem" class="cw-menuItem" tabindex="0">KP PRIP</a>
+                                        </li>
+                                        <li role="none" data-tier-id="1">
+                                            <a href="{{ route('projects.show', 'KP-RIISP') }}" data-tier-id="1" role="menuitem" class="cw-menuItem" tabindex="0">KP RIISP</a>
+                                        </li>
+                                        <li role="none" data-tier-id="1">
+                                            <a href="{{ route('projects.show', 'KP-RAP') }}" data-tier-id="1" role="menuitem" class="cw-menuItem" tabindex="0">KP RAP</a>
+                                        </li>
+                                        <li role="none" data-tier-id="1">
+                                            <a href="{{ route('projects.show', 'PaRSA') }}" data-tier-id="1" role="menuitem" class="cw-menuItem" tabindex="0">KP PaRSA</a>
+                                        </li>
+                                    </ul>
                                 </li>
-                                <li role="none" data-tier-id="3">
-                                    <a href="{{ route('development_projects.index', ['status' => 'On-Hold']) }}" role="menuitem" class="cw-menuItem" tabindex="0">ON HOLD</a>
-                                </li>
-                                <li role="none" data-tier-id="3">
-                                    <a href="{{ route('development_projects.index', ['status' => 'Completed']) }}" role="menuitem" class="cw-menuItem" tabindex="0">COMPLETED</a>
-                                </li>
-                                <li role="none" data-tier-id="3">
-                                    <a href="{{ route('development_projects.index') }}" role="menuitem" class="cw-menuItem" tabindex="0">All PROJECTS</a>
+                                <li role="none" class="child-nav" data-tier-id="1">
+                                    <button role="menuitem" class="cw-menuItem" data-tier-id="1" tabindex="0" aria-expanded="false" aria-haspopup="true">
+                                        DEVELOPMENTAL
+                                    </button>
+                                    <ul class="sub-nav" role="menu" data-tier-id="1" aria-label="Professional Services" aria-orientation="vertical">
+                                        <li role="none" class="cw-back-list-item">
+                                            <button role="menuitem" class="cw-back-button" tabindex="0">
+                                                <span class="cw-menu-chevron left chevron-right"></span>
+                                                <span class="cw-back-button-label">Back
+                                                </span>
+                                            </button>
+                                        </li>
+                                        <li role="menuitem" class="cw-hide-mob-links cw-plateTitle">
+                                            DEVELOPMENTAL
+                                        </li>
+                                        <li role="none" data-tier-id="1">
+                                            <a href="{{ route('development_projects.index', ['status' => 'In-Progress']) }}" data-tier-id="1" role="menuitem" class="cw-menuItem" tabindex="0">IN PROGRESS</a>
+                                        </li>
+                                        <li role="none" data-tier-id="1">
+                                            <a href="{{ route('development_projects.index', ['status' => 'On-Hold']) }}" data-tier-id="1" role="menuitem" class="cw-menuItem" tabindex="0">ON HOLD</a>
+                                        </li>
+                                        <li role="none" data-tier-id="1">
+                                            <a href="{{ route('development_projects.index', ['status' => 'Completed']) }}" data-tier-id="1" role="menuitem" class="cw-menuItem" tabindex="0">COMPLETED</a>
+                                        </li>
+                                        <li role="none" data-tier-id="1">
+                                            <a href="{{ route('development_projects.index') }}" data-tier-id="1" role="menuitem" class="cw-menuItem" tabindex="0">All PROJECTS</a>
+                                        </li>
+                                    </ul>
                                 </li>
                             </ul>
                         </li>
-                        <li role="none" class="cw-top-menu child-nav" data-tier-id="4">
+                        <li role="none" class="cw-top-menu child-nav" data-tier-id="2">
                             <button role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>UPDATES</span>
                             </button>
 
-                            <ul class="sub-nav" aria-label="Support" role="menu" data-tier-id="4" aria-orientation="vertical">
+                            <ul class="sub-nav" aria-label="Support" role="menu" data-tier-id="2" aria-orientation="vertical">
                                 <li role="none" class="cw-back-list-item">
                                     <button role="menuitem" class="cw-back-button" tabindex="0">
                                         <span class="cw-menu-chevron left chevron-right"></span>
@@ -192,41 +208,41 @@
                                 <li role="menuitem" class="cw-hide-mob-links cw-plateTitle">
                                     UPDATES
                                 </li>
-                                <li role="none" data-tier-id="4">
-                                    <a href="{{ route('news.index') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="4" tabindex="0">NEWS</a>
+                                <li role="none" data-tier-id="2">
+                                    <a href="{{ route('news.index') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="2" tabindex="0">NEWS</a>
                                 </li>
-                                <li role="none" data-tier-id="4">
-                                    <a href="{{ route('events.index') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="4" tabindex="0">EVENTS</a>
+                                <li role="none" data-tier-id="2">
+                                    <a href="{{ route('events.index') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="2" tabindex="0">EVENTS</a>
                                 </li>
                             </ul>
                         </li>
-                        <li role="none" class="cw-top-menu {{ request()->routeIs('downloads.index') ? 'uActived' : '' }}" data-tier-id="5">
-                            <a href="{{ route('downloads.index') }}" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
+                        <li role="none" class="cw-top-menu {{ request()->routeIs('downloads.index') ? 'uActived' : '' }}" data-tier-id="3">
+                            <a href="{{ route('downloads.index') }}" data-tier-id="3" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>DOWNLOADS</span>
                             </a>
                         </li>
-                        <li role="none" class="cw-top-menu {{ request()->routeIs('seniority.index') ? 'uActived' : '' }}" data-tier-id="6">
-                            <a href="{{ route('seniority.index') }}" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
+                        <li role="none" class="cw-top-menu {{ request()->routeIs('seniority.index') ? 'uActived' : '' }}" data-tier-id="4">
+                            <a href="{{ route('seniority.index') }}" data-tier-id="4" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>SENIORITY</span>
                             </a>
                         </li>
-                        <li role="none" class="cw-top-menu {{ request()->routeIs('gallery.index') ? 'uActived' : '' }}" data-tier-id="7">
-                            <a href="{{ route('gallery.index') }}" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
+                        <li role="none" class="cw-top-menu {{ request()->routeIs('gallery.index') ? 'uActived' : '' }}" data-tier-id="5">
+                            <a href="{{ route('gallery.index') }}" data-tier-id="5" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>GALLERY</span>
                             </a>
                         </li>
-                        <li role="none" class="cw-top-menu {{ request()->routeIs('team') ? 'uActived' : '' }}" data-tier-id="8">
-                            <a href="{{ route('team') }}" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
+                        <li role="none" class="cw-top-menu {{ request()->routeIs('team') ? 'uActived' : '' }}" data-tier-id="6">
+                            <a href="{{ route('team') }}" data-tier-id="6" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>TEAM</span>
                             </a>
                         </li>
-                        <li role="none" class="cw-top-menu {{ request()->routeIs('pages.show', 'achievements') ? 'uActived' : '' }}" data-tier-id="9">
-                            <a href="{{ route('pages.show', 'achievements') }}" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
+                        <li role="none" class="cw-top-menu {{ request()->routeIs('pages.show', 'achievements') ? 'uActived' : '' }}" data-tier-id="7">
+                            <a href="{{ route('pages.show', 'achievements') }}" data-tier-id="7" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>ACHIEVEMENTS</span>
                             </a>
                         </li>
-                        <li role="none" class="cw-top-menu {{ request()->routeIs('contacts.index') ? 'uActived' : '' }}" data-tier-id="9">
-                            <a href="{{ route('contacts.index') }}" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
+                        <li role="none" class="cw-top-menu {{ request()->routeIs('contacts.index') ? 'uActived' : '' }}" data-tier-id="8">
+                            <a href="{{ route('contacts.index') }}" data-tier-id="8" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>CONTACTS</span>
                             </a>
                         </li>
