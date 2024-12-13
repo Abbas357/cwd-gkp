@@ -7,7 +7,10 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use App\Notifications\ContentPublished;
 use App\Http\Requests\StoreEventRequest;
+use App\Models\NewsLetter;
+use Illuminate\Support\Facades\Notification;
 
 class EventController extends Controller
 {

@@ -146,21 +146,29 @@
         let seenUserIds = Object.keys(contentSeenItems);
 
         fetch("{{ route('stories.get') }}", {
-                method: 'POST'
-                , headers: {
-                    'Content-Type': 'application/json'
-                    , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                , }
-                , body: JSON.stringify({
-                    seenUserIds
-                })
-            , })
-            .then(response => response.json())
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ seenUserIds })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return null;
+                }
+                return response.json();
+            })
             .then(data => {
-                if (data.success) {
+                if (!data) {
+                    btn.classList.remove('stories-indicator');
+                    return;
+                }
+
+                if (data.success && Array.isArray(data.data?.result)) {
                     let storiesData = data.data.result;
 
-                    if (data.expiredUsers && data.expiredUsers.length > 0) {
+                    if (Array.isArray(data.expiredUsers) && data.expiredUsers.length > 0) {
                         data.expiredUsers.forEach(userId => {
                             delete contentSeenItems[userId];
                         });
@@ -179,18 +187,17 @@
                     if (storiesData.some(story => !contentSeenItems[story.id])) {
                         btn.classList.add('stories-indicator');
                     } else {
-                        if (btn.classList.contains('stories-indicator')) {
-                            btn.classList.remove('stories-indicator');
-                        }
-                    }
-                } else {
-                    if (btn.classList.contains('stories-indicator')) {
                         btn.classList.remove('stories-indicator');
                     }
+                } else {
+                    btn.classList.remove('stories-indicator');
                 }
             })
+            .catch(error => {
+                console.warn('No stories or server error occurred:', error);
+                btn.classList.remove('stories-indicator');
+            });
     });
-
 
     document.querySelector('#view-stories').addEventListener('click', function(e) {
         let btn = document.querySelector('#view-stories');
@@ -324,7 +331,6 @@
     `;
         storiesContent.classList.add('d-none');
     });
-
 
     document.addEventListener('DOMContentLoaded', () => {
         const modalContainer = document.getElementById('modal-container');

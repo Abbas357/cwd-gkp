@@ -26,4 +26,9 @@ class NewsLetter extends Model
             $builder->whereNotNull('unsubscribe_token');
         });
     }
+
+    public function routeNotificationForMail()
+    {
+        return $this->email;
+    }
 }
