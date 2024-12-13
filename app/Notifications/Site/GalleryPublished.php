@@ -1,7 +1,7 @@
 <?php
 namespace App\Notifications\Site;
 
-class NewsPublished
+class GalleryPublished
 {
     public function __construct(
         public string $title,
@@ -12,7 +12,7 @@ class NewsPublished
     public function toArray()
     {
         return [
-            'type' => 'News',
+            'type' => 'Gallery',
             'title' => $this->title,
             'description' => $this->description,
             'url' => $this->url,
