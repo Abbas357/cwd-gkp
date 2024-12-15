@@ -9,8 +9,13 @@
     @endpush
     <x-slot name="header"></x-slot>
 
-    <div class="container-fluid position-relative p-0">
-        @include('site.home.partials.slider')
+    <div id="slider-section" class="container-fluid position-relative p-0 message-bg" style="min-height: 300px;">
+        <!-- Loading Spinner -->
+        <div class="d-flex justify-content-center align-items-center" style="height: 100%;">
+            <div class="spinner-border text-primary" role="status" id="slider-spinner" style="margin-top:5rem">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
     </div>
 
     <div class="container-fluid position-relative module">
@@ -132,6 +137,30 @@
     <script src="{{ asset('site/lib/waypoints/waypoints.min.js') }}"></script>
     <script src="{{ asset('site/lib/newsticker/news-ticker.min.js') }}"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            loadSlider('{{ route('partials.slider') }}', 'slider-section', 'slider-spinner');
+        });
+
+        function loadSlider(url, elementId, spinnerId) {
+            const spinner = document.getElementById(spinnerId);
+            const element = document.getElementById(elementId);
+
+            if (spinner) spinner.style.display = 'block';
+
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    element.innerHTML = html; // Replace the content with the fetched HTML
+                })
+                .catch(error => {
+                    console.error('Error loading slider:', error);
+                    element.innerHTML = '<div class="text-center text-danger">Failed to load slider content.</div>';
+                })
+                .finally(() => {
+                    if (spinner) spinner.style.display = 'none';
+                });
+        }
+
         function loadNews() {
             $.ajax({
                 url: "{{ route('notifications.get') }}",
@@ -150,18 +179,18 @@
         }
 
         function displayNews(newsItems) {
-        let tickerContent = newsItems.map((item, index) => 
-            `<li><a href="${item.url}" target="_blank"><span class="fw-bold">${index + 1}.</span> &nbsp; ${item.title}</a></li>`
-        ).join('');
+            let tickerContent = newsItems.map((item, index) => 
+                `<li><a href="${item.url}" target="_blank"><span class="fw-bold">${index + 1}.</span> &nbsp; ${item.title}</a></li>`
+            ).join('');
 
-        $('#newsTicker .bn-news ul').html(tickerContent);
+            $('#newsTicker .bn-news ul').html(tickerContent);
 
-        $('#newsTicker').breakingNews({
-            effect: 'typography',
-            themeColor: '#3b5998',
-            fontSize: '20px'
-        });
-}
+            $('#newsTicker').breakingNews({
+                effect: 'typography',
+                themeColor: '#3b5998',
+                fontSize: '20px'
+            });
+        }
 
         $(document).ready(function() {
             loadNews();

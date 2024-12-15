@@ -18,31 +18,33 @@ class HomeController extends Controller
 {
     public function site()
     {
-        $sliders = Cache::remember('sliders', 1440, function () {
-            return Slider::select('id', 'title', 'slug', 'summary')
-                ->with('media')
-                ->limit(5)
-                ->orderBy('order')
-                ->get()
-                ->map(function ($slider) {
-                    return [
-                        'id' => $slider->id,
-                        'title' => $slider->title,
-                        'slug' => $slider->slug,
-                        'summary' => $slider->summary,
-                        'image' => [
-                            'medium' => $slider->getFirstMediaUrl('sliders', 'medium'),
-                            'large' => $slider->getFirstMediaUrl('sliders', 'large'),
-                            'original' => $slider->getFirstMediaUrl('sliders')
-                        ]
-                    ];
-                });
-        });
-
         return view('site.home.index', [
             'title' => 'HomePage',
-            'sliders' => $sliders
         ]);
+    }
+
+    public function sliderPartial()
+    {
+        $slides = Slider::select('id', 'title', 'slug', 'summary')
+            ->with('media')
+            ->limit(5)
+            ->orderBy('order')
+            ->get()
+            ->map(function ($slider) {
+                return [
+                    'id' => $slider->id,
+                    'title' => $slider->title,
+                    'slug' => $slider->slug,
+                    'summary' => $slider->summary,
+                    'image' => [
+                        'medium' => $slider->getFirstMediaUrl('sliders', 'medium'),
+                        'large' => $slider->getFirstMediaUrl('sliders', 'large'),
+                        'original' => $slider->getFirstMediaUrl('sliders'),
+                    ],
+                ];
+            });
+
+        return view('site.home.partials.slider', compact('slides'));
     }
 
     public function messagePartial()
@@ -220,21 +222,15 @@ class HomeController extends Controller
         return view('site.home.partials.contact');
     }
 
-    public function notifications()
+    public function notifications(Request $request)
     {
-        $announcement = Page::where('page_type', 'Announcement')
-            ->orderBy('created_at', 'desc')
-            ->first();
+        $page = $request->input('page', 1);
+        $perPage = 10;
 
-        $announcementData = $announcement ? [
-            'id' => $announcement->id,
-            'title' => $announcement->title,
-            'image' => $announcement->getFirstMediaUrl('page_attachments')
-                ?: asset('admin/images/no-image.jpg'),
-        ] : null;
-
-        $notifications = SiteNotification::take(10)
-            ->latest()
+        $query = SiteNotification::latest();
+        $totalNotifications = $query->count();
+        $notifications = $query->skip(($page - 1) * $perPage)
+            ->take($perPage)
             ->get()
             ->map(function ($notification) {
                 $info = [
@@ -256,11 +252,15 @@ class HomeController extends Controller
                 ];
             });
 
+        $hasMore = ($page * $perPage) < $totalNotifications;
+
         return response()->json([
-            'announcement' => $announcementData,
             'notifications' => $notifications,
+            'nextPage' => $hasMore ? $page + 1 : null,
+            'hasMore' => $hasMore,
         ]);
     }
+
 
     public function allNotifications(Request $request)
     {

@@ -3,39 +3,39 @@
         
         <!-- Carousel Indicators -->
         <ol class="carousel-indicators">
-            @foreach($sliders as $index => $slider)
+            @foreach($slides as $index => $slide)
                 <li data-bs-target="#homePageSlider" data-bs-slide-to="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }}"></li>
             @endforeach
         </ol>
         
         <!-- Carousel Inner -->
         <div class="carousel-inner" role="listbox">
-            @foreach($sliders as $index => $slider)
+            @foreach($slides as $index => $slide)
                 <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
                     <!-- Responsive Image -->
                     <img 
-                        src="{{ $slider['image']['large'] }}" 
+                        src="{{ $slide['image']['large'] }}" 
                         srcset="
-                            {{ $slider['image']['medium'] }} 768w, 
-                            {{ $slider['image']['large'] }} 1000w, 
-                            {{ $slider['image']['original'] }} 1200w"
+                            {{ $slide['image']['medium'] }} 768w, 
+                            {{ $slide['image']['large'] }} 1000w, 
+                            {{ $slide['image']['original'] }} 1200w"
                         sizes="(max-width: 768px) 768px, (max-width: 1000px) 1000px, 100vw" 
                         class="img-fluid" 
-                        alt="{{ $slider['title'] }}">
+                        alt="{{ $slide['title'] }}">
                     
                     <div class="carousel-caption">
                         <div class="p-3">
                             <h3 class="text-uppercase fw-bold mb-2 p-3">
-                                {{ $slider['title'] }}
+                                {{ $slide['title'] }}
                             </h3>
                             
                             <p class="mb-2 fs-5 p-3">
-                                {{ $slider['summary'] }}
+                                {{ $slide['summary'] }}
                             </p>
                             
                             <div>
                                 <a class="btn-hover-bg btn btn-primary text-white py-2 px-3" 
-                                   href="{{ route('sliders.showSlider', $slider['slug']) }}">
+                                   href="{{ route('sliders.showSlider', $slide['slug']) }}">
                                    View Details
                                 </a>
                             </div>

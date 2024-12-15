@@ -332,83 +332,149 @@
         storiesContent.classList.add('d-none');
     });
 
+    // Notification Popup
     document.addEventListener('DOMContentLoaded', () => {
         const modalContainer = document.getElementById('modal-container');
+        let currentPage = 1;
+        let isLoading = false;
+        let hasMorePages = true;
+
         const announcementSeen = sessionStorage.getItem('announcement_seen');
         const notificationsSeen = sessionStorage.getItem('notifications_seen');
 
-        fetch('/notifications')
-            .then(response => response.json())
-            .then(data => {
-                const {
-                    announcement
-                    , notifications
-                } = data;
-
-                if (announcement && !announcementSeen) {
-                    modalContainer.innerHTML += `
-                        <div id="announcement-modal" class="modal fade" tabindex="-1" role="dialog">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">${announcement.title}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <a href="{{ route('pages.show', 'Announcement') }}"><img src="${announcement.image}" style="width:100%" /></a>
-                                    </div>
+        modalContainer.innerHTML = `
+            <div id="news-modal" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content" style="background: #ffffffcc">
+                        <div class="modal-header">
+                            <h5 class="modal-title"><i class="bi-megaphone"></i> &nbsp; Updates & Notifications</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div id="modal-body-content" class="modal-body" style="max-height: 500px; overflow-y: auto;">
+                            <div id="notification-list"></div>
+                            <div id="loading-indicator" class="d-flex justify-content-center my-3">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
                                 </div>
                             </div>
                         </div>
-                    `;
-                    sessionStorage.setItem('announcement_seen', true);
-                    const announcementModal = new bootstrap.Modal(document.getElementById('announcement-modal'));
-                    announcementModal.show();
-                }
+                        <div class="modal-footer d-flex justify-content-center w-100">
+                            <div><a href="{{ route('notifications.index') }}">All Notifications</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
 
-                if (notifications.length && !notificationsSeen) {
-                    const notificationList = notifications.map(item => {
-                    return `
-                            <div class="d-flex align-items-center p-2 notification-item">
-                                <i class="bi ${item.info[0]} notification-icon me-3 fs-3 px-2 py-0 rounded" style="background: ${item.info[2]}"></i>
-                                <div>
-                                    <a href="${item.url}">${item.title}</a>
+        const newsModal = new bootstrap.Modal(document.getElementById('news-modal'));
+        const notificationList = document.getElementById('notification-list');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const modalBodyContent = document.getElementById('modal-body-content');
+
+        if (!notificationsSeen) {
+            fetchNotifications(currentPage);
+            newsModal.show();
+        }
+
+        if (!announcementSeen) {
+            fetchAnnouncement();
+        }
+
+        function fetchAnnouncement() {
+            fetch('/notifications')
+                .then(response => response.json())
+                .then(data => {
+                    const { announcement } = data;
+
+                    if (announcement) {
+                        modalContainer.innerHTML += `
+                            <div id="announcement-modal" class="modal fade" tabindex="-1" role="dialog">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">${announcement.title}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <a href="{{ route('pages.show', 'Announcement') }}">
+                                                <img src="${announcement.image}" style="width:100%" />
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
-                                <small class="news-date text-muted d-flex flex-column start" style="margin-left:auto">
-                                    <a href="${item.info[3]}" class="badge text-bg-light mb-1 small" style="font-size: 10px">${item.info[1]}</a>
-                                    <span>${item.created_at}</span>
-                                </small>
                             </div>
                         `;
-                    }).join('');
+                        sessionStorage.setItem('announcement_seen', true);
+                        const announcementModal = new bootstrap.Modal(document.getElementById('announcement-modal'));
+                        announcementModal.show();
+                    }
+                });
+        }
 
-                    modalContainer.innerHTML += `
-                        <div id="news-modal" class="modal fade" tabindex="-1" role="dialog">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content" style="background: #ffffffdd">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title"><i class="bi-megaphone"></i> &nbsp; Updates & Notifications</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body" style="max-height: 500px; overflow-y: auto;">
-                                        <div>${notificationList}</div>
-                                    </div>
-                                    <div class="modal-footer d-flex justify-content-center w-100">
-                                        <div><a href="{{ route('notifications.index') }}">All Notifications</a></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+        function fetchNotifications(page) {
+            if (isLoading || !hasMorePages) return;
 
-                sessionStorage.setItem('notifications_seen', true);
-                const newsModal = new bootstrap.Modal(document.getElementById('news-modal'));
-                newsModal.show();
+            isLoading = true;
+            showLoadingIndicator(true);
+
+            fetch(`/notifications?page=${page}`)
+                .then(response => response.json())
+                .then(data => {
+                    const { notifications, nextPage, hasMore } = data;
+
+                    if (notifications.length) {
+                        appendNotifications(notifications);
+                    }
+
+                    currentPage = nextPage || currentPage;
+                    hasMorePages = hasMore;
+                    isLoading = false;
+                    sessionStorage.setItem('notifications_seen', true);
+                    if (!hasMore) {
+                        showLoadingIndicator(false);
+                        displayEndOfNotificationsMessage();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching notifications:', error);
+                    isLoading = false;
+                    showLoadingIndicator(false);
+                });
+        }
+
+        function appendNotifications(notifications) {
+            const notificationItems = notifications.map(item => `
+                <div class="d-flex align-items-center p-2 notification-item">
+                    <i class="bi ${item.info[0]} notification-icon me-3 fs-3 px-2 py-0 rounded" style="background: ${item.info[2]}"></i>
+                    <div>
+                        <a href="${item.url}">${item.title}</a>
+                    </div>
+                    <small class="news-date text-muted d-flex flex-column start" style="margin-left:auto">
+                        <a href="${item.info[3]}" class="badge text-bg-light mb-1 small" style="font-size: 10px">${item.info[1]}</a>
+                        <span>${item.created_at}</span>
+                    </small>
+                </div>
+            `).join('');
+
+            notificationList.innerHTML += notificationItems;
+        }
+
+        function showLoadingIndicator(show) {
+            loadingIndicator.style.display = show ? 'flex' : 'none';
+        }
+
+        function displayEndOfNotificationsMessage() {
+            loadingIndicator.innerHTML = `
+                <span class="text-muted">No more notifications</span>
+            `;
+        }
+
+        modalBodyContent.addEventListener('scroll', () => {
+            if (modalBodyContent.scrollTop + modalBodyContent.clientHeight >= modalBodyContent.scrollHeight - 50) {
+                fetchNotifications(currentPage);
             }
-
-
-            })
-            .catch(error => console.error('Error fetching modals:', error));
+        });
     });
+
 
 </script>

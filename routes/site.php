@@ -21,6 +21,7 @@ use App\Http\Controllers\Site\SeniorityController;
 use App\Http\Controllers\Site\ServiceCardController;
 
 Route::prefix('partials')->as('partials.')->group(function () {
+    Route::get('/slider', [HomeController::class, 'sliderPartial'])->name('slider');
     Route::get('/message', [HomeController::class, 'messagePartial'])->name('message');
     Route::get('/about', [HomeController::class, 'aboutPartial'])->name('about');
     Route::get('/gallery', [HomeController::class, 'galleryPartial'])->name('gallery');
