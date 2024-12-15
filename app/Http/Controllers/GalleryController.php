@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Gallery;
 use App\Models\Category;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\SiteNotification;
+
 use Yajra\DataTables\DataTables;
 use App\Http\Requests\StoreGalleryRequest;
-
-use Illuminate\Support\Str;
 
 class GalleryController extends Controller
 {
@@ -117,6 +118,11 @@ class GalleryController extends Controller
             $gallery->published_at = now();
             $gallery->status = 'published';
             $message = 'Gallery has been published successfully.';
+            SiteNotification::create([
+                'type' => 'Gallery', 
+                'title' => $gallery->title,
+                'url' => route('gallery.show', $gallery->slug),
+            ]);
         } else {
             $gallery->status = 'draft';
             $message = 'Gallery has been unpublished.';

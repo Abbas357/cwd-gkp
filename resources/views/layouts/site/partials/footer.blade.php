@@ -335,14 +335,14 @@
     document.addEventListener('DOMContentLoaded', () => {
         const modalContainer = document.getElementById('modal-container');
         const announcementSeen = sessionStorage.getItem('announcement_seen');
-        const newsSeen = sessionStorage.getItem('news_seen');
+        const notificationsSeen = sessionStorage.getItem('notifications_seen');
 
-        fetch('/fetch-popups')
+        fetch('/notifications')
             .then(response => response.json())
             .then(data => {
                 const {
                     announcement
-                    , news
+                    , notifications
                 } = data;
 
                 if (announcement && !announcementSeen) {
@@ -366,38 +366,47 @@
                     announcementModal.show();
                 }
 
-                if (news.length && !newsSeen) {
-                    const newsList = news.map(item => `
-                    <li class="list-group-item d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <img src="${item.image}" alt="${item.title}" class="img-thumbnail news-image" />
-                            <a href="${item.url}" class="news-title ms-3">
-                                <strong>${item.title}</strong>
-                            </a>
-                        </div>
-                        <small class="news-date">${item.created_at}</small>
-                    </li>
-                `).join('');
+                if (notifications.length && !notificationsSeen) {
+                    const notificationList = notifications.map(item => {
+                    return `
+                            <div class="d-flex align-items-center p-2 notification-item">
+                                <i class="bi ${item.info[0]} notification-icon me-3 fs-3 px-2 py-0 rounded" style="background: ${item.info[2]}"></i>
+                                <div>
+                                    <a href="${item.url}">${item.title}</a>
+                                </div>
+                                <small class="news-date text-muted d-flex flex-column start" style="margin-left:auto">
+                                    <a href="${item.info[3]}" class="badge text-bg-light mb-1 small" style="font-size: 10px">${item.info[1]}</a>
+                                    <span>${item.created_at}</span>
+                                </small>
+                            </div>
+                        `;
+                    }).join('');
 
                     modalContainer.innerHTML += `
                         <div id="news-modal" class="modal fade" tabindex="-1" role="dialog">
                             <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
+                                <div class="modal-content" style="background: #ffffffdd">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Latest News</h5>
+                                        <h5 class="modal-title"><i class="bi-megaphone"></i> &nbsp; Updates & Notifications</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    <div class="modal-body">
-                                        <ul class="list-group">${newsList}</ul>
+                                    <div class="modal-body" style="max-height: 500px; overflow-y: auto;">
+                                        <div>${notificationList}</div>
+                                    </div>
+                                    <div class="modal-footer d-flex justify-content-center w-100">
+                                        <div><a href="{{ route('notifications.index') }}">All Notifications</a></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     `;
-                    sessionStorage.setItem('news_seen', true);
-                    const newsModal = new bootstrap.Modal(document.getElementById('news-modal'));
-                    newsModal.show();
-                }
+
+                sessionStorage.setItem('notifications_seen', true);
+                const newsModal = new bootstrap.Modal(document.getElementById('news-modal'));
+                newsModal.show();
+            }
+
+
             })
             .catch(error => console.error('Error fetching modals:', error));
     });

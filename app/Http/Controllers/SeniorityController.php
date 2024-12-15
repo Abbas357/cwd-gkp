@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Seniority;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\SiteNotification;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Cache;
-use App\Models\Seniority;
 use App\Http\Requests\StoreSeniorityRequest;
 
 class SeniorityController extends Controller
@@ -113,6 +114,11 @@ class SeniorityController extends Controller
             $seniority->published_at = now();
             $seniority->status = 'published';
             $message = 'Seniority has been published successfully.';
+            SiteNotification::create([
+                'type' => 'Seniority', 
+                'title' => $seniority->title,
+                'url' => route('seniority.show', $seniority->slug),
+            ]);
         } else {
             $seniority->status = 'draft';
             $message = 'Seniority has been unpublished.';

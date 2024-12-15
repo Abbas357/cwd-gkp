@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Download;
 use Illuminate\Http\Request;
+use App\Models\SiteNotification;
 use Yajra\DataTables\DataTables;
 use App\Http\Requests\StoreDownloadRequest;
 
@@ -104,6 +105,11 @@ class DownloadController extends Controller
             $download->published_at = now();
             $download->status = 'published';
             $message = 'File has been published successfully.';
+            SiteNotification::create([
+                'type' => 'Download', 
+                'title' => $download->file_name,
+                'url' => $download->getFirstMediaUrl('downloads'),
+            ]);
         } else {
             $download->status = 'draft';
             $message = 'File has been unpublished.';

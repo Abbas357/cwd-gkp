@@ -6,6 +6,7 @@ use App\Models\News;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\SiteNotification;
 use Yajra\DataTables\DataTables;
 use App\Http\Requests\StoreNewsRequest;
 
@@ -107,6 +108,11 @@ class NewsController extends Controller
             $news->published_at = now();
             $news->status = 'published';
             $message = 'News has been published successfully.';
+            SiteNotification::create([
+                'type' => 'News', 
+                'title' => $news->title,
+                'url' => route('news.show', $news->slug),
+            ]);
         } else {
             $news->status = 'draft';
             $message = 'News has been unpublished.';

@@ -3,14 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
-use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\SiteNotification;
 use Yajra\DataTables\DataTables;
-use App\Notifications\ContentPublished;
 use App\Http\Requests\StoreEventRequest;
-use App\Models\NewsLetter;
-use Illuminate\Support\Facades\Notification;
 
 class EventController extends Controller
 {
@@ -123,6 +120,13 @@ class EventController extends Controller
             $event->published_at = now();
             $event->status = 'published';
             $message = 'Event has been published successfully.';
+
+            SiteNotification::create([
+                'type' => 'Event', 
+                'title' => $event->title,
+                'url' => route('events.show', $event->slug),
+            ]);
+            
         } else {
             $event->status = 'draft';
             $message = 'Event has been unpublished.';

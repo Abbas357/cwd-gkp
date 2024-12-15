@@ -344,3 +344,48 @@
     font-size: 1.1rem;
     background-color: #f5f5f5
 }
+
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.notification-icon {
+    position: relative;
+}
+
+.notification-icon::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    border-radius: 50%;
+    animation: blink .7s infinite;
+}
+
+.notification-item {
+    background: #fff; 
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.notification-item:hover {
+    transform: scale(1.01);
+    background-color: #0eff5211;
+    font-weight: bold;
+}
+
+.notification-item:hover i,  
+.notification-item:hover small {
+    display: none;
+}

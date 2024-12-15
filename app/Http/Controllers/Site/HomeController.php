@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\Event;
 use App\Models\Slider;
 use App\Models\Gallery;
+use Illuminate\Http\Request;
+use App\Models\SiteNotification;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 
@@ -218,7 +220,7 @@ class HomeController extends Controller
         return view('site.home.partials.contact');
     }
 
-    public function fetchPopups()
+    public function notifications()
     {
         $announcement = Page::where('page_type', 'Announcement')
             ->orderBy('created_at', 'desc')
@@ -227,31 +229,68 @@ class HomeController extends Controller
         $announcementData = $announcement ? [
             'id' => $announcement->id,
             'title' => $announcement->title,
-            'image' => $announcement->getFirstMediaUrl('page_attachments') 
+            'image' => $announcement->getFirstMediaUrl('page_attachments')
                 ?: asset('admin/images/no-image.jpg'),
         ] : null;
 
-        $news = News::take(10)
-        ->latest()
-        ->get()
-        ->map(function ($newsItem) {
-            $media = $newsItem->getFirstMedia('news_attachments');
-            $isImage = $media && str_starts_with($media->mime_type, 'image/');
-
-            return [
-                'id' => $newsItem->id,
-                'title' => $newsItem->title,
-                'slug' => $newsItem->slug,
-                'created_at' => $newsItem->created_at->format('M d, Y'),
-                'url' => route('news.show', $newsItem->slug),
-                'image' => $isImage ? $media->getUrl() : asset('admin/images/no-image.jpg'),
-            ];
-        });
+        $notifications = SiteNotification::take(10)
+            ->latest()
+            ->get()
+            ->map(function ($notification) {
+                $info = [
+                    'Gallery' => ['bi-images', 'Galleries', '#00c4ff33', route('gallery.index')],
+                    'Event' => ['bi-calendar-event', 'Events', '#2dde9833', route('events.index')],
+                    'News' => ['bi-newspaper', 'News', '#c1d82f33', route('news.index')],
+                    'Seniority' => ['bi-person-badge', 'Seniorities', '#ffb31033', route('seniority.index')],
+                    'Download' => ['bi-download', 'Downloads', '#ff408133', route('downloads.index')],
+                ];
+                return [
+                    'id' => $notification->id,
+                    'title' => strlen($notification->title) > 80
+                        ? substr($notification->title, 0, 80) . '...'
+                        : $notification->title,
+                    'url' => $notification->url,
+                    'created_at' => $notification->created_at->diffForHumans(),
+                    'type' => $notification->type,
+                    'info' => $info[$notification->type],
+                ];
+            });
 
         return response()->json([
             'announcement' => $announcementData,
-            'news' => $news,
+            'notifications' => $notifications,
         ]);
     }
 
+    public function allNotifications(Request $request)
+    {
+        $validated = $request->validate([
+            'search' => 'nullable|string|max:255',
+            'type' => 'nullable|in:Event,News,Seniority,Downloads,Gallery',
+            'date_start' => 'nullable|date',
+            'date_end' => 'nullable|date|after_or_equal:date_start',
+        ]);
+
+        $types = ['Event', 'News', 'Seniority', 'Downloads', 'Gallery'];
+
+        $notifications = SiteNotification::orderByDesc('created_at')
+            ->when($request->query('search'), function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('title', 'like', "%$search%")
+                        ->orWhere('type', 'like', "%$search%");
+                });
+            })
+            ->when($request->query('date_start'), function ($query, $dateStart) {
+                $query->whereDate('created_at', '>=', $dateStart);
+            })
+            ->when($request->query('date_end'), function ($query, $dateEnd) {
+                $query->whereDate('created_at', '<=', $dateEnd);
+            })
+            ->when($request->query('type'), function ($query, $type) {
+                $query->where('type', $type);
+            })
+            ->paginate(10);
+
+        return view('site.notifications.index', compact('notifications', 'types'));
+    }
 }

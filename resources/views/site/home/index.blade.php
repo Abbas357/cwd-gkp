@@ -134,10 +134,14 @@
     <script>
         function loadNews() {
             $.ajax({
-                url: "{{ route('news.ticker') }}",
+                url: "{{ route('notifications.get') }}",
                 method: 'GET',
                 success: function(data) {
-                    displayNews(data);
+                    const {
+                        announcement
+                        , notifications
+                    } = data;
+                    displayNews(notifications);
                 },
                 error: function() {
                     console.log("Error fetching news.");
@@ -146,17 +150,18 @@
         }
 
         function displayNews(newsItems) {
-            const newsShowRoute = "{{ route('news.show', ':slug') }}";
-            let tickerContent = newsItems.map(item => `<li><a href="${newsShowRoute.replace(':slug', item.slug)}" target="_blank">${item.title}</a></li>`).join('');
+        let tickerContent = newsItems.map((item, index) => 
+            `<li><a href="${item.url}" target="_blank"><span class="fw-bold">${index + 1}.</span> &nbsp; ${item.title}</a></li>`
+        ).join('');
 
-            $('#newsTicker .bn-news ul').html(tickerContent);
+        $('#newsTicker .bn-news ul').html(tickerContent);
 
-            $('#newsTicker').breakingNews({
-                effect: 'typography',
-                themeColor: '#3b5998',
-                fontSize: '20px'
-            });
-        }
+        $('#newsTicker').breakingNews({
+            effect: 'typography',
+            themeColor: '#3b5998',
+            fontSize: '20px'
+        });
+}
 
         $(document).ready(function() {
             loadNews();
