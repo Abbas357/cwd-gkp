@@ -35,7 +35,7 @@ class ContractorRegistration extends Model implements HasMedia
             ->dontSubmitEmptyLogs()
             ->useLogName('contractor_registrations')
             ->setDescriptionForEvent(function (string $eventName) {
-                return "Registration has been {$eventName}";
+                return "Registration {$eventName}";
             });
     }
 

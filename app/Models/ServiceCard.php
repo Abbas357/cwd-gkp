@@ -34,7 +34,7 @@ class ServiceCard extends Model implements HasMedia
             ->useLogName('users')
             ->dontSubmitEmptyLogs()
             ->setDescriptionForEvent(function (string $eventName) {
-                return "Card has been {$eventName}";
+                return "Card {$eventName}";
             });
     }
 

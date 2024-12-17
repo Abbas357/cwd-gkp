@@ -33,7 +33,7 @@ class Gallery extends Model implements HasMedia
             ->dontSubmitEmptyLogs()
             ->useLogName('galleries')
             ->setDescriptionForEvent(function (string $eventName) {
-                return "Gallery has been {$eventName}";
+                return "Gallery {$eventName}";
             });
     }
 

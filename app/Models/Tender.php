@@ -7,12 +7,10 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-
 use Spatie\Activitylog\Traits\LogsActivity;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class News extends Model implements HasMedia
+class Tender extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, LogsActivity;
 
@@ -22,6 +20,8 @@ class News extends Model implements HasMedia
     {
         return [
             'published_at' => 'datetime',
+            'date_of_advertisement' => 'datetime',
+            'closing_date' => 'datetime',
         ];
     }
 
@@ -29,12 +29,12 @@ class News extends Model implements HasMedia
     {
         return LogOptions::defaults()
             ->logAll()
-            ->logExcept(['id', 'content', 'updated_at', 'created_at'])
+            ->logExcept(['id', 'updated_at', 'created_at'])
             ->logOnlyDirty()
-            ->useLogName('news')
+            ->useLogName('tender')
             ->dontSubmitEmptyLogs()
             ->setDescriptionForEvent(function (string $eventName) {
-                return "News {$eventName}";
+                return "Tender {$eventName}";
             });
     }
 
@@ -47,8 +47,9 @@ class News extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('news_attachments')
-        ->singleFile();
+        $this->addMediaCollection('tender_documents');
+        $this->addMediaCollection('tender_eoi_documents');
+        $this->addMediaCollection('bidding_documents');
     }
 
     public function user() {

@@ -35,7 +35,7 @@ class EStandardization extends Model implements HasMedia
             ->dontSubmitEmptyLogs()
             ->useLogName('standardization')
             ->setDescriptionForEvent(function (string $eventName) {
-                return "Standardization has been {$eventName}";
+                return "Standardization {$eventName}";
             });
     }
     

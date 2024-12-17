@@ -35,6 +35,7 @@
                     
                     <li><a href="{{ route('admin.news.index') }}"><i class="bi-newspaper fs-6"></i>&nbsp; News</a></li>
                     <li><a href="{{ route('admin.events.index') }}"><i class="bi-calendar2-event fs-6"></i>&nbsp; Events</a></li>
+                    <li><a href="{{ route('admin.tenders.index') }}"><i class="bi-briefcase fs-6"></i>&nbsp; Tenders</a></li>
                 </ul>
             </li>
             <li>

@@ -34,7 +34,7 @@ class Slider extends Model implements HasMedia
             ->useLogName('slider')
             ->dontSubmitEmptyLogs()
             ->setDescriptionForEvent(function (string $eventName) {
-                return "Slider has been {$eventName}";
+                return "Slider {$eventName}";
             });
     }
 

@@ -25,6 +25,7 @@ use App\Http\Controllers\PublicContactController;
 use App\Http\Controllers\EStandardizationController;
 use App\Http\Controllers\DevelopmentProjectController;
 use App\Http\Controllers\ContractorRegistrationController;
+use App\Http\Controllers\TenderController;
 
 Route::middleware('auth')->group(function () { 
     Route::prefix('admin')->as('admin.')->group(function () {
@@ -232,6 +233,19 @@ Route::middleware('auth')->group(function () {
             Route::patch('/publish/{story}', [StoryController::class, 'publishStory'])->name('publish');
             Route::get('/{story}', [StoryController::class, 'show'])->name('show');
             Route::delete('/{story}', [StoryController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('tenders')->as('tenders.')->group(function () {
+            Route::get('/', [TenderController::class, 'index'])->name('index');
+            Route::get('/create', [TenderController::class, 'create'])->name('create');
+            Route::post('/', [TenderController::class, 'store'])->name('store');
+            Route::get('/{tender}', [TenderController::class, 'show'])->name('show');
+            Route::get('/get/{tender}', [TenderController::class, 'showDetail'])->name('detail');
+            Route::patch('/publish/{tender}', [TenderController::class, 'publishTender'])->name('publish');
+            Route::patch('/archive/{tender}', [TenderController::class, 'archiveTender'])->name('archive');
+            Route::patch('/update/field', [TenderController::class, 'updateField'])->name('updateField');
+            Route::patch('/upload/file', [TenderController::class, 'uploadFile'])->name('uploadFile');
+            Route::delete('/{tender}', [TenderController::class, 'destroy'])->name('destroy');
         });
 
         Route::prefix('roles')->as('roles.')->group(function () {

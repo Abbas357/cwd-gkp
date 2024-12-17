@@ -35,7 +35,7 @@ class Download extends Model implements HasMedia
             ->dontSubmitEmptyLogs()
             ->useLogName('downloads')
             ->setDescriptionForEvent(function (string $eventName) {
-                return "Download has been {$eventName}";
+                return "Download {$eventName}";
             });
     }
 

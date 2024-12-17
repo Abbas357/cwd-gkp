@@ -34,7 +34,7 @@ class Event extends Model implements HasMedia
             ->dontSubmitEmptyLogs()
             ->useLogName('events')
             ->setDescriptionForEvent(function (string $eventName) {
-                return "Event has been {$eventName}";
+                return "Event {$eventName}";
             });
     }
 

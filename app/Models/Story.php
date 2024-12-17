@@ -29,7 +29,7 @@ class Story extends Model implements HasMedia
             ->useLogName('stories')
             ->dontSubmitEmptyLogs()
             ->setDescriptionForEvent(function (string $eventName) {
-                return "Story has been {$eventName}";
+                return "Story {$eventName}";
             });
     }
     

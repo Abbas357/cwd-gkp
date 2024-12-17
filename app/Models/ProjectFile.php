@@ -32,7 +32,7 @@ class ProjectFile extends Model implements HasMedia
             ->dontSubmitEmptyLogs()
             ->useLogName('project_file')
             ->setDescriptionForEvent(function (string $eventName) {
-                return "Project File has been {$eventName}";
+                return "Project File {$eventName}";
             });
     }
 

@@ -1,7 +1,5 @@
 <x-app-layout title="Add News">
     @push('style')
-    <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
     @endpush
@@ -22,17 +20,12 @@
                                 <a class="btn btn-success shadow-sm" href="{{ route('admin.news.index') }}">All News</a>
                             </div>
                             <div class="row">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-12 mb-3">
                                     <label for="title">Title</label>
                                     <input type="text" class="form-control" id="title" value="{{ old('title') }}" placeholder="News title" name="title" required>
                                     @error('title')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
-                                </div>
-                                <div class="col-md-6 mx-mb-3">
-                                    <label for="load-users">Office</label>
-                                    <select class="form-select form-select-md" data-placeholder="Choose" id="load-users" name="user">
-                                    </select>
                                 </div>
                             </div>
                             <div class="row">
@@ -148,38 +141,6 @@
 
                     form.classList.add('was-validated')
                 }, false)
-            });
-
-            $('#load-users').select2({
-                theme: "bootstrap-5"
-                , dropdownParent: $('#load-users').parent()
-                , ajax: {
-                    url: '{{ route("admin.users.api") }}'
-                    , dataType: 'json'
-                    , data: function(params) {
-                        return {
-                            q: params.term
-                            , page: params.page || 1
-                        };
-                    }
-                    , processResults: function(data, params) {
-                        params.page = params.page || 1;
-                        return {
-                            results: data.items
-                            , pagination: {
-                                more: data.pagination.more
-                            }
-                        };
-                    }
-                    , cache: true
-                }
-                , minimumInputLength: 0
-                , templateResult(user) {
-                    return user.position;
-                }
-                , templateSelection(user) {
-                    return user.position;
-                }
             });
 
         });

@@ -34,7 +34,7 @@ class Page extends Model implements HasMedia
             ->dontSubmitEmptyLogs()
             ->useLogName('pages')
             ->setDescriptionForEvent(function (string $eventName) {
-                return "Page has been {$eventName}";
+                return "Page {$eventName}";
             });
     }
 

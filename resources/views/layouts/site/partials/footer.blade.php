@@ -350,11 +350,32 @@
                             <h5 class="modal-title"><i class="bi-megaphone"></i> &nbsp; Updates & Notifications</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div id="modal-body-content" class="modal-body" style="max-height: 500px; overflow-y: auto;">
-                            <div id="notification-list"></div>
-                            <div id="loading-indicator" class="d-flex justify-content-center my-3">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Loading...</span>
+                        <div class="modal-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="flex-grow-1 me-3">
+                                    <input type="text" id="search-notifications" class="form-control" 
+                                        style="border-radius: 3px; padding: .5rem .7rem" 
+                                        placeholder="Search notifications..." />
+                                </div>
+                                <div>
+                                    <select id="filter-notifications" class="form-select" style="border-radius: 3px; padding: .5rem .7rem; min-width: 150px;">
+                                        <option value="">All</option>
+                                        <option value="Tender">Tenders</option>
+                                        <option value="Gallery">Galleries</option>
+                                        <option value="Event">Events</option>
+                                        <option value="News">News</option>
+                                        <option value="Seniority">Seniorities</option>
+                                        <option value="Download">Downloads</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div id="modal-body-content" style="max-height: 400px; overflow-y: auto;">
+                                <div id="notification-list"></div>
+                                <div id="loading-indicator" class="d-flex justify-content-center my-3">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -370,6 +391,18 @@
         const notificationList = document.getElementById('notification-list');
         const loadingIndicator = document.getElementById('loading-indicator');
         const modalBodyContent = document.getElementById('modal-body-content');
+        const searchInput = document.getElementById('search-notifications');
+        const filterDropdown = document.getElementById('filter-notifications');
+        
+        searchInput.addEventListener('input', handleSearchOrFilter);
+        filterDropdown.addEventListener('change', handleSearchOrFilter);
+
+        function handleSearchOrFilter() {
+            currentPage = 1; 
+            notificationList.innerHTML = '';
+            hasMorePages = true;
+            fetchNotifications(currentPage);
+        }
 
         if (!notificationsSeen) {
             fetchNotifications(currentPage);
@@ -415,21 +448,26 @@
             if (isLoading || !hasMorePages) return;
 
             isLoading = true;
+            const searchQuery = searchInput.value.trim();
+            const selectedType = filterDropdown.value;
             showLoadingIndicator(true);
 
-            fetch(`/notifications?page=${page}`)
+            fetch(`/notifications?page=${page}&search=${encodeURIComponent(searchQuery)}&type=${selectedType}`)
                 .then(response => response.json())
                 .then(data => {
                     const { notifications, nextPage, hasMore } = data;
 
                     if (notifications.length) {
                         appendNotifications(notifications);
+                    } else if (page === 1) {
+                        notificationList.innerHTML = '<p class="text-muted text-center">No notifications found.</p>';
                     }
 
                     currentPage = nextPage || currentPage;
                     hasMorePages = hasMore;
                     isLoading = false;
                     sessionStorage.setItem('notifications_seen', true);
+
                     if (!hasMore) {
                         showLoadingIndicator(false);
                         displayEndOfNotificationsMessage();
@@ -450,7 +488,7 @@
                         <a href="${item.url}">${item.title}</a>
                     </div>
                     <small class="news-date text-muted d-flex flex-column start" style="margin-left:auto">
-                        <a href="${item.info[3]}" class="badge text-bg-light mb-1 small" style="font-size: 10px">${item.info[1]}</a>
+                        <a href="${item.info[3]}" class="badge text-bg-secondary mb-1" style="font-size: 10px">${item.info[1]}</a>
                         <span>${item.created_at}</span>
                     </small>
                 </div>

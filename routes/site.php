@@ -19,6 +19,7 @@ use App\Http\Controllers\Site\ContractorRegistrationController;
 use App\Http\Controllers\Site\DevelopmentProjectController;
 use App\Http\Controllers\Site\SeniorityController;
 use App\Http\Controllers\Site\ServiceCardController;
+use App\Http\Controllers\Site\TenderController;
 
 Route::prefix('partials')->as('partials.')->group(function () {
     Route::get('/slider', [HomeController::class, 'sliderPartial'])->name('slider');
@@ -86,6 +87,11 @@ Route::prefix('news')->as('news.')->group(function () {
 Route::prefix('events')->as('events.')->group(function () {
     Route::get('/', [EventsController::class, 'index'])->name('index');
     Route::get('/{slug}', [EventsController::class, 'showEvent'])->name('show');
+});
+
+Route::prefix('tenders')->as('tenders.')->group(function () {
+    Route::get('/', [TenderController::class, 'index'])->name('index');
+    Route::get('/{slug}', [TenderController::class, 'showTenders'])->name('show');
 });
 
 Route::prefix('seniority')->as('seniority.')->group(function () {

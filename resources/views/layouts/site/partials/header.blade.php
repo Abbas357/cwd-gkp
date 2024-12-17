@@ -151,7 +151,7 @@
                                         <li role="none" data-tier-id="1">
                                             <a href="{{ route('projects.show', 'KP-PRIP') }}" data-tier-id="1" role="menuitem" class="cw-menuItem" tabindex="0">KP PRIP</a>
                                         </li>
-                                        <li role="none" data-tier-id="1">
+                                        <li role="none" data-ti er-id="1">
                                             <a href="{{ route('projects.show', 'KP-RIISP') }}" data-tier-id="1" role="menuitem" class="cw-menuItem" tabindex="0">KP RIISP</a>
                                         </li>
                                         <li role="none" data-tier-id="1">
@@ -215,6 +215,11 @@
                                     <a href="{{ route('events.index') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="2" tabindex="0">EVENTS</a>
                                 </li>
                             </ul>
+                        </li>
+                        <li role="none" class="cw-top-menu {{ request()->routeIs('tenders.index') ? 'uActived' : '' }}" data-tier-id="3">
+                            <a href="{{ route('tenders.index') }}" data-tier-id="3" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
+                                <span>TENDERS</span>
+                            </a>
                         </li>
                         <li role="none" class="cw-top-menu {{ request()->routeIs('downloads.index') ? 'uActived' : '' }}" data-tier-id="3">
                             <a href="{{ route('downloads.index') }}" data-tier-id="3" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">

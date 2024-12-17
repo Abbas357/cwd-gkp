@@ -30,7 +30,7 @@ class PublicContact extends Model
             ->dontSubmitEmptyLogs()
             ->useLogName('public_contacts')
             ->setDescriptionForEvent(function (string $eventName) {
-                return "Public contact Message has been {$eventName}";
+                return "Public contact Message {$eventName}";
             });
     }
 

@@ -185,7 +185,6 @@ class HomeController extends Controller
         return view('site.home.partials.events', compact('events'));
     }
 
-
     public function teamPartial()
     {
         $users = Cache::remember('team_partial', 43200, function () {
@@ -225,20 +224,34 @@ class HomeController extends Controller
     public function notifications(Request $request)
     {
         $page = $request->input('page', 1);
-        $perPage = 10;
+        $perPage = 7;
+        $search = $request->input('search', '');
+        $type = $request->input('type', '');
 
         $query = SiteNotification::latest();
+
+        if (!empty($search)) {
+            $query->where('title', 'like', '%' . $search . '%')
+                ->orWhere('type', 'like', '%' . $search . '%');
+        }
+
+        if (!empty($type)) {
+            $query->where('type', $type);
+        }    
+
         $totalNotifications = $query->count();
+
         $notifications = $query->skip(($page - 1) * $perPage)
             ->take($perPage)
             ->get()
             ->map(function ($notification) {
                 $info = [
-                    'Gallery' => ['bi-images', 'Galleries', '#00c4ff33', route('gallery.index')],
-                    'Event' => ['bi-calendar-event', 'Events', '#2dde9833', route('events.index')],
-                    'News' => ['bi-newspaper', 'News', '#c1d82f33', route('news.index')],
-                    'Seniority' => ['bi-person-badge', 'Seniorities', '#ffb31033', route('seniority.index')],
-                    'Download' => ['bi-download', 'Downloads', '#ff408133', route('downloads.index')],
+                    'Tender' => ['bi-briefcase', 'Tenders', '#fbb03466', route('tenders.index')],
+                    'Gallery' => ['bi-images', 'Galleries', '#00c4ff66', route('gallery.index')],
+                    'Event' => ['bi-calendar-event', 'Events', '#2dde9866', route('events.index')],
+                    'News' => ['bi-newspaper', 'News', '#c1d82f66', route('news.index')],
+                    'Seniority' => ['bi-person-badge', 'Seniorities', '#ffb661066', route('seniority.index')],
+                    'Download' => ['bi-download', 'Downloads', '#ff408166', route('downloads.index')],
                 ];
                 return [
                     'id' => $notification->id,
@@ -248,7 +261,7 @@ class HomeController extends Controller
                     'url' => $notification->url,
                     'created_at' => $notification->created_at->diffForHumans(),
                     'type' => $notification->type,
-                    'info' => $info[$notification->type],
+                    'info' => $info[$notification->type] ?? ['bi-bell', 'Notification', '#ccc', '#'],
                 ];
             });
 
@@ -261,17 +274,16 @@ class HomeController extends Controller
         ]);
     }
 
-
     public function allNotifications(Request $request)
     {
         $validated = $request->validate([
             'search' => 'nullable|string|max:255',
-            'type' => 'nullable|in:Event,News,Seniority,Downloads,Gallery',
+            'type' => 'nullable|in:Tender,Event,News,Seniority,Downloads,Gallery',
             'date_start' => 'nullable|date',
             'date_end' => 'nullable|date|after_or_equal:date_start',
         ]);
 
-        $types = ['Event', 'News', 'Seniority', 'Downloads', 'Gallery'];
+        $types = ['Tender', 'Event', 'News', 'Seniority', 'Downloads', 'Gallery'];
 
         $notifications = SiteNotification::orderByDesc('created_at')
             ->when($request->query('search'), function ($query, $search) {

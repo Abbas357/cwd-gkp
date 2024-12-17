@@ -41,7 +41,7 @@ class Seniority extends Model implements HasMedia
             ->dontSubmitEmptyLogs()
             ->useLogName('seniority')
             ->setDescriptionForEvent(function (string $eventName) {
-                return "Seniority has been {$eventName}";
+                return "Seniority {$eventName}";
             });
     }
 

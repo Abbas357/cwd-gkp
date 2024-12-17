@@ -48,7 +48,7 @@ class User extends Authenticatable implements HasMedia
             ->useLogName('users')
             ->dontSubmitEmptyLogs()
             ->setDescriptionForEvent(function (string $eventName) {
-                return "User has been {$eventName}";
+                return "User {$eventName}";
             });
     }
 

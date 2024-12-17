@@ -28,7 +28,7 @@ class Setting extends Model implements HasMedia
             ->useLogName('settings')
             ->dontSubmitEmptyLogs()
             ->setDescriptionForEvent(function (string $eventName) {
-                return "Setting has been {$eventName}";
+                return "Setting {$eventName}";
             });
     }
 

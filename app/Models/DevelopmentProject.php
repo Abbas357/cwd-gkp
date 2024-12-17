@@ -42,7 +42,7 @@ class DevelopmentProject extends Model implements HasMedia
             ->dontSubmitEmptyLogs()
             ->useLogName('development_projects')
             ->setDescriptionForEvent(function (string $eventName) {
-                return "Development Project has been {$eventName}";
+                return "Development Project {$eventName}";
             });
     }
 
