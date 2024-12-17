@@ -16,13 +16,13 @@ return new class extends Migration
             $table->string('title', 191);
             $table->string('slug', 191)->unique();
             $table->mediumText('description')->nullable();
-            $table->string('procurement_entity', 191);
-            $table->timestamp('date_of_advertisement');
-            $table->timestamp('closing_date');
-            $table->string('domain', 191);
+            $table->string('procurement_entity', 191)->nullable();;
+            $table->timestamp('date_of_advertisement')->nullable();
+            $table->timestamp('closing_date')->nullable();
+            $table->string('domain', 191)->nullable();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
-            $table->timestamp('published_at')->nullable()->default(null);
+            $table->timestamp('published_at')->nullable();
             $table->foreignId('published_by')->nullable()->constrained('users');
             $table->timestamps();
         });
