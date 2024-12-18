@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('fbr_ntn', 45)->nullable();
             $table->string('kpra_reg_no', 45)->nullable();
             $table->string('pre_enlistment')->nullable();
-            $table->boolean('is_limited')->default(false);
+            $table->string('is_limited', 45)->default('no');
             $table->enum('status', ['new', 'deffered_one', 'deffered_two', 'deffered_three', 'approved'])->default('new');
             $table->text('deffered_reason');
             $table->string('reg_no', 45)->nullable();

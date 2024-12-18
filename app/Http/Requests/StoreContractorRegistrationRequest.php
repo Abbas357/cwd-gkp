@@ -16,7 +16,7 @@ class StoreContractorRegistrationRequest extends FormRequest
         return [
             'owner_name' => 'required|string|max:255',
             'district' => 'required|string|max:255',
-            'pec_number' => 'required|string|max:15',
+            'pec_number' => 'required|numeric',
             'category_applied' => 'required|string|max:255',
             'contractor_name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
@@ -28,7 +28,7 @@ class StoreContractorRegistrationRequest extends FormRequest
             'mobile_number' => 'required|string|max:15',
             'pre_enlistment' => 'nullable|array',
             'pre_enlistment.*' => 'string|max:255',
-            'is_limited' => 'required|in:yes,no',
+            'is_limited' => 'required|in:Yes,No',
             
             'contractor_picture' => 'nullable|file|mimes:jpg,jpeg,png|max:5000',
             'cnic_front_attachment' => 'nullable|file|mimes:jpg,jpeg,png|max:5000',

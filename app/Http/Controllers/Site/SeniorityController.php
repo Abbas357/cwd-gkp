@@ -9,7 +9,7 @@ class SeniorityController extends Controller
 {
     public function index()
     {
-        $seniorities = Seniority::paginate(10);
+        $seniorities = Seniority::latest()->paginate(10);
         return view('site.seniority.index', compact('seniorities'));
     }
 

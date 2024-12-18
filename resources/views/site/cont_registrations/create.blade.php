@@ -26,7 +26,7 @@
                                         <div class="row mb-3">
                                             <div class="col">
                                                 <label for="owner_name">Name of Owner <abbr title="Required">*</abbr></label>
-                                                <input type="text" class="form-control" id="owner_name" value="{{ old('owner_name') }}" placeholder="Name of Owner" name="owner_name" required>
+                                                <input type="text" class="form-control" id="owner_name" value="{{ old('owner_name') }}" placeholder="eg. Aslam Khan" name="owner_name" required>
                                                 @error('owner_name')
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @enderror
@@ -49,7 +49,7 @@
                                             <div class="col-md-6">
                                                 <label for="pec_number">PEC No. <abbr title="Required">*</abbr></label>
                                                 <div class="input-group">
-                                                    <input type="number" class="form-control" id="pec_number" value="{{ old('pec_number') }}" placeholder="PEC No" name="pec_number" required>
+                                                    <input type="text" class="form-control" id="pec_number" value="{{ old('pec_number') }}" placeholder="eg. 3423425" name="pec_number" required>
                                                     <span class="input-group-append">
                                                         <div id="checking_loader" class="spinner-border spinner-border-lg text-info" style="display: none;" role="status">
                                                             <span class="visually-hidden">Checking...</span>
@@ -78,7 +78,7 @@
                                             </div>
                                             <div class="col">
                                                 <label for="contractor_name">Name of Contractor / Firm / Company <abbr title="Required">*</abbr></label>
-                                                <input type="text" class="form-control" id="contractor_name" value="{{ old('contractor_name') }}" placeholder="Name of Contractor / Firm / Company" name="contractor_name" required>
+                                                <input type="text" class="form-control" id="contractor_name" value="{{ old('contractor_name') }}" placeholder="eg. Aslam Builders" name="contractor_name" required>
                                                 @error('contractor_name')
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @enderror
@@ -88,7 +88,7 @@
                                         <div class="row mb-3">
                                             <div class="col">
                                                 <label for="address">Address (as per PEC) <abbr title="Required">*</abbr></label>
-                                                <input type="text" class="form-control" id="address" value="{{ old('address') }}" placeholder="Address" name="address" required>
+                                                <input type="text" class="form-control" id="address" value="{{ old('address') }}" placeholder="eg. Dir Upper" name="address" required>
                                                 @error('address')
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @enderror
@@ -110,7 +110,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="cnic">CNIC No <abbr title="Required">*</abbr></label>
-                                                <input type="text" class="form-control" id="cnic" value="{{ old('cnic') }}" placeholder="CNIC" name="cnic" required>
+                                                <input type="text" class="form-control" id="cnic" value="{{ old('cnic') }}" placeholder="National Identity Card Number" name="cnic" required>
                                                 @error('cnic')
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @enderror
@@ -120,14 +120,14 @@
                                         <div class="row mb-3">
                                             <div class="col-md-6">
                                                 <label for="fbr_ntn">FBR Registration No <abbr title="Required">*</abbr></label>
-                                                <input type="number" class="form-control" id="fbr_ntn" value="{{ old('fbr_ntn') }}" placeholder="FBR Registration No" name="fbr_ntn" required>
+                                                <input type="text" class="form-control" id="fbr_ntn" value="{{ old('fbr_ntn') }}" placeholder="eg. 23523645" name="fbr_ntn" required>
                                                 @error('fbr_ntn')
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @enderror
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="kpra_reg_no">KIPPRA Registration No <abbr title="Required">*</abbr></label>
-                                                <input type="number" class="form-control" id="kpra_reg_no" value="{{ old('kpra_reg_no') }}" placeholder="KPRA Registration No" name="kpra_reg_no" required>
+                                                <input type="text" class="form-control" id="kpra_reg_no" value="{{ old('kpra_reg_no') }}" placeholder="eg. K753465974-7" name="kpra_reg_no" required>
                                                 @error('kpra_reg_no')
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @enderror
@@ -137,14 +137,14 @@
                                         <div class="row mb-3">
                                             <div class="col-md-6">
                                                 <label for="email">Email Address <abbr title="Required">*</abbr></label>
-                                                <input type="email" class="form-control" id="email" value="{{ old('email') }}" placeholder="Email Address" name="email" required>
+                                                <input type="email" class="form-control" id="email" value="{{ old('email') }}" placeholder="eg. aslam@gmail.com" name="email" required>
                                                 @error('email')
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @enderror
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="mobile_number">Mobile No. <abbr title="Required">*</abbr></label>
-                                                <input type="text" class="form-control" id="mobile_number" value="{{ old('mobile_number') }}" placeholder="Mobile No" name="mobile_number" required>
+                                                <input type="text" class="form-control" id="mobile_number" value="{{ old('mobile_number') }}" placeholder="eg. 0333-3333333" name="mobile_number" required>
                                                 @error('mobile_number')
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @enderror
@@ -153,8 +153,8 @@
 
                                         <div class="row mb-3">
                                             <div class="col-md-6">
-                                                <label for="pre_enlistment">In Case of already enlisted in Provincial Department / Organization / Board</label>
-                                                <select class="form-select form-select-sm" data-placeholder="Choose" id="pre_enlistment" multiple name="pre_enlistment[]">
+                                                <label for="pre_enlistment">In Case of already enlisted in following</label>
+                                                <select class="form-select" data-placeholder="Choose" id="pre_enlistment" multiple name="pre_enlistment[]">
                                                     @foreach ($cat['provincial_entities'] as $entities)
                                                     <option value="{{ $entities->name }}">{{ $entities->name }}</option>
                                                     @endforeach
@@ -163,25 +163,16 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @enderror
                                             </div>
-                                            <div class="col-md-6 d-flex align-items-center">
-                                                <div class="form-group">
-                                                    <label>Is Your firm registered/ Limited</label>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label" for="is_limited_yes">
-                                                            <input class="form-check-input" type="radio" value="1" name="is_limited" id="is_limited_yes" required>
-                                                            Yes
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label" for="is_limited_no">
-                                                            <input class="form-check-input" type="radio" value="0" name="is_limited" id="is_limited_no" required>
-                                                            No
-                                                        </label>
-                                                    </div>
-                                                    @error('is_limited')
-                                                    <div class="text-danger">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
+                                            <div class="col-md-6">
+                                                <label for="is_limited">Is Limitted <abbr title="Required">*</abbr></label>
+                                                <select class="form-select" id="is_limited" name="is_limited" required>
+                                                    <option value="">Choose...</option>
+                                                    <option value="Yes">Yes</option>
+                                                    <option value="No">No</option>
+                                                </select>
+                                                @error('is_limited')
+                                                <div class="text-danger">{{ $message }}</div>
+                                                @enderror
                                             </div>
                                         </div>
                                     </div>
@@ -192,7 +183,6 @@
                                 <div class="card p-2 shadow border border-light rounded border-2">
                                     <div class="card-body">
                                         <h3 class="card-title">Upload relevant documents</h3>
-
                                         <div class="mb-3">
                                             <label for="contractor_picture">Contractor Picture (Picture on Card)</label>
                                             <input type="file" class="form-control" id="contractor_picture" name="contractor_picture">

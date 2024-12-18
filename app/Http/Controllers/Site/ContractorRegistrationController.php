@@ -44,7 +44,7 @@ class ContractorRegistrationController extends Controller
         $registration->email = $request->input('email');
         $registration->mobile_number = $request->input('mobile_number');
         $registration->is_limited = $request->input('is_limited');
-
+        
         if ($request->has('pre_enlistment')) {
             $registration->pre_enlistment = json_encode($request->input('pre_enlistment'));
         }
