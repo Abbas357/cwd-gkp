@@ -7,8 +7,8 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
     RewriteEngine On 
 
     # Exclude the subdomain folder from Laravel routing
-    # RewriteCond %{HTTP_HOST} ^old\.cwd\.gkp\.pk$ [NC]
-    # RewriteRule ^ - [L]
+    RewriteCond %{HTTP_HOST} ^old\.cwd\.gkp\.pk$ [NC]
+    RewriteRule ^ - [L]
     
     RewriteRule ^$ public/index.php [L]
     RewriteRule ^((?!public/).*)$ public/$1 [L,NC]
