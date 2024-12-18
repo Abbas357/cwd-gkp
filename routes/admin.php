@@ -7,7 +7,9 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\StoryController;
+use App\Http\Controllers\SchemeController;
 use App\Http\Controllers\SliderController;
+use App\Http\Controllers\TenderController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
@@ -25,7 +27,6 @@ use App\Http\Controllers\PublicContactController;
 use App\Http\Controllers\EStandardizationController;
 use App\Http\Controllers\DevelopmentProjectController;
 use App\Http\Controllers\ContractorRegistrationController;
-use App\Http\Controllers\TenderController;
 
 Route::middleware('auth')->group(function () { 
     Route::prefix('admin')->as('admin.')->group(function () {
@@ -246,6 +247,11 @@ Route::middleware('auth')->group(function () {
             Route::patch('/update/field', [TenderController::class, 'updateField'])->name('updateField');
             Route::patch('/upload/file', [TenderController::class, 'uploadFile'])->name('uploadFile');
             Route::delete('/{tender}', [TenderController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('schemes')->as('schemes.')->group(function () {
+            Route::get('/', [SchemeController::class, 'index'])->name('index');
+            Route::post('/sync', [SchemeController::class, 'syncSchemes'])->name('sync');
         });
 
         Route::prefix('roles')->as('roles.')->group(function () {
