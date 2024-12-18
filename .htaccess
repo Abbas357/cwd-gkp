@@ -5,6 +5,11 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 <IfModule mime_module>
     DirectoryIndex index.php
     RewriteEngine On 
+
+    # Exclude the subdomain folder from Laravel routing
+    # RewriteCond %{HTTP_HOST} ^old\.cwd\.gkp\.pk$ [NC]
+    # RewriteRule ^ - [L]
+    
     RewriteRule ^$ public/index.php [L]
     RewriteRule ^((?!public/).*)$ public/$1 [L,NC]
     RewriteCond %{REQUEST_FILENAME} !-d

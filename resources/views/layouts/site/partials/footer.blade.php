@@ -345,20 +345,23 @@
         modalContainer.innerHTML = `
             <div id="news-modal" class="modal fade" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content" style="background: #ffffffcc">
+                    <div class="modal-content" style="background: #ffffffdd">
                         <div class="modal-header">
                             <h5 class="modal-title"><i class="bi-megaphone"></i> &nbsp; Updates & Notifications</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1" style="margin-top:-4px">
                                 <div class="flex-grow-1 me-3">
-                                    <input type="text" id="search-notifications" class="form-control" 
-                                        style="border-radius: 3px; padding: .5rem .7rem" 
-                                        placeholder="Search notifications..." />
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="bi bi-search"></i>
+                                        </span>
+                                        <input type="text" id="search-notifications" class="form-control" style="border-radius: 3px; padding: .4rem .8rem" placeholder="Search..." />
+                                    </div>
                                 </div>
                                 <div>
-                                    <select id="filter-notifications" class="form-select" style="border-radius: 3px; padding: .5rem .7rem; min-width: 150px;">
+                                    <select id="filter-notifications" class="form-select" style="border-radius: 3px; padding: .4rem .8rem; min-width: 150px;">
                                         <option value="">All</option>
                                         <option value="Tender">Tenders</option>
                                         <option value="Gallery">Galleries</option>
@@ -370,7 +373,7 @@
                                 </div>
                             </div>
 
-                            <div id="modal-body-content" style="max-height: 400px; overflow-y: auto;">
+                            <div id="modal-body-content" style="height: 400px; overflow-y: auto;">
                                 <div id="notification-list"></div>
                                 <div id="loading-indicator" class="d-flex justify-content-center my-3">
                                     <div class="spinner-border text-primary" role="status">
@@ -379,7 +382,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer d-flex justify-content-center w-100">
+                        <div class="modal-footer d-flex justify-content-center w-100" style="padding: 2px !important;">
                             <div><a href="{{ route('notifications.index') }}">All Notifications</a></div>
                         </div>
                     </div>
@@ -400,6 +403,9 @@
         function handleSearchOrFilter() {
             currentPage = 1; 
             notificationList.innerHTML = '';
+            loadingIndicator.innerHTML = `<div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>`;
             hasMorePages = true;
             fetchNotifications(currentPage);
         }
@@ -459,8 +465,6 @@
 
                     if (notifications.length) {
                         appendNotifications(notifications);
-                    } else if (page === 1) {
-                        notificationList.innerHTML = '<p class="text-muted text-center">No notifications found.</p>';
                     }
 
                     currentPage = nextPage || currentPage;

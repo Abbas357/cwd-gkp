@@ -230,14 +230,13 @@ class HomeController extends Controller
 
         $query = SiteNotification::latest();
 
-        if (!empty($search)) {
-            $query->where('title', 'like', '%' . $search . '%')
-                ->orWhere('type', 'like', '%' . $search . '%');
-        }
-
         if (!empty($type)) {
-            $query->where('type', $type);
-        }    
+            $query->where('type', $type)
+                  ->where('title', 'like', '%' . $search . '%');
+        } elseif (!empty($search)) {
+            $query->where('title', 'like', '%' . $search . '%')
+                  ->orWhere('type', 'like', '%' . $search . '%');
+        }  
 
         $totalNotifications = $query->count();
 
