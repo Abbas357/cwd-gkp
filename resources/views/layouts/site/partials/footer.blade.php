@@ -347,7 +347,8 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content" style="background: #ffffffdd">
                         <div class="modal-header">
-                            <h5 class="modal-title"><i class="bi-megaphone"></i> &nbsp; Updates & Notifications</h5>
+                            <h5 class="modal-title"><i class="bi-megaphone"></i> &nbsp; Notifications</h5> <a class="animated-gradient-text" href="https://old.cwd.gkp.pk">View Old Website</a>
+
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
