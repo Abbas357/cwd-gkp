@@ -18,7 +18,7 @@ class StoreTenderRequest extends FormRequest
             'procurement_entity' => 'required',
             'date_of_advertisement' => 'required',
             'closing_date' => 'required',
-            'tender_domain' => 'required',
+            // 'tender_domain' => 'required',
         ];
     }
 }

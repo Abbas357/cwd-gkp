@@ -41,7 +41,6 @@
                     <a href=""><i class="bi bi-house me-2"></i>{{ $settings->contact_address ?? 'Civil Secretariat, Peshawar'}}</a>
                     <a href=""><i class="bi bi-envelope me-2"></i>{{ $settings->email ?? 'info@cwd.gkp.pk'}}</a>
                     <a href=""><i class="bi bi-phone me-2"></i>{{ $settings->contact_phone ?? '091-9214039'}}</a>
-                    <a href="" class="mb-3"><i class="bi bi-whatsapp me-2"></i> {{ $settings->whatsapp ?? '0313-0535333'}}</a>
                 </div>
                 <div class="footer-item d-flex flex-column">
                     <h4 class="mb-2 text-white">Follow Us</h4>
@@ -347,8 +346,7 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content" style="background: #ffffffdd">
                         <div class="modal-header">
-                            <h5 class="modal-title"><i class="bi-megaphone"></i> &nbsp; Notifications</h5> <a class="animated-gradient-text" href="https://old.cwd.gkp.pk">View Old Website</a>
-
+                            <h5 class="modal-title"><i class="bi-megaphone"></i> &nbsp; Notifications</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">

@@ -253,7 +253,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [SchemeController::class, 'index'])->name('index');
             Route::post('/sync', [SchemeController::class, 'syncSchemes'])->name('sync');
         });
-
+        
         Route::prefix('roles')->as('roles.')->group(function () {
             Route::get('/', [RoleController::class, 'index'])->name('index');
             Route::post('/', [RoleController::class, 'store'])->name('store');

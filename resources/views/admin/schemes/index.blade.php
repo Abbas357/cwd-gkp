@@ -8,20 +8,22 @@
 
     <div class="card-header mb-3">
         <div class="row">
-            <div class="col-md-6 mb-4">
-                <label for="year">Year</label>
-                <select class="form-select form-select-md" id="year" name="year" required>
-                    <option value="">Select Year</option>
-                    <option value="2020">2020</option>
-                    <option value="2021">2021</option>
-                    <option value="2022">2022</option>
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
-                </select>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="scheme_code">Scheme Code</label>
-                <input type="text" class="form-control" id="scheme_code" placeholder="scheme_code" name="scheme_code" required>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <label for="year">Year</label>
+                    <select class="form-select form-select-md filter-field" id="year" name="year">
+                        <option value="">Select Year</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="scheme_code">Scheme Code</label>
+                    <input type="text" class="form-control filter-field" id="scheme_code" name="scheme_code" placeholder="Scheme Code">
+                </div>
             </div>
         </div>
     </div>
@@ -53,6 +55,47 @@
     <script src="{{ asset('admin/plugins/html2canvas/html2canvas.min.js') }}"></script>
 
     <script>
+        function dynamicFilterNavigator(config) {
+            const { table, dataTableUrl, filterSelector } = config;
+
+            function buildQueryParams(params) {
+                if (!params) return "";
+                const queryParams = Object.entries(params)
+                    .filter(([key, value]) => value !== undefined && value !== "")
+                    .map(
+                        ([key, value]) =>
+                            `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+                    )
+                    .join("&");
+                return queryParams ? "?" + queryParams : "";
+            }
+
+            function updateDataTableURL(params) {
+                const queryParams = buildQueryParams(params);
+                const tableFullUrl = dataTableUrl + queryParams;
+                table.ajax.url(tableFullUrl).load();
+            }
+
+            function getFilterValues() {
+                const params = {};
+                $(filterSelector).each(function () {
+                    const key = $(this).attr("name");
+                    const value = $(this).val();
+                    if (key) {
+                        params[key] = value;
+                    }
+                });
+                return params;
+            }
+
+            $(filterSelector).on("change keyup", function () {
+                const params = getFilterValues();
+                updateDataTableURL(params);
+            });
+
+            updateDataTableURL(getFilterValues());
+        }
+
         $(document).ready(function() {
             var table = initDataTable('#schemes-datatable', {
                 ajaxUrl: "{{ route('admin.development_projects.index') }}"
@@ -121,34 +164,10 @@
                 , }
             });
 
-            hashTabsNavigator({
-                table: table
-                , dataTableUrl: "{{ route('admin.development_projects.index') }}"
-                , tabToHashMap: {
-                    "#draft-tab": '#draft'
-                    , "#inprogress-tab": '#inprogress'
-                    , "#onhold-tab": '#onhold'
-                    , "#completed-tab": '#completed'
-                    , "#archived-tab": '#archived'
-                , }
-                , hashToParamsMap: {
-                    '#draft': {
-                        status: 'Draft'
-                    }
-                    , '#inprogress': {
-                        status: 'In-Progress'
-                    }
-                    , '#onhold': {
-                        status: 'On-Hold'
-                    }
-                    , '#completed': {
-                        status: 'Completed'
-                    }
-                    , '#archived': {
-                        status: 'Archived'
-                    }
-                , }
-                , defaultHash: '#draft'
+            dynamicFilterNavigator({
+                table: table,
+                dataTableUrl: "{{ route('admin.development_projects.index') }}",
+                filterSelector: ".filter-field",
             });
 
             $("#schemes-datatable").on('click', '.publish-btn', async function() {

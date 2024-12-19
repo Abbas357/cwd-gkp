@@ -252,6 +252,9 @@
                             </a>
                         </li>
                         <li role="menuitem" aria-hidden="true" class="divider cw-onlyMobileTab"></li>
+                        <button class="cw-top-nav-button" style="margin-left: 1.4rem; margin-top: 3px;padding: 7px; border: none; border-radius: 50px">
+                            <span class="animated-gradient-text">OLD VERSION</span>
+                        </button>
                     </ul>
                 </nav>
             </div>

@@ -52,14 +52,14 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="date_of_advertisement">Date of Advertisement</label>
-                                    <input type="date" class="form-control" id="date_of_advertisement" value="{{ old('date_of_advertisement') }}" placeholder="Start Date & Time" name="date_of_advertisement" required>
+                                    <input type="date" class="form-control" id="date_of_advertisement" value="{{ old('date_of_advertisement') }}" placeholder="Start Date & Time" name="date_of_advertisement">
                                     @error('date_of_advertisement')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="closing_date">Closing Date</label>
-                                    <input type="date" class="form-control" id="closing_date" value="{{ old('closing_date') }}" placeholder="End Date & Time" name="closing_date" required>
+                                    <label for="closing_date">Closing (Expiry) Date</label>
+                                    <input type="date" class="form-control" id="closing_date" value="{{ old('closing_date') }}" placeholder="End Date & Time" name="closing_date">
                                     @error('closing_date')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
