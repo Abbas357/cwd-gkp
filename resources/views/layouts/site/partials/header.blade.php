@@ -253,7 +253,7 @@
                         </li>
                         <li role="menuitem" aria-hidden="true" class="divider cw-onlyMobileTab"></li>
                         <button class="cw-top-nav-button" style="margin-left: 1.4rem; margin-top: 3px;padding: 7px; border: none; border-radius: 50px">
-                            <a href="https://old.cwd.gkp.pk"><span class="animated-gradient-text">OLD VERSION</span></a>
+                            <a href="https://old.cwd.gkp.pk" target="_blank"><span class="animated-gradient-text">OLD VERSION</span></a>
                         </button>
                     </ul>
                 </nav>
