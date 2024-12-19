@@ -92,6 +92,30 @@
                 <i class="bi bi-person-circle" style="color: #8d0fe0"></i>
                 <p>Users</p>
             </a>
+            <a href="{{ route('admin.tenders.index') }}" class="app-tile">
+                <i class="bi bi-briefcase" style="color: #ff000d"></i>
+                <p>Tenders</p>
+            </a>
+            <a href="{{ route('admin.events.index') }}" class="app-tile">
+                <i class="bi bi-calendar2-event" style="color: #96bb05"></i>
+                <p>Events</p>
+            </a>
+            <a href="{{ route('admin.news.index') }}" class="app-tile">
+                <i class="bi bi-journal" style="color: #1cc7d0"></i>
+                <p>News</p>
+            </a>
+            <a href="{{ route('admin.sliders.index') }}" class="app-tile">
+                <i class="bi bi-images" style="color: #146eb4"></i>
+                <p>Slider</p>
+            </a>
+            <a href="{{ route('admin.downloads.index') }}" class="app-tile">
+                <i class="bi bi-download" style="color: #fb8a2e"></i>
+                <p>Downloads</p>
+            </a>
+            <a href="{{ route('admin.gallery.index') }}" class="app-tile">
+                <i class="bi bi-card-image" style="color: #11862f"></i>
+                <p>Gallery</p>
+            </a>
             <a href="{{ route('admin.registrations.index') }}" class="app-tile">
                 <i class="bi bi-clipboard" style="color: #00a4e4"></i>
                 <p>Registration</p>
@@ -104,29 +128,13 @@
                 <i class="bi bi-credit-card" style="color: #a4c649"></i>
                 <p>Service Card</p>
             </a>
-            <a href="{{ route('admin.news.index') }}" class="app-tile">
-                <i class="bi bi-journal" style="color: #1cc7d0"></i>
-                <p>News</p>
-            </a>
             <a href="{{ route('admin.pages.index') }}" class="app-tile">
                 <i class="bi bi-file-earmark-post" style="color: #ffc168"></i>
                 <p>Pages</p>
             </a>
-            <a href="{{ route('admin.sliders.index') }}" class="app-tile">
-                <i class="bi bi-images" style="color: #146eb4"></i>
-                <p>Slider</p>
-            </a>
             <a href="{{ route('admin.stories.index') }}" class="app-tile">
                 <i class="bi bi-app" style="color: #0389ff"></i>
                 <p>Stories</p>
-            </a>
-            <a href="{{ route('admin.downloads.index') }}" class="app-tile">
-                <i class="bi bi-download" style="color: #fb8a2e"></i>
-                <p>Downloads</p>
-            </a>
-            <a href="{{ route('admin.gallery.index') }}" class="app-tile">
-                <i class="bi bi-card-image" style="color: #11862f"></i>
-                <p>Gallery</p>
             </a>
             <a href="{{ route('admin.projects.index') }}" class="app-tile">
                 <i class="bi bi-kanban" style="color: #a71930"></i>
@@ -159,10 +167,6 @@
             <a href="{{ route('admin.development_projects.index') }}" class="app-tile">
                 <i class="bi bi-buildings" style="color: #0096a0"></i>
                 <p>Dev. Projects</p>
-            </a>
-            <a href="{{ route('admin.events.index') }}" class="app-tile">
-                <i class="bi bi-calendar2-event" style="color: #96bb05"></i>
-                <p>Events</p>
             </a>
         </div>
     </div>
