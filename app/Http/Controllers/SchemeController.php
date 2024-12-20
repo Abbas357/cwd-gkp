@@ -11,7 +11,12 @@ class SchemeController extends Controller
     public function index()
     {
         $schemes = Scheme::all();
-        return view('schemes.index', compact('schemes'));
+        return view('admin.schemes.index', compact('schemes'));
+    }
+
+    public function syncSchemesView()
+    {
+        return view('admin.schemes.sync');
     }
 
     public function syncSchemes(Request $request)

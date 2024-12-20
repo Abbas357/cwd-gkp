@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamp('date_of_advertisement')->nullable();
             $table->timestamp('closing_date')->nullable();
             $table->string('domain', 191)->nullable();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users');
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
             $table->timestamp('published_at')->nullable();
             $table->foreignId('published_by')->nullable()->constrained('users');

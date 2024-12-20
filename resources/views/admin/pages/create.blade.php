@@ -1,7 +1,5 @@
 <x-app-layout title="Add Page">
     @push('style')
-    <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
     @endpush
@@ -69,65 +67,7 @@
         </form>
     </div>
     @push('script')
-    <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/summernote/summernote-bs5.min.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-
-            $('#content').summernote({
-                height: 300,
-                spellCheck: true,
-                codeviewFilter: false,
-            });
-
-            var forms = document.querySelectorAll('.needs-validation')
-
-            Array.prototype.slice.call(forms).forEach(function(form) {
-                form.addEventListener('submit', function(event) {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
-                    }
-
-                    form.classList.add('was-validated')
-                }, false)
-            });
-
-            $('#load-users').select2({
-                theme: "bootstrap-5"
-                , dropdownParent: $('#load-users').parent()
-                , ajax: {
-                    url: '{{ route("admin.users.api") }}'
-                    , dataType: 'json'
-                    , data: function(params) {
-                        return {
-                            q: params.term
-                            , page: params.page || 1
-                        };
-                    }
-                    , processResults: function(data, params) {
-                        params.page = params.page || 1;
-                        return {
-                            results: data.items
-                            , pagination: {
-                                more: data.pagination.more
-                            }
-                        };
-                    }
-                    , cache: true
-                }
-                , minimumInputLength: 0
-                , templateResult(user) {
-                    return user.designation;
-                }
-                , templateSelection(user) {
-                    return user.designation;
-                }
-            });
-
-        });
-
-    </script>
     @endpush
 </x-app-layout>

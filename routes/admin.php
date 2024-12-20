@@ -251,6 +251,7 @@ Route::middleware('auth')->group(function () {
 
         Route::prefix('schemes')->as('schemes.')->group(function () {
             Route::get('/', [SchemeController::class, 'index'])->name('index');
+            Route::get('/sync', [SchemeController::class, 'syncSchemesView'])->name('syncView');
             Route::post('/sync', [SchemeController::class, 'syncSchemes'])->name('sync');
         });
         
