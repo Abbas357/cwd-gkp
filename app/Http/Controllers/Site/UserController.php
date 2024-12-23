@@ -35,7 +35,7 @@ class UserController extends Controller
         return view('site.users.contacts', compact('contactsByOffice'));
     }
 
-    public function showPositions($position)
+    private function showPositions($position)
     {
         $users = User::withoutGlobalScope('active')->where('status', 'Archived')->where('position', $position)
             ->with(['media' => function ($query) {
@@ -56,7 +56,7 @@ class UserController extends Controller
             ];
         });
 
-        return view('site.users.list', compact('userData', 'position'));
+        return $userData;
     }
 
     public function getUserDetails($id)
@@ -69,19 +69,20 @@ class UserController extends Controller
 
         $userData = [
             'id' => $user->id,
-            'name' => $user->name ?? 'N/A',
-            'email' => $user->email ?? 'N/A',
-            'mobile_number' => $user->mobile_number ?? 'N/A',
-            'landline_number' => $user->landline_number ?? 'N/A',
-            'whatsapp' => $user->whatsapp ?? 'N/A',
-            'facebook' => $user->facebook ?? 'N/A',
-            'twitter' => $user->twitter ?? 'N/A',
-            'designation' => $user->designation ?? 'N/A',
-            'title' => $user->title ?? 'N/A',
-            'posting_type' => $user->posting_type ?? 'N/A',
-            'posting_date' => $user->posting_date ? $user->posting_date->format('j, F Y') : 'N/A',
-            'exit_type' => $user->exit_type ?? 'N/A',
-            'exit_date' => $user->exit_date ? $user->exit_date->format('j, F Y') : 'N/A',
+            'name' => $user->name ?? '-',
+            'email' => $user->email ?? '-',
+            'mobile_number' => $user->mobile_number ?? '-',
+            'landline_number' => $user->landline_number ?? '-',
+            'whatsapp' => $user->whatsapp ?? '-',
+            'facebook' => $user->facebook ?? '-',
+            'twitter' => $user->twitter ?? '-',
+            'designation' => $user->designation ?? '-',
+            'position' => $user->position ?? '-',
+            'title' => $user->title ?? '-',
+            'posting_type' => $user->posting_type ?? '-',
+            'posting_date' => $user->posting_date ? $user->posting_date->format('j, F Y') : '-',
+            'exit_type' => $user->exit_type ?? '-',
+            'exit_date' => $user->exit_date ? $user->exit_date->format('j, F Y') : '-',
             'status' => $user->status,
             'media' => [
                 'profile_pictures' => $user->getFirstMediaUrl('profile_pictures', 'small')
@@ -89,16 +90,10 @@ class UserController extends Controller
                 'posting_orders' => $user->getFirstMediaUrl('posting_orders'),
                 'exit_orders' => $user->getFirstMediaUrl('exit_orders'),
             ],
+            'previous' => $this->showPositions($user->position),
         ];
 
-        $html = view('site.users.partials.detail', ['user' => $userData])->render();
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'result' => $html,
-            ],
-        ]);
+        return view('site.users.detail', ['user' => $userData]);
     }
 
     public function team()
@@ -126,8 +121,8 @@ class UserController extends Controller
                     return [
                         'id' => $user->id,
                         'name' => $user->name,
-                        'title' => $user->title ?? 'N/A',
-                        'position' => $user->position ?? 'N/A',
+                        'title' => $user->title ?? '-',
+                        'position' => $user->position ?? '-',
                         'facebook' => $user->facebook ?? '#',
                         'twitter' => $user->twitter ?? '#',
                         'whatsapp' => $user->whatsapp ?? '#',

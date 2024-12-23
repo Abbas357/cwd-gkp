@@ -64,8 +64,7 @@ Route::prefix('sliders')->as('sliders.')->group(function () {
 });
 
 Route::prefix('positions')->as('positions.')->group(function () {
-    Route::get('/{position}', [UserController::class, 'showPositions'])->name('show');
-    Route::get('/details/{id}', [UserController::class, 'getUserDetails'])->name('details');
+    Route::get('/detail/{id}', [UserController::class, 'getUserDetails'])->name('details');
 });
 
 Route::prefix('contacts')->as('contacts.')->group(function () {

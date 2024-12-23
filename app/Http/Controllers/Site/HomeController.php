@@ -63,6 +63,7 @@ class HomeController extends Controller
                 ->first();
 
             $ministerData = $minister ? [
+                'id' => $minister->id,
                 'name' => $minister->name,
                 'title' => $minister->title,
                 'designation' => $minister->designation,
@@ -72,6 +73,7 @@ class HomeController extends Controller
             ] : null;
 
             $secretaryData = $secretary ? [
+                'id' => $secretary->id,
                 'name' => $secretary->name,
                 'title' => $secretary->title,
                 'designation' => $secretary->designation,

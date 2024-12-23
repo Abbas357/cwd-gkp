@@ -45,7 +45,6 @@
                                             <th>S#</th>
                                             <th>Name</th>
                                             <th>Position</th>
-                                            <th>Mobile Number</th>
                                             <th>Landline Number</th>
                                             <th>Social Media</th>
                                         </tr>
@@ -56,7 +55,6 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $contact->name }}</td>
                                                 <td>{{ $contact->position }}</td>
-                                                <td>{{ $contact->mobile_number ?? "N/A" }}</td>
                                                 <td>{{ $contact->landline_number ?? "N/A" }}</td>
                                                 <td>
                                                     <div>

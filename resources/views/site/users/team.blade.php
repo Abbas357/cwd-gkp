@@ -40,7 +40,7 @@
                  role="tabpanel" aria-labelledby="{{ Str::slug($role, '-') }}-tab">
                 <div class="row">
                     @foreach ($users as $user)
-                        <div class="col-sm-12 col-md-3 mb-4" style="scale:.95">
+                        <div class="col-sm-12 col-md-2 mb-4" style="scale:.95">
                             <div class="team-item h-100 user-card">
                                 <div class="team-img">
                                     <div class="team-img-efects">
@@ -57,7 +57,9 @@
                                         <h5 class="fs-6 mt-1 text-no-overflow">{{ $user['name'] }}</h5>
                                         <p class="mb-1 text-no-overflow">{{ $user['position'] }}</p>
                                     </div>
-                                    <a href="{{ route('positions.show', ['position' => $user['position']]) }}" class="btn-animate mt-1">View Previous</a>
+                                    <div class="flex m-2">
+                                        <a href="{{ route('positions.details', ['id' => $user['id'] ]) }}" class="cw-btn"><i class="bi-eye"></i> View Detail</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
