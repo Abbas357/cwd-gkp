@@ -3,7 +3,7 @@
     <div class="col-lg-4 col-md-6">
         <div class="blog-item">
             <div class="blog-img">
-                <div class="blog-img-inner">
+                <div class="blog-img-inner" style="height:300px">
                     @if (str_starts_with($news['file_type'], 'image'))
                     <!-- Display image if the file is an image -->
                     <img class="img-fluid w-100 rounded-top" src="{{ $news['image'] }}" alt="{{ $news['title'] }}">
@@ -32,7 +32,7 @@
                 <a href="{{ route('news.show', $news['slug']) }}" class="h4">{{ $news['title'] }}</a>
                 <!-- Dynamic summary -->
                 <p class="my-3">{{ Str::limit($news['summary'], 100, '...') }}</p>
-                <a href="{{ route('news.show', $news['slug']) }}" class="btn-animate rounded-pill py-2 px-4">Read More</a>
+                <a href="{{ route('news.show', $news['slug']) }}" class="cw-btn rounded-pill py-2 px-4">Read More</a>
             </div>
         </div>
     </div>

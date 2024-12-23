@@ -2,8 +2,8 @@
 
 <div class="events-carousel owl-carousel">
     @foreach ($events as $event)
-    <div class="events-item">
-        <div class="events-img">
+    <div class="events-item" style="overflow: hidden">
+        <div class="events-img" style="height:300px">
             <img src="{{ $event['image'] }}" style="height:300px" class="img-fluid w-100 rounded-top" alt="{{ $event['title'] }}">
             <div class="events-info d-flex border border-start-0 border-end-0 position-absolute" style="width: 100%; bottom: 0; left: 0; z-index: 5;">
                 <small class="flex-fill text-center border-end py-2"><i class="bi-geo-alt me-2"></i>{{ $event['location'] }}</small>
@@ -25,9 +25,9 @@
                 <h5 class="mb-2" style="white-space: nowrap">{{ \Illuminate\Support\Str::limit($event['title'], 50) }}</h5>
                 <small class="text-uppercase"><b>Event Type:</b> {{ $event['event_type'] }}</small>
             </div>
-            <div class="row bg-primary rounded-bottom mx-0">
+            <div class="row bg-light rounded-bottom mx-0">
                 <div class="col text-center px-0">
-                    <a href="{{ route('events.show', $event['slug']) }}" class="btn-hover btn text-white py-2 px-4">Read More</a>
+                    <a href="{{ route('events.show', $event['slug']) }}" class="cw-btn py-2 px-4">Read More</a>
                 </div>
             </div>
         </div>

@@ -486,7 +486,7 @@
         function appendNotifications(notifications) {
             const notificationItems = notifications.map(item => `
                 <div class="d-flex align-items-center p-2 notification-item">
-                    <i class="bi ${item.info[0]} notification-icon me-3 fs-3 px-2 py-0 rounded" style="background: ${item.info[2]}"></i>
+                    <i class="bi ${item.info[0]} ${item.recentNotification ? 'notification-icon' : ''} me-3 fs-3 px-2 py-0 rounded" style="background: ${item.info[2]}"></i>
                     <div>
                         <a href="${item.url}">${item.title}</a>
                     </div>

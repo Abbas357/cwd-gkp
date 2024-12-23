@@ -122,17 +122,17 @@
         <div class="row mt-3">
             <h1 class="fs-3 py-2 bg-light">Previous</h1>
             @foreach ($user['previous'] as $user)
-            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-3">
+            <div class="col-sm-12 col-md-4 col-lg-3 col-xl-2 mb-3">
                 <div class="card user-card shadow-sm rounded border-0 overflow-hidden">
-                    <img src="{{ $user['profile_pictures'] }}" class="card-img-top img-fluid" style="object-fit: cover;" alt="{{ $user['name'] }}">
+                    <img src="{{ $user['profile_pictures'] }}" class="card-img-top img-fluid" style="object-fit: cover;height:200px" alt="{{ $user['name'] }}">
                     <div class="card-body text-center p-2">
                         <h5 class="card-title font-weight-bold text-primary mb-2">{{ $user['name'] }}</h5>
                         <div>
-                            <span class="badge text-bg-light">
+                            <span class="badge text-bg-light" style="white-space: normal; word-wrap: break-word; word-break: break-word;">
                                 @if($user['status'] == 'Active')
                                 Since {{ $user['from'] ?? 'unknown' }}
                                 @else
-                                From {{ $user['from'] ?? '...' }} to {{ $user['to'] ?? '...' }}
+                                From <span class="d-block">{{ $user['from'] ?? '...' }}</span> to <span class="d-block">{{ $user['to'] ?? '...' }}</span>
                                 @endif
                             </span>
                         </div>

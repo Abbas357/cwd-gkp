@@ -263,6 +263,7 @@ class HomeController extends Controller
                     'created_at' => $notification->created_at->diffForHumans(),
                     'type' => $notification->type,
                     'info' => $info[$notification->type] ?? ['bi-bell', 'Notification', '#ccc', '#'],
+                    'recentNotification' => $notification->created_at->gt(now()->subDay()),
                 ];
             });
 
