@@ -26,8 +26,11 @@ class SeniorityController extends Controller
             'seniority_date' => \Carbon\Carbon::parse($seniority->seniority_date)->format('M d, Y'),
             'slug' => $seniority->slug,
             'status' => $seniority->status,
+            'views_count' => $seniority->views_count,
             'attachment' => $mediaUrl,
         ];
+
+        $seniority->increment('views_count');
 
         return view('site.seniority.show', compact('seniorityData'));
     }

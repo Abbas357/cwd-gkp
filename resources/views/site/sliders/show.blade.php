@@ -10,8 +10,8 @@
     
     <div class="container mt-3">
         <div class="d-flex justify-content-between">
-            <p><strong>Published By:</strong> {{ $sliderData['published_by'] }}</p>
             <p><strong>Published At:</strong> {{ $sliderData['published_at'] ? $sliderData['published_at']->format('M d, Y') : 'Not Published' }}</p>
+            <p><strong>Views:</strong> {{ $sliderData['views_count'] }}</p>
         </div>
         <!-- Responsive Image -->
         <img 

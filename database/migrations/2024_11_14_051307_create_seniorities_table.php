@@ -22,6 +22,7 @@ return new class extends Migration
             $table->timestamp('seniority_date')->nullable()->default(null);
             $table->timestamp('published_at')->nullable()->default(null);
             $table->foreignId('published_by')->nullable()->constrained('users');
+            $table->unsignedBigInteger('views_count')->default(0);
             $table->timestamps();
         });
     }

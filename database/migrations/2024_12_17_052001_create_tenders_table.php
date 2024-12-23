@@ -24,6 +24,7 @@ return new class extends Migration
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
             $table->timestamp('published_at')->nullable();
             $table->foreignId('published_by')->nullable()->constrained('users');
+            $table->unsignedBigInteger('views_count')->default(0);
             $table->timestamps();
         });
     }

@@ -90,7 +90,7 @@ Route::prefix('events')->as('events.')->group(function () {
 
 Route::prefix('tenders')->as('tenders.')->group(function () {
     Route::get('/', [TenderController::class, 'index'])->name('index');
-    Route::get('/{slug}', [TenderController::class, 'showTenders'])->name('show');
+    Route::get('/{slug}', [TenderController::class, 'show'])->name('show');
 });
 
 Route::prefix('seniority')->as('seniority.')->group(function () {

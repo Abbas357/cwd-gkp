@@ -47,7 +47,10 @@ class NewsController extends Controller
             'published_at' => $news->published_at->format('M d, Y'),
             'file_url' => $mediaUrl,
             'file_type' => $mediaType,
+            'views_count' => $news->views_count,
         ];
+
+        $news->increment('views_count');
 
         return view('site.news.show', compact('newsData'));
     }

@@ -11,19 +11,36 @@
             </div>
         </div>
         <div class="events-content bg-light">
-            <div class="flex-fill text-center border-end py-2">
+            @if(!empty($event['start_datetime']) && !empty($event['end_datetime']))
+            <div class="flex-fill text-center">
                 <i class="bi-calendar-check me-2"></i>
-                {{ $event['start_datetime']->format('M d, Y') }} - {{ $event['end_datetime']->format('M d, Y') }}
+                <td>
+                    {{ \Carbon\Carbon::parse($event['start_datetime'])->format('M d, Y') }}
+                    @if(\Carbon\Carbon::parse($event['start_datetime'])->format('M d, Y') != \Carbon\Carbon::parse($event['end_datetime'])->format('M d, Y'))
+                    to {{ \Carbon\Carbon::parse($event['end_datetime'])->format('M d, Y') }}
+                    @endif
+                </td>
             </div>
-
             <div class="flex-fill text-center">
                 <i class="bi-alarm me-2"></i>
-                {{ $event['start_datetime']->format('h:i A') }} - {{ $event['end_datetime']->format('h:i A') }}
+                <td>
+                    {{ \Carbon\Carbon::parse($event['start_datetime'])->format('h:i A') }}
+                    to {{ \Carbon\Carbon::parse($event['end_datetime'])->format('h:i A') }}
+                </td>
             </div>
+            @elseif(!empty($event['start_datetime']))
+            <div class="flex-fill text-center">
+                <i class="bi-calendar-check me-2"></i>
+                <td>{{ \Carbon\Carbon::parse($event['start_datetime'])->format('M d, Y') }}</td>
+            </div>
+            <div class="flex-fill text-center">
+                <i class="bi-alarm me-2"></i>
+                <td>{{ \Carbon\Carbon::parse($event['start_datetime'])->format('h:i A') }}</td>
+            </div>
+            @endif
             
             <div class="p-3 pb-0 mb-2 text-center">
                 <h5 class="mb-2" style="white-space: nowrap">{{ \Illuminate\Support\Str::limit($event['title'], 50) }}</h5>
-                <small class="text-uppercase"><b>Event Type:</b> {{ $event['event_type'] }}</small>
             </div>
             <div class="row bg-light rounded-bottom mx-0">
                 <div class="col text-center px-0">

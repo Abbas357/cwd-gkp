@@ -14,10 +14,9 @@
     <div class="container mt-3">
         <!-- Publisher Info -->
         <div class="d-flex justify-content-between">
-            <p><strong>Published By:</strong> {{ $eventData['published_by'] }}</p>
             <p><strong>Published At:</strong> {{ $eventData['published_at'] }}</p>
+            <p><strong>Views:</strong> {{ $eventData['views_count'] }}</p>
         </div>
-
         <!-- Event Details Table -->
         <div class="table-responsive mt-4">
             <table class="table table-bordered">

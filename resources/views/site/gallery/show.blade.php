@@ -14,13 +14,10 @@
     <div class="container py-3">
         <div class="gallery-detail">
             <div class="d-flex justify-content-between">
-                @if(!empty($galleryData['published_by']))
-                    <p><strong>Published By:</strong> {{ $galleryData['published_by'] }}</p>
-                @endif
-
                 @if(!empty($galleryData['published_at']))
-                    <p><strong>Published At:</strong> {{ $galleryData['published_at'] }}</p>
+                <p><strong>Published At:</strong> {{ $galleryData['published_at'] }}</p>
                 @endif
+                <p><strong>Views:</strong> {{ $galleryData['views_count'] }}</p>
             </div>
             
             @if(!empty($galleryData['images']))

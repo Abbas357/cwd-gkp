@@ -12,6 +12,7 @@
     </x-slot>
 
     <div class="container mt-4">
+        <p style="text-align: right"><strong>Views:</strong> {{ $seniorityData['views_count'] }}</p>
         <!-- Seniority Details Table -->
         <div class="table-responsive">
             <table class="table table-bordered">

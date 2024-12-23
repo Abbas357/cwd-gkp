@@ -65,10 +65,10 @@ class SchemeController extends Controller
 
     private function getAuthToken()
     {
-        $response = Http::asForm()->post('https://pcfms.pndkp.gov.pk:9002/oauth/token', [
+        $response = Http::asForm()->post(env('PND_AUTH_URL'), [
             'grant_type' => 'password',
-            'UserName' => 'cnwweb',
-            'Password' => 'Web@Cnw@2@24',
+            'UserName' => env('PND_AUTH_USERNAME'),
+            'Password' => env('PND_AUTH_PASSWORD'),
         ]);
 
         if ($response->successful()) {
@@ -77,4 +77,5 @@ class SchemeController extends Controller
 
         throw new \Exception('Failed to retrieve auth token');
     }
+
 }

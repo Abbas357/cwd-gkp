@@ -4,7 +4,6 @@
         <tr>
             <th>#</th>
             <th>File Name</th>
-            <th>File Type</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -12,16 +11,15 @@
         @forelse ($downloads as $download)
         <tr>
             <td>{{ $loop->iteration }}</td>
-            <td>{{ $download->file_name }}</td>
             <td>
                 @php
                     $icons = [
-                        'pdf' => 'bi-file-earmark-pdf',
-                        'doc' => 'bi-file-earmark-word',
-                        'docx' => 'bi-file-earmark-word',
-                        'docs' => 'bi-file-earmark-word',
-                        'image' => 'bi-file-earmark-image',
-                        'xlsx' => 'bi-file-earmark-excel',
+                        'pdf' => 'bi-file-earmark-pdf text-danger',
+                        'doc' => 'bi-file-earmark-word text-primary',
+                        'docx' => 'bi-file-earmark-word text-primary',
+                        'docs' => 'bi-file-earmark-word text-primary',
+                        'image' => 'bi-file-earmark-image text-info',
+                        'xlsx' => 'bi-file-earmark-excel text-success',
                     ];
 
                     $fileType = strtolower($download->file_type ?? 'default');
@@ -29,10 +27,11 @@
                 @endphp
                 <i class="bi {{ $iconClass }}"></i> 
                 {{ $download->file_type ?? 'N/A' }}
-            </td>
+                {{ $download->file_name }}</td>
             <td>
                 @if ($media = $download->getFirstMediaUrl('downloads'))
-                <a href="{{ $media }}" class="btn btn-primary btn-sm btn-animate" style="white-space: nowrap">
+                <a href="{{ $media }}" class="btn btn-primary btn-sm btn-animate download-link" 
+                   data-id="{{ $download->id }}" style="white-space: nowrap" target="_blank">
                     <i class="bi-cloud-arrow-down"></i> Download
                 </a>
                 @else

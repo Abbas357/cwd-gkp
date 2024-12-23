@@ -16,6 +16,7 @@ class SliderController extends Controller
             'title' => $slider->title,
             'description' => $slider->description,
             'published_at' => $slider->published_at,
+            'views_count' => $slider->views_count,
             'published_by' => $slider->publishedBy->designation,
             'image' => [
                 'medium' => $slider->getFirstMediaUrl('sliders', 'medium'),
@@ -23,6 +24,8 @@ class SliderController extends Controller
                 'original' => $slider->getFirstMediaUrl('sliders')
             ]
         ];
+
+        $slider->increment('views_count');
 
         return view('site.sliders.show', compact('sliderData'));
     }

@@ -9,6 +9,7 @@
     </x-slot>
 
     <div class="container mt-3">
+        <p style="text-align: right"><strong>Views:</strong> {{ $tenderData['views_count'] }}</p>
         <div class="card">
             <div class="card-body">
                 <table class="table table-bordered table-striped mt-4">

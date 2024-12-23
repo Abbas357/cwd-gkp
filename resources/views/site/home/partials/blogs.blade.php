@@ -28,11 +28,10 @@
                 </div>
             </div>
             <div class="blog-content border border-top-0 rounded-bottom p-4">
-                <!-- Dynamic author and title -->
                 <a href="{{ route('news.show', $news['slug']) }}" class="h4">{{ $news['title'] }}</a>
-                <!-- Dynamic summary -->
-                <p class="my-3">{{ Str::limit($news['summary'], 100, '...') }}</p>
-                <a href="{{ route('news.show', $news['slug']) }}" class="cw-btn rounded-pill py-2 px-4">Read More</a>
+                <div class="text-center">
+                    <a href="{{ route('news.show', $news['slug']) }}" class="cw-btn rounded-pill py-2 px-4"><i class="bi-eye"></i> View</a>
+                </div>
             </div>
         </div>
     </div>

@@ -10,17 +10,13 @@
     
     <div class="container mt-3">
         <div class="d-flex justify-content-between">
-            @if (!empty($newsData['published_by']))
-                <p><strong>Published By:</strong> {{ $newsData['published_by'] }}</p>
-            @endif
-
             @if (!empty($newsData['published_at']))
                 <p><strong>Published At:</strong> {{ $newsData['published_at'] }}</p>
             @endif
+            <p><strong>Views:</strong> {{ $newsData['views_count'] }}</p>
         </div>
         
         <div class="description mt-4">
-            <h2>Description</h2>
             <p>{!! nl2br($newsData['content'] ?? 'No content available.') !!}</p>
         </div>
 
@@ -34,12 +30,8 @@
                 <div class="mt-2">
                     @if (str_starts_with($newsData['file_type'], 'image'))
                         <img src="{{ $newsData['file_url'] }}" alt="{{ $newsData['title'] }}" style="max-width:100%; height:auto;">
-                    
-                    @elseif (str_contains($newsData['file_type'], 'pdf'))
-                        <iframe src="{{ $newsData['file_url'] }}" style="width:100%; height:600px;" frameborder="0"></iframe>
-                    
                     @else
-                        <p>This file type is not directly viewable. Please <a href="{{ $newsData['file_url'] }}" target="_blank">download the attachment</a> to view.</p>
+                        <a href="{{ $newsData['file_url'] }}">Attachment</a>                    
                     @endif
                 </div>
             </div>

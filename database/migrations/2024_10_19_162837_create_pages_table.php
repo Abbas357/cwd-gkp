@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('slug', 191)->unique();
             $table->mediumText('content');
             $table->boolean('is_active')->default(false);
+            $table->unsignedBigInteger('views_count')->default(0);
             $table->timestamps();
         });
     }

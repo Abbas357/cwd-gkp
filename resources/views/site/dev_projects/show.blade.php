@@ -21,7 +21,7 @@
 
         <div class="d-flex justify-content-between">
             <p><strong>Chief Engineer:</strong> {{ $projectData['chief_engineer'] }}</p>
-            <p><strong>Superintendent Engineer:</strong> {{ $projectData['superintendent_engineer'] }}</p>
+            <p><strong>Views: </strong> {{ $projectData['views_count'] }}</p>
         </div>
 
         <div class="table-responsive mt-4">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Site;
 
 use App\Models\Tender;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -17,12 +18,12 @@ class TenderController extends Controller
             ->orderBy('published_at', 'desc')
             ->paginate(10);
 
-        $categories = Tender::select('domain')->distinct()->pluck('domain');
+        $categories = Category::where('type', 'tender_domain')->get();
 
         return view('site.tenders.index', compact('tenders', 'categories'));
     }
 
-    public function showTenders($slug)
+    public function show($slug)
     {
         $tender = Tender::where('slug', $slug)->with(['media'])->firstOrFail();
 
@@ -65,7 +66,10 @@ class TenderController extends Controller
             'tender_documents' => $tenderDocuments,
             'tender_eoi_documents' => $tenderEoiDocuments,
             'bidding_documents' => $biddingDocuments,
+            'views_count' => $tender->views_count,
         ];
+
+        $tender->increment('views_count');
 
         return view('site.tenders.show', compact('tenderData'));
     }

@@ -23,8 +23,11 @@ class PageController extends Controller
             'title' => $page->title ?? 'No title available.',
             'type' => $page->page_type,
             'content' => $page->content ?? 'No content available.',
+            'views_count' => $page->views_count,
             'attachments' => $mediaUrls,
         ];
+
+        $page->increment('views_count');
 
         return view('site.pages.show', compact('pageData'));
     }

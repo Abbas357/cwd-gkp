@@ -13,7 +13,7 @@
     </x-slot>
 
     <div class="container mt-3">
-
+        <p style="text-align: right"><strong>Views:</strong> {{ $pageData['views_count'] }}</p>
         <div class="description mt-4">
             <p>{!! nl2br($pageData['content']) !!}</p>
         </div>

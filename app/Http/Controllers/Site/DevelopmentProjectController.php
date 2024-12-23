@@ -69,8 +69,11 @@ class DevelopmentProjectController extends Controller
             'progress_percentage' => $project->progress_percentage,
             'year_of_completion' => $project->year_of_completion?->format('M d, Y'),
             'status' => $project->status,
+            'views_count' => $project->views_count,
             'images' => $mediaUrls,
         ];
+
+        $project->increment('views_count');
 
         return view('site.dev_projects.show', compact('projectData'));
     }

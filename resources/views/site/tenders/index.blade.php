@@ -33,8 +33,8 @@
                     <select name="category" id="category" class="form-select w-auto" onchange="this.form.submit()">
                         <option value="">All</option>
                         @foreach ($categories as $category)
-                        <option value="{{ $category }}" {{ request('category') === $category ? 'selected' : '' }}>
-                            {{ $category }}
+                        <option value="{{ $category->name }}" {{ request('category') === $category->name ? 'selected' : '' }}>
+                            {{ $category->name }}
                         </option>
                         @endforeach
                     </select>
@@ -77,7 +77,7 @@
                             {{ $tender->getMedia('bidding_documents')->isNotEmpty() ? 'Yes' : 'Not Available' }}
                         </td>
                         <td>
-                            <a href="{{ route('tenders.show', $tender->slug) }}" class="btn btn-primary btn-sm">Read More</a>
+                            <a href="{{ route('tenders.show', $tender->slug) }}" class="cw-btn">View Detail</a>
                         </td>
                     </tr>
                     @endforeach

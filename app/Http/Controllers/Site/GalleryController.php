@@ -38,12 +38,15 @@ class GalleryController extends Controller
             'description' => $gallery->description,
             'type' => ucfirst(str_replace('_', ' ', $gallery->type)) ?? 'General',
             'user' => $gallery->user->designation,
+            'views_count' => $gallery->views_count,
             'published_by' => $gallery->publishBy->designation,
             'published_at' => $gallery->published_at?->format('M d, Y'),
             'images' => $gallery->getMedia('gallery')->map(function ($media) {
                 return $media->getUrl();
             })->toArray() ?: [asset('admin/images/no-image.jpg')],
         ];
+
+        $gallery->increment('views_count');
 
         return view('site.gallery.show', compact('galleryData'));
     }

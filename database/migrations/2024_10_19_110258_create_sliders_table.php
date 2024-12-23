@@ -19,6 +19,7 @@ return new class extends Migration
             $table->timestamp('published_at')->nullable()->default(null);
             $table->foreignId('published_by')->nullable()->constrained('users');
             $table->integer('order')->default(0);
+            $table->unsignedBigInteger('views_count')->default(0);
             $table->timestamps();
         });
     }

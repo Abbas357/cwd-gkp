@@ -42,8 +42,11 @@ class EventsController extends Controller
             'published_by' => $event->user->designation,
             'published_at' => $event->published_at->format('M d, Y'),
             'description' => $event->description,
+            'views_count' => $event->views_count,
             'images' => $mediaUrls,
         ];
+
+        $event->increment('views_count');
 
         return view('site.events.show', compact('eventData'));
     }
