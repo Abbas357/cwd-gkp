@@ -102,10 +102,10 @@ class SchemeController extends Controller
 
     private function getAuthToken()
     {
-        $response = Http::asForm()->post(env('PND_AUTH_URL'), [
+        $response = Http::asForm()->post(config('pnd.auth_url'), [
             'grant_type' => 'password',
-            'UserName' => env('PND_AUTH_USERNAME'),
-            'Password' => env('PND_AUTH_PASSWORD'),
+            'UserName' => config('pnd.auth_username'),
+            'Password' => config('pnd.auth_password'),
         ]);
 
         if ($response->successful()) {
