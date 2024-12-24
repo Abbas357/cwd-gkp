@@ -247,11 +247,11 @@ class HomeController extends Controller
             ->get()
             ->map(function ($notification) {
                 $info = [
-                    'Tender' => ['bi-briefcase', 'Tenders', '#fbb03466', route('tenders.index')],
+                    'Tender' => ['bi-clipboard-check', 'Tenders', '#fbb03466', route('tenders.index')],
                     'Gallery' => ['bi-images', 'Galleries', '#00c4ff66', route('gallery.index')],
                     'Event' => ['bi-calendar-event', 'Events', '#2dde9866', route('events.index')],
                     'News' => ['bi-newspaper', 'News', '#c1d82f66', route('news.index')],
-                    'Seniority' => ['bi-person-badge', 'Seniorities', '#ffb661066', route('seniority.index')],
+                    'Seniority' => ['bi-person-badge', 'Seniorities', '#da482f66', route('seniority.index')],
                     'Download' => ['bi-download', 'Downloads', '#ff408166', route('downloads.index')],
                 ];
                 return [

@@ -13,7 +13,7 @@ return new class extends Migration
             $table->longText('body');
             $table->string('name');
             $table->string('email')->nullable();
-            $table->string('commentable_type', 191); // Limit to 191 characters
+            $table->string('commentable_type', 191);
             $table->unsignedBigInteger('commentable_id');
             $table->foreignId('parent_id')->references('id')->on('comments')->onDelete('cascade');
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
