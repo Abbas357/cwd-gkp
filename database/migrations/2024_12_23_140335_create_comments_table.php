@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('commentable_type', 191);
             $table->unsignedBigInteger('commentable_id');
             $table->foreignId('parent_id')->nullable()->constrained('comments')->onDelete('cascade');
-            $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
+            $table->enum('status', ['new', 'published', 'archived'])->default('new');
             $table->timestamp('published_at')->nullable();
             $table->foreignId('published_by')->nullable()->constrained('users');
             $table->timestamps();

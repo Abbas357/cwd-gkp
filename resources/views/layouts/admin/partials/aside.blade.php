@@ -100,6 +100,7 @@
                     <div class="menu-title">Public Dealings</div>
                 </a>
                 <ul class="p-2 menu-items">
+                    <li><a href="{{ route('admin.comments.index') }}"><i class="bi-chat fs-6"></i>&nbsp; Comments</a></li>
                     <li><a href="{{ route('admin.newsletter.create_mass_email') }}"><i class="bi-send fs-6"></i>&nbsp; Send Email</a></li>
                     <li><a href="{{ route('admin.newsletter.index') }}"><i class="bi-envelope fs-6"></i>&nbsp; All Emails</a></li>
                     <li><a href="{{ route('admin.public_contact.index') }}"><i class="bi-exclamation-triangle fs-6"></i>&nbsp; Queries</a></li>
