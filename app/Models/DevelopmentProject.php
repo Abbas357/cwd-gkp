@@ -12,9 +12,11 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+use App\Traits\HasComments;
+
 class DevelopmentProject extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, LogsActivity;
+    use HasFactory, InteractsWithMedia, LogsActivity, HasComments;
 
     protected $guarded = [];
 

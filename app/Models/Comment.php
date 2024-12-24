@@ -2,22 +2,20 @@
 
 namespace App\Models;
 
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
+
 use Illuminate\Database\Eloquent\Builder;
-use App\Traits\HasComments;
-
 use Spatie\Activitylog\Traits\LogsActivity;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class News extends Model implements HasMedia
+class Comment extends Model
 {
-    use HasFactory, InteractsWithMedia, LogsActivity, HasComments;
+    use HasFactory, LogsActivity;
 
-    protected $guarded = [];
+    protected $fillable = ['body', 'name', 'email', 'parent_id'];
+
+    protected static $recordEvents = ['updated', 'deleted'];
 
     protected function casts(): array
     {
@@ -30,12 +28,12 @@ class News extends Model implements HasMedia
     {
         return LogOptions::defaults()
             ->logAll()
-            ->logExcept(['id', 'content', 'updated_at', 'created_at'])
+            ->logExcept(['id', 'updated_at', 'created_at'])
             ->logOnlyDirty()
-            ->useLogName('news')
+            ->useLogName('comments')
             ->dontSubmitEmptyLogs()
             ->setDescriptionForEvent(function (string $eventName) {
-                return "News {$eventName}";
+                return "Comment {$eventName}";
             });
     }
 
@@ -46,18 +44,17 @@ class News extends Model implements HasMedia
         });
     }
 
-    public function registerMediaCollections(): void
+    public function commentable()
     {
-        $this->addMediaCollection('news_attachments')
-        ->singleFile();
+        return $this->morphTo();
     }
 
-    public function user() {
-        return $this->belongsTo(User::class);
+    public function replies()
+    {
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     public function publishBy() {
         return $this->belongsTo(User::class, 'published_by');
     }
-
 }

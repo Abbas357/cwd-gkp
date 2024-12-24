@@ -44,9 +44,16 @@ class EventsController extends Controller
             'description' => $event->description,
             'views_count' => $event->views_count,
             'images' => $mediaUrls,
+            'comments' => $event->comments()->whereNull('parent_id')->with('replies')->get(),
         ];
 
-        $event->increment('views_count');
+        $ipAddress = request()->ip();
+        $sessionKey = 'event_' . $event->id . '_' . md5($ipAddress);
+
+        if (!session()->has($sessionKey)) {
+            $event->increment('views_count');
+            session()->put($sessionKey, true);
+        }
 
         return view('site.events.show', compact('eventData'));
     }

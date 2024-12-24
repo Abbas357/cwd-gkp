@@ -67,9 +67,16 @@ class TenderController extends Controller
             'tender_eoi_documents' => $tenderEoiDocuments,
             'bidding_documents' => $biddingDocuments,
             'views_count' => $tender->views_count,
+            'comments' => $tender->comments()->whereNull('parent_id')->with('replies')->get(),
         ];
 
-        $tender->increment('views_count');
+        $ipAddress = request()->ip();
+        $sessionKey = 'tender_' . $tender->id . '_' . md5($ipAddress);
+
+        if (!session()->has($sessionKey)) {
+            $tender->increment('views_count');
+            session()->put($sessionKey, true);
+        }
 
         return view('site.tenders.show', compact('tenderData'));
     }

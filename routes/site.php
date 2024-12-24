@@ -9,17 +9,18 @@ use App\Http\Controllers\Site\StoryController;
 use App\Http\Controllers\Site\EventsController;
 use App\Http\Controllers\Site\SearchController;
 use App\Http\Controllers\Site\SliderController;
+use App\Http\Controllers\Site\TenderController;
+use App\Http\Controllers\Site\CommentController;
 use App\Http\Controllers\Site\GalleryController;
 use App\Http\Controllers\Site\ProjectController;
 use App\Http\Controllers\Site\DownloadController;
+use App\Http\Controllers\Site\SeniorityController;
 use App\Http\Controllers\Site\NewsLetterController;
+use App\Http\Controllers\Site\ServiceCardController;
 use App\Http\Controllers\Site\PublicContactController;
 use App\Http\Controllers\Site\EStandardizationController;
-use App\Http\Controllers\Site\ContractorRegistrationController;
 use App\Http\Controllers\Site\DevelopmentProjectController;
-use App\Http\Controllers\Site\SeniorityController;
-use App\Http\Controllers\Site\ServiceCardController;
-use App\Http\Controllers\Site\TenderController;
+use App\Http\Controllers\Site\ContractorRegistrationController;
 
 Route::prefix('partials')->as('partials.')->group(function () {
     Route::get('/slider', [HomeController::class, 'sliderPartial'])->name('slider');
@@ -128,4 +129,8 @@ Route::get('/search', [SearchController::class, 'search'])->name('search');
 Route::prefix('notifications')->as('notifications.')->group(function () {
     Route::get('/all', [HomeController::class, 'allNotifications'])->name('index');
     Route::get('/', [HomeController::class, 'notifications'])->name('get');
+});
+
+Route::prefix('comments')->as('comments.')->group(function () {
+    Route::post('/{type}/{id}', [CommentController::class, 'store'])->name('store');
 });

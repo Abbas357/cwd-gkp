@@ -71,9 +71,16 @@ class DevelopmentProjectController extends Controller
             'status' => $project->status,
             'views_count' => $project->views_count,
             'images' => $mediaUrls,
+            'comments' => $project->comments()->whereNull('parent_id')->with('replies')->get(),
         ];
 
-        $project->increment('views_count');
+        $ipAddress = request()->ip();
+        $sessionKey = 'adp_' . $project->id . '_' . md5($ipAddress);
+
+        if (!session()->has($sessionKey)) {
+            $project->increment('views_count');
+            session()->put($sessionKey, true);
+        }
 
         return view('site.dev_projects.show', compact('projectData'));
     }

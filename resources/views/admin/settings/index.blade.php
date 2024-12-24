@@ -36,8 +36,6 @@
                                     @enderror
                                 </div>
 
-                                
-
                                 <div class="col-md-12 mb-4">
                                     <label for="contact_address">Contact Address</label>
                                     <input type="text" class="form-control" id="contact_address" value="{{ old('contact_address',  $settings->contact_address) }}" name="contact_address" required>
@@ -53,6 +51,18 @@
                                         <option value="1" {{ $settings->maintenance_mode ===1 ? 'selected' : '' }}>On</option>
                                     </select>
                                     @error('maintenance_mode')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-12 mb-4">
+                                    <label for="cache">Cache Management</label>
+                                    <select class="form-select" id="cache" name="cache">
+                                        <option value="">Choose ...</option>
+                                        <option value="create" {{ $settings->cache === 0 ? 'selected' : '' }}>Create Cache</option>
+                                        <option value="clear" {{ $settings->cache ===1 ? 'selected' : '' }}>Clear Cache</option>
+                                    </select>
+                                    @error('cache')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>

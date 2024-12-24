@@ -23,7 +23,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
             $table->timestamp('published_at')->nullable();
-            $table->foreignId('published_by')->nullable()->constrained('users');
+            $table->foreignId('published_by')->constrained('users');
             $table->unsignedBigInteger('views_count')->default(0);
             $table->timestamps();
         });

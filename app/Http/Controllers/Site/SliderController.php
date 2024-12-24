@@ -22,10 +22,17 @@ class SliderController extends Controller
                 'medium' => $slider->getFirstMediaUrl('sliders', 'medium'),
                 'large' => $slider->getFirstMediaUrl('sliders', 'large'),
                 'original' => $slider->getFirstMediaUrl('sliders')
-            ]
+            ],
+            'comments' => $slider->comments()->whereNull('parent_id')->with('replies')->get(),
         ];
 
-        $slider->increment('views_count');
+        $ipAddress = request()->ip();
+        $sessionKey = 'slider_' . $slider->id . '_' . md5($ipAddress);
+
+        if (!session()->has($sessionKey)) {
+            $slider->increment('views_count');
+            session()->put($sessionKey, true);
+        }
 
         return view('site.sliders.show', compact('sliderData'));
     }

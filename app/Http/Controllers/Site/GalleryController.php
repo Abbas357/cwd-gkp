@@ -44,9 +44,16 @@ class GalleryController extends Controller
             'images' => $gallery->getMedia('gallery')->map(function ($media) {
                 return $media->getUrl();
             })->toArray() ?: [asset('admin/images/no-image.jpg')],
+            'comments' => $gallery->comments()->whereNull('parent_id')->with('replies')->get(),
         ];
 
-        $gallery->increment('views_count');
+        $ipAddress = request()->ip();
+        $sessionKey = 'gallery_' . $gallery->id . '_' . md5($ipAddress);
+
+        if (!session()->has($sessionKey)) {
+            $gallery->increment('views_count');
+            session()->put($sessionKey, true);
+        }
 
         return view('site.gallery.show', compact('galleryData'));
     }

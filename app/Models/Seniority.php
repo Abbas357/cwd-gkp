@@ -8,13 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\HasComments;
 
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Seniority extends Model implements HasMedia
 {
-    use HasFactory, LogsActivity, InteractsWithMedia;
+    use HasFactory, LogsActivity, InteractsWithMedia, HasComments;
 
     protected $guarded = [];
 

@@ -20,6 +20,7 @@ class SeniorityController extends Controller
         $mediaUrl = $seniority->getFirstMediaUrl('seniorities');
 
         $seniorityData = [
+            'id' => $seniority->id,
             'title' => $seniority->title,
             'designation' => $seniority->designation,
             'bps' => $seniority->bps,
@@ -28,9 +29,16 @@ class SeniorityController extends Controller
             'status' => $seniority->status,
             'views_count' => $seniority->views_count,
             'attachment' => $mediaUrl,
+            'comments' => $seniority->comments()->whereNull('parent_id')->with('replies')->get(),
         ];
 
-        $seniority->increment('views_count');
+        $ipAddress = request()->ip();
+        $sessionKey = 'seniority_' . $seniority->id . '_' . md5($ipAddress);
+
+        if (!session()->has($sessionKey)) {
+            $seniority->increment('views_count');
+            session()->put($sessionKey, true);
+        }
 
         return view('site.seniority.show', compact('seniorityData'));
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Site;
 use App\Models\News;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 
 class NewsController extends Controller
 {
@@ -48,9 +49,16 @@ class NewsController extends Controller
             'file_url' => $mediaUrl,
             'file_type' => $mediaType,
             'views_count' => $news->views_count,
+            'comments' => $news->comments()->whereNull('parent_id')->with('replies')->get(),
         ];
 
-        $news->increment('views_count');
+        $ipAddress = request()->ip();
+        $sessionKey = 'news_' . $news->id . '_' . md5($ipAddress);
+
+        if (!session()->has($sessionKey)) {
+            $news->increment('views_count');
+            session()->put($sessionKey, true);
+        }
 
         return view('site.news.show', compact('newsData'));
     }

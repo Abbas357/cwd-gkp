@@ -10,6 +10,7 @@ use App\Http\Controllers\StoryController;
 use App\Http\Controllers\SchemeController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\TenderController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
@@ -287,6 +288,16 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{district}', [DistrictController::class, 'destroy'])->name('destroy');
         });
 
+        Route::prefix('comments')->as('comments.')->group(function () {
+            Route::get('/', [CommentController::class, 'index'])->name('index');
+            Route::get('/{comment}', [CommentController::class, 'show'])->name('show');
+            Route::get('/get/{comment}', [CommentController::class, 'showDetail'])->name('detail');
+            Route::patch('/publish/{comment}', [CommentController::class, 'publishComment'])->name('publish');
+            Route::patch('/archive/{comment}', [CommentController::class, 'archiveComment'])->name('archive');
+            Route::delete('/{comment}', [CommentController::class, 'destroy'])->name('destroy');
+        });
+
         Route::get('/logs', ActivityLogController::class)->name('logs');
+
     });
 });

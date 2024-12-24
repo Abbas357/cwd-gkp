@@ -27,7 +27,13 @@ class PageController extends Controller
             'attachments' => $mediaUrls,
         ];
 
-        $page->increment('views_count');
+        $ipAddress = request()->ip();
+        $sessionKey = 'page_' . $page->id . '_' . md5($ipAddress);
+
+        if (!session()->has($sessionKey)) {
+            $page->increment('views_count');
+            session()->put($sessionKey, true);
+        }
 
         return view('site.pages.show', compact('pageData'));
     }
