@@ -13,13 +13,17 @@ return new class extends Migration
             $table->longText('body');
             $table->string('name');
             $table->string('email')->nullable();
-            $table->morphs('commentable');
+            $table->string('commentable_type', 191); // Limit to 191 characters
+            $table->unsignedBigInteger('commentable_id');
             $table->foreignId('parent_id')->references('id')->on('comments')->onDelete('cascade');
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
             $table->timestamp('published_at')->nullable();
             $table->foreignId('published_by')->nullable()->constrained('users');
             $table->timestamps();
+        
+            $table->index(['commentable_type', 'commentable_id'], 'comments_commentable_index');
         });
+        
     }
 
     public function down(): void
