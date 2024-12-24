@@ -267,4 +267,11 @@
         </div>
     </div>
     @endif
+    @if (session('error'))
+    <div class="container d-flex justify-content-center pt-2 bg-light">
+        <div class="alert alert-warning">
+            {{ session('error') }}
+        </div>
+    </div>
+    @endif
 </header>

@@ -136,23 +136,24 @@
                         <p class="mb-0">{{ $comment->body }}</p>
 
                         <!-- Reply Button -->
-                        <button class="btn btn-link p-0 mt-2" data-bs-toggle="collapse" data-bs-target="#replyForm-{{ $comment->id }}">Reply</button>
+                        <button class="btn p-1 pb-0 mt-1"><i class="bi-hand-thumbs-up"></i></button>
+                        <button class="btn p-1 pb-0 mt-1"><i class="bi-hand-thumbs-down"></i></button>
+                        <button class="btn p-1 pb-0 mt-1" data-bs-toggle="collapse" data-bs-target="#replyForm-{{ $comment->id }}">Reply</button>
 
                         <!-- Reply Form (Initially Hidden) -->
                         <div id="replyForm-{{ $comment->id }}" class="collapse mt-3">
                             <form class="needs-validation" method="POST" action="{{ route('comments.store', ['type' => 'Event', 'id' => $eventData['id']]) }}" novalidate>
                                 @csrf
-                                <div class="mb-3">
-                                    <input type="text" name="name" class="form-control" placeholder="Your Name" required />
+                                <div class="mb-3 d-flex justify-content-between gap-3 inputs d-none">
+                                    <input type="text" name="name" class="form-control" placeholder="Your Name" required style="flex: 1;" />
+                                    <input type="email" name="email" class="form-control" placeholder="Your Email" style="flex: 1;" />
                                 </div>
                                 <div class="mb-3">
-                                    <input type="email" name="email" class="form-control" placeholder="Your Email" required />
-                                </div>
-                                <div class="mb-3">
-                                    <textarea name="body" class="form-control" rows="3" placeholder="Your Reply" required></textarea>
+                                    <textarea name="body" class="form-control comment-body" rows="2" placeholder="Your Reply" required></textarea>
                                 </div>
                                 <input type="hidden" name="parent_id" value="{{ $comment->id }}" />
-                                <button type="submit" class="btn btn-primary">Post Reply</button>
+                                <button type="reset" class="btn btn-light close-form d-none">Cancel</button>
+                                <button type="submit" class="cw-btn">Post Reply</button>
                             </form>
                         </div>
                     </div>
@@ -183,15 +184,16 @@
         <!-- Main Comment Form -->
         <form class="container needs-validation p-2" method="POST" action="{{ route('comments.store', ['type' => 'Event', 'id' => $eventData['id']]) }}" novalidate>
             @csrf
-            <div class="mb-3 d-flex justify-content-between gap-3">
+            <div class="mb-3 d-flex justify-content-between gap-3 inputs d-none">
                 <input type="text" name="name" class="form-control" placeholder="Your Name" required style="flex: 1;" />
                 <input type="email" name="email" class="form-control" placeholder="Your Email" style="flex: 1;" />
             </div>
             <div class="mb-3">
-                <textarea name="body" class="form-control" rows="3" placeholder="Your Comment" required></textarea>
+                <textarea name="body" class="form-control comment-body" rows="2" placeholder="Your Comment" required></textarea>
             </div>
             <input type="hidden" name="parent_id" value="" />
-            <button type="submit" class="btn btn-primary">Post Comment</button>
+            <button type="reset" class="btn btn-light close-form d-none">Cancel</button>
+            <button type="submit" class="cw-btn"><i class="bi-send"></i> &nbsp; Comment</button>
         </form>
     </div>
 
@@ -215,6 +217,16 @@
 
                 form.classList.add('was-validated')
             }, false)
+        });
+
+        $('.comment-body').on('focus', function() {
+            $(this).closest('form').find('.inputs').removeClass('d-none');
+            $(this).closest('form').find('.close-form').removeClass('d-none');
+        });
+
+        $('.close-form').on('click', function() {
+            $(this).closest('form').find('.inputs').addClass('d-none');
+            $(this).addClass('d-none');
         });
 
 

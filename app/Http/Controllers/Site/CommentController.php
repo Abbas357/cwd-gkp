@@ -18,6 +18,13 @@ class CommentController extends Controller
 
         $model = $class::findOrFail($id);
 
+        $ipAddress = request()->ip();
+        $sessionKey = "comment_{$type}_{$id}_" . md5($ipAddress);
+
+        if (session()->has($sessionKey)) {
+            return redirect()->back()->with(['error' => 'Nope! You have already posted a comment for this item. Sorry']);
+        }
+
         $model->addComment([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
@@ -25,6 +32,8 @@ class CommentController extends Controller
             'parent_id' => $request->input('parent_id'),
         ]);
 
-        return redirect()->back()->with(['success' => 'Comment added successfully, it will be visible after moderation. Thank you!']);
+        session()->put($sessionKey, true);
+
+        return redirect()->back()->with(['success' => 'Your comment is under review and will be visible after moderation. You’ll be notified upon publication. Thank you!']);
     }
 }
