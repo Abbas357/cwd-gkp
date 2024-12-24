@@ -172,6 +172,10 @@
                 <i class="bi bi-chat" style="color: #000000"></i>
                 <p>Comments</p>
             </a>
+            <a href="{{ route('admin.schemes.index') }}" class="app-tile">
+                <i class="bi bi-building" style="color: #028be1"></i>
+                <p>Schemes</p>
+            </a>
         </div>
     </div>
     <audio id="hoverSound" src="{{ asset('admin/click.wav') }}" preload="auto"></audio>

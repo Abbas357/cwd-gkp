@@ -11,13 +11,11 @@
             <div class="row">
                 <div class="col-md-6 mb-4">
                     <label for="year">Year</label>
-                    <select class="form-select form-select-md filter-field" id="year" name="year">
+                    <select class="form-select form-select-md filter-field" name="year" id="year">
                         <option value="">Select Year</option>
-                        <option value="2020">2020</option>
-                        <option value="2021">2021</option>
-                        <option value="2022">2022</option>
-                        <option value="2023">2023</option>
-                        <option value="2024">2024</option>
+                        @foreach (getYears() as $year)
+                        <option value="{{ $year }}">{{ $year }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-md-6 mb-3">
