@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('schemes', function (Blueprint $table) {
             $table->id();
             $table->integer('adp_number')->nullable();
-            $table->string('scheme_code', 191)->unique();
-            $table->string('scheme_name', 191)->nullable();
-            $table->string('sector_name', 191)->nullable();
-            $table->string('sub_sector_name', 191)->unique();
+            $table->string('scheme_code', 191);
+            $table->year('year')->nullable();
+            $table->text('-')->nullable();
+            $table->string('sector_name')->nullable();
+            $table->string('sub_sector_name', 191)->nullable();
             $table->decimal('local_cost', 15, 3)->nullable();
             $table->decimal('foreign_cost', 15, 3)->nullable();
             $table->decimal('previous_expenditure', 15, 3)->nullable();
@@ -30,6 +31,8 @@ return new class extends Migration
             $table->decimal('prog_releases', 15, 3)->nullable();
             $table->decimal('progressive_exp', 15, 3)->nullable();
             $table->timestamps();
+
+            $table->unique(['scheme_code', 'year']);
         });
     }
 

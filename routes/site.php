@@ -21,6 +21,7 @@ use App\Http\Controllers\Site\PublicContactController;
 use App\Http\Controllers\Site\EStandardizationController;
 use App\Http\Controllers\Site\DevelopmentProjectController;
 use App\Http\Controllers\Site\ContractorRegistrationController;
+use App\Http\Controllers\Site\SchemeController;
 
 Route::prefix('partials')->as('partials.')->group(function () {
     Route::get('/slider', [HomeController::class, 'sliderPartial'])->name('slider');
@@ -125,7 +126,6 @@ Route::prefix('projects')->as('projects.')->group(function () {
 Route::get('/team', [UserController::class, 'team'])->name('team');
 Route::get('/search', [SearchController::class, 'search'])->name('search');
 
-
 Route::prefix('notifications')->as('notifications.')->group(function () {
     Route::get('/all', [HomeController::class, 'allNotifications'])->name('index');
     Route::get('/', [HomeController::class, 'notifications'])->name('get');
@@ -133,4 +133,9 @@ Route::prefix('notifications')->as('notifications.')->group(function () {
 
 Route::prefix('comments')->as('comments.')->group(function () {
     Route::post('/{type}/{id}', [CommentController::class, 'store'])->name('store');
+});
+
+Route::prefix('schemes')->as('schemes.')->group(function () {
+    Route::get('/', [SchemeController::class, 'index'])->name('index');
+    Route::get('/{scheme}', [SchemeController::class, 'show'])->name('show');
 });

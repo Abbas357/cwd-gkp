@@ -191,6 +191,12 @@
                                         </li>
                                     </ul>
                                 </li>
+                                <li role="none" data-tier-id="2">
+                                    <a href="{{ route('development_projects.index') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="2" tabindex="0">PSDP</a>
+                                </li>
+                                <li role="none" data-tier-id="2">
+                                    <a href="{{ route('schemes.index') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="2" tabindex="0">SCHEMES</a>
+                                </li>
                             </ul>
                         </li>
                         <li role="none" class="cw-top-menu child-nav" data-tier-id="2">

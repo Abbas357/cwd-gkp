@@ -100,7 +100,7 @@
                                     @csrf
                                     <div class="mb-3 d-flex justify-content-between gap-3 inputs d-none">
                                         <input type="text" name="name" class="form-control" placeholder="Your Name" required style="flex: 1;" />
-                                        <input type="email" name="email" class="form-control" placeholder="Your Email" style="flex: 1;" />
+                                        <input type="email" name="email" class="form-control" placeholder="Your Email" required style="flex: 1;" />
                                     </div>
                                     <div class="mb-3">
                                         <textarea name="body" class="form-control comment-body" rows="2" placeholder="Your Reply" required></textarea>
@@ -140,7 +140,7 @@
                 @csrf
                 <div class="mb-3 d-flex justify-content-between gap-3 inputs d-none">
                     <input type="text" name="name" class="form-control" placeholder="Your Name" required style="flex: 1;" />
-                    <input type="email" name="email" class="form-control" placeholder="Your Email" style="flex: 1;" />
+                    <input type="email" name="email" class="form-control" placeholder="Your Email" required style="flex: 1;" />
                 </div>
                 <div class="mb-3">
                     <textarea name="body" class="form-control comment-body" rows="2" placeholder="Your Comment" required></textarea>
@@ -150,20 +150,6 @@
                 <button type="submit" class="cw-btn"><i class="bi-send"></i> &nbsp; Comment</button>
             </form>
         </div>
-
-        <!-- Main Comment Form -->
-        <form class="needs-validation p-2" method="POST" action="{{ route('comments.store', ['type' => 'News', 'id' => $newsData['id']]) }}" novalidate>
-            @csrf
-            <div class="mb-3 d-flex justify-content-between gap-3">
-                <input type="text" name="name" class="form-control" placeholder="Your Name" required style="flex: 1;" />
-                <input type="email" name="email" class="form-control" placeholder="Your Email" style="flex: 1;" />
-            </div>
-            <div class="mb-3">
-                <textarea name="body" class="form-control" rows="3" placeholder="Your Comment" required></textarea>
-            </div>
-            <input type="hidden" name="parent_id" value="" />
-            <button type="submit" class="btn btn-primary">Post Comment</button>
-        </form>
     </div>
 
     @push('script')
@@ -183,11 +169,13 @@
 
             $('.comment-body').on('focus', function() {
                 $(this).closest('form').find('.inputs').removeClass('d-none');
+                $(this).attr('rows', 5);
                 $(this).closest('form').find('.close-form').removeClass('d-none');
             });
 
             $('.close-form').on('click', function() {
                 $(this).closest('form').find('.inputs').addClass('d-none');
+                $(this).closest('form').find('.comment-body').hide().attr('rows', 2).show();
                 $(this).addClass('d-none');
             });
 

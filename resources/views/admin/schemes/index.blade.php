@@ -32,17 +32,23 @@
         <thead>
             <tr>
                 <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Name</th>
-                <th scope="col" class="p-3">Commencement Date</th>
-                <th scope="col" class="p-3">Total Cost (Millions)</th>
-                <th scope="col" class="p-3">District</th>
-                <th scope="col" class="p-3">Chief Engineer</th>
-                <th scope="col" class="p-3">Progress Percentage</th>
-                <th scope="col" class="p-3">Year of Completion</th>
-                <th scope="col" class="p-3">Uploaded By</th>
-                <th scope="col" class="p-3">Created At</th>
-                <th scope="col" class="p-3">Updated At</th>
-                <th scope="col" class="p-3">Actions</th>
+                <th scope="col" class="p-3">ADP Number</th>
+                <th scope="col" class="p-3">Scheme Code</th>
+                <th scope="col" class="p-3">Year</th>
+                <th scope="col" class="p-3">Scheme Name</th>
+                <th scope="col" class="p-3">Sector Name</th>
+                <th scope="col" class="p-3">Sub Sector Name</th>
+                <th scope="col" class="p-3">Local Cost</th>
+                <th scope="col" class="p-3">Foreign Cost</th>
+                <th scope="col" class="p-3">Previous Expenditure</th>
+                <th scope="col" class="p-3">Capital Allocation</th>
+                <th scope="col" class="p-3">Revenue Allocation</th>
+                <th scope="col" class="p-3">Total Allocation</th>
+                <th scope="col" class="p-3">F Allocation</th>
+                <th scope="col" class="p-3">TF</th>
+                <th scope="col" class="p-3">Revised Allocation</th>
+                <th scope="col" class="p-3">Prog Release</th>
+                <th scope="col" class="p-3">Progressive Expenditure</th>
             </tr>
         </thead>
         <tbody>
@@ -98,50 +104,78 @@
 
         $(document).ready(function() {
             var table = initDataTable('#schemes-datatable', {
-                ajaxUrl: "{{ route('admin.development_projects.index') }}"
+                ajaxUrl: "{{ route('admin.schemes.index') }}"
                 , columns: [{
                         data: "id"
                         , searchBuilderType: "num"
                     }
                     , {
-                        data: "name"
+                        data: "adp_number"
+                        , searchBuilderType: "num"
+                    }
+                    , {
+                        data: "scheme_code"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "commencement_date"
+                        data: "year"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "total_cost"
+                        data: "scheme_name"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "district"
+                        data: "sector_name"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "chief_engineer"
+                        data: "sub_sector_name"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "progress_percentage"
+                        data: "local_cost"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "year_of_completion"
+                        data: "foreign_cost"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "uploaded_by"
+                        data: "previous_expenditure"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "created_at"
-                        , searchBuilderType: "date"
+                        data: "capital_allocation"
+                        , searchBuilderType: "string"
                     }
                     , {
-                        data: "updated_at"
-                        , searchBuilderType: "date"
+                        data: "revenue_allocation"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "total_allocation"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "f_allocation"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "tf"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "revised_allocation"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "prog_releases"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "progressive_exp"
+                        , searchBuilderType: "string"
                     }
                     , {
                         data: 'action'
@@ -157,57 +191,17 @@
                     , visible: false
                 }]
                 , customButton: {
-                    text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Dev. Project</span>`
+                    text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Sync Schemes</span>`
                     , action: function(e, dt, node, config) {
-                        window.location.href = "{{ route('admin.development_projects.create') }}";
+                        window.location.href = "{{ route('admin.schemes.sync') }}";
                     }
                 , }
             });
 
             dynamicFilterNavigator({
                 table: table,
-                dataTableUrl: "{{ route('admin.development_projects.index') }}",
+                dataTableUrl: "{{ route('admin.schemes.index') }}",
                 filterSelector: ".filter-field",
-            });
-
-            $("#schemes-datatable").on('click', '.publish-btn', async function() {
-                const dev_projectId = $(this).data("id");
-                const message = $(this).data("type");
-                const url = "{{ route('admin.development_projects.publish', ':id') }}".replace(':id', dev_projectId);
-
-                const result = await confirmAction(`Do you want to ${message} this Project?`);
-                if (result && result.isConfirmed) {
-                    const success = await fetchRequest(url, 'PATCH');
-                    if (success) {
-                        $("#schemes-datatable").DataTable().ajax.reload();
-                    }
-                }
-            });
-
-            $("#schemes-datatable").on('click', '.archive-btn', async function() {
-                const dev_projectId = $(this).data("id");
-                const url = "{{ route('admin.development_projects.archive', ':id') }}".replace(':id', dev_projectId);
-
-                const result = await confirmAction(`Do you want to archive this Project?`);
-                if (result && result.isConfirmed) {
-                    const success = await fetchRequest(url, 'PATCH');
-                    if (success) {
-                        $("#schemes-datatable").DataTable().ajax.reload();
-                    }
-                }
-            });
-
-            $("#schemes-datatable").on('click', '.delete-btn', async function() {
-                const projectsId = $(this).data("id");
-                const url = "{{ route('admin.development_projects.destroy', ':id') }}".replace(':id', projectsId);
-
-                const result = await confirmAction(`Do you want to delete this projects?`);
-                if (result && result.isConfirmed) {
-                    const success = await fetchRequest(url, 'DELETE');
-                    if (success) {
-                        $("#schemes-datatable").DataTable().ajax.reload();
-                    }
-                }
             });
 
             $('#schemes-datatable').colResizable({
@@ -220,7 +214,7 @@
             , });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.development_projects.detail', ':id') }}"
+                fetchUrl: "{{ route('admin.schemes.detail', ':id') }}"
                 , btnSelector: '.view-btn'
                 , title: 'Schemes Details'
                 , modalSize: 'lg'

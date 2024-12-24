@@ -20,6 +20,17 @@ function categoryType()
     ];
 }
 
+function getYears() {
+    $currentYear = (int)date('Y');
+    $years = [];
+
+    for ($year = 2000; $year <= $currentYear; $year++) {
+        $years[] = $year;
+    }
+
+    return $years;
+}
+
 function getDocumentIcon($mimeType)
 {
     switch (strtolower($mimeType)) {

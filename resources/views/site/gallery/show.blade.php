@@ -72,7 +72,7 @@
                                 @csrf
                                 <div class="mb-3 d-flex justify-content-between gap-3 inputs d-none">
                                     <input type="text" name="name" class="form-control" placeholder="Your Name" required style="flex: 1;" />
-                                    <input type="email" name="email" class="form-control" placeholder="Your Email" style="flex: 1;" />
+                                    <input type="email" name="email" class="form-control" placeholder="Your Email" required style="flex: 1;" />
                                 </div>
                                 <div class="mb-3">
                                     <textarea name="body" class="form-control comment-body" rows="2" placeholder="Your Reply" required></textarea>
@@ -112,7 +112,7 @@
             @csrf
             <div class="mb-3 d-flex justify-content-between gap-3 inputs d-none">
                 <input type="text" name="name" class="form-control" placeholder="Your Name" required style="flex: 1;" />
-                <input type="email" name="email" class="form-control" placeholder="Your Email" style="flex: 1;" />
+                <input type="email" name="email" class="form-control" placeholder="Your Email" required style="flex: 1;" />
             </div>
             <div class="mb-3">
                 <textarea name="body" class="form-control comment-body" rows="2" placeholder="Your Comment" required></textarea>
@@ -147,11 +147,13 @@
 
             $('.comment-body').on('focus', function() {
                 $(this).closest('form').find('.inputs').removeClass('d-none');
+                $(this).attr('rows', 5);
                 $(this).closest('form').find('.close-form').removeClass('d-none');
             });
 
             $('.close-form').on('click', function() {
                 $(this).closest('form').find('.inputs').addClass('d-none');
+                $(this).closest('form').find('.comment-body').hide().attr('rows', 2).show();
                 $(this).addClass('d-none');
             });
 

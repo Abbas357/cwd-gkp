@@ -63,7 +63,7 @@
 
                             <!-- Filter Buttons -->
                             <div class="col-lg-12 text-end">
-                                <button type="submit" class="btn-animate">
+                                <button type="submit" class="cw-btn">
                                     <i class="bi bi-funnel"></i> Apply Filters
                                 </button>
                                 <a href="{{ route('development_projects.index') }}" class="btn btn-light">
@@ -101,7 +101,7 @@
                     <td>{{ isset($project->progress_percentage) ? $project->progress_percentage . '%' : '' }}</td>
                     <td>{{ $project->status ?? '' }}</td>
                     <td>
-                        <a href="{{ route('development_projects.show', $project->slug) }}" class="btn btn-sm btn-primary fs-6" style="white-space: nowrap"><i class="bi-eye"></i> View</a>
+                        <a href="{{ route('development_projects.show', $project->slug) }}" class="cw-btn" style="white-space: nowrap"><i class="bi-eye"></i> View</a>
                     </td>
                 </tr>
                 @endforeach

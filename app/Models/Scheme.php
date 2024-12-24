@@ -12,6 +12,7 @@ class Scheme extends Model
     protected $fillable = [
         'adp_number',
         'scheme_code',
+        'year',
         'scheme_name',
         'sector_name',
         'sub_sector_name',
