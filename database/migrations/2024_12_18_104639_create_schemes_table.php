@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('adp_number')->nullable();
             $table->string('scheme_code', 191);
             $table->year('year')->nullable();
-            $table->text('-')->nullable();
+            $table->text('scheme_name')->nullable();
             $table->string('sector_name')->nullable();
             $table->string('sub_sector_name', 191)->nullable();
             $table->decimal('local_cost', 15, 3)->nullable();

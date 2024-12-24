@@ -29,8 +29,8 @@
         .app-tile {
             background-color: #f1f1f1;
             padding: .7rem 0;
-            border-radius: 8px;
-            box-shadow:  5px 5px 1px rgba(0, 0, 0, 0.3);
+            border-radius: .9rem;
+            box-shadow:  5px 5px 3px rgba(0, 0, 0, 0.2);
             text-align: center;
             cursor: pointer;
             position: relative;
@@ -167,6 +167,10 @@
             <a href="{{ route('admin.development_projects.index') }}" class="app-tile">
                 <i class="bi bi-buildings" style="color: #0096a0"></i>
                 <p>Dev. Projects</p>
+            </a>
+            <a href="{{ route('admin.comments.index') }}" class="app-tile">
+                <i class="bi bi-chat" style="color: #000000"></i>
+                <p>Comments</p>
             </a>
         </div>
     </div>

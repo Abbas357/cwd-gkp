@@ -24,7 +24,7 @@ function getYears() {
     $currentYear = (int)date('Y');
     $years = [];
 
-    for ($year = 2000; $year <= $currentYear; $year++) {
+    for ($year = $currentYear; $year >= 2000; $year--) {
         $years[] = $year;
     }
 

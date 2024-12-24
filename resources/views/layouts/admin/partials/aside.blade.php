@@ -58,6 +58,7 @@
                     <li><a href="{{ route('admin.projects.index') }}"><i class="bi-kanban fs-6"></i>&nbsp; Projects</a></li>
                     <li><a href="{{ route('admin.project_files.index') }}"><i class="bi-folder fs-6"></i>&nbsp; Project Files</a></li>
                     <li><a href="{{ route('admin.development_projects.index') }}"><i class="bi-buildings fs-6"></i>&nbsp; Dev. Projects</a></li>
+                    <li><a href="{{ route('admin.schemes.index') }}"><i class="bi-buildings fs-6"></i>&nbsp; Schemes</a></li>
                 </ul>
             </li>
             <li>

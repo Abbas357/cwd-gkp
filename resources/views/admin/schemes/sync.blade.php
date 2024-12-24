@@ -18,13 +18,11 @@
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <label for="year">Year</label>
-                                    <select class="form-select form-select-md" id="year" name="year" required>
+                                    <select name="year" id="year" class="form-select form-select-md" required>
                                         <option value="">Select Year</option>
-                                        <option value="2020">2020</option>
-                                        <option value="2021">2021</option>
-                                        <option value="2022">2022</option>
-                                        <option value="2023">2023</option>
-                                        <option value="2024">2024</option>
+                                        @foreach (getYears() as $year)
+                                        <option value="{{ $year }}">{{ $year }}</option>
+                                        @endforeach
                                     </select>
                                     @error('year')
                                     <div class="text-danger">{{ $message }}</div>
@@ -32,7 +30,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="scheme_code">Scheme Code</label>
-                                    <input type="text" class="form-control" id="scheme_code" value="{{ old('scheme_code') }}" placeholder="Page scheme_code" name="scheme_code">
+                                    <input type="text" class="form-control" id="scheme_code" value="{{ old('scheme_code') }}" placeholder="eg. 23774389" name="scheme_code">
                                     @error('scheme_code')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
