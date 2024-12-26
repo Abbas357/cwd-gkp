@@ -102,7 +102,7 @@
                     <td>{{ $scheme->revenue_allocation ?? '' }}</td>
                     <td>{{ $scheme->total_allocation ?? '' }}</td>
                     <td>
-                        <a href="{{ route('schemes.show', $scheme->id) }}" class="cw-btn" style="white-space: nowrap"><i class="bi-eye"></i> View</a>
+                        <a href="{{ route('schemes.show', $scheme->uuid) }}" class="cw-btn" style="white-space: nowrap"><i class="bi-eye"></i> View</a>
                     </td>
                 </tr>
                 @endforeach

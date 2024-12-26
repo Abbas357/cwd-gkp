@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('schemes', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique()->nullable();
             $table->integer('adp_number')->nullable();
             $table->string('scheme_code', 191);
             $table->year('year')->nullable();

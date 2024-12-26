@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Scheme;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Http;
@@ -75,6 +76,7 @@ class SchemeController extends Controller
                         'year' => $year,
                     ],
                     [
+                        'uuid' => Str::uuid(),
                         'adp_number' => $scheme['ADPNumber'],
                         'scheme_name' => $scheme['SchemeName'],
                         'sector_name' => $scheme['SectorName'],

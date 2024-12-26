@@ -10,6 +10,7 @@ class Scheme extends Model
     use HasFactory;
 
     protected $fillable = [
+        'uuid',
         'adp_number',
         'scheme_code',
         'year',

@@ -38,9 +38,9 @@ class SchemeController extends Controller
         return view('site.schemes.index', compact('schemes'));
     }
 
-    public function show($id)
+    public function show($slug)
     {
-        $scheme = Scheme::where('id', $id)->firstOrFail();
+        $scheme = Scheme::where('uuid', $slug)->firstOrFail();
 
         return view('site.schemes.show', compact('scheme'));
     }
