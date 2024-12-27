@@ -8,12 +8,8 @@ use Illuminate\Http\Request;
 
 use Yajra\DataTables\DataTables;
 use Spatie\Permission\Models\Role;
-use Endroid\QrCode\Builder\Builder;
 
-use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Endroid\QrCode\Encoding\Encoding;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;

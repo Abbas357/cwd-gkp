@@ -45,6 +45,27 @@ class Tender extends Model implements HasMedia
         static::addGlobalScope('published', function (Builder $builder) {
             $builder->where('status', 'published')->whereNotNull('published_at');
         });
+
+        static::created(function ($tender) {
+            SiteNotification::create([
+                'title' => $tender->title,
+                'url' => route('tenders.show', $tender->slug, false),
+                'notifiable_id' => $tender->id,
+                'notifiable_type' => get_class($tender),
+            ]);
+        });
+
+        static::updated(function ($tender) {
+            if ($tender->isDirty('status')) {
+                $tender->notifications()->withoutGlobalScopes()->update([
+                    'published_at' => $tender->status === 'published' ? $tender->published_at : null,
+                ]);
+            }
+        });
+
+        static::deleted(function ($tender) {
+            $tender->notifications()->withoutGlobalScopes()->delete();
+        });
     }
 
     public function registerMediaCollections(): void
@@ -60,6 +81,11 @@ class Tender extends Model implements HasMedia
 
     public function publishBy() {
         return $this->belongsTo(User::class, 'published_by');
+    }
+
+    public function notifications()
+    {
+        return $this->morphMany(SiteNotification::class, 'notifiable');
     }
 
 }

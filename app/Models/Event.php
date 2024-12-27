@@ -45,6 +45,27 @@ class Event extends Model implements HasMedia
         static::addGlobalScope('published', function (Builder $builder) {
             $builder->where('status', 'published')->whereNotNull('published_at');
         });
+
+        static::created(function ($event) {
+            SiteNotification::create([
+                'title' => $event->title,
+                'url' => route('events.show', $event->slug, false),
+                'notifiable_id' => $event->id,
+                'notifiable_type' => get_class($event),
+            ]);
+        });
+
+        static::updated(function ($event) {
+            if ($event->isDirty('status')) {
+                $event->notifications()->withoutGlobalScopes()->update([
+                    'published_at' => $event->status === 'published' ? $event->published_at : null,
+                ]);
+            }
+        });
+
+        static::deleted(function ($event) {
+            $event->notifications()->withoutGlobalScopes()->delete();
+        });
     }
 
     public function registerMediaCollections(): void
@@ -58,5 +79,10 @@ class Event extends Model implements HasMedia
 
     public function publishBy() {
         return $this->belongsTo(User::class, 'published_by');
+    }
+
+    public function notifications()
+    {
+        return $this->morphMany(SiteNotification::class, 'notifiable');
     }
 }

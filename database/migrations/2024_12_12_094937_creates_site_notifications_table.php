@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('site_notifications', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('type');
+            $table->morphs('notifiable');
             $table->string('url');
+            $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });
     }

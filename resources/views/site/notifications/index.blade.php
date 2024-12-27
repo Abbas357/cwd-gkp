@@ -63,7 +63,7 @@
 
                             <!-- Filter Buttons -->
                             <div class="col-lg-12 text-end">
-                                <button type="submit" class="btn-animate">
+                                <button type="submit" class="cw-btn">
                                     <i class="bi bi-funnel"></i> Apply Filters
                                 </button>
                                 <a href="{{ route('notifications.index') }}" class="btn btn-light">
@@ -90,9 +90,16 @@
                 <tr>
                     <td>{{ ($notifications->currentPage() - 1) * $notifications->perPage() + $loop->iteration }}</td>
                     <td>{{ $notification->title ?? '' }}</td>
-                    <td>{{ $notification->type ?? '' }}</td>
                     <td>
-                        <a href="{{ $notification->url }}" class="btn btn-sm btn-primary fs-6" style="white-space: nowrap"><i class="bi-eye"></i> View</a>
+                        @php
+                            $type = class_basename($notification->notifiable_type);
+                        @endphp
+                        {{ $type ?? '' }}
+                    </td>
+                    <td>
+                        <a href="{{ $notification->url }}" class="cw-btn fs-6" style="white-space: nowrap">
+                            <i class="bi-eye"></i> View
+                        </a>
                     </td>
                 </tr>
                 @endforeach

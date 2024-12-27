@@ -78,8 +78,7 @@ class DevelopmentProjectController extends Controller
     {
         $dev_project = new DevelopmentProject();
         $dev_project->name = $request->name;
-        $name = collect(explode(' ', $request->name))->take(5)->join(' ');
-        $dev_project->slug = Str::slug($name) . '-' . substr(uniqid(), -6) . '-' . date('d-m-Y');
+        $dev_project->slug = Str::uuid();
         $dev_project->introduction = $request->introduction;
         $dev_project->total_cost = $request->total_cost;
         $dev_project->commencement_date = $request->commencement_date;

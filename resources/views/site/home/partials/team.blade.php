@@ -24,7 +24,7 @@
             <div class="team-title-inner">
                 <h4 class="mt-4 fs-5 text-no-overflow">{{ $user['name'] }}</h4>
                 <p class="mb-2 text-no-overflow">{{ $user['position'] }}</p>
-                <a href="{{ route('positions.details', ['id' => $user['id'] ]) }}" class="cw-btn">View Detail</a>
+                <a href="{{ route('positions.details', ['uuid' => $user['uuid'] ]) }}" class="cw-btn">View Detail</a>
             </div>
         </div>
     </div>

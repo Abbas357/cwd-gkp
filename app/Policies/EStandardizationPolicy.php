@@ -4,63 +4,51 @@ namespace App\Policies;
 
 use App\Models\EStandardization;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class EStandardizationPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
     public function viewAny(User $user): bool
     {
-        //
+        return $user->can('view any standardization');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
     public function view(User $user, EStandardization $eStandardization): bool
     {
-        //
+        return $user->can('view standardization');
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
     public function create(User $user): bool
     {
-        //
+        return true;
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
     public function update(User $user, EStandardization $eStandardization): bool
     {
-        //
+        return $user->can('update standardization');
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
+    public function approve(User $user): bool
+    {
+        return $user->can('approve standardization');
+    }
+
+    public function reject(User $user): bool
+    {
+        return $user->can('reject standardization');
+    }
+
+    public function card(User $user): bool
+    {
+        return $user->can('generate standardization card');
+    }
+
+    public function renew(User $user): bool
+    {
+        return $user->can('renew standardization card');
+    }
+
     public function delete(User $user, EStandardization $eStandardization): bool
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, EStandardization $eStandardization): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, EStandardization $eStandardization): bool
-    {
-        //
+        return $user->can('delete standardization');
     }
 }

@@ -4,63 +4,51 @@ namespace App\Policies;
 
 use App\Models\Gallery;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class GalleryPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
     public function viewAny(User $user): bool
     {
-        //
+        return $user->can('view any gallery');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
     public function view(User $user, Gallery $gallery): bool
     {
-        //
+        return $user->can('view gallery');
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
     public function create(User $user): bool
     {
-        //
+        return $user->can('create gallery');
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
     public function update(User $user, Gallery $gallery): bool
     {
-        //
+        return $user->id === $gallery->user_id || $user->can('update gallery');
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
+    public function publish(User $user, Gallery $gallery): bool
+    {
+        return $user->can('publish gallery');
+    }
+
+    public function archive(User $user, Gallery $gallery): bool
+    {
+        return $user->can('archive gallery');
+    }
+
     public function delete(User $user, Gallery $gallery): bool
     {
-        //
+        return $user->can('delete gallery');
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Gallery $gallery): bool
+    public function updateField(User $user): bool
     {
-        //
+        return $user->can('update gallery field');
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Gallery $gallery): bool
+    public function uploadFile(User $user): bool
     {
-        //
+        return $user->can('upload gallery file');
     }
 }

@@ -31,6 +31,27 @@ class Seniority extends Model implements HasMedia
         static::addGlobalScope('published', function (Builder $builder) {
             $builder->where('status', 'published')->whereNotNull('published_at');
         });
+
+        static::created(function ($seniority) {
+            SiteNotification::create([
+                'title' => $seniority->title,
+                'url' => route('seniority.show', $seniority->slug, false),
+                'notifiable_id' => $seniority->id,
+                'notifiable_type' => get_class($seniority),
+            ]);
+        });
+
+        static::updated(function ($seniority) {
+            if ($seniority->isDirty('status')) {
+                $seniority->notifications()->withoutGlobalScopes()->update([
+                    'published_at' => $seniority->status === 'published' ? $seniority->published_at : null,
+                ]);
+            }
+        });
+
+        static::deleted(function ($seniority) {
+            $seniority->notifications()->withoutGlobalScopes()->delete();
+        });
     }
 
     public function getActivitylogOptions(): LogOptions
@@ -58,5 +79,10 @@ class Seniority extends Model implements HasMedia
 
     public function publishBy() {
         return $this->belongsTo(User::class, 'published_by');
+    }
+
+    public function notifications()
+    {
+        return $this->morphMany(SiteNotification::class, 'notifiable');
     }
 }

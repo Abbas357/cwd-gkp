@@ -50,13 +50,13 @@ class HomeController extends Controller
     public function messagePartial()
     {
         $data = Cache::remember('message_partial', 1440, function () {
-            $minister = User::select('id', 'name', 'title', 'designation', 'position', 'message')
+            $minister = User::select('id','uuid', 'name', 'title', 'designation', 'position', 'message')
                 ->where('position', 'minister')
                 ->with('media')
                 ->latest('created_at')
                 ->first();
 
-            $secretary = User::select('id', 'name', 'title', 'designation', 'position', 'message')
+            $secretary = User::select('id', 'uuid', 'name', 'title', 'designation', 'position', 'message')
                 ->where('position', 'secretary')
                 ->with('media')
                 ->latest('created_at')
@@ -64,6 +64,7 @@ class HomeController extends Controller
 
             $ministerData = $minister ? [
                 'id' => $minister->id,
+                'uuid' => $minister->uuid,
                 'name' => $minister->name,
                 'title' => $minister->title,
                 'designation' => $minister->designation,
@@ -74,6 +75,7 @@ class HomeController extends Controller
 
             $secretaryData = $secretary ? [
                 'id' => $secretary->id,
+                'uuid' => $secretary->uuid,
                 'name' => $secretary->name,
                 'title' => $secretary->title,
                 'designation' => $secretary->designation,
@@ -190,7 +192,7 @@ class HomeController extends Controller
     public function teamPartial()
     {
         $users = Cache::remember('team_partial', 43200, function () {
-            return User::select('id', 'name', 'title', 'position', 'bps')
+            return User::select('id', 'name', 'uuid', 'title', 'position', 'bps')
                 ->featured()
                 ->with('media')
                 ->latest('created_at')
@@ -198,6 +200,7 @@ class HomeController extends Controller
                 ->map(function ($user) {
                     return [
                         'id' => $user->id,
+                        'uuid' => $user->uuid,
                         'name' => $user->name,
                         'title' => $user->title ?? 'N/A',
                         'designation' => $user->designation ?? 'N/A',
@@ -233,12 +236,12 @@ class HomeController extends Controller
         $query = SiteNotification::latest();
 
         if (!empty($type)) {
-            $query->where('type', $type)
-                  ->where('title', 'like', '%' . $search . '%');
+            $query->where('notifiable_type', 'App\Models\\' . $type)
+                ->where('title', 'like', '%' . $search . '%');
         } elseif (!empty($search)) {
             $query->where('title', 'like', '%' . $search . '%')
-                  ->orWhere('type', 'like', '%' . $search . '%');
-        }  
+                ->orWhere('type', 'like', '%' . $search . '%');
+        }
 
         $totalNotifications = $query->count();
 
@@ -247,13 +250,13 @@ class HomeController extends Controller
             ->get()
             ->map(function ($notification) {
                 $info = [
-                    'Tender' => ['bi-clipboard-check', 'Tenders', '#fbb03466', route('tenders.index')],
-                    'Gallery' => ['bi-images', 'Galleries', '#00c4ff66', route('gallery.index')],
-                    'Event' => ['bi-calendar-event', 'Events', '#2dde9866', route('events.index')],
-                    'News' => ['bi-newspaper', 'News', '#c1d82f66', route('news.index')],
-                    'Seniority' => ['bi-person-badge', 'Seniorities', '#da482f66', route('seniority.index')],
-                    'Download' => ['bi-download', 'Downloads', '#ff408166', route('downloads.index')],
+                    \App\Models\Tender::class => ['bi-clipboard-check', 'Tenders', '#fbb03466', route('tenders.index')],
+                    \App\Models\Gallery::class => ['bi-images', 'Galleries', '#00c4ff66', route('gallery.index')],
+                    \App\Models\Event::class => ['bi-calendar-event', 'Events', '#2dde9866', route('events.index')],
+                    \App\Models\News::class => ['bi-newspaper', 'News', '#c1d82f66', route('news.index')],
+                    \App\Models\Seniority::class => ['bi-person-badge', 'Seniorities', '#da482f66', route('seniority.index')],
                 ];
+
                 return [
                     'id' => $notification->id,
                     'title' => strlen($notification->title) > 80
@@ -261,8 +264,8 @@ class HomeController extends Controller
                         : $notification->title,
                     'url' => $notification->url,
                     'created_at' => $notification->created_at->diffForHumans(),
-                    'type' => $notification->type,
-                    'info' => $info[$notification->type] ?? ['bi-bell', 'Notification', '#ccc', '#'],
+                    'type' => class_basename($notification->notifiable_type),
+                    'info' => $info[$notification->notifiable_type] ?? ['bi-bell', 'Notification', '#ccc', '#'],
                     'recentNotification' => $notification->created_at->gt(now()->subDay()),
                 ];
             });
@@ -280,12 +283,12 @@ class HomeController extends Controller
     {
         $validated = $request->validate([
             'search' => 'nullable|string|max:255',
-            'type' => 'nullable|in:Tender,Event,News,Seniority,Downloads,Gallery',
+            'type' => 'nullable|in:Tender,Event,News,Seniority,Gallery',
             'date_start' => 'nullable|date',
             'date_end' => 'nullable|date|after_or_equal:date_start',
         ]);
 
-        $types = ['Tender', 'Event', 'News', 'Seniority', 'Downloads', 'Gallery'];
+        $types = ['Tender', 'Event', 'News', 'Seniority', 'Gallery'];
 
         $notifications = SiteNotification::orderByDesc('created_at')
             ->when($request->query('search'), function ($query, $search) {
@@ -301,7 +304,7 @@ class HomeController extends Controller
                 $query->whereDate('created_at', '<=', $dateEnd);
             })
             ->when($request->query('type'), function ($query, $type) {
-                $query->where('type', $type);
+                $query->where('notifiable_type', 'App\Models\\' . $type);
             })
             ->paginate(10);
 

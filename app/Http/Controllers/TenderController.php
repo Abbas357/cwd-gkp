@@ -84,8 +84,7 @@ class TenderController extends Controller
     {
         $tender = new Tender();
         $tender->title = $request->title;
-        $title = collect(explode(' ', $request->title))->take(5)->join(' ');
-        $tender->slug = Str::slug($title) . '-' . substr(uniqid(), -6) . '-' . date('d-m-Y');
+        $tender->slug = Str::uuid();
         $tender->description = $request->description;
         $tender->procurement_entity = $request->procurement_entity;
         $tender->date_of_advertisement = $request->date_of_advertisement;
@@ -134,11 +133,6 @@ class TenderController extends Controller
             $tender->published_at = now();
             $tender->status = 'published';
             $message = 'Tender has been published successfully.';
-            SiteNotification::create([
-                'type' => 'Tender', 
-                'title' => $tender->title,
-                'url' => route('tenders.show', $tender->slug),
-            ]);
         } else {
             $tender->status = 'draft';
             $message = 'Tender has been unpublished.';

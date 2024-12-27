@@ -74,8 +74,7 @@ class SliderController extends Controller
     {
         $slider = new Slider();
         $slider->title = $request->title;
-        $title = collect(explode(' ', $request->title))->take(5)->join(' ');
-        $slider->slug = Str::slug($title) . '-' . substr(uniqid(), -6) . '-' . date('d-m-Y');
+        $slider->slug = $this->slug($request->title);
         $slider->summary = $request->summary;
         $slider->description = $request->description;
         $slider->status = 'draft';

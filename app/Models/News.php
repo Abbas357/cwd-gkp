@@ -44,6 +44,27 @@ class News extends Model implements HasMedia
         static::addGlobalScope('published', function (Builder $builder) {
             $builder->where('status', 'published')->whereNotNull('published_at');
         });
+
+        static::created(function ($news) {
+            SiteNotification::create([
+                'title' => $news->title,
+                'url' => route('news.show', $news->slug, false),
+                'notifiable_id' => $news->id,
+                'notifiable_type' => get_class($news),
+            ]);
+        });
+
+        static::updated(function ($news) {
+            if ($news->isDirty('status')) {
+                $news->notifications()->withoutGlobalScopes()->update([
+                    'published_at' => $news->status === 'published' ? $news->published_at : null,
+                ]);
+            }
+        });
+
+        static::deleted(function ($news) {
+            $news->notifications()->withoutGlobalScopes()->delete();
+        });
     }
 
     public function registerMediaCollections(): void
@@ -58,6 +79,11 @@ class News extends Model implements HasMedia
 
     public function publishBy() {
         return $this->belongsTo(User::class, 'published_by');
+    }
+
+    public function notifications()
+    {
+        return $this->morphMany(SiteNotification::class, 'notifiable');
     }
 
 }

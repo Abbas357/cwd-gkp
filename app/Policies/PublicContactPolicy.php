@@ -4,63 +4,36 @@ namespace App\Policies;
 
 use App\Models\PublicContact;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class PublicContactPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
     public function viewAny(User $user): bool
     {
-        //
+        return $user->can('view any public contact');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
     public function view(User $user, PublicContact $publicContact): bool
     {
-        //
+        return $user->can('view public contact');
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
     public function create(User $user): bool
     {
-        //
+        return $user->can('create public contact');
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, PublicContact $publicContact): bool
+    public function reliefGrant(User $user, PublicContact $publicContact): bool
     {
-        //
+        return $user->can('grant relief to public contact');
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, PublicContact $publicContact): bool
+    public function reliefNotGrant(User $user, PublicContact $publicContact): bool
     {
-        //
+        return $user->can('deny relief to public contact');
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, PublicContact $publicContact): bool
+    public function drop(User $user, PublicContact $publicContact): bool
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, PublicContact $publicContact): bool
-    {
-        //
+        return $user->can('drop public contact');
     }
 }

@@ -331,7 +331,6 @@
         storiesContent.classList.add('d-none');
     });
 
-    // Notification Popup
     document.addEventListener('DOMContentLoaded', () => {
         const modalContainer = document.getElementById('modal-container');
         let currentPage = 1;
@@ -367,7 +366,6 @@
                                         <option value="Event">Events</option>
                                         <option value="News">News</option>
                                         <option value="Seniority">Seniorities</option>
-                                        <option value="Download">Downloads</option>
                                     </select>
                                 </div>
                             </div>

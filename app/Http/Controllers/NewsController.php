@@ -78,8 +78,7 @@ class NewsController extends Controller
     {
         $news = new News();
         $news->title = $request->title;
-        $title = collect(explode(' ', $request->title))->take(5)->join(' ');
-        $news->slug = Str::slug($title) . '-' . substr(uniqid(), -6) . '-' . date('d-m-Y');
+        $news->slug = $this->slug($request->title);
         $news->category = $request->news_category;
         $news->summary = $request->summary;
         $news->content = $request->content;
@@ -108,11 +107,6 @@ class NewsController extends Controller
             $news->published_at = now();
             $news->status = 'published';
             $message = 'News has been published successfully.';
-            SiteNotification::create([
-                'type' => 'News', 
-                'title' => $news->title,
-                'url' => route('news.show', $news->slug),
-            ]);
         } else {
             $news->status = 'draft';
             $message = 'News has been unpublished.';

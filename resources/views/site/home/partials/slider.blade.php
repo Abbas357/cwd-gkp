@@ -24,17 +24,17 @@
                         alt="{{ $slide['title'] }}">
                     
                     <div class="carousel-caption">
-                        <div class="p-3">
-                            <h3 class="text-uppercase fw-bold mb-2 p-3">
+                        <div class="p-1">
+                            <h3 class="text-uppercase fw-bold mb-1 p-2">
                                 {{ $slide['title'] }}
                             </h3>
                             
-                            <p class="mb-2 fs-5 p-3">
+                            <p class="mb-1 fs-5 p-2">
                                 {{ $slide['summary'] }}
                             </p>
                             
                             <div>
-                                <a class="btn-hover-bg btn btn-primary text-white py-2 px-3" 
+                                <a class="cw-btn py-2 px-3" 
                                    href="{{ route('sliders.showSlider', $slide['slug']) }}">
                                    View Details
                                 </a>

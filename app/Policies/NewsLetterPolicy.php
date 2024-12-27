@@ -2,65 +2,22 @@
 
 namespace App\Policies;
 
-use App\Models\NewsLetter;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class NewsLetterPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
     public function viewAny(User $user): bool
     {
-        //
+        return $user->can('view any newsletter');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, NewsLetter $newsLetter): bool
+    public function createMassEmail(User $user): bool
     {
-        //
+        return $user->can('create mass email');
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
+    public function sendMassEmail(User $user): bool
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, NewsLetter $newsLetter): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, NewsLetter $newsLetter): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, NewsLetter $newsLetter): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, NewsLetter $newsLetter): bool
-    {
-        //
+        return $user->can('send mass email');
     }
 }

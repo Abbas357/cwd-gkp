@@ -87,7 +87,7 @@ class SeniorityController extends Controller
         $seniority->designation = $request->designation;
         $seniority->bps = $request->bps;
         $seniority->seniority_date = $request->seniority_date;
-        $seniority->slug = Str::slug($request->title) . '-' . substr(uniqid(), -6). '-' . date('d-m-Y');
+        $seniority->slug = $this->slug($request->title);
         $seniority->status = 'draft';
 
         if ($request->hasFile('attachment')) {
@@ -114,11 +114,6 @@ class SeniorityController extends Controller
             $seniority->published_at = now();
             $seniority->status = 'published';
             $message = 'Seniority has been published successfully.';
-            SiteNotification::create([
-                'type' => 'Seniority', 
-                'title' => $seniority->title,
-                'url' => route('seniority.show', $seniority->slug),
-            ]);
         } else {
             $seniority->status = 'draft';
             $message = 'Seniority has been unpublished.';

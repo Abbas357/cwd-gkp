@@ -123,7 +123,7 @@
             </div>
         </div>
         <div class="card-footer-row">
-            <a href="{{ route('positions.details', ['id' => $ministerData['id'] ]) }}">View Detail</a>
+            <a href="{{ route('positions.details', ['uuid' => $ministerData['uuid'] ]) }}">View Detail</a>
             <span class="person-name">{{ $ministerData['name'] }}</span>
         </div>
     </div>
@@ -144,7 +144,7 @@
             </div>
         </div>
         <div class="card-footer-row">
-            <a href="{{ route('positions.details', ['id' => $secretaryData['id'] ]) }}">View Detail</a>
+            <a href="{{ route('positions.details', ['uuid' => $secretaryData['uuid'] ]) }}">View Detail</a>
             <span class="person-name">{{ $secretaryData['name'] }}</span>
         </div>
     </div>

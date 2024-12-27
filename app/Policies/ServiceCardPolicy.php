@@ -4,63 +4,61 @@ namespace App\Policies;
 
 use App\Models\ServiceCard;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ServiceCardPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
     public function viewAny(User $user): bool
     {
-        //
+        return $user->can('view any service card');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
     public function view(User $user, ServiceCard $serviceCard): bool
     {
-        //
+        return $user->can('view service card');
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
     public function create(User $user): bool
     {
-        //
+        return $user->can('create service card');
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
     public function update(User $user, ServiceCard $serviceCard): bool
     {
-        //
+        return $user->can('update service card');
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
     public function delete(User $user, ServiceCard $serviceCard): bool
     {
-        //
+        return $user->can('delete service card');
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
+    public function verify(User $user, ServiceCard $serviceCard): bool
+    {
+        return $user->can('verify service card');
+    }
+
+    public function reject(User $user, ServiceCard $serviceCard): bool
+    {
+        return $user->can('reject service card');
+    }
+
     public function restore(User $user, ServiceCard $serviceCard): bool
     {
-        //
+        return $user->can('restore service card');
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, ServiceCard $serviceCard): bool
+    public function renew(User $user, ServiceCard $serviceCard): bool
     {
-        //
+        return $user->can('renew service card');
+    }
+
+    public function updateField(User $user): bool
+    {
+        return $user->can('update service card field');
+    }
+
+    public function uploadFile(User $user): bool
+    {
+        return $user->can('upload service card file');
     }
 }

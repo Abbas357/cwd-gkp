@@ -137,7 +137,7 @@
                             </span>
                         </div>
                         
-                        <a class="cw-btn" href="{{ route('positions.details', ['id' => $user['id'] ]) }}" ><i class="bi-eye"></i> View Detail</a>
+                        <a class="cw-btn" href="{{ route('positions.details', ['uuid' => $user['uuid'] ]) }}" ><i class="bi-eye"></i> View Detail</a>
                     </div>
                 </div>
             </div>

@@ -46,6 +46,7 @@ class UserController extends Controller
         $userData = $users->map(function ($user) {
             return [
                 'id' => $user->id,
+                'uuid' => $user->uuid,
                 'name' => $user->name,
                 'title' => $user->title,
                 'status' => $user->status,
@@ -59,9 +60,9 @@ class UserController extends Controller
         return $userData;
     }
 
-    public function getUserDetails($id)
+    public function getUserDetails($uuid)
     {
-        $user = User::withoutGlobalScope('active')->findOrFail($id);
+        $user = User::withoutGlobalScope('active')->where('uuid', $uuid)->first();
 
         if (!$user) {
             return response()->json(['success' => false, 'message' => 'User not found.'], 404);
@@ -70,6 +71,7 @@ class UserController extends Controller
         $userData = [
             'id' => $user->id,
             'name' => $user->name ?? '-',
+            'uuid' => $user->uuid ?? '-',
             'email' => $user->email ?? '-',
             'mobile_number' => $user->mobile_number ?? '-',
             'landline_number' => $user->landline_number ?? '-',
@@ -112,7 +114,7 @@ class UserController extends Controller
         $teamData = [];
 
         foreach ($roles as $role => $criteria) {
-            $teamData[$role] = User::select('id', 'name', 'title', 'position', 'bps')
+            $teamData[$role] = User::select('id', 'uuid', 'name', 'title', 'position', 'bps')
                 ->where($criteria['column'], $criteria['value'])
                 ->with('media')
                 ->latest('created_at')
@@ -120,6 +122,7 @@ class UserController extends Controller
                 ->map(function ($user) {
                     return [
                         'id' => $user->id,
+                        'uuid' => $user->uuid,
                         'name' => $user->name,
                         'title' => $user->title ?? '-',
                         'position' => $user->position ?? '-',

@@ -66,6 +66,27 @@ class Gallery extends Model implements HasMedia
         static::addGlobalScope('published', function (Builder $builder) {
             $builder->where('status', 'published')->whereNotNull('published_at');
         });
+
+        static::created(function ($gallery) {
+            SiteNotification::create([
+                'title' => $gallery->title,
+                'url' => route('gallery.show', $gallery->slug, false),
+                'notifiable_id' => $gallery->id,
+                'notifiable_type' => get_class($gallery),
+            ]);
+        });
+
+        static::updated(function ($gallery) {
+            if ($gallery->isDirty('status')) {
+                $gallery->notifications()->withoutGlobalScopes()->update([
+                    'published_at' => $gallery->status === 'published' ? $gallery->published_at : null,
+                ]);
+            }
+        });
+
+        static::deleted(function ($gallery) {
+            $gallery->notifications()->withoutGlobalScopes()->delete();
+        });
     }
     
     public function user() {
@@ -74,5 +95,10 @@ class Gallery extends Model implements HasMedia
 
     public function publishBy() {
         return $this->belongsTo(User::class, 'published_by');
+    }
+
+    public function notifications()
+    {
+        return $this->morphMany(SiteNotification::class, 'notifiable');
     }
 }

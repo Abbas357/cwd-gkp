@@ -81,8 +81,7 @@ class EventController extends Controller
     {
         $event = new Event();
         $event->title = $request->title;
-        $title = collect(explode(' ', $request->title))->take(5)->join(' ');
-        $event->slug = Str::slug($title) . '-' . substr(uniqid(), -6) . '-' . date('d-m-Y');
+        $event->slug = Str::uuid();
         $event->description = $request->description;
         $event->start_datetime = $request->start_datetime;
         $event->end_datetime = $request->end_datetime;
@@ -119,14 +118,7 @@ class EventController extends Controller
         if ($event->status === 'draft') {
             $event->published_at = now();
             $event->status = 'published';
-            $message = 'Event has been published successfully.';
-
-            SiteNotification::create([
-                'type' => 'Event', 
-                'title' => $event->title,
-                'url' => route('events.show', $event->slug),
-            ]);
-            
+            $message = 'Event has been published successfully.';            
         } else {
             $event->status = 'draft';
             $message = 'Event has been unpublished.';

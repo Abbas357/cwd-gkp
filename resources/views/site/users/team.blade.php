@@ -58,7 +58,7 @@
                                         <p class="mb-1 text-no-overflow">{{ $user['position'] }}</p>
                                     </div>
                                     <div class="flex m-2">
-                                        <a href="{{ route('positions.details', ['id' => $user['id'] ]) }}" class="cw-btn"><i class="bi-eye"></i> View Detail</a>
+                                        <a href="{{ route('positions.details', ['uuid' => $user['uuid'] ]) }}" class="cw-btn"><i class="bi-eye"></i> View Detail</a>
                                     </div>
                                 </div>
                             </div>
