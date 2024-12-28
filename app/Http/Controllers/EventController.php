@@ -112,9 +112,8 @@ class EventController extends Controller
         return response()->json($event);
     }
 
-    public function publishEvent(Request $request, $eventId)
+    public function publishEvent(Request $request, Event $event)
     {
-        $event = Event::withoutGlobalScope('published')->findOrFail($eventId);
         if ($event->status === 'draft') {
             $event->published_at = now();
             $event->status = 'published';
@@ -138,9 +137,8 @@ class EventController extends Controller
         return response()->json(['success' => 'Event cannot be archived.'], 403);
     }
 
-    public function showDetail($eventId)
+    public function showDetail(Event $event)
     {
-        $event = Event::withoutGlobalScope('published')->findOrFail($eventId);
         if (!$event) {
             return response()->json([
                 'success' => false,
@@ -164,15 +162,12 @@ class EventController extends Controller
         ]);
     }
 
-    public function updateField(Request $request)
+    public function updateField(Request $request, Event $event)
     {
         $request->validate([
             'field' => 'required|string',
             'value' => 'required|string',
-            'id'    => 'required|integer|exists:events,id',
         ]);
-
-        $event = Event::withoutGlobalScope('published')->findOrFail($request->id);
 
         if (in_array($event->status, ['published', 'archived'])) {
             return response()->json(['error' => 'Published or Archived events cannot be updated'], 403);
@@ -187,35 +182,9 @@ class EventController extends Controller
 
         return response()->json(['error' => 'No changes were made to the field'], 200);
     }
-
-
-    public function uploadEvent(Request $request)
+    
+    public function destroy(Event $event)
     {
-        $request->validate([
-            'file' => 'required|file|mimes:jpg,jpeg,gif,webp,png|max:10240',
-            'id'   => 'required|integer|exists:events,id',
-        ]);
-
-        $event = Event::withoutGlobalScope('published')->findOrFail($request->id);
-
-        if (in_array($event->status, ['published', 'archived'])) {
-            return response()->json(['error' => 'Published or Archived events cannot be updated'], 403); 
-        }
-
-        try {
-            $file = $request->file('file');
-            $event->addMedia($file)->toMediaCollection('events_pictures');
-
-            return response()->json(['success' => 'Event uploaded successfully'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error uploading file: ' . $e->getMessage()], 500);
-        }
-    }
-
-
-    public function destroy($eventId)
-    {
-        $event = Event::withoutGlobalScope('published')->findOrFail($eventId);
         if ($event->status === 'draft' && is_null($event->published_at)) {
             if ($event->delete()) {
                 return response()->json(['success' => 'Event has been deleted successfully.']);

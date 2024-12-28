@@ -107,9 +107,8 @@ class SeniorityController extends Controller
         return response()->json($seniority);
     }
 
-    public function publishSeniority(Request $request, $seniorityId)
+    public function publishSeniority(Request $request, Seniority $seniority)
     {
-        $seniority = Seniority::withoutGlobalScope('published')->findOrFail($seniorityId);
         if ($seniority->status === 'draft') {
             $seniority->published_at = now();
             $seniority->status = 'published';
@@ -133,9 +132,8 @@ class SeniorityController extends Controller
         return response()->json(['success' => 'Seniority cannot be archived.'], 403);
     }
 
-    public function showDetail($seniorityId)
+    public function showDetail(Seniority $seniority)
     {
-        $seniority = Seniority::withoutGlobalScope('published')->findOrFail($seniorityId);
         if (!$seniority) {
             return response()->json([
                 'success' => false,
@@ -164,15 +162,12 @@ class SeniorityController extends Controller
         ]);
     }
 
-    public function updateField(Request $request)
+    public function updateField(Request $request, Seniority $seniority)
     {
         $request->validate([
             'field' => 'required|string',
             'value' => 'required|string',
-            'id'    => 'required|integer|exists:seniorities,id',
         ]);
-
-        $seniority = Seniority::withoutGlobalScope('published')->findOrFail($request->id);
 
         if (in_array($seniority->status, ['published', 'archived'])) {
             return response()->json(['error' => 'Published or Archived seniority cannot be updated'], 403);
@@ -188,15 +183,11 @@ class SeniorityController extends Controller
         return response()->json(['error' => 'No changes were made to the field'], 200);
     }
 
-
-    public function uploadFile(Request $request)
+    public function uploadFile(Request $request, Seniority $seniority)
     {
         $request->validate([
-            'id'   => 'required|integer|exists:seniorities,id',
             'attachment' => 'required|file|mimes:pdf,docx,pptx,txt,jpeg,jpg,png,gif|max:10240', 
         ]);
-
-        $seniority = Seniority::withoutGlobalScope('published')->findOrFail($request->id);
 
         if (in_array($seniority->status, ['published', 'archived'])) {
             return response()->json(['error' => 'Published or Archived seniority cannot be updated'], 403); 
@@ -212,9 +203,8 @@ class SeniorityController extends Controller
         }
     }
 
-    public function destroy($seniorityId)
+    public function destroy(Seniority $seniority)
     {
-        $seniority = Seniority::withoutGlobalScope('published')->findOrFail($seniorityId);
         if ($seniority->status === 'draft' && is_null($seniority->published_at)) {
             if ($seniority->delete()) {
                 return response()->json(['success' => 'File has been deleted successfully.']);

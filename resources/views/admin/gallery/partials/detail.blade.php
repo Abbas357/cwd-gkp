@@ -96,10 +96,9 @@
             , onComplete: async function(file, input) {
                 var formData = new FormData();
                 formData.append('file', file);
-                formData.append('id', "{{ $gallery->id }}");
                 formData.append('_method', "PATCH");
 
-                const url = "{{ route('admin.gallery.uploadFile') }}"
+                const url = "{{ route('admin.gallery.uploadFile', ':id') }}".replace(':id', '{{ $gallery->id }}');
                 try {
                     const result = await fetchRequest(url, 'POST', formData);
                     if (result) {
@@ -122,10 +121,9 @@
 
     async function updateField(field, id) {
         const newValue = $('#input-' + field).val();
-        const url = "{{ route('admin.gallery.updateField') }}";
+        const url = "{{ route('admin.gallery.updateField', ':id') }}".replace(':id', id);
         const data = {
-            id: id
-            , field: field
+            field: field
             , value: newValue
         };
         const success = await fetchRequest(url, 'PATCH', data);

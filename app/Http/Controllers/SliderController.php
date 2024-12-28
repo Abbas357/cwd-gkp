@@ -97,11 +97,10 @@ class SliderController extends Controller
         return response()->json($slider);
     }
 
-    public function publishSlider(Request $request, $sliderId)
+    public function publishSlider(Request $request, Slider $slider)
     {
         $publishedSlidersCount = Slider::where('status', 'published')->whereNotNull('published_at')->count();
 
-        $slider = Slider::withoutGlobalScope('published')->findOrFail($sliderId);
         if ($slider->status === 'draft') {
             if ($publishedSlidersCount >= 5) {
                 return response()->json(['error' => 'You cannot publish more than 5 sliders.'], 400);
@@ -130,9 +129,8 @@ class SliderController extends Controller
         return response()->json(['error' => 'Slider cannot be archived.'], 403);
     }
 
-    public function showDetail($sliderId)
+    public function showDetail(Slider $slider)
     {
-        $slider = Slider::withoutGlobalScope('published')->findOrFail($sliderId);
         if (!$slider) {
             return response()->json([
                 'success' => false,
@@ -151,15 +149,12 @@ class SliderController extends Controller
         ]);
     }
 
-    public function updateField(Request $request)
+    public function updateField(Request $request, Slider $slider)
     {
         $request->validate([
             'field' => 'required|string',
             'value' => 'required|string',
-            'id'    => 'required|integer|exists:sliders,id',
         ]);
-
-        $slider = Slider::withoutGlobalScope('published')->findOrFail($request->id);
 
         if (in_array($slider->status, ['published', 'archived'])) {
             return response()->json(['error' => 'Published or Archived sliders cannot be updated'], 403);
@@ -176,15 +171,11 @@ class SliderController extends Controller
         return response()->json(['error' => 'No changes were made to the field'], 200);
     }
 
-
-    public function uploadFile(Request $request)
+    public function uploadFile(Request $request, Slider $slider)
     {
         $request->validate([
-            'id'   => 'required|integer|exists:sliders,id',
             'image' => 'required|file|mimes:jpeg,jpg,png,gif|max:10240', 
         ]);
-
-        $slider = Slider::withoutGlobalScope('published')->findOrFail($request->id);
 
         if (in_array($slider->status, ['published', 'archived'])) {
             return response()->json(['error' => 'Published or Archived sliders cannot be updated'], 403); 
@@ -200,10 +191,8 @@ class SliderController extends Controller
         }
     }
 
-
-    public function destroy($sliderId)
+    public function destroy(Slider $slider)
     {
-        $slider = Slider::withoutGlobalScope('published')->findOrFail($sliderId);
         if ($slider->status === 'draft' && is_null($slider->published_at)) {
             if ($slider->delete()) {
                 Cache::forget('sliders');

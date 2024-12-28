@@ -19,7 +19,7 @@
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-title">{{ $tender->title }}</span>
                     @if (!in_array($tender->status, ['published', 'archived']))
-                    <input type="text" id="input-title" value="{{ $tender->title }}" class="d-none form-control" onkeypress="if (tender.key === 'Enter') updateField('title', {{ $tender->id }})" />
+                    <input type="text" id="input-title" value="{{ $tender->title }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('title', {{ $tender->id }})" />
                     <button id="save-btn-title" class="btn btn-sm btn-light d-none" onclick="updateField('title', {{ $tender->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-title" class="no-print btn btn-sm edit-button" onclick="enableEditing('title')"><i class="bi-pencil fs-6"></i></button>
                     @endif
@@ -31,7 +31,7 @@
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-procurement_entity">{{ $tender->procurement_entity }}</span>
                     @if (!in_array($tender->status, ['published', 'archived']))
-                    <input type="text" id="input-procurement_entity" value="{{ $tender->procurement_entity }}" class="d-none form-control" onkeypress="if (tender.key === 'Enter') updateField('procurement_entity', {{ $tender->id }})" />
+                    <input type="text" id="input-procurement_entity" value="{{ $tender->procurement_entity }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('procurement_entity', {{ $tender->id }})" />
                     <button id="save-btn-procurement_entity" class="btn btn-sm btn-light d-none" onclick="updateField('procurement_entity', {{ $tender->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-procurement_entity" class="no-print btn btn-sm edit-button" onclick="enableEditing('procurement_entity')"><i class="bi-pencil fs-6"></i></button>
                     @endif
@@ -57,7 +57,7 @@
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-date_of_advertisement">{{ $tender->date_of_advertisement }}</span>
                     @if (!in_array($tender->status, ['published', 'archived']))
-                    <input type="date" id="input-date_of_advertisement" value="{{ $tender->date_of_advertisement }}" class="d-none form-control" onkeypress="if (tender.key === 'Enter') updateField('date_of_advertisement', {{ $tender->id }})" />
+                    <input type="date" id="input-date_of_advertisement" value="{{ $tender->date_of_advertisement }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('date_of_advertisement', {{ $tender->id }})" />
                     <button id="save-btn-date_of_advertisement" class="btn btn-sm btn-light d-none" onclick="updateField('date_of_advertisement', {{ $tender->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-date_of_advertisement" class="no-print btn btn-sm edit-button" onclick="enableEditing('date_of_advertisement')"><i class="bi-pencil fs-6"></i></button>
                     @endif
@@ -69,7 +69,7 @@
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="date-closing_date">{{ $tender->closing_date }}</span>
                     @if (!in_array($tender->status, ['published', 'archived']))
-                    <input type="text" id="input-closing_date" value="{{ $tender->closing_date }}" class="d-none form-control" onkeypress="if (tender.key === 'Enter') updateField('closing_date', {{ $tender->id }})" />
+                    <input type="text" id="input-closing_date" value="{{ $tender->closing_date }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('closing_date', {{ $tender->id }})" />
                     <button id="save-btn-closing_date" class="btn btn-sm btn-light d-none" onclick="updateField('closing_date', {{ $tender->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-closing_date" class="no-print btn btn-sm edit-button" onclick="enableEditing('closing_date')"><i class="bi-pencil fs-6"></i></button>
                     @endif
@@ -82,7 +82,7 @@
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-domain">{{ $tender->domain }}</span>
                     @if (!in_array($tender->status, ['published', 'archived']))
-                    <select id="input-domain" class="d-none form-control" onkeypress="if (tender.key === 'Enter') updateField('domain', {{ $tender->id }})">
+                    <select id="input-domain" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('domain', {{ $tender->id }})">
                         @foreach ($cat['tender_domain'] as $domain)
                         <option value="{{ $domain->name }}" {{ $tender->domain == $domain->name ? 'selected' : '' }}>
                             {{ $domain->name }}
@@ -119,10 +119,9 @@
 
     async function updateField(field, id) {
         const newValue = (field === 'description') ? $('#input-' + field).summernote('code') : $('#input-' + field).val();
-        const url = "{{ route('admin.tenders.updateField') }}";
+        const url = "{{ route('admin.tenders.updateField', ':id') }}".replace(':id', id);
         const data = {
-            id: id
-            , field: field
+            field: field
             , value: newValue
         };
         const success = await fetchRequest(url, 'PATCH', data);

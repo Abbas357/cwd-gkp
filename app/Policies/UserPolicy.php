@@ -16,7 +16,7 @@ class UserPolicy
 
     public function view(User $user, User $model): bool
     {
-        return $user->can('view user');
+        return $user->id === $model->id || $user->can('view user');
     }
 
     public function create(User $user): bool
@@ -26,7 +26,7 @@ class UserPolicy
 
     public function update(User $user, User $model): bool
     {
-        return $user->can('update user');
+        return $user->id === $model->id || $user->can('update user');
     }
 
     public function delete(User $user, User $model): bool
@@ -36,11 +36,11 @@ class UserPolicy
 
     public function activate(User $user, User $model): bool
     {
-        return $user->can('activate user');
+        return $user->id === $model->id || $user->can('activate user');
     }
 
     public function archive(User $user, User $model): bool
     {
-        return $user->can('archive user');
+        return $user->id === $model->id || $user->can('archive user');
     }
 }

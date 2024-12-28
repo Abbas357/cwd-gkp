@@ -9,28 +9,17 @@ class CommentPolicy
 {    
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->can('view any comment');
     }
     
     public function view(User $user, Comment $comment): bool
     {
-        return true;
-    }
-    
-    public function create(User $user): bool
-    {
-        
-        return true;
-    }
-    
-    public function update(User $user, Comment $comment): bool
-    {
-        return $user->id === $comment->user_id || $user->can('update comment');
+        return $user->can('view comment');
     }
     
     public function delete(User $user, Comment $comment): bool
     {
-        return $user->id === $comment->user_id || $user->can('delete comment');
+        return $user->can('delete comment');
     }
     
     public function publish(User $user, Comment $comment): bool

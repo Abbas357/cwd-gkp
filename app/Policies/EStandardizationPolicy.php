@@ -17,32 +17,27 @@ class EStandardizationPolicy
         return $user->can('view standardization');
     }
 
-    public function create(User $user): bool
-    {
-        return true;
-    }
-
     public function update(User $user, EStandardization $eStandardization): bool
     {
         return $user->can('update standardization');
     }
 
-    public function approve(User $user): bool
+    public function approve(User $user, EStandardization $eStandardization): bool
     {
         return $user->can('approve standardization');
     }
 
-    public function reject(User $user): bool
+    public function reject(User $user, EStandardization $eStandardization): bool
     {
         return $user->can('reject standardization');
     }
 
-    public function card(User $user): bool
+    public function card(User $user, EStandardization $eStandardization): bool
     {
         return $user->can('generate standardization card');
     }
 
-    public function renew(User $user): bool
+    public function renew(User $user, EStandardization $eStandardization): bool
     {
         return $user->can('renew standardization card');
     }

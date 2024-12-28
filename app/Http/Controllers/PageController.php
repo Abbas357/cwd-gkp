@@ -95,13 +95,11 @@ class PageController extends Controller
         return response()->json($page);
     }
 
-    public function activatePage(Request $request, $pageId)
+    public function activatePage(Request $request, Page $page)
     {
-        $page = Page::withoutGlobalScope('active')->findOrFail($pageId);
-        $existingActivePage = Page::withoutGlobalScope('active')
-            ->where('page_type', $page->page_type)
+        $existingActivePage = Page::where('page_type', $page->page_type)
             ->where('is_active', 1)
-            ->where('id', '!=', $pageId)
+            ->where('id', '!=', $page->id)
             ->first();
         if ($existingActivePage) {
             return response()->json(['error' => 'Only one page of this type can be active at a time.'], 200);
@@ -117,9 +115,8 @@ class PageController extends Controller
         return response()->json(['success' => $message], 200);
     }
 
-    public function showDetail($pageId)
+    public function showDetail(Page $page)
     {
-        $page = Page::withoutGlobalScope('active')->findOrFail($pageId);
         if (!$page) {
             return response()->json([
                 'success' => false,
@@ -142,15 +139,12 @@ class PageController extends Controller
         ]);
     }
 
-    public function updateField(Request $request)
+    public function updateField(Request $request, Page $page)
     {
         $request->validate([
             'field' => 'required|string',
             'value' => 'required|string',
-            'id'    => 'required|integer|exists:pages,id',
         ]);
-
-        $page = Page::withoutGlobalScope('active')->findOrFail($request->id);
 
         $page->{$request->field} = $request->value;
 
@@ -163,14 +157,11 @@ class PageController extends Controller
         return response()->json(['error' => 'No changes were made to the field'], 200);
     }
 
-    public function uploadFile(Request $request)
+    public function uploadFile(Request $request, Page $page)
     {
         $request->validate([
-            'id'   => 'required|integer|exists:pages,id',
             'attachment' => 'required|file|mimes:pdf,docx,pptx,txt,jpeg,jpg,png,gif|max:10240',
         ]);
-
-        $page = Page::withoutGlobalScope('active')->findOrFail($request->id);
 
         if ($page->is_active === 1) {
             return response()->json(['error' => 'Active page cannot be updated'], 403);
@@ -187,9 +178,8 @@ class PageController extends Controller
         }
     }
 
-    public function destroy($pageId)
+    public function destroy(Page $page)
     {
-        $page = Page::withoutGlobalScope('active')->findOrFail($pageId);
         if ($page->is_active === 0 && $page->delete()) {
             Cache::forget('about_partial');
             return response()->json(['success' => 'Page has been deleted successfully.']);

@@ -91,41 +91,39 @@ class ProjectFileController extends Controller
         return redirect()->route('admin.project_files.create')->with('danger', 'There is an error adding your project file');
     }
 
-    public function show(ProjectFile $ProjectFile)
+    public function show(ProjectFile $project_file)
     {
-        return response()->json($ProjectFile);
+        return response()->json($project_file);
     }
 
-    public function publishProjectFile(Request $request, $projectId)
+    public function publishProjectFile(Request $request, ProjectFile $project_file)
     {
-        $project = ProjectFile::withoutGlobalScope('published')->findOrFail($projectId);
-        if ($project->status === 'draft') {
-            $project->published_at = now();
-            $project->status = 'published';
+        if ($project_file->status === 'draft') {
+            $project_file->published_at = now();
+            $project_file->status = 'published';
             $message = 'File has been published successfully.';
         } else {
-            $project->status = 'draft';
+            $project_file->status = 'draft';
             $message = 'File has been unpublished.';
         }
-        $project->published_by = $request->user()->id;
-        $project->save();
+        $project_file->published_by = $request->user()->id;
+        $project_file->save();
         return response()->json(['success' => $message], 200);
     }
 
-    public function archiveProjectFile(Request $request, ProjectFile $project)
+    public function archiveProjectFile(Request $request, ProjectFile $project_file)
     {
-        if (!is_null($project->published_at)) {
-            $project->status = 'archived';
-            $project->save();
+        if (!is_null($project_file->published_at)) {
+            $project_file->status = 'archived';
+            $project_file->save();
             return response()->json(['success' => 'File has been archived successfully.'], 200);
         }
         return response()->json(['success' => 'File cannot be archived.'], 403);
     }
 
-    public function showDetail($projectFileId)
+    public function showDetail(ProjectFile $project_file)
     {
-        $projectFile = ProjectFile::withoutGlobalScope('published')->findOrFail($projectFileId);
-        if (!$projectFile) {
+        if (!$project_file) {
             return response()->json([
                 'success' => false,
                 'data' => [
@@ -139,7 +137,7 @@ class ProjectFileController extends Controller
             'projects' => Project::select('id', 'name')->get(),
         ];
 
-        $html = view('admin.project_files.partials.detail', compact('projectFile', 'cat'))->render();
+        $html = view('admin.project_files.partials.detail', compact('project_file', 'cat'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -148,24 +146,21 @@ class ProjectFileController extends Controller
         ]);
     }
 
-    public function updateField(Request $request)
+    public function updateField(Request $request, ProjectFile $project_file)
     {
         $request->validate([
             'field' => 'required|string',
             'value' => 'required|string',
-            'id'    => 'required|integer|exists:project_files,id',
         ]);
 
-        $project = ProjectFile::withoutGlobalScope('published')->findOrFail($request->id);
-
-        if (in_array($project->status, ['published', 'archived'])) {
+        if (in_array($project_file->status, ['published', 'archived'])) {
             return response()->json(['error' => 'Published or Archived downlods cannot be updated'], 403);
         }
 
-        $project->{$request->field} = $request->value;
+        $project_file->{$request->field} = $request->value;
 
-        if ($project->isDirty($request->field)) {
-            $project->save();
+        if ($project_file->isDirty($request->field)) {
+            $project_file->save();
             return response()->json(['success' => 'Field updated successfully'], 200);
         }
 
@@ -173,22 +168,19 @@ class ProjectFileController extends Controller
     }
 
 
-    public function uploadFile(Request $request)
+    public function uploadFile(Request $request, ProjectFile $project_file)
     {
         $request->validate([
             'file' => 'required|file|mimes:pdf,docx,pptx, txt,jpg,png|max:10240', 
-            'id'   => 'required|integer|exists:project_files,id',
         ]);
 
-        $project = ProjectFile::withoutGlobalScope('published')->findOrFail($request->id);
-
-        if (in_array($project->status, ['published', 'archived'])) {
+        if (in_array($project_file->status, ['published', 'archived'])) {
             return response()->json(['error' => 'Published or Archived Project files cannot be updated'], 403); 
         }
 
         try {
             $file = $request->file('file');
-            $project->addMedia($file)->toMediaCollection('project_files');
+            $project_file->addMedia($file)->toMediaCollection('project_files');
 
             return response()->json(['success' => 'File uploaded successfully'], 200);
         } catch (\Exception $e) {
@@ -196,12 +188,10 @@ class ProjectFileController extends Controller
         }
     }
 
-
-    public function destroy($projectId)
+    public function destroy(ProjectFile $project_file)
     {
-        $project = ProjectFile::withoutGlobalScope('published')->findOrFail($projectId);
-        if ($project->status === 'draft' && is_null($project->published_at)) {
-            if ($project->delete()) {
+        if ($project_file->status === 'draft' && is_null($project_file->published_at)) {
+            if ($project_file->delete()) {
                 return response()->json(['success' => 'File has been deleted successfully.']);
             }
         }

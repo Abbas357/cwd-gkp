@@ -97,15 +97,17 @@
                 <form method="post" id="permissions-update" novalidate>
                     @method('PATCH')
                     <div class="modal-body">
-                        <div class="loading-spinner text-center mt-2">
+                        <div class="loading-spinner text-center mt-2" style="display: none">
                             <div class="spinner-border" role="status">
                                 <span class="visually-hidden">Loading...</span>
                             </div>
                         </div>
                         <div class="card mb-0">
-                            <div class="card-body">
-                                <div class="user-details" style="display: none">
+                            <div class="card-body" style="height:500px">
+                                <input type="text" id="search-permissions" class="form-control mb-3" placeholder="Search Permissions">
+                                <div class="user-details">
                                     <div id="permissions" class="d-flex flex-wrap justify-content-evenly align-items-center gap-2">
+                                        <!-- Permissions will be populated dynamically -->
                                     </div>
                                 </div>
                             </div>
@@ -119,10 +121,33 @@
             </div>
         </div>
     </div>
+    
 
     @push('script')
     <script>
         $(document).ready(function() {
+
+            const $searchInput = $('#search-permissions');
+
+            if ($searchInput.length) {
+                $searchInput.on('keyup', function () {
+                    const searchQuery = $(this).val().toLowerCase();
+                    const $permissionItems = $('#permissions .form-check');
+
+                    if ($permissionItems.length === 0) {
+                        console.warn('No permission items found.');
+                        return;
+                    }
+
+                    $permissionItems.each(function () {
+                        const $label = $(this).find('label');
+                        const text = $label.text().toLowerCase();
+                        $(this).toggle(text.includes(searchQuery));
+                    });
+                });
+            } else {
+                console.error('Search input field not found.');
+            }
 
             $('.delete-role-btn').on('click', async function() {
                 const result = await confirmAction('Are you sure to delete the Role?');

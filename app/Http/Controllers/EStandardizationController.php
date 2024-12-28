@@ -164,14 +164,13 @@ class EStandardizationController extends Controller
         return response()->json(['error' => 'Product can\'t be rejected.']);
     }
 
-    public function updateField(Request $request)
+    public function updateField(Request $request, EStandardization $EStandardization)
     {
         $request->validate([
             'field' => 'required|string',
             'value' => 'required|string',
         ]);
 
-        $EStandardization = EStandardization::find($request->id);
         if(($request->has('expiry_date') || $request->has('issue_date')) && $EStandardization->status !== 'new') {
             return response()->json(['error' => 'Approved or Rejected Products cannot be updated']);
         }
@@ -181,17 +180,15 @@ class EStandardizationController extends Controller
         return response()->json(['success' => 'Field saved']);
     }
 
-    public function uploadFile(Request $request)
+    public function uploadFile(Request $request, EStandardization $EStandardization)
     {
-        dd('dddk');
-        $standardization = EStandardization::find($request->id);
-        if($request->hasFile('firm_pictures') && $standardization->status !== 'new') {
+        if($request->hasFile('firm_pictures') && $EStandardization->status !== 'new') {
             return response()->json(['error' => 'Approved or Rejected Products cannot be updated']);
         }
         $file = $request->file;
         $collection = $request->collection;
-        $standardization->addMedia($file)->toMediaCollection($collection);
-        if($standardization->save()) {
+        $EStandardization->addMedia($file)->toMediaCollection($collection);
+        if($EStandardization->save()) {
             return response()->json(['success' => 'File Updated']);
         }
         return response()->json(['error' => 'Error Uploading File']);

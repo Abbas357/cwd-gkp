@@ -88,94 +88,162 @@
     <div class="wrapper">
         <input type="text" id="searchBar" placeholder="Search apps by name..." oninput="filterApps()">
         <div class="app-grid" id="appGrid">
+            @can('view any user')
             <a href="{{ route('admin.users.index') }}" class="app-tile">
                 <i class="bi bi-person-circle" style="color: #8d0fe0"></i>
                 <p>Users</p>
             </a>
+            @endcan
+
+            @can('view any tender')
             <a href="{{ route('admin.tenders.index') }}" class="app-tile">
                 <i class="bi bi-briefcase" style="color: #ff000d"></i>
                 <p>Tenders</p>
             </a>
+            @endcan
+
+            @can('view any event')
             <a href="{{ route('admin.events.index') }}" class="app-tile">
                 <i class="bi bi-calendar2-event" style="color: #96bb05"></i>
                 <p>Events</p>
             </a>
+            @endcan
+
+            @can('view any news')
             <a href="{{ route('admin.news.index') }}" class="app-tile">
                 <i class="bi bi-journal" style="color: #1cc7d0"></i>
                 <p>News</p>
             </a>
+            @endcan
+
+            @can('view any slider')
             <a href="{{ route('admin.sliders.index') }}" class="app-tile">
                 <i class="bi bi-images" style="color: #146eb4"></i>
                 <p>Slider</p>
             </a>
+            @endcan
+
+            @can('create download')
             <a href="{{ route('admin.downloads.index') }}" class="app-tile">
                 <i class="bi bi-download" style="color: #fb8a2e"></i>
                 <p>Downloads</p>
             </a>
+            @endcan
+
+            @can('view any gallery')
             <a href="{{ route('admin.gallery.index') }}" class="app-tile">
                 <i class="bi bi-card-image" style="color: #11862f"></i>
                 <p>Gallery</p>
             </a>
+            @endcan
+
+            @can('view any contractor')
             <a href="{{ route('admin.registrations.index') }}" class="app-tile">
                 <i class="bi bi-clipboard" style="color: #00a4e4"></i>
                 <p>Registration</p>
             </a>
+            @endcan
+
+            @can('view any standardization')
             <a href="{{ route('admin.standardizations.index') }}" class="app-tile">
                 <i class="bi bi-shield-lock" style="color: #49c0b6"></i>
                 <p>Standardization</p>
             </a>
+            @endcan
+
+            @can('view any service card')
             <a href="{{ route('admin.service_cards.index') }}" class="app-tile">
                 <i class="bi bi-credit-card" style="color: #a4c649"></i>
                 <p>Service Card</p>
             </a>
+            @endcan
+
+            @can('view any page')
             <a href="{{ route('admin.pages.index') }}" class="app-tile">
                 <i class="bi bi-file-earmark-post" style="color: #ffc168"></i>
                 <p>Pages</p>
             </a>
+            @endcan
+
+            @can('view any story')
             <a href="{{ route('admin.stories.index') }}" class="app-tile">
                 <i class="bi bi-app" style="color: #0389ff"></i>
                 <p>Stories</p>
             </a>
+            @endcan
+
+            @can('view any project')
             <a href="{{ route('admin.projects.index') }}" class="app-tile">
                 <i class="bi bi-kanban" style="color: #a71930"></i>
                 <p>Projects</p>
             </a>
+            @endcan
+
+            @can('view project file')
             <a href="{{ route('admin.project_files.index') }}" class="app-tile">
                 <i class="bi bi-file" style="color: #5ecc62"></i>
                 <p>Project Files</p>
             </a>
+            @endcan
+
+            @can('view any newsletter')
             <a href="{{ route('admin.newsletter.index') }}" class="app-tile">
                 <i class="bi bi-envelope" style="color: #505050"></i>
                 <p>Newsletter</p>
             </a>
+            @endcan
+
+            @can('view any public contact')
             <a href="{{ route('admin.public_contact.index') }}" class="app-tile">
                 <i class="bi bi-chat-left" style="color: #00aee6"></i>
                 <p>Public Queries</p>
             </a>
+            @endcan
+
+            {{-- Settings is typically for admins only --}}
+            @can('view any user')
             <a href="{{ route('admin.settings.index') }}" class="app-tile">
                 <i class="bi bi-gear" style="color: #f1632a"></i>
                 <p>Settings</p>
             </a>
+            @endcan
+
+            {{-- Logs are typically for admins only --}}
+            @can('view any user')
             <a href="{{ route('admin.logs') }}" class="app-tile">
                 <i class="bi bi-activity" style="color: #ce1126"></i>
                 <p>Activity Log</p>
             </a>
+            @endcan
+
+            @can('view any seniority')
             <a href="{{ route('admin.seniority.index') }}" class="app-tile">
                 <i class="bi bi-graph-up-arrow" style="color: #790bdf"></i>
                 <p>Seniority List</p>
             </a>
+            @endcan
+
+            @can('create development project')
             <a href="{{ route('admin.development_projects.index') }}" class="app-tile">
                 <i class="bi bi-buildings" style="color: #0096a0"></i>
                 <p>Dev. Projects</p>
             </a>
+            @endcan
+
+            @can('update comment')
             <a href="{{ route('admin.comments.index') }}" class="app-tile">
                 <i class="bi bi-chat" style="color: #000000"></i>
                 <p>Comments</p>
             </a>
+            @endcan
+
+            {{-- Assuming schemes have similar permissions to projects --}}
+            @can('view any project')
             <a href="{{ route('admin.schemes.index') }}" class="app-tile">
                 <i class="bi bi-building" style="color: #028be1"></i>
                 <p>Schemes</p>
             </a>
+            @endcan
         </div>
     </div>
     <audio id="hoverSound" src="{{ asset('admin/click.wav') }}" preload="auto"></audio>

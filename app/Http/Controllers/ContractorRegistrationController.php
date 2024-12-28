@@ -181,14 +181,13 @@ class ContractorRegistrationController extends Controller
         ]);
     }
 
-    public function updateField(Request $request)
+    public function updateField(Request $request, ContractorRegistration $ContractorRegistration)
     {
         $request->validate([
             'field' => 'required|string',
             'value' => 'required',
         ]);
 
-        $ContractorRegistration = ContractorRegistration::find($request->id);
         if (($request->has('reg_no') || $request->has('expiry_date') || $request->has('issue_date')) && in_array($ContractorRegistration->status, ['approved_three', 'approved'])) {
             return response()->json(['error' => 'Approved or Rejected Registrations cannot be updated']);
         }
@@ -206,9 +205,8 @@ class ContractorRegistrationController extends Controller
         return response()->json(['success' => 'Field saved']);
     }
 
-    public function uploadFile(Request $request)
+    public function uploadFile(Request $request, ContractorRegistration $ContractorRegistration)
     {
-        $ContractorRegistration = ContractorRegistration::find($request->id);
         if ($request->hasFile('contractor_pictures') && in_array($ContractorRegistration->status, ['approved_three', 'approved'])) {
             return response()->json(['error' => 'Approved or Rejected Registrations cannot be updated']);
         }

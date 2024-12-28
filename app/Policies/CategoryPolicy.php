@@ -22,11 +22,6 @@ class CategoryPolicy
         return $user->can('create category');
     }
 
-    public function update(User $user, Category $category): bool
-    {
-        return $user->can('update category');
-    }
-
     public function delete(User $user, Category $category): bool
     {
         return $user->can('delete category');

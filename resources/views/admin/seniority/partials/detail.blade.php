@@ -92,10 +92,9 @@
         , onComplete: async function(file, input) {
             var formData = new FormData();
             formData.append('attachment', file);
-            formData.append('id', "{{ $seniority->id }}");
             formData.append('_method', "PATCH");
 
-            const url = "{{ route('admin.seniority.uploadFile') }}"
+            const url = "{{ route('admin.seniority.uploadFile', ':id') }}".replace(':id', '{{ $seniority->id }}');
             try {
                 const result = await fetchRequest(url, 'POST', formData);
                 if (result) {
@@ -116,7 +115,7 @@
 
     async function updateField(field, id) {
         const newValue = $('#input-' + field).val();
-        const url = "{{ route('admin.seniority.updateField') }}";
+        const url = "{{ route('admin.seniority.updateField', ':id') }}".replace(':id', id);
         const data = {
             id: id
             , field: field

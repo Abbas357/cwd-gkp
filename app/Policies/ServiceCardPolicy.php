@@ -14,7 +14,7 @@ class ServiceCardPolicy
 
     public function view(User $user, ServiceCard $serviceCard): bool
     {
-        return $user->can('view service card');
+        return $user->id === $serviceCard->user_id || $user->can('view service card');
     }
 
     public function create(User $user): bool
@@ -24,41 +24,26 @@ class ServiceCardPolicy
 
     public function update(User $user, ServiceCard $serviceCard): bool
     {
-        return $user->can('update service card');
+        return $user->id === $serviceCard->user_id || $user->can('update service card');
     }
 
     public function delete(User $user, ServiceCard $serviceCard): bool
     {
-        return $user->can('delete service card');
+        return $user->id === $serviceCard->user_id || $user->can('delete service card');
     }
 
     public function verify(User $user, ServiceCard $serviceCard): bool
     {
-        return $user->can('verify service card');
+        return $user->id === $serviceCard->user_id || $user->can('verify service card');
     }
 
     public function reject(User $user, ServiceCard $serviceCard): bool
     {
-        return $user->can('reject service card');
-    }
-
-    public function restore(User $user, ServiceCard $serviceCard): bool
-    {
-        return $user->can('restore service card');
+        return $user->id === $serviceCard->user_id || $user->can('reject service card');
     }
 
     public function renew(User $user, ServiceCard $serviceCard): bool
     {
-        return $user->can('renew service card');
-    }
-
-    public function updateField(User $user): bool
-    {
-        return $user->can('update service card field');
-    }
-
-    public function uploadFile(User $user): bool
-    {
-        return $user->can('upload service card file');
+        return $user->id === $serviceCard->user_id || $user->can('renew service card');
     }
 }

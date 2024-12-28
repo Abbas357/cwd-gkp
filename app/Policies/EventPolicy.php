@@ -14,7 +14,7 @@ class EventPolicy
 
     public function view(User $user, Event $event): bool
     {
-        return $user->can('view event');
+        return $user->id === $event->user_id || $user->can('view event');
     }
 
     public function create(User $user): bool
@@ -24,31 +24,21 @@ class EventPolicy
 
     public function update(User $user, Event $event): bool
     {
-        return $user->id === $event->user_id || $user->can('update event');
+        return$user->id === $event->user_id ||  $user->can('update event');
     }
 
     public function publish(User $user, Event $event): bool
     {
-        return $user->can('publish event');
+        return $user->id === $event->user_id || $user->can('publish event');
     }
 
     public function archive(User $user, Event $event): bool
     {
-        return $user->can('archive event');
+        return $user->id === $event->user_id || $user->can('archive event');
     }
 
     public function delete(User $user, Event $event): bool
     {
-        return $user->can('delete event');
-    }
-
-    public function updateField(User $user): bool
-    {
-        return $user->can('update event field');
-    }
-
-    public function uploadFile(User $user): bool
-    {
-        return $user->can('upload event file');
+        return $user->id === $event->user_id || $user->can('delete event');
     }
 }

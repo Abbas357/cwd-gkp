@@ -13,75 +13,125 @@
         </div>
     </a>
     <div class="sidebar-nav" data-simplebar="true">
-
-        <!--navigation-->
         <ul class="metismenu" id="sidenav">
+            @canany(['view any user', 'view any seniority'])
             <li>
                 <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="bi-people-fill text-warning"></i></div>
                     <div class="menu-title">User Management</div>
                 </a>
                 <ul class="p-2 menu-items">
+                    @can('view any user')
                     <li><a href="{{ route('admin.users.index') }}"><i class="bi-person-circle fs-6"></i>&nbsp; Users</a></li>
+                    @endcan
+                    @can('view any seniority')
                     <li><a href="{{ route('admin.seniority.index') }}"><i class="bi-graph-up-arrow fs-6"></i>&nbsp; Seniority</a></li>
+                    @endcan
                 </ul>
             </li>
+            @endcanany
+    
+            @canany(['view any news', 'view any event', 'view any tender'])
             <li>
                 <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="bi-megaphone text-primary"></i></div>
                     <div class="menu-title">Updates</div>
                 </a>
                 <ul class="p-2 menu-items">
-                    
+                    @can('view any news')
                     <li><a href="{{ route('admin.news.index') }}"><i class="bi-newspaper fs-6"></i>&nbsp; News</a></li>
+                    @endcan
+                    @can('view any event')
                     <li><a href="{{ route('admin.events.index') }}"><i class="bi-calendar2-event fs-6"></i>&nbsp; Events</a></li>
+                    @endcan
+                    @can('view any tender')
                     <li><a href="{{ route('admin.tenders.index') }}"><i class="bi-briefcase fs-6"></i>&nbsp; Tenders</a></li>
+                    @endcan
                 </ul>
             </li>
+            @endcanany
+    
+            @canany(['view any slider', 'view any story', 'view any gallery'])
             <li>
                 <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="bi-collection-play-fill text-success"></i></div>
                     <div class="menu-title">Media</div>
                 </a>
                 <ul class="p-2 menu-items">
+                    @can('view any slider')
                     <li><a href="{{ route('admin.sliders.index') }}"><i class="bi-images fs-6"></i>&nbsp; Sliders</a></li>
+                    @endcan
+                    @can('view any story')
                     <li><a href="{{ route('admin.stories.index') }}"><i class="bi-circle fs-6"></i>&nbsp; Stories</a></li>
+                    @endcan
+                    @can('view any gallery')
                     <li><a href="{{ route('admin.gallery.index') }}"><i class="bi-card-image fs-6"></i>&nbsp; Gallery</a></li>
+                    @endcan
                 </ul>
             </li>
+            @endcanany
+    
+            @canany(['view any project', 'view project file', 'create development project'])
             <li>
                 <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="bi-kanban text-primary"></i></div>
                     <div class="menu-title">Projects</div>
                 </a>
                 <ul class="p-2 menu-items">
+                    @can('view any project')
                     <li><a href="{{ route('admin.projects.index') }}"><i class="bi-kanban fs-6"></i>&nbsp; Projects</a></li>
+                    @endcan
+                    @can('view project file')
                     <li><a href="{{ route('admin.project_files.index') }}"><i class="bi-folder fs-6"></i>&nbsp; Project Files</a></li>
+                    @endcan
+                    @can('create development project')
                     <li><a href="{{ route('admin.development_projects.index') }}"><i class="bi-buildings fs-6"></i>&nbsp; Dev. Projects</a></li>
+                    @endcan
+                    @can('view any project')
                     <li><a href="{{ route('admin.schemes.index') }}"><i class="bi-building fs-6"></i>&nbsp; Schemes</a></li>
+                    @endcan
                 </ul>
             </li>
+            @endcanany
+    
+            @canany(['view any page', 'create download'])
             <li>
                 <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="bi-database text-success"></i></div>
                     <div class="menu-title">Site Content</div>
                 </a>
                 <ul class="p-2 menu-items">
+                    @can('view any page')
                     <li><a href="{{ route('admin.pages.index') }}"><i class="bi-file-earmark-plus fs-6"></i>&nbsp; Pages</a></li>
+                    @endcan
+                    @can('create download')
                     <li><a href="{{ route('admin.downloads.index') }}"><i class="bi-cloud-arrow-down fs-6"></i>&nbsp; Downloads</a></li>
+                    @endcan
                 </ul>
             </li>
+            @endcanany
+    
+            @canany(['view any service card', 'view any contractor', 'view any standardization'])
             <li>
                 <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="bi-app-indicator text-info"></i></div>
                     <div class="menu-title">Modules</div>
                 </a>
                 <ul class="p-2 menu-items">
+                    @can('view any service card')
                     <li><a href="{{ route('admin.service_cards.index') }}"><i class="bi-credit-card fs-6"></i>&nbsp; Service Card</a></li>
+                    @endcan
+                    @can('view any contractor')
                     <li><a href="{{ route('admin.registrations.index') }}"><i class="bi-person-vcard fs-6"></i>&nbsp; E-Registration</a></li>
+                    @endcan
+                    @can('view any standardization')
                     <li><a href="{{ route('admin.standardizations.index') }}"><i class="bi-patch-check-fill fs-6"></i>&nbsp; E-Standardization</a></li>
+                    @endcan
                 </ul>
             </li>
+            @endcanany
+    
+            @canany(['view any districts', 'view any category', 'view any role', 'view any permission'])
             <li class="menu-label">Others</li>
             <li>
                 <a href="javascript:;" class="has-arrow">
@@ -89,44 +139,42 @@
                     <div class="menu-title">Collections</div>
                 </a>
                 <ul class="p-2 menu-items">
+                    @can('view any district')
                     <li><a href="{{ route('admin.districts.index') }}"><i class="bi-arrow-right-short fs-6"></i>&nbsp; Districts</a></li>
+                    @endcan
+                    @can('view any category')
                     <li><a href="{{ route('admin.categories.index') }}"><i class="bi-arrow-right-short fs-6"></i>&nbsp; Categories</a></li>
+                    @endcan
+                    @can('view any roles')
                     <li><a href="{{ route('admin.roles.index') }}"><i class="bi-arrow-right-short fs-6"></i>&nbsp; Roles</a></li>
+                    @endcan
+                    @can('view any permissions')
                     <li><a href="{{ route('admin.permissions.index') }}"><i class="bi-arrow-right-short fs-6"></i>&nbsp; Permissions</a></li>
+                    @endcan
                 </ul>
             </li>
+            @endcanany
+    
+            @canany(['update comment', 'view any newsletter', 'view any public contact'])
             <li>
                 <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="bi-person-walking text-danger"></i></div>
                     <div class="menu-title">Public Dealings</div>
                 </a>
                 <ul class="p-2 menu-items">
+                    @can('update comment')
                     <li><a href="{{ route('admin.comments.index') }}"><i class="bi-chat fs-6"></i>&nbsp; Comments</a></li>
+                    @endcan
+                    @can('view any newsletter')
                     <li><a href="{{ route('admin.newsletter.create_mass_email') }}"><i class="bi-send fs-6"></i>&nbsp; Send Email</a></li>
                     <li><a href="{{ route('admin.newsletter.index') }}"><i class="bi-envelope fs-6"></i>&nbsp; All Emails</a></li>
+                    @endcan
+                    @can('view any public contact')
                     <li><a href="{{ route('admin.public_contact.index') }}"><i class="bi-exclamation-triangle fs-6"></i>&nbsp; Queries</a></li>
+                    @endcan
                 </ul>
             </li>
-            {{-- <li>
-                <a class="has-arrow" href="javascript:;">
-                    <div class="parent-icon"><i class="bi-three-dots"></i></div>
-                    <div class="menu-title">Menu Levels</div>
-                </a>
-                <ul>
-                    <li><a class="has-arrow" href="javascript:;"><i class="bi-arrow-right-short"></i>Level
-                            One</a>
-                        <ul>
-                            <li><a class="has-arrow" href="javascript:;"><i class="bi-arrow-right-short"></i>Level
-                                    Two</a>
-                                <ul>
-                                    <li><a href="javascript:;"><i class="bi-arrow-right-short"></i>Level Three</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </li> --}}
+            @endcanany
         </ul>
     </div>
     <div class="sidebar-bottom gap-4">
@@ -150,8 +198,12 @@
                 <i class="bi-sliders"></i>
             </a>
             <div class="dropdown-menu dropdown-option dropdown-menu-end shadow">
-                <div><a class="dropdown-item d-flex align-items-center gap-3 py-2" href="{{ route('admin.logs') }}"><i class="bi-activity"></i>Activity Log</a></div>
-                <div><a class="dropdown-item d-flex align-items-center gap-3 py-2" href="{{ route('admin.settings.index') }}"><i class="bi-gear"></i>Settings</a></div>
+                @can('view activity')
+                    <div><a class="dropdown-item d-flex align-items-center gap-3 py-2" href="{{ route('admin.logs') }}"><i class="bi-activity"></i>Activity Log</a></div>
+                @endcan
+                @can('view settings')
+                    <div><a class="dropdown-item d-flex align-items-center gap-3 py-2" href="{{ route('admin.settings.index') }}"><i class="bi-gear"></i>Settings</a></div>
+                @endcan
                 <div><a class="dropdown-item d-flex align-items-center gap-3 py-2" href="{{ route('admin.profile.edit') }}"><i class="bi-person-circle"></i>Edit Profile</a></div>
             </div>
         </div>

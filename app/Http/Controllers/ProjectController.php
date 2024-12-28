@@ -59,9 +59,8 @@ class ProjectController extends Controller
         return response()->json($project);
     }
 
-    public function showDetail($projectId)
+    public function showDetail(Project $project)
     {
-        $project = Project::withoutGlobalScope('published')->findOrFail($projectId);
 
         $cat = [
             'news_category' => Category::where('type', 'news_category')->get(),
@@ -76,15 +75,12 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function updateField(Request $request)
+    public function updateField(Request $request, Project $project)
     {
         $request->validate([
             'field' => 'required|string',
             'value' => 'required|string',
-            'id'    => 'required|integer|exists:projects,id',
         ]);
-
-        $project = Project::findOrFail($request->id);
 
         $project->{$request->field} = $request->value;
 
@@ -96,7 +92,7 @@ class ProjectController extends Controller
         return response()->json(['error' => 'No changes were made to the field'], 200);
     }
 
-    public function destroy($project)
+    public function destroy(Project $project)
     {
         if ($project->delete()) {
             return response()->json(['success' => 'Project has been deleted successfully.']);

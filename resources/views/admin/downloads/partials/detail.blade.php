@@ -95,9 +95,8 @@
 
     async function updateField(field, id) {
         const newValue = $('#input-' + field).val();
-        const url = "{{ route('admin.downloads.updateField') }}";
+        const url = "{{ route('admin.downloads.updateField', ':id') }}".replace(':id', id);
         const data = {
-            id: id,
             field: field,
             value: newValue
         };
@@ -115,10 +114,9 @@
         const file = $('#file')[0].files[0];
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('id', id);
         formData.append('_method', 'PATCH');
 
-        const url = "{{ route('admin.downloads.uploadFile') }}";
+        const url = "{{ route('admin.downloads.uploadFile', ':id') }}".replace(':id', id);
         fetchRequest(url, 'POST', formData);
     }
 </script>

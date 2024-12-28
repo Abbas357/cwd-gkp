@@ -110,9 +110,8 @@ class GalleryController extends Controller
         return response()->json($Gallery);
     }
 
-    public function publishGallery(Request $request, $galleryId)
+    public function publishGallery(Request $request, Gallery $gallery)
     {
-        $gallery = Gallery::withoutGlobalScope('published')->findOrFail($galleryId);
         if ($gallery->status === 'draft') {
             $gallery->published_at = now();
             $gallery->status = 'published';
@@ -136,9 +135,8 @@ class GalleryController extends Controller
         return response()->json(['success' => 'Gallery cannot be archived.'], 403);
     }
 
-    public function showDetail($galleryId)
+    public function showDetail(Gallery $gallery)
     {
-        $gallery = Gallery::withoutGlobalScope('published')->findOrFail($galleryId);
         if (!$gallery) {
             return response()->json([
                 'success' => false,
@@ -161,14 +159,12 @@ class GalleryController extends Controller
         ]);
     }
 
-    public function updateField(Request $request)
+    public function updateField(Request $request, Gallery $gallery)
     {
         $request->validate([
             'field' => 'required|string',
             'value' => 'required|string',
         ]);
-
-        $gallery = Gallery::withoutGlobalScope('published')->findOrFail($request->id);
 
         if (in_array($gallery->status, ['published', 'archived'])) {
             return response()->json(['error' => 'Published or Archived gallery cannot be updated'], 403);
@@ -184,14 +180,11 @@ class GalleryController extends Controller
         return response()->json(['error' => 'No changes were made to the field'], 200);
     }
 
-
-    public function uploadFile(Request $request)
+    public function uploadFile(Request $request, Gallery $gallery)
     {
         $request->validate([
             'file' => 'required|file|mimes:jpg,png,jpeg,gif|max:10240',
         ]);
-
-        $gallery = Gallery::withoutGlobalScope('published')->findOrFail($request->id);
 
         if (in_array($gallery->status, ['published', 'archived'])) {
             return response()->json(['error' => 'Published or Archived gallery cannot be updated'], 403);
@@ -207,10 +200,8 @@ class GalleryController extends Controller
         }
     }
 
-
-    public function destroy($galleryId)
+    public function destroy(Gallery $gallery)
     {
-        $gallery = Gallery::withoutGlobalScope('published')->findOrFail($galleryId);
         if ($gallery->status === 'draft' && is_null($gallery->published_at)) {
             if ($gallery->delete()) {
                 return response()->json(['success' => 'Gallery has been deleted successfully.']);

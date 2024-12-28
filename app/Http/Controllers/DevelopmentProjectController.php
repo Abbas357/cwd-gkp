@@ -110,26 +110,24 @@ class DevelopmentProjectController extends Controller
         return response()->json($DevelopmentProject);
     }
 
-    public function publishDevelopmentProject(Request $request, $dev_projectId)
+    public function publishDevelopmentProject(Request $request, DevelopmentProject $DevelopmentProject)
     {
-        $dev_project = DevelopmentProject::withoutGlobalScope('published')->findOrFail($dev_projectId);
-        if ($dev_project->status === 'Draft') {
-            $dev_project->status = $request->progress_percentage == 100 ? 'Completed' : 'In-Progress';
+        if ($DevelopmentProject->status === 'Draft') {
+            $DevelopmentProject->status = $request->progress_percentage == 100 ? 'Completed' : 'In-Progress';
             $message = 'Project has been published successfully.';
         } else {
-            $dev_project->status = 'Draft';
+            $DevelopmentProject->status = 'Draft';
             $message = 'Project has been unpublished.';
         }
-        $dev_project->save();
+        $DevelopmentProject->save();
         return response()->json(['success' => $message], 200);
     }
 
-    public function archiveDevelopmentProject(Request $request, $dev_projectId)
+    public function archiveDevelopmentProject(Request $request, DevelopmentProject $DevelopmentProject)
     {
-        $dev_project = DevelopmentProject::findOrFail($dev_projectId);
-        if ($dev_project->status != 'Draft') {
-            $dev_project->status = 'Archived';
-            $dev_project->save(); 
+        if ($DevelopmentProject->status != 'Draft') {
+            $DevelopmentProject->status = 'Archived';
+            $DevelopmentProject->save(); 
             return response()->json(['success' => 'Project has been archived successfully.'], 200);
         }
         return response()->json(['success' => 'Project cannot be archived.'], 403);
@@ -153,20 +151,17 @@ class DevelopmentProjectController extends Controller
         ]);
     }
 
-    public function updateField(Request $request)
+    public function updateField(Request $request, DevelopmentProject $DevelopmentProject)
     {
         $request->validate([
             'field' => 'required|string',
             'value' => 'required|string',
-            'id'    => 'required|integer|exists:development_projects,id',
         ]);
 
-        $project = DevelopmentProject::findOrFail($request->id);
+        $DevelopmentProject->{$request->field} = $request->value;
 
-        $project->{$request->field} = $request->value;
-
-        if ($project->isDirty($request->field)) {
-            $project->save();
+        if ($DevelopmentProject->isDirty($request->field)) {
+            $DevelopmentProject->save();
             return response()->json(['success' => 'Field updated successfully'], 200);
         }
 

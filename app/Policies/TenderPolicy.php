@@ -5,7 +5,7 @@ namespace App\Policies;
 use App\Models\Tender;
 use App\Models\User;
 
-class TenderPolicy{
+class TenderPolicy {
     
     public function viewAny(User $user): bool
     {
@@ -14,7 +14,7 @@ class TenderPolicy{
     
     public function view(User $user, Tender $tender): bool
     {
-        return $user->can('view tender');
+        return $user->id === $tender->user_id || $user->can('view tender');
     }
     
     public function create(User $user): bool
@@ -24,35 +24,21 @@ class TenderPolicy{
     
     public function update(User $user, Tender $tender): bool
     {
-        
         return $user->id === $tender->user_id || $user->can('update tender');
     }
     
     public function delete(User $user, Tender $tender): bool
     {
-        
         return $user->id === $tender->user_id || $user->can('delete tender');
-    }
-    
-    public function restore(User $user, Tender $tender): bool
-    {
-        
-        return $user->can('restore tender');
-    }
-    
-    public function forceDelete(User $user, Tender $tender): bool
-    {
-        
-        return $user->can('force delete tender');
     }
     
     public function publish(User $user, Tender $tender): bool
     {
-        return $user->can('publish tender');
+        return $user->id === $tender->user_id || $user->can('publish tender');
     }
     
     public function archive(User $user, Tender $tender): bool
     {
-        return $user->can('archive tender');
+        return $user->id === $tender->user_id || $user->can('archive tender');
     }
 }

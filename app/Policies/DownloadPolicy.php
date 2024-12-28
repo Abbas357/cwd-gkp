@@ -9,12 +9,12 @@ class DownloadPolicy
 {
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->can('view any download');
     }
 
     public function view(User $user, Download $download): bool
     {
-        return true;
+        return $user->id === $download->user_id || $user->can('view download');
     }
 
     public function create(User $user): bool
@@ -29,26 +29,16 @@ class DownloadPolicy
 
     public function delete(User $user, Download $download): bool
     {
-        return $user->can('delete download');
+        return $user->id === $download->user_id || $user->can('delete download');
     }
 
     public function publish(User $user, Download $download): bool
     {
-        return $user->can('publish download');
+        return $user->id === $download->user_id || $user->can('publish download');
     }
 
     public function archive(User $user, Download $download): bool
     {
-        return $user->can('archive download');
-    }
-
-    public function updateField(User $user): bool
-    {
-        return $user->can('update download field');
-    }
-
-    public function uploadFile(User $user): bool
-    {
-        return $user->can('upload download file');
+        return $user->id === $download->user_id || $user->can('archive download');
     }
 }

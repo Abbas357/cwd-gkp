@@ -153,10 +153,9 @@
 
     async function updateField(field, id) {
         const newValue = (field === 'introduction') ? $('#input-' + field).summernote('code') : $('#input-' + field).val();
-        const url = "{{ route('admin.development_projects.updateField') }}";
+        const url = "{{ route('admin.development_projects.updateField', ':id') }}".replace(':id', id);
         const data = {
-            id: id
-            , field: field
+            field: field
             , value: newValue
         };
         const success = await fetchRequest(url, 'PATCH', data);

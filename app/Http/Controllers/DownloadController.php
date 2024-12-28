@@ -98,9 +98,8 @@ class DownloadController extends Controller
         return response()->json($Download);
     }
 
-    public function publishDownload(Request $request, $downloadId)
+    public function publishDownload(Request $request, Download $download)
     {
-        $download = Download::withoutGlobalScope('published')->findOrFail($downloadId);
         if ($download->status === 'draft') {
             $download->published_at = now();
             $download->status = 'published';
@@ -124,9 +123,8 @@ class DownloadController extends Controller
         return response()->json(['success' => 'File cannot be archived.'], 403);
     }
 
-    public function showDetail($downloadId)
+    public function showDetail(Download $download)
     {
-        $download = Download::withoutGlobalScope('published')->findOrFail($downloadId);
         if (!$download) {
             return response()->json([
                 'success' => false,
@@ -150,15 +148,12 @@ class DownloadController extends Controller
         ]);
     }
 
-    public function updateField(Request $request)
+    public function updateField(Request $request, Download $download)
     {
         $request->validate([
             'field' => 'required|string',
             'value' => 'required|string',
-            'id'    => 'required|integer|exists:downloads,id',
         ]);
-
-        $download = Download::withoutGlobalScope('published')->findOrFail($request->id);
 
         if (in_array($download->status, ['published', 'archived'])) {
             return response()->json(['error' => 'Published or Archived downlods cannot be updated'], 403);
@@ -175,14 +170,11 @@ class DownloadController extends Controller
     }
 
 
-    public function uploadFile(Request $request)
+    public function uploadFile(Request $request, Download $download)
     {
         $request->validate([
             'file' => 'required|file|mimes:pdf,docx,pptx, txt,jpg,png|max:10240', 
-            'id'   => 'required|integer|exists:downloads,id',
         ]);
-
-        $download = Download::withoutGlobalScope('published')->findOrFail($request->id);
 
         if (in_array($download->status, ['published', 'archived'])) {
             return response()->json(['error' => 'Published or Archived downloads cannot be updated'], 403); 
@@ -199,9 +191,8 @@ class DownloadController extends Controller
     }
 
 
-    public function destroy($downloadId)
+    public function destroy(Download $download)
     {
-        $download = Download::withoutGlobalScope('published')->findOrFail($downloadId);
         if ($download->status === 'draft' && is_null($download->published_at)) {
             if ($download->delete()) {
                 return response()->json(['success' => 'File has been deleted successfully.']);

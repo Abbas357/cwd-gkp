@@ -311,10 +311,9 @@
                 var formData = new FormData();
                 formData.append('file', file);
                 formData.append('collection', input.dataset.collection);
-                formData.append('id', "{{ $ContractorRegistration->id }}");
                 formData.append('_method', "PATCH");
 
-                const url = "{{ route('admin.registrations.uploadFile') }}"
+                const url = "{{ route('admin.registrations.uploadFile', ':id') }}".replace(':id', '{{ $ContractorRegistration->id }}');
                 try {
                     const result = await fetchRequest(url, 'POST', formData);
                     if (result) {
@@ -350,10 +349,9 @@
 
     async function updateField(field, id) {
         const newValue = $('#input-' + field).val();
-        const url = "{{ route('admin.registrations.updateField') }}";
+        const url = "{{ route('admin.registrations.updateField', ':id') }}".replace(':id', id);
         const data = {
-            id: id
-            , field: field
+            field: field
             , value: newValue
         };
         const success = await fetchRequest(url, 'PATCH', data, 'Field updated successfully', 'Error updating field');

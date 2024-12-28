@@ -240,7 +240,7 @@ class HomeController extends Controller
                 ->where('title', 'like', '%' . $search . '%');
         } elseif (!empty($search)) {
             $query->where('title', 'like', '%' . $search . '%')
-                ->orWhere('type', 'like', '%' . $search . '%');
+                ->orWhere('notifiable_type', 'like', '%' . $search . '%');
         }
 
         $totalNotifications = $query->count();
@@ -294,7 +294,7 @@ class HomeController extends Controller
             ->when($request->query('search'), function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('title', 'like', "%$search%")
-                        ->orWhere('type', 'like', "%$search%");
+                        ->orWhere('notifiable_type', 'like', "%$search%");
                 });
             })
             ->when($request->query('date_start'), function ($query, $dateStart) {

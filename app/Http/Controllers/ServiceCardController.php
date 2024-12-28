@@ -62,15 +62,13 @@ class ServiceCardController extends Controller
         return view('admin.service_cards.index');
     }
 
-    public function show($cardId)
+    public function show(ServiceCard $service_card)
     {
-        $service_card = ServiceCard::findOrFail($cardId);
         return response()->json($service_card);
     }
 
-    public function verify(Request $request, $cardId)
+    public function verify(Request $request, ServiceCard $service_card)
     {
-        $service_card = ServiceCard::findOrFail($cardId);
         if ($service_card->status !== 'Verified') {
             $service_card->status = 'Verified';
             $service_card->issue_date = Carbon::now();
@@ -83,9 +81,8 @@ class ServiceCardController extends Controller
         return response()->json(['error' => 'Service Card can\'t be Verified.']);
     }
 
-    public function restore(Request $request, $cardId)
+    public function restore(Request $request, ServiceCard $service_card)
     {
-        $service_card = ServiceCard::findOrFail($cardId);
         if ($service_card->status === 'Rejected') {
             $service_card->status = 'New';
             if ($service_card->save()) {
@@ -95,9 +92,8 @@ class ServiceCardController extends Controller
         return response()->json(['error' => 'Service Card can\'t be restored.']);
     }
 
-    public function reject(Request $request, $cardId)
+    public function reject(Request $request, ServiceCard $service_card)
     {
-        $service_card = ServiceCard::findOrFail($cardId);
         if (!in_array($service_card->status, ['Verified', 'Rejected'])) {
             $service_card->status = 'Rejected';
             $service_card->rejection_reason = $request->reason;
@@ -110,10 +106,9 @@ class ServiceCardController extends Controller
         return response()->json(['error' => 'Service Card can\'t be Rejected.']);
     }
 
-    public function renew(Request $request, $cardId)
+    public function renew(Request $request, ServiceCard $service_card)
     {
         $currentDate = Carbon::now();
-        $service_card = ServiceCard::findOrFail($cardId);
         if ($service_card->status === 'Verified') {
             if ($currentDate->greaterThanOrEqualTo($service_card->expiry_date)) {
                 $service_card->issue_date = $request->issue_date ?? $currentDate;
@@ -133,9 +128,8 @@ class ServiceCardController extends Controller
         }
     }
 
-    public function showDetail($cardId)
+    public function showDetail(ServiceCard $service_card)
     {
-        $service_card = ServiceCard::findOrFail($cardId);
         if (!$service_card) {
             return response()->json([
                 'success' => false,
@@ -167,10 +161,8 @@ class ServiceCardController extends Controller
         ]);
     }
 
-    public function showCard($cardId)
+    public function showCard(ServiceCard $service_card)
     {
-        $service_card = ServiceCard::findOrFail($cardId);
-
         if ($service_card->status !== 'Verified') {
             return response()->json([
                 'success' => false,
@@ -201,15 +193,12 @@ class ServiceCardController extends Controller
         ]);
     }
 
-    public function updateField(Request $request)
+    public function updateField(Request $request, ServiceCard $service_card)
     {
         $request->validate([
             'field' => 'required|string',
             'value' => 'required|string',
-            'id'    => 'required|integer|exists:service_cards,id',
         ]);
-
-        $service_card = User::findOrFail($request->id);
 
         if (in_array($service_card->status, ['Verified', 'Rejected'])) {
             return response()->json(['error' => 'Verified or Rejected Cards cannot be updated'], 403);
@@ -225,14 +214,11 @@ class ServiceCardController extends Controller
         return response()->json(['error' => 'No changes were made to the field'], 200);
     }
 
-    public function uploadFile(Request $request)
+    public function uploadFile(Request $request, ServiceCard $service_card)
     {
         $request->validate([
-            'id'   => 'required|integer|exists:service_cards,id',
             'image' => 'required|image|mimes:jpeg,jpg,png,gif|max:5000',
         ]);
-
-        $service_card = User::findOrFail($request->id);
 
         if (in_array($service_card->status, ['Verified', 'Rejected'])) {
             return response()->json(['error' => 'Verified or Rejected Cards cannot be updated'], 403);

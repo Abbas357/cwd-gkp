@@ -14,7 +14,7 @@ class SeniorityPolicy
 
     public function view(User $user, Seniority $seniority): bool
     {
-        return $user->can('view seniority');
+        return $user->id === $seniority->user_id || $user->can('view seniority');
     }
 
     public function create(User $user): bool
@@ -22,28 +22,24 @@ class SeniorityPolicy
         return $user->can('create seniority');
     }
 
+    public function update(User $user, Seniority $seniority): bool
+    {
+        return $user->id === $seniority->user_id || $user->can('update seniority');
+    }
+
     public function delete(User $user, Seniority $seniority): bool
     {
-        return $user->can('delete seniority');
+        return $user->id === $seniority->user_id || $user->can('delete seniority');
     }
 
     public function publish(User $user, Seniority $seniority): bool
     {
-        return $user->can('publish seniority');
+        return $user->id === $seniority->user_id || $user->can('publish seniority');
     }
 
     public function archive(User $user, Seniority $seniority): bool
     {
-        return $user->can('archive seniority');
+        return $user->id === $seniority->user_id || $user->can('archive seniority');
     }
 
-    public function updateField(User $user): bool
-    {
-        return $user->can('update seniority field');
-    }
-
-    public function uploadFile(User $user): bool
-    {
-        return $user->can('upload seniority file');
-    }
 }

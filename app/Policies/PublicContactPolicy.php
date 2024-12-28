@@ -9,31 +9,26 @@ class PublicContactPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->can('view any public contact');
+        return $user->can('view any public query');
     }
 
     public function view(User $user, PublicContact $publicContact): bool
     {
-        return $user->can('view public contact');
-    }
-
-    public function create(User $user): bool
-    {
-        return $user->can('create public contact');
+        return $user->can('view public query');
     }
 
     public function reliefGrant(User $user, PublicContact $publicContact): bool
     {
-        return $user->can('grant relief to public contact');
+        return $user->can('grant relief to query');
     }
 
     public function reliefNotGrant(User $user, PublicContact $publicContact): bool
     {
-        return $user->can('deny relief to public contact');
+        return $user->can('deny relief to query');
     }
 
     public function drop(User $user, PublicContact $publicContact): bool
     {
-        return $user->can('drop public contact');
+        return $user->can('drop query');
     }
 }

@@ -14,7 +14,7 @@ class GalleryPolicy
 
     public function view(User $user, Gallery $gallery): bool
     {
-        return $user->can('view gallery');
+        return $user->id === $gallery->user_id || $user->can('view gallery');
     }
 
     public function create(User $user): bool
@@ -29,26 +29,16 @@ class GalleryPolicy
 
     public function publish(User $user, Gallery $gallery): bool
     {
-        return $user->can('publish gallery');
+        return $user->id === $gallery->user_id || $user->can('publish gallery');
     }
 
     public function archive(User $user, Gallery $gallery): bool
     {
-        return $user->can('archive gallery');
+        return $user->id === $gallery->user_id || $user->can('archive gallery');
     }
 
     public function delete(User $user, Gallery $gallery): bool
     {
-        return $user->can('delete gallery');
-    }
-
-    public function updateField(User $user): bool
-    {
-        return $user->can('update gallery field');
-    }
-
-    public function uploadFile(User $user): bool
-    {
-        return $user->can('upload gallery file');
+        return $user->id === $gallery->user_id || $user->can('delete gallery');
     }
 }

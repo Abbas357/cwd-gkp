@@ -126,9 +126,8 @@ class TenderController extends Controller
         return response()->json($tender);
     }
 
-    public function publishTender(Request $request, $tenderId)
+    public function publishTender(Request $request, Tender $tender)
     {
-        $tender = Tender::withoutGlobalScope('published')->findOrFail($tenderId);
         if ($tender->status === 'draft') {
             $tender->published_at = now();
             $tender->status = 'published';
@@ -152,9 +151,8 @@ class TenderController extends Controller
         return response()->json(['success' => 'Tender cannot be archived.'], 403);
     }
 
-    public function showDetail($tenderId)
+    public function showDetail(Tender $tender)
     {
-        $tender = Tender::withoutGlobalScope('published')->findOrFail($tenderId);
         if (!$tender) {
             return response()->json([
                 'success' => false,
@@ -177,15 +175,12 @@ class TenderController extends Controller
         ]);
     }
 
-    public function updateField(Request $request)
+    public function updateField(Request $request, Tender $tender)
     {
         $request->validate([
             'field' => 'required|string',
             'value' => 'required|string',
-            'id'    => 'required|integer|exists:tenders,id',
         ]);
-
-        $tender = Tender::withoutGlobalScope('published')->findOrFail($request->id);
 
         if (in_array($tender->status, ['published', 'archived'])) {
             return response()->json(['error' => 'Published or Archived tender cannot be updated'], 403);
@@ -201,33 +196,8 @@ class TenderController extends Controller
         return response()->json(['error' => 'No changes were made to the field'], 200);
     }
 
-
-    public function uploadFile(Request $request)
+    public function destroy(Tender $tender)
     {
-        $request->validate([
-            'id'   => 'required|integer|exists:tenders,id',
-            'attachment' => 'required|file|mimes:pdf,docx,pptx,txt,jpeg,jpg,png,gif|max:10240', 
-        ]);
-
-        $tender = Tender::withoutGlobalScope('published')->findOrFail($request->id);
-
-        if (in_array($tender->status, ['published', 'archived'])) {
-            return response()->json(['error' => 'Published or Archived tender cannot be updated'], 403); 
-        }
-
-        try {
-            $tender->addMedia($request->file('tender_document'))
-                ->toMediaCollection('tender_documents');
-
-            return response()->json(['success' => 'File uploaded successfully'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error uploading file: ' . $e->getMessage()], 500);
-        }
-    }
-
-    public function destroy($tenderId)
-    {
-        $tender = Tender::withoutGlobalScope('published')->findOrFail($tenderId);
         if ($tender->status === 'draft' && is_null($tender->published_at)) {
             if ($tender->delete()) {
                 return response()->json(['success' => 'Tender has been deleted successfully.']);

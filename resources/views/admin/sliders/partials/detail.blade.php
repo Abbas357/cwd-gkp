@@ -118,10 +118,9 @@
             , onComplete: async function(file, input) {
                 var formData = new FormData();
                 formData.append('image', file);
-                formData.append('id', "{{ $slider->id }}");
                 formData.append('_method', "PATCH");
 
-                const url = "{{ route('admin.sliders.uploadFile') }}"
+                const url = "{{ route('admin.sliders.uploadFile', ':id') }}".replace(':id', '{{ $slider->id }}');
                 try {
                     const result = await fetchRequest(url, 'POST', formData);
                     if (result) {
@@ -154,10 +153,9 @@
 
     async function updateField(field, id) {
         const newValue = (field === 'content') ? $('#input-' + field).summernote('code') : $('#input-' + field).val();
-        const url = "{{ route('admin.sliders.updateField') }}";
+        const url = "{{ route('admin.sliders.updateField', ':id') }}".replace(':id', id);
         const data = {
-            id: id
-            , field: field
+            field: field
             , value: newValue
         };
         const success = await fetchRequest(url, 'PATCH', data);

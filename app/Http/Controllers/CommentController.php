@@ -53,9 +53,8 @@ class CommentController extends Controller
         return view('admin.comments.index');
     }
 
-    public function showDetail($commentId)
+    public function showDetail(Comment $comment)
     {
-        $comment = Comment::withoutGlobalScope('published')->findOrFail($commentId);
         if (!$comment) {
             return response()->json([
                 'success' => false,
@@ -73,9 +72,8 @@ class CommentController extends Controller
         ]);
     }
 
-    public function publishComment(Request $request, $commentId)
+    public function publishComment(Request $request, Comment $comment)
     {
-        $comment = Comment::withoutGlobalScope('published')->findOrFail($commentId);
         if ($comment->status === 'new') {
             $comment->published_at = now();
             $comment->status = 'published';
@@ -99,9 +97,8 @@ class CommentController extends Controller
         return response()->json(['success' => 'Comment cannot be archived.'], 403);
     }
 
-    public function destroy($commentId)
+    public function destroy(Comment $comment)
     {
-        $comment = Comment::withoutGlobalScope('published')->findOrFail($commentId);
         if ($comment->status === 'new' && is_null($comment->published_at)) {
             if ($comment->delete()) {
                 return response()->json(['success' => 'File has been deleted successfully.']);

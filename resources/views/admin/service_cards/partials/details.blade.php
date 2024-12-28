@@ -259,10 +259,9 @@
             , onComplete: async function(file, input) {
                 var formData = new FormData();
                 formData.append('image', file);
-                formData.append('id', "{{ $service_card->id }}");
                 formData.append('_method', "PATCH");
 
-                const url = "{{ route('admin.service_cards.uploadFile') }}"
+                const url = "{{ route('admin.service_cards.uploadFile', ':id') }}".replace(':id', '{{ $service_card->id }}');
                 try {
                     const result = await fetchRequest(url, 'POST', formData);
                     if (result) {
@@ -307,10 +306,9 @@
 
     async function updateField(field, id) {
         const newValue = (field === 'content') ? $('#input-' + field).summernote('code') : $('#input-' + field).val();
-        const url = "{{ route('admin.service_cards.updateField') }}";
+        const url = "{{ route('admin.service_cards.updateField', ':id') }}".replace(':id', id);
         const data = {
-            id: id
-            , field: field
+            field: field
             , value: newValue
         };
         const success = await fetchRequest(url, 'PATCH', data);

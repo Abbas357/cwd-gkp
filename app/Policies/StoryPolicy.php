@@ -14,7 +14,7 @@ class StoryPolicy
 
     public function view(User $user, Story $story): bool
     {
-        return $user->can('view story');
+        return $user->id === $story->user_id || $user->can('view story');
     }
 
     public function create(User $user): bool

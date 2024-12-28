@@ -100,9 +100,8 @@ class NewsController extends Controller
         return response()->json($news);
     }
 
-    public function publishNews(Request $request, $newsId)
+    public function publishNews(Request $request, News $news)
     {
-        $news = News::withoutGlobalScope('published')->findOrFail($newsId);
         if ($news->status === 'draft') {
             $news->published_at = now();
             $news->status = 'published';
@@ -126,9 +125,8 @@ class NewsController extends Controller
         return response()->json(['success' => 'News cannot be archived.'], 403);
     }
 
-    public function showDetail($newsId)
+    public function showDetail(News $news)
     {
-        $news = News::withoutGlobalScope('published')->findOrFail($newsId);
         if (!$news) {
             return response()->json([
                 'success' => false,
@@ -151,15 +149,12 @@ class NewsController extends Controller
         ]);
     }
 
-    public function updateField(Request $request)
+    public function updateField(Request $request, News $news)
     {
         $request->validate([
             'field' => 'required|string',
             'value' => 'required|string',
-            'id'    => 'required|integer|exists:news,id',
         ]);
-
-        $news = News::withoutGlobalScope('published')->findOrFail($request->id);
 
         if (in_array($news->status, ['published', 'archived'])) {
             return response()->json(['error' => 'Published or Archived news cannot be updated'], 403);
@@ -175,15 +170,11 @@ class NewsController extends Controller
         return response()->json(['error' => 'No changes were made to the field'], 200);
     }
 
-
-    public function uploadFile(Request $request)
+    public function uploadFile(Request $request, News $news)
     {
         $request->validate([
-            'id'   => 'required|integer|exists:news,id',
             'attachment' => 'required|file|mimes:pdf,docx,pptx,txt,jpeg,jpg,png,gif|max:10240', 
         ]);
-
-        $news = News::withoutGlobalScope('published')->findOrFail($request->id);
 
         if (in_array($news->status, ['published', 'archived'])) {
             return response()->json(['error' => 'Published or Archived news cannot be updated'], 403); 
@@ -199,9 +190,8 @@ class NewsController extends Controller
         }
     }
 
-    public function destroy($newsId)
+    public function destroy(News $news)
     {
-        $news = News::withoutGlobalScope('published')->findOrFail($newsId);
         if ($news->status === 'draft' && is_null($news->published_at)) {
             if ($news->delete()) {
                 return response()->json(['success' => 'File has been deleted successfully.']);

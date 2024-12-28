@@ -37,13 +37,4 @@ class PagePolicy
         return $user->can('activate page');
     }
 
-    public function updateField(User $user): bool
-    {
-        return $user->can('update page field');
-    }
-
-    public function uploadFile(User $user): bool
-    {
-        return $user->can('upload page file');
-    }
 }

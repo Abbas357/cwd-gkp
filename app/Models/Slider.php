@@ -72,6 +72,11 @@ class Slider extends Model implements HasMedia
         //     alt="User image">
     }
 
+    public function resolveRouteBinding($value, $route = null)
+    {
+        return static::withoutGlobalScopes()->where('id', $value)->firstOrFail();
+    }
+
     public function user() {
         return $this->belongsTo(User::class, 'author_id');
     }

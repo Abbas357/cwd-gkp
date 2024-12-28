@@ -98,10 +98,9 @@
             , onComplete: async function(file, input) {
                 var formData = new FormData();
                 formData.append('attachment', file);
-                formData.append('id', "{{ $page->id }}");
                 formData.append('_method', "PATCH");
 
-                const url = "{{ route('admin.pages.uploadFile') }}"
+                const url = "{{ route('admin.pages.uploadFile', ':id') }}".replace(':id', '{{ $page->id }}');
                 try {
                     const result = await fetchRequest(url, 'POST', formData);
                     if (result) {
@@ -124,29 +123,28 @@
         if (field === 'content') {
             var textarea = $('#input-' + field);
             if (textarea.data('summernote-initialized')) {
-                textarea.summernote('destroy'); // Ensure any existing instances are destroyed
+                textarea.summernote('destroy'); 
             }
             textarea.summernote({
                 height: 300
             });
-            textarea.data('summernote-initialized', true); // Set flag indicating initialization
+            textarea.data('summernote-initialized', true);
         }
     }
 
     async function updateField(field, id) {
         const newValue = (field === 'content') ? $('#input-' + field).summernote('code') : $('#input-' + field).val();
-        const url = "{{ route('admin.pages.updateField') }}";
+        const url = "{{ route('admin.pages.updateField', ':id') }}".replace(':id', id);
         const data = {
-            id: id
-            , field: field
+            field: field
             , value: newValue
         };
         const success = await fetchRequest(url, 'PATCH', data);
         if (success) {
             if (field === 'content') {
-                $('#text-' + field).html(newValue); // Update the HTML content properly
-                $('#input-' + field).summernote('destroy'); // Destroy Summernote instance
-                $('#input-' + field).data('summernote-initialized', false); // Reset initialization flag
+                $('#text-' + field).html(newValue);
+                $('#input-' + field).summernote('destroy');
+                $('#input-' + field).data('summernote-initialized', false);
             } else {
                 $('#text-' + field).text(newValue);
             }
