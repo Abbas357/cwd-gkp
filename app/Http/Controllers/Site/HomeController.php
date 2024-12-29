@@ -250,11 +250,11 @@ class HomeController extends Controller
             ->get()
             ->map(function ($notification) {
                 $info = [
-                    \App\Models\Tender::class => ['bi-clipboard-check', 'Tenders', '#fbb03466', route('tenders.index')],
-                    \App\Models\Gallery::class => ['bi-images', 'Galleries', '#00c4ff66', route('gallery.index')],
-                    \App\Models\Event::class => ['bi-calendar-event', 'Events', '#2dde9866', route('events.index')],
-                    \App\Models\News::class => ['bi-newspaper', 'News', '#c1d82f66', route('news.index')],
-                    \App\Models\Seniority::class => ['bi-person-badge', 'Seniorities', '#da482f66', route('seniority.index')],
+                    \App\Models\Tender::class => ['bi-file-earmark-text', 'Tenders', '#fcaf4533', route('tenders.index')],
+                    \App\Models\Gallery::class => ['bi-images', 'Galleries', '#00c4ff33', route('gallery.index')],
+                    \App\Models\Event::class => ['bi-clock-history', 'Events', '#2dde9833', route('events.index')],
+                    \App\Models\News::class => ['bi-broadcast', 'News', '#ff000033', route('news.index')],
+                    \App\Models\Seniority::class => ['bi-person-lines-fill', 'Seniorities', '#9146ff33', route('seniority.index')],
                 ];
 
                 return [

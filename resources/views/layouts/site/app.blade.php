@@ -45,7 +45,7 @@
     <link href="{{ asset('site/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('site/css/style.css') }}" rel="stylesheet">
     @stack('style')
-    <link href="{{ asset('site/css/custom.css') }}" rel="stylesheet">
+    <link href="{{ asset('site/css/custom.v1.css') }}" rel="stylesheet">
 </head>
 
 

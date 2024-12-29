@@ -344,7 +344,7 @@
             <div id="news-modal" class="modal fade" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content" style="background: #ffffffdd">
-                        <div class="modal-header">
+                        <div class="modal-header" style="background-color: #22d0b815 !important">
                             <h5 class="modal-title"><i class="bi-megaphone"></i> &nbsp; Notifications</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
@@ -370,7 +370,7 @@
                                 </div>
                             </div>
 
-                            <div id="modal-body-content" style="height: 400px; overflow-y: auto;">
+                            <div id="modal-body-content" class="custom-scrollbar" style="height: 400px; overflow-y: auto;">
                                 <div id="notification-list"></div>
                                 <div id="loading-indicator" class="d-flex justify-content-center my-3">
                                     <div class="spinner-border text-primary" role="status">
@@ -386,6 +386,30 @@
                 </div>
             </div>
         `;
+
+        document.addEventListener('DOMContentLoaded', ()=> {
+            const scrollableElements = document.querySelectorAll('.custom-scrollbar');
+        
+            scrollableElements.forEach(element => {
+                let timeout;
+                
+                element.addEventListener('mouseenter', () => {
+                clearTimeout(timeout);
+                element.style.scrollbarWidth = 'thin';
+                element.style.scrollbarColor = 'rgba(0, 0, 0, 0.2) transparent';
+                });
+                
+                element.addEventListener('mouseleave', () => {
+                timeout = setTimeout(() => {
+                    element.style.scrollbarWidth = 'none';
+                    element.style.scrollbarColor = 'transparent transparent';
+                }, 1000);
+                });
+                
+                const contentWidth = element.offsetWidth;
+                element.style.width = `${contentWidth}px`;
+            });
+        });
 
         const newsModal = new bootstrap.Modal(document.getElementById('news-modal'));
         const notificationList = document.getElementById('notification-list');
@@ -488,9 +512,11 @@
                     <div>
                         <a href="${item.url}">${item.title}</a>
                     </div>
-                    <small class="news-date text-muted d-flex flex-column start" style="margin-left:auto">
-                        <a href="${item.info[3]}" class="badge text-bg-secondary mb-1" style="font-size: 10px">${item.info[1]}</a>
-                        <span>${item.created_at}</span>
+                    <small class="news-date text-muted d-flex flex-column align-items-end" style="margin-left:auto">
+                        <div class="mb-1">
+                            <a href="${item.info[3]}" class="badge text-bg-primary" style="font-size: 10px; display: inline-block">${item.info[1]}</a>
+                        </div>
+                        <span class="fw-bold" style="font-size:.7rem">${item.created_at}</span>
                     </small>
                 </div>
             `).join('');
@@ -514,6 +540,4 @@
             }
         });
     });
-
-
 </script>
