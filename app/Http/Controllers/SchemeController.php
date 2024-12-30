@@ -26,13 +26,21 @@ class SchemeController extends Controller
 
         if ($request->ajax()) {
 
-            return DataTables::of($query)
+            $dataTable =  DataTables::of($query)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     return view('admin.schemes.partials.buttons', compact('row'))->render();
                 })
-                ->rawColumns(['action'])
-                ->make(true);
+                ->rawColumns(['action']);
+                
+            if (!$request->input('search.value') && $request->has('searchBuilder')) {
+                $dataTable->filter(function ($query) use ($request) {
+                    $sb = new \App\Helpers\SearchBuilder($request, $query);
+                    $sb->build();
+                });
+            }
+
+            return $dataTable->toJson();
         }
 
         return view('admin.schemes.index');

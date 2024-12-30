@@ -15,13 +15,20 @@ class ProjectController extends Controller
         if ($request->ajax()) {
             $projects = Project::query();
 
-            return DataTables::of($projects)
+            $dataTable = DataTables::of($projects)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     return view('admin.projects.partials.buttons', compact('row'))->render();
                 })
-                ->rawColumns(['action'])
-                ->make(true);
+                ->rawColumns(['action']);
+
+            if (!$request->input('search.value') && $request->has('searchBuilder')) {
+                $dataTable->filter(function ($query) use ($request) {
+                    $sb = new \App\Helpers\SearchBuilder($request, $query);
+                    $sb->build();
+                });
+            }
+            return $dataTable->toJson();
         }
 
         return view('admin.projects.index');

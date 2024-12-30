@@ -39,9 +39,10 @@ class ActivityLogController extends Controller
                     return $row->created_at->format('j, F Y').' ('.$row->created_at->diffForHumans().')';
                 })
                 ->rawColumns(['properties', 'subject', 'causer']);
+
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
                 $dataTable->filter(function ($query) use ($request) {
-                    $sb = new \App\SearchBuilder($request, $query);
+                    $sb = new \App\Helpers\SearchBuilder($request, $query);
                     $sb->build();
                 });
             }

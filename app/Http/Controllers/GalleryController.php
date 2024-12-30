@@ -45,12 +45,12 @@ class GalleryController extends Controller
                 })
                 ->rawColumns(['action', 'status', 'uploaded_by']);
 
-            // if (!$request->input('search.value') && $request->has('searchBuilder')) {
-            //     $dataTable->filter(function ($query) use ($request) {
-            //         $sb = new \App\SearchBuilder($request, $query);
-            //         $sb->build();
-            //     });
-            // }
+            if (!$request->input('search.value') && $request->has('searchBuilder')) {
+                $dataTable->filter(function ($query) use ($request) {
+                    $sb = new \App\Helpers\SearchBuilder($request, $query);
+                    $sb->build();
+                });
+            }
 
             return $dataTable->toJson();
         }

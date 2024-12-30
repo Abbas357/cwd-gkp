@@ -48,12 +48,12 @@ class SeniorityController extends Controller
                 })
                 ->rawColumns(['action', 'status', 'attachment', 'user']);
 
-            // if (!$request->input('search.value') && $request->has('searchBuilder')) {
-            //     $dataTable->filter(function ($query) use ($request) {
-            //         $sb = new \App\SearchBuilder($request, $query);
-            //         $sb->build();
-            //     });
-            // }
+            if (!$request->input('search.value') && $request->has('searchBuilder')) {
+                $dataTable->filter(function ($query) use ($request) {
+                    $sb = new \App\SearchBuilder($request, $query);
+                    $sb->build();
+                });
+            }
 
             return $dataTable->toJson();
         }

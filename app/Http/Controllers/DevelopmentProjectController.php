@@ -25,7 +25,7 @@ class DevelopmentProjectController extends Controller
 
         if ($request->ajax()) {
 
-            return DataTables::of($projects)
+            $dataTable = DataTables::of($projects)
                 ->addIndexColumn()
                 ->addColumn('district', function ($row) {
                     return $row->district?->name;
@@ -56,8 +56,16 @@ class DevelopmentProjectController extends Controller
                 ->editColumn('updated_at', function ($row) {
                     return $row->updated_at->diffForHumans();
                 })
-                ->rawColumns(['action', 'uploaded_by'])
-                ->make(true);
+                ->rawColumns(['action', 'uploaded_by']);
+
+            if (!$request->input('search.value') && $request->has('searchBuilder')) {
+                $dataTable->filter(function ($query) use ($request) {
+                    $sb = new \App\Helpers\SearchBuilder($request, $query);
+                    $sb->build();
+                });
+            }
+            
+            return $dataTable->toJson();
         }
 
         return view('admin.development_projects.index');

@@ -72,12 +72,12 @@ return [
      * This is the class that is responsible for naming generated files.
      */
     // 'file_namer' => Spatie\MediaLibrary\Support\FileNamer\DefaultFileNamer::class,
-    'file_namer' => App\CustomFileNamer::class,
+    'file_namer' => App\Helpers\CustomFileNamer::class,
     /*
      * The class that contains the strategy for determining a media file's path.
      */
     // 'path_generator' => Spatie\MediaLibrary\Support\PathGenerator\DefaultPathGenerator::class,
-    'path_generator' => App\CustomPathGenerator::class,
+    'path_generator' => App\Helpers\CustomPathGenerator::class,
 
     /*
      * The class that contains the strategy for determining how to remove files.

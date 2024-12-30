@@ -1,11 +1,9 @@
 <?php
 
-namespace App;
+namespace App\Helpers;
 
-use Exception;
 use App\Helpers\Database;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Schema;
 
 class SearchBuilder
 {
