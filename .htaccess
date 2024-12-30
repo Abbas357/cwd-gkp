@@ -30,24 +30,24 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 # For more information, read our documentation (https://go.cpanel.net/EA4ModifyINI)
 <IfModule php8_module>
    php_flag display_errors Off
-   php_value max_execution_time 1200
-   php_value max_input_time 1200
+   php_value max_execution_time 300
+   php_value max_input_time 300
    php_value max_input_vars 1000
-   php_value memory_limit 2G
-   php_value post_max_size 2G
+   php_value memory_limit 512M
+   php_value post_max_size 50M
    php_value session.gc_maxlifetime 1440
-   php_value upload_max_filesize 2G
+   php_value upload_max_filesize 50M
    php_flag zlib.output_compression Off
 </IfModule>
 <IfModule lsapi_module>
    php_flag display_errors Off
-   php_value max_execution_time 1200
-   php_value max_input_time 1200
+   php_value max_execution_time 300
+   php_value max_input_time 300
    php_value max_input_vars 1000
-   php_value memory_limit 2G
-   php_value post_max_size 2G
+   php_value memory_limit 512M
+   php_value post_max_size 50M
    php_value session.gc_maxlifetime 1440
-   php_value upload_max_filesize 2G
+   php_value upload_max_filesize 50M
    php_flag zlib.output_compression Off
 </IfModule>
 # END cPanel-generated php ini directives, do not edit
