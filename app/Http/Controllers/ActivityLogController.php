@@ -39,12 +39,13 @@ class ActivityLogController extends Controller
                     return $row->created_at->format('j, F Y').' ('.$row->created_at->diffForHumans().')';
                 })
                 ->rawColumns(['properties', 'subject', 'causer']);
-            // if (!$request->input('search.value') && $request->has('searchBuilder')) {
-            //     $dataTable->filter(function ($query) use ($request) {
-            //         $sb = new \App\SearchBuilder($request, $query);
-            //         $sb->build();
-            //     });
-            // }
+            if (!$request->input('search.value') && $request->has('searchBuilder')) {
+                $dataTable->filter(function ($query) use ($request) {
+                    $allowedColumns = ['id', 'log_name', 'description', 'properties', 'created_at', 'updated_at'];
+                    $sb = new \App\SearchBuilder($request, $query, $allowedColumns);
+                    $sb->build();
+                });
+            }
 
             return $dataTable->toJson();
         }

@@ -63,11 +63,11 @@
 
                             <!-- Filter Buttons -->
                             <div class="col-lg-12 text-end">
-                                <button type="submit" class="cw-btn">
-                                    <i class="bi bi-funnel"></i> Apply Filters
+                                <button type="submit" class="cw-btn cw-simple" data-icon="bi-funnel">
+                                    Apply Filters
                                 </button>
                                 <a href="{{ route('notifications.index') }}" class="btn btn-light">
-                                    <i class="bi bi-arrow-repeat"></i> Reset
+                                    Reset
                                 </a>
                             </div>
                         </div>

@@ -3,8 +3,6 @@
 namespace App;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Schema;
-use Exception;
 
 class SearchBuilder
 {
@@ -36,15 +34,7 @@ class SearchBuilder
     {
         $this->request = $request;
         $this->query = $query;
-        
-        try {
-            $this->allowedColumns = !empty($allowedColumns) 
-                ? $allowedColumns 
-                : Schema::getColumnListing($query->getModel()->getTable());
-        } catch (Exception $e) {
-            $this->allowedColumns = !empty($allowedColumns) ? $allowedColumns : ['id'];
-        }
-        
+        $this->allowedColumns = !empty($allowedColumns) ? $allowedColumns : \Illuminate\Support\Facades\Schema::getColumnListing($query->getModel()->getTable());
         $this->mapColumns = $mapColumns;
     }
 
@@ -76,6 +66,8 @@ class SearchBuilder
                     }
 
                     $searchTerm = (!in_array($rule['condition'] ?? null, ['null', '!null'])) ? $rule['value1'] ?? false : true;
+
+                    $colType = \Illuminate\Support\Facades\Schema::getColumnType($this->query->getModel()->getTable(), $col);
 
                     if ($col && $searchTerm && array_key_exists($rule['condition'] ?? null, $this->sbRules) && in_array($col, $this->allowedColumns)) {
                         if ($rule['condition'] === 'starts' || $rule['condition'] === '!starts') {

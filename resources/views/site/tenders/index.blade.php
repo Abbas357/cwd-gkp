@@ -77,7 +77,7 @@
                             {{ $tender->getMedia('bidding_documents')->isNotEmpty() ? 'Yes' : 'Not Available' }}
                         </td>
                         <td>
-                            <a href="{{ route('tenders.show', $tender->slug) }}" class="cw-btn">View Detail</a>
+                            <a href="{{ route('tenders.show', $tender->slug) }}" class="cw-btn" data-icon="bi-eye">View Detail</a>
                         </td>
                     </tr>
                     @endforeach

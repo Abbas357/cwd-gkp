@@ -31,7 +31,7 @@
             <td>
                 @if ($media = $download->getFirstMediaUrl('downloads'))
                 <a href="{{ $media }}" class="btn btn-primary btn-sm btn-animate download-link" 
-                   data-id="{{ $download->id }}" style="white-space: nowrap" target="_blank">
+                   data-id="{{ $download->id }}" target="_blank">
                     <i class="bi-cloud-arrow-down"></i> Download
                 </a>
                 @else

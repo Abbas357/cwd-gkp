@@ -60,7 +60,7 @@
 
                             <!-- Filter Buttons -->
                             <div class="col-lg-12 text-end">
-                                <button type="submit" class="cw-btn">
+                                <button type="submit" class="cw-btn cw-simple">
                                     <i class="bi bi-funnel"></i> Apply Filters
                                 </button>
                                 <a href="{{ route('schemes.index') }}" class="btn btn-light">

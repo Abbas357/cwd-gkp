@@ -57,7 +57,7 @@
                         </div>
                         @endif
 
-                        <a href="{{ route('events.show', $event->slug) }}" class="btn btn-primary btn-sm">Read More</a>
+                        <a href="{{ route('events.show', $event->slug) }}" class="cw-btn" data-icon="bi-eye">View Detail</a>
                     </div>
 
                 </div>

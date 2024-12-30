@@ -24,30 +24,25 @@
     <meta property="og:description" content="{{ $settings->meta_description ?? 'Official Website of Communication and Works Department Government of Khyber Pakhtunkhwa' }}">
     <meta property="og:image" content="{{ $ogImage }}">
     <meta property="og:site_name" content="{{ $title }}">
+    <meta name="theme-color" content="#2c9f45"> </head>
     <meta property="og:url" content="{{ request()->url() }}">
     <meta property="og:logo" content="{{ asset('site/images/logo-square.png') }}">
     <link rel="canonical" href="{{ request()->url() }}">
 
-    <!-- Favicon -->
     <link rel="icon" href="{{ asset('site/images/favicon.ico') }}" type="image/x-icon">
-
-    {{-- Loading Bar --}}
     <link rel="stylesheet" href="{{ asset('site/lib/pace/loading-bar.css') }}">
     <script src="{{ asset('site/lib/pace/pace.min.js') }}"></script>
 
-    <!-- Preconnect for Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600&family=Roboto&display=swap" rel="stylesheet">
 
-    <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ asset('site/css/bootstrap-icons.min.css') }}">
     <link href="{{ asset('site/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('site/css/style.css') }}" rel="stylesheet">
     @stack('style')
     <link href="{{ asset('site/css/custom.v1.css') }}" rel="stylesheet">
 </head>
-
 
 <body>
     @include("layouts.site.partials.header")
@@ -85,6 +80,6 @@
     <script src="{{ asset('site/js/core.min.js') }}"></script>
 
     @stack('script')
-    <script src="{{ asset('site/js/custom.js') }}"></script>
+    <script src="{{ asset('site/js/custom.v1.js') }}"></script>
 </body>
 </html>

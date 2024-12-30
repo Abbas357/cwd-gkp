@@ -78,7 +78,7 @@
                             @endif
                         </p>
                         <p>{{ Str::limit($news->summary ?? 'No summary available.', 150) }}</p>
-                        <a href="{{ route('news.show', $news->slug) }}" class="btn btn-primary btn-sm">Read More</a>
+                        <a href="{{ route('news.show', $news->slug) }}" class="cw-btn" data-icon="bi-eye">Read More</a>
                     </div>
                 </div>
             </div>
