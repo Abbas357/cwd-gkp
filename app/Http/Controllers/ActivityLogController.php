@@ -41,8 +41,7 @@ class ActivityLogController extends Controller
                 ->rawColumns(['properties', 'subject', 'causer']);
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
                 $dataTable->filter(function ($query) use ($request) {
-                    $allowedColumns = ['id', 'log_name', 'description', 'properties', 'created_at', 'updated_at'];
-                    $sb = new \App\SearchBuilder($request, $query, $allowedColumns);
+                    $sb = new \App\SearchBuilder($request, $query);
                     $sb->build();
                 });
             }

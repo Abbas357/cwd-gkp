@@ -2,9 +2,10 @@
 
 namespace App;
 
+use Exception;
+use App\Helpers\Database;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
-use Exception;
 
 class SearchBuilder
 {
@@ -36,15 +37,9 @@ class SearchBuilder
     {
         $this->request = $request;
         $this->query = $query;
-        
-        try {
-            $this->allowedColumns = !empty($allowedColumns) 
-                ? $allowedColumns 
-                : Schema::getColumnListing($query->getModel()->getTable());
-        } catch (Exception $e) {
-            $this->allowedColumns = !empty($allowedColumns) ? $allowedColumns : ['id'];
-        }
-        
+        $this->allowedColumns = !empty($allowedColumns) 
+            ? $allowedColumns 
+            : Database::getColumns($query->getModel()->getTable());
         $this->mapColumns = $mapColumns;
     }
 
