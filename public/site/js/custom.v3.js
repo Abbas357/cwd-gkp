@@ -824,8 +824,7 @@ function pushStateModal({
                         storiesContent.zuckInstance = zuckInstance;
 
                         function incrementViewCount(storyId) {
-                            const url = "{{ route('stories.viewed', ':id') }}".replace(':id', storyId);
-                            fetch(url, {
+                            fetch(`/stories/viewed/${storyId}`, {
                                     method: 'PATCH'
                                     , headers: {
                                         'Content-Type': 'application/json'
@@ -984,7 +983,7 @@ function pushStateModal({
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <a href="{{ route('pages.show', 'Announcement') }}">
+                                            <a href="/pages/Announcement">
                                                 <img src="${announcement.image}" style="width:100%" />
                                             </a>
                                         </div>
