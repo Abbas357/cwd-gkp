@@ -31,7 +31,7 @@ class Slider extends Model implements HasMedia
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['title', 'status', 'published_by', 'published_at', 'order'])
+            ->logOnly(['title', 'views_count', 'status', 'published_by', 'published_at', 'order'])
             ->logOnlyDirty()
             ->useLogName('slider')
             ->dontSubmitEmptyLogs()

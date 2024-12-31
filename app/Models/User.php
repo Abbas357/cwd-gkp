@@ -43,7 +43,7 @@ class User extends Authenticatable implements HasMedia
     {
         return LogOptions::defaults()
             ->logAll()
-            ->logExcept(['id', 'password', 'remember_token', 'password_updated_at', 'updated_at', 'created_at'])
+            ->logExcept(['id', 'views_count', 'password', 'remember_token', 'password_updated_at', 'updated_at', 'created_at'])
             ->logOnlyDirty()
             ->useLogName('users')
             ->dontSubmitEmptyLogs()

@@ -5,7 +5,7 @@ namespace App\Models;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Schema\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;

@@ -29,7 +29,7 @@ class Page extends Model implements HasMedia
     {
         return LogOptions::defaults()
             ->logAll()
-            ->logExcept(['id', 'content', 'updated_at', 'created_at'])
+            ->logExcept(['id', 'views_count', 'content', 'updated_at', 'created_at'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
             ->useLogName('pages')

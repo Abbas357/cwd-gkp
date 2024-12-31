@@ -31,7 +31,7 @@ class Event extends Model implements HasMedia
     {
         return LogOptions::defaults()
             ->logAll()
-            ->logExcept(['id', 'updated_at', 'created_at'])
+            ->logExcept(['id', 'views_count', 'updated_at', 'created_at'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
             ->useLogName('events')

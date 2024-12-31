@@ -23,7 +23,7 @@ class Setting extends Model implements HasMedia
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logExcept(['id', 'updated_at', 'created_at'])
+            ->logExcept(['id', 'views_count', 'updated_at', 'created_at'])
             ->logOnlyDirty()
             ->useLogName('settings')
             ->dontSubmitEmptyLogs()

@@ -24,7 +24,7 @@ class Story extends Model implements HasMedia
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['title', 'published_by', 'published_at'])
+            ->logOnly(['title', 'views', 'published_by', 'published_at'])
             ->logOnlyDirty()
             ->useLogName('stories')
             ->dontSubmitEmptyLogs()
