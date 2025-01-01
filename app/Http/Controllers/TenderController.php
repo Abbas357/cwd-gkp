@@ -198,11 +198,10 @@ class TenderController extends Controller
 
     public function destroy(Tender $tender)
     {
-        if ($tender->status === 'draft' && is_null($tender->published_at)) {
-            if ($tender->delete()) {
-                return response()->json(['success' => 'Tender has been deleted successfully.']);
-            }
+        if ((request()->user()->isAdmin() || ($tender->status === 'draft' && is_null($tender->published_at))) && $tender->delete()) {
+            return response()->json(['success' => 'Tender has been deleted successfully.']);
         }
+
         return response()->json(['error' => 'Published, Archived, or Draft tender that were once published cannot be deleted.']);
     }
 }

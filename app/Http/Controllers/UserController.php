@@ -19,7 +19,7 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $active = $request->query('status', null);
+        $active = $request->query('status', null); 
 
         $users = User::query()->withoutGlobalScope('active');
 
@@ -146,9 +146,8 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    public function activateUser(Request $request, $userId)
+    public function activateUser(Request $request, User $user)
     {
-        $user = User::withoutGlobalScope('active')->findOrFail($userId);
         if ($user->status ===  'Inactive') {
             $user->status = 'Active';
             $message = 'User has been Activated successfully.';
@@ -162,9 +161,8 @@ class UserController extends Controller
         return response()->json(['success' => $message], 200);
     }
 
-    public function archiveUser(Request $request, $userId)
+    public function archiveUser(Request $request, User $user)
     {
-        $user = User::withoutGlobalScope('active')->findOrFail($userId);
         $user->status = "Archived";
         if($user->save()) {
             Cache::forget('message_partial');
@@ -173,14 +171,13 @@ class UserController extends Controller
         }
     }
 
-    public function edit($userId)
+    public function edit(User $user)
     {
         $bps = [];
         for ($i = 1; $i <= 22; $i++) {
             $bps[] = sprintf("BPS-%02d", $i);
         }
 
-        $user = User::withoutGlobalScope('active')->findOrFail($userId);
         if (!$user) {
             return response()->json([
                 'success' => false,
@@ -211,9 +208,8 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(UpdateUserRequest $request, $userId)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        $user = User::withoutGlobalScope('active')->findOrFail($userId);
         $validated = $request->validated();
         
         $validated['is_featured'] = $request->has('is_featured') ? 1 : 0;
@@ -260,10 +256,12 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        if ($user->delete()) {
-            Cache::forget('message_partial');
-            Cache::forget('team_partial');
-            return response()->json(['success' => 'User has been deleted successfully.']);
+        if (request()->user()->isAdmin()) {
+            if ($user->delete()) {
+                Cache::forget('message_partial');
+                Cache::forget('team_partial');
+                return response()->json(['success' => 'User has been deleted successfully.']);
+            }
         }
 
         return response()->json(['error' => 'User can\'t be deleted.']);

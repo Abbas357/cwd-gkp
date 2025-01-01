@@ -202,7 +202,7 @@ class GalleryController extends Controller
 
     public function destroy(Gallery $gallery)
     {
-        if ($gallery->status === 'draft' && is_null($gallery->published_at)) {
+        if (request()->user()->isAdmin() || ($gallery->status === 'draft' && is_null($gallery->published_at))) {
             if ($gallery->delete()) {
                 return response()->json(['success' => 'Gallery has been deleted successfully.']);
             }

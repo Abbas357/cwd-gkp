@@ -192,11 +192,10 @@ class NewsController extends Controller
 
     public function destroy(News $news)
     {
-        if ($news->status === 'draft' && is_null($news->published_at)) {
-            if ($news->delete()) {
-                return response()->json(['success' => 'File has been deleted successfully.']);
-            }
+        if ((request()->user()->isAdmin() || ($news->status === 'draft' && is_null($news->published_at))) && $news->delete()) {
+            return response()->json(['success' => 'File has been deleted successfully.']);
         }
+
         return response()->json(['error' => 'Published, Archived, or Draft news that were once published cannot be deleted.']);
     }
 }

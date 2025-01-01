@@ -190,11 +190,10 @@ class ProjectFileController extends Controller
 
     public function destroy(ProjectFile $project_file)
     {
-        if ($project_file->status === 'draft' && is_null($project_file->published_at)) {
-            if ($project_file->delete()) {
-                return response()->json(['success' => 'File has been deleted successfully.']);
-            }
+        if ((request()->user()->isAdmin() || ($project_file->status === 'draft' && is_null($project_file->published_at))) && $project_file->delete()) {
+            return response()->json(['success' => 'File has been deleted successfully.']);
         }
-        return response()->json(['error' => 'Published, Archived, or Draft project file that were once published cannot be deleted.']);
+
+        return response()->json(['error' => 'Published, Archived, or Draft project files that were once published cannot be deleted.']);
     }
 }

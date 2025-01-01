@@ -82,17 +82,22 @@ class PublicContactController extends Controller
 
     public function drop(Request $request, PublicContact $PublicContact)
     {
-        if ($PublicContact->status === 'new') {
+        if ($request->user()->isAdmin()) {
+            if ($PublicContact->delete()) {
+                return response()->json(['success' => 'PublicContact has been deleted successfully.']);
+            }
+        } elseif ($PublicContact->status === 'new') {
             $PublicContact->status = 'dropped';
             $PublicContact->remarks = $request->remarks;
             $PublicContact->action_by = $request->user()->id;
             $PublicContact->action_at = now();
 
-            if($PublicContact->save()) {
+            if ($PublicContact->save()) {
                 Mail::to($PublicContact->email)->queue(new DroppedMail($PublicContact, $request->remarks));
                 return response()->json(['success' => 'Dropped.']);
             }
         }
-        return response()->json(['error' => 'Product can\'t be rejected.']);
+
+        return response()->json(['error' => 'PublicContact can\'t be rejected or deleted.']);
     }
 }

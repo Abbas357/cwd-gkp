@@ -50,7 +50,7 @@ class SeniorityController extends Controller
 
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
                 $dataTable->filter(function ($query) use ($request) {
-                    $sb = new \App\SearchBuilder($request, $query);
+                    $sb = new \App\Helpers\SearchBuilder($request, $query);
                     $sb->build();
                 });
             }
@@ -205,7 +205,8 @@ class SeniorityController extends Controller
 
     public function destroy(Seniority $seniority)
     {
-        if ($seniority->status === 'draft' && is_null($seniority->published_at)) {
+        $canDelete = $seniority->status === 'draft' && is_null($seniority->published_at);
+        if (request()->user()->isAdmin() || $canDelete) {
             if ($seniority->delete()) {
                 return response()->json(['success' => 'File has been deleted successfully.']);
             }

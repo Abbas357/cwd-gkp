@@ -94,6 +94,11 @@ class User extends Authenticatable implements HasMedia
         });
     }
 
+    public function resolveRouteBinding($value, $route = null)
+    {
+        return static::withoutGlobalScopes()->where('id', $value)->firstOrFail();
+    }
+
     public function scopeFeatured($query)
     {
         return $query->where('is_featured', 1);

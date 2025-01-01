@@ -193,12 +193,11 @@ class SliderController extends Controller
 
     public function destroy(Slider $slider)
     {
-        if ($slider->status === 'draft' && is_null($slider->published_at)) {
-            if ($slider->delete()) {
-                Cache::forget('sliders');
-                return response()->json(['success' => 'Slider has been deleted successfully.']);
-            }
+        if ((request()->user()->isAdmin() || ($slider->status === 'draft' && is_null($slider->published_at))) && $slider->delete()) {
+            Cache::forget('sliders');
+            return response()->json(['success' => 'Slider has been deleted successfully.']);
         }
+
         return response()->json(['error' => 'Published, Archived, or Draft sliders that were once published cannot be deleted.']);
     }
 }
