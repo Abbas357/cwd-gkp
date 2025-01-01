@@ -28,15 +28,14 @@
                         </div>
                     </button>
                 </div>
-                <div id="filterCollapse" class="">
+                <div id="filterCollapse" class="collapse show">
                     <div class="card-body">
                         <div class="row g-3 align-items-end">
-                            <div class="col-md-3 col-sm-6 col-xs-12">
+                            <div class="col-md-4 col-sm-6 col-xs-12">
                                 <label for="search" class="form-label">Search</label>
                                 <input type="text" name="search" id="search" class="form-control" placeholder="Enter scheme name or keywords" value="{{ request('search') }}">
                             </div>
-
-                            <div class="col-md-3 col-sm-6 col-xs-12">
+                            <div class="col-md-2 col-sm-6 col-xs-12">
                                 <label for="year" class="form-label">Year</label>
                                 <select name="year" id="year" class="form-select">
                                     <option value="">Select Year</option>
@@ -47,18 +46,25 @@
                                     @endforeach
                                 </select>
                             </div>
-
-                            <div class="col-md-3 col-sm-6 col-xs-12">
+                            <div class="col-md-2 col-sm-6 col-xs-12">
+                                <label for="sector_name" class="form-label">Sector</label>
+                                <select name="sector_name" id="sector_name" class="form-select">
+                                    @foreach ($sectors as $sector)
+                                        <option value="{{ $sector }}" 
+                                            {{ request('sector_name', 'road') == $sector ? 'selected' : '' }}>
+                                            {{ ucfirst($sector) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-2 col-sm-6 col-xs-12">
                                 <label for="adp_number" class="form-label">ADP Number</label>
                                 <input type="text" name="adp_number" id="adp_number" class="form-control" value="{{ request('adp_number') }}">
                             </div>
-
-                            <div class="col-md-3 col-sm-6 col-xs-12">
+                            <div class="col-md-2 col-sm-6 col-xs-12">
                                 <label for="scheme_code" class="form-label">Scheme Code</label>
                                 <input type="text" name="scheme_code" id="scheme_code" class="form-control" value="{{ request('scheme_code') }}">
                             </div>
-
-                            <!-- Filter Buttons -->
                             <div class="col-lg-12 text-end">
                                 <button type="submit" class="cw-btn cw-simple">
                                     <i class="bi bi-funnel"></i> Apply Filters
