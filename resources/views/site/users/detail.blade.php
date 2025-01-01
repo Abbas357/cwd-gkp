@@ -46,6 +46,7 @@
     </x-slot>
     @endpush
     <div class="container mt-3">
+        <p style="text-align: right"><strong>Views:</strong> {{ $user['views_count'] }}</p>
         <div class="row">
             <div class="text-center">
                 <img src="{{ $user['media']['profile_pictures'] }}" class="modal-img" alt="{{ $user['name'] }}">

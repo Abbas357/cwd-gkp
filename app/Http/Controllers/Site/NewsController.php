@@ -52,13 +52,7 @@ class NewsController extends Controller
             'comments' => $news->comments()->whereNull('parent_id')->with('replies')->get(),
         ];
 
-        $ipAddress = request()->ip();
-        $sessionKey = 'news_' . $news->id . '_' . md5($ipAddress);
-
-        if (!session()->has($sessionKey)) {
-            $news->increment('views_count');
-            session()->put($sessionKey, true);
-        }
+        $this->incrementViews($news);
 
         return view('site.news.show', compact('newsData'));
     }

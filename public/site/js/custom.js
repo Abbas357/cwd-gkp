@@ -871,7 +871,7 @@ function pushStateModal({
             <div id="news-modal" class="modal fade" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content" style="background: #ffffffdd">
-                        <div class="modal-header" style="background-color: #22d0b815 !important">
+                        <div class="modal-header" style="background-color: #ff660010 !important">
                             <h5 class="modal-title"><i class="bi-megaphone"></i> &nbsp; Notifications</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
@@ -896,7 +896,6 @@ function pushStateModal({
                                     </select>
                                 </div>
                             </div>
-
                             <div id="modal-body-content" class="custom-scrollbar" style="height: 400px; overflow-y: auto;">
                                 <div id="notification-list"></div>
                                 <div id="loading-indicator" class="d-flex justify-content-center my-3">
@@ -906,7 +905,7 @@ function pushStateModal({
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer d-flex justify-content-center w-100" style="padding: 2px !important;">
+                        <div class="modal-footer d-flex justify-content-center w-100" style="padding: 2px !important; background-color: #ff660010 !important">
                             <div><a href="/notifications/all">All Notifications</a></div>
                         </div>
                     </div>

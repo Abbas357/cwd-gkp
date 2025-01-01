@@ -93,7 +93,10 @@ class UserController extends Controller
                 'exit_orders' => $user->getFirstMediaUrl('exit_orders'),
             ],
             'previous' => $this->showPositions($user->position),
+            'views_count' => $user->views_count,
         ];
+
+        $this->incrementViews($user);
 
         return view('site.users.detail', ['user' => $userData]);
     }

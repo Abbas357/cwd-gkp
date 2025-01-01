@@ -41,7 +41,7 @@
     <link href="{{ asset('site/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('site/css/style.css') }}" rel="stylesheet">
     @stack('style')
-    <link href="{{ asset('site/css/custom.v3.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('site/css/custom.min.css') }}?v=1" rel="stylesheet">
 </head>
 
 <body>
@@ -80,6 +80,6 @@
     <script src="{{ asset('site/js/core.min.js') }}"></script>
 
     @stack('script')
-    <script src="{{ asset('site/js/custom.v3.min.js') }}"></script>
+    <script src="{{ asset('site/js/custom.min.js') }}?v=1"></script>
 </body>
 </html>

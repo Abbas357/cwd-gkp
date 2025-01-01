@@ -70,13 +70,7 @@ class TenderController extends Controller
             'comments' => $tender->comments()->whereNull('parent_id')->with('replies')->get(),
         ];
 
-        $ipAddress = request()->ip();
-        $sessionKey = 'tender_' . $tender->id . '_' . md5($ipAddress);
-
-        if (!session()->has($sessionKey)) {
-            $tender->increment('views_count');
-            session()->put($sessionKey, true);
-        }
+        $this->incrementViews($tender);
 
         return view('site.tenders.show', compact('tenderData'));
     }

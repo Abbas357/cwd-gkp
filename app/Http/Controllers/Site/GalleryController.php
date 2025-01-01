@@ -47,13 +47,7 @@ class GalleryController extends Controller
             'comments' => $gallery->comments()->whereNull('parent_id')->with('replies')->get(),
         ];
 
-        $ipAddress = request()->ip();
-        $sessionKey = 'gallery_' . $gallery->id . '_' . md5($ipAddress);
-
-        if (!session()->has($sessionKey)) {
-            $gallery->increment('views_count');
-            session()->put($sessionKey, true);
-        }
+        $this->incrementViews($gallery);
 
         return view('site.gallery.show', compact('galleryData'));
     }

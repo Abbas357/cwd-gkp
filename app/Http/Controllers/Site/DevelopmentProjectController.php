@@ -74,13 +74,7 @@ class DevelopmentProjectController extends Controller
             'comments' => $project->comments()->whereNull('parent_id')->with('replies')->get(),
         ];
 
-        $ipAddress = request()->ip();
-        $sessionKey = 'adp_' . $project->id . '_' . md5($ipAddress);
-
-        if (!session()->has($sessionKey)) {
-            $project->increment('views_count');
-            session()->put($sessionKey, true);
-        }
+        $this->incrementViews($project);
 
         return view('site.dev_projects.show', compact('projectData'));
     }

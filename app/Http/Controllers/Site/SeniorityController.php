@@ -32,13 +32,7 @@ class SeniorityController extends Controller
             'comments' => $seniority->comments()->whereNull('parent_id')->with('replies')->get(),
         ];
 
-        $ipAddress = request()->ip();
-        $sessionKey = 'seniority_' . $seniority->id . '_' . md5($ipAddress);
-
-        if (!session()->has($sessionKey)) {
-            $seniority->increment('views_count');
-            session()->put($sessionKey, true);
-        }
+        $this->incrementViews($seniority);
 
         return view('site.seniority.show', compact('seniorityData'));
     }
