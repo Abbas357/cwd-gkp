@@ -33,6 +33,7 @@
                     <a href="http://175.107.63.223:8889/forms/frmservlet?config=mb"><i class="bi bi-arrow-right-short me-2"></i> E-Billing</a>
                     <a href="https://pr.cwd.gkp.pk"><i class="bi bi-arrow-right-short me-2"></i> PWMIS</a>
                     <a href="https://old.cwd.gkp.pk/etender/login.php"><i class="bi bi-arrow-right-short me-2"></i> Old E-Tender</a>
+                    <a href="https://old.cwd.gkp.pk/etender/contlogin.php"><i class="bi bi-arrow-right-short me-2"></i> Tender Form (OLD SYSTEM)</a>
                 </div>
             </div>
             <div class="col-md-6 col-lg-6 col-xl-3">
