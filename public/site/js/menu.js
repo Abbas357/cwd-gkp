@@ -1,137 +1,193 @@
-!(function (t) {
-    const n = {
-        matchMedia: window.matchMedia("(max-width: 1024px"),
-        popover: t(".cw-top .right-column .cw-menu-popover"),
-        integratedPlate: t("#integrated-plate"),
-        topMenu: t(".cw-bottom .cw-top-menu-nav>li"),
-        popoverBtn: t(".cw-menu-popover-btn"),
-        mobileSearch: t(".cw-mobile-search"),
-        cwTop: t(".cw-top"),
-        cwBottom: t(".cw-bottom"),
-        overlay: t(".CWD .popoverOverlay"),
-        searchInput: t("#cw-search-input"),
-        cancelBtn: t(".cw-search-cancel"),
-        suggesstion: t(".cw-search .cw-suggesstion"),
-        sugsContent: t(".cw-search .cw-suggesstion #content"),
-        inputLoading: t(".input-loading"),
-        searchWidget: t(".cw-search .widget"),
-        lastScrollTop: 0,
-        handleMatchMedia() {
-            n.matchMedia.matches
-                ? (n.cwBottom.css("height", "0px"),
-                  n.mobileSearch.addClass("cw-mobile-search"))
-                : n.cwBottom.css("height", "50px");
-        },
-        throttle(t, n) {
-            let a, s;
-            return function () {
-                const e = this,
-                    o = arguments;
-                s
-                    ? (clearTimeout(a),
-                      (a = setTimeout(function () {
-                          Date.now() - s >= n &&
-                              (t.apply(e, o), (s = Date.now()));
-                      }, n - (Date.now() - s))))
-                    : (t.apply(e, o), (s = Date.now()));
-            };
-        },
-        handleSearchInput(e) {
-            clearTimeout(void 0);
-            const o = e.target;
-            n.inputLoading.addClass("cw-animated-border"),
-                n.searchWidget.css("display", "flex"),
-                n.sugsContent.empty(),
-                setTimeout(() => {
-                    2 < o.value.length
-                        ? (n.openSearch(o),
-                          t.ajax({
-                              url: "/search",
-                              data: { query: o.value },
-                              method: "GET",
-                              success: function (e) {
-                                  e.success &&
-                                      (n.searchWidget.css("display", "none"),
-                                      n.displayResults(e.data));
-                              },
-                              complete: function () {
-                                  n.inputLoading.removeClass(
-                                      "cw-animated-border"
-                                  ),
-                                      n.searchWidget.css("display", "none");
-                              },
-                          }))
-                        : n.closeSearch();
-                }, 1e3);
-        },
-        displayResults(e) {
-            n.sugsContent.empty(),
-                n.inputLoading.removeClass("cw-animated-border"),
-                n.searchWidget.css("display", "none"),
-                console.log(e.result),
-                n.sugsContent.html(e.result);
-        },
-        displayErrors() {
-            n.sugsContent.empty(),
-                n.inputLoading.removeClass("cw-animated-border"),
-                n.searchWidget.css("display", "none");
-            var e = t("<li>")
-                .addClass("cw-search-error")
-                .text("No results found. Please try a different Query");
-            n.sugsContent.append(e);
-        },
-        openSearch(e) {
-            n.cancelBtn.show(),
-                n.suggesstion.show(),
-                n.cancelBtn.on("click", function () {
-                    (e.value = ""),
-                        n.cancelBtn.hide(),
-                        n.suggesstion.hide(),
-                        n.searchInput.focus();
-                });
-        },
-        closeSearch() {
-            n.cancelBtn.hide(),
-                n.suggesstion.hide(),
-                n.inputLoading.removeClass("cw-animated-border"),
-                n.searchWidget.css("display", "none");
-        },
-        handleStickyBehavior() {
-            150 < window.scrollY && 900 < window.innerWidth
-                ? (n.cwTop.addClass("d-none"), n.cwBottom.css("opacity", "0.9"))
-                : window.scrollY < 50 &&
-                  900 < window.innerWidth &&
-                  (n.cwTop.removeClass("d-none"),
-                  n.cwBottom.css("opacity", "1"));
-        },
-    };
-    t(document).ready(function () {
-        n.searchInput.on("input", n.handleSearchInput),
-            t(window).on("resize", n.handleMatchMedia),
-            t(document).on("scroll", n.throttle(n.handleStickyBehavior, 500)),
-            n.topMenu.on("mouseenter", function () {
-                t(this).hasClass("child-nav") &&
-                    1024 < window.innerWidth &&
-                    n.overlay.css({ top: "113px", display: "block" });
-            }),
-            n.topMenu.on("mouseleave", function () {
-                n.overlay.hide();
-            }),
-            n.popover.on("mouseenter", function () {
-                900 < window.innerWidth &&
-                    n.overlay.css({ top: "65px", display: "block" });
-            }),
-            n.popover.on("mouseleave", function () {
-                n.overlay.hide();
-            }),
-            n.popoverBtn.on("click", function () {
-                "true" ===
-                t(this)
-                    .parentsUntil(".aria-expanded")
-                    .last()
-                    .attr("aria-expanded")
-                    ? n.overlay.hide()
-                    : n.overlay.css({ top: "65px", display: "block" });
-            });
-    });
+(function ($) {
+	const CWD = {
+		matchMedia: window.matchMedia("(max-width: 1024px"),
+		popover: $(".cw-top .right-column .cw-menu-popover"),
+		integratedPlate: $("#integrated-plate"),
+		topMenu: $(".cw-bottom .cw-top-menu-nav>li"),
+		popoverBtn: $(".cw-menu-popover-btn"),
+		searchIcon: $(".searchIcon"),
+		mobileSearch: $(".cw-mobile-search"),
+		cwTop: $(".cw-top"),
+		cwBottom: $(".cw-bottom"),
+		overlay: $(".CWD .popoverOverlay"),
+		searchInput: $("#cw-search-input"),
+		cancelBtn: $(".cw-search-cancel"),
+		suggesstion: $(".cw-search .cw-suggesstion"),
+		sugsContent: $(".cw-search .cw-suggesstion #content"),
+		inputLoading: $(".input-loading"),
+		searchWidget: $(".cw-search .widget"),
+		lastScrollTop: 0,
+
+		handleSearchIcon() {
+			if (
+				CWD.mobileSearch.hasClass("cw-mobile-search") &&
+				CWD.matchMedia.matches
+			) {
+				setTimeout(() => {
+					CWD.mobileSearch.removeClass("cw-mobile-search");
+				}, 200);
+				CWD.cwBottom.css("height", "68px");
+			} else {
+				CWD.mobileSearch.addClass("cw-mobile-search");
+				CWD.cwBottom.css("height", "0px");
+			}
+		},
+
+		handleMatchMedia() {
+			if (!CWD.matchMedia.matches) {
+				CWD.cwBottom.css("height", "50px");
+			} else {
+				CWD.cwBottom.css("height", "0px");
+				CWD.mobileSearch.addClass("cw-mobile-search");
+			}
+		},
+
+		throttle(func, limit) {
+			let lastFunc;
+			let lastRan;
+			return function() {
+				const context = this;
+				const args = arguments;
+				if (!lastRan) {
+					func.apply(context, args);
+					lastRan = Date.now();
+				} else {
+					clearTimeout(lastFunc);
+					lastFunc = setTimeout(function() {
+						if (Date.now() - lastRan >= limit) {
+							func.apply(context, args);
+							lastRan = Date.now();
+						}
+					}, limit - (Date.now() - lastRan));
+				}
+			};
+		},
+
+		handleSearchInput(e) {
+			let debounceTimer;
+			clearTimeout(debounceTimer);
+
+			const input = e.target;
+			CWD.inputLoading.addClass("cw-animated-border");
+			CWD.searchWidget.css("display", "flex");
+
+			CWD.sugsContent.empty();
+
+			debounceTimer = setTimeout(() => {
+				if (input.value.length > 2) {
+					CWD.openSearch(input);
+					$.ajax({
+						url: "/search",
+						data: { query: input.value },
+						method: "GET",
+						success: function (response) {
+							if (response.success) {
+								CWD.searchWidget.css("display", "none");
+								CWD.displayResults(response.data);
+							}
+						},
+						complete: function () {
+							CWD.inputLoading.removeClass("cw-animated-border");
+							CWD.searchWidget.css("display", "none");
+						},
+					});
+				} else {
+					CWD.closeSearch();
+				}
+			}, 1000);
+		},
+
+		displayResults(data) {
+			CWD.sugsContent.empty();
+			CWD.inputLoading.removeClass("cw-animated-border");
+			CWD.searchWidget.css("display", "none");
+			CWD.sugsContent.html(data.result);
+		},
+
+		displayErrors() {
+			CWD.sugsContent.empty();
+			CWD.inputLoading.removeClass("cw-animated-border");
+			CWD.searchWidget.css("display", "none");
+
+			const li = $("<li>")
+				.addClass("cw-search-error")
+				.text("No results found. Please try a different Query");
+
+			CWD.sugsContent.append(li);
+		},
+
+		openSearch(input) {
+			CWD.cancelBtn.show();
+			CWD.suggesstion.show();
+
+			CWD.cancelBtn.on("click", function () {
+				input.value = "";
+				CWD.cancelBtn.hide();
+				CWD.suggesstion.hide();
+				CWD.searchInput.focus();
+			});
+		},
+
+		closeSearch() {
+			CWD.cancelBtn.hide();
+			CWD.suggesstion.hide();
+			CWD.inputLoading.removeClass("cw-animated-border");
+			CWD.searchWidget.css("display", "none");
+		},
+
+		handleStickyBehavior() {
+			const scrollThreshold = 100;
+			const buffer = 50;
+		
+			if (window.scrollY > (scrollThreshold + buffer) && window.innerWidth > 900) {
+				CWD.cwTop.addClass('d-none');
+				CWD.cwBottom.css('opacity', '0.9');
+			} else if (window.scrollY < (scrollThreshold - buffer) && window.innerWidth > 900) {
+				CWD.cwTop.removeClass('d-none');
+				CWD.cwBottom.css('opacity', '1')
+			}
+		},
+
+	};
+
+	$(document).ready(function () {
+		CWD.searchIcon.on("click", CWD.handleSearchIcon);
+		CWD.searchInput.on("input", CWD.handleSearchInput);
+		$(window).on("resize", CWD.handleMatchMedia);
+		$(document).on('scroll', CWD.throttle(CWD.handleStickyBehavior, 500));
+
+		CWD.topMenu.on("mouseenter", function () {
+			if ($(this).hasClass("child-nav") && window.innerWidth > 1024) {
+				CWD.overlay.css({ top: "113px", display: "block" });
+			}
+		});
+
+		CWD.topMenu.on("mouseleave", function () {
+			CWD.overlay.hide();
+		});
+
+		CWD.popover.on("mouseenter", function () {
+			if (window.innerWidth > 900) {
+				CWD.overlay.css({ top: "65px", display: "block" });
+			}
+		});
+
+		CWD.popover.on("mouseleave", function () {
+			CWD.overlay.hide();
+		});
+
+		CWD.popoverBtn.on("click", function () {
+			const el = $(this);
+			const isExpanded =
+				el.parentsUntil(".aria-expanded").last().attr("aria-expanded") ===
+				"true";
+
+			if (isExpanded) {
+				CWD.overlay.hide();
+			} else {
+				CWD.overlay.css({ top: "65px", display: "block" });
+			}
+		});
+		
+	});
 })(jQuery);

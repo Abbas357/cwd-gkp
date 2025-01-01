@@ -10,11 +10,11 @@ class EventsController extends Controller
 {
     public function index(Request $request)
     {
-        $newsItems = Event::with(['media', 'user'])
+        $eventItems = Event::with(['media', 'user'])
             ->orderBy('published_at', 'desc')
             ->paginate(10);
 
-        return view('site.events.index', compact('newsItems'));
+        return view('site.events.index', compact('eventItems'));
     }
 
     public function showEvent($slug)

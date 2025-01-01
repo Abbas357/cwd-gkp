@@ -1,4 +1,5 @@
 @if(
+    (isset($tenderResults) && !$tenderResults->isEmpty()) ||
     (isset($newsResults) && !$newsResults->isEmpty()) ||
     (isset($projectResults) && !$projectResults->isEmpty()) ||
     (isset($downloadResults) && !$downloadResults->isEmpty()) ||
@@ -6,6 +7,19 @@
     (isset($seniorityResults) && !$seniorityResults->isEmpty()) ||
     (isset($userResults) && !$userResults->isEmpty())
 )
+    @if(isset($tenderResults) && !$tenderResults->isEmpty())
+        <h4 class="text-dark fs-4 px-3 py-1 border border-bottom bg-light">Tenders</h4>
+        <ul class="cw-search-results">
+            @foreach($tenderResults as $tender)
+                <li class="cw-search-item">
+                    <a href="{{ route('tenders.show', $tender->slug) }}" class="cw-search-item-content">
+                        <h3 class="fs-5 cw-search-item-title">{{ $tender->title }}</h3>
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    @endif
+
     @if(isset($newsResults) && !$newsResults->isEmpty())
         <h4 class="text-dark fs-4 px-3 py-1 border border-bottom bg-light">News</h4>
         <ul class="cw-search-results">
@@ -78,7 +92,7 @@
         <ul class="cw-search-results">
             @foreach($userResults as $user)
                 <li class="cw-search-item">
-                    <a href="{{ url('/positions/' . $user->position . '/?id=' . $user->id . '&type=details') }}" class="cw-search-item-content">
+                    <a href="{{ url('/positions/detail/' . $user->uuid) }}" class="cw-search-item-content">
                         <h3 class="fs-5 cw-search-item-title">
                             {{ $user->name }} 
                             ({{ $user->position ? $user->position : $user->designation }})

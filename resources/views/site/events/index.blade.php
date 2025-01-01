@@ -23,7 +23,7 @@
     <div class="container my-4">
 
         <div class="list-group">
-            @foreach ($newsItems as $event)
+            @foreach ($eventItems as $event)
             <div class="list-group-item py-2">
                 <div class="row p-1">
                     <div class="col-md-2">
@@ -39,7 +39,9 @@
                             <a href="{{ route('events.show', $event->slug) }}">
                                 <h5 class="mt-0">{{ $event->title }}</h5>
                             </a>
-                            <small class="text-muted">{{ $event->published_at->format('M d, Y') }}</small>
+                            <div>
+                                <small class="text-muted">{{ $event->published_at->format('M d, Y') }}</small>
+                            </div>
                         </div>
 
                         @if(!empty($event->start_datetime) && !empty($event->end_datetime))
@@ -66,7 +68,7 @@
         </div>
 
         <div class="d-flex justify-content-center mt-4">
-            {{ $newsItems->links() }}
+            {{ $eventItems->links() }}
         </div>
     </div>
 </x-main-layout>

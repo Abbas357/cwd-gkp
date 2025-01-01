@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Site;
 use App\Models\News;
 use App\Models\User;
 use App\Models\Event;
+use App\Models\Tender;
 use App\Models\Download;
 use App\Models\Seniority;
 use Illuminate\Http\Request;
@@ -16,6 +17,7 @@ class SearchController extends Controller
     public function search(Request $request)
     {
         $query = $request->input('query');
+        $tenderResults = $this->searchTenders($query);
         $newsResults = $this->searchNews($query);
         $downloadResults = $this->searchDownloads($query);
         $eventResults = $this->searchEvents($query);
@@ -24,6 +26,7 @@ class SearchController extends Controller
         $userResults = $this->searchUsers($query);
 
         if (
+            $tenderResults->isEmpty() &&
             $newsResults->isEmpty() &&
             $downloadResults->isEmpty() &&
             $eventResults->isEmpty() &&
@@ -40,6 +43,7 @@ class SearchController extends Controller
         }
 
         $html = view('layouts.site.partials.search', compact(
+            'tenderResults',
             'newsResults',
             'downloadResults',
             'eventResults',
@@ -101,6 +105,15 @@ class SearchController extends Controller
             ->orWhere('description', 'LIKE', "%{$query}%")
             ->orWhere('location', 'LIKE', "%{$query}%")
             ->orWhere('event_type', 'LIKE', "%{$query}%")
+            ->latest()
+            ->limit(5)
+            ->get();
+    }
+
+    private function searchTenders(string $query)
+    {
+        return Tender::where('title', 'LIKE', "%{$query}%")
+            ->orWhere('description', 'LIKE', "%{$query}%")
             ->latest()
             ->limit(5)
             ->get();

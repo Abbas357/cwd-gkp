@@ -601,52 +601,6 @@ function pushStateModal({
 })();
 
 (() => {
-    (function() {
-        const leftColumn = document.querySelector(".left-column");
-        const informationCanvas = document.querySelector("#informationCanvas .offcanvas-header");
-
-        const searchElement = document.createElement("div");
-        searchElement.className = "cw-search cw-search-temp-wrapper";
-        searchElement.setAttribute("role", "search");
-        searchElement.innerHTML = `
-            <div class="cw-input-container">
-                <input id="cw-search-input" type="search" class="cw-search-input" aria-label="AI Search..." placeholder="AI Search..." tabindex="0" autocomplete="off" />
-                <div class="input-loading"></div>
-                <button class="cw-search-btn cw-search-cancel" tabindex="0" aria-label="Cancel Search">
-                    <i class="bi bi-x-circle"></i>
-                </button>
-                <button class="cw-search-btn cw-search-submit d-none d-lg-block" tabindex="0" aria-label="Search...">
-                    <i class="bi bi-search d-none d-sm-block"></i>
-                </button>
-            </div>
-            <div class="cw-suggesstion">
-                <div class="widget">
-                    <header class="widget__header">
-                        <h1 id="wait">Please wait <span class="dots">...</span></h1>
-                    </header>
-                    <div class="widget__body">
-                        <div class="list-component list-loader"></div>
-                    </div>
-                </div>
-                <div id="content"></div>
-            </div>
-        `;
-
-        function insertSearchElement() {
-            if (window.innerWidth < 768) {
-                if (informationCanvas && searchElement.parentElement !== informationCanvas) {
-                    informationCanvas.insertBefore(searchElement, informationCanvas.firstChild);
-                }
-            } else {
-                if (leftColumn && searchElement.parentElement !== leftColumn) {
-                    leftColumn.appendChild(searchElement);
-                }
-            }
-        }
-        insertSearchElement();
-        window.addEventListener("resize", insertSearchElement);
-    })();
-
     function loadZuckLibraries(callback) {
         if (!document.getElementById('zuck-css')) {
             let cssLink = document.createElement('link');
