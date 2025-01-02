@@ -161,12 +161,21 @@
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="form-check form-switch mb-3">
-                    <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured" style="scale: 1.3" {{ $data['user']->is_featured ? 'checked' : '' }}>
-                    <label class="form-check-label" for="is_featured" style="margin-left:.5rem">Featured on Site</label>
-                </div>
-                <label for="message">Message</label>
+                @php
+                    $featuredOn = $data['user']->featured_on 
+                        ? json_decode($data['user']->featured_on, true) 
+                        : [];
+                @endphp
                 <div class="mb-3">
+                    <label for="featured_on" class="form-label">Featured on</label>
+                    <select id="featured_on" name="featured_on[]" class="form-select" multiple>
+                        <option value="Home" {{ in_array('Home', $featuredOn) ? 'selected' : '' }}>Home</option>
+                        <option value="Team" {{ in_array('Team', $featuredOn) ? 'selected' : '' }}>Team</option>
+                        <option value="Contact" {{ in_array('Contact', $featuredOn) ? 'selected' : '' }}>Contact</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="message">Message</label>
                     <textarea name="message" id="message" class="form-control" style="height:190px">{{ old('message', $data['user']->message) }}</textarea>
                 </div>
                 <div class="mb-3">
@@ -214,9 +223,7 @@
             @endforeach
         </div>
     </div>
-
 </div>
-
 
 <script>
     imageCropper({
@@ -245,9 +252,13 @@
         placeholder: "____-_______"
     });
 
-    // $('#landline_number').mask('0000000000', {
-    //     placeholder: "__________"
-    // });
+    $('#featured_on').select2({
+        theme: "bootstrap-5"
+        , width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style'
+        , placeholder: 'Select Featured On'
+        , closeOnSelect: false
+        , dropdownParent: $('#featured_on').parent()
+    , });
 
     $('#cnic').mask('00000-0000000-0', {
         placeholder: "_____-_______-_"

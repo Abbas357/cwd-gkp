@@ -24,6 +24,7 @@ class UserController extends Controller
         })->mapWithKeys(function ($office) {
             $contacts = User::select('name', 'position', 'office', 'bps', 'mobile_number', 'landline_number', 'facebook', 'twitter', 'whatsapp')
                 ->where('office', $office)
+                ->featuredOnContact()
                 ->orderByDesc('bps')
                 ->orderBy('position')
                 ->orderBy('name')
@@ -119,6 +120,7 @@ class UserController extends Controller
         foreach ($roles as $role => $criteria) {
             $teamData[$role] = User::select('id', 'uuid', 'name', 'title', 'position', 'bps')
                 ->where($criteria['column'], $criteria['value'])
+                ->featuredOnTeam()
                 ->with('media')
                 ->latest('created_at')
                 ->get()

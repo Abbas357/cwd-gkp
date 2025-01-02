@@ -212,7 +212,9 @@ class UserController extends Controller
     {
         $validated = $request->validated();
         
-        $validated['is_featured'] = $request->has('is_featured') ? 1 : 0;
+        $validated['featured_on'] = $request->has('featured_on') 
+        ? json_encode($request->input('featured_on')) 
+        : json_encode([]); 
 
         $user->fill(array_filter($validated, function ($value) {
             return $value !== null;

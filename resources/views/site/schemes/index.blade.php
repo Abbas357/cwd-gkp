@@ -49,6 +49,7 @@
                             <div class="col-md-2 col-sm-6 col-xs-12">
                                 <label for="sector_name" class="form-label">Sector</label>
                                 <select name="sector_name" id="sector_name" class="form-select">
+                                    <option value="">Select Sector</option>
                                     @foreach ($sectors as $sector)
                                         <option value="{{ $sector }}" 
                                             {{ request('sector_name', 'road') == $sector ? 'selected' : '' }}>
@@ -82,16 +83,18 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th scope="col" class="p-3">ID</th>
-                    <th scope="col" class="p-3">ADP Number</th>
-                    <th scope="col" class="p-3">Scheme Code</th>
-                    <th scope="col" class="p-3">Year</th>
-                    <th scope="col" class="p-3">Scheme Name</th>
-                    <th scope="col" class="p-3">Sector Name</th>
-                    <th scope="col" class="p-3">Local Cost</th>
-                    <th scope="col" class="p-3">Previous Expenditure</th>
-                    <th scope="col" class="p-3">Revenue Allocation</th>
-                    <th scope="col" class="p-3">Total Allocation</th>
+                    <th scope="col" class="p-1">ID</th>
+                    <th scope="col" class="p-1">ADP Number</th>
+                    <th scope="col" class="p-1">Scheme Code</th>
+                    <th scope="col" class="p-1">Year</th>
+                    <th scope="col" class="p-1">Scheme Name</th>
+                    <th scope="col" class="p-1">Sector Name</th>
+                    <th scope="col" class="p-1">Local Cost</th>
+                    <th scope="col" class="p-1">Previous Expenditure</th>
+                    <th scope="col" class="p-1">Revenue Allocation</th>
+                    <th scope="col" class="p-1">Total Allocation</th>
+                    <th scope="col" class="p-1">Views</th>
+                    <th scope="col" class="p-1">Detail</th>
                 </tr>
             </thead>
             <tbody>
@@ -107,6 +110,7 @@
                     <td>{{ $scheme->previous_expenditure ?? '' }}</td>
                     <td>{{ $scheme->revenue_allocation ?? '' }}</td>
                     <td>{{ $scheme->total_allocation ?? '' }}</td>
+                    <td>{{ $scheme->views_count }}</td>
                     <td>
                         <a href="{{ route('schemes.show', $scheme->uuid) }}" class="cw-btn" style="white-space: nowrap"><i class="bi-eye"></i> View</a>
                     </td>

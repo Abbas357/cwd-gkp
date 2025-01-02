@@ -43,7 +43,7 @@
         <!-- News List -->
         <div class="list-group">
             @foreach ($newsItems as $news)
-            <div class="list-group-item py-4">
+            <div class="list-group-item py-2">
                 <div class="row">
                     <div class="col-md-2">
                         @if ($news->getFirstMedia('news_attachments') && $news->getFirstMedia('news_attachments')->mime_type === 'image/jpeg')
@@ -54,32 +54,39 @@
                     </div>
 
                     <div class="col-md-10">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <a href="{{ route('news.show', $news->slug) }}">
-                                <h5 class="mt-0">{{ $news->title }}</h5>
-                            </a>
-                            @if($news->published_at)
-                            <small class="text-muted">{{ $news->published_at->format('M d, Y') }}</small>
-                            @endif
-                        </div>
-                        <p class="mb-1">
+                        <div class="mb-0">
                             @if($news->category)
-                            <a href="{{ route('news.index', ['category' => $news->category]) }}" class="text-decoration-none text-primary">
+                            <a href="{{ route('news.index', ['category' => $news->category]) }}" class="badge bg-info text-dark">
                                 {{ $news->category }}
                             </a>
-                            @else
-                            <span class="text-muted">General</span>
                             @endif
-
-                            @if($news->user && $news->user->designation)
-                            | <span>{{ $news->user->designation }}</span>
-                            @else
-                            | <span class="text-muted">Admin</span>
-                            @endif
-                        </p>
-                        <p>{{ Str::limit($news->summary ?? 'No summary available.', 150) }}</p>
-                        <a href="{{ route('news.show', $news->slug) }}" class="cw-btn" data-icon="bi-eye">Read More</a>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <!-- Left Section -->
+                            <div>
+                                <a href="{{ route('news.show', $news->slug) }}">
+                                    <h5 class="mt-0">{{ $news->title }}</h5>
+                                </a>
+                                
+                                <p class="mb-0">{{ Str::limit($news->summary ?? 'No summary available.', 100) }}</p>
+                            </div>
+                    
+                            <!-- Right Section -->
+                            <div class="text-end">
+                                @if($news->published_at)
+                                <div>
+                                    <small class="text-muted">{{ $news->published_at->format('M d, Y') }}</small>
+                                </div>
+                                @endif
+                                <div>
+                                    <small class="text-muted"><span class="fw-bold">Views: </span>{{ $news->views_count }}</small>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <a href="{{ route('news.show', $news->slug) }}" class="btn btn-light"><i class="bi-eye"></i> View</a>
                     </div>
+                    
                 </div>
             </div>
             @endforeach

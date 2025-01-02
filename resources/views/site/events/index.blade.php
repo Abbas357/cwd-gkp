@@ -35,32 +35,41 @@
                     </div>
 
                     <div class="col-md-10">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <a href="{{ route('events.show', $event->slug) }}">
-                                <h5 class="mt-0">{{ $event->title }}</h5>
-                            </a>
+                        <div class="d-flex justify-content-between">
+                            <!-- Left Section -->
                             <div>
-                                <small class="text-muted">{{ $event->published_at->format('M d, Y') }}</small>
+                                <a href="{{ route('events.show', $event->slug) }}">
+                                    <h5 class="mt-0">{{ $event->title }}</h5>
+                                </a>
+                                @if(!empty($event->start_datetime) && !empty($event->end_datetime))
+                                <div>
+                                    <strong>Date:</strong>
+                                    {{ $event->start_datetime->format('M d, Y') }}
+                                    @if($event->start_datetime->format('M d, Y') !== $event->end_datetime->format('M d, Y'))
+                                    to {{ $event->end_datetime->format('M d, Y') }}
+                                    @endif
+                                    <br>
+                                    <strong>Time:</strong>
+                                    {{ $event->start_datetime->format('h:i A') }}
+                                    to {{ $event->end_datetime->format('h:i A') }}
+                                </div>
+                                @endif
+                            </div>
+                    
+                            <!-- Right Section -->
+                            <div class="text-end">
+                                <div>
+                                    <small class="text-muted">{{ $event->published_at->format('M d, Y') }}</small>
+                                </div>
+                                <div>
+                                    <small class="text-muted">Views: {{ $event->views_count }}</small>
+                                </div>
                             </div>
                         </div>
-
-                        @if(!empty($event->start_datetime) && !empty($event->end_datetime))
-                        <div>
-                            <strong>Date:</strong>
-                            {{ $event->start_datetime->format('M d, Y') }}
-                            @if($event->start_datetime->format('M d, Y') !== $event->end_datetime->format('M d, Y'))
-                            to {{ $event->end_datetime->format('M d, Y') }}
-                            @endif
-                            <br>
-                            <strong>Time:</strong>
-                            {{ $event->start_datetime->format('h:i A') }}
-                            to {{ $event->end_datetime->format('h:i A') }}
-                            <br>
-                        </div>
-                        @endif
-
-                        <a href="{{ route('events.show', $event->slug) }}" class="cw-btn" data-icon="bi-eye">View Detail</a>
+                    
+                        <a href="{{ route('events.show', $event->slug) }}" class="btn btn-light"> <i class="bi-eye"></i> View</a>
                     </div>
+                    
 
                 </div>
             </div>

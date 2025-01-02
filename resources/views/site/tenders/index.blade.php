@@ -48,13 +48,13 @@
                 <thead class="table-light">
                     <tr>
                         <th>Title</th>
-                        <th>Procurement Entity</th>
                         <th>Office</th>
                         <th>Tender Domain</th>
                         <th>Published Date</th>
                         <th>Tender Documents</th>
                         <th>EOI Documents</th>
                         <th>Bidding Documents</th>
+                        <th>Views</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -62,7 +62,6 @@
                     @foreach ($tenders as $tender)
                     <tr>
                         <td> {{ $tender->title }} </td>
-                        <td> {{ $tender->procurement_entity }} </td>
                         <td> {{ $tender->user->position }} </td>
                         <td> {{ $tender->domain }} </td>
                         <td> {{ $tender->published_at->format('j, F Y') }}
@@ -76,6 +75,7 @@
                         <td>
                             {{ $tender->getMedia('bidding_documents')->isNotEmpty() ? 'Yes' : 'Not Available' }}
                         </td>
+                        <td> {{ $tender->views_count }} </td>
                         <td>
                             <a href="{{ route('tenders.show', $tender->slug) }}" class="cw-btn" data-icon="bi-eye">View Detail</a>
                         </td>

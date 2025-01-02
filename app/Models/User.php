@@ -99,9 +99,19 @@ class User extends Authenticatable implements HasMedia
         return static::withoutGlobalScopes()->where('id', $value)->firstOrFail();
     }
 
-    public function scopeFeatured($query)
+    public function scopeFeaturedOnHome($query)
     {
-        return $query->where('is_featured', 1);
+        return $query->whereJsonContains('featured_on', 'Home');
+    }
+
+    public function scopeFeaturedOnTeam($query)
+    {
+        return $query->whereJsonContains('featured_on', 'Team');
+    }
+
+    public function scopeFeaturedOnContact($query)
+    {
+        return $query->whereJsonContains('featured_on', 'Contact');
     }
 
     public function logs()

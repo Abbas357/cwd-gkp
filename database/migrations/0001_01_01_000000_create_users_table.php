@@ -35,7 +35,7 @@ return new class extends Migration
             $table->string('otp')->nullable();
             $table->enum('status', ['Inactive', 'Active', 'Archived'])->nullable();
             $table->text('message')->nullable();
-            $table->boolean('is_featured')->default(0);        
+            $table->boolean('featured_on')->default(null);
             $table->string('password');
             $table->timestamp('password_updated_at')->nullable();
             $table->unsignedBigInteger('views_count')->default(0);

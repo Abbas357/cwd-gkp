@@ -44,7 +44,7 @@
                                     <h5 class="card-title">{{ $gallery->title }}</h5>
                                     @endif
                                     @if(!empty($gallery->items))
-                                    <p class="card-text">Number of Items: {{ $gallery->items }}</p>
+                                    <div class="card-text d-flex justify-content-between"> <span>Items: {{ $gallery->items }}</span> <span>Views: {{ $gallery->views_count }}</span> </div>
                                     @endif
                                 </div>
                             </div>

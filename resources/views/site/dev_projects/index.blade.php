@@ -86,7 +86,7 @@
                     <th>Total Cost</th>
                     <th>Commencement Date</th>
                     <th>Progress</th>
-                    <th>Status</th>
+                    <th>Views</th>
                     <th>Details</th>
                 </tr>
             </thead>
@@ -99,7 +99,7 @@
                     <td>{{ $project->total_cost ? number_format($project->total_cost, 2) : '' }}</td>
                     <td>{{ $project->commencement_date ? $project->commencement_date->format('M d, Y') : '' }}</td>
                     <td>{{ isset($project->progress_percentage) ? $project->progress_percentage . '%' : '' }}</td>
-                    <td>{{ $project->status ?? '' }}</td>
+                    <td>{{ $project->views_count }}</td>
                     <td>
                         <a href="{{ route('development_projects.show', $project->slug) }}" class="cw-btn" style="white-space: nowrap"><i class="bi-eye"></i> View</a>
                     </td>

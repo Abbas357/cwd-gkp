@@ -89,8 +89,8 @@
     <div class="container mt-3">
 
         <div class="d-flex justify-content-between">
-            <p><strong>Sector:</strong> {{ $scheme->sector_name }}</p>
-            <p><strong>Scheme Code:</strong> {{ $scheme->scheme_code }}</p>
+            <p><strong>Scheme Code</strong> {{ $scheme->scheme_code }}</p>
+            <p><strong>Views:</strong> {{ $scheme->views_count }}</p>
         </div>
 
         <div class="table-responsive mt-4">

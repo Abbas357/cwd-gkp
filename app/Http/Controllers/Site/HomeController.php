@@ -193,7 +193,7 @@ class HomeController extends Controller
     {
         $users = Cache::remember('team_partial', 43200, function () {
             return User::select('id', 'name', 'uuid', 'title', 'position', 'bps')
-                ->featured()
+                ->featuredOnHome()
                 ->with('media')
                 ->latest('created_at')
                 ->get()

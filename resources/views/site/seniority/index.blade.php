@@ -13,7 +13,7 @@
                         <th>#</th>
                         <th>Title</th>
                         <th>Designation</th>
-                        <th>BPS</th>
+                        <th>Views</th>
                         <th>Seniority Date</th>
                         <th>Action</th>
                     </tr>
@@ -24,7 +24,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $seniority->title }}</td>
                             <td>{{ $seniority->designation }}</td>
-                            <td>{{ $seniority->bps }}</td>
+                            <td>{{ $seniority->views_count }}</td>
                             <td>{{ \Carbon\Carbon::parse($seniority->seniority_date)->format('M d, Y') }}</td>
                             <td>
                                 <a href="{{ route('seniority.show', $seniority->slug) }}" class="cw-btn" data-icon="bi-eye">View Details</a>
