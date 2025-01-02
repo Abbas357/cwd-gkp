@@ -19,8 +19,8 @@
 
         <!-- Filters Section -->
         <form method="GET" action="{{ route('schemes.index') }}" class="mb-4">
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <div class="card shadow-sm mb-4" style="border-radius:0px">
+                <div class="card-header d-flex justify-content-between align-items-center p-2">
                     <button type="button" class="btn p-0 w-100 text-start" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="{{ request('search') || request('scheme_code') || request('year') ? 'true' : 'false' }}" aria-controls="filterCollapse">
                         <div class="d-flex justify-content-between align-items-center w-100">
                             <h5 class="mb-0" style="text-decoration: none !important">Filter Schemes</h5>
@@ -29,7 +29,7 @@
                     </button>
                 </div>
                 <div id="filterCollapse" class="collapse show">
-                    <div class="card-body">
+                    <div class="card-body p-2">
                         <div class="row g-3 align-items-end">
                             <div class="col-md-4 col-sm-6 col-xs-12">
                                 <label for="search" class="form-label">Search</label>
