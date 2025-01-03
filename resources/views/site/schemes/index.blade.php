@@ -19,17 +19,17 @@
 
         <!-- Filters Section -->
         <form method="GET" action="{{ route('schemes.index') }}" class="mb-4">
-            <div class="card shadow-sm mb-4" style="border-radius:0px">
-                <div class="card-header d-flex justify-content-between align-items-center p-2">
+            <div class="card mb-4" style="border-radius:0px; box-shadow: 0 0 10px #fbb03444">
+                <div class="card-header d-flex justify-content-between align-items-center p-2 py-0" style="background: #e9eff3">
                     <button type="button" class="btn p-0 w-100 text-start" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="{{ request('search') || request('scheme_code') || request('year') ? 'true' : 'false' }}" aria-controls="filterCollapse">
                         <div class="d-flex justify-content-between align-items-center w-100">
-                            <h5 class="mb-0" style="text-decoration: none !important">Filter Schemes</h5>
-                            <i class="bi bi-arrow-down-circle fs-4" id="accordion-icon"></i>
+                            <h5 class="mb-0" style="text-decoration: none !important"><i class="bi-funnel"></i> &nbsp; Filter Schemes</h5>
+                            <i class="bi bi-arrow-up-circle fs-4" id="accordion-icon"></i>
                         </div>
                     </button>
                 </div>
                 <div id="filterCollapse" class="collapse show">
-                    <div class="card-body p-2">
+                    <div class="card-body p-1 px-3">
                         <div class="row g-3 align-items-end">
                             <div class="col-md-4 col-sm-6 col-xs-12">
                                 <label for="search" class="form-label">Search</label>
@@ -66,7 +66,7 @@
                                 <label for="scheme_code" class="form-label">Scheme Code</label>
                                 <input type="text" name="scheme_code" id="scheme_code" class="form-control" value="{{ request('scheme_code') }}">
                             </div>
-                            <div class="col-lg-12 text-end">
+                            <div class="col-lg-12 text-end m-2">
                                 <button type="submit" class="cw-btn cw-simple">
                                     <i class="bi bi-funnel"></i> Apply Filters
                                 </button>
@@ -83,7 +83,7 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th scope="col" class="p-1">ID</th>
+                    <th scope="col" class="p-1">S.No</th>
                     <th scope="col" class="p-1">ADP Number</th>
                     <th scope="col" class="p-1">Scheme Code</th>
                     <th scope="col" class="p-1">Year</th>
