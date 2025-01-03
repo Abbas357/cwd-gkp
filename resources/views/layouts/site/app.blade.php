@@ -35,9 +35,65 @@
 
     <link rel="stylesheet" href="{{ asset('site/css/bootstrap-icons.min.css') }}">
     <link href="{{ asset('site/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('site/css/style.min.css') }}?v=3" rel="stylesheet">
+    <link href="{{ asset('site/css/style.min.css') }}?v=4" rel="stylesheet">
     @stack('style')
-    <link href="{{ asset('site/css/custom.min.css') }}?v=3" rel="stylesheet">
+    <link href="{{ asset('site/css/custom.min.css') }}?v=4" rel="stylesheet">
+    <script>
+        (function() {
+            var theme;
+            const savedTheme = localStorage.getItem('selectedTheme');
+            if (savedTheme) {
+                themes = {
+                    default: {
+                        '--cw-primary': '#0b7240',
+                        '--cw-primary-light': '#32b877',
+                        '--cw-menu-text-color': '#fff',
+                        '--cw-primary-deep': '#0b6137',
+                        '--cw-dense': '#232323',
+                        '--cw-simple': '#FCFCFC',
+                        '--cw-simple-alpha': '#F8F8F8',
+                        '--cw-simple-beta': '#E0E0E0',
+                        '--cw-simple-gray': '#D5D6D7',
+                        '--cw-gray': '#C5C5C5',
+                        '--cw-dense-gray': '#575757'
+                    },
+                    brown: {
+                        '--cw-primary': '#855723',
+                        '--cw-primary-light': '#ba7b33',
+                        '--cw-menu-text-color': '#fff',
+                        '--cw-primary-deep': '#5c3c18',
+                        '--cw-dense': '#2b1810',
+                        '--cw-simple': '#FCFAF7',
+                        '--cw-simple-alpha': '#F8F4F0',
+                        '--cw-simple-beta': '#E6DCD1',
+                        '--cw-simple-gray': '#D5CDC4',
+                        '--cw-gray': '#C5B8AC',
+                        '--cw-dense-gray': '#767066'
+                    },
+                    blue: {
+                        '--cw-primary': '#1e4d8c',
+                        '--cw-primary-light': '#2d6fc7',
+                        '--cw-menu-text-color': '#fff',
+                        '--cw-primary-deep': '#163761',
+                        '--cw-dense': '#1a2634',
+                        '--cw-simple': '#F7FAFC',
+                        '--cw-simple-alpha': '#F0F4F8',
+                        '--cw-simple-beta': '#D1DEE6',
+                        '--cw-simple-gray': '#C4D0D9',
+                        '--cw-gray': '#ACB8C5',
+                        '--cw-dense-gray': '#666D76'
+                    }
+                };
+                
+                const theme = themes[savedTheme];
+                const styles = Object.entries(theme)
+                    .map(([property, value]) => `${property}: ${value}`)
+                    .join(';');
+                                
+                document.write(`<style>body { ${styles} }</style>`);
+            }
+        })();
+        </script>
 </head>
 
 <body>
@@ -68,11 +124,10 @@
         {{ $slot }}
     </main>
 
-    <button id="theme-toggle" class="position-fixed" style="right: 20px; top: 33vh; z-index: 1040; background: var(--cw-primary); color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer;">
-        <i class="bi bi-palette"></i>
+    <button id="theme-toggle" class="position-fixed" style="right: 0; top: 33vh; z-index: 1040; color: white; border: none; padding: .5rem .7rem; border-radius: 5px; cursor: pointer;">
+        <i class="bi bi-palette" style="font-size: 1.5rem"></i>
     </button>
     
-    <!-- Add the offcanvas -->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="themeCanvas" aria-labelledby="themeCanvasLabel">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="themeCanvasLabel">Choose Theme</h5>
@@ -111,91 +166,59 @@
 
     <script src="{{ asset('site/js/jquery.min.js') }}"></script>
     <script src="{{ asset('site/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('site/js/menu.min.js') }}?v=3"></script>
-    <script src="{{ asset('site/js/core.min.js') }}?v=3"></script>
+    <script src="{{ asset('site/js/menu.min.js') }}?v=4"></script>
+    <script src="{{ asset('site/js/core.min.js') }}?v=4"></script>
 
     @stack('script')
-    <script src="{{ asset('site/js/custom.min.js') }}?v=3"></script>
+    <script src="{{ asset('site/js/custom.min.js') }}?v=4"></script>
     
-    <script>
-        // Theme definitions
-        const themes = {
-            default: {
-                '--cw-menu-width': '1325px',
-                '--cw-primary': '#0b7240',
-                '--cw-primary-light': '#32b877',
-                '--cw-menu-text-color': '#fff',
-                '--cw-primary-deep': '#0b6137',
-                '--cw-dense': '#232323',
-                '--cw-simple': '#FCFCFC',
-                '--cw-simple-alpha': '#F8F8F8',
-                '--cw-simple-beta': '#E0E0E0',
-                '--cw-simple-gray': '#D5D6D7',
-                '--cw-gray': '#C5C5C5',
-                '--cw-dense-gray': '#575757'
-            },
-            brown: {
-                '--cw-menu-width': '1325px',
-                '--cw-primary': '#855723',
-                '--cw-primary-light': '#ba7b33',
-                '--cw-menu-text-color': '#fff',
-                '--cw-primary-deep': '#5c3c18',
-                '--cw-dense': '#2b1810',
-                '--cw-simple': '#FCFAF7',
-                '--cw-simple-alpha': '#F8F4F0',
-                '--cw-simple-beta': '#E6DCD1',
-                '--cw-simple-gray': '#D5CDC4',
-                '--cw-gray': '#C5B8AC',
-                '--cw-dense-gray': '#767066'
-            },
-            blue: {
-                '--cw-menu-width': '1325px',
-                '--cw-primary': '#1e4d8c',
-                '--cw-primary-light': '#2d6fc7',
-                '--cw-menu-text-color': '#fff',
-                '--cw-primary-deep': '#163761',
-                '--cw-dense': '#1a2634',
-                '--cw-simple': '#F7FAFC',
-                '--cw-simple-alpha': '#F0F4F8',
-                '--cw-simple-beta': '#D1DEE6',
-                '--cw-simple-gray': '#C4D0D9',
-                '--cw-gray': '#ACB8C5',
-                '--cw-dense-gray': '#666D76'
-            }
-        };
-        
-        // Initialize canvas
+    <script>        
         const themeCanvas = new bootstrap.Offcanvas(document.getElementById('themeCanvas'));
         
-        // Add click handler for theme toggle button
         document.getElementById('theme-toggle').addEventListener('click', () => {
             themeCanvas.show();
         });
         
-        // Function to apply theme
         function applyTheme(themeName) {
             const theme = themes[themeName];
-            const cwdElement = document.querySelector('.CWD');
+            const themedElement = document.querySelector('body');
             
             Object.entries(theme).forEach(([property, value]) => {
-                cwdElement.style.setProperty(property, value);
+                themedElement.style.setProperty(property, value);
             });
             
-            // Save theme preference
             localStorage.setItem('selectedTheme', themeName);
             
-            // Close the canvas
             themeCanvas.hide();
+            applyThemeColorToButton();
         }
+
+        const applyThemeColorToButton = () => {
+            const themedElement = document.querySelector('body');
+            const button = document.getElementById('theme-toggle');
+            if (themedElement && button) {
+                const themePrimaryColor = getComputedStyle(themedElement).getPropertyValue('--cw-primary');
+                button.style.backgroundColor = themePrimaryColor.trim();
+            }
+        };
+
+        applyThemeColorToButton();
         
-        // Load saved theme on page load
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('selectedTheme');
+            const themedElement = document.querySelector('body');
+
+            const button = document.getElementById('theme-toggle');
+            if (themedElement && button) {
+                const themePrimaryColor = getComputedStyle(themedElement).getPropertyValue('--cw-primary');
+                button.style.backgroundColor = themePrimaryColor.trim();
+            };
+
             if (savedTheme && themes[savedTheme]) {
                 applyTheme(savedTheme);
             }
         });
-        </script>
+    </script>
         
 </body>
 </html>
