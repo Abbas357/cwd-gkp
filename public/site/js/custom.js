@@ -1022,3 +1022,116 @@ function pushStateModal({
     });
 
 })();
+
+document.addEventListener('DOMContentLoaded', () => {
+    const themeToggle = document.createElement('button');
+    themeToggle.id = 'theme-toggle';
+    themeToggle.className = 'position-fixed';
+    themeToggle.style.cssText = 'right: 0; top: 33vh; z-index: 1040; color: white; border: none; padding: .3rem .5rem; border-radius: 5px; cursor: pointer;';
+
+    const icon = document.createElement('i');
+    icon.className = 'bi bi-palette';
+    icon.style.fontSize = '1.5rem';
+    themeToggle.appendChild(icon);
+
+    const offcanvas = document.createElement('div');
+    offcanvas.className = 'offcanvas offcanvas-end';
+    offcanvas.id = 'themeCanvas';
+    offcanvas.setAttribute('tabindex', '-1');
+    offcanvas.setAttribute('aria-labelledby', 'themeCanvasLabel');
+
+    const themeOptions = [
+        {
+            name: 'default',
+            color: '#0b7240',
+            title: 'Default Theme',
+            description: 'Original green color scheme'
+        },
+        {
+            name: 'brown',
+            color: '#855723',
+            title: 'Brown Theme',
+            description: 'Warm brown color palette'
+        },
+        {
+            name: 'blue',
+            color: '#1e4d8c',
+            title: 'Blue Theme',
+            description: 'Professional blue scheme'
+        },
+        {
+            name: 'violet',
+            color: '#7F00FF',
+            title: 'Violet Theme',
+            description: 'Professional Violet scheme'
+        }
+    ];
+
+    offcanvas.innerHTML = `
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="themeCanvasLabel">Choose Theme</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="d-flex flex-column gap-3">
+                ${themeOptions.map(theme => `
+                    <div class="theme-option p-3 rounded" onclick="applyTheme('${theme.name}')" 
+                        style="cursor: pointer; border: 1px solid #ddd;">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <div style="width: 25px; height: 25px; background-color: ${theme.color}; border-radius: 50%;"></div>
+                            <h6 class="mb-0">${theme.title}</h6>
+                        </div>
+                        <small class="text-muted">${theme.description}</small>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(themeToggle);
+    document.body.appendChild(offcanvas);
+
+    window.applyTheme = function(themeName) {
+        let themeLink = document.getElementById('theme-stylesheet');
+        
+        if (themeName === 'default') {
+            if (themeLink) {
+                themeLink.remove();
+            }
+        } else {
+            if (!themeLink) {
+                themeLink = document.createElement('link');
+                themeLink.id = 'theme-stylesheet';
+                themeLink.rel = 'stylesheet';
+                const styleSheet = document.querySelector('link[href*="style.min.css"]');
+                if (styleSheet) {
+                    styleSheet.parentNode.insertBefore(themeLink, styleSheet.nextSibling);
+                } else {
+                    document.head.appendChild(themeLink);
+                }
+            }
+            themeLink.href = `/site/css/themes/${themeName}.css`;
+        }
+
+        localStorage.setItem('selectedTheme', themeName);
+        window.themeCanvas.hide();
+        applyThemeColorToButton();
+    };
+
+    function applyThemeColorToButton() {
+        const button = document.getElementById('theme-toggle');
+        const selectedTheme = localStorage.getItem('selectedTheme') || 'default';
+        const themeOption = themeOptions.find(t => t.name === selectedTheme);
+        if (button && themeOption) {
+            button.style.backgroundColor = themeOption.color;
+        }
+    }
+
+    window.themeCanvas = new bootstrap.Offcanvas(document.getElementById('themeCanvas'));
+
+    themeToggle.addEventListener('click', () => {
+        window.themeCanvas.show();
+    });
+
+    applyThemeColorToButton();
+});

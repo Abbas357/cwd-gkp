@@ -12,7 +12,7 @@
                 <a class="LogoWrapper dynamic-link" href="{{ route('site') }}" aria-label="Home">
                     <div>
                         <div class="cw-show-DeskTop-Tab">
-                            <img class="desktop-logo" style="border-bottom-right-radius: 50px" src="{{ asset('site/images/logo-desktop.gif') }}" alt="Desktop Logo" />
+                            <img class="desktop-logo" style="border-bottom-right-radius: 30px; border-top-right-radius: 30px; border-bottom-left-radius: 15px; border-top-left-radius: 15px; " src="{{ asset('site/images/logo-desktop.gif') }}" alt="Desktop Logo" />
                         </div>
                     </div>
                 </a>

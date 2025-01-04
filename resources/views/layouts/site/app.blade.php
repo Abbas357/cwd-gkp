@@ -39,59 +39,12 @@
     @stack('style')
     <link href="{{ asset('site/css/custom.min.css') }}?v=4" rel="stylesheet">
     <script>
-        const themes = {
-            default: {
-                '--cw-primary': '#0b7240'
-                , '--cw-primary-light': '#32b877'
-                , '--cw-menu-text-color': '#fff'
-                , '--cw-primary-deep': '#0b6137'
-                , '--cw-dense': '#232323'
-                , '--cw-simple': '#FCFCFC'
-                , '--cw-simple-alpha': '#F8F8F8'
-                , '--cw-simple-beta': '#E0E0E0'
-                , '--cw-simple-gray': '#D5D6D7'
-                , '--cw-gray': '#C5C5C5'
-                , '--cw-dense-gray': '#575757'
-            }
-            , brown: {
-                '--cw-primary': '#855723'
-                , '--cw-primary-light': '#ba7b33'
-                , '--cw-menu-text-color': '#fff'
-                , '--cw-primary-deep': '#5c3c18'
-                , '--cw-dense': '#2b1810'
-                , '--cw-simple': '#FCFAF7'
-                , '--cw-simple-alpha': '#F8F4F0'
-                , '--cw-simple-beta': '#E6DCD1'
-                , '--cw-simple-gray': '#D5CDC4'
-                , '--cw-gray': '#C5B8AC'
-                , '--cw-dense-gray': '#767066'
-            }
-            , blue: {
-                '--cw-primary': '#1e4d8c'
-                , '--cw-primary-light': '#2d6fc7'
-                , '--cw-menu-text-color': '#fff'
-                , '--cw-primary-deep': '#163761'
-                , '--cw-dense': '#1a2634'
-                , '--cw-simple': '#F7FAFC'
-                , '--cw-simple-alpha': '#F0F4F8'
-                , '--cw-simple-beta': '#D1DEE6'
-                , '--cw-simple-gray': '#C4D0D9'
-                , '--cw-gray': '#ACB8C5'
-                , '--cw-dense-gray': '#666D76'
-            }
-        };
-        
         (function() {
             const savedTheme = localStorage.getItem('selectedTheme');
-            if (savedTheme && themes[savedTheme]) {
-                const theme = themes[savedTheme];
-                const styles = Object.entries(theme)
-                    .map(([property, value]) => `${property}: ${value}`)
-                    .join(';');
-                document.write(`<style>body { ${styles} }</style>`);
+            if (savedTheme && savedTheme !== 'default') {
+                document.write(`<link id="theme-stylesheet" rel="stylesheet" href="{{ asset('site/css/themes/${savedTheme}.css') }}">`);
             }
         })();
-
     </script>
 </head>
 
@@ -123,44 +76,6 @@
         {{ $slot }}
     </main>
 
-    <button id="theme-toggle" class="position-fixed" style="right: 0; top: 33vh; z-index: 1040; color: white; border: none; padding: .5rem .7rem; border-radius: 5px; cursor: pointer;">
-        <i class="bi bi-palette" style="font-size: 1.5rem"></i>
-    </button>
-    
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="themeCanvas" aria-labelledby="themeCanvasLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="themeCanvasLabel">Choose Theme</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <div class="d-flex flex-column gap-3">
-                <div class="theme-option p-3 rounded cursor-pointer" onclick="applyTheme('default')" style="cursor: pointer; border: 1px solid #ddd;">
-                    <div class="d-flex align-items-center gap-2 mb-2">
-                        <div style="width: 25px; height: 25px; background-color: #0b7240; border-radius: 50%;"></div>
-                        <h6 class="mb-0">Default Green Theme</h6>
-                    </div>
-                    <small class="text-muted">Original green color scheme</small>
-                </div>
-    
-                <div class="theme-option p-3 rounded" onclick="applyTheme('brown')" style="cursor: pointer; border: 1px solid #ddd;">
-                    <div class="d-flex align-items-center gap-2 mb-2">
-                        <div style="width: 25px; height: 25px; background-color: #855723; border-radius: 50%;"></div>
-                        <h6 class="mb-0">Earthy Brown Theme</h6>
-                    </div>
-                    <small class="text-muted">Warm brown color palette</small>
-                </div>
-    
-                <div class="theme-option p-3 rounded" onclick="applyTheme('blue')" style="cursor: pointer; border: 1px solid #ddd;">
-                    <div class="d-flex align-items-center gap-2 mb-2">
-                        <div style="width: 25px; height: 25px; background-color: #1e4d8c; border-radius: 50%;"></div>
-                        <h6 class="mb-0">Ocean Blue Theme</h6>
-                    </div>
-                    <small class="text-muted">Professional blue scheme</small>
-                </div>
-            </div>
-        </div>
-    </div>
-    
     @include("layouts.site.partials.footer")
 
     <script src="{{ asset('site/js/jquery.min.js') }}"></script>
@@ -170,48 +85,5 @@
 
     @stack('script')
     <script src="{{ asset('site/js/custom.min.js') }}?v=4"></script>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            window.applyTheme = function(themeName) {
-                const theme = themes[themeName];
-                const themedElement = document.querySelector('body');
-
-                Object.entries(theme).forEach(([property, value]) => {
-                    themedElement.style.setProperty(property, value);
-                });
-
-                localStorage.setItem('selectedTheme', themeName);
-
-                window.themeCanvas.hide();
-                applyThemeColorToButton();
-            }
-            
-            function applyThemeColorToButton() {
-                const themedElement = document.querySelector('body');
-                const button = document.getElementById('theme-toggle');
-                if (themedElement && button) {
-                    const themePrimaryColor = getComputedStyle(themedElement).getPropertyValue('--cw-primary');
-                    button.style.backgroundColor = themePrimaryColor.trim();
-                }
-            }
-
-            window.themeCanvas = new bootstrap.Offcanvas(document.getElementById('themeCanvas'));
-
-            document.getElementById('theme-toggle').addEventListener('click', () => {
-                window.themeCanvas.show();
-            });
-
-            const savedTheme = localStorage.getItem('selectedTheme');
-            if (savedTheme && themes[savedTheme]) {
-                applyTheme(savedTheme);
-            }
-            
-            applyThemeColorToButton();
-        });
-
-    </script>
-        
 </body>
 </html>
