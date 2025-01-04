@@ -35,9 +35,9 @@
 
     <link rel="stylesheet" href="{{ asset('site/css/bootstrap-icons.min.css') }}">
     <link href="{{ asset('site/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('site/css/style.min.css') }}?v=4" rel="stylesheet">
+    <link href="{{ asset('site/css/style.min.css') }}?v=5" rel="stylesheet">
     @stack('style')
-    <link href="{{ asset('site/css/custom.min.css') }}?v=4" rel="stylesheet">
+    <link href="{{ asset('site/css/custom.min.css') }}?v=5" rel="stylesheet">
     <script>
         (function() {
             const savedTheme = localStorage.getItem('selectedTheme');
@@ -80,10 +80,10 @@
 
     <script src="{{ asset('site/js/jquery.min.js') }}"></script>
     <script src="{{ asset('site/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('site/js/menu.min.js') }}?v=4"></script>
-    <script src="{{ asset('site/js/core.min.js') }}?v=4"></script>
+    <script src="{{ asset('site/js/menu.min.js') }}?v=5"></script>
+    <script src="{{ asset('site/js/core.min.js') }}?v=5"></script>
 
     @stack('script')
-    <script src="{{ asset('site/js/custom.min.js') }}?v=4"></script>
+    <script src="{{ asset('site/js/custom.min.js') }}?v=5"></script>
 </body>
 </html>
