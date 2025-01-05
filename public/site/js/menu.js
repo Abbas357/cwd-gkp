@@ -136,8 +136,8 @@
 		},
 
 		handleStickyBehavior() {
-			const scrollThreshold = 100;
-			const buffer = 50;
+			const scrollThreshold = 46;
+			const buffer = 23;
 			const bottomHeight = CWD.cwBottom.outerHeight();
 		
 			if (window.scrollY > (scrollThreshold + buffer) && window.innerWidth > 900) {
@@ -149,7 +149,6 @@
 					'position': 'fixed',
 					'top': '0',
 					'width': '100%',
-					'z-index': '1000',
 					'opacity': '0.9'
 				});
 			} else if (window.scrollY < (scrollThreshold - buffer) && window.innerWidth > 900) {

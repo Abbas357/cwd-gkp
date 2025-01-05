@@ -35,14 +35,14 @@
 
     <link rel="stylesheet" href="{{ asset('site/css/bootstrap-icons.min.css') }}">
     <link href="{{ asset('site/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('site/css/style.min.css') }}?v=6" rel="stylesheet">
+    <link href="{{ asset('site/css/style.min.css') }}?v=7" rel="stylesheet">
     @stack('style')
-    <link href="{{ asset('site/css/custom.min.css') }}?v=6" rel="stylesheet">
+    <link href="{{ asset('site/css/custom.min.css') }}?v=7" rel="stylesheet">
     <script>
         (function() {
             const savedTheme = localStorage.getItem('selectedTheme');
             if (savedTheme && savedTheme !== 'default') {
-                document.write(`<link id="theme-stylesheet" rel="stylesheet" href="{{ asset('site/css/themes/${savedTheme}.css') }}?v=6">`);
+                document.write(`<link id="theme-stylesheet" rel="stylesheet" href="{{ asset('site/css/themes/${savedTheme}.css') }}?v=7">`);
             }
         })();
     </script>
@@ -54,7 +54,7 @@
     <div id="modal-container"></div>
 
     @if(isset($breadcrumbTitle) || isset($breadcrumbItems))
-    <div class="container-fluid bg-breadcrumb mb-1">
+    <div class="container-fluid bg-breadcrumb mb-1" style="box-shadow: 0 0 7px var(--cw-primary-light)">
         <div class="container d-flex justify-content-between align-items-center">
             @isset($breadcrumbTitle)
             <h3 class="fs-4" style="text-shadow: 3px 3px 3px #00000055">
@@ -80,10 +80,10 @@
 
     <script src="{{ asset('site/js/jquery.min.js') }}"></script>
     <script src="{{ asset('site/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('site/js/menu.min.js') }}?v=6"></script>
-    <script src="{{ asset('site/js/core.min.js') }}?v=6"></script>
+    <script src="{{ asset('site/js/menu.min.js') }}?v=7"></script>
+    <script src="{{ asset('site/js/core.min.js') }}?v=7"></script>
 
     @stack('script')
-    <script src="{{ asset('site/js/custom.min.js') }}?v=6"></script>
+    <script src="{{ asset('site/js/custom.min.js') }}?v=7"></script>
 </body>
 </html>

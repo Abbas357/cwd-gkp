@@ -30,9 +30,8 @@
                 {{ $download->file_name }}</td>
             <td>
                 @if ($media = $download->getFirstMediaUrl('downloads'))
-                <a href="{{ $media }}" class="btn btn-primary btn-sm btn-animate download-link" 
-                   data-id="{{ $download->id }}" target="_blank">
-                    <i class="bi-cloud-arrow-down"></i> Download
+                <a href="{{ $media }}" class="cw-btn" data-icon="bi-cloud-arrow-down" 
+                   data-id="{{ $download->id }}" target="_blank"> Download
                 </a>
                 @else
                 <span class="text-muted">No file available</span>

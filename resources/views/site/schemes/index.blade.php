@@ -126,6 +126,7 @@
     </div>
 
     @push('script')
+    <script src="{{ asset('site/lib/sharer/sharer.min.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const filterCollapse = document.getElementById('filterCollapse');

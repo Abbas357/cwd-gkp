@@ -77,7 +77,7 @@
                         </td>
                         <td> {{ $tender->views_count }} </td>
                         <td>
-                            <a href="{{ route('tenders.show', $tender->slug) }}" class="cw-btn" data-icon="bi-eye">View Detail</a>
+                            <a href="{{ route('tenders.show', $tender->slug) }}" class="cw-btn" data-icon="bi-eye">View</a>
                         </td>
                     </tr>
                     @endforeach

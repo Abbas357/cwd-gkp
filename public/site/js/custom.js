@@ -1027,7 +1027,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeToggle = document.createElement('button');
     themeToggle.id = 'theme-toggle';
     themeToggle.className = 'position-fixed';
-    themeToggle.style.cssText = 'right: 0; top: 33vh; z-index: 1040; color: white; border: none; padding: .3rem .5rem; border-radius: 5px; cursor: pointer;';
+    themeToggle.style.cssText = 'right: 0; top: 33vh; z-index: 1040; color: white; border: none; padding: .3rem .5rem; border-radius: 5px; cursor: pointer;background-color: #febd17';
 
     const icon = document.createElement('i');
     icon.className = 'bi bi-palette';
@@ -1045,31 +1045,26 @@ document.addEventListener('DOMContentLoaded', () => {
             name: 'default',
             color: '#0b7240',
             title: 'Default Theme',
-            description: 'Original green color theme'
         },
         {
             name: 'brown',
             color: '#855723',
             title: 'Brown Theme',
-            description: 'Warm brown theme'
         },
         {
             name: 'blue',
             color: '#1e4d8c',
             title: 'Blue Theme',
-            description: 'Dark blue theme'
         },
         {
             name: 'violet',
             color: '#8f2bbc',
             title: 'Violet Theme',
-            description: 'Amazing Violet theme'
         },
         {
             name: 'darkred',
             color: '#af0606',
             title: 'Dark Red Theme',
-            description: 'Pure Dark Red theme'
         }
     ];
 
@@ -1082,12 +1077,11 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="d-flex flex-column gap-3">
                 ${themeOptions.map(theme => `
                     <div class="theme-option p-3 rounded" onclick="applyTheme('${theme.name}')" 
-                        style="cursor: pointer; border: 1px solid #ddd;">
-                        <div class="d-flex align-items-center gap-2 mb-2">
+                        style="cursor: pointer; border: 1px solid #ddd; box-shadow: 0 0 15px #00000045" onmouseover="this.style.backgroundColor='${theme.color}'; this.style.color = 'white'" onmouseout="this.style.backgroundColor='transparent'; this.style.color = 'black'">
+                        <div class="d-flex align-items-center gap-2">
                             <div style="width: 25px; height: 25px; background-color: ${theme.color}; border-radius: 50%;"></div>
                             <h6 class="mb-0">${theme.title}</h6>
                         </div>
-                        <small class="text-muted">${theme.description}</small>
                     </div>
                 `).join('')}
             </div>
@@ -1124,20 +1118,10 @@ document.addEventListener('DOMContentLoaded', () => {
         applyThemeColorToButton();
     };
 
-    function applyThemeColorToButton() {
-        const button = document.getElementById('theme-toggle');
-        const selectedTheme = localStorage.getItem('selectedTheme') || 'default';
-        const themeOption = themeOptions.find(t => t.name === selectedTheme);
-        if (button && themeOption) {
-            button.style.backgroundColor = themeOption.color;
-        }
-    }
-
     window.themeCanvas = new bootstrap.Offcanvas(document.getElementById('themeCanvas'));
 
     themeToggle.addEventListener('click', () => {
         window.themeCanvas.show();
     });
 
-    applyThemeColorToButton();
 });

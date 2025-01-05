@@ -27,7 +27,7 @@
                             <td>{{ $seniority->views_count }}</td>
                             <td>{{ \Carbon\Carbon::parse($seniority->seniority_date)->format('M d, Y') }}</td>
                             <td>
-                                <a href="{{ route('seniority.show', $seniority->slug) }}" class="cw-btn" data-icon="bi-eye">View Details</a>
+                                <a href="{{ route('seniority.show', $seniority->slug) }}" class="cw-btn" data-icon="bi-eye">View</a>
                             </td>
                         </tr>
                     @endforeach

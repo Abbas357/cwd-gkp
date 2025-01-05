@@ -1,7 +1,7 @@
 <x-main-layout title="{{ $pageData['title'] }}">
 
     @push('style')
-        <link rel="stylesheet" href="{{ asset('admin/plugins/lightbox/lightbox.min.css') }}" />
+        <link rel="stylesheet" href="{{ asset('site/lib/lightbox/lightbox.min.css') }}" />
     @endpush
 
     <x-slot name="breadcrumbTitle">
@@ -34,7 +34,7 @@
     </div>
 
     @push('script')
-        <script src="{{ asset('admin/plugins/lightbox/lightbox.min.js') }}"></script>
+        <script src="{{ asset('site/lib/lightbox/lightbox.min.js') }}"></script>
         <script>
             lightbox.option({
                 'resizeDuration': 200,
