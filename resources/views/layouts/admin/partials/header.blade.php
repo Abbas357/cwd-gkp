@@ -53,9 +53,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer text-center bg-transparent">
-                                <a href="javascript:;" class="btn w-100">See All Search Results</a>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -422,3 +419,79 @@
 
     </nav>
 </header>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.querySelector('.search-control');
+        const mobileSearchInput = document.querySelector('.mobile-search-control');
+        const searchPopup = document.querySelector('.search-popup');
+        const keywordsWrapper = document.querySelector('.kewords-wrapper');
+        const searchList = document.querySelector('.search-list');
+        
+        let typingTimer;
+        const doneTypingInterval = 500;
+        let recentUrlMap = {};
+
+        function performSearch(query) {
+            fetch(`/admin/search/links?query=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    data.results.forEach(result => {
+                        if (result.url && result.title) {
+                            recentUrlMap[result.title.toLowerCase()] = result.url;
+                        }
+                    });
+
+                    keywordsWrapper.innerHTML = data.recentSearches.map(search => {
+                        const url = recentUrlMap[search.toLowerCase()];
+                        return url ? `
+                            <a href="${url}" class="kewords">
+                                <span>${search}</span>
+                                <i class="bi-arrow-right fs-6"></i>
+                            </a>
+                        ` : `
+                            <a href="javascript:;" class="kewords" onclick="document.querySelector('.search-control').value='${search}';performSearch('${search}')">
+                                <span>${search}</span>
+                                <i class="bi-search fs-6"></i>
+                            </a>
+                        `;
+                    }).join('');
+
+                    // Update search results
+                    if (data.results.length === 0) {
+                        searchList.innerHTML = `
+                            <div class="search-list-item">
+                                <p class="text-muted mb-0">No links found</p>
+                            </div>
+                        `;
+                    } else {
+                        searchList.innerHTML = data.results.map(link => `
+                            <div class="search-list-item">
+                                <h5 class="mb-0 search-list-title">
+                                    <a href="${link.url}" class="text-decoration-none">
+                                        ${link.title}
+                                    </a>
+                                </h5>
+                            </div>
+                        `).join('');
+                    }
+                });
+        }
+
+        performSearch('');
+
+        searchInput.addEventListener('keyup', function() {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(() => performSearch(this.value), doneTypingInterval);
+        });
+
+        mobileSearchInput.addEventListener('keyup', function() {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(() => performSearch(this.value), doneTypingInterval);
+        });
+
+        searchInput.addEventListener('focus', () => searchPopup.style.display = 'block');
+        document.querySelector('.search-close').addEventListener('click', () => searchPopup.style.display = 'none');
+        document.querySelector('.mobile-search-close').addEventListener('click', () => searchPopup.style.display = 'none');
+    });
+</script>

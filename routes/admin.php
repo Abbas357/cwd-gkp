@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\RoleController;
@@ -292,6 +293,11 @@ Route::middleware('auth')->group(function () {
             Route::patch('/publish/{comment}', [CommentController::class, 'publishComment'])->name('publish')->can('publish', App\Models\Comment::class);
             Route::patch('/archive/{comment}', [CommentController::class, 'archiveComment'])->name('archive')->can('archive', App\Models\Comment::class);
             Route::delete('/{comment}', [CommentController::class, 'destroy'])->name('destroy')->can('delete', App\Models\Comment::class);
+        });
+
+        Route::prefix('search')->as('search.')->group(function () {
+            Route::get('/links', [HomeController::class, 'searchLinks'])->name('links');
+            Route::post('/clear', [HomeController::class, 'clearRecentSearches'])->name('clear');
         });
         
         Route::get('/logs', ActivityLogController::class)->name('logs')->can('view', Spatie\Activitylog\Models\Activity::class);

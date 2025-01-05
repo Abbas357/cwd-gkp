@@ -5,7 +5,7 @@
     </x-slot>
 
     <x-slot name="breadcrumbItems">
-        <li class="breadcrumb-item active">Gallery</li>
+        <li class="breadcrumb-item"><a href="{{ route('sliders.index') }}">Sliders</a></li>
     </x-slot>
     
     <div class="container mt-3">

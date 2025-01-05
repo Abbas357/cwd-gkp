@@ -8,7 +8,6 @@
 
     <x-slot name="breadcrumbItems">
         <li class="breadcrumb-item"><a href="{{ route('seniority.index') }}">Seniority List</a></li>
-        <li class="breadcrumb-item active">{{ $seniorityData['title'] }}</li>
     </x-slot>
 
     <div class="container mt-4">
@@ -33,19 +32,22 @@
                         <th>Seniority Date</th>
                         <td>{{ $seniorityData['seniority_date'] }}</td>
                     </tr>
+                    @if ($seniorityData['attachment'])
+                    <tr>
+                        <th>Attachement</th>
+                        <td>
+                            <a href="{{ $seniorityData['attachment'] }}">
+                                Download
+                            </a>
+                        </td>
+                    </tr>
+                    @endif
                 </tbody>
             </table>
         </div>
 
         <!-- Attachment (Media) Section with Lightbox -->
-        @if ($seniorityData['attachment'])
-        <div class="mt-4">
-            <h5>Attachment</h5>
-            <a href="{{ $seniorityData['attachment'] }}" download>
-                Download Attachment
-            </a>
-        </div>
-        @endif
+        
     </div>
 
     <div class="container mt-4">

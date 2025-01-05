@@ -72,7 +72,7 @@
         @endif
  
         <div class="container mt-4">
-            <h5 class="sharer-title">Share this tender</h5>
+            <h5 class="sharer-title">Share this news</h5>
             @php
                 $title = $newsData['title'] . ' - ' . config('app.name');
             @endphp

@@ -601,5 +601,5 @@ input[type=text]::placeholder {
     cursor: pointer;
 }
 .sharer-button:hover i, .sharer-button:hover span {
-    color: var(--cw-primary);
+    color: var(--cw-primary-light);
 }

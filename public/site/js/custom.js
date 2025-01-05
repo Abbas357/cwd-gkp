@@ -1079,7 +1079,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="theme-option p-3 rounded" onclick="applyTheme('${theme.name}')" 
                         style="cursor: pointer; border: 1px solid #ddd; box-shadow: 0 0 15px #00000045" onmouseover="this.style.backgroundColor='${theme.color}'; this.style.color = 'white'" onmouseout="this.style.backgroundColor='transparent'; this.style.color = 'black'">
                         <div class="d-flex align-items-center gap-2">
-                            <div style="width: 25px; height: 25px; background-color: ${theme.color}; border-radius: 50%;"></div>
+                            <div style="width: 25px; height: 25px; background-color: ${theme.color}; border-radius: 50%;border:2px solid #fff;"></div>
                             <h6 class="mb-0">${theme.title}</h6>
                         </div>
                     </div>

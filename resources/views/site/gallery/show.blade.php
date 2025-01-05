@@ -8,7 +8,7 @@
     </x-slot>
 
     <x-slot name="breadcrumbItems">
-        <li class="breadcrumb-item active">Gallery</li>
+        <li class="breadcrumb-item"><a href="{{ route('gallery.index') }}">Gallery</a></li>
     </x-slot>
 
     <div class="container py-3">

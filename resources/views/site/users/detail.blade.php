@@ -42,8 +42,9 @@
     </x-slot>
 
     <x-slot name="breadcrumbItems">
-        <li class="breadcrumb-item active">Detail</li>
+        <li class="breadcrumb-item"><a href="{{ route('team') }}">Team</a></li>
     </x-slot>
+    
     @endpush
     <div class="container mt-3">
         <p style="text-align: right"><strong>Views:</strong> {{ $user['views_count'] }}</p>
