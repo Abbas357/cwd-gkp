@@ -1045,25 +1045,31 @@ document.addEventListener('DOMContentLoaded', () => {
             name: 'default',
             color: '#0b7240',
             title: 'Default Theme',
-            description: 'Original green color scheme'
+            description: 'Original green color theme'
         },
         {
             name: 'brown',
             color: '#855723',
             title: 'Brown Theme',
-            description: 'Warm brown color palette'
+            description: 'Warm brown theme'
         },
         {
             name: 'blue',
             color: '#1e4d8c',
             title: 'Blue Theme',
-            description: 'Professional blue scheme'
+            description: 'Dark blue theme'
         },
         {
             name: 'violet',
-            color: '#7F00FF',
+            color: '#8f2bbc',
             title: 'Violet Theme',
-            description: 'Professional Violet scheme'
+            description: 'Amazing Violet theme'
+        },
+        {
+            name: 'darkred',
+            color: '#af0606',
+            title: 'Dark Red Theme',
+            description: 'Pure Dark Red theme'
         }
     ];
 

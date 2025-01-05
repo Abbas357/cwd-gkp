@@ -138,13 +138,27 @@
 		handleStickyBehavior() {
 			const scrollThreshold = 100;
 			const buffer = 50;
+			const bottomHeight = CWD.cwBottom.outerHeight();
 		
 			if (window.scrollY > (scrollThreshold + buffer) && window.innerWidth > 900) {
+				if (!$('.cw-bottom-placeholder').length) {
+					$('<div>').addClass('cw-bottom-placeholder').height(bottomHeight).insertAfter(CWD.cwBottom);
+				}
 				CWD.cwTop.addClass('d-none');
-				CWD.cwBottom.css('opacity', '0.9');
+				CWD.cwBottom.css({
+					'position': 'fixed',
+					'top': '0',
+					'width': '100%',
+					'z-index': '1000',
+					'opacity': '0.9'
+				});
 			} else if (window.scrollY < (scrollThreshold - buffer) && window.innerWidth > 900) {
+				$('.cw-bottom-placeholder').remove();
 				CWD.cwTop.removeClass('d-none');
-				CWD.cwBottom.css('opacity', '1')
+				CWD.cwBottom.css({
+					'position': 'relative',
+					'opacity': '1'
+				});
 			}
 		},
 
@@ -154,7 +168,7 @@
 		CWD.searchIcon.on("click", CWD.handleSearchIcon);
 		CWD.searchInput.on("input", CWD.handleSearchInput);
 		$(window).on("resize", CWD.handleMatchMedia);
-		$(document).on('scroll', CWD.throttle(CWD.handleStickyBehavior, 500));
+		$(document).on('scroll', CWD.throttle(CWD.handleStickyBehavior.bind(CWD), 500));
 
 		CWD.topMenu.on("mouseenter", function () {
 			if ($(this).hasClass("child-nav") && window.innerWidth > 1024) {
