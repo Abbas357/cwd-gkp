@@ -25,10 +25,12 @@ return new class extends Migration
             $table->string('pre_enlistment')->nullable();
             $table->string('is_limited', 45)->default('no');
             $table->enum('status', ['new', 'deffered_one', 'deffered_two', 'deffered_three', 'approved'])->default('new');
-            $table->text('deffered_reason');
+            $table->text('deffered_reason')->nullable();
             $table->string('reg_no', 45)->nullable();
+            $table->string('password', 100)->nullable();
             $table->timestamp('card_issue_date')->nullable()->default(null);
             $table->timestamp('card_expiry_date')->nullable()->default(null);
+            $table->timestamp('password_updated_at')->nullable()->default(null);
             $table->timestamps();
         });
     }

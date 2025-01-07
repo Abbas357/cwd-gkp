@@ -115,7 +115,7 @@
                                         <div class="row mb-3">
                                             <div class="col">
                                                 <label for="ntn_number">NTN Number <abbr title="Required">*</abbr></label>
-                                                <input type="ntn_number" class="form-control" id="ntn_number" value="{{ old('ntn_number') }}" placeholder="NTN Number" name="ntn_number" required>
+                                                <input type="text" class="form-control" id="ntn_number" value="{{ old('ntn_number') }}" placeholder="NTN Number" name="ntn_number" required>
                                                 @error('ntn_number')
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @enderror

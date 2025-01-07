@@ -2,7 +2,6 @@
     <div class="position-relative rounded w-100 mx-auto p-3" style="background: #a4c63955; overflow-x: auto; white-space: nowrap; border-radius: 50px; border: 1px solid #a4c63955; box-shadow: 10px 10px 30px #a4c63955">
         <div class="d-flex text-center gap-2 menu-container">
             <div class="col action-container">
-                {{-- <a href="{{ route('registrations.create') }}" class="action-link"> --}}
                 <a href="https://old.cwd.gkp.pk/applyOnline.php" class="action-link">
                     <div class="action-button">
                         <i class="bi-briefcase action-icon"></i>
@@ -17,6 +16,15 @@
                         <i class="bi-award action-icon"></i>
                         <div class="action-label">E-Standardization</div>
                         <small class="explanation-text">(Engineering Products)</small>
+                    </div>
+                </a>
+            </div>
+            <div class="col action-container">
+                <a href="{{ route('service_cards.create') }}" class="action-link">
+                    <div class="action-button">
+                        <i class="bi-credit-card action-icon"></i>
+                        <div class="action-label">Service Cards</div>
+                        <small class="explanation-text">(Employ Service Cards)</small>
                     </div>
                 </a>
             </div>

@@ -42,6 +42,7 @@ class ContractorRegistrationController extends Controller
         $registration->fbr_ntn = $request->input('fbr_ntn');
         $registration->kpra_reg_no = $request->input('kpra_reg_no');
         $registration->email = $request->input('email');
+        $registration->password = $this->generatePassword($registration->email);
         $registration->mobile_number = $request->input('mobile_number');
         $registration->is_limited = $request->input('is_limited');
         
@@ -49,51 +50,51 @@ class ContractorRegistrationController extends Controller
             $registration->pre_enlistment = json_encode($request->input('pre_enlistment'));
         }
 
-        if ($request->hasFile('contractor_picture')) {
-            $registration->addMedia($request->file('contractor_picture'))
-                ->toMediaCollection('contractor_pictures');
-        }
-
-        if ($request->hasFile('cnic_front_attachment')) {
-            $registration->addMedia($request->file('cnic_front_attachment'))
-                ->toMediaCollection('cnic_front_attachments');
-        }
-
-        if ($request->hasFile('cnic_back_attachment')) {
-            $registration->addMedia($request->file('cnic_back_attachment'))
-                ->toMediaCollection('cnic_back_attachments');
-        }
-
-        if ($request->hasFile('fbr_attachment')) {
-            $registration->addMedia($request->file('fbr_attachment'))
-                ->toMediaCollection('fbr_attachments');
-        }
-
-        if ($request->hasFile('kpra_attachment')) {
-            $registration->addMedia($request->file('kpra_attachment'))
-                ->toMediaCollection('kpra_attachments');
-        }
-
-        if ($request->hasFile('pec_attachment')) {
-            $registration->addMedia($request->file('pec_attachment'))
-                ->toMediaCollection('pec_attachments');
-        }
-
-        if ($request->hasFile('form_h_attachment')) {
-            $registration->addMedia($request->file('form_h_attachment'))
-                ->toMediaCollection('form_h_attachments');
-        }
-
-        if ($request->hasFile('pre_enlistment_attachment')) {
-            $registration->addMedia($request->file('pre_enlistment_attachment'))
-                ->toMediaCollection('pre_enlistment_attachments');
-        }
+        $this->handleMediaAttachments($registration, $request);
 
         if ($registration->save()) {
-            Mail::to($registration->email)->queue(new AppliedMail($registration));
-            return redirect()->route('registrations.create')->with('success', 'Your form has been submitted successfully');
+            // Mail::to($registration->email)->queue(new AppliedMail($registration));
+        
+            $successMessage = view('site.cont_registrations.partials.success_message', [
+                'email' => $registration->email,
+                'password' => $registration->password,
+                'loginUrl' => route('registrations.login')
+            ])->render();
+        
+            return redirect()->route('registrations.create')->with('success', $successMessage);
         }
+        
         return redirect()->route('registrations.create')->with('danger', 'There is an error submitting your data');
+    }
+
+    private function handleMediaAttachments($registration, $request)
+    {
+        if ($request->hasFile('contractor_picture')) {
+            $registration->addMedia($request->file('contractor_picture'))->toMediaCollection('contractor_pictures');
+        }
+
+        $attachments = [
+            'cnic_front_attachment' => 'cnic_front_attachments',
+            'cnic_back_attachment' => 'cnic_back_attachments',
+            'fbr_attachment' => 'fbr_attachments',
+            'kpra_attachment' => 'kpra_attachments',
+            'pec_attachment' => 'pec_attachments',
+            'form_h_attachment' => 'form_h_attachments',
+            'pre_enlistment_attachment' => 'pre_enlistment_attachments'
+        ];
+
+        foreach ($attachments as $input => $collection) {
+            if ($request->hasFile($input)) {
+                $registration->addMedia($request->file($input))->toMediaCollection($collection);
+            }
+        }
+    }
+
+    private function generatePassword($email)
+    {
+        $email_prefix = strstr($email, '@', true);
+        $random_number = rand(100000, 999999);
+        return "{$email_prefix}#{$random_number}";
     }
 
     public function checkPEC(Request $request)
@@ -107,5 +108,112 @@ class ContractorRegistrationController extends Controller
     {
         $registration = ContractorRegistration::find($id);
         return view('site.cont_registrations.approved', compact('registration'));
+    }
+
+    public function login_view()
+    {
+        return view('site.cont_registrations.login');
+    }
+
+    public function login(Request $request)
+    {
+        if ($request->isMethod('get')) {
+            return view('site.cont_registrations.login');
+        }
+
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        $contractor = ContractorRegistration::where('email', $credentials['email'])->first();
+
+        if ($contractor && $credentials['password'] === $contractor->password) {
+            session(['contractor_id' => $contractor->id]);
+            return redirect()->route('registrations.dashboard');
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->withInput($request->except('password'));
+    }
+
+    public function dashboard()
+    {
+        $contractor = ContractorRegistration::findOrFail(session('contractor_id'));
+        return view('site.cont_registrations.dashboard', compact('contractor'));
+    }
+
+    public function logout(Request $request)
+    {
+        $request->session()->forget('contractor_id');
+        return redirect()->route('registrations.login')->with('status', 'You have been logged out successfully');
+    }
+
+    public function edit()
+    {
+        $contractor = ContractorRegistration::findOrFail(session('contractor_id'));
+        
+        if ($contractor->status !== 'new') {
+            return redirect()->route('registrations.dashboard')
+                ->with('error', 'You can only edit registration when status is new');
+        }
+        
+        return view('site.cont_registrations.edit', compact('contractor'));
+    }
+
+    public function update(Request $request)
+    {
+        $contractor = ContractorRegistration::findOrFail(session('contractor_id'));
+        
+        if ($contractor->status !== 'new') {
+            return redirect()->route('registrations.dashboard')
+                ->with('error', 'You can only update registration when status is new');
+        }
+
+        $validated = $request->validate([
+            'owner_name' => 'required|string|max:100',
+            'contractor_name' => 'required|string|max:100',
+            'cnic' => 'required|string|max:45',
+            'mobile_number' => 'nullable|string|max:45',
+            'email' => 'required|email|max:100',
+            'address' => 'nullable|string',
+            'district' => 'required|string|max:100',
+            'pec_number' => 'required|string|max:100',
+            'pec_category' => 'required|string|max:45',
+            'category_applied' => 'required|string|max:45',
+            'fbr_ntn' => 'nullable|string|max:45',
+            'kpra_reg_no' => 'nullable|string|max:45',
+            'is_limited' => 'required|in:yes,no',
+            'contractor_picture' => 'nullable|image|max:2048',
+            'cnic_front_attachment' => 'nullable|file|max:2048',
+            'cnic_back_attachment' => 'nullable|file|max:2048',
+            'fbr_attachment' => 'nullable|file|max:2048',
+            'kpra_attachment' => 'nullable|file|max:2048',
+            'pec_attachment' => 'nullable|file|max:2048',
+        ]);
+
+        $contractor->update($validated);
+
+        if ($request->hasFile('contractor_picture')) {
+            $contractor->addMedia($request->file('contractor_picture'))->toMediaCollection('contractor_pictures');
+        }
+        
+        $attachments = [
+            'cnic_front_attachment' => 'cnic_front_attachments',
+            'cnic_back_attachment' => 'cnic_back_attachments',
+            'fbr_attachment' => 'fbr_attachments',
+            'kpra_attachment' => 'kpra_attachments',
+            'pec_attachment' => 'pec_attachments',
+        ];
+
+        foreach ($attachments as $input => $collection) {
+            if ($request->hasFile($input)) {
+                $contractor->addMedia($request->file($input))->toMediaCollection($collection);
+            }
+        }
+
+        return redirect()->route('registrations.dashboard')
+            ->with('status', 'Registration updated successfully');
     }
 }

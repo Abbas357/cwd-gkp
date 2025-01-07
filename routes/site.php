@@ -1,12 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\ContractorAuth;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\NewsController;
 use App\Http\Controllers\Site\PageController;
 use App\Http\Controllers\Site\UserController;
 use App\Http\Controllers\Site\StoryController;
 use App\Http\Controllers\Site\EventsController;
+use App\Http\Controllers\Site\SchemeController;
 use App\Http\Controllers\Site\SearchController;
 use App\Http\Controllers\Site\SliderController;
 use App\Http\Controllers\Site\TenderController;
@@ -21,7 +23,6 @@ use App\Http\Controllers\Site\PublicContactController;
 use App\Http\Controllers\Site\EStandardizationController;
 use App\Http\Controllers\Site\DevelopmentProjectController;
 use App\Http\Controllers\Site\ContractorRegistrationController;
-use App\Http\Controllers\Site\SchemeController;
 
 Route::prefix('partials')->as('partials.')->group(function () {
     Route::get('/slider', [HomeController::class, 'sliderPartial'])->name('slider');
@@ -36,9 +37,19 @@ Route::prefix('partials')->as('partials.')->group(function () {
 
 Route::prefix('registrations')->as('registrations.')->group(function () {
     Route::get('/apply', [ContractorRegistrationController::class, 'create'])->name('create');
+    Route::post('/login', [ContractorRegistrationController::class, 'login'])->name('login');
     Route::post('/', [ContractorRegistrationController::class, 'store'])->name('store');
     Route::post('/check-pec', [ContractorRegistrationController::class, 'checkPEC'])->name('checkPEC');
     Route::get('/approved/{id}', [ContractorRegistrationController::class, 'approvedContractors'])->name('approved');
+
+    Route::get('/login', [ContractorRegistrationController::class, 'login_view'])->name('login');
+    Route::middleware(ContractorAuth::class)->group(function () {
+        Route::get('/dashboard', [ContractorRegistrationController::class, 'dashboard'])->name('dashboard');
+        Route::post('/logout', [ContractorRegistrationController::class, 'logout'])->name('logout');
+    });
+
+    Route::get('/edit', [ContractorRegistrationController::class, 'edit'])->name('edit');
+    Route::patch('/update', [ContractorRegistrationController::class, 'update'])->name('update');
 });
 
 Route::prefix('standardizations')->as('standardizations.')->group(function () {

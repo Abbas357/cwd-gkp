@@ -15,12 +15,14 @@ class ServiceCardController extends Controller
     public function create()
     {
         $bps = [];
-        for ($i = 1; $i <= 22; $i++) {
+        for ($i = 1; $i <= 20; $i++) {
             $bps[] = sprintf("BPS-%02d", $i);
         }
 
         $cat = [
-            'designations' => Category::where('type', 'designation')->get(),
+            'designations' => Category::where('type', 'designation')
+                ->whereNotIn('name', ['Secretary', 'Minister'])
+                ->get(),
             'offices' => Category::where('type', 'office')->get(),
             'bps' => $bps,
             'blood_groups' => ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]

@@ -432,54 +432,77 @@
 }
 
 input[type=date].form-control, 
-input[type=email].form-control, 
+input[type=email].form-control,
+input[type=number].form-control,
 input[type=file].form-control, 
 input[type=password].form-control, 
 input[type=text].form-control, 
+textarea.form-control, 
 select.form-select {
-    background-color: #fdfdfd !important;
-    border-radius: .2rem;
-    border: 1px solid #d9d9d9;
-    color: #333;
+    background-color: #fff;
+    border: 1.5px solid rgba(0, 0, 0, 0.23);
+    border-radius: 3px;
     padding: 8px 12px;
     font-size: 1rem;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    transition: all 0.2s ease-in-out;
+    color: rgba(0, 0, 0, 0.87);
+    height: auto;
+    position: relative;
+    outline: 2px solid transparent;
+    outline-offset: -1px;
+    box-shadow: 0 0 7px #eee;
 }
 
 input[type=date].form-control:focus, 
 input[type=email].form-control:focus, 
+input[type=number].form-control,
 input[type=file].form-control:focus, 
 input[type=password].form-control:focus, 
 input[type=text].form-control:focus, 
 select.form-select:focus {
-    outline: none !important;
-    border-color: #2196f3 !important;
-    box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.3) !important;
+    outline: 2px solid rgba(25, 118, 210, 0.5);
+    outline-offset: -1px;
+    border-color: #649be2;
+    box-shadow: none !important;
 }
 
 .form-control:focus, 
 .form-select:focus {
-    outline: none !important;
-    border-color: #2196f3 !important;
-    box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.3) !important;
+    outline: 2px solid rgba(25, 118, 210, 0.5);
+    outline-offset: -1px;
+    border-color: #3b5998;
+    box-shadow: none !important;
 }
 
 label {
-    font-size: .8rem;
-    color: #575757 !important;
-    font-weight: 500;
-    margin-bottom: .1rem !important;
-    color: #555 !important;
+    font-size: 0.75rem;
+    color: rgba(0, 0, 0, 0.6) !important;
+    font-weight: 400;
+    margin-bottom: 0.5rem !important;
+    transition: color 0.2s;
+}
+
+.form-control:focus + label,
+.form-select:focus + label {
+    color: #3b5998 !important;
 }
 
 input[type=date]::placeholder, 
 input[type=number]::placeholder, 
-input[type=text]::placeholder {
-    color: #aaa;
+input[type=text]::placeholder,
+input[type=email]::placeholder {
+    color: rgba(0, 0, 0, 0.38);
     opacity: 1;
-    font-style: italic;
 }
 
+input[type=date].form-control:hover, 
+input[type=email].form-control:hover, 
+input[type=file].form-control:hover, 
+input[type=password].form-control:hover, 
+input[type=text].form-control:hover, 
+select.form-select:hover {
+    border-color: rgba(29, 120, 206, 0.87);
+}
 
 .animated-gradient-text {
     display: inline-block;
