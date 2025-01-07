@@ -11,26 +11,12 @@
         .info-value {
             color: #333;
         }
-        .nav-tabs .nav-link {
-            color: #495057;
-            font-weight: 500;
-        }
-        .nav-tabs .nav-link.active {
-            color: #0d6efd;
-            font-weight: 600;
-        }
-        .top-nav-container {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-bottom: 1px solid #dee2e6;
-            margin-bottom: 2rem;
-        }
     </style>
     @endpush
 
     @include('site.cont_registrations.partials.header')
 
-    <div class="container p-4">
+    <div class="container p-2">
 
         @if(session('status'))
         <div class="alert alert-success">

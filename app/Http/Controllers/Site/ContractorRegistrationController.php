@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers\Site;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
 use App\Models\Category;
 use App\Models\District;
-use App\Models\ContractorRegistration;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use App\Models\ContractorRegistration;
 use App\Mail\ContractorRegistration\AppliedMail;
 use App\Http\Requests\StoreContractorRegistrationRequest;
+use App\Models\ContractorHumanResource;
+use App\Models\ContractorMachinery;
 
 class ContractorRegistrationController extends Controller
 {
@@ -42,10 +46,11 @@ class ContractorRegistrationController extends Controller
         $registration->fbr_ntn = $request->input('fbr_ntn');
         $registration->kpra_reg_no = $request->input('kpra_reg_no');
         $registration->email = $request->input('email');
-        $registration->password = $this->generatePassword($registration->email);
+        $password = $this->generatePassword($registration->email);
+        $registration->password = $password;
         $registration->mobile_number = $request->input('mobile_number');
         $registration->is_limited = $request->input('is_limited');
-        
+
         if ($request->has('pre_enlistment')) {
             $registration->pre_enlistment = json_encode($request->input('pre_enlistment'));
         }
@@ -54,16 +59,16 @@ class ContractorRegistrationController extends Controller
 
         if ($registration->save()) {
             // Mail::to($registration->email)->queue(new AppliedMail($registration));
-        
+
             $successMessage = view('site.cont_registrations.partials.success_message', [
                 'email' => $registration->email,
-                'password' => $registration->password,
+                'password' => $password,
                 'loginUrl' => route('registrations.login')
             ])->render();
-        
+
             return redirect()->route('registrations.create')->with('success', $successMessage);
         }
-        
+
         return redirect()->route('registrations.create')->with('danger', 'There is an error submitting your data');
     }
 
@@ -88,6 +93,29 @@ class ContractorRegistrationController extends Controller
                 $registration->addMedia($request->file($input))->toMediaCollection($collection);
             }
         }
+    }
+
+    public function PasswordView()
+    {
+        return view('site.cont_registrations.password');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'old_password' => 'required',
+            'new_password' => 'required|min:8|confirmed',
+        ]);
+
+        $contractor = ContractorRegistration::findOrFail(session('contractor_id'));
+        if (!Hash::check($request->input('old_password'), $contractor->password)) {
+            return back()->withErrors(['old_password' => 'The old password is incorrect.']);
+        }
+
+        $contractor->password = $request->input('new_password');
+        $contractor->save();
+
+        return back()->with('status', 'Password updated successfully.');
     }
 
     private function generatePassword($email)
@@ -128,7 +156,7 @@ class ContractorRegistrationController extends Controller
 
         $contractor = ContractorRegistration::where('email', $credentials['email'])->first();
 
-        if ($contractor && $credentials['password'] === $contractor->password) {
+        if ($contractor && Hash::check($credentials['password'], $contractor->password)) {
             session(['contractor_id' => $contractor->id]);
             return redirect()->route('registrations.dashboard');
         }
@@ -153,19 +181,19 @@ class ContractorRegistrationController extends Controller
     public function edit()
     {
         $contractor = ContractorRegistration::findOrFail(session('contractor_id'));
-        
+
         if ($contractor->status !== 'new') {
             return redirect()->route('registrations.dashboard')
                 ->with('error', 'You can only edit registration when status is new');
         }
-        
+
         return view('site.cont_registrations.edit', compact('contractor'));
     }
 
     public function update(Request $request)
     {
         $contractor = ContractorRegistration::findOrFail(session('contractor_id'));
-        
+
         if ($contractor->status !== 'new') {
             return redirect()->route('registrations.dashboard')
                 ->with('error', 'You can only update registration when status is new');
@@ -198,7 +226,7 @@ class ContractorRegistrationController extends Controller
         if ($request->hasFile('contractor_picture')) {
             $contractor->addMedia($request->file('contractor_picture'))->toMediaCollection('contractor_pictures');
         }
-        
+
         $attachments = [
             'cnic_front_attachment' => 'cnic_front_attachments',
             'cnic_back_attachment' => 'cnic_back_attachments',
@@ -216,4 +244,118 @@ class ContractorRegistrationController extends Controller
         return redirect()->route('registrations.dashboard')
             ->with('status', 'Registration updated successfully');
     }
+
+    public function createHrProfiles()
+    {
+        return view('site.cont_registrations.hr_profile');
+    }
+
+    public function storeHrProfile(Request $request)
+    {
+        $request->validate([
+            'hr_profile' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'profiles.*.name' => 'required|string|max:255',
+            'profiles.*.cnic' => 'required|string|max:15',
+            'profiles.*.pec' => 'required|string|max:50',
+            'profiles.*.designation' => 'nullable|string|max:100',
+            'profiles.*.date' => 'nullable|date',
+            'profiles.*.salary' => 'nullable|numeric'
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $mainProfile = null;
+            if ($request->hasFile('hr_profile')) {
+                $mainProfile = ContractorHumanResource::create([
+                    'name' => 'Main Document', // You can adjust this as needed
+                    'type' => 'main_document'
+                ]);
+
+                $mainProfile->addMedia($request->file('hr_profile'))
+                    ->toMediaCollection('hr_documents');
+            }
+
+            // Store each profile
+            foreach ($request->profiles as $profile) {
+                $hrProfile = ContractorHumanResource::create([
+                    'name' => $profile['name'],
+                    'cnic' => $profile['cnic'],
+                    'pec' => $profile['pec'],
+                    'designation' => $profile['designation'] ?? null,
+                    'date' => $profile['date'] ?? null,
+                    'salary' => $profile['salary'] ?? null,
+                    'parent_id' => $mainProfile ? $mainProfile->id : null // Optional: If you want to link profiles to main document
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->back()->with('status', 'HR Profiles saved successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->withErrors(['error' => 'An error occurred while saving the profiles.'])
+                ->withInput();
+        }
+    }
+
+    public function createMachinery()
+    {
+        return view('site.cont_registrations.machinery');
+    }
+
+    public function storeMachinery(Request $request)
+    {
+        $request->validate([
+            'machinery_docs' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'machinery.*.name' => 'required|string|max:255',
+            'machinery.*.number' => 'required|string|max:50',
+            'machinery.*.model' => 'nullable|string|max:100',
+            'machinery.*.registration' => 'nullable|string|max:50'
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // Create main machinery record if file is uploaded
+            $mainRecord = null;
+            if ($request->hasFile('machinery_docs')) {
+                $mainRecord = ContractorMachinery::create([
+                    'name' => 'Main Document',
+                    'type' => 'main_document'
+                ]);
+
+                $mainRecord->addMedia($request->file('machinery_docs'))
+                    ->toMediaCollection('machinery_documents');
+            }
+
+            // Store each machinery entry
+            foreach ($request->machinery as $machine) {
+                ContractorMachinery::create([
+                    'name' => $machine['name'],
+                    'number' => $machine['number'],
+                    'model' => $machine['model'] ?? null,
+                    'registration' => $machine['registration'] ?? null,
+                    'parent_id' => $mainRecord ? $mainRecord->id : null
+                ]);
+            }
+
+            DB::commit();
+            return redirect()->route('registrations.work_experience.create')
+                ->with('status', 'Machinery details saved successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->withErrors(['error' => 'An error occurred while saving the machinery details.'])
+                ->withInput();
+        }
+    }
+
+    public function createWorkExperience()
+    {
+        return view('site.cont_registrations.work_experience');
+    }
+
+    public function storeWorkExperience(Request $request) {}
 }

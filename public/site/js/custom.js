@@ -1125,3 +1125,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
+
+document.querySelectorAll('.cw-btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+        if (this.closest('form')) {
+            e.preventDefault();
+        }
+        
+        this.setAttribute('data-loading', 'true');
+        this.disabled = true;
+        
+        const form = this.closest('form');
+        if (form) {
+            setTimeout(() => form.submit(), 10);
+        }
+    });
+});

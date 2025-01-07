@@ -33,10 +33,46 @@ return new class extends Migration
             $table->timestamp('password_updated_at')->nullable()->default(null);
             $table->timestamps();
         });
+
+        Schema::create('contractor_human_resources', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('contractor_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('name');
+            $table->string('cnic');
+            $table->string('pec_number');
+            $table->string('designation');
+            $table->decimal('salary', 10, 2);
+            $table->date('joining_date');
+            $table->timestamps();
+        });
+
+        Schema::create('contractor_machinery', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('contractor_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('name');
+            $table->string('number');
+            $table->string('model');
+            $table->string('registration');
+            $table->timestamps();
+        });
+
+        Schema::create('contractor_work_experiences', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('contractor_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('adp_no');
+            $table->string('name');
+            $table->string('duration');
+            $table->date('completion_date');
+            $table->decimal('cost', 12, 2);
+            $table->timestamps();
+        });
     }
 
     public function down(): void
     {
         Schema::dropIfExists('contractor_registrations');
+        Schema::dropIfExists('contractor_hr_profiles');
+        Schema::dropIfExists('contractor_machinery');
+        Schema::dropIfExists('contractor_work_experiences');
     }
 };

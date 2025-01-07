@@ -1,27 +1,4 @@
 <x-main-layout>
-    @push('style')
-    <style>
-        .nav-tabs .nav-link {
-            color: #495057;
-            font-weight: 500;
-        }
-        .nav-tabs .nav-link.active {
-            color: #0d6efd;
-            font-weight: 600;
-        }
-        .top-nav-container {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-bottom: 1px solid #dee2e6;
-            margin-bottom: 2rem;
-        }
-        .form-label {
-            font-weight: bold;
-            color: #666;
-        }
-    </style>
-    @endpush
-
     @include('site.cont_registrations.partials.header')
 
     <div class="container">
@@ -50,7 +27,7 @@
             @method('PATCH')
 
             <div class="card mb-4">
-                <div class="card-header bg-light">
+                <div class="card-header bg-light fw-bold text-uppercase text-center">
                     Personal Information
                 </div>
                 <div class="card-body">
@@ -92,7 +69,7 @@
             </div>
 
             <div class="card mb-4">
-                <div class="card-header bg-light">
+                <div class="card-header bg-light fw-bold text-uppercase text-center">
                     Professional Information
                 </div>
                 <div class="card-body">
@@ -133,7 +110,7 @@
             </div>
 
             <div class="card mb-4">
-                <div class="card-header bg-light">
+                <div class="card-header bg-light fw-bold text-uppercase text-center">
                     Attachments
                 </div>
                 <div class="card-body">
@@ -171,8 +148,8 @@
             </div>
 
             <div class="d-flex justify-content-end">
-                <a href="{{ route('registrations.dashboard') }}" class="btn btn-secondary me-2">Cancel</a>
-                <button type="submit" class="btn btn-primary">Update Registration</button>
+                <a href="{{ route('registrations.dashboard') }}" class="btn btn-light me-2">Cancel</a>
+                <x-button type="submit" text="Update Registration" />
             </div>
         </form>
     </div>

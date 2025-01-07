@@ -21,6 +21,7 @@ class ContractorRegistration extends Model implements HasMedia
     protected function casts(): array
     {
         return [
+            'password' => 'hashed',
             'card_issue_date' => 'datetime',
             'card_expiry_date' => 'datetime',
         ];

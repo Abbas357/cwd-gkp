@@ -37,19 +37,31 @@ Route::prefix('partials')->as('partials.')->group(function () {
 
 Route::prefix('registrations')->as('registrations.')->group(function () {
     Route::get('/apply', [ContractorRegistrationController::class, 'create'])->name('create');
+    Route::get('/login', [ContractorRegistrationController::class, 'login_view'])->name('login');
     Route::post('/login', [ContractorRegistrationController::class, 'login'])->name('login');
     Route::post('/', [ContractorRegistrationController::class, 'store'])->name('store');
     Route::post('/check-pec', [ContractorRegistrationController::class, 'checkPEC'])->name('checkPEC');
     Route::get('/approved/{id}', [ContractorRegistrationController::class, 'approvedContractors'])->name('approved');
 
-    Route::get('/login', [ContractorRegistrationController::class, 'login_view'])->name('login');
     Route::middleware(ContractorAuth::class)->group(function () {
         Route::get('/dashboard', [ContractorRegistrationController::class, 'dashboard'])->name('dashboard');
         Route::post('/logout', [ContractorRegistrationController::class, 'logout'])->name('logout');
-    });
+        
+        Route::get('/password', [ContractorRegistrationController::class, 'PasswordView'])->name('password.view');
+        Route::post('/password', [ContractorRegistrationController::class, 'updatePassword'])->name('password.update');
+        
+        Route::get('/edit', [ContractorRegistrationController::class, 'edit'])->name('edit');
+        Route::patch('/update', [ContractorRegistrationController::class, 'update'])->name('update');
 
-    Route::get('/edit', [ContractorRegistrationController::class, 'edit'])->name('edit');
-    Route::patch('/update', [ContractorRegistrationController::class, 'update'])->name('update');
+        Route::get('/hr-profiles', [ContractorRegistrationController::class, 'createHrProfiles'])->name('hr_profiles.create');
+        Route::post('/hr-profiles', [ContractorRegistrationController::class, 'storeHrProfile'])->name('hr_profiles.store');
+
+        Route::get('/machinery', [ContractorRegistrationController::class, 'createMachinery'])->name('machinery.create');
+        Route::post('/machinery', [ContractorRegistrationController::class, 'storeMachinery'])->name('machinery.store');
+
+        Route::get('/work-experience', [ContractorRegistrationController::class, 'createWorkExperience'])->name('work_experience.create');
+        Route::post('/work-experience', [ContractorRegistrationController::class, 'storeWorkExperience'])->name('work_experience.store');
+    });
 });
 
 Route::prefix('standardizations')->as('standardizations.')->group(function () {
