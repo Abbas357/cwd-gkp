@@ -112,17 +112,35 @@ class UserController extends Controller
             'Principal Consulting Architect' => ['column' => 'position', 'value' => 'Principal Consulting Architect'],
             'Section Officers' => ['column' => 'designation', 'value' => 'Section Officer'],
             'Administrative Officers' => ['column' => 'designation', 'value' => 'Administrative Officer'],
-            'IT Professionals' => ['column' => 'office', 'value' => 'Director (IT)'],
+            'IT Staff' => [
+                'custom_query' => true,
+                'callback' => function ($query) {
+                    return $query->where(function ($q) {
+                        $q->where('position', 'LIKE', '%(IT)%')
+                        ->orWhere('position', 'LIKE', '%(GIS)%');
+                    })
+                    ->where(function ($q) {
+                        $q->where('BPS', 'BPS-17')
+                        ->orWhere('bps', 'BPS-18');
+                    });
+                }
+            ],
         ];
 
         $teamData = [];
 
         foreach ($roles as $role => $criteria) {
-            $teamData[$role] = User::select('id', 'uuid', 'name', 'title', 'position', 'bps')
-                ->where($criteria['column'], $criteria['value'])
+            $query = User::select('id', 'uuid', 'name', 'title', 'position', 'bps')
                 ->featuredOnTeam()
-                ->with('media')
-                ->latest('created_at')
+                ->with('media');
+
+            if (isset($criteria['custom_query']) && $criteria['custom_query']) {
+                $query = $criteria['callback']($query);
+            } else {
+                $query = $query->where($criteria['column'], $criteria['value']);
+            }
+
+            $teamData[$role] = $query->latest('created_at')
                 ->get()
                 ->map(function ($user) {
                     return [

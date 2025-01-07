@@ -21,7 +21,6 @@
             class="img-fluid my-4" 
             alt="{{ $sliderData['title'] }}">
 
-
         <div class="description mt-4">
             <h2>Description</h2>
             <p>{!! nl2br($sliderData['description']) !!}</p>
