@@ -65,6 +65,10 @@
                                 <option value="ongoing">Ongoing</option>
                             </select>
                         </div>
+                        <div class="col-md-3">
+                            <label for="word_order" class="form-label">Work Order</label>
+                            <input type="file" class="form-control" id="word_order" name="experiences[0][work_order]">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -91,7 +95,7 @@
             function createInputGroup(label, name, type = 'text', required = false, options = null) {
                 if (type === 'select') {
                     return `
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label class="form-label">${label}</label>
                             <select class="form-select" name="experiences[${rowIndex}][${name}]">
                                 <option value="completed">Completed</option>
@@ -113,6 +117,7 @@
                 rowIndex++;
                 const newRow = document.createElement('div');
                 newRow.className = 'experience-row mb-5 p-3 border rounded position-relative';
+                newRow.style.cssText = "box-shadow: 0 0 7px #cdcdcd";
                 
                 const inputs = `
                     <div class="position-absolute top-0 end-0 mt-2 me-2">
@@ -121,11 +126,13 @@
                         </button>
                     </div>
                     <div class="row g-3">
+                        ${createInputGroup('ADP Number', 'adp_number', 'text', true)}
                         ${createInputGroup('Project Name', 'project_name', 'text', true)}
-                        ${createInputGroup('Client Name', 'client_name', 'text', true)}
-                        ${createInputGroup('Project Value', 'project_value', 'number', true)}
+                        ${createInputGroup('Project cost', 'project_cost', 'text', true)}
+                        ${createInputGroup('Commencement Date', 'commencement_date', 'date', true)}
                         ${createInputGroup('Completion Date', 'completion_date', 'date', true)}
-                        ${createInputGroup('Status', 'status', 'select')}
+                        ${createInputGroup('Status', 'status', 'select', true)}
+                        ${createInputGroup('Work Order', 'word_order', 'file', true)}
                     </div>
                 `;
                 
