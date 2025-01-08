@@ -32,8 +32,28 @@
             margin: auto;
             border-radius: 10px;
             background: #ffffff99;
-            box-shadow: 0 0 30px #bebebe;
+            box-shadow: 0 0 30px #999;
             border: 1px solid #ddd;
+        }
+
+        body {
+            background-image: url("../site/images/engineering-bg-image.jpg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            margin: 0;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            z-index: -1;
         }
 
     </style>

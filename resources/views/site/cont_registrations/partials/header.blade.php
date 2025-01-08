@@ -10,21 +10,20 @@
     .top-nav-container {
         background: #f8f9fa;
         padding: 1rem;
-        border-bottom: 1px solid #dee2e6;
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
     }
     .form-label {
         font-weight: bold;
         color: #666;
     }
 </style>
-<div class="top-nav-container">
+<div class="top-nav-container p-0 mt-1">
     <div class="container d-flex justify-content-between align-items-center">
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('registrations.dashboard') ? 'active' : '' }}" 
                    href="{{ route('registrations.dashboard') }}">
-                    <i class="bi bi-house-door"></i> &nbsp; Home
+                    <i class="bi bi-house-door"></i> &nbsp; Dashboard
                 </a>
             </li>
             <li class="nav-item">

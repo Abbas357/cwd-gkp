@@ -1053,17 +1053,17 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             name: 'blue',
-            color: '#1e4d8c',
+            color: '#3b5998',
             title: 'Blue Theme',
         },
         {
             name: 'violet',
-            color: '#8f2bbc',
+            color: '#612bac',
             title: 'Violet Theme',
         },
         {
             name: 'darkred',
-            color: '#af0606',
+            color: '#830051',
             title: 'Dark Red Theme',
         }
     ];
