@@ -25,7 +25,7 @@
             <div class="col-md-6 col-lg-6 col-xl-3">
                 <div class="footer-item d-flex flex-column">
                     <h4 class="mb-4 text-white">Modules</h4>
-                    <a href="{{ route('registrations.create') }}"><i class="bi bi-arrow-right-short me-2"></i> E-Registration</a>
+                    <a href="{{ route('contractors.registration') }}"><i class="bi bi-arrow-right-short me-2"></i> E-Registration</a>
                     <a href="{{ route('standardizations.create') }}"><i class="bi bi-arrow-right-short me-2"></i> E-Standardization</a>
                     <a href="http://eprocurement.cwd.gkp.pk"><i class="bi bi-arrow-right-short me-2"></i> E-bidding</a>
                     <a href="http://etenders.cwd.gkp.pk/"><i class="bi bi-arrow-right-short me-2"></i> Contractor Login</a>

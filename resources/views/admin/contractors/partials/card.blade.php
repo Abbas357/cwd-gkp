@@ -1,5 +1,5 @@
 <style>
-    .product-card {
+    .contractor-card {
         border: 2px solid #ddd;
         border-radius: 10px;
         padding: .5rem;
@@ -9,8 +9,8 @@
         margin-bottom: .3rem
     }
 
-    .product-card_front {
-        background-image: url('{{ asset('admin/images/cards/product-card-front.png') }}');
+    .contractor-card_front {
+        background-image: url('{{ asset('admin/images/cards/contractor-card-front.png') }}');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;
@@ -157,8 +157,8 @@
         
     }
 
-    .product-card_back {
-        background-image: url('{{ asset('admin/images/cards/product-card-back.png') }}');
+    .contractor-card_back {
+        background-image: url('{{ asset('admin/images/cards/contractor-card-back.png') }}');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;
@@ -166,8 +166,8 @@
 
         .back-heading {
             position: absolute;
-            top: .5rem;
-            left: 15%;
+            top: .7rem;
+            left: 20%;
 
             h1 {
                 text-transform: uppercase;
@@ -181,20 +181,17 @@
         }
         .back-main {
             position: absolute;
-            top: 2rem;
+            top: 3rem;
             width:94%;
-            text-align: justify;
-            font-size: 9px;
         }
         .back-footer {
             position: absolute;
-            bottom: 5px;
-            left: .4rem;
+            bottom: .3rem;
             p {
                 margin: 0px;
                 color: #575757;
                 text-align: center;
-                font-size: 10px;
+                font-size: 9px;
                 font-weight:normal;
             }
         }
@@ -208,7 +205,7 @@
 </style>
 
 <div id="capture">
-    <div class="product-card product-card_front text-center">
+    <div class="contractor-card contractor-card_front text-center">
 
         <div class="header-left">
             <img src="{{ asset('admin/images/logo-square.png') }}" alt="">
@@ -220,17 +217,17 @@
         </div>
 
         <div class="header-right">
-            <span class="expires">EXPIRES: {{ $standardization->card_expiry_date->format('j, M Y'); }}</span>
+            <span class="expires">EXPIRES: {{ $Contractor->card_expiry_date->format('j, M Y'); }}</span>
         </div>
 
         <div class="image">
-            <img src="{{ $standardization->getFirstMediaUrl('firm_pictures') ?: asset('admin/images/no-profile.png') }}" alt="{{ $standardization->product_name }}">
+            <img src="{{ $Contractor->getFirstMediaUrl('contractor_pictures') ?: asset('admin/images/no-profile.png') }}" alt="{{ $Contractor->contractor_name }}">
         </div>
 
         <div class="main">
-            <h1>{{ $standardization->firm_name }}</h1>
-            <h2> {{ $standardization->product_name }}</h2>
-            <h3> Locality: {{ $standardization->locality }}</h3>
+            <h1>{{ $Contractor->contractor_name }}</h1>
+            <h2> {{ $Contractor->applied_category }} / {{ $Contractor->pec_number }}</h2>
+            <h3> Name: {{ $Contractor->owner_name }}</h3>
         </div>
 
         <div class="footer">
@@ -238,7 +235,7 @@
                 <img src="{{ asset('admin/images/cards/service-card-sign.png') }}" alt="Sign">
             </div>
             <div class="authority-sign">
-                ISSUING AUTHORITY
+                ADDL. SECRETARY (TECH.)
             </div>
             <div class="qr-code">
                 <img src="{{ $qrCodeUri }}" style="width: 75px;border:3px solid transparent; outline: 2px solid #aaa" alt="QR Code for verification">
@@ -246,40 +243,64 @@
         </div>
 
         <div class="bottom-text">
-            <h1>Product Standardization Card</h1>
+            <h1>Contractor Registration Card</h1>
         </div>
 
     </div>
 
     <!-- Back Side -->
-    <div class="card product-card product-card_back">
+    <div class="card contractor-card contractor-card_back">
         <div class="mx-1 mt-5">
             <div class="back-heading">
-                <h1>Terms and Conditions</h1>
+                <h1>Contractor Detail</h1>
             </div>
 
             <div class="back-main">
-                <div class="d-flex justify-content-start align-items-center border-bottom border-secondary">
-                    1. The manufacturer authorized dealers will be bound to issue sales tax invoice for each consignment supplied to the contractor with the name of purchaser and name of work.
+                <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="fw-bold">CNIC: &emsp;</div>
+                        <div>{{ $Contractor->cnic }}</div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center ml-auto">
+                        <div class="fw-bold">Issue Date: &emsp;</div>
+                        <div>{{ $Contractor->card_issue_date->format('d/m/Y') }}</div>
+                    </div>
                 </div>
-                <div class="d-flex justify-content-start align-items-center border-bottom border-secondary">
-                    2. The firm will be bound to provide test reports (along with other documents) of the product supplied on the request of concerned Divisional officer of PHED/concerned department Khyber Pakhtunkhwa.
+                <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
+                    <div class="d-flex justify-content-around align-items-center">
+                        <div class="fw-bold">District: &emsp;</div>
+                        <div>{{ $Contractor->district }}</div>
+                    </div>
+                    <div class="d-flex justify-content-around align-items-center ml-auto">
+                        <div class="fw-bold">Registration No: &emsp;</div>
+                        <div>{{ $Contractor->reg_no }}</div>
+                    </div>
                 </div>
-                <div class="d-flex justify-content-start align-items-center border-bottom border-secondary">
-                    3. For Pipe, each pipe will bear the stamp of the manufacturer with pipe classification, identification code as per international standard specifications.
+                <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
+                    <div class="d-flex justify-content-around align-items-center">
+                        <div class="fw-bold">Email: &emsp;</div>
+                        <div style="overflow: hidden; text-overflow: ellipsis;">{{ $Contractor->email }}</div>
+                    </div>
                 </div>
-                <div class="d-flex justify-content-start align-items-center border-bottom border-secondary">
-                    4. The firm will be responsible for the quality of the product supplied to the contractor.
+                <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
+                    <div class="d-flex justify-content-around align-items-center">
+                        <div class="fw-bold">Mobile Number: &emsp;</div>
+                        <div style="overflow: hidden; text-overflow: ellipsis;">{{ $Contractor->mobile_number }}</div>
+                    </div>
                 </div>
-                <div class="d-flex justify-content-start align-items-center border-bottom border-secondary">
-                    5. Unsatisfactory performance and below specification product supplied to contractors will result in legal action, rejection of material supplied and blacklisting of the firm.
+                
+                <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
+                    <div class="fw-bold">Address: &emsp;</div>
+                    <div style="overflow: hidden; text-overflow: ellipsis;">{{ $Contractor->address }}</div>
                 </div>
             </div>
             
             <div class="back-footer">
-                <p class="text-danger" style="white-space: nowrap"><strong>Note:</strong> Cardholder is a Standardized Firm, not a government entity / official.</p>
+                <p class="text-danger"><strong>Note:</strong> Cardholder is an approved contractor, not a government official.</p>
                 <p>
-                    Issued by IT Cell, C&W Department Govt. of Khyber Pakhtunkhwa.<br />
+                    Issued by Communication and Works Department Govt. of Khyber Pakhtunkhwa.<br />
+                    For Information / Verification, scan QR code or contact IT Cell, C&W Department.<br />
+                    If found please drop into the nearest letter box.
                 </p>
             </div>
         </div>

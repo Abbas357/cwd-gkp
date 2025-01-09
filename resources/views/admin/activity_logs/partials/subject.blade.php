@@ -8,9 +8,9 @@
         if ($subject) {
             $subjectClassName = strtolower(class_basename($subjectType));
 
-            if (class_basename($subjectType) === 'ContractorRegistration') {
-                $routeName = 'admin.registrations.show';
-            } elseif (class_basename($subjectType) === 'EStandardization') {
+            if (class_basename($subjectType) === 'Contractor') {
+                $routeName = 'admin.contractors.show';
+            } elseif (class_basename($subjectType) === 'Standardization') {
                 $routeName = 'admin.standardizations.show';
             } elseif (class_basename($subjectType) === 'Story') {
                 $routeName = 'admin.stories.show';

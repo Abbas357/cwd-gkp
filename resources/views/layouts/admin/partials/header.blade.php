@@ -147,7 +147,7 @@
                                 @endcan
                         
                                 @can('view any contractor')
-                                <a href="{{ route('admin.registrations.index') }}" class="grid-item text-decoration-none text-dark">
+                                <a href="{{ route('admin.contractors.index') }}" class="grid-item text-decoration-none text-dark">
                                     <div class="app-wrapper d-flex flex-column gap-2 text-center p-3">
                                         <div class="app-icon">
                                             <i style="font-size: 26px; color: #00a4e4" class="bi bi-clipboard"></i>

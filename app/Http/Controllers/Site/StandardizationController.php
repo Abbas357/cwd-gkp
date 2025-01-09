@@ -1,0 +1,91 @@
+<?php
+
+namespace App\Http\Controllers\Site;
+
+use App\Http\Controllers\Controller;
+
+use Illuminate\Http\Request;
+use App\Http\Requests\StoreStandardizationRequest;
+use App\Models\Standardization;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Standardization\AppliedMail;
+
+class StandardizationController extends Controller
+{
+    public function create()
+    {
+        return view('site.standardizations.create');
+    }
+
+    public function store(StoreStandardizationRequest $request)
+    {
+        $standardization = new Standardization();
+        $standardization->product_name = $request->input('product_name');
+        $standardization->specification_details = $request->input('specification_details');
+        $standardization->firm_name = $request->input('firm_name');
+        $standardization->address = $request->input('address');
+        $standardization->mobile_number = $request->input('mobile_number');
+        $standardization->phone_number = $request->input('phone_number');
+        $standardization->email = $request->input('email');
+        $standardization->locality = $request->input('locality');
+        $standardization->ntn_number = $request->input('ntn_number');
+        $standardization->location_type = $request->input('location_type');
+
+        if ($request->hasFile('firm_picture')) {
+            $standardization->addMedia($request->file('firm_picture'))
+                ->toMediaCollection('firm_pictures');
+        }
+
+        if ($request->hasFile('secp_certificate')) {
+            $standardization->addMedia($request->file('secp_certificate'))
+                ->toMediaCollection('secp_certificates');
+        }
+
+        if ($request->hasFile('iso_certificate')) {
+            $standardization->addMedia($request->file('iso_certificate'))
+                ->toMediaCollection('iso_certificates');
+        }
+
+        if ($request->hasFile('commerce_membership')) {
+            $standardization->addMedia($request->file('commerce_membership'))
+                ->toMediaCollection('commerse_memberships');
+        }
+
+        if ($request->hasFile('pec_certificate')) {
+            $standardization->addMedia($request->file('pec_certificate'))
+                ->toMediaCollection('pec_certificates');
+        }
+
+        if ($request->hasFile('annual_tax_returns')) {
+            $standardization->addMedia($request->file('annual_tax_returns'))
+                ->toMediaCollection('annual_tax_returns');
+        }
+
+        if ($request->hasFile('audited_financial')) {
+            $standardization->addMedia($request->file('audited_financial'))
+                ->toMediaCollection('audited_financials');
+        }
+
+        if ($request->hasFile('dept_org_cert')) {
+            $standardization->addMedia($request->file('dept_org_cert'))
+                ->toMediaCollection('organization_registrations');
+        }
+
+        if ($request->hasFile('performance_certificate')) {
+            $standardization->addMedia($request->file('performance_certificate'))
+                ->toMediaCollection('performance_certificate');
+        }
+
+        if ($standardization->save()) {
+            Mail::to($standardization->email)->queue(new AppliedMail($standardization));
+            return redirect()->route('standardizations.create')->with('success', 'Your form has been submitted successfully');
+        }
+        return redirect()->route('standardizations.create')->with('danger', 'There is an error submitting your data');
+    }
+
+    public function approvedProducts(Request $request, $id)
+    {
+        $product = Standardization::find($id);
+        return view('site.standardizations.approved', compact('product'));
+    }
+}

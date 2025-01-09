@@ -8,18 +8,18 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('contractor_registrations', function (Blueprint $table) {
+        Schema::create('contractors', function (Blueprint $table) {
             $table->id();
             $table->string('mobile_number', 45)->nullable();
             $table->string('email', 100)->nullable();
-            $table->string('cnic', 45);
-            $table->string('owner_name', 100);
-            $table->string('district', 100);
-            $table->string('address')->nullable();;
-            $table->string('pec_number', 100);
-            $table->string('category_applied', 45);
-            $table->string('contractor_name', 100);
-            $table->string('pec_category', 45);
+            $table->string('cnic', 45)->nullable();
+            $table->string('owner_name', 100)->nullable();
+            $table->string('district', 100)->nullable();
+            $table->string('address')->nullable();
+            $table->string('pec_number', 100)->nullable();
+            $table->string('category_applied', 45)->nullable();
+            $table->string('contractor_name', 100)->nullable();
+            $table->string('pec_category', 45)->nullable();
             $table->string('fbr_ntn', 45)->nullable();
             $table->string('kpra_reg_no', 45)->nullable();
             $table->string('pre_enlistment')->nullable();
@@ -36,7 +36,7 @@ return new class extends Migration
 
         Schema::create('contractor_human_resources', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('contractor_id')->references('id')->on('contractor_registrations')->onDelete('cascade');
+            $table->foreignId('contractor_id')->references('id')->on('contractors')->onDelete('cascade');
             $table->string('name')->nullable();
             $table->string('cnic_number')->nullable();
             $table->string('pec_number')->nullable();
@@ -50,7 +50,7 @@ return new class extends Migration
 
         Schema::create('contractor_machinery', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('contractor_id')->references('id')->on('contractor_registrations')->onDelete('cascade');
+            $table->foreignId('contractor_id')->references('id')->on('contractors')->onDelete('cascade');
             $table->string('name')->nullable();
             $table->string('number')->nullable();
             $table->string('model')->nullable();
@@ -60,7 +60,7 @@ return new class extends Migration
 
         Schema::create('contractor_work_experiences', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('contractor_id')->references('id')->on('contractor_registrations')->onDelete('cascade');
+            $table->foreignId('contractor_id')->references('id')->on('contractors')->onDelete('cascade');
             $table->string('adp_number')->nullable();
             $table->string('project_name')->nullable();
             $table->decimal('project_cost', 12, 2)->nullable();
@@ -74,7 +74,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('contractor_registrations');
+        Schema::dropIfExists('contractors');
         Schema::dropIfExists('contractor_hr_profiles');
         Schema::dropIfExists('contractor_machinery');
         Schema::dropIfExists('contractor_work_experiences');

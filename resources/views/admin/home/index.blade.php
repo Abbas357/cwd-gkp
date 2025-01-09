@@ -138,7 +138,7 @@
             @endcan
 
             @can('view any contractor')
-            <a href="{{ route('admin.registrations.index') }}" class="app-tile">
+            <a href="{{ route('admin.contractors.index') }}" class="app-tile">
                 <i class="bi bi-clipboard" style="color: #00a4e4"></i>
                 <p>Registration</p>
             </a>

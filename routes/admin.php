@@ -26,9 +26,9 @@ use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\ProjectFileController;
 use App\Http\Controllers\ServiceCardController;
 use App\Http\Controllers\PublicContactController;
-use App\Http\Controllers\EStandardizationController;
+use App\Http\Controllers\StandardizationController;
 use App\Http\Controllers\DevelopmentProjectController;
-use App\Http\Controllers\ContractorRegistrationController;
+use App\Http\Controllers\ContractorController;
 
 Route::middleware('auth')->group(function () { 
     Route::prefix('admin')->as('admin.')->group(function () {
@@ -64,28 +64,28 @@ Route::middleware('auth')->group(function () {
             Route::patch('/upload/file/{service_card}', [ServiceCardController::class, 'uploadFile'])->name('uploadFile')->can('update', 'service_card');
         });
         
-        Route::prefix('registrations')->as('registrations.')->group(function () {
-            Route::get('/', [ContractorRegistrationController::class, 'index'])->name('index')->can('viewAny', App\Models\ContractorRegistration::class);
-            Route::patch('/defer/{ContractorRegistration}', [ContractorRegistrationController::class, 'defer'])->name('defer')->can('defer', 'ContractorRegistration');
-            Route::patch('/approve/{ContractorRegistration}', [ContractorRegistrationController::class, 'approve'])->name('approve')->can('approve', 'ContractorRegistration');
-            Route::get('/{ContractorRegistration}', [ContractorRegistrationController::class, 'show'])->name('show')->can('view', 'ContractorRegistration');
-            Route::get('/get/{ContractorRegistration}', [ContractorRegistrationController::class, 'showDetail'])->name('showDetail')->can('view', 'ContractorRegistration');
-            Route::get('/card/{ContractorRegistration}', [ContractorRegistrationController::class, 'showCard'])->name('showCard')->can('card', 'ContractorRegistration');
-            Route::patch('/renew/{ContractorRegistration}', [ContractorRegistrationController::class, 'renew'])->name('renew')->can('renew', 'ContractorRegistration');
-            Route::patch('/update/field/{ContractorRegistration}', [ContractorRegistrationController::class, 'updateField'])->name('updateField')->can('update', 'ContractorRegistration');
-            Route::patch('/update/file/{ContractorRegistration}', [ContractorRegistrationController::class, 'uploadFile'])->name('uploadFile')->can('update', 'ContractorRegistration');
+        Route::prefix('contractors')->as('contractors.')->group(function () {
+            Route::get('/', [ContractorController::class, 'index'])->name('index')->can('viewAny', App\Models\Contractor::class);
+            Route::patch('/defer/{Contractor}', [ContractorController::class, 'defer'])->name('defer')->can('defer', 'Contractor');
+            Route::patch('/approve/{Contractor}', [ContractorController::class, 'approve'])->name('approve')->can('approve', 'Contractor');
+            Route::get('/{Contractor}', [ContractorController::class, 'show'])->name('show')->can('view', 'Contractor');
+            Route::get('/get/{Contractor}', [ContractorController::class, 'showDetail'])->name('showDetail')->can('view', 'Contractor');
+            Route::get('/card/{Contractor}', [ContractorController::class, 'showCard'])->name('showCard')->can('card', 'Contractor');
+            Route::patch('/renew/{Contractor}', [ContractorController::class, 'renew'])->name('renew')->can('renew', 'Contractor');
+            Route::patch('/update/field/{Contractor}', [ContractorController::class, 'updateField'])->name('updateField')->can('update', 'Contractor');
+            Route::patch('/update/file/{Contractor}', [ContractorController::class, 'uploadFile'])->name('uploadFile')->can('update', 'Contractor');
         });
         
         Route::prefix('standardizations')->as('standardizations.')->group(function () {
-            Route::get('/', [EStandardizationController::class, 'index'])->name('index')->can('viewAny', App\Models\EStandardization::class);
-            Route::patch('/approve/{EStandardization}', [EStandardizationController::class, 'approve'])->name('approve')->can('approve', 'EStandardization');
-            Route::patch('/reject/{EStandardization}', [EStandardizationController::class, 'reject'])->name('reject')->can('reject', 'EStandardization');
-            Route::get('/{EStandardization}', [EStandardizationController::class, 'show'])->name('show')->can('view', 'EStandardization');
-            Route::get('/get/{EStandardization}', [EStandardizationController::class, 'showDetail'])->name('detail')->can('view', 'EStandardization');
-            Route::get('/card/{EStandardization}', [EStandardizationController::class, 'showCard'])->name('card')->can('card', 'EStandardization');
-            Route::patch('/renew/{EStandardization}', [EStandardizationController::class, 'renew'])->name('renew')->can('renew', 'EStandardization');
-            Route::patch('/update/field/{EStandardization}', [EStandardizationController::class, 'updateField'])->name('updateField')->can('update', 'EStandardization');
-            Route::patch('/upload/file/{EStandardization}', [EStandardizationController::class, 'uploadFile'])->name('uploadFile')->can('update', 'EStandardization');
+            Route::get('/', [StandardizationController::class, 'index'])->name('index')->can('viewAny', App\Models\Standardization::class);
+            Route::patch('/approve/{standardization}', [StandardizationController::class, 'approve'])->name('approve')->can('approve', 'Standardization');
+            Route::patch('/reject/{standardization}', [StandardizationController::class, 'reject'])->name('reject')->can('reject', 'Standardization');
+            Route::get('/{standardization}', [StandardizationController::class, 'show'])->name('show')->can('view', 'Standardization');
+            Route::get('/get/{standardization}', [StandardizationController::class, 'showDetail'])->name('detail')->can('view', 'Standardization');
+            Route::get('/card/{standardization}', [StandardizationController::class, 'showCard'])->name('card')->can('card', 'Standardization');
+            Route::patch('/renew/{standardization}', [StandardizationController::class, 'renew'])->name('renew')->can('renew', 'Standardization');
+            Route::patch('/update/field/{standardization}', [StandardizationController::class, 'updateField'])->name('updateField')->can('update', 'Standardization');
+            Route::patch('/upload/file/{standardization}', [StandardizationController::class, 'uploadFile'])->name('uploadFile')->can('update', 'Standardization');
         });
         
         Route::prefix('downloads')->as('downloads.')->group(function () {

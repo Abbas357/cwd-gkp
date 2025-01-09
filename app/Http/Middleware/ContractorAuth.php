@@ -11,7 +11,7 @@ class ContractorAuth
     public function handle(Request $request, Closure $next)
     {
         if (!session()->has('contractor_id')) {
-            return redirect()->route('registrations.login')
+            return redirect()->route('contractors.login')
                 ->with('status', 'Please login to access your dashboard');
         }
         return $next($request);

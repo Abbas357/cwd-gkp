@@ -22,6 +22,6 @@ class ContractorMachinery extends Model
 
     public function contractor()
     {
-        return $this->belongsTo(ContractorRegistration::class, 'contractor_id');
+        return $this->belongsTo(Contractor::class, 'contractor_id');
     }
 }
