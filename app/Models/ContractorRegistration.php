@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use Spatie\MediaLibrary\HasMedia;
+use Spatie\Activitylog\LogOptions;
+use App\Models\ContractorMachinery;
+use App\Models\ContractorHumanResource;
+
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ContractorWorkExperience;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
-use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Activitylog\LogOptions;
 
 class ContractorRegistration extends Model implements HasMedia
 {
@@ -51,5 +54,20 @@ class ContractorRegistration extends Model implements HasMedia
         $this->addMediaCollection('pre_enlistment_attachments')->singleFile();
         $this->addMediaCollection('pre_enlistment_attachments')->singleFile();
         $this->addMediaCollection('contractor_pictures')->singleFile();
+    }
+
+    public function humanResources()
+    {
+        return $this->hasMany(ContractorHumanResource::class, 'contractor_id');
+    }
+    
+    public function machinery()
+    {
+        return $this->hasMany(ContractorMachinery::class, 'contractor_id');
+    }
+    
+    public function workExperiences()
+    {
+        return $this->hasMany(ContractorWorkExperience::class, 'contractor_id');
     }
 }

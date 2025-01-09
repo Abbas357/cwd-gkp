@@ -36,34 +36,38 @@ return new class extends Migration
 
         Schema::create('contractor_human_resources', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('contractor_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('name');
-            $table->string('cnic');
-            $table->string('pec_number');
-            $table->string('designation');
-            $table->decimal('salary', 10, 2);
-            $table->date('joining_date');
+            $table->foreignId('contractor_id')->references('id')->on('contractor_registrations')->onDelete('cascade');
+            $table->string('name')->nullable();
+            $table->string('cnic_number')->nullable();
+            $table->string('pec_number')->nullable();
+            $table->string('designation')->nullable();
+            $table->decimal('salary', 10, 2)->nullable();
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
+            $table->string('type')->nullable();
             $table->timestamps();
         });
 
         Schema::create('contractor_machinery', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('contractor_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('name');
-            $table->string('number');
-            $table->string('model');
-            $table->string('registration');
+            $table->foreignId('contractor_id')->references('id')->on('contractor_registrations')->onDelete('cascade');
+            $table->string('name')->nullable();
+            $table->string('number')->nullable();
+            $table->string('model')->nullable();
+            $table->string('registration')->nullable();
             $table->timestamps();
         });
 
         Schema::create('contractor_work_experiences', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('contractor_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('adp_no');
-            $table->string('name');
-            $table->string('duration');
-            $table->date('completion_date');
-            $table->decimal('cost', 12, 2);
+            $table->foreignId('contractor_id')->references('id')->on('contractor_registrations')->onDelete('cascade');
+            $table->string('adp_number')->nullable();
+            $table->string('project_name')->nullable();
+            $table->decimal('project_cost', 12, 2)->nullable();
+            $table->date('commencement_date')->nullable();
+            $table->date('completion_date')->nullable();
+            $table->enum('status', ['completed', 'ongoing'])->nullable();
+            $table->string('type')->nullable();
             $table->timestamps();
         });
     }

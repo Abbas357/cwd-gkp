@@ -32,11 +32,11 @@
                             <input type="text" class="form-control" name="profiles[0][name]" required>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">CNIC Number</label>
+                            <label class="form-label">CNIC Number *</label>
                             <input type="text" class="form-control" name="profiles[0][cnic_number]" required>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">PEC Number</label>
+                            <label class="form-label">PEC Number *</label>
                             <input type="text" class="form-control" name="profiles[0][pec_number]" required>
                         </div>
                         <div class="col-md-3">
@@ -53,7 +53,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Salary</label>
-                            <input type="text" class="form-control" name="profiles[0][salary]">
+                            <input type="number" step="0.01" class="form-control" name="profiles[0][salary]">
                         </div>
                         <div class="col-md-3">
                             <label for="hrProfile" class="form-label">Résumé (CV)</label>

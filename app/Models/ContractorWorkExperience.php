@@ -21,4 +21,9 @@ class ContractorWorkExperience extends Model
         $this->addMediaCollection('contractor_work_experiences')->singleFile();
     }
 
+    public function contractor()
+    {
+        return $this->belongsTo(ContractorRegistration::class, 'contractor_id');
+    }
+    
 }

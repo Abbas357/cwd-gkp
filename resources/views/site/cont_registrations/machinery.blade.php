@@ -32,11 +32,6 @@
 
             <div id="machineryRows" class="position-relative">
                 <div class="machinery-row mb-5 p-4 border rounded position-relative" style="box-shadow: 0 0 7px #cdcdcd">
-                    <div class="position-absolute top-0 end-0 mt-2 me-2">
-                        <button type="button" class="btn btn-danger btn-sm delete-row" style="display: none;">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
                     <div class="row g-3">
                         <div class="col-md-3">
                             <label class="form-label">Name *</label>

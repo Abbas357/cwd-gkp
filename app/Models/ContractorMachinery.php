@@ -19,4 +19,9 @@ class ContractorMachinery extends Model
     {
         $this->addMediaCollection('contractor_machinery')->singleFile();
     }
+
+    public function contractor()
+    {
+        return $this->belongsTo(ContractorRegistration::class, 'contractor_id');
+    }
 }

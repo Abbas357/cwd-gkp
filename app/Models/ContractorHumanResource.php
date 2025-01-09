@@ -21,4 +21,9 @@ class ContractorHumanResource extends Model
     {
         $this->addMediaCollection('contractor_human_resources')->singleFile();
     }
+
+    public function contractor()
+    {
+        return $this->belongsTo(ContractorRegistration::class, 'contractor_id');
+    }
 }

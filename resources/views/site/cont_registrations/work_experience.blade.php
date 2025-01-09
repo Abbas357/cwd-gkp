@@ -32,11 +32,6 @@
 
             <div id="experienceRows" class="position-relative">
                 <div class="experience-row mb-5 p-4 border rounded position-relative" style="box-shadow: 0 0 7px #cdcdcd">
-                    <div class="position-absolute top-0 end-0 mt-2 me-2">
-                        <button type="button" class="btn btn-danger btn-sm delete-row" style="display: none;">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
                     <div class="row g-3">
                         <div class="col-md-3">
                             <label class="form-label">ADP Number *</label>
@@ -48,7 +43,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Project Cost *</label>
-                            <input type="text" step="0.01" class="form-control" name="experiences[0][project_cost]" required>
+                            <input type="number" step="0.01" class="form-control" name="experiences[0][project_cost]" required>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Commencement Date *</label>
@@ -61,13 +56,14 @@
                         <div class="col-md-3">
                             <label class="form-label">Status</label>
                             <select class="form-select" name="experiences[0][status]">
+                                <option value="">Choose ...</option>
                                 <option value="completed">Completed</option>
                                 <option value="ongoing">Ongoing</option>
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label for="word_order" class="form-label">Work Order</label>
-                            <input type="file" class="form-control" id="word_order" name="experiences[0][work_order]">
+                            <label class="form-label">Work Order</label>
+                            <input type="file" class="form-control" name="experiences[0][work_order]">
                         </div>
                     </div>
                 </div>

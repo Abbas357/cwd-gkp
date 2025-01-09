@@ -6,16 +6,17 @@ use App\Models\Category;
 use App\Models\District;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 
+use App\Models\ContractorMachinery;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Models\ContractorRegistration;
+use App\Models\ContractorHumanResource;
 use App\Mail\ContractorRegistration\AppliedMail;
 use App\Http\Requests\StoreContractorRegistrationRequest;
-use App\Models\ContractorHumanResource;
-use App\Models\ContractorMachinery;
 
 class ContractorRegistrationController extends Controller
 {
@@ -252,45 +253,40 @@ class ContractorRegistrationController extends Controller
 
     public function storeHrProfile(Request $request)
     {
+        $contractor = ContractorRegistration::findOrFail(session('contractor_id'));
+
         $request->validate([
             'hr_profile' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
             'profiles.*.name' => 'required|string|max:255',
-            'profiles.*.cnic' => 'required|string|max:15',
-            'profiles.*.pec' => 'required|string|max:50',
+            'profiles.*.cnic_number' => 'required|string|max:15',
+            'profiles.*.pec_number' => 'required|string|max:50',
             'profiles.*.designation' => 'nullable|string|max:100',
-            'profiles.*.date' => 'nullable|date',
+            'profiles.*.start_date' => 'nullable|date',
+            'profiles.*.end_date' => 'nullable|date',
             'profiles.*.salary' => 'nullable|numeric'
         ]);
 
         try {
             DB::beginTransaction();
 
-            $mainProfile = null;
-            if ($request->hasFile('hr_profile')) {
-                $mainProfile = ContractorHumanResource::create([
-                    'name' => 'Main Document', // You can adjust this as needed
-                    'type' => 'main_document'
-                ]);
-
-                $mainProfile->addMedia($request->file('hr_profile'))
-                    ->toMediaCollection('hr_documents');
-            }
-
-            // Store each profile
             foreach ($request->profiles as $profile) {
-                $hrProfile = ContractorHumanResource::create([
+                $hrProfile = $contractor->humanResources()->create([
                     'name' => $profile['name'],
-                    'cnic' => $profile['cnic'],
-                    'pec' => $profile['pec'],
+                    'cnic_number' => $profile['cnic_number'],
+                    'pec_number' => $profile['pec_number'],
                     'designation' => $profile['designation'] ?? null,
-                    'date' => $profile['date'] ?? null,
-                    'salary' => $profile['salary'] ?? null,
-                    'parent_id' => $mainProfile ? $mainProfile->id : null // Optional: If you want to link profiles to main document
+                    'start_date' => $profile['start_date'] ?? null,
+                    'end_date' => $profile['end_date'] ?? null,
+                    'salary' => $profile['salary'] ?? null
                 ]);
+
+                if ($request->hasFile('hr_profile')) {
+                    $hrProfile->addMedia($request->file('hr_profile'))
+                        ->toMediaCollection('hr_documents');
+                }
             }
 
             DB::commit();
-
             return redirect()->back()->with('status', 'HR Profiles saved successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -307,6 +303,8 @@ class ContractorRegistrationController extends Controller
 
     public function storeMachinery(Request $request)
     {
+        $contractor = ContractorRegistration::findOrFail(session('contractor_id'));
+
         $request->validate([
             'machinery_docs' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
             'machinery.*.name' => 'required|string|max:255',
@@ -318,27 +316,18 @@ class ContractorRegistrationController extends Controller
         try {
             DB::beginTransaction();
 
-            // Create main machinery record if file is uploaded
-            $mainRecord = null;
-            if ($request->hasFile('machinery_docs')) {
-                $mainRecord = ContractorMachinery::create([
-                    'name' => 'Main Document',
-                    'type' => 'main_document'
-                ]);
-
-                $mainRecord->addMedia($request->file('machinery_docs'))
-                    ->toMediaCollection('machinery_documents');
-            }
-
-            // Store each machinery entry
             foreach ($request->machinery as $machine) {
-                ContractorMachinery::create([
+                $machinery = $contractor->machinery()->create([
                     'name' => $machine['name'],
                     'number' => $machine['number'],
                     'model' => $machine['model'] ?? null,
-                    'registration' => $machine['registration'] ?? null,
-                    'parent_id' => $mainRecord ? $mainRecord->id : null
+                    'registration' => $machine['registration'] ?? null
                 ]);
+
+                if ($request->hasFile('machinery_docs')) {
+                    $machinery->addMedia($request->file('machinery_docs'))
+                        ->toMediaCollection('machinery_documents');
+                }
             }
 
             DB::commit();
@@ -357,5 +346,52 @@ class ContractorRegistrationController extends Controller
         return view('site.cont_registrations.work_experience');
     }
 
-    public function storeWorkExperience(Request $request) {}
+    public function storeWorkExperience(Request $request)
+    {
+        $contractor = ContractorRegistration::findOrFail(session('contractor_id'));
+
+        $request->validate([
+            'experience_docs' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'experiences.*.adp_number' => 'required|string|max:50',
+            'experiences.*.project_name' => 'required|string|max:255',
+            'experiences.*.project_cost' => 'required|numeric',
+            'experiences.*.commencement_date' => 'required|date',
+            'experiences.*.completion_date' => 'required|date',
+            'experiences.*.status' => 'nullable|in:completed,ongoing',
+            'experiences.*.work_order' => 'nullable|file|mimes:pdf,doc,docx|max:2048'
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($request->experiences as $experience) {
+                $workExperience = $contractor->workExperiences()->create([
+                    'adp_number' => $experience['adp_number'],
+                    'project_name' => $experience['project_name'],
+                    'project_cost' => $experience['project_cost'],
+                    'commencement_date' => $experience['commencement_date'],
+                    'completion_date' => $experience['completion_date'],
+                    'status' => $experience['status'] ?? null
+                ]);
+
+                if ($request->hasFile('experience_docs')) {
+                    $workExperience->addMedia($request->file('experience_docs'))
+                        ->toMediaCollection('experience_documents');
+                }
+
+                if (isset($experience['work_order']) && $experience['work_order'] instanceof UploadedFile) {
+                    $workExperience->addMedia($experience['work_order'])
+                        ->toMediaCollection('work_orders');
+                }
+            }
+
+            DB::commit();
+            return redirect()->back()->with('status', 'Work experience saved successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->withErrors(['error' => 'An error occurred while saving the work experience.'])
+                ->withInput();
+        }
+    }
 }

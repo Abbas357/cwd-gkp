@@ -29,6 +29,5 @@ return new class extends Migration
         
             $table->index(['model_type', 'model_id'], 'media_model_type_model_id_index');
         });
-        
     }
 };
