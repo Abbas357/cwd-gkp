@@ -73,26 +73,46 @@
                                 <input type="text" class="form-control" name="contractor_name" value="{{ old('contractor_name', $contractor->contractor_name) }}">
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Mobile Number</label>
-                                <input type="text" class="form-control" name="mobile_number" value="{{ old('mobile_number', $contractor->mobile_number) }}">
+                                <label for="mobile_number">Mobile No. <abbr title="Required">*</abbr></label>
+                                <input type="text" class="form-control" id="mobile_number" value="{{ old('mobile_number') }}" placeholder="eg. 0333-3333333" name="mobile_number" required>
+                                @error('mobile_number')
+                                <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">CNIC</label>
-                                <input type="text" class="form-control" name="cnic" value="{{ old('cnic', $contractor->cnic) }}">
+                                <label for="cnic">CNIC No <abbr title="Required">*</abbr></label>
+                                <input type="text" class="form-control" id="cnic" value="{{ old('cnic') }}" placeholder="National Identity Card Number" name="cnic" required>
+                                @error('cnic')
+                                <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Email</label>
-                                <input type="email" class="form-control" name="email" value="{{ old('email', $contractor->email) }}">
+                                <label for="email">Email Address <abbr title="Required">*</abbr></label>
+                                <input type="email" class="form-control" id="email" value="{{ old('email') }}" placeholder="eg. aslam@gmail.com" name="email" required>
+                                @error('email')
+                                <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">District</label>
-                                <input type="text" class="form-control" name="district" value="{{ old('district', $contractor->district) }}">
+                                <label for="district">District <abbr title="Required">*</abbr></label>
+                                <select class="form-select" id="district" name="district" required>
+                                    <option value="">Choose...</option>
+                                    @foreach ($cat['districts'] as $district)
+                                    <option value="{{ $district->name }}">{{ $district->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('district')
+                                <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Address</label>
-                                <textarea class="form-control" name="address" rows="3">{{ old('address', $contractor->address) }}</textarea>
+                                <label for="address">Address (as per PEC) <abbr title="Required">*</abbr></label>
+                                <input type="text" class="form-control" id="address" value="{{ old('address') }}" placeholder="eg. Dir Upper" name="address" required>
+                                @error('address')
+                                <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -121,19 +141,29 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">FBR NTN</label>
-                                <input type="text" class="form-control" name="fbr_ntn" value="{{ old('fbr_ntn', $contractor->fbr_ntn) }}">
+                                <label for="fbr_ntn">FBR Registration No <abbr title="Required">*</abbr></label>
+                                <input type="text" class="form-control" id="fbr_ntn" value="{{ old('fbr_ntn') }}" placeholder="eg. 23523645" name="fbr_ntn" required>
+                                @error('fbr_ntn')
+                                <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">KPRA Registration No</label>
-                                <input type="text" class="form-control" name="kpra_reg_no" value="{{ old('kpra_reg_no', $contractor->kpra_reg_no) }}">
+                                <label for="kpra_reg_no">KIPPRA Registration No <abbr title="Required">*</abbr></label>
+                                <input type="text" class="form-control" id="kpra_reg_no" value="{{ old('kpra_reg_no') }}" placeholder="eg. K753465974-7" name="kpra_reg_no" required>
+                                @error('kpra_reg_no')
+                                <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Is Limited</label>
-                                <select class="form-select" name="is_limited">
-                                    <option value="no" {{ old('is_limited', $contractor->is_limited) === 'no' ? 'selected' : '' }}>No</option>
-                                    <option value="yes" {{ old('is_limited', $contractor->is_limited) === 'yes' ? 'selected' : '' }}>Yes</option>
+                                <label for="is_limited">Is Limitted <abbr title="Required">*</abbr></label>
+                                <select class="form-select" id="is_limited" name="is_limited" required>
+                                    <option value="">Choose...</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
                                 </select>
+                                @error('is_limited')
+                                <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -200,13 +230,22 @@
     <script src="{{ asset('admin/plugins/jquery-mask/jquery.mask.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        $(document).ready(function() {
             
             const formInputs = document.querySelector('main').querySelectorAll(`
                 input:not([type="hidden"]):not([type="submit"]),
                 select,
                 textarea
             `);
+
+            imageCropper({
+                fileInput: "#contractor_picture"
+                , inputLabelPreview: "#previewContractorPicture"
+                , aspectRatio: 5 / 6
+                , onComplete() {
+                    $("#previewContractorPicture").show();
+                }
+            });
 
             $('#pre_enlistment').select2({
                 theme: "bootstrap-5"
@@ -215,6 +254,20 @@
                 , closeOnSelect: false
                 , dropdownParent: $('#pre_enlistment').parent()
             , });
+
+            $('#district').select2({
+                theme: "bootstrap-5"
+                , placeholder: $(this).data('placeholder')
+                , dropdownParent: $('#district').parent()
+            , });
+
+            $('#mobile_number').mask('0000-0000000', {
+                placeholder: "____-_______"
+            });
+
+            $('#cnic').mask('00000-0000000-0', {
+                placeholder: "_____-_______-_"
+            });
 
             formInputs.forEach(input => {
                 const isEmpty = checkIfEmpty(input);

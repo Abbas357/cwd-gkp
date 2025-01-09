@@ -33,6 +33,36 @@ return new class extends Migration
             $table->timestamp('password_updated_at')->nullable()->default(null);
             $table->timestamps();
         });
+        Schema::create('contractors', function (Blueprint $table) {
+            $table->id();
+            $table->string('owner_name', 45)->nullable();
+            $table->string('mobile_number', 15)->nullable();
+            $table->string('email', 100)->unique();
+            $table->string('cnic', 15);
+            $table->string('district', 45)->nullable();
+            $table->string('address')->nullable();
+            $table->string('password', 100);
+            $table->string('reg_no', 45)->nullable();
+            $table->timestamp('password_updated_at')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('contractor_registrations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('contractor_id')->references('id')->on('contractors')->onDelete('cascade');
+            $table->string('pec_number', 100);
+            $table->string('category_applied', 45)->nullable();
+            $table->string('pec_category', 45)->nullable();
+            $table->string('fbr_ntn', 45)->nullable();
+            $table->string('kpra_reg_no', 45)->nullable();
+            $table->string('pre_enlistment')->nullable();
+            $table->string('is_limited', 45)->default('no');
+            $table->enum('status', ['new', 'deffered_one', 'deffered_two', 'deffered_three', 'approved'])->default('new');
+            $table->text('deffered_reason')->nullable();
+            $table->timestamp('card_issue_date')->nullable();
+            $table->timestamp('card_expiry_date')->nullable();
+            $table->timestamps();
+        });
 
         Schema::create('contractor_human_resources', function (Blueprint $table) {
             $table->id();
