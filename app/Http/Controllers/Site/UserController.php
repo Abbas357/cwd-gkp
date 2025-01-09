@@ -112,7 +112,7 @@ class UserController extends Controller
             'Principal Consulting Architect' => ['column' => 'position', 'value' => 'Principal Consulting Architect'],
             'Section Officers' => ['column' => 'designation', 'value' => 'Section Officer'],
             'Administrative Officers' => ['column' => 'designation', 'value' => 'Administrative Officer'],
-            'IT Staff' => [
+            'IT Officers' => [
                 'custom_query' => true,
                 'callback' => function ($query) {
                     return $query->where(function ($q) {

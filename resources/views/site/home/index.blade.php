@@ -2,7 +2,7 @@
     @push('style')
     <link href="{{ asset('site/lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
     <link href="{{ asset('site/lib/newsticker/news-ticker.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('site/css/dashboard.min.css') }}?v=8" rel="stylesheet">
+    <link href="{{ asset('site/css/dashboard.min.css') }}?v=9" rel="stylesheet">
     <style>
         
     </style>
