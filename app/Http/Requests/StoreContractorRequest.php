@@ -14,12 +14,14 @@ class StoreContractorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|max:255',
-            'password' => 'required|max:255',
-            'owner_name' => 'required|string|max:255',
-            'pec_number' => 'required|numeric',
+            'name' => 'required|max:100',
+            'firm_name' => 'required|string|max:100',
+            'email' => 'required|email|max:100',
             'cnic' => 'required|string|max:15',
-            'mobile_number' => 'required|string|max:15',
+            'address' => 'required|string|max:255',
+            'district' => 'required',
+            'mobile_number' => 'required|max:15',
+            'password' => 'required|max:100',
         ];
     }
 }

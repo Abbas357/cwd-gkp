@@ -24,6 +24,10 @@ use App\Http\Controllers\Site\PublicContactController;
 use App\Http\Controllers\Site\StandardizationController;
 use App\Http\Middleware\ContractorRedirectIfAuthenticated;
 use App\Http\Controllers\Site\DevelopmentProjectController;
+use App\Http\Controllers\Site\ContractorMachineryController;
+use App\Http\Controllers\Site\ContractorRegistrationController;
+use App\Http\Controllers\Site\ContractorHumanResourceController;
+use App\Http\Controllers\Site\ContractorWorkExperienceController;
 
 Route::prefix('partials')->as('partials.')->group(function () {
     Route::get('/slider', [HomeController::class, 'sliderPartial'])->name('slider');
@@ -43,29 +47,41 @@ Route::prefix('contractors')->as('contractors.')->group(function () {
     Route::get('/approved/{id}', [ContractorController::class, 'approvedContractors'])->name('approved');
 
     Route::middleware([ContractorRedirectIfAuthenticated::class])->group(function () {
-        Route::get('/login', [ContractorController::class, 'login_view'])->name('login');
+        Route::get('/login', [ContractorController::class, 'view_login'])->name('login');
         Route::post('/login', [ContractorController::class, 'login'])->name('login');
         Route::get('/register', [ContractorController::class, 'register'])->name('register');
     });
 
     Route::middleware(ContractorAuth::class)->group(function () {
+
         Route::get('/dashboard', [ContractorController::class, 'dashboard'])->name('dashboard');
         Route::post('/logout', [ContractorController::class, 'logout'])->name('logout');
-        
+
         Route::get('/password', [ContractorController::class, 'PasswordView'])->name('password.view');
         Route::post('/password', [ContractorController::class, 'updatePassword'])->name('password.update');
-        
+
         Route::get('/edit', [ContractorController::class, 'edit'])->name('edit');
         Route::patch('/update', [ContractorController::class, 'update'])->name('update');
 
-        Route::get('/hr-profiles', [ContractorController::class, 'createHrProfiles'])->name('hr_profiles.create');
-        Route::post('/hr-profiles', [ContractorController::class, 'storeHrProfile'])->name('hr_profiles.store');
+        Route::prefix('registration')->as('registration.')->group(function () {
+            Route::get('/view', [ContractorRegistrationController::class, 'index'])->name('index');
+            Route::get('/apply', [ContractorRegistrationController::class, 'create'])->name('create');
+        });
 
-        Route::get('/machinery', [ContractorController::class, 'createMachinery'])->name('machinery.create');
-        Route::post('/machinery', [ContractorController::class, 'storeMachinery'])->name('machinery.store');
+        Route::prefix('machinery')->as('machinery.')->group(function () {
+            Route::get('/', [ContractorMachineryController::class, 'create'])->name('create');
+            Route::post('/', [ContractorMachineryController::class, 'store'])->name('store');
+        });
 
-        Route::get('/work-experience', [ContractorController::class, 'createWorkExperience'])->name('work_experience.create');
-        Route::post('/work-experience', [ContractorController::class, 'storeWorkExperience'])->name('work_experience.store');
+        Route::prefix('hr')->as('hr.')->group(function () {
+            Route::get('/', [ContractorHumanResourceController::class, 'create'])->name('create');
+            Route::post('/', [ContractorHumanResourceController::class, 'store'])->name('store');
+        });
+
+        Route::prefix('experience')->as('experience.')->group(function () {
+            Route::get('/', [ContractorWorkExperienceController::class, 'create'])->name('create');
+            Route::post('/', [ContractorWorkExperienceController::class, 'store'])->name('store');
+        });
     });
 });
 

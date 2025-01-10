@@ -26,7 +26,7 @@
         }
 
         .register-box {
-            width: 600px;
+            width: 700px;
             max-width: 95%;
             margin: 2rem auto;
         }
@@ -68,14 +68,67 @@
                     @csrf
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label for="email">Email Address <abbr title="Required">*</abbr></label>
-                            <input type="email" class="form-control" id="email" value="{{ old('email') }}" placeholder="eg. aslam@gmail.com" name="email" required>
+                            <label for="name">Name <abbr title="Required">*</abbr></label>
+                            <input type="text" class="form-control" id="name" value="{{ old('name') }}" placeholder="eg. Aslam Khan" name="name" required>
+                            @error('name')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col">
+                            <label for="firm_name">Firm / Company Name <abbr title="Required">*</abbr></label>
+                            <input type="text" class="form-control" id="firm_name" value="{{ old('firm_name') }}" placeholder="eg. Aslam Builders" name="firm_name" required>
+                            @error('firm_name')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="email">Email <abbr title="Required">*</abbr></label>
+                            <input type="email" class="form-control" id="email" value="{{ old('email') }}" placeholder="eg. aslamkhan@gmail.com" name="email" required>
                             @error('email')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="col-md-6">
+                            <label for="cnic">CNIC Number <abbr title="Required">*</abbr></label>
+                            <input type="text" class="form-control" id="cnic" name="cnic" value="{{ old('cnic') }}" pattern="[0-9]{5}-[0-9]{7}-[0-9]{1}" placeholder="eg. 11111-1111111-1" required>
+                            @error('cnic')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="address">Address <abbr title="Required">*</abbr></label>
+                            <input type="text" class="form-control" id="address" value="{{ old('address') }}" placeholder="Address (As per PEC)" name="address" required>
+                            @error('address')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="district">District <abbr title="Required">*</abbr></label>
+                            <select class="form-select" id="district" name="district" required>
+                                <option value="">Choose...</option>
+                                @foreach ($cat['districts'] as $district)
+                                <option value="{{ $district->name }}">{{ $district->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('district')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="mobile_number">Mobile Number <abbr title="Required">*</abbr></label>
+                            <input type="text" class="form-control" id="mobile_number" value="{{ old('mobile_number') }}" pattern="[0-9]{4}-[0-9]{7}" placeholder="eg. 0333-3333333" name="mobile_number" required>
+                            @error('mobile_number')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-4">
                             <label for="password" class="form-label text-secondary">Password</label></span>
                             <div class="input-group" id="show_hide_password">
                                 <input type="password" class="form-control shadow-sm" id="password" placeholder="Enter Password" name="password" required autocomplete="current-password">
@@ -86,47 +139,6 @@
                             @foreach($errors->get('password') as $error)
                             <span class="text-danger small"> {{ $error }}</span>
                             @endforeach
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="owner_name">Owner Name <abbr title="Required">*</abbr></label>
-                            <input type="text" class="form-control" id="owner_name" value="{{ old('owner_name') }}" placeholder="eg. Aslam Khan" name="owner_name" required>
-                            @error('owner_name')
-                            <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="pec_number">PEC No. <abbr title="Required">*</abbr></label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="pec_number" value="{{ old('pec_number') }}" placeholder="eg. 3423425" name="pec_number" required>
-                                <span class="input-group-append">
-                                    <div id="checking_loader" class="spinner-border spinner-border-lg text-info" style="display: none;" role="status">
-                                        <span class="visually-hidden">Checking...</span>
-                                    </div>
-                                </span>
-                            </div>
-                            <div id="pec_number_feedback" class="mt-1"></div>
-                            @error('pec_number')
-                            <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        
-
-                        <div class="col-md-6">
-                            <label for="mobile_number">Mobile No. <abbr title="Required">*</abbr></label>
-                            <input type="text" class="form-control" id="mobile_number" value="{{ old('mobile_number') }}" pattern="[0-9]{4}-[0-9]{7}" placeholder="eg. 0333-3333333" name="mobile_number" required>
-                            @error('mobile_number')
-                            <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="cnic">CNIC No <abbr title="Required">*</abbr></label>
-                            <input type="text" class="form-control" id="cnic" name="cnic" value="{{ old('cnic') }}" pattern="[0-9]{5}-[0-9]{7}-[0-9]{1}" placeholder="National Identity Card Number" required>
-                            @error('cnic')
-                            <div class="text-danger">{{ $message }}</div>
-                            @enderror
                         </div>
 
                         <div class="col-12 mt-3">

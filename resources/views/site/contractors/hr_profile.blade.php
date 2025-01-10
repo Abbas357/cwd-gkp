@@ -22,7 +22,7 @@
         </div>
         @endif
 
-        <form id="hrProfileForm" action="{{ route('contractors.hr_profiles.store') }}" method="POST" enctype="multipart/form-data">
+        <form id="hrProfileForm" action="{{ route('contractors.hr.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div id="profileRows" class="my-3 position-relative">
                 <div class="profile-row mb-5 p-4 border rounded position-relative" style="box-shadow: 0 0 7px #cdcdcd">

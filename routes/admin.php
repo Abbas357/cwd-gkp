@@ -20,6 +20,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\SeniorityController;
+use App\Http\Controllers\ContractorController;
 use App\Http\Controllers\NewsLetterController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ActivityLogController;
@@ -28,7 +29,7 @@ use App\Http\Controllers\ServiceCardController;
 use App\Http\Controllers\PublicContactController;
 use App\Http\Controllers\StandardizationController;
 use App\Http\Controllers\DevelopmentProjectController;
-use App\Http\Controllers\ContractorController;
+use App\Http\Controllers\ContractorRegistrationController;
 
 Route::middleware('auth')->group(function () { 
     Route::prefix('admin')->as('admin.')->group(function () {
@@ -66,14 +67,23 @@ Route::middleware('auth')->group(function () {
         
         Route::prefix('contractors')->as('contractors.')->group(function () {
             Route::get('/', [ContractorController::class, 'index'])->name('index')->can('viewAny', App\Models\Contractor::class);
-            Route::patch('/defer/{Contractor}', [ContractorController::class, 'defer'])->name('defer')->can('defer', 'Contractor');
-            Route::patch('/approve/{Contractor}', [ContractorController::class, 'approve'])->name('approve')->can('approve', 'Contractor');
             Route::get('/{Contractor}', [ContractorController::class, 'show'])->name('show')->can('view', 'Contractor');
             Route::get('/get/{Contractor}', [ContractorController::class, 'showDetail'])->name('showDetail')->can('view', 'Contractor');
-            Route::get('/card/{Contractor}', [ContractorController::class, 'showCard'])->name('showCard')->can('card', 'Contractor');
-            Route::patch('/renew/{Contractor}', [ContractorController::class, 'renew'])->name('renew')->can('renew', 'Contractor');
+            Route::patch('/change-status/{user}', [ContractorController::class, 'changeStatus'])->name('changeStatus')->can('changeStatus', 'Contractor');
             Route::patch('/update/field/{Contractor}', [ContractorController::class, 'updateField'])->name('updateField')->can('update', 'Contractor');
             Route::patch('/update/file/{Contractor}', [ContractorController::class, 'uploadFile'])->name('uploadFile')->can('update', 'Contractor');
+        
+            Route::prefix('registration')->as('registration.')->group(function () {
+                Route::get('/', [ContractorRegistrationController::class, 'index'])->name('index')->can('viewAny', App\Models\ContractorRegistration::class);
+                Route::patch('/defer/{ContractorRegistration}', [ContractorRegistrationController::class, 'defer'])->name('defer')->can('defer', 'Contractor');
+                Route::patch('/approve/{ContractorRegistration}', [ContractorRegistrationController::class, 'approve'])->name('approve')->can('approve', 'Contractor');
+                Route::get('/{ContractorRegistration}', [ContractorRegistrationController::class, 'show'])->name('show')->can('view', 'Contractor');
+                Route::get('/get/{ContractorRegistration}', [ContractorRegistrationController::class, 'showDetail'])->name('showDetail')->can('view', 'Contractor');
+                Route::get('/card/{ContractorRegistration}', [ContractorRegistrationController::class, 'showCard'])->name('showCard')->can('card', 'Contractor');
+                Route::patch('/renew/{ContractorRegistration}', [ContractorRegistrationController::class, 'renew'])->name('renew')->can('renew', 'Contractor');
+                Route::patch('/update/field/{ContractorRegistration}', [ContractorRegistrationController::class, 'updateField'])->name('updateField')->can('update', 'Contractor');
+                Route::patch('/update/file/{ContractorRegistration}', [ContractorRegistrationController::class, 'uploadFile'])->name('uploadFile')->can('update', 'Contractor');
+            });
         });
         
         Route::prefix('standardizations')->as('standardizations.')->group(function () {

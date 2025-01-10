@@ -34,23 +34,25 @@
 
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Edit Contractor</h2>
+            <h2 class="mb-0">Edit your information</h2>
         </div>
 
         @if(session('status'))
-        <div class="alert alert-success">
-            {{ session('status') }}
-        </div>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('status') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         @endif
 
         @if($errors->any())
-        <div class="alert alert-danger">
-            <ul class="mb-0">
-                @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <ul class="mb-0">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         @endif
 
         <form action="{{ route('contractors.update') }}" method="POST" enctype="multipart/form-data">
@@ -63,157 +65,86 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Owner Name</label>
-                                <input type="text" class="form-control" name="owner_name" value="{{ old('owner_name', $contractor->owner_name) }}">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Contractor Name</label>
-                                <input type="text" class="form-control" name="contractor_name" value="{{ old('contractor_name', $contractor->contractor_name) }}">
-                            </div>
-                            <div class="mb-3">
-                                <label for="mobile_number">Mobile No. <abbr title="Required">*</abbr></label>
-                                <input type="text" class="form-control" id="mobile_number" value="{{ old('mobile_number') }}" placeholder="eg. 0333-3333333" name="mobile_number" required>
-                                @error('mobile_number')
-                                <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="mb-3">
-                                <label for="cnic">CNIC No <abbr title="Required">*</abbr></label>
-                                <input type="text" class="form-control" id="cnic" value="{{ old('cnic') }}" placeholder="National Identity Card Number" name="cnic" required>
-                                @error('cnic')
-                                <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="email">Email Address <abbr title="Required">*</abbr></label>
-                                <input type="email" class="form-control" id="email" value="{{ old('email') }}" placeholder="eg. aslam@gmail.com" name="email" required>
-                                @error('email')
-                                <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="mb-3">
-                                <label for="district">District <abbr title="Required">*</abbr></label>
-                                <select class="form-select" id="district" name="district" required>
-                                    <option value="">Choose...</option>
-                                    @foreach ($cat['districts'] as $district)
-                                    <option value="{{ $district->name }}">{{ $district->name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('district')
-                                <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="mb-3">
-                                <label for="address">Address (as per PEC) <abbr title="Required">*</abbr></label>
-                                <input type="text" class="form-control" id="address" value="{{ old('address') }}" placeholder="eg. Dir Upper" name="address" required>
-                                @error('address')
-                                <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-header bg-light fw-bold text-uppercase text-center">
-                    Professional Information
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">PEC Number</label>
-                                <input type="text" class="form-control" name="pec_number" value="{{ old('pec_number', $contractor->pec_number) }}">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">PEC Category</label>
-                                <input type="text" class="form-control" name="pec_category" value="{{ old('pec_category', $contractor->pec_category) }}">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Category Applied</label>
-                                <input type="text" class="form-control" name="category_applied" value="{{ old('category_applied', $contractor->category_applied) }}">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="fbr_ntn">FBR Registration No <abbr title="Required">*</abbr></label>
-                                <input type="text" class="form-control" id="fbr_ntn" value="{{ old('fbr_ntn') }}" placeholder="eg. 23523645" name="fbr_ntn" required>
-                                @error('fbr_ntn')
-                                <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="mb-3">
-                                <label for="kpra_reg_no">KIPPRA Registration No <abbr title="Required">*</abbr></label>
-                                <input type="text" class="form-control" id="kpra_reg_no" value="{{ old('kpra_reg_no') }}" placeholder="eg. K753465974-7" name="kpra_reg_no" required>
-                                @error('kpra_reg_no')
-                                <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="mb-3">
-                                <label for="is_limited">Is Limitted <abbr title="Required">*</abbr></label>
-                                <select class="form-select" id="is_limited" name="is_limited" required>
-                                    <option value="">Choose...</option>
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
-                                </select>
-                                @error('is_limited')
-                                <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="pre_enlistment">In Case of already enlisted in following</label>
-                            <select class="form-select" data-placeholder="Choose" id="pre_enlistment" multiple name="pre_enlistment[]">
-                                @foreach ($cat['provincial_entities'] as $entities)
-                                <option value="{{ $entities->name }}">{{ $entities->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('pre_enlistment')
+                        <div class="col-md-4 mb-3">
+                            <label for="name">Name <abbr title="Required">*</abbr></label>
+                            <input type="text" class="form-control" id="name" value="{{ old('name', $contractor->name) }}" placeholder="eg. Aslam Khan" name="name" required>
+                            @error('name')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-header bg-light fw-bold text-uppercase text-center">
-                    Attachments
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Contractor Picture</label>
-                                <input type="file" class="form-control" name="contractor_picture">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">CNIC Front</label>
-                                <input type="file" class="form-control" name="cnic_front_attachment">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">CNIC Back</label>
-                                <input type="file" class="form-control" name="cnic_back_attachment">
-                            </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="email">Email Address <abbr title="Required">*</abbr></label>
+                            <input type="email" class="form-control" id="email" value="{{ old('email', $contractor->email) }}" placeholder="eg. aslam@gmail.com" name="email" required>
+                            @error('email')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">FBR Attachment</label>
-                                <input type="file" class="form-control" name="fbr_attachment">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">KPRA Attachment</label>
-                                <input type="file" class="form-control" name="kpra_attachment">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">PEC Attachment</label>
-                                <input type="file" class="form-control" name="pec_attachment">
-                            </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="firm_name">Firm / Company Name <abbr title="Required">*</abbr></label>
+                            <input type="text" class="form-control" id="firm_name" value="{{ old('firm_name', $contractor->firm_name) }}" placeholder="eg. Aslam Builders" name="firm_name" required>
+                            @error('firm_name')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="mobile_number">Mobile No. <abbr title="Required">*</abbr></label>
+                            <input type="text" class="form-control" id="mobile_number" value="{{ old('mobile_number', $contractor->mobile_number) }}" placeholder="eg. 0333-3333333" name="mobile_number" required>
+                            @error('mobile_number')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="cnic">CNIC No <abbr title="Required">*</abbr></label>
+                            <input type="text" class="form-control" id="cnic" value="{{ old('cnic', $contractor->cnic) }}" placeholder="National Identity Card Number" name="cnic" required>
+                            @error('cnic')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="district">District <abbr title="Required">*</abbr></label>
+                            <select class="form-select" id="district" name="district" required>
+                                <option value="">Choose...</option>
+                                @foreach ($cat['districts'] as $district)
+                                <option value="{{ $district->name }}" {{ $contractor->district == $district->name ? 'selected' : '' }}>{{ $district->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('district')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label for="address">Address (as per PEC) <abbr title="Required">*</abbr></label>
+                            <input type="text" class="form-control" id="address" value="{{ old('address', $contractor->address) }}" placeholder="eg. Dir Upper" name="address" required>
+                            @error('address')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="contractor_picture">Contractor Picture (Picture on Card)</label>
+                            <input type="file" class="form-control" id="contractor_picture" name="contractor_picture">
+                            @error('contractor_picture')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                            <img id="previewContractorPicture" src="#" alt="Contractor Picture Preview" style="display:none; margin-top: 10px; max-height: 100px;">
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="cnic_front">CNIC (Front Side)</label>
+                            <input type="file" class="form-control" id="cnic_front" name="cnic_front">
+                            @error('cnic_front')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                            <img id="previewCnicFront" src="#" alt="CNIC Front Preview" style="display:none; margin-top: 10px; max-height: 100px;">
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="cnic_back">CNIC (Back Side)</label>
+                            <input type="file" class="form-control" id="cnic_back" name="cnic_back">
+                            @error('cnic_back')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                            <img id="previewCnicBack" src="#" alt="CNIC Back Preview" style="display:none; margin-top: 10px; max-height: 100px;">
                         </div>
                     </div>
                 </div>
@@ -231,7 +162,7 @@
     <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            
+
             const formInputs = document.querySelector('main').querySelectorAll(`
                 input:not([type="hidden"]):not([type="submit"]),
                 select,
@@ -244,6 +175,24 @@
                 , aspectRatio: 5 / 6
                 , onComplete() {
                     $("#previewContractorPicture").show();
+                }
+            });
+
+            imageCropper({
+                fileInput: "#cnic_front"
+                , inputLabelPreview: "#previewCnicFront"
+                , aspectRatio: 1.58 / 1
+                , onComplete() {
+                    $("#previewCnicFront").show();
+                }
+            });
+
+            imageCropper({
+                fileInput: "#cnic_back"
+                , inputLabelPreview: "#previewCnicBack"
+                , aspectRatio: 1.58 / 1
+                , onComplete() {
+                    $("#previewCnicBack").show();
                 }
             });
 
@@ -279,7 +228,7 @@
 
             function checkIfEmpty(input) {
                 if (input.type === 'file') {
-                    
+
                     const existingFile = input.closest('.mb-3').querySelector('img, a');
                     return !existingFile;
                 } else if (input.tagName === 'SELECT' && input.multiple) {
@@ -290,7 +239,7 @@
             }
 
             function addWarningLabel(input) {
-                
+
                 const existingLabel = input.parentElement.querySelector('.warning-label');
                 if (existingLabel) {
                     existingLabel.remove();
@@ -341,7 +290,7 @@
                     statusDiv.remove();
                 }
             }
-            
+
             formInputs.forEach(input => {
                 ['change', 'input'].forEach(eventType => {
                     input.addEventListener(eventType, function() {

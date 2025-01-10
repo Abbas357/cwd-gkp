@@ -76,7 +76,7 @@
                     </div>
 
                     <div class="col-12 mb-2">
-                        <label for="password" class="form-label text-secondary">Password</label><span style="font-size:12px; color: #0000ff"> (If don't have password contact C&W IT Cell)</span>
+                        <label for="password" class="form-label text-secondary">Password</label><span style="font-size:12px; color: #0000ff"> (If you forgot your password, please contact C&W IT Cell)</span>
                         <div class="input-group" id="show_hide_password">
                             <input type="password" class="form-control shadow-sm" id="password" placeholder="Enter Password" name="password" required autocomplete="current-password">
                             <button type="button" class="input-group-text bg-white" style="border: 1px solid #999" onclick="togglePasswordVisibility()">

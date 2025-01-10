@@ -22,7 +22,7 @@
         </div>
         @endif
 
-        <form id="workExperienceForm" action="{{ route('contractors.work_experience.store') }}" method="POST" enctype="multipart/form-data">
+        <form id="workExperienceForm" action="{{ route('contractors.experience.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="mb-3">

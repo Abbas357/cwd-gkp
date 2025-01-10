@@ -198,6 +198,7 @@
     line-height: 36px;
     overflow: hidden;
     letter-spacing: 1px;
+    white-space: nowrap;
     outline: none;
     cursor: pointer;
     transition: box-shadow 0.2s;

@@ -25,8 +25,6 @@ class Contractor extends Model implements HasMedia
     {
         return [
             'password' => 'hashed',
-            'card_issue_date' => 'datetime',
-            'card_expiry_date' => 'datetime',
         ];
     }
     
@@ -45,15 +43,8 @@ class Contractor extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('cnic_front_attachments')->singleFile();
-        $this->addMediaCollection('cnic_back_attachments')->singleFile();
-        $this->addMediaCollection('fbr_attachments')->singleFile();
-        $this->addMediaCollection('kpra_attachments')->singleFile();
-        $this->addMediaCollection('pec_attachments')->singleFile();
-        $this->addMediaCollection('form_h_attachments')->singleFile();
-        $this->addMediaCollection('pre_enlistment_attachments')->singleFile();
-        $this->addMediaCollection('pre_enlistment_attachments')->singleFile();
         $this->addMediaCollection('contractor_pictures')->singleFile();
+        $this->addMediaCollection('contractor_cnic')->singleFile();
     }
 
     public function humanResources()
@@ -69,5 +60,10 @@ class Contractor extends Model implements HasMedia
     public function workExperiences()
     {
         return $this->hasMany(ContractorWorkExperience::class, 'contractor_id');
+    }
+
+    public function registrations()
+    {
+        return $this->hasMany(ContractorRegistration::class, 'contractor_id');
     }
 }
