@@ -12,7 +12,7 @@ class ContractorRegistrationController extends Controller
 {
     public function index()
     {
-        
+        //
     }
     
     public function create()
@@ -21,7 +21,7 @@ class ContractorRegistrationController extends Controller
             'contractor_category' => Category::where('type', 'contractor_category')->get(),
             'provincial_entities' => Category::where('type', 'provincial_entity')->get(),
         ];
-        return view('site.contractor_registrations.create', compact('cat'));
+        return view('site.contractors.registration.create', compact('cat'));
     }
 
     public function store(StoreContractorRegistrationRequest $request)
@@ -94,25 +94,5 @@ class ContractorRegistrationController extends Controller
         $pecNumber = $request->input('pec_number');
         $exists = ContractorRegistration::where('pec_number', $pecNumber)->where('status', '!=', 3)->exists();
         return response()->json(['unique' => !$exists]);
-    }
-    
-    public function show(ContractorRegistration $contractorRegistration)
-    {
-        
-    }
-    
-    public function edit(ContractorRegistration $contractorRegistration)
-    {
-        
-    }
-    
-    public function update(Request $request, ContractorRegistration $contractorRegistration)
-    {
-        
-    }
-    
-    public function destroy(ContractorRegistration $contractorRegistration)
-    {
-        
     }
 }
