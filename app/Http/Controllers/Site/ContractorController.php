@@ -20,14 +20,9 @@ use App\Http\Requests\StoreContractorRequest;
 
 class ContractorController extends Controller
 {
-    public function registration()
+    public function register()
     {
-        $cat = [
-            'districts' => District::all(),
-            'contractor_category' => Category::where('type', 'contractor_category')->get(),
-            'provincial_entities' => Category::where('type', 'provincial_entity')->get(),
-        ];
-        return view('site.contractors.registration', compact('cat'));
+        return view('site.contractors.register');
     }
 
     public function store(StoreContractorRequest $request)

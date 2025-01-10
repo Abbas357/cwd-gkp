@@ -45,6 +45,7 @@ Route::prefix('contractors')->as('contractors.')->group(function () {
     Route::middleware([ContractorRedirectIfAuthenticated::class])->group(function () {
         Route::get('/login', [ContractorController::class, 'login_view'])->name('login');
         Route::post('/login', [ContractorController::class, 'login'])->name('login');
+        Route::get('/register', [ContractorController::class, 'register'])->name('register');
     });
 
     Route::middleware(ContractorAuth::class)->group(function () {
