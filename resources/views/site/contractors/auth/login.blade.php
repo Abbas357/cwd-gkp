@@ -65,7 +65,7 @@
                     <span>(If you don't have account please <a class="switch-form-btn" href="{{ route('contractors.register')}}">Register</a> here)</span>
                 </div>
 
-                <form class="row g-3 needs-validation" method="POST" action="{{ route('contractors.login') }}" novalidate>
+                <form class="row g-3" method="POST" action="{{ route('contractors.login') }}">
                     @csrf
                     <div class="col-12">
                         <label for="email" class="form-label text-secondary">Email</label>
@@ -98,16 +98,6 @@
 
     @push('script')
     <script>
-        const forms = document.querySelectorAll('.needs-validation');
-        Array.from(forms).forEach(form => {
-            form.addEventListener('submit', event => {
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-            }, false);
-        });
 
         window.togglePasswordVisibility = function() {
             const passwordField = document.getElementById("password");
@@ -120,54 +110,6 @@
                 toggleIcon.classList.replace("bi-eye-slash-fill", "bi-eye-fill");
             }
         };
-
-        const pecInput = document.getElementById('pec_number');
-        if (pecInput) {
-            pecInput.addEventListener('input', function() {
-                let pecNumber = this.value;
-                let feedbackElement = document.getElementById('pec_number_feedback');
-                let loaderElement = document.getElementById('checking_loader');
-                let submitButton = document.getElementById('submitBtn');
-
-                if (pecNumber) {
-                    loaderElement.style.display = 'block';
-                    feedbackElement.textContent = '';
-                    feedbackElement.classList.remove('text-danger', 'text-success');
-
-                    fetch("{{ route('contractors.checkPEC') }}", {
-                            method: 'POST'
-                            , headers: {
-                                'Content-Type': 'application/json'
-                                , 'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            }
-                            , body: JSON.stringify({
-                                pec_number: pecNumber
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            loaderElement.style.display = 'none';
-                            if (data.unique) {
-                                feedbackElement.textContent = 'PEC Number is available for registration';
-                                feedbackElement.classList.add('text-success');
-                                if (submitButton) submitButton.disabled = false;
-                            } else {
-                                feedbackElement.textContent = 'You have already applied.';
-                                feedbackElement.classList.add('text-danger');
-                                if (submitButton) submitButton.disabled = true;
-                            }
-                        })
-                        .catch(error => {
-                            loaderElement.style.display = 'none';
-                            console.error('Error:', error);
-                        });
-                } else {
-                    feedbackElement.textContent = '';
-                    loaderElement.style.display = 'none';
-                    if (submitButton) submitButton.disabled = false;
-                }
-            });
-        }
 
     </script>
     @endpush

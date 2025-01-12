@@ -104,7 +104,12 @@
         }
     }
 </style>
-
+@php
+    use App\Models\Contractor;
+    $contractorId = session('contractor_id');
+    $contractor = Contractor::find($contractorId);
+    $profilePictureUrl = $contractor?->getFirstMediaUrl('contractor_pictures') ?: asset('site/images/default-dp.png');
+@endphp
 <div class="top-nav-container p-0 mt-1">
     <button class="hamburger" id="hamburgerBtn">
         <span class="hamburger-line"></span>
@@ -161,7 +166,7 @@
         </ul>
         <div class="dropdown account-dropdown">
             <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton">
-                Account
+                {{ $contractor->name }}
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <li>

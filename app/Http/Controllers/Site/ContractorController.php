@@ -72,6 +72,21 @@ class ContractorController extends Controller
         $contractor->mobile_number = $request->input('mobile_number');
         $contractor->password = $request->input('password');
 
+        if ($request->hasFile('contractor_picture')) {
+            $contractor->addMedia($request->file('contractor_picture'))
+                ->toMediaCollection('contractor_pictures');
+        }
+
+        if ($request->hasFile('cnic_front')) {
+            $contractor->addMedia($request->file('cnic_front'))
+                ->toMediaCollection('contractor_cnic_front');
+        }
+
+        if ($request->hasFile('cnic_back')) {
+            $contractor->addMedia($request->file('cnic_back'))
+                ->toMediaCollection('contractor_cnic_back');
+        }
+
         if ($contractor->save()) {
             session(['contractor_id' => $contractor->id]);
             $successMessage = view('site.contractors.partials.success_message', [
@@ -144,11 +159,11 @@ class ContractorController extends Controller
         }
 
         if ($request->hasFile('cnic_front')) {
-            $contractor->addMedia($request->file('cnic_front'))->toMediaCollection('contractor_cnic');
+            $contractor->addMedia($request->file('cnic_front'))->toMediaCollection('contractor_cnic_front');
         }
 
         if ($request->hasFile('cnic_back')) {
-            $contractor->addMedia($request->file('cnic_back'))->toMediaCollection('contractor_cnic');
+            $contractor->addMedia($request->file('cnic_back'))->toMediaCollection('contractor_cnic_back');
         }
         
         return redirect()->route('contractors.edit')
@@ -159,5 +174,31 @@ class ContractorController extends Controller
     {
         $request->session()->forget('contractor_id');
         return redirect()->route('contractors.login')->with('status', 'You have been logged out successfully');
+    }
+
+    public function checkFields(Request $request)
+    {
+        $field = $request->input('field');
+        $value = $request->input('value');
+        $contractorId = session('contractor_id');
+
+        $query = Contractor::query();
+        
+        if ($contractorId) {
+            $query->where('id', '!=', $contractorId);
+        }
+
+        $exists = $query->where($field, $value)->exists();
+
+        $messages = [
+            'email' => 'This email is already registered',
+            'cnic' => 'This CNIC is already registered',
+            'mobile_number' => 'This mobile number is already registered'
+        ];
+
+        return response()->json([
+            'valid' => !$exists,
+            'message' => $exists ? $messages[$field] : ''
+        ]);
     }
 }

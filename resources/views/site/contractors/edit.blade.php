@@ -163,12 +163,6 @@
     <script>
         $(document).ready(function() {
 
-            const formInputs = document.querySelector('main').querySelectorAll(`
-                input:not([type="hidden"]):not([type="submit"]),
-                select,
-                textarea
-            `);
-
             imageCropper({
                 fileInput: "#contractor_picture"
                 , inputLabelPreview: "#previewContractorPicture"
@@ -196,14 +190,6 @@
                 }
             });
 
-            $('#pre_enlistment').select2({
-                theme: "bootstrap-5"
-                , width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style'
-                , placeholder: $(this).data('placeholder')
-                , closeOnSelect: false
-                , dropdownParent: $('#pre_enlistment').parent()
-            , });
-
             $('#district').select2({
                 theme: "bootstrap-5"
                 , placeholder: $(this).data('placeholder')
@@ -218,91 +204,6 @@
                 placeholder: "_____-_______-_"
             });
 
-            formInputs.forEach(input => {
-                const isEmpty = checkIfEmpty(input);
-                if (isEmpty) {
-                    addWarningLabel(input);
-                    updateFieldStatus();
-                }
-            });
-
-            function checkIfEmpty(input) {
-                if (input.type === 'file') {
-
-                    const existingFile = input.closest('.mb-3').querySelector('img, a');
-                    return !existingFile;
-                } else if (input.tagName === 'SELECT' && input.multiple) {
-                    return !input.selectedOptions.length;
-                } else {
-                    return !input.value.trim();
-                }
-            }
-
-            function addWarningLabel(input) {
-
-                const existingLabel = input.parentElement.querySelector('.warning-label');
-                if (existingLabel) {
-                    existingLabel.remove();
-                }
-
-                const label = document.createElement('div');
-                label.className = 'warning-label';
-                label.textContent = 'Required field';
-                label.style.cssText = `
-                    color: #fff;
-                    font-size: 0.8rem;
-                    position: absolute;
-                    right: 0;
-                    top: 5px;
-                    padding: 1px 2px;
-                    border-radius: 3px;
-                    background: orange;
-                `;
-
-                input.parentElement.style.position = 'relative';
-                input.classList.add('border-danger');
-                input.parentElement.appendChild(label);
-            }
-
-            function removeWarningLabel(input) {
-                const warningLabel = input.parentElement.querySelector('.warning-label');
-                if (warningLabel) {
-                    warningLabel.remove();
-                    input.classList.remove('border-danger');
-                }
-            }
-
-            function updateFieldStatus() {
-                const emptyFieldCount = Array.from(formInputs).filter(input => checkIfEmpty(input)).length;
-                const statusDiv = document.querySelector('.alert.alert-warning');
-
-                if (emptyFieldCount > 0) {
-                    if (!statusDiv) {
-                        const newStatusDiv = document.createElement('div');
-                        newStatusDiv.className = 'alert alert-warning mb-4';
-                        newStatusDiv.innerHTML = `<strong>Profile Incomplete:</strong> ${emptyFieldCount} out of ${formInputs.length} fields need to be filled.`;
-                        const form = document.querySelector('main form');
-                        form.parentNode.insertBefore(newStatusDiv, form);
-                    } else {
-                        statusDiv.innerHTML = `<strong>Profile Incomplete:</strong> ${emptyFieldCount} out of ${formInputs.length} fields need to be filled.`;
-                    }
-                } else if (statusDiv) {
-                    statusDiv.remove();
-                }
-            }
-
-            formInputs.forEach(input => {
-                ['change', 'input'].forEach(eventType => {
-                    input.addEventListener(eventType, function() {
-                        if (!checkIfEmpty(input)) {
-                            removeWarningLabel(input);
-                        } else {
-                            addWarningLabel(input);
-                        }
-                        updateFieldStatus();
-                    });
-                });
-            });
         });
 
     </script>

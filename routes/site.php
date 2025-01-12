@@ -43,7 +43,7 @@ Route::prefix('partials')->as('partials.')->group(function () {
 Route::prefix('contractors')->as('contractors.')->group(function () {
     Route::get('/', [ContractorController::class, 'registration'])->name('registration');
     Route::post('/', [ContractorController::class, 'store'])->name('store');
-    Route::post('/check-pec', [ContractorController::class, 'checkPEC'])->name('checkPEC');
+    Route::post('/check', [ContractorController::class, 'checkFields'])->name('check');
     Route::get('/approved/{id}', [ContractorController::class, 'approvedContractors'])->name('approved');
 
     Route::middleware([ContractorRedirectIfAuthenticated::class])->group(function () {
@@ -65,7 +65,12 @@ Route::prefix('contractors')->as('contractors.')->group(function () {
 
         Route::prefix('registration')->as('registration.')->group(function () {
             Route::get('/view', [ContractorRegistrationController::class, 'index'])->name('index');
+            Route::get('/{uuid}/edit', [ContractorRegistrationController::class, 'edit'])->name('edit');
+            Route::patch('/{uuid}', [ContractorRegistrationController::class, 'update'])->name('update');
             Route::get('/apply', [ContractorRegistrationController::class, 'create'])->name('create');
+            Route::post('/', [ContractorRegistrationController::class, 'store'])->name('store');
+            Route::post('/check-pec', [ContractorRegistrationController::class, 'checkPEC'])->name('checkPEC');
+            Route::get('/{uuid}', [ContractorRegistrationController::class, 'show'])->name('show');
         });
 
         Route::prefix('machinery')->as('machinery.')->group(function () {

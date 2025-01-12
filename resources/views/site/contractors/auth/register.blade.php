@@ -1,5 +1,8 @@
 <x-main-layout>
     @push('style')
+    <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
     <style>
         body {
             background-image: url("../site/images/engineering-bg-image.jpg");
@@ -26,12 +29,12 @@
         }
 
         .register-box {
-            width: 700px;
+            width: 800px;
             max-width: 95%;
             margin: 2rem auto;
         }
 
-        .register-box > div {
+        .register-box>div {
             background: rgba(255, 255, 255, 0.98);
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1),
@@ -57,14 +60,14 @@
         </div>
         @endif
 
-        <div class="register-box " >
+        <div class="register-box ">
             <div class="auth-form" id="loginForm">
                 <div class="bg-dark text-white text-center py-4 rounded-top mb-4">
                     <h4 class="fw-bold mb-0">Contractor Registration</h4>
-                    <span>(If you alreadu have an account please <a class="switch-form-btn" href="{{ route('contractors.login')}}">Login</a> here)</span>
+                    <span>(If you already have an account please <a class="switch-form-btn" href="{{ route('contractors.login')}}">Login</a> here)</span>
                 </div>
 
-                <form class="needs-validation" action="{{ route('contractors.store') }}" method="post" novalidate>
+                <form class="needs-validation" action="{{ route('contractors.store') }}" method="post" enctype="multipart/form-data" novalidate>
                     @csrf
                     <div class="row g-3">
                         <div class="col-md-6">
@@ -95,14 +98,6 @@
                             <label for="cnic">CNIC Number <abbr title="Required">*</abbr></label>
                             <input type="text" class="form-control" id="cnic" name="cnic" value="{{ old('cnic') }}" pattern="[0-9]{5}-[0-9]{7}-[0-9]{1}" placeholder="eg. 11111-1111111-1" required>
                             @error('cnic')
-                            <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-12">
-                            <label for="address">Address <abbr title="Required">*</abbr></label>
-                            <input type="text" class="form-control" id="address" value="{{ old('address') }}" placeholder="Address (As per PEC)" name="address" required>
-                            @error('address')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
@@ -141,8 +136,43 @@
                             @endforeach
                         </div>
 
+                        <div class="col-md-12">
+                            <label for="address">Address <abbr title="Required">*</abbr></label>
+                            <input type="text" class="form-control" id="address" value="{{ old('address') }}" placeholder="Address (As per PEC)" name="address" required>
+                            @error('address')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="contractor_picture">Profile Picture (Picture on Card)</label>
+                            <input type="file" class="form-control" id="contractor_picture" name="contractor_picture">
+                            @error('contractor_picture')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                            <img id="previewContractorPicture" src="#" alt="Contractor Picture Preview" style="display:none; margin-top: 10px; max-height: 100px;">
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="cnic_front">CNIC (Front Side)</label>
+                            <input type="file" class="form-control" id="cnic_front" name="cnic_front">
+                            @error('cnic_front')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                            <img id="previewCnicFront" src="#" alt="CNIC Front Preview" style="display:none; margin-top: 10px; max-height: 100px;">
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="cnic_back">CNIC (Back Side)</label>
+                            <input type="file" class="form-control" id="cnic_back" name="cnic_back">
+                            @error('cnic_back')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                            <img id="previewCnicBack" src="#" alt="CNIC Back Preview" style="display:none; margin-top: 10px; max-height: 100px;">
+                        </div>
+
                         <div class="col-12 mt-3">
-                            <x-button type="submit" text="Register" />
+                            <x-button type="submit" id="submitBtn" text="Register" />
                         </div>
                     </div>
                 </form>
@@ -151,77 +181,158 @@
     </div>
 
     @push('script')
+    <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
+    <script src="{{ asset('admin/plugins/jquery-mask/jquery.mask.min.js') }}"></script>
+    <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
     <script>
-        const forms = document.querySelectorAll('.needs-validation');
-        Array.from(forms).forEach(form => {
-            form.addEventListener('submit', event => {
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-            }, false);
-        });
+        $(document).ready(function() {
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
 
-        window.togglePasswordVisibility = function() {
-            const passwordField = document.getElementById("password");
-            const toggleIcon = document.getElementById("togglePasswordIcon");
-            if (passwordField.type === "password") {
-                passwordField.type = "text";
-                toggleIcon.classList.replace("bi-eye-fill", "bi-eye-slash-fill");
-            } else {
-                passwordField.type = "password";
-                toggleIcon.classList.replace("bi-eye-slash-fill", "bi-eye-fill");
-            }
-        };
+            $('#mobile_number').mask('0000-0000000', {
+                placeholder: "____-_______"
+            });
 
-        const pecInput = document.getElementById('pec_number');
-        if (pecInput) {
-            pecInput.addEventListener('input', function() {
-                let pecNumber = this.value;
-                let feedbackElement = document.getElementById('pec_number_feedback');
-                let loaderElement = document.getElementById('checking_loader');
-                let submitButton = document.getElementById('submitBtn');
+            $('#cnic').mask('00000-0000000-0', {
+                placeholder: "_____-_______-_"
+            });
 
-                if (pecNumber) {
-                    loaderElement.style.display = 'block';
-                    feedbackElement.textContent = '';
-                    feedbackElement.classList.remove('text-danger', 'text-success');
-
-                    fetch("{{ route('contractors.checkPEC') }}", {
-                            method: 'POST'
-                            , headers: {
-                                'Content-Type': 'application/json'
-                                , 'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            }
-                            , body: JSON.stringify({
-                                pec_number: pecNumber
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            loaderElement.style.display = 'none';
-                            if (data.unique) {
-                                feedbackElement.textContent = 'PEC Number is available for registration';
-                                feedbackElement.classList.add('text-success');
-                                if (submitButton) submitButton.disabled = false;
-                            } else {
-                                feedbackElement.textContent = 'You have already applied.';
-                                feedbackElement.classList.add('text-danger');
-                                if (submitButton) submitButton.disabled = true;
-                            }
-                        })
-                        .catch(error => {
-                            loaderElement.style.display = 'none';
-                            console.error('Error:', error);
-                        });
-                } else {
-                    feedbackElement.textContent = '';
-                    loaderElement.style.display = 'none';
-                    if (submitButton) submitButton.disabled = false;
+            imageCropper({
+                fileInput: "#contractor_picture"
+                , inputLabelPreview: "#previewContractorPicture"
+                , aspectRatio: 5 / 6
+                , onComplete() {
+                    $("#previewContractorPicture").show();
                 }
             });
-        }
+
+            imageCropper({
+                fileInput: "#cnic_front"
+                , inputLabelPreview: "#previewCnicFront"
+                , aspectRatio: 1.58 / 1
+                , onComplete() {
+                    $("#previewCnicFront").show();
+                }
+            });
+
+            imageCropper({
+                fileInput: "#cnic_back"
+                , inputLabelPreview: "#previewCnicBack"
+                , aspectRatio: 1.58 / 1
+                , onComplete() {
+                    $("#previewCnicBack").show();
+                }
+            });
+
+            window.togglePasswordVisibility = function() {
+                const passwordField = document.getElementById("password");
+                const toggleIcon = document.getElementById("togglePasswordIcon");
+                if (passwordField.type === "password") {
+                    passwordField.type = "text";
+                    toggleIcon.classList.replace("bi-eye-fill", "bi-eye-slash-fill");
+                } else {
+                    passwordField.type = "password";
+                    toggleIcon.classList.replace("bi-eye-slash-fill", "bi-eye-fill");
+                }
+            };
+            
+            // Function to validate field in real-time
+            function validateField(field, value) {
+                const feedbackId = `${field}_feedback`;
+                const inputElement = $(`#${field}`);
+                let submitButton = $('#submitBtn');
+                
+                // Create feedback div if it doesn't exist
+                if (!$(`#${feedbackId}`).length) {
+                    inputElement.after(`<div id="${feedbackId}" class="mt-1"></div>`);
+                }
+                
+                const feedbackElement = $(`#${feedbackId}`);
+                
+                // Show loading spinner
+                feedbackElement.html('<div class="spinner-border spinner-border-sm text-info" role="status"></div>');
+                
+                // Make AJAX request
+                $.ajax({
+                    url: '{{ route("contractors.check") }}',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        field: field,
+                        value: value
+                    },
+                    success: function(response) {
+                        if (response.valid) {
+                            inputElement.removeClass('border-danger');
+                            feedbackElement.removeClass('text-danger').addClass('text-success');
+                            feedbackElement.html('<i class="fas fa-check"></i> Available');
+                            submitButton.prop('disabled', false);
+                        } else {
+                            inputElement.addClass('border-danger');
+                            feedbackElement.removeClass('text-success').addClass('text-danger');
+                            feedbackElement.html(`<i class="fas fa-times"></i> ${response.message}`);
+                            submitButton.prop('disabled', true);
+                        }
+                    },
+                    error: function() {
+                        feedbackElement.html('<span class="text-danger">Error checking availability</span>');
+                    }
+                });
+            }
+
+            // Debounce function to limit API calls
+            function debounce(func, wait) {
+                let timeout;
+                return function(...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), wait);
+                };
+            }
+
+            // Add event listeners for each field
+            const debouncedValidate = debounce(validateField, 500);
+
+            $('#email').on('input', function() {
+                const value = $(this).val();
+                if (value.length > 3) {
+                    debouncedValidate('email', value);
+                }
+            });
+
+            $('#cnic').on('input', function() {
+                const value = $(this).val();
+                if (value.length > 5) {
+                    debouncedValidate('cnic', value);
+                }
+            });
+
+            $('#mobile_number').on('input', function() {
+                const value = $(this).val();
+                if (value.length > 5) {
+                    debouncedValidate('mobile_number', value);
+                }
+            });
+
+            // Form submission validation
+            $('form').on('submit', function(e) {
+                const invalidFields = $('.border-danger').length;
+                if (invalidFields > 0) {
+                    e.preventDefault();
+                    alert('Please fix the highlighted errors before submitting');
+                }
+            });
+
+        });
+            
+
     </script>
     @endpush
 </x-main-layout>

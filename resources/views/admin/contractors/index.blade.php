@@ -222,13 +222,13 @@
                         status: 'new'
                     }
                     , '#deferred1': {
-                        status: 'deffered_one'
+                        status: 'deffered_once'
                     }
                     , '#deferred2': {
-                        status: 'deffered_two'
+                        status: 'deffered_twice'
                     }
                     , '#deferred3': {
-                        status: 'deffered_three'
+                        status: 'deffered_thrice'
                     }
                     , '#approved': {
                         status: 'approved'

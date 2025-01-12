@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Spatie\MediaLibrary\HasMedia;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class ContractorRegistration extends Model
+class ContractorRegistration extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, LogsActivity;
 
@@ -41,7 +42,6 @@ class ContractorRegistration extends Model
         $this->addMediaCollection('kpra_attachments')->singleFile();
         $this->addMediaCollection('pec_attachments')->singleFile();
         $this->addMediaCollection('form_h_attachments')->singleFile();
-        $this->addMediaCollection('pre_enlistment_attachments')->singleFile();
         $this->addMediaCollection('pre_enlistment_attachments')->singleFile();
     }
 

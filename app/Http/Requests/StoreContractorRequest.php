@@ -22,6 +22,9 @@ class StoreContractorRequest extends FormRequest
             'district' => 'required',
             'mobile_number' => 'required|max:15',
             'password' => 'required|max:100',
+            'contractor_picture' => 'required|file|max:2048',
+            'cnic_front' => 'required|file|max:2048',
+            'cnic_back' => 'required|file|max:2048',
         ];
     }
 }

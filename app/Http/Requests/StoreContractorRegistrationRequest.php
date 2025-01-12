@@ -23,9 +23,6 @@ class StoreContractorRegistrationRequest extends FormRequest
             'pre_enlistment.*' => 'string|max:255',
             'is_limited' => 'required|in:Yes,No',
             
-            'contractor_picture' => 'nullable|file|mimes:jpg,jpeg,png|max:5000',
-            'cnic_front_attachment' => 'nullable|file|mimes:jpg,jpeg,png|max:5000',
-            'cnic_back_attachment' => 'nullable|file|mimes:jpg,jpeg,png|max:5000',
             'fbr_attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5000',
             'kpra_attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5000',
             'pec_attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5000',

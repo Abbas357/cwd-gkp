@@ -81,31 +81,31 @@
 
                 <div class="row mt-4">
                     <div class="col-md-4">
-                        @if($contractor->contractor_picture)
+                        @if($contractor->hasMedia('contractor_pictures'))
                             <div class="info-group">
-                                <div class="info-label">Contractor Picture</div>
+                                <div class="info-label">Profile Picture</div>
                                 <div class="info-value">
-                                    <img src="{{ asset($contractor->contractor_picture) }}" alt="Contractor Picture" class="img-thumbnail" style="max-height: 100px;">
+                                    <img src="{{ $contractor->getFirstMediaUrl('contractor_pictures') }}" alt="Contractor Picture" class="img-thumbnail" style="max-height: 100px;">
                                 </div>
                             </div>
                         @endif
                     </div>
                     <div class="col-md-4">
-                        @if($contractor->cnic_front)
+                        @if($contractor->hasMedia('contractor_cnic_front'))
                             <div class="info-group">
                                 <div class="info-label">CNIC (Front Side)</div>
                                 <div class="info-value">
-                                    <img src="{{ asset($contractor->cnic_front) }}" alt="CNIC Front" class="img-thumbnail" style="max-height: 100px;">
+                                    <img src="{{ $contractor->getFirstMediaUrl('contractor_cnic_front') }}" alt="CNIC Front" class="img-thumbnail" style="max-height: 100px;">
                                 </div>
                             </div>
                         @endif
                     </div>
                     <div class="col-md-4">
-                        @if($contractor->cnic_back)
+                        @if($contractor->hasMedia('contractor_cnic_back'))
                             <div class="info-group">
                                 <div class="info-label">CNIC (Back Side)</div>
                                 <div class="info-value">
-                                    <img src="{{ asset($contractor->cnic_back) }}" alt="CNIC Back" class="img-thumbnail" style="max-height: 100px;">
+                                    <img src="{{ $contractor->getFirstMediaUrl('contractor_cnic_back') }}" alt="CNIC Back" class="img-thumbnail" style="max-height: 100px;">
                                 </div>
                             </div>
                         @endif

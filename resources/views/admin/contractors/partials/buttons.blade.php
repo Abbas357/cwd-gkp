@@ -4,7 +4,7 @@
 
 <div class="action-btns">
     <i class="view-btn bi-eye bg-light text-primary" title="View" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
-    @if (!in_array($status, ['deffered_three', 'approved']))
+    @if (!in_array($status, ['deffered_thrice', 'approved']))
         <i class="approve-btn bg-light text-success bi-check2-circle" title="Approve" data-bs-toggle="tooltip" data-id="{{ $row->id }}">
         </i>
         <i class="defer-btn bg-light text-danger bi-ban" title="Defer" data-bs-toggle="tooltip" data-id="{{ $row->id }}">

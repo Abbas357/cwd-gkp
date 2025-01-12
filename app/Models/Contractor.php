@@ -44,7 +44,8 @@ class Contractor extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('contractor_pictures')->singleFile();
-        $this->addMediaCollection('contractor_cnic')->singleFile();
+        $this->addMediaCollection('contractor_cnic_front')->singleFile();
+        $this->addMediaCollection('contractor_cnic_back')->singleFile();
     }
 
     public function humanResources()

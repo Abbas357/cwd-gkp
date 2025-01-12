@@ -26,13 +26,13 @@ class ContractorRegistrationController extends Controller
     {
         $ContractorRegistration->deffered_reason = $request->reason;
         if ($ContractorRegistration->status == "fresh") {
-            $ContractorRegistration->status = "deffered_one";
+            $ContractorRegistration->status = "deffered_once";
             // Mail::to($ContractorRegistration->email)->queue(new DeferredFirstMail($ContractorRegistration, $request->reason));
-        } elseif ($ContractorRegistration->status == "deffered_one") {
-            $ContractorRegistration->status = "deffered_two";
+        } elseif ($ContractorRegistration->status == "deffered_once") {
+            $ContractorRegistration->status = "deffered_twice";
             // Mail::to($ContractorRegistration->email)->queue(new DeferredSecondMail($ContractorRegistration, $request->reason));
-        } elseif ($ContractorRegistration->status == "deffered_two") {
-            $ContractorRegistration->status = "deffered_three";;
+        } elseif ($ContractorRegistration->status == "deffered_twice") {
+            $ContractorRegistration->status = "deffered_thrice";;
             // Mail::to($ContractorRegistration->email)->queue(new DeferredThirdMail($ContractorRegistration, $request->reason));
         }
         if($ContractorRegistration->save()) {
@@ -44,7 +44,7 @@ class ContractorRegistrationController extends Controller
 
     public function approve(Request $request, ContractorRegistration $ContractorRegistration)
     {
-        if (!in_array($ContractorRegistration->status, ["deffered_three", 'approved'])) {
+        if (!in_array($ContractorRegistration->status, ["deffered_thrice", 'approved'])) {
             $ContractorRegistration->status = 'approved';
             $ContractorRegistration->card_issue_date = Carbon::now();
             $ContractorRegistration->card_expiry_date = Carbon::now()->addYears(1);

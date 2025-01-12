@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Category;
+use Illuminate\Support\Str;
+
 use Illuminate\Http\Request;
-
 use Yajra\DataTables\DataTables;
-use Spatie\Permission\Models\Role;
 
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\StoreUserRequest;
@@ -116,6 +117,7 @@ class UserController extends Controller
         $user->facebook = $request->facebook ?? null;
         $user->whatsapp = $request->whatsapp ?? null;
         $user->twitter = $request->twitter ?? null;
+        $user->uuid = Str::uuid();
 
         if ($request->hasFile('image')) {
             $user->addMedia($request->file('image'))
