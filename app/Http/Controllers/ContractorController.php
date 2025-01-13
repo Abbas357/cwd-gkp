@@ -1,25 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Carbon\Carbon;
-
-use App\Models\Category;
-use App\Models\District;
 use Illuminate\Http\Request;
 
 use Yajra\DataTables\DataTables;
-use Endroid\QrCode\Builder\Builder;
-use Endroid\QrCode\Writer\PngWriter;
-use Illuminate\Support\Facades\Mail;
-
-use Endroid\QrCode\Encoding\Encoding;
 use App\Models\Contractor;
-use App\Mail\Contractor\RenewedMail;
-use App\Mail\Contractor\ApprovedMail;
-use App\Mail\Contractor\DeferredFirstMail;
-use App\Mail\Contractor\DeferredThirdMail;
-use App\Mail\Contractor\DeferredSecondMail;
 
 class ContractorController extends Controller
 {

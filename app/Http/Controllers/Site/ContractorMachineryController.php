@@ -38,13 +38,13 @@ class ContractorMachineryController extends Controller
 
         if ($machinery_docs) {
             foreach ($machinery_docs as $doc) {
-                $machinery->addMedia($doc)->toMediaCollection('events_pictures');
+                $machinery->addMedia($doc)->toMediaCollection('contractor_machinery_docs');
             }
         }
 
         if ($machinery_pictures) {
             foreach ($machinery_pictures as $picture) {
-                $machinery->addMedia($picture)->toMediaCollection('events_pictures');
+                $machinery->addMedia($picture)->toMediaCollection('contractor_machinery_pics');
             }
         }
 

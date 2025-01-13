@@ -22,7 +22,8 @@ class ContractorMachinery extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('contractor_machinery')->singleFile();
+        $this->addMediaCollection('contractor_machinery_docs');
+        $this->addMediaCollection('contractor_machinery_pics');
     }
 
     public function contractor()

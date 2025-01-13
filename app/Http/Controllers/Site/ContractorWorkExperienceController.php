@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\Site;
 
-use App\Models\Contractor;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\ContractorWorkExperience;
 
 class ContractorWorkExperienceController extends Controller
 {
@@ -17,50 +15,34 @@ class ContractorWorkExperienceController extends Controller
 
     public function store(Request $request)
     {
-        $contractor = Contractor::findOrFail(session('contractor_id'));
-
         $request->validate([
-            'experience_docs' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
-            'experiences.*.adp_number' => 'required|string|max:50',
-            'experiences.*.project_name' => 'required|string|max:255',
-            'experiences.*.project_cost' => 'required|numeric',
-            'experiences.*.commencement_date' => 'required|date',
-            'experiences.*.completion_date' => 'required|date',
-            'experiences.*.status' => 'nullable|in:completed,ongoing',
-            'experiences.*.work_order' => 'nullable|file|mimes:pdf,doc,docx|max:2048'
+            'adp_number' => 'required|string|max:255',
+            'project_name' => 'required|string|max:50',
+            'project_cost' => 'nullable|string|max:100',
+            'commencement_date' => 'required|date|max:50',
+            'completion_date' => 'nullable|date|max:50',
+            'status' => 'nullable',
+            'work_order' => 'nullable|file|mimes:pdf,doc,docx,jpg,png,gif|max:2048',
         ]);
 
-        try {
-            DB::beginTransaction();
+        $experince = new ContractorWorkExperience();
+        $experince->adp_number = $request->adp_number;
+        $experince->project_name = $request->project_name;
+        $experince->project_cost = $request->project_cost;
+        $experince->commencement_date = $request->commencement_date;
+        $experince->completion_date = $request->completion_date;
+        $experince->status = $request->status;
+        $experince->contractor_id = session('contractor_id');
 
-            foreach ($request->experiences as $experience) {
-                $workExperience = $contractor->workExperiences()->create([
-                    'adp_number' => $experience['adp_number'],
-                    'project_name' => $experience['project_name'],
-                    'project_cost' => $experience['project_cost'],
-                    'commencement_date' => $experience['commencement_date'],
-                    'completion_date' => $experience['completion_date'],
-                    'status' => $experience['status'] ?? null
-                ]);
-
-                if ($request->hasFile('experience_docs')) {
-                    $workExperience->addMedia($request->file('experience_docs'))
-                        ->toMediaCollection('experience_documents');
-                }
-
-                if (isset($experience['work_order']) && $experience['work_order'] instanceof UploadedFile) {
-                    $workExperience->addMedia($experience['work_order'])
-                        ->toMediaCollection('work_orders');
-                }
-            }
-
-            DB::commit();
-            return redirect()->back()->with('status', 'Work experience saved successfully!');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()
-                ->withErrors(['error' => 'An error occurred while saving the work experience.'])
-                ->withInput();
+        if ($request->hasFile('work_order')) {
+            $experince->addMedia($request->file('work_order'))
+                ->toMediaCollection('contractor_work_orders');
         }
+
+        if ($experince->save()) {
+            return redirect()->back()->with('success', 'Work Experience saved successfully!');
+        }
+
+        return redirect()->back()->with(['error' => 'An error occurred while saving the work experince.']);
     }
 }

@@ -23,7 +23,7 @@ class ContractorWorkExperience extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('contractor_work_experiences')->singleFile();
+        $this->addMediaCollection('contractor_work_orders')->singleFile();
     }
 
     public function contractor()

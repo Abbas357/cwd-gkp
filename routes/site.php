@@ -44,7 +44,7 @@ Route::prefix('contractors')->as('contractors.')->group(function () {
     Route::get('/', [ContractorController::class, 'registration'])->name('registration');
     Route::post('/', [ContractorController::class, 'store'])->name('store');
     Route::post('/check', [ContractorController::class, 'checkFields'])->name('check');
-    Route::get('/approved/{id}', [ContractorController::class, 'approvedContractors'])->name('approved');
+    Route::get('/approved/{id}', [ContractorRegistrationController::class, 'approvedContractors'])->name('approved');
 
     Route::middleware([ContractorRedirectIfAuthenticated::class])->group(function () {
         Route::get('/login', [ContractorController::class, 'view_login'])->name('login');

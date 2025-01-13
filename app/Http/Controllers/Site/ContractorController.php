@@ -4,14 +4,16 @@ namespace App\Http\Controllers\Site;
 
 use App\Models\District;
 
-use Illuminate\Http\Request;
+use App\Models\Contractor;
 
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Mail\Contractor\AppliedMail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Models\Contractor;
-use App\Mail\Contractor\AppliedMail;
 use App\Http\Requests\StoreContractorRequest;
+use App\Models\ContractorRegistration;
 
 class ContractorController extends Controller
 {
@@ -63,6 +65,7 @@ class ContractorController extends Controller
     public function store(StoreContractorRequest $request)
     {
         $contractor = new Contractor();
+        $contractor->uuid = Str::uuid();
         $contractor->name = $request->input('name');
         $contractor->firm_name = $request->input('firm_name');
         $contractor->email = $request->input('email');
@@ -89,12 +92,7 @@ class ContractorController extends Controller
 
         if ($contractor->save()) {
             session(['contractor_id' => $contractor->id]);
-            $successMessage = view('site.contractors.partials.success_message', [
-                'email' => $contractor->email,
-                'password' => $request->input('password'),
-            ])->render();
-
-            return redirect()->route('contractors.dashboard')->with('success', $successMessage);
+            return redirect()->route('contractors.dashboard')->with('success', 'Congratulation! Account successfully created. Please use this portal for managing your registration.');
         }
 
         return redirect()->route('contractors.login')->with('error', 'There is an error submitting your data');
@@ -121,12 +119,6 @@ class ContractorController extends Controller
         $contractor->save();
 
         return back()->with('status', 'Password updated successfully.');
-    }
-
-    public function approvedContractors(Request $request, $id)
-    {
-        $contractor = Contractor::find($id);
-        return view('site.contractors.approved', compact('contractor'));
     }
 
     public function edit()

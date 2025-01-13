@@ -261,10 +261,8 @@
                 const alertElement = $('#pec-validation-message');
                 const messageElement = $('#pec-message-text');
 
-                // Remove existing color classes
                 alertElement.removeClass('alert-success alert-warning alert-danger');
 
-                // Add appropriate color class
                 switch (type) {
                     case 'success':
                         alertElement.addClass('alert-success');
@@ -316,7 +314,6 @@
                     });
             }
 
-            // Event Listeners
             $('#pec_number').on('input', function() {
                 updateFormState('pecNumber', $(this).val());
             });
@@ -329,7 +326,6 @@
                 updateFormState('pecCategory', $(this).val());
             });
 
-            // Form submission validation
             $('.registration-form').on('submit', function(e) {
                 if (!formState.isValid) {
                     e.preventDefault();

@@ -19,13 +19,72 @@ use App\Mail\Contractor\DeferredFirstMail;
 use App\Mail\Contractor\DeferredThirdMail;
 use App\Mail\Contractor\DeferredSecondMail;
 use App\Http\Requests\StoreContractorRegistrationRequest;
+use Yajra\DataTables\DataTables;
 
 class ContractorRegistrationController extends Controller
 {
+    public function index(Request $request)
+    {
+        $status = $request->query('status', null);
+
+        $registrations = ContractorRegistration::query();
+
+        $registrations->when($status !== null, function ($query) use ($status) {
+            $query->where('status', $status);
+        });
+
+        if ($request->ajax()) {
+            $dataTable = Datatables::of($registrations)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    return view('admin.contractors.registration.partials.buttons', compact('row'))->render();
+                })
+                ->addColumn('name', function ($row) {
+                    return $row->contractor->name;
+                })
+                ->addColumn('firm_name', function ($row) {
+                    return $row->contractor->firm_name;
+                })
+                ->addColumn('email', function ($row) {
+                    return $row->contractor->email;
+                })
+                ->addColumn('mobile_number', function ($row) {
+                    return $row->contractor->mobile_number;
+                })
+                ->addColumn('cnic', function ($row) {
+                    return $row->contractor->cnic;
+                })
+                ->addColumn('district', function ($row) {
+                    return $row->contractor->district;
+                })
+                ->addColumn('address', function ($row) {
+                    return $row->contractor->address;
+                })
+                ->editColumn('created_at', function ($row) {
+                    return $row->created_at?->format('j, F Y');
+                })
+                ->editColumn('updated_at', function ($row) {
+                    return $row->updated_at->diffForHumans();
+                })
+                ->rawColumns(['action']);
+
+            if (!$request->input('search.value') && $request->has('searchBuilder')) {
+                $dataTable->filter(function ($query) use ($request) {
+                    $sb = new \App\Helpers\SearchBuilder($request, $query);
+                    $sb->build();
+                });
+            }
+
+            return $dataTable->toJson();
+        }
+
+        return view('admin.contractors.registration.index');
+    }
+
     public function defer(Request $request, ContractorRegistration $ContractorRegistration)
     {
         $ContractorRegistration->deffered_reason = $request->reason;
-        if ($ContractorRegistration->status == "fresh") {
+        if ($ContractorRegistration->status == "new") {
             $ContractorRegistration->status = "deffered_once";
             // Mail::to($ContractorRegistration->email)->queue(new DeferredFirstMail($ContractorRegistration, $request->reason));
         } elseif ($ContractorRegistration->status == "deffered_once") {
@@ -103,7 +162,7 @@ class ContractorRegistrationController extends Controller
                 ],
             ]);
         }
-        $html = view('admin.contractors.registrations.partials.detail', compact('Contractor', 'cat'))->render();
+        $html = view('admin.contractors.registration.registrations.partials.detail', compact('Contractor', 'cat'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -118,7 +177,7 @@ class ContractorRegistrationController extends Controller
             return response()->json([
                 'success' => false,
                 'data' => [
-                    'result' => 'Contractor is not verified',
+                    'result' => 'Contractor is not approved',
                 ],
             ]);
         }
@@ -133,7 +192,7 @@ class ContractorRegistrationController extends Controller
 
         $qrCodeUri = $qrCode->getDataUri();
 
-        $html = view('admin.contractors.registrations.partials.card', compact('Contractor', 'qrCodeUri'))->render();
+        $html = view('admin.contractors.registration.partials.card', compact('ContractorRegistration', 'qrCodeUri'))->render();
         return response()->json([
             'success' => true,
             'data' => [

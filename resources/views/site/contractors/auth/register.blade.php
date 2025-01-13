@@ -238,23 +238,19 @@
                 }
             };
             
-            // Function to validate field in real-time
             function validateField(field, value) {
                 const feedbackId = `${field}_feedback`;
                 const inputElement = $(`#${field}`);
                 let submitButton = $('#submitBtn');
                 
-                // Create feedback div if it doesn't exist
                 if (!$(`#${feedbackId}`).length) {
                     inputElement.after(`<div id="${feedbackId}" class="mt-1"></div>`);
                 }
                 
                 const feedbackElement = $(`#${feedbackId}`);
                 
-                // Show loading spinner
                 feedbackElement.html('<div class="spinner-border spinner-border-sm text-info" role="status"></div>');
                 
-                // Make AJAX request
                 $.ajax({
                     url: '{{ route("contractors.check") }}',
                     method: 'POST',

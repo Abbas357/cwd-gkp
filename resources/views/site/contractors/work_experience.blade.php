@@ -61,7 +61,7 @@
                                 <option value="">Choose...</option>
                                 <option value="completed">Completed</option>
                                 <option value="ongoing">Ongoing</option>
-                                <option value="onhold">Ohhold</option>
+                                <option value="onhold">Onhold</option>
                             </select>
                             @error('status')
                             <div class="text-danger">{{ $message }}</div>

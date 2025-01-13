@@ -217,17 +217,17 @@
         </div>
 
         <div class="header-right">
-            <span class="expires">EXPIRES: {{ $Contractor->card_expiry_date->format('j, M Y'); }}</span>
+            <span class="expires">EXPIRES: {{ $ContractorRegistration->card_expiry_date->format('j, M Y'); }}</span>
         </div>
 
         <div class="image">
-            <img src="{{ $Contractor->getFirstMediaUrl('contractor_pictures') ?: asset('admin/images/no-profile.png') }}" alt="{{ $Contractor->contractor_name }}">
+            <img src="{{ $ContractorRegistration->contractor->getFirstMediaUrl('contractor_pictures') ?: asset('admin/images/no-profile.png') }}" alt="{{ $ContractorRegistration->contractor->firm_name }}">
         </div>
 
         <div class="main">
-            <h1>{{ $Contractor->contractor_name }}</h1>
-            <h2> {{ $Contractor->applied_category }} / {{ $Contractor->pec_number }}</h2>
-            <h3> Name: {{ $Contractor->owner_name }}</h3>
+            <h1>{{ $ContractorRegistration->contractor->firm_name }}</h1>
+            <h2> {{ $ContractorRegistration->applied_category }} / {{ $ContractorRegistration->pec_number }}</h2>
+            <h3> Name: {{ $ContractorRegistration->contractor->name }}</h3>
         </div>
 
         <div class="footer">
@@ -259,39 +259,39 @@
                 <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="fw-bold">CNIC: &emsp;</div>
-                        <div>{{ $Contractor->cnic }}</div>
+                        <div>{{ $ContractorRegistration->contractor->cnic }}</div>
                     </div>
                     <div class="d-flex justify-content-between align-items-center ml-auto">
                         <div class="fw-bold">Issue Date: &emsp;</div>
-                        <div>{{ $Contractor->card_issue_date->format('d/m/Y') }}</div>
+                        <div>{{ $ContractorRegistration->card_issue_date->format('d/m/Y') }}</div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
                     <div class="d-flex justify-content-around align-items-center">
                         <div class="fw-bold">District: &emsp;</div>
-                        <div>{{ $Contractor->district }}</div>
+                        <div>{{ $ContractorRegistration->contractor->district }}</div>
                     </div>
                     <div class="d-flex justify-content-around align-items-center ml-auto">
                         <div class="fw-bold">Registration No: &emsp;</div>
-                        <div>{{ $Contractor->reg_no }}</div>
+                        <div>{{ $ContractorRegistration->contractor->reg_no }}</div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
                     <div class="d-flex justify-content-around align-items-center">
                         <div class="fw-bold">Email: &emsp;</div>
-                        <div style="overflow: hidden; text-overflow: ellipsis;">{{ $Contractor->email }}</div>
+                        <div style="overflow: hidden; text-overflow: ellipsis;">{{ $ContractorRegistration->contractor->email }}</div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
                     <div class="d-flex justify-content-around align-items-center">
                         <div class="fw-bold">Mobile Number: &emsp;</div>
-                        <div style="overflow: hidden; text-overflow: ellipsis;">{{ $Contractor->mobile_number }}</div>
+                        <div style="overflow: hidden; text-overflow: ellipsis;">{{ $ContractorRegistration->contractor->mobile_number }}</div>
                     </div>
                 </div>
                 
                 <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
                     <div class="fw-bold">Address: &emsp;</div>
-                    <div style="overflow: hidden; text-overflow: ellipsis;">{{ $Contractor->address }}</div>
+                    <div style="overflow: hidden; text-overflow: ellipsis;">{{ $ContractorRegistration->contractor->address }}</div>
                 </div>
             </div>
             

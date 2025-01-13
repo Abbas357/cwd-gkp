@@ -223,6 +223,12 @@ class ContractorRegistrationController extends Controller
         }
     }
 
+    public function approvedContractors(Request $request, $uuid)
+    {
+        $ContractorRegistration = ContractorRegistration::where('uuid', $uuid)->first();
+        return view('site.contractors.approved', compact('ContractorRegistration'));
+    }
+
     public function checkPEC(Request $request)
     {
         $pecNumber = $request->input('pec_number');
