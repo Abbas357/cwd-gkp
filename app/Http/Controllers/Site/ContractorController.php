@@ -165,7 +165,7 @@ class ContractorController extends Controller
     public function logout(Request $request)
     {
         $request->session()->forget('contractor_id');
-        return redirect()->route('contractors.login')->with('status', 'You have been logged out successfully');
+        return redirect()->route('contractors.login.get')->with('status', 'You have been logged out successfully');
     }
 
     public function checkFields(Request $request)

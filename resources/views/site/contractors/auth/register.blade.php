@@ -58,7 +58,7 @@
             <div class="auth-form" id="loginForm">
                 <div class="bg-dark text-white text-center py-4 rounded-top mb-4">
                     <h4 class="fw-bold mb-0">Contractor Registration</h4>
-                    <span>(If you already have an account please <a class="switch-form-btn" href="{{ route('contractors.login')}}">Login</a> here)</span>
+                    <span>(If you already have an account please <a class="switch-form-btn" href="{{ route('contractors.login.post')}}">Login</a> here)</span>
                 </div>
 
                 <form class="needs-validation" action="{{ route('contractors.store') }}" method="post" enctype="multipart/form-data" novalidate>

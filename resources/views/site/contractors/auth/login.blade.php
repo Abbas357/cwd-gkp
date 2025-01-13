@@ -59,7 +59,7 @@
                     <span>(If you don't have account please <a class="switch-form-btn" href="{{ route('contractors.register')}}">Register</a> here)</span>
                 </div>
 
-                <form class="row g-3" method="POST" action="{{ route('contractors.login') }}">
+                <form class="row g-3" method="POST" action="{{ route('contractors.login.post') }}">
                     @csrf
                     <div class="col-12">
                         <label for="email" class="form-label text-secondary">Email</label>
