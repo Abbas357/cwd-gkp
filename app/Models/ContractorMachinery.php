@@ -4,15 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ContractorMachinery extends Model
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+
+class ContractorMachinery extends Model implements HasMedia
 {
+    use InteractsWithMedia;
+    
     protected $table = 'contractor_machinery';
 
     protected $fillable = [
         'name',
         'number',
         'model',
-        'registration'
+        'registration',
     ];
 
     public function registerMediaCollections(): void

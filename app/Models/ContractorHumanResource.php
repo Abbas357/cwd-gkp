@@ -4,22 +4,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ContractorHumanResource extends Model
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+
+class ContractorHumanResource extends Model implements HasMedia
 {
+    use InteractsWithMedia;
+
     protected $table = 'contractor_human_resources';
 
     protected $fillable = [
         'name',
-        'cnic',
+        'cnic_number',
         'pec_number',
         'designation',
+        'start_date',
+        'end_date',
         'salary',
-        'joining_date',
     ];
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('contractor_human_resources')->singleFile();
+        $this->addMediaCollection('contractor_hr_resumes')->singleFile();
     }
 
     public function contractor()

@@ -6,6 +6,7 @@ use App\Models\Contractor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\ContractorMachinery;
 
 class ContractorMachineryController extends Controller
 {
@@ -16,41 +17,41 @@ class ContractorMachineryController extends Controller
 
     public function store(Request $request)
     {
-        $contractor = Contractor::findOrFail(session('contractor_id'));
-
         $request->validate([
-            'machinery_docs' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
-            'machinery.*.name' => 'required|string|max:255',
-            'machinery.*.number' => 'required|string|max:50',
-            'machinery.*.model' => 'nullable|string|max:100',
-            'machinery.*.registration' => 'nullable|string|max:50'
+            'name' => 'required|string|max:255',
+            'number' => 'required|string|max:50',
+            'model' => 'nullable|string|max:100',
+            'registration' => 'nullable|string|max:50',
+            'machinery_docs.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,png,gif|max:2048',
+            'machinery_pictures.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,png,gif|max:2048',
         ]);
 
-        try {
-            DB::beginTransaction();
+        $machinery = new ContractorMachinery();
+        $machinery->name = $request->name;
+        $machinery->number = $request->number;
+        $machinery->model = $request->model;
+        $machinery->registration = $request->registration;
+        $machinery->contractor_id = session('contractor_id');
 
-            foreach ($request->machinery as $machine) {
-                $machinery = $contractor->machinery()->create([
-                    'name' => $machine['name'],
-                    'number' => $machine['number'],
-                    'model' => $machine['model'] ?? null,
-                    'registration' => $machine['registration'] ?? null
-                ]);
+        $machinery_docs = $request->file('machinery_docs');
+        $machinery_pictures = $request->file('machinery_pictures');
 
-                if ($request->hasFile('machinery_docs')) {
-                    $machinery->addMedia($request->file('machinery_docs'))
-                        ->toMediaCollection('machinery_documents');
-                }
+        if ($machinery_docs) {
+            foreach ($machinery_docs as $doc) {
+                $machinery->addMedia($doc)->toMediaCollection('events_pictures');
             }
-
-            DB::commit();
-            return redirect()->route('contractors.work_experience.create')
-                ->with('status', 'Machinery details saved successfully!');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()
-                ->withErrors(['error' => 'An error occurred while saving the machinery details.'])
-                ->withInput();
         }
+
+        if ($machinery_pictures) {
+            foreach ($machinery_pictures as $picture) {
+                $machinery->addMedia($picture)->toMediaCollection('events_pictures');
+            }
+        }
+
+        if ($machinery->save()) {
+            return redirect()->back()->with('success', 'Machinery details saved successfully!');
+        }
+
+        return redirect()->back()->with(['error' => 'An error occurred while saving the machinery details.']);
     }
 }

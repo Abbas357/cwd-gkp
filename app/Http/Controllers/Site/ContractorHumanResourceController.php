@@ -6,6 +6,8 @@ use App\Models\Contractor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\ContractorHumanResource;
+use App\Models\ContractorRegistration;
 
 class ContractorHumanResourceController extends Controller
 {
@@ -16,46 +18,42 @@ class ContractorHumanResourceController extends Controller
 
     public function store(Request $request)
     {
-        $contractor = Contractor::findOrFail(session('contractor_id'));
-
         $request->validate([
-            'hr_profile' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
-            'profiles.*.name' => 'required|string|max:255',
-            'profiles.*.cnic_number' => 'required|string|max:15',
-            'profiles.*.pec_number' => 'required|string|max:50',
-            'profiles.*.designation' => 'nullable|string|max:100',
-            'profiles.*.start_date' => 'nullable|date',
-            'profiles.*.end_date' => 'nullable|date',
-            'profiles.*.salary' => 'nullable|numeric'
+            'name' => 'required|string|max:255',
+            'father_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'mobile_number' => 'required|string|max:255',
+            'cnic_number' => 'required|string|max:15',
+            'pec_number' => 'required|string|max:50',
+            'designation' => 'required|string|max:100',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'salary' => 'required|numeric',
+            'resume' => 'nullable|file|mimes:jpg,png,gif,pdf,doc,docx|max:2048'
         ]);
 
-        try {
-            DB::beginTransaction();
+        $hr = new ContractorHumanResource();
+        $hr->name = $request->name;
+        $hr->father_name = $request->father_name;
+        $hr->email = $request->email;
+        $hr->mobile_number = $request->mobile_number;
+        $hr->cnic_number = $request->cnic_number;
+        $hr->pec_number = $request->pec_number;
+        $hr->designation = $request->designation;
+        $hr->start_date = $request->start_date;
+        $hr->end_date = $request->end_date;
+        $hr->salary = $request->salary;
+        $hr->contractor_id = session('contractor_id');
 
-            foreach ($request->profiles as $profile) {
-                $hrProfile = $contractor->humanResources()->create([
-                    'name' => $profile['name'],
-                    'cnic_number' => $profile['cnic_number'],
-                    'pec_number' => $profile['pec_number'],
-                    'designation' => $profile['designation'] ?? null,
-                    'start_date' => $profile['start_date'] ?? null,
-                    'end_date' => $profile['end_date'] ?? null,
-                    'salary' => $profile['salary'] ?? null
-                ]);
-
-                if ($request->hasFile('hr_profile')) {
-                    $hrProfile->addMedia($request->file('hr_profile'))
-                        ->toMediaCollection('hr_documents');
-                }
-            }
-
-            DB::commit();
-            return redirect()->back()->with('status', 'HR Profiles saved successfully!');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()
-                ->withErrors(['error' => 'An error occurred while saving the profiles.'])
-                ->withInput();
+        if ($request->hasFile('resume')) {
+            $hr->addMedia($request->file('resume'))
+                ->toMediaCollection('contractor_hr_resumes');
         }
+
+        if ($hr->save()) {
+            return redirect()->back()->with('success', 'HR Profiles saved successfully!');
+        }
+
+        return redirect()->back()->with(['error' => 'An error occurred while saving the profiles.']);
     }
 }

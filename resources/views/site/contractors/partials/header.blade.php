@@ -133,12 +133,12 @@
                     <i class="bi bi-clipboard-check"></i> &nbsp; Registration
                 </a>
                 <ul class="dropdown-menu shadow" aria-labelledby="registrationDropdown">
-                    <li class="py-1">
+                    <li>
                         <a class="dropdown-item py-2" href="{{ route('contractors.registration.create') }}">
                             <i class="bi bi-pencil-square"></i> &nbsp; Apply for Registration
                         </a>
                     </li>
-                    <li class="py-1">
+                    <li>
                         <a class="dropdown-item py-2" href="{{ route('contractors.registration.index') }}">
                             <i class="bi bi-list-check"></i> &nbsp; View Existing Registrations
                         </a>
@@ -165,8 +165,9 @@
             </li>
         </ul>
         <div class="dropdown account-dropdown">
-            <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton">
-                {{ $contractor->name }}
+            <button class="btn btn-light dropdown-toggle py-1 d-flex align-items-center" type="button" id="dropdownMenuButton">
+                <img src="{{ $profilePictureUrl }}" alt="Profile Picture" style="width:30px; height:30px; border-radius: 50px; outline: 2px solid #fff">
+                <span> &nbsp; {{ $contractor->name }}</span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <li>
@@ -190,6 +191,24 @@
             </ul>
         </div>
     </div>
+</div>
+
+<div class="container">
+
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endif
+
+    @if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endif
+    
 </div>
 
 <script>

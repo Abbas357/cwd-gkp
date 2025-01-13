@@ -17,12 +17,6 @@
     @include('site.contractors.partials.header')
 
     <div class="container p-2">
-        @if(session('status'))
-            <div class="alert alert-success">
-                {{ session('status') }}
-            </div>
-        @endif
-        
         <div class="card mb-4">
             <div class="card-header bg-light fw-bold text-uppercase">
                 Account

@@ -54,12 +54,6 @@
     @endpush
 
     <div class="container-fluid">
-        @if (session('status'))
-        <div class="alert alert-info my-3 text-center">
-            {{ session('status') }}
-        </div>
-        @endif
-
         <div class="register-box ">
             <div class="auth-form" id="loginForm">
                 <div class="bg-dark text-white text-center py-4 rounded-top mb-4">

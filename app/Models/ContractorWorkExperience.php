@@ -4,8 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ContractorWorkExperience extends Model
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+
+class ContractorWorkExperience extends Model implements HasMedia
 {
+    use InteractsWithMedia;
+
     protected $table = 'contractor_work_experiences';
 
     protected $fillable = [

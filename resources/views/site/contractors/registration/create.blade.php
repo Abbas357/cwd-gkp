@@ -33,24 +33,7 @@
     @include('site.contractors.partials.header')
 
     <div class="container">
-        @if(session('status'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('status') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        @endif
-
-        @if($errors->any())
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <ul class="mb-0">
-                @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        @endif
-
+        
         <div id="pec-validation-message" class="alert alert-dismissible fade" role="alert" style="display: none;">
             <span id="pec-message-text"></span>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

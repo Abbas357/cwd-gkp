@@ -45,6 +45,9 @@ return new class extends Migration
         Schema::create('contractor_human_resources', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
+            $table->string('father_name')->nullable();
+            $table->string('email')->nullable();
+            $table->string('mobile_number')->nullable();
             $table->string('cnic_number')->nullable();
             $table->string('pec_number')->nullable();
             $table->string('designation')->nullable();

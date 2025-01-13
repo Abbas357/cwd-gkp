@@ -475,10 +475,11 @@ select.form-select {
 
 input[type=date].form-control:focus, 
 input[type=email].form-control:focus, 
-input[type=number].form-control,
+input[type=number].form-control:focus,
 input[type=file].form-control:focus, 
 input[type=password].form-control:focus, 
 input[type=text].form-control:focus, 
+textarea.form-control:focus, 
 select.form-select:focus {
     outline: 2px solid rgba(25, 118, 210, 0.5);
     outline-offset: -1px;
@@ -513,15 +514,6 @@ input[type=text]::placeholder,
 input[type=email]::placeholder {
     color: rgba(0, 0, 0, 0.38);
     opacity: 1;
-}
-
-input[type=date].form-control:hover, 
-input[type=email].form-control:hover, 
-input[type=file].form-control:hover, 
-input[type=password].form-control:hover, 
-input[type=text].form-control:hover, 
-select.form-select:hover {
-    border-color: rgba(29, 120, 206, 0.87);
 }
 
 .animated-gradient-text {
@@ -645,4 +637,8 @@ select.form-select:hover {
 }
 .sharer-button:hover i, .sharer-button:hover span {
     color: var(--cw-primary-light);
+}
+
+.cw-shadow {
+    box-shadow: 0 0 7px #00000025;
 }
