@@ -132,14 +132,14 @@
                    role="button">
                     <i class="bi bi-clipboard-check"></i> &nbsp; Registration
                 </a>
-                <ul class="dropdown-menu" aria-labelledby="registrationDropdown">
-                    <li>
-                        <a class="dropdown-item" href="{{ route('contractors.registration.create') }}">
+                <ul class="dropdown-menu shadow" aria-labelledby="registrationDropdown">
+                    <li class="py-1">
+                        <a class="dropdown-item py-2" href="{{ route('contractors.registration.create') }}">
                             <i class="bi bi-pencil-square"></i> &nbsp; Apply for Registration
                         </a>
                     </li>
-                    <li>
-                        <a class="dropdown-item" href="{{ route('contractors.registration.index') }}">
+                    <li class="py-1">
+                        <a class="dropdown-item py-2" href="{{ route('contractors.registration.index') }}">
                             <i class="bi bi-list-check"></i> &nbsp; View Existing Registrations
                         </a>
                     </li>
