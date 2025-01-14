@@ -13,6 +13,8 @@ class ContractorRegistration extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, LogsActivity;
 
+    protected $guarded = [];
+    
     protected function casts(): array
     {
         return [
@@ -43,6 +45,22 @@ class ContractorRegistration extends Model implements HasMedia
         $this->addMediaCollection('pec_attachments')->singleFile();
         $this->addMediaCollection('form_h_attachments')->singleFile();
         $this->addMediaCollection('pre_enlistment_attachments')->singleFile();
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::updating(function ($model) {
+            if ($model->isDirty('status')) {
+                $model->status_updated_at = now();
+                $model->status_updated_by = request()->user()->id ?? null;
+            }
+        });
+    }
+
+    public function resolveRouteBinding($value, $route = null)
+    {
+        return static::withoutGlobalScopes()->where('id', $value)->firstOrFail();
     }
 
     public function contractor()

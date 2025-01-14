@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('file_link')->nullable();
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
-            $table->timestamp('published_at')->nullable()->default(null);
+            $table->timestamp('published_at')->nullable();
             $table->foreignId('published_by')->nullable()->constrained('users');
             $table->timestamps();
         });

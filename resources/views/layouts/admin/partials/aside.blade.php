@@ -122,7 +122,16 @@
                     <li><a href="{{ route('admin.service_cards.index') }}"><i class="bi-credit-card fs-6"></i>&nbsp; Service Card</a></li>
                     @endcan
                     @can('view any contractor')
-                    <li><a href="{{ route('admin.contractors.index') }}"><i class="bi-person-vcard fs-6"></i>&nbsp; E-Registration</a></li>
+                    <li>
+                        <a href="javascript:;" class="has-arrow">
+                            <div class="parent-icon"><i class="bi-person-vcard fs-6"></i></div>
+                            <div class="menu-title">Contractors</div>
+                        </a>
+                        <ul class="p-2 menu-items">
+                            <li><a href="{{ route('admin.contractors.index') }}"><i class="bi-credit-card fs-6"></i>&nbsp; List</a></li>
+                            <li><a href="{{ route('admin.contractors.registration.index') }}"><i class="bi-person-vcard fs-6"></i>&nbsp; Registration</a></li>
+                        </ul>
+                    </li>
                     @endcan
                     @can('view any standardization')
                     <li><a href="{{ route('admin.standardizations.index') }}"><i class="bi-patch-check-fill fs-6"></i>&nbsp; E-Standardization</a></li>

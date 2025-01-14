@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers\Site;
 
-use App\Models\Contractor;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\ContractorMachinery;
 
@@ -49,7 +47,7 @@ class ContractorMachineryController extends Controller
         }
 
         if ($machinery->save()) {
-            return redirect()->back()->with('success', 'Machinery details saved successfully!');
+            return redirect()->back()->with('success', 'Record has been added and will be placed under review. It will be visible once the moderation process is complete');
         }
 
         return redirect()->back()->with(['error' => 'An error occurred while saving the machinery details.']);

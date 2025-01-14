@@ -9,40 +9,32 @@
     <div class="card-header mb-3">
         <ul class="nav nav-tabs nav-tabs-table">
             <li class="nav-item">
-                <a id="new-tab" class="nav-link" data-bs-toggle="tab" href="#new">New</a>
+                <a id="active-tab" class="nav-link" data-bs-toggle="tab" href="#active">Active</a>
             </li>
             <li class="nav-item">
-                <a id="deferred-one-tab" class="nav-link" data-bs-toggle="tab" href="#deferred1">Deferred 1</a>
+                <a id="blacklisted-tab" class="nav-link" data-bs-toggle="tab" href="#blacklisted">Blacklisted</a>
             </li>
             <li class="nav-item">
-                <a id="deferred-two-tab" class="nav-link" data-bs-toggle="tab" href="#deferred2">Deferred 2</a>
+                <a id="suspended-tab" class="nav-link" data-bs-toggle="tab" href="#suspended">Suspended</a>
             </li>
             <li class="nav-item">
-                <a id="deferred-three-tab" class="nav-link" data-bs-toggle="tab" href="#deferred3">Deferred 3</a>
-            </li>
-            <li class="nav-item">
-                <a id="approved-tab" class="nav-link" data-bs-toggle="tab" href="#approved">Approved</a>
+                <a id="dormant-tab" class="nav-link" data-bs-toggle="tab" href="#dormant">Dormant</a>
             </li>
         </ul>
     </div>
 
-    <table id="contractors-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+    <table id="contractors" width="100%" class="table table-striped table-hover table-bordered align-center">
         <thead>
             <tr>
                 <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Contractor Name</th>
+                <th scope="col" class="p-3">Name</th>
                 <th scope="col" class="p-3">Email</th>
-                <th scope="col" class="p-3">Mobile Number</th>
                 <th scope="col" class="p-3">CNIC</th>
+                <th scope="col" class="p-3">Mobile Number</th>
                 <th scope="col" class="p-3">District</th>
+                <th scope="col" class="p-3">Firm Name</th>
                 <th scope="col" class="p-3">Address</th>
-                <th scope="col" class="p-3">Category Applied</th>
-                <th scope="col" class="p-3">Owner Name</th>
-                <th scope="col" class="p-3">PEC Number</th>
-                <th scope="col" class="p-3">PEC Category</th>
-                <th scope="col" class="p-3">FBR NTN</th>
-                <th scope="col" class="p-3">KPRA Registration</th>
-                <th scope="col" class="p-3">Registration Limited</th>
+                <th scope="col" class="p-3">Status</th>
                 <th scope="col" class="p-3">Created At</th>
                 <th scope="col" class="p-3">Updated At</th>
                 <th scope="col" class="p-3">Actions</th>
@@ -60,14 +52,14 @@
 
     <script>
         $(document).ready(function() {
-            var table = initDataTable('#contractors-datatable', {
+            var table = initDataTable('#contractors', {
                 ajaxUrl: "{{ route('admin.contractors.index') }}"
                 , columns: [{
                         data: "id"
                         , searchBuilderType: "num"
                     }
                     , {
-                        data: "contractor_name"
+                        data: "name"
                         , searchBuilderType: "string"
                     }
                     , {
@@ -75,11 +67,11 @@
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "mobile_number"
+                        data: "cnic"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "cnic"
+                        data: "mobile_number"
                         , searchBuilderType: "string"
                     }
                     , {
@@ -87,35 +79,15 @@
                         , searchBuilderType: "string"
                     }
                     , {
+                        data: "firm_name"
+                        , searchBuilderType: "string"
+                    }
+                    , {
                         data: "address"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "category_applied"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "owner_name"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "pec_number"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "pec_category"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "fbr_ntn"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "kpra_reg_no"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "is_limited"
+                        data: "status"
                         , searchBuilderType: "string"
                     }
                     , {
@@ -133,111 +105,41 @@
                         , type: "html"
                     }
                 ]
-                , defaultOrderColumn: 17
+                , defaultOrderColumn: 9
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
-                    targets: [0, 2, 3, 6, 11, 12, 13, 14, 15]
+                    targets: [0, 7]
                     , visible: false
                 }]
-            });
-
-            $("#contractors-datatable").on('click', '.defer-btn', async function() {
-                const registrationId = $(this).data("id");
-                const url = "{{ route('admin.contractors.defer', ':id') }}".replace(':id', registrationId);
-
-
-                const { value: reason } = await confirmWithInput({
-                    inputType: "textarea",
-                    text: 'Do you want to deffered this registration?'
-                    , inputValidator: (value) => {
-                        if (!value) {
-                            return 'You need to provide a reason!';
-                        }
-                    }
-                    , inputPlaceholder: 'Enter the reason for deffering'
-                    , confirmButtonText: 'Reject'
-                    , cancelButtonText: 'Cancel'
-                });
-
-                if (reason) {
-                    const success = await fetchRequest(url, 'PATCH', {
-                        reason
-                    });
-                    if (success) {
-                        $("#contractors-datatable").DataTable().ajax.reload();
-                    }
-                }
-            });
-
-            $("#contractors-datatable").on('click', '.renew-btn', async function() {
-                const registrationId = $(this).data("id");
-                const url = "{{ route('admin.contractors.renew', ':id') }}".replace(':id', registrationId);
-
-                const {
-                    value: issue_date
-                } = await confirmWithInput({
-                    inputType: "date"
-                    , text: 'Renew! (Issue Date is Optional)'
-                    , inputValidator: (value) => {}
-                    , inputPlaceholder: 'Enter the issue date (optional)'
-                    , confirmButtonText: 'Renew'
-                    , cancelButtonText: 'Cancel'
-                });
-
-                if (issue_date === '' || issue_date) {
-                    const success = await fetchRequest(url, 'PATCH', {
-                        issue_date
-                    });
-                    if (success) {
-                        $("#contractors-datatable").DataTable().ajax.reload();
-                    }
-                }
-            });
-
-            $("#contractors-datatable").on('click', '.approve-btn', async function() {
-                const registrationId = $(this).data("id");
-                const url = "{{ route('admin.contractors.approve', ':id') }}".replace(':id', registrationId);
-
-                const result = await confirmAction('Do you want to approve this registration?');
-                if (result && result.isConfirmed) {
-                    const success = await fetchRequest(url, 'PATCH');
-                    if (success) {
-                        $("#contractors-datatable").DataTable().ajax.reload();
-                    }
-                }
             });
 
             hashTabsNavigator({
                 table: table
                 , dataTableUrl: "{{ route('admin.contractors.index') }}"
                 , tabToHashMap: {
-                    "#new-tab": '#new'
-                    , "#deferred-one-tab": '#deferred1'
-                    , "#deferred-two-tab": '#deferred2'
-                    , "#deferred-three-tab": '#deferred3'
-                    , "#approved-tab": '#approved'
+                    "#active-tab": '#active'
+                    , "#blacklisted-tab": '#blacklisted'
+                    , "#suspended-tab": '#suspended'
+                    , "#dormant-tab": '#dormant'
                 , }
                 , hashToParamsMap: {
-                    '#new': {
-                        status: 'new'
+                    '#active': {
+                        status: 'active'
                     }
-                    , '#deferred1': {
-                        status: 'deffered_once'
+                    , '#blacklisted': {
+                        status: 'blacklisted'
                     }
-                    , '#deferred2': {
-                        status: 'deffered_twice'
+                    , '#suspended': {
+                        status: 'suspended'
                     }
-                    , '#deferred3': {
-                        status: 'deffered_thrice'
-                    }
-                    , '#approved': {
-                        status: 'approved'
+                    , '#dormant': {
+                        status: 'dormant'
                     }
                 , }
-                , defaultHash: '#new'
+                , defaultHash: '#active'
             });
 
-            $('#contractors-datatable').colResizable({
+            $('#contractors').colResizable({
                 liveDrag: true
                 , resizeMode: 'overflow'
                 , postbackSafe: true
@@ -249,33 +151,9 @@
             pushStateModal({
                 fetchUrl: "{{ route('admin.contractors.showDetail', ':id') }}"
                 , btnSelector: '.view-btn'
-                , title: 'Registrations Details'
+                , title: 'Contractor Details'
                 , modalSize: 'lg'
-            , });
-
-            pushStateModal({
-                fetchUrl: "{{ route('admin.contractors.showCard', ':id') }}"
-                , btnSelector: '.card-btn'
-                , title: 'Contractor Card'
-                , modalSize: 'md'
-                , actionButtonName: 'Download Card'
-            , }).then((modal) => {
-                const actionBtn = $('#'+modal).find('button[type="submit"]');
-                actionBtn.on('click', function() {
-                    var div = $('#capture')[0];
-                    html2canvas(div, {
-                        scale: 2
-                    }).then(function(canvas) {
-                        canvas.toBlob(function(blob) {
-                            var link = $('<a></a>')[0];
-                            link.href = URL.createObjectURL(blob);
-                            link.download = `contractor-card-${uniqId(6)}.png`;
-                            link.click();
-                        });
-                    });
-                })
             });
-
 
         });
 

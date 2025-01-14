@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('location')->nullable();
             $table->foreignId('user_id')->constrained('users');
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
-            $table->dateTime('published_at')->nullable()->default(null);
+            $table->dateTime('published_at')->nullable();
             $table->foreignId('published_by')->nullable()->constrained('users');
             $table->string('organizer')->nullable();
             $table->string('chairperson')->nullable();

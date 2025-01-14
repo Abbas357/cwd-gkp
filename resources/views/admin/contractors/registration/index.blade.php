@@ -12,13 +12,13 @@
                 <a id="new-tab" class="nav-link" data-bs-toggle="tab" href="#new">New</a>
             </li>
             <li class="nav-item">
-                <a id="deferred-once-tab" class="nav-link" data-bs-toggle="tab" href="#deferred_once">Deferred 1</a>
+                <a id="deferred-once-tab" class="nav-link" data-bs-toggle="tab" href="#deferred_once">Deferred once</a>
             </li>
             <li class="nav-item">
-                <a id="deferred-twice-tab" class="nav-link" data-bs-toggle="tab" href="#deferred_twice">Deferred 2</a>
+                <a id="deferred-twice-tab" class="nav-link" data-bs-toggle="tab" href="#deferred_twice">Deferred twice</a>
             </li>
             <li class="nav-item">
-                <a id="deferred-thrice-tab" class="nav-link" data-bs-toggle="tab" href="#deferred_thrice">Deferred 3</a>
+                <a id="deferred-thrice-tab" class="nav-link" data-bs-toggle="tab" href="#deferred_thrice">Deferred thrice</a>
             </li>
             <li class="nav-item">
                 <a id="approved-tab" class="nav-link" data-bs-toggle="tab" href="#approved">Approved</a>

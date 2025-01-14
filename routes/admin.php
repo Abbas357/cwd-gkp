@@ -68,7 +68,6 @@ Route::middleware('auth')->group(function () {
         Route::prefix('contractors')->as('contractors.')->group(function () {
             Route::get('/', [ContractorController::class, 'index'])->name('index')->can('viewAny', App\Models\Contractor::class);
             Route::get('/get/{Contractor}', [ContractorController::class, 'showDetail'])->name('showDetail')->can('view', 'Contractor');
-            Route::patch('/change-status/{user}', [ContractorController::class, 'changeStatus'])->name('changeStatus')->can('changeStatus', 'Contractor');
             Route::patch('/update/field/{Contractor}', [ContractorController::class, 'updateField'])->name('updateField')->can('update', 'Contractor');
             Route::patch('/update/file/{Contractor}', [ContractorController::class, 'uploadFile'])->name('uploadFile')->can('update', 'Contractor');
         

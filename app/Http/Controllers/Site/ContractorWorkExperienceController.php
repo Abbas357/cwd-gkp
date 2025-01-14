@@ -21,7 +21,7 @@ class ContractorWorkExperienceController extends Controller
             'project_cost' => 'nullable|string|max:100',
             'commencement_date' => 'required|date|max:50',
             'completion_date' => 'nullable|date|max:50',
-            'status' => 'nullable',
+            'project_status' => 'nullable',
             'work_order' => 'nullable|file|mimes:pdf,doc,docx,jpg,png,gif|max:2048',
         ]);
 
@@ -31,7 +31,7 @@ class ContractorWorkExperienceController extends Controller
         $experince->project_cost = $request->project_cost;
         $experince->commencement_date = $request->commencement_date;
         $experince->completion_date = $request->completion_date;
-        $experince->status = $request->status;
+        $experince->project_status = $request->project_status;
         $experince->contractor_id = session('contractor_id');
 
         if ($request->hasFile('work_order')) {
@@ -40,7 +40,7 @@ class ContractorWorkExperienceController extends Controller
         }
 
         if ($experince->save()) {
-            return redirect()->back()->with('success', 'Work Experience saved successfully!');
+            return redirect()->back()->with('success', 'Record has been added and will be placed under review. It will be visible once the moderation process is complete');
         }
 
         return redirect()->back()->with(['error' => 'An error occurred while saving the work experince.']);

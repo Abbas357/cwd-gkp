@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamp('downloaded_at')->useCurrent();
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
-            $table->timestamp('published_at')->nullable()->default(null);
+            $table->timestamp('published_at')->nullable();
             $table->foreignId('published_by')->nullable()->constrained('users');
             $table->unsignedBigInteger('downloads_count')->default(0);
             $table->timestamps();

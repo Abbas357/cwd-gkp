@@ -162,7 +162,7 @@ class ContractorRegistrationController extends Controller
                 ],
             ]);
         }
-        $html = view('admin.contractors.registration.registrations.partials.detail', compact('Contractor', 'cat'))->render();
+        $html = view('admin.contractors.registration.partials.detail', compact('ContractorRegistration', 'cat'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -199,5 +199,43 @@ class ContractorRegistrationController extends Controller
                 'result' => $html,
             ],
         ]);
+    }
+
+    public function updateField(Request $request, ContractorRegistration $ContractorRegistration)
+    {
+        $request->validate([
+            'field' => 'required|string',
+            'value' => 'required',
+        ]);
+
+        if (($request->has('reg_no') || $request->has('expiry_date') || $request->has('issue_date')) && in_array($ContractorRegistration->status, ['deffered_thrice', 'approved'])) {
+            return response()->json(['error' => 'Approved or Rejected Contractors cannot be updated']);
+        }
+        if ($request->field === 'pec_number') {
+            if (ContractorRegistration::where('pec_number', $request->value)->where('status', '!=', 'approved')->exists()) {
+                return response()->json(['error' => 'PEC number already exists']);
+            }
+        }
+
+        $ContractorRegistration->{$request->field} = $request->field === 'pre_enlistment'
+            ? json_encode($request->value)
+            : $request->value;
+        $ContractorRegistration->save();
+
+        return response()->json(['success' => 'Field saved']);
+    }
+
+    public function uploadFile(Request $request, ContractorRegistration $ContractorRegistration)
+    {
+        if ($request->hasFile('contractor_pictures') && in_array($ContractorRegistration->status, ['deffered_thrice', 'approved'])) {
+            return response()->json(['error' => 'Approved or Rejected Contractors cannot be updated']);
+        }
+        $file = $request->file;
+        $collection = $request->collection;
+        $ContractorRegistration->addMedia($file)->toMediaCollection($collection);
+        if ($ContractorRegistration->save()) {
+            return response()->json(['success' => 'File Updated']);
+        }
+        return response()->json(['error' => 'Error Uploading File']);
     }
 }

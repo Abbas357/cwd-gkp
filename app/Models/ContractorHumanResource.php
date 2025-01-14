@@ -7,25 +7,42 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+use Illuminate\Database\Eloquent\Builder;
+
 class ContractorHumanResource extends Model implements HasMedia
 {
     use InteractsWithMedia;
 
     protected $table = 'contractor_human_resources';
 
-    protected $fillable = [
-        'name',
-        'cnic_number',
-        'pec_number',
-        'designation',
-        'start_date',
-        'end_date',
-        'salary',
-    ];
+    protected $guarded = [];
 
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('contractor_hr_resumes')->singleFile();
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::updating(function ($model) {
+            if ($model->isDirty('status')) {
+                $model->status_updated_at = now();
+                $model->status_updated_by = request()->user()->id ?? null;
+            }
+        });
+    }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('approved', function (Builder $builder) {
+            $builder->where('status', 'approved')->whereNotNull('status_updated_at');
+        });
+    }
+
+    public function resolveRouteBinding($value, $route = null)
+    {
+        return static::withoutGlobalScopes()->where('id', $value)->firstOrFail();
     }
 
     public function contractor()

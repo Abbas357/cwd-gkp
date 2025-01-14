@@ -16,7 +16,7 @@ return new class extends Migration
             $table->mediumText('description')->nullable();
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->timestamp('published_at')->nullable()->default(null);
+            $table->timestamp('published_at')->nullable();
             $table->foreignId('published_by')->nullable()->constrained('users');
             $table->integer('order')->default(0);
             $table->unsignedBigInteger('views_count')->default(0);

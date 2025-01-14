@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
+use App\Models\District;
 
-use Yajra\DataTables\DataTables;
 use App\Models\Contractor;
+use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class ContractorController extends Controller
 {
@@ -12,17 +13,20 @@ class ContractorController extends Controller
     {
         $status = $request->query('status', null);
 
-        $contractors = Contractor::query();
+        $Contractors = Contractor::query();
 
-        $contractors->when($status !== null, function ($query) use ($status) {
+        $Contractors->when($status !== null, function ($query) use ($status) {
             $query->where('status', $status);
         });
 
         if ($request->ajax()) {
-            $dataTable = Datatables::of($contractors)
+            $dataTable = Datatables::of($Contractors)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     return view('admin.contractors.partials.buttons', compact('row'))->render();
+                })
+                ->addColumn('status', function ($row) {
+                    return view('admin.contractors.partials.status', compact('row'))->render();
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at?->format('j, F Y');
@@ -30,7 +34,7 @@ class ContractorController extends Controller
                 ->editColumn('updated_at', function ($row) {
                     return $row->updated_at->diffForHumans();
                 })
-                ->rawColumns(['action']);
+                ->rawColumns(['action', 'status']);
 
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
                 $dataTable->filter(function ($query) use ($request) {
@@ -45,8 +49,28 @@ class ContractorController extends Controller
         return view('admin.contractors.index');
     }
 
-    public function changeStatus(Request $request) {
-        //
+    public function showDetail(Contractor $Contractor)
+    {
+        $cat = [
+            'districts' => District::all(),
+            'status' => ['active', 'blacklisted', 'suspended', 'dormant'],
+        ];
+
+        if (!$Contractor) {
+            return response()->json([
+                'success' => false,
+                'data' => [
+                    'result' => 'Unable to load Contractor detail',
+                ],
+            ]);
+        }
+        $html = view('admin.contractors.partials.detail', compact('Contractor', 'cat'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
     }
 
     public function updateField(Request $request, Contractor $Contractor)
@@ -56,28 +80,18 @@ class ContractorController extends Controller
             'value' => 'required',
         ]);
 
-        if (($request->has('reg_no') || $request->has('expiry_date') || $request->has('issue_date')) && in_array($Contractor->status, ['approved_three', 'approved'])) {
-            return response()->json(['error' => 'Approved or Rejected Contractors cannot be updated']);
-        }
-        if ($request->field === 'pec_number') {
-            if (Contractor::where('pec_number', $request->value)->where('status', '!=', 'approved')->exists()) {
-                return response()->json(['error' => 'PEC number already exists']);
-            }
+        $Contractor->{$request->field} = $request->value;
+
+        if ($Contractor->isDirty($request->field)) {
+            $Contractor->save();
+            return response()->json(['success' => 'Field updated successfully'], 200);
         }
 
-        $Contractor->{$request->field} = $request->field === 'pre_enlistment'
-            ? json_encode($request->value)
-            : $request->value;
-        $Contractor->save();
-
-        return response()->json(['success' => 'Field saved']);
+        return response()->json(['error' => 'No changes were made to the field'], 200);
     }
 
     public function uploadFile(Request $request, Contractor $Contractor)
     {
-        if ($request->hasFile('contractor_pictures') && in_array($Contractor->status, ['approved_three', 'approved'])) {
-            return response()->json(['error' => 'Approved or Rejected Contractors cannot be updated']);
-        }
         $file = $request->file;
         $collection = $request->collection;
         $Contractor->addMedia($file)->toMediaCollection($collection);

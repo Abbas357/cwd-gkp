@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('bps', 191)->nullable();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
-            $table->timestamp('seniority_date')->nullable()->default(null);
-            $table->timestamp('published_at')->nullable()->default(null);
+            $table->timestamp('seniority_date')->nullable();
+            $table->timestamp('published_at')->nullable();
             $table->foreignId('published_by')->nullable()->constrained('users');
             $table->unsignedBigInteger('views_count')->default(0);
             $table->timestamps();

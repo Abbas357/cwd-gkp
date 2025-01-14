@@ -49,9 +49,9 @@ class ContractorHumanResourceController extends Controller
             $hr->addMedia($request->file('resume'))
                 ->toMediaCollection('contractor_hr_resumes');
         }
-
+ 
         if ($hr->save()) {
-            return redirect()->back()->with('success', 'HR Profiles saved successfully!');
+            return redirect()->back()->with('success', 'Record has been added and will be placed under review. It will be visible once the moderation process is complete');
         }
 
         return redirect()->back()->with(['error' => 'An error occurred while saving the profiles.']);

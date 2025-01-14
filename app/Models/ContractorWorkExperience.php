@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Builder;
 
 class ContractorWorkExperience extends Model implements HasMedia
 {
@@ -13,17 +14,34 @@ class ContractorWorkExperience extends Model implements HasMedia
 
     protected $table = 'contractor_work_experiences';
 
-    protected $fillable = [
-        'adp_no',
-        'name',
-        'duration',
-        'completion_date',
-        'cost'
-    ];
+    protected $guarded = [];
 
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('contractor_work_orders')->singleFile();
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::updating(function ($model) {
+            if ($model->isDirty('status')) {
+                $model->status_updated_at = now();
+                $model->status_updated_by = request()->user()->id ?? null;
+            }
+        });
+    }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('approved', function (Builder $builder) {
+            $builder->where('status', 'approved')->whereNotNull('status_updated_at');
+        });
+    }
+
+    public function resolveRouteBinding($value, $route = null)
+    {
+        return static::withoutGlobalScopes()->where('id', $value)->firstOrFail();
     }
 
     public function contractor()

@@ -56,17 +56,18 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label for="status">Status <abbr title="Required">*</abbr></label>
-                            <select class="form-select" id="status" name="status" required>
+                            <label for="project_status">Project Status <abbr title="Required">*</abbr></label>
+                            <select class="form-select" id="project_status" name="project_status" required>
                                 <option value="">Choose...</option>
                                 <option value="completed">Completed</option>
                                 <option value="ongoing">Ongoing</option>
                                 <option value="onhold">Onhold</option>
                             </select>
-                            @error('status')
+                            @error('project_status')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
+                        
                     </div>
                 </div>
             </div>
