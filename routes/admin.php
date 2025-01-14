@@ -24,12 +24,15 @@ use App\Http\Controllers\ContractorController;
 use App\Http\Controllers\NewsLetterController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\ContractorHumanResourceController;
+use App\Http\Controllers\ContractorMachineryController;
 use App\Http\Controllers\ProjectFileController;
 use App\Http\Controllers\ServiceCardController;
 use App\Http\Controllers\PublicContactController;
 use App\Http\Controllers\StandardizationController;
 use App\Http\Controllers\DevelopmentProjectController;
 use App\Http\Controllers\ContractorRegistrationController;
+use App\Http\Controllers\ContractorWorkExperienceController;
 
 Route::middleware('auth')->group(function () { 
     Route::prefix('admin')->as('admin.')->group(function () {
@@ -67,9 +70,27 @@ Route::middleware('auth')->group(function () {
         
         Route::prefix('contractors')->as('contractors.')->group(function () {
             Route::get('/', [ContractorController::class, 'index'])->name('index')->can('viewAny', App\Models\Contractor::class);
-            Route::get('/get/{Contractor}', [ContractorController::class, 'showDetail'])->name('showDetail')->can('view', 'Contractor');
+            Route::get('/{Contractor}/detail', [ContractorController::class, 'detail'])->name('detail')->can('view', 'Contractor');
             Route::patch('/update/field/{Contractor}', [ContractorController::class, 'updateField'])->name('updateField')->can('update', 'Contractor');
             Route::patch('/update/file/{Contractor}', [ContractorController::class, 'uploadFile'])->name('uploadFile')->can('update', 'Contractor');
+
+            Route::prefix('hr')->as('hr.')->group(function () {
+                Route::get('/{Contractor}', [ContractorHumanResourceController::class, 'detail'])->name('detail')->can('view', 'Contractor');
+                Route::post('/{id}/update', [ContractorHumanResourceController::class, 'update'])->name('update');
+                Route::patch('/{id}/upload', [ContractorHumanResourceController::class, 'upload'])->name('upload');
+            });
+
+            Route::prefix('machinery')->as('machinery.')->group(function () {
+                Route::get('/{Contractor}', [ContractorMachineryController::class, 'detail'])->name('detail')->can('view', 'Contractor');
+                Route::post('/{id}/update', [ContractorMachineryController::class, 'update'])->name('update');
+                Route::patch('/{id}/upload', [ContractorMachineryController::class, 'upload'])->name('upload');
+            });
+
+            Route::prefix('experience')->as('experience.')->group(function () {
+                Route::get('/{Contractor}', [ContractorWorkExperienceController::class, 'detail'])->name('detail')->can('view', 'Contractor');
+                Route::post('/{id}/update', [ContractorWorkExperienceController::class, 'update'])->name('update');
+                Route::patch('/{id}/upload', [ContractorWorkExperienceController::class, 'upload'])->name('upload');
+            });
         
             Route::prefix('registration')->as('registration.')->group(function () {
                 Route::get('/', [ContractorRegistrationController::class, 'index'])->name('index')->can('viewAny', App\Models\ContractorRegistration::class);

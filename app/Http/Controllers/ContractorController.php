@@ -49,7 +49,55 @@ class ContractorController extends Controller
         return view('admin.contractors.index');
     }
 
-    public function showDetail(Contractor $Contractor)
+    public function detail(Contractor $Contractor)
+    {
+        $cat = [
+            'districts' => District::all(),
+            'status' => ['active', 'blacklisted', 'suspended', 'dormant'],
+        ];
+
+        if (!$Contractor) {
+            return response()->json([
+                'success' => false,
+                'data' => [
+                    'result' => 'Unable to load Contractor detail',
+                ],
+            ]);
+        }
+        $html = view('admin.contractors.partials.detail', compact('Contractor', 'cat'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
+    }
+
+    public function machinery(Contractor $Contractor)
+    {
+        $cat = [
+            'districts' => District::all(),
+            'status' => ['active', 'blacklisted', 'suspended', 'dormant'],
+        ];
+
+        if (!$Contractor) {
+            return response()->json([
+                'success' => false,
+                'data' => [
+                    'result' => 'Unable to load Contractor detail',
+                ],
+            ]);
+        }
+        $html = view('admin.contractors.partials.detail', compact('Contractor', 'cat'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
+    }
+
+    public function experience(Contractor $Contractor)
     {
         $cat = [
             'districts' => District::all(),

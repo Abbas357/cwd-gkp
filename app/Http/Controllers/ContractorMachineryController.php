@@ -2,64 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ContractorMachinery;
+use App\Models\Contractor;
 use Illuminate\Http\Request;
+use App\Models\ContractorMachinery;
 
 class ContractorMachineryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function detail(Contractor $Contractor)
     {
-        //
-    }
+        $machinery = $Contractor->machinery()->get();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(ContractorMachinery $contractorMachinery)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ContractorMachinery $contractorMachinery)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, ContractorMachinery $contractorMachinery)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ContractorMachinery $contractorMachinery)
-    {
-        //
+        if (!$machinery) {
+            return response()->json([
+                'success' => false,
+                'data' => [
+                    'result' => 'Unable to load machinery detail',
+                ],
+            ]);
+        }
+        $html = view('admin.contractors.partials.machinery', compact('machinery'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
     }
 }

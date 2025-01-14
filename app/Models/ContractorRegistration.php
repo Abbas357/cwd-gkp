@@ -58,11 +58,6 @@ class ContractorRegistration extends Model implements HasMedia
         });
     }
 
-    public function resolveRouteBinding($value, $route = null)
-    {
-        return static::withoutGlobalScopes()->where('id', $value)->firstOrFail();
-    }
-
     public function contractor()
     {
         return $this->belongsTo(Contractor::class, 'contractor_id');

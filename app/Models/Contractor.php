@@ -51,11 +51,6 @@ class Contractor extends Model implements HasMedia
         $this->addMediaCollection('contractor_cnic_back')->singleFile();
     }
 
-    public function humanResources()
-    {
-        return $this->hasMany(ContractorHumanResource::class, 'contractor_id');
-    }
-
     protected static function boot()
     {
         parent::boot();
@@ -68,6 +63,11 @@ class Contractor extends Model implements HasMedia
                 $model->password_updated_at = now();
             }
         });
+    }
+
+    public function humanResources()
+    {
+        return $this->hasMany(ContractorHumanResource::class, 'contractor_id');
     }
     
     public function machinery()

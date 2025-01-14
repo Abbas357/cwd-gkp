@@ -149,9 +149,31 @@
             , });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.contractors.showDetail', ':id') }}"
+                fetchUrl: "{{ route('admin.contractors.detail', ':id') }}"
                 , btnSelector: '.view-btn'
                 , title: 'Contractor Details'
+                , modalSize: 'lg'
+                , 
+            });
+
+            pushStateModal({
+                fetchUrl: "{{ route('admin.contractors.hr.detail', ':id') }}"
+                , btnSelector: '.hr-btn'
+                , title: 'Contractor Human Resource'
+                , modalSize: 'xl'
+            });
+
+            pushStateModal({
+                fetchUrl: "{{ route('admin.contractors.machinery.detail', ':id') }}"
+                , btnSelector: '.machinery-btn'
+                , title: 'Contractor Machinery'
+                , modalSize: 'lg'
+            });
+
+            pushStateModal({
+                fetchUrl: "{{ route('admin.contractors.experience.detail', ':id') }}"
+                , btnSelector: '.experience-btn'
+                , title: 'Contractor Work Experience'
                 , modalSize: 'lg'
             });
 

@@ -32,17 +32,17 @@ class ContractorWorkExperience extends Model implements HasMedia
         });
     }
 
-    protected static function booted()
-    {
-        static::addGlobalScope('approved', function (Builder $builder) {
-            $builder->where('status', 'approved')->whereNotNull('status_updated_at');
-        });
-    }
+    // protected static function booted()
+    // {
+    //     static::addGlobalScope('approved', function (Builder $builder) {
+    //         $builder->where('status', 'approved')->whereNotNull('status_updated_at');
+    //     });
+    // }
 
-    public function resolveRouteBinding($value, $route = null)
-    {
-        return static::withoutGlobalScopes()->where('id', $value)->firstOrFail();
-    }
+    // public function resolveRouteBinding($value, $route = null)
+    // {
+    //     return static::withoutGlobalScopes()->where('id', $value)->firstOrFail();
+    // }
 
     public function contractor()
     {
