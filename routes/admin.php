@@ -78,18 +78,21 @@ Route::middleware('auth')->group(function () {
                 Route::get('/{Contractor}', [ContractorHumanResourceController::class, 'detail'])->name('detail')->can('view', 'Contractor');
                 Route::post('/{id}/update', [ContractorHumanResourceController::class, 'update'])->name('update');
                 Route::patch('/{id}/upload', [ContractorHumanResourceController::class, 'upload'])->name('upload');
+                Route::delete('{id}', [ContractorHumanResourceController::class, 'destroy'])->name('destroy');
             });
 
             Route::prefix('machinery')->as('machinery.')->group(function () {
                 Route::get('/{Contractor}', [ContractorMachineryController::class, 'detail'])->name('detail')->can('view', 'Contractor');
                 Route::post('/{id}/update', [ContractorMachineryController::class, 'update'])->name('update');
                 Route::patch('/{id}/upload', [ContractorMachineryController::class, 'upload'])->name('upload');
+                Route::delete('{id}', [ContractorMachineryController::class, 'destroy'])->name('destroy');
             });
 
             Route::prefix('experience')->as('experience.')->group(function () {
                 Route::get('/{Contractor}', [ContractorWorkExperienceController::class, 'detail'])->name('detail')->can('view', 'Contractor');
                 Route::post('/{id}/update', [ContractorWorkExperienceController::class, 'update'])->name('update');
                 Route::patch('/{id}/upload', [ContractorWorkExperienceController::class, 'upload'])->name('upload');
+                Route::delete('{id}', [ContractorWorkExperienceController::class, 'destroy'])->name('destroy');
             });
         
             Route::prefix('registration')->as('registration.')->group(function () {

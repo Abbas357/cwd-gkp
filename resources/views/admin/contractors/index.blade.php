@@ -1,6 +1,7 @@
 <x-app-layout title="Contractor Registrations">
     @push('style')
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header">
         <li class="breadcrumb-item active" aria-current="page">Registrations</li>
@@ -49,6 +50,7 @@
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/col-resizable.js') }}"></script>
     <script src="{{ asset('admin/plugins/html2canvas/html2canvas.min.js') }}"></script>
+    <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
 
     <script>
         $(document).ready(function() {
@@ -167,14 +169,14 @@
                 fetchUrl: "{{ route('admin.contractors.machinery.detail', ':id') }}"
                 , btnSelector: '.machinery-btn'
                 , title: 'Contractor Machinery'
-                , modalSize: 'lg'
+                , modalSize: 'xl'
             });
 
             pushStateModal({
                 fetchUrl: "{{ route('admin.contractors.experience.detail', ':id') }}"
                 , btnSelector: '.experience-btn'
                 , title: 'Contractor Work Experience'
-                , modalSize: 'lg'
+                , modalSize: 'xl'
             });
 
         });

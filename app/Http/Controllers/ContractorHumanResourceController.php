@@ -77,4 +77,14 @@ class ContractorHumanResourceController extends Controller
             ], 500);
         }
     }
+
+    public function destroy($id)
+    {
+        $hr = ContractorHumanResource::findOrFail($id);
+        if($hr->delete()) {
+            return response()->json(['success' => 'HR User deleted successfully'], 200);
+        }
+        return response()->json(['error' => 'Failed to delete HR User'], 500);
+    }
+
 }

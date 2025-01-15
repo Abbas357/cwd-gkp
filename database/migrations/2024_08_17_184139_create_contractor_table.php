@@ -62,7 +62,6 @@ return new class extends Migration
             $table->date('end_date')->nullable();
             $table->enum('status', ['draft', 'rejected', 'approved'])->default('draft');
             $table->timestamp('status_updated_at')->nullable();
-            // $table->foreignId('status_updated_by')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('status_updated_by')->nullable();
             $table->foreignId('contractor_id')->references('id')->on('contractors')->onDelete('cascade');
             $table->timestamps();
@@ -76,7 +75,6 @@ return new class extends Migration
             $table->string('registration')->nullable();
             $table->enum('status', ['draft', 'rejected', 'approved'])->default('draft');
             $table->timestamp('status_updated_at')->nullable();
-            // $table->foreignId('status_updated_by')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('status_updated_by')->nullable();
             $table->foreignId('contractor_id')->references('id')->on('contractors')->onDelete('cascade');
             $table->timestamps();
@@ -92,7 +90,6 @@ return new class extends Migration
             $table->enum('project_status', ['completed', 'ongoing'])->nullable();
             $table->enum('status', ['draft', 'rejected', 'approved'])->default('draft');
             $table->timestamp('status_updated_at')->nullable();
-            // $table->foreignId('status_updated_by')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('status_updated_by')->nullable();
             $table->foreignId('contractor_id')->references('id')->on('contractors')->onDelete('cascade');
             $table->timestamps();

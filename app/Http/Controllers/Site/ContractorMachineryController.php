@@ -20,8 +20,8 @@ class ContractorMachineryController extends Controller
             'number' => 'required|string|max:50',
             'model' => 'nullable|string|max:100',
             'registration' => 'nullable|string|max:50',
-            'machinery_docs.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,png,gif|max:2048',
-            'machinery_pictures.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,png,gif|max:2048',
+            'machinery_docs.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,png,gif|max:5000',
+            'machinery_pictures.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,png,gif|max:5000',
         ]);
 
         $machinery = new ContractorMachinery();
@@ -41,8 +41,8 @@ class ContractorMachineryController extends Controller
         }
 
         if ($machinery_pictures) {
-            foreach ($machinery_pictures as $picture) {
-                $machinery->addMedia($picture)->toMediaCollection('contractor_machinery_pics');
+            foreach ($machinery_pictures as $pic) {
+                $machinery->addMedia($pic)->toMediaCollection('contractor_machinery_pics');
             }
         }
 
