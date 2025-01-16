@@ -226,7 +226,7 @@
 
         <div class="main">
             <h1>{{ $ContractorRegistration->contractor->firm_name }}</h1>
-            <h2> {{ $ContractorRegistration->applied_category }} / {{ $ContractorRegistration->pec_number }}</h2>
+            <h2> {{ $ContractorRegistration->category_applied }} / {{ $ContractorRegistration->pec_number }}</h2>
             <h3> Name: {{ $ContractorRegistration->contractor->name }}</h3>
         </div>
 

@@ -32,7 +32,7 @@ class ContractorHumanResourceController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
             'salary' => 'required|numeric',
-            'resume' => 'nullable|file|mimes:jpg,png,gif,pdf,doc,docx|max:2048'
+            'resume' => 'nullable|file|mimes:jpg,png,gif,pdf,doc,docx|max:5000'
         ]);
 
         $hr = new ContractorHumanResource();
