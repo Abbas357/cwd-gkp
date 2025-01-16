@@ -181,7 +181,7 @@ class ContractorRegistrationController extends Controller
                 ],
             ]);
         }
-        $data = route('contractors.approved', ['id' => $ContractorRegistration->id]);
+        $data = route('contractors.approved', ['uuid' => $ContractorRegistration->uuid]);
         $qrCode = Builder::create()
             ->writer(new PngWriter())
             ->data($data)

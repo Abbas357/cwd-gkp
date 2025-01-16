@@ -2,21 +2,36 @@
 
 namespace App\Models;
 
+use Spatie\MediaLibrary\HasMedia;
+
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
-
 use Illuminate\Database\Eloquent\Builder;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 class ContractorMachinery extends Model implements HasMedia
 {
-    use InteractsWithMedia;
+    use InteractsWithMedia, LogsActivity;
     
     protected $table = 'contractor_machinery';
 
     protected $guarded = [];
 
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll()
+            ->logExcept(['id', 'updated_at', 'created_at'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->useLogName('Contractor Machinery')
+            ->setDescriptionForEvent(function (string $eventName) {
+                return "Contractor Machinery {$eventName}";
+            });
+    }
+    
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('contractor_machinery_docs');
@@ -33,18 +48,6 @@ class ContractorMachinery extends Model implements HasMedia
             }
         });
     }
-
-    // protected static function booted()
-    // {
-    //     static::addGlobalScope('approved', function (Builder $builder) {
-    //         $builder->where('status', 'approved')->whereNotNull('status_updated_at');
-    //     });
-    // }
-
-    // public function resolveRouteBinding($value, $route = null)
-    // {
-    //     return static::withoutGlobalScopes()->where('id', $value)->firstOrFail();
-    // }
 
     public function contractor()
     {

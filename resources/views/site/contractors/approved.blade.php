@@ -168,7 +168,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($ContractorRegistration->contractor->humanResources as $hr)
+                                    @php
+                                        $humanResources = $ContractorRegistration->contractor->humanResources->where('status', 'approved');
+                                    @endphp
+                                    @foreach($humanResources as $hr)
                                     <tr>
                                         <td>{{ $hr->name }}</td>
                                         <td>{{ $hr->designation }}</td>
@@ -210,28 +213,35 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($ContractorRegistration->contractor->machinery as $machine)
+                                    @php
+                                        $machinery = $ContractorRegistration->contractor->machinery->where('status', 'approved');
+                                    @endphp
+                                    @foreach($machinery as $machine)
                                     <tr>
                                         <td>{{ $machine->name }}</td>
                                         <td>{{ $machine->number }}</td>
                                         <td>{{ $machine->model }}</td>
                                         <td>{{ $machine->registration }}</td>
                                         <td>
-                                            @if($machine->getMedia('contractor_machinery_docs')->count() > 0)
-                                            <a href="{{ $machine->getFirstMediaUrl('contractor_machinery_docs') }}" class="btn btn-sm btn-primary" target="_blank">
-                                                <i class="bi-file-earmark-text"></i> View
-                                            </a>
-                                            @else
-                                            -
+                                            @if($machine->getMedia('contractor_machinery_docs'))
+                                                @foreach($machine->getMedia('contractor_machinery_docs') as $index => $doc)
+                                                <div class="mt-2 files">
+                                                    <a href="{{ $doc->getUrl() }}" target="_blank" class="m-1 badge bg-primary">
+                                                       Document {{ $index + 1 }}
+                                                    </a>
+                                                </div>
+                                                @endforeach
                                             @endif
                                         </td>
                                         <td>
-                                            @if($machine->getMedia('contractor_machinery_pics')->count() > 0)
-                                            <a href="{{ $machine->getFirstMediaUrl('contractor_machinery_pics') }}" class="btn btn-sm btn-primary" target="_blank">
-                                                <i class="bi-image"></i> View
-                                            </a>
-                                            @else
-                                            -
+                                            @if($machine->getMedia('contractor_machinery_pics'))
+                                                @foreach($machine->getMedia('contractor_machinery_pics') as $index => $doc)
+                                                <div class="mt-2 files">
+                                                    <a href="{{ $doc->getUrl() }}" target="_blank" class="m-1 badge bg-primary">
+                                                       Picture {{ $index + 1 }}
+                                                    </a>
+                                                </div>
+                                                @endforeach
                                             @endif
                                         </td>
                                     </tr>
@@ -261,14 +271,17 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($ContractorRegistration->contractor->workExperiences as $experience)
+                                    @php
+                                        $workExperiences = $ContractorRegistration->contractor->workExperiences->where('status', 'approved');
+                                    @endphp
+                                    @foreach($workExperiences as $experience)
                                     <tr>
                                         <td>{{ $experience->project_name }}</td>
                                         <td>{{ $experience->adp_number }}</td>
                                         <td>{{ number_format($experience->project_cost, 2) }}</td>
                                         <td>
-                                            <span class="badge bg-{{ $experience->status === 'completed' ? 'success' : 'warning' }}">
-                                                {{ ucfirst($experience->status) }}
+                                            <span class="badge bg-{{ $experience->project_status === 'completed' ? 'success' : 'warning' }}">
+                                                {{ ucfirst($experience->project_status) }}
                                             </span>
                                         </td>
                                         <td>
