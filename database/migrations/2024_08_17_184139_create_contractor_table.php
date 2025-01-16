@@ -62,10 +62,6 @@ return new class extends Migration
             $table->timestamp('status_updated_at')->nullable();
             $table->unsignedBigInteger('status_updated_by')->nullable();
             $table->foreignId('contractor_id')->references('id')->on('contractors')->onDelete('cascade');
-            $table->unique(['pec_number', 'start_date', 'end_date'], 'pec_date_unique');
-            $table->unique(['email', 'start_date', 'end_date'], 'email_date_unique');
-            $table->unique(['cnic_number', 'start_date', 'end_date'], 'cnic_date_unique');
-            $table->unique(['mobile_number', 'start_date', 'end_date'], 'mobile_number_date_unique');
             $table->timestamps();
         });
 
