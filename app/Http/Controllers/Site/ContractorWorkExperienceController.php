@@ -10,7 +10,8 @@ class ContractorWorkExperienceController extends Controller
 {
     public function create()
     {
-        return view('site.contractors.work_experience');
+        $experiences = ContractorWorkExperience::where('contractor_id', session('contractor_id'))->paginate(10);
+        return view('site.contractors.work_experience', compact('experiences'));
     }
 
     public function store(Request $request)

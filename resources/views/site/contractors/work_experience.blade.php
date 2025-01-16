@@ -94,6 +94,64 @@
                 <x-button type="submit" text="Add" />
             </div>
         </form>
+
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title mb-3 p-2"> List of Work Experience </h3>
+                <table class="table p-5 table-stripped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ADP Number</th>
+                            <th>Project Name</th>
+                            <th>Project Cost</th>
+                            <th>Commencement Date</th>
+                            <th>Completion Date</th>
+                            <th>Project Status</th>
+                            <th>Status</th>
+                            <th>Documents</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($experiences as $experience)
+                        <tr>
+                            <td> {{ $experience->adp_number }} </td>
+                            <td> {{ $experience->project_name }} </td>
+                            <td> {{ number_format($experience->project_cost) }} </td>
+                            <td> {{ $experience->commencement_date }} </td>
+                            <td> {{ $experience->completion_date }} </td>
+                            <td> {{ $experience->project_status }} </td>
+                            <td>
+                                <span class="badge 
+                                    @switch($experience->status)
+                                        @case('draft') bg-secondary @break
+                                        @case('rejected') bg-danger @break
+                                        @case('approved') bg-success @break
+                                        @default bg-light text-dark
+                                    @endswitch">
+                                    {{ ucfirst($experience->status) }}
+                                </span>
+                            </td>
+                            <td class="d-flex justify-content-center">
+                                @if($experience->getFirstMedia('contractor_work_orders'))
+                                <div class="mt-2 files">
+                                    <a href="{{ $experience->getFirstMedia('contractor_work_orders')->getUrl() }}" target="_blank" class="badge bg-primary">
+                                        File
+                                    </a>
+                                </div>
+                                @endif
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="12" class="text-center">No records found</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            {{ $experiences->links() }}
+        </div>
+
     </div>
     @push('script')
     <script src="{{ asset('admin/plugins/jquery-mask/jquery.mask.min.js') }}"></script>

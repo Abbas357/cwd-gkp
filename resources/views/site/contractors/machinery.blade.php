@@ -73,5 +73,77 @@
                 <x-button type="submit" text="Add" />
             </div>
         </form>
+
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title mb-3 p-2"> List of Machinery </h3>
+                <table class="table p-5 table-stripped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Number</th>
+                            <th>Model</th>
+                            <th>Registration</th>
+                            <th>Status</th>
+                            <th>Machinery Documents</th>
+                            <th>Machinery Pictures</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($machinery as $machine)
+                        <tr>
+                            <td> {{ $machine->name }} </td>
+                            <td> {{ $machine->number }} </td>
+                            <td> {{ $machine->model }} </td>
+                            <td> {{ $machine->registration }} </td>
+                            <td>
+                                <span class="badge 
+                                    @switch($machine->status)
+                                        @case('draft') bg-secondary @break
+                                        @case('rejected') bg-danger @break
+                                        @case('approved') bg-success @break
+                                        @default bg-light text-dark
+                                    @endswitch">
+                                    {{ ucfirst($machine->status) }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    @if($machine->getMedia('contractor_machinery_docs'))
+                                        @foreach($machine->getMedia('contractor_machinery_docs') as $index => $doc)
+                                        <div class="mt-2 files">
+                                            <a href="{{ $doc->getUrl() }}" target="_blank" class="m-1 badge bg-primary">
+                                                Document {{ $index + 1 }}
+                                            </a>
+                                        </div>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    @if($machine->getMedia('contractor_machinery_pics'))
+                                        @foreach($machine->getMedia('contractor_machinery_pics') as $index => $pic)
+                                        <div class="mt-2 files">
+                                            <a href="{{ $pic->getUrl() }}" target="_blank" class="m-1 badge bg-primary">
+                                                Image {{ $index + 1 }}
+                                            </a>
+                                        </div>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="12" class="text-center">No records found</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            {{ $machinery->links() }}
+        </div>
+
     </div>
 </x-main-layout>

@@ -9,7 +9,6 @@ use App\Models\ContractorHumanResource;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ContractorWorkExperience;
-use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

@@ -2,7 +2,6 @@
     <table class="table table-experience table-bordered">
         <thead>
             <tr>
-                <th>S.No</th>
                 <th>ADP Number</th>
                 <th>Project Name</th>
                 <th>Project Cost</th>
@@ -11,6 +10,7 @@
                 <th>Project Status</th>
                 <th>Status</th>
                 <th>Documents</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>

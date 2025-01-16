@@ -10,7 +10,8 @@ class ContractorMachineryController extends Controller
 {
     public function create()
     {
-        return view('site.contractors.machinery');
+        $machinery = ContractorMachinery::where('contractor_id', session('contractor_id'))->paginate(10);
+        return view('site.contractors.machinery', compact('machinery'));
     }
 
     public function store(Request $request)

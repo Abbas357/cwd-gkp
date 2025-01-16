@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('password', 100);
             $table->enum('status', ['active', 'blacklisted', 'suspended', 'dormant'])->default('active');
             $table->timestamp('status_updated_at')->nullable();
-            // $table->foreignId('status_updated_by')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('status_updated_by')->nullable();
             $table->timestamp('password_updated_at')->nullable();
             $table->timestamps();
@@ -39,7 +38,6 @@ return new class extends Migration
             $table->string('is_limited', 45)->default('no');
             $table->enum('status', ['new', 'deffered_once', 'deffered_twice', 'deffered_thrice', 'approved'])->default('new');
             $table->timestamp('status_updated_at')->nullable();
-            // $table->foreignId('status_updated_by')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('status_updated_by')->nullable();
             $table->text('deffered_reason')->nullable();
             $table->timestamp('card_issue_date')->nullable();
@@ -64,6 +62,10 @@ return new class extends Migration
             $table->timestamp('status_updated_at')->nullable();
             $table->unsignedBigInteger('status_updated_by')->nullable();
             $table->foreignId('contractor_id')->references('id')->on('contractors')->onDelete('cascade');
+            $table->unique(['pec_number', 'start_date', 'end_date'], 'pec_date_unique');
+            $table->unique(['email', 'start_date', 'end_date'], 'email_date_unique');
+            $table->unique(['cnic_number', 'start_date', 'end_date'], 'cnic_date_unique');
+            $table->unique(['mobile_number', 'start_date', 'end_date'], 'mobile_number_date_unique');
             $table->timestamps();
         });
 
@@ -87,8 +89,8 @@ return new class extends Migration
             $table->decimal('project_cost', 12, 2)->nullable();
             $table->date('commencement_date')->nullable();
             $table->date('completion_date')->nullable();
-            $table->enum('project_status', ['completed', 'ongoing'])->nullable();
-            $table->enum('status', ['draft', 'rejected', 'approved'])->default('draft');
+            $table->enum('project_status', ['completed', 'ongoing', 'onhold'])->nullable();
+            $table->enum('status', ['draft', 'rejected', 'approved'])->default('draft'); 
             $table->timestamp('status_updated_at')->nullable();
             $table->unsignedBigInteger('status_updated_by')->nullable();
             $table->foreignId('contractor_id')->references('id')->on('contractors')->onDelete('cascade');

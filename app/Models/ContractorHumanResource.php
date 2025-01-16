@@ -7,7 +7,6 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 
-use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -17,6 +16,11 @@ class ContractorHumanResource extends Model implements HasMedia
 
     protected $table = 'contractor_human_resources';
 
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
+    ];
+    
     protected $guarded = [];
 
     protected static $recordEvents = ['updated', 'deleted'];

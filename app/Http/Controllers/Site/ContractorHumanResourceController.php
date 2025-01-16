@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers\Site;
 
-use App\Models\Contractor;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\ContractorHumanResource;
-use App\Models\ContractorRegistration;
+use App\Rules\UniqueDateRangeValidation;
 
 class ContractorHumanResourceController extends Controller
 {
     public function create()
     {
-        return view('site.contractors.hr_profile');
+        $humanResources = ContractorHumanResource::where('contractor_id', session('contractor_id'))->paginate(10);
+        return view('site.contractors.hr_profile', compact('humanResources'));
     }
 
     public function store(Request $request)
@@ -21,13 +20,17 @@ class ContractorHumanResourceController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'father_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'mobile_number' => 'required|string|max:255',
-            'cnic_number' => 'required|string|max:15',
-            'pec_number' => 'required|string|max:50',
+            'email' => ['required', 'email', 'max:255', 
+                new UniqueDateRangeValidation('email', $request->input('start_date'), $request->input('end_date'))],
+            'mobile_number' => ['required', 'string', 'max:255', 
+                new UniqueDateRangeValidation('mobile_number', $request->input('start_date'), $request->input('end_date'))],
+            'cnic_number' => ['required', 'string', 'max:15', 
+                new UniqueDateRangeValidation('cnic_number', $request->input('start_date'), $request->input('end_date'))],
+            'pec_number' => ['required', 'max:50', 
+                new UniqueDateRangeValidation('pec_number', $request->input('start_date'), $request->input('end_date'))],
             'designation' => 'required|string|max:100',
             'start_date' => 'required|date',
-            'end_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
             'salary' => 'required|numeric',
             'resume' => 'nullable|file|mimes:jpg,png,gif,pdf,doc,docx|max:2048'
         ]);

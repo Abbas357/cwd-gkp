@@ -1,8 +1,8 @@
 <x-main-layout>
     @push('style')
-        <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
     @endpush
-    
+
     @include('site.contractors.partials.header')
 
     <div class="container">
@@ -122,6 +122,71 @@
                 <x-button type="submit" text="Add" />
             </div>
         </form>
+
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title mb-3 p-2"> List of Human Resources </h3>
+                <table class="table p-5 table-stripped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Father Name</th>
+                            <th>Email</th>
+                            <th>Mobile</th>
+                            <th>CNIC</th>
+                            <th>PEC No.</th>
+                            <th>Designation</th>
+                            <th>Salary</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Status</th>
+                            <th>Documents</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($humanResources as $resource)
+                        <tr>
+                            <td>{{ $resource->name }}</td>
+                            <td>{{ $resource->father_name }}</td>
+                            <td>{{ $resource->email }}</td>
+                            <td>{{ $resource->mobile_number }}</td>
+                            <td>{{ $resource->cnic_number }}</td>
+                            <td>{{ $resource->pec_number }}</td>
+                            <td>{{ $resource->designation }}</td>
+                            <td>{{ number_format($resource->salary, 2) }}</td>
+                            <td>{{ $resource->start_date }}</td>
+                            <td>{{ $resource->end_date }}</td>
+                            <td>
+                                <span class="badge 
+                                    @switch($resource->status)
+                                        @case('draft') bg-secondary @break
+                                        @case('rejected') bg-danger @break
+                                        @case('approved') bg-success @break
+                                        @default bg-light text-dark
+                                    @endswitch">
+                                    {{ ucfirst($resource->status) }}
+                                </span>
+                            </td>
+                            <td class="d-flex justify-content-center">
+                                @if($resource->getFirstMedia('contractor_hr_resumes'))
+                                <div class="mt-2 files">
+                                    <a href="{{ $resource->getFirstMedia('contractor_hr_resumes')->getUrl() }}" target="_blank" class="p-0">
+                                        Resume-(CV)
+                                    </a>
+                                </div>
+                                @endif
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="12" class="text-center">No records found</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            {{ $humanResources->links() }}
+        </div>
     </div>
 
     @push('script')
