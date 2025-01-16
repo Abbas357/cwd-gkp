@@ -3,8 +3,8 @@
         border: 2px solid #ddd;
         border-radius: 10px;
         padding: .5rem;
-        width: 382px;
-        height: 250px;
+        width: 380px;
+        height: 240px;
         margin: auto;
         margin-bottom: .3rem
     }
@@ -60,9 +60,8 @@
             }
 
             .expires {
-                font-size: 140%;
+                font-size: 130%;
                 font-weight: bolder;
-                text-decoration: underline;
                 color: #ff0000;
             }
         }
@@ -104,7 +103,7 @@
                 display: inline-block;
                 height: 115px;
                 border: 5px solid transparent;
-                border: 2px solid #ccc;
+                border: 2px solid #aaa;
                 border-radius: 5px;
             }
         }
@@ -123,7 +122,7 @@
 
         .qr-code {
             position: absolute;
-            bottom: 1.5rem;
+            bottom: 1.6rem;
             right: .3rem;
         }
 
@@ -172,7 +171,7 @@
             h1 {
                 text-transform: uppercase;
                 font-size: 1.2rem;
-                color: #777;
+                color: #222;
                 letter-spacing: 1px;
                 text-decoration: underline;
                 font-weight: bold;
@@ -181,15 +180,15 @@
         }
         .back-main {
             position: absolute;
-            top: 3rem;
+            top: 2.4rem;
             width:94%;
         }
         .back-footer {
             position: absolute;
-            bottom: .3rem;
+            bottom: .1rem;
             p {
                 margin: 0px;
-                color: #575757;
+                color: #222;
                 text-align: center;
                 font-size: 9px;
                 font-weight:normal;
@@ -296,10 +295,10 @@
             </div>
             
             <div class="back-footer">
-                <p class="text-danger"><strong>Note:</strong> Cardholder is an approved contractor, not a government official.</p>
+                <p class="text-danger fw-bold">Note: Cardholder is an approved contractor, not a government official.</p>
                 <p>
                     Issued by Communication and Works Department Govt. of Khyber Pakhtunkhwa.<br />
-                    For Information / Verification, scan QR code or contact IT Cell, C&W Department.<br />
+                    For Verification, scan QR code or contact IT Cell (9214039), C&W Department. <br />
                     If found please drop into the nearest letter box.
                 </p>
             </div>

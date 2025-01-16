@@ -262,7 +262,8 @@
                 actionBtn.on('click', function() {
                     var div = $('#capture')[0];
                     html2canvas(div, {
-                        scale: 2
+                        scale: 2,
+                        useCORS: true
                     }).then(function(canvas) {
                         canvas.toBlob(function(blob) {
                             var link = $('<a></a>')[0];
