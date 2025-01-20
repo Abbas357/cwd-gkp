@@ -3,14 +3,13 @@
 namespace App\Models;
 
 use Spatie\MediaLibrary\HasMedia;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Activitylog\LogOptions;
-
-class Standardization extends Model implements HasMedia
+class Product extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, LogsActivity;
 
@@ -23,7 +22,6 @@ class Standardization extends Model implements HasMedia
         return [
             'card_issue_date' => 'datetime',
             'card_expiry_date' => 'datetime',
-            'password' => 'hashed'
         ];
     }
     
@@ -34,23 +32,15 @@ class Standardization extends Model implements HasMedia
             ->logExcept(['id', 'updated_at', 'created_at'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
-            ->useLogName('standardization')
+            ->useLogName('products')
             ->setDescriptionForEvent(function (string $eventName) {
-                return "Standardization {$eventName}";
+                return "Product {$eventName}";
             });
     }
-    
+
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('secp_certificates')->singleFile();
-        $this->addMediaCollection('iso_certificates')->singleFile();
-        $this->addMediaCollection('commerse_memberships')->singleFile();
-        $this->addMediaCollection('pec_certificates')->singleFile();
-        $this->addMediaCollection('annual_tax_returns')->singleFile();
-        $this->addMediaCollection('audited_financials')->singleFile();
-        $this->addMediaCollection('organization_registrations')->singleFile();
-        $this->addMediaCollection('performance_certificate')->singleFile();
-        $this->addMediaCollection('standardization_firms_pictures')->singleFile();
+        $this->addMediaCollection('product_images');
     }
 
     protected static function boot()
@@ -61,14 +51,11 @@ class Standardization extends Model implements HasMedia
                 $model->status_updated_at = now();
                 $model->status_updated_by = request()->user()->id ?? null;
             }
-            if ($model->isDirty('password')) {
-                $model->password_updated_at = now();
-            }
         });
     }
 
-    public function products()
+    public function standardization()
     {
-        return $this->hasMany(Product::class, 'standardization_id');
+        return $this->belongsTo(Standardization::class, 'standardization_id');
     }
 }

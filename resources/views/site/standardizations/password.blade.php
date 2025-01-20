@@ -1,12 +1,12 @@
 <x-main-layout>
-    @include('site.contractors.partials.header')
+    @include('site.standardizations.partials.header')
 
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="mb-0">Change Password</h2>
         </div>
 
-        <form action="{{ route('contractors.password.update') }}" method="POST">
+        <form action="{{ route('standardizations.password.update') }}" method="POST">
             @csrf
 
             <div class="card p-3">
@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <div class="">
-                    <a href="{{ route('contractors.dashboard') }}" class="btn btn-light me-2">Cancel</a>
+                    <a href="{{ route('standardizations.dashboard') }}" class="btn btn-light me-2">Cancel</a>
                     <x-button type="submit" text="Update Password" />
                 </div>
             </div>

@@ -10,7 +10,7 @@
     }
 
     .contractor-card_front {
-        background-image: url('{{ asset('admin/images/cards/contractor-card-front.png') }}');
+        background-image: url('{{ asset('admin/images/cards/contractor-card-front.png') }}?v=11');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;
@@ -157,7 +157,7 @@
     }
 
     .contractor-card_back {
-        background-image: url('{{ asset('admin/images/cards/contractor-card-back.png') }}');
+        background-image: url('{{ asset('admin/images/cards/contractor-card-back.png') }}?v=11');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;
@@ -171,9 +171,9 @@
             h1 {
                 text-transform: uppercase;
                 font-size: 1.2rem;
-                color: #222;
+                color: #555;
                 letter-spacing: 1px;
-                text-decoration: underline;
+                border-bottom: 2px solid #555;
                 font-weight: bold;
                 transform: scale(.7, 1);
             }

@@ -39,7 +39,7 @@ return new class extends Migration
             $table->enum('status', ['new', 'deffered_once', 'deffered_twice', 'deffered_thrice', 'approved'])->default('new');
             $table->timestamp('status_updated_at')->nullable();
             $table->unsignedBigInteger('status_updated_by')->nullable();
-            $table->text('deffered_reason')->nullable();
+            $table->text('remarks')->nullable();
             $table->timestamp('card_issue_date')->nullable();
             $table->timestamp('card_expiry_date')->nullable();
             $table->foreignId('contractor_id')->references('id')->on('contractors')->onDelete('cascade');
@@ -59,6 +59,7 @@ return new class extends Migration
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->enum('status', ['draft', 'rejected', 'approved'])->default('draft');
+            $table->text('remarks')->nullable();
             $table->timestamp('status_updated_at')->nullable();
             $table->unsignedBigInteger('status_updated_by')->nullable();
             $table->foreignId('contractor_id')->references('id')->on('contractors')->onDelete('cascade');
@@ -72,6 +73,7 @@ return new class extends Migration
             $table->string('model')->nullable();
             $table->string('registration')->nullable();
             $table->enum('status', ['draft', 'rejected', 'approved'])->default('draft');
+            $table->text('remarks')->nullable();
             $table->timestamp('status_updated_at')->nullable();
             $table->unsignedBigInteger('status_updated_by')->nullable();
             $table->foreignId('contractor_id')->references('id')->on('contractors')->onDelete('cascade');
@@ -87,6 +89,7 @@ return new class extends Migration
             $table->date('completion_date')->nullable();
             $table->enum('project_status', ['completed', 'ongoing', 'onhold'])->nullable();
             $table->enum('status', ['draft', 'rejected', 'approved'])->default('draft'); 
+            $table->text('remarks')->nullable();
             $table->timestamp('status_updated_at')->nullable();
             $table->unsignedBigInteger('status_updated_by')->nullable();
             $table->foreignId('contractor_id')->references('id')->on('contractors')->onDelete('cascade');

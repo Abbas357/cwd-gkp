@@ -4,21 +4,12 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Category;
-use App\Models\District;
-use App\Models\Contractor;
 use Illuminate\Http\Request;
 use Endroid\QrCode\Builder\Builder;
 use App\Http\Controllers\Controller;
-use App\Mail\Contractor\RenewedMail;
 use Endroid\QrCode\Writer\PngWriter;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\Contractor\ApprovedMail;
 use Endroid\QrCode\Encoding\Encoding;
 use App\Models\ContractorRegistration;
-use App\Mail\Contractor\DeferredFirstMail;
-use App\Mail\Contractor\DeferredThirdMail;
-use App\Mail\Contractor\DeferredSecondMail;
-use App\Http\Requests\StoreContractorRegistrationRequest;
 use Yajra\DataTables\DataTables;
 
 class ContractorRegistrationController extends Controller
@@ -83,7 +74,7 @@ class ContractorRegistrationController extends Controller
 
     public function defer(Request $request, ContractorRegistration $ContractorRegistration)
     {
-        $ContractorRegistration->deffered_reason = $request->reason;
+        $ContractorRegistration->remarks = $request->remarks;
         if ($ContractorRegistration->status == "new") {
             $ContractorRegistration->status = "deffered_once";
             // Mail::to($ContractorRegistration->email)->queue(new DeferredFirstMail($ContractorRegistration, $request->reason));
@@ -91,7 +82,7 @@ class ContractorRegistrationController extends Controller
             $ContractorRegistration->status = "deffered_twice";
             // Mail::to($ContractorRegistration->email)->queue(new DeferredSecondMail($ContractorRegistration, $request->reason));
         } elseif ($ContractorRegistration->status == "deffered_twice") {
-            $ContractorRegistration->status = "deffered_thrice";;
+            $ContractorRegistration->status = "deffered_thrice";
             // Mail::to($ContractorRegistration->email)->queue(new DeferredThirdMail($ContractorRegistration, $request->reason));
         }
         if($ContractorRegistration->save()) {

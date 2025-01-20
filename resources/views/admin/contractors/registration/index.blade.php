@@ -144,12 +144,12 @@
                 const registrationId = $(this).data("id");
                 const url = "{{ route('admin.contractors.registration.defer', ':id') }}".replace(':id', registrationId);
 
-                const { value: reason } = await confirmWithInput({
+                const { value: remarks } = await confirmWithInput({
                     inputType: "textarea",
                     text: 'Do you want to deffered this registration?'
                     , inputValidator: (value) => {
                         if (!value) {
-                            return 'You need to provide a reason!';
+                            return 'You need to provide reason / remarks!';
                         }
                     }
                     , inputPlaceholder: 'Enter the reason for deffering'

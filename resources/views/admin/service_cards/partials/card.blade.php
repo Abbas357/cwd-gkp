@@ -3,14 +3,14 @@
         border: 2px solid #ddd;
         border-radius: 10px;
         padding: .5rem;
-        width: 382px;
-        height: 250px;
+        width: 380px;
+        height: 240px;
         margin: auto;
         margin-bottom: .3rem
     }
 
     .service-card_front {
-        background-image: url('{{ asset('admin/images/cards/service-card-front.png') }}');
+        background-image: url('{{ asset('admin/images/cards/service-card-front.png') }}?v=11');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;
@@ -60,9 +60,8 @@
             }
 
             .expires {
-                font-size: 140%;
+                font-size: 120%;
                 font-weight: bolder;
-                text-decoration: underline;
                 color: #ff0000;
             }
         }
@@ -157,7 +156,7 @@
     }
 
     .service-card_back {
-        background-image: url('{{ asset('admin/images/cards/service-card-back.png') }}');
+        background-image: url('{{ asset('admin/images/cards/service-card-back.png') }}?v=11');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;
@@ -171,9 +170,9 @@
             h1 {
                 text-transform: uppercase;
                 font-size: 1.2rem;
-                color: #777;
+                color: #555;
                 letter-spacing: 1px;
-                text-decoration: underline;
+                border-bottom: 2px solid #555;
                 font-weight: bold;
                 transform: scale(.7, 1);
             }
@@ -185,7 +184,7 @@
         }
         .back-footer {
             position: absolute;
-            bottom: .3rem;
+            bottom: 0;
             p {
                 margin: 0px;
                 color: #575757;
@@ -305,7 +304,7 @@
             <div class="back-footer">
                 <p>
                     Issued by Communication and Works Department Govt. of Khyber Pakhtunkhwa.<br />
-                    For Information / Verification, scan QR code or contact IT Cell, C&W Department.<br />
+                    For Verification, scan QR code or contact IT Cell (9214039), C&W Department. <br />
                     If found please drop into the nearest letter box.
                 </p>
             </div>

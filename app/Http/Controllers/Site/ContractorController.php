@@ -112,13 +112,13 @@ class ContractorController extends Controller
 
         $contractor = Contractor::findOrFail(session('contractor_id'));
         if (!Hash::check($request->input('old_password'), $contractor->password)) {
-            return back()->withErrors(['old_password' => 'The old password is incorrect.']);
+            return back()->with(['error' => 'The old password is incorrect.']);
         }
 
         $contractor->password = $request->input('new_password');
         $contractor->save();
 
-        return back()->with('status', 'Password updated successfully.');
+        return back()->with('success', 'Password updated successfully.');
     }
 
     public function edit()
@@ -143,6 +143,11 @@ class ContractorController extends Controller
             'address' => 'required|string',
             'district' => 'required|string|max:100',
         ]);
+
+        if ($contractor->updated_at && $contractor->updated_at->isToday()) {
+            return redirect()->route('standardizations.edit')
+                ->with('error', 'Update Failed! Come back tomorrow to update your profile again');
+        }
 
         $contractor->update($validated);
 

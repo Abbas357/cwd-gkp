@@ -1,6 +1,7 @@
 <x-app-layout title="E-Standardization">
     @push('style')
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header">
         <li class="breadcrumb-item active" aria-current="page">E-Standardization</li>
@@ -17,23 +18,21 @@
             <li class="nav-item">
                 <a id="rejected-tab" class="nav-link" data-bs-toggle="tab" href="#rejected">Rejected</a>
             </li>
+            <li class="nav-item">
+                <a id="blacklisted-tab" class="nav-link" data-bs-toggle="tab" href="#blacklisted">Blacklisted</a>
+            </li>
         </ul>
     </div>
 
-    <table id="standardizations-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+    <table id="standardizations" width="100%" class="table table-striped table-hover table-bordered align-center">
         <thead>
             <tr>
                 <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Product Name</th>
-                <th scope="col" class="p-3">Specification Details</th>
                 <th scope="col" class="p-3">Firm Name</th>
                 <th scope="col" class="p-3">Address</th>
                 <th scope="col" class="p-3">Mobile Number</th>
                 <th scope="col" class="p-3">Phone Number</th>
                 <th scope="col" class="p-3">Email</th>
-                <th scope="col" class="p-3">Locality</th>
-                <th scope="col" class="p-3">NTN Number</th>
-                <th scope="col" class="p-3">Location Type</th>
                 <th scope="col" class="p-3">Created At</th>
                 <th scope="col" class="p-3">Updated At</th>
                 <th scope="col" class="p-3">Actions</th>
@@ -47,22 +46,15 @@
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/col-resizable.js') }}"></script>
     <script src="{{ asset('admin/plugins/html2canvas/html2canvas.min.js') }}"></script>
+    <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
 
     <script>
         $(document).ready(function() {
-            var table = initDataTable('#standardizations-datatable', {
+            var table = initDataTable('#standardizations', {
                 ajaxUrl: "{{ route('admin.standardizations.index') }}"
                 , columns: [{
                         data: "id"
                         , searchBuilderType: "num"
-                    }
-                    , {
-                        data: "product_name"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "specification_details"
-                        , searchBuilderType: "string"
                     }
                     , {
                         data: "firm_name"
@@ -85,18 +77,6 @@
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "locality"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "ntn_number"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "location_type"
-                        , searchBuilderType: "string"
-                    }
-                    , {
                         data: "created_at"
                         , searchBuilderType: "date"
                     }
@@ -111,28 +91,28 @@
                         , type: "html"
                     }
                 ]
-                , defaultOrderColumn: 11
+                , defaultOrderColumn: 9
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
-                    targets: [0, 2, 5, 8, 10]
+                    targets: [0, 2, 5]
                     , visible: false
                 }]
             });
 
-            $("#standardizations-datatable").on('click', '.approve-btn', async function() {
+            $("#standardizations").on('click', '.approve-btn', async function() {
                 const standardizationId = $(this).data("id");
                 const url = "{{ route('admin.standardizations.approve', ':id') }}".replace(':id', standardizationId);
 
-                const result = await confirmAction('Do you want to approve this product?');
+                const result = await confirmAction('Do you want to approve this firm?');
                 if (result && result.isConfirmed) {
                     const success = await fetchRequest(url, 'PATCH');
                     if (success) {
-                        $("#standardizations-datatable").DataTable().ajax.reload();
+                        $("#standardizations").DataTable().ajax.reload();
                     }
                 }
             });
 
-            $("#standardizations-datatable").on('click', '.renew-btn', async function() {
+            $("#standardizations").on('click', '.renew-btn', async function() {
                 const standardizationId = $(this).data("id");
                 const url = "{{ route('admin.standardizations.renew', ':id') }}".replace(':id', standardizationId);
 
@@ -152,20 +132,20 @@
                         issue_date
                     });
                     if (success) {
-                        $("#standardizations-datatable").DataTable().ajax.reload();
+                        $("#standardizations").DataTable().ajax.reload();
                     }
                 }
             });
 
-            $("#standardizations-datatable").on('click', '.reject-btn', async function() {
+            $("#standardizations").on('click', '.reject-btn', async function() {
                 const standardizationId = $(this).data("id");
                 const url = "{{ route('admin.standardizations.reject', ':id') }}".replace(':id', standardizationId);
 
                 const {
-                    value: reason
+                    value: remarks
                 } = await confirmWithInput({
                     inputType: "textarea",
-                    text: 'Do you want to reject this product?'
+                    text: 'Do you want to reject this firm?'
                     , inputValidator: (value) => {
                         if (!value) {
                             return 'You need to provide a reason!';
@@ -181,7 +161,7 @@
                         reason
                     });
                     if (success) {
-                        $("#standardizations-datatable").DataTable().ajax.reload();
+                        $("#standardizations").DataTable().ajax.reload();
                     }
                 }
             });
@@ -193,6 +173,7 @@
                     "#new-tab": '#new'
                     , "#approved-tab": '#approved'
                     , "#rejected-tab": '#rejected'
+                    , "#blacklisted-tab": '#blacklisted'
                 , }
                 , hashToParamsMap: {
                     '#new': {
@@ -204,11 +185,14 @@
                     , '#rejected': {
                         status: 'rejected'
                     }
+                    , '#blacklisted': {
+                        status: 'blacklisted'
+                    }
                 , }
                 , defaultHash: '#new'
             });
 
-            $('#standardizations-datatable').colResizable({
+            $('#standardizations').colResizable({
                 liveDrag: true
                 , resizeMode: 'overflow'
                 , postbackSafe: true
@@ -244,6 +228,13 @@
                 btnSelector: '.view-btn',
                 title: 'Standardization Details',
                 modalSize: 'lg',
+            });
+
+            pushStateModal({
+                fetchUrl: "{{ route('admin.standardizations.product.detail', ':id') }}"
+                , btnSelector: '.product-btn'
+                , title: 'Products'
+                , modalSize: 'xl'
             });
             
         });

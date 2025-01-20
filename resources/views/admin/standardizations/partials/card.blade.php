@@ -3,14 +3,14 @@
         border: 2px solid #ddd;
         border-radius: 10px;
         padding: .5rem;
-        width: 382px;
-        height: 250px;
+        width: 380px;
+        height: 240px;
         margin: auto;
         margin-bottom: .3rem
     }
 
     .product-card_front {
-        background-image: url('{{ asset('admin/images/cards/product-card-front.png') }}');
+        background-image: url('{{ asset('admin/images/cards/product-card-front.png') }}?v=11');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;
@@ -60,9 +60,8 @@
             }
 
             .expires {
-                font-size: 140%;
+                font-size: 120%;
                 font-weight: bolder;
-                text-decoration: underline;
                 color: #ff0000;
             }
         }
@@ -111,7 +110,7 @@
 
         .authority-sign {
             position: absolute;
-            bottom: 1.3rem;
+            bottom: 1.5rem;
             left: 7rem;
             border-top: 1px solid black;
             width: 130px;
@@ -123,13 +122,13 @@
 
         .qr-code {
             position: absolute;
-            bottom: 1.5rem;
+            bottom: 1.8rem;
             right: .3rem;
         }
 
         .sign {
             position: absolute;
-            bottom: 1.5rem;
+            bottom: 1.8rem;
             left: 8.5rem;
             width: 30px;
             rotate: -30deg;
@@ -158,7 +157,7 @@
     }
 
     .product-card_back {
-        background-image: url('{{ asset('admin/images/cards/product-card-back.png') }}');
+        background-image: url('{{ asset('admin/images/cards/product-card-back.png') }}?v=11');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;
@@ -166,29 +165,31 @@
 
         .back-heading {
             position: absolute;
-            top: .5rem;
+            top: .1rem;
             left: 15%;
 
             h1 {
                 text-transform: uppercase;
                 font-size: 1.2rem;
-                color: #777;
+                color: #555;
                 letter-spacing: 1px;
-                text-decoration: underline;
+                border-bottom: 2px solid #555;
                 font-weight: bold;
                 transform: scale(.7, 1);
             }
         }
         .back-main {
             position: absolute;
-            top: 2rem;
+            top: 1.9rem;
             width:94%;
             text-align: justify;
-            font-size: 9px;
+            font-size: 10px;
+            line-height: .75rem;
+            color: #222;
         }
         .back-footer {
             position: absolute;
-            bottom: 5px;
+            bottom: 0px;
             left: .4rem;
             p {
                 margin: 0px;
@@ -220,17 +221,20 @@
         </div>
 
         <div class="header-right">
-            <span class="expires">EXPIRES: {{ $standardization->card_expiry_date->format('j, M Y'); }}</span>
+            <span class="expires">EXPIRES: {{ $Standardization->card_expiry_date->format('j, M Y'); }}</span>
         </div>
 
         <div class="image">
-            <img src="{{ $standardization->getFirstMediaUrl('firm_pictures') ?: asset('admin/images/no-profile.png') }}" alt="{{ $standardization->product_name }}">
+            <img src="{{ $Standardization->getFirstMediaUrl('standardization_firms_pictures') ?: asset('admin/images/no-profile.png') }}" alt="{{ $Standardization->product_name }}">
         </div>
 
         <div class="main">
-            <h1>{{ $standardization->firm_name }}</h1>
-            <h2> {{ $standardization->product_name }}</h2>
-            <h3> Locality: {{ $standardization->locality }}</h3>
+            <h1>{{ $Standardization->firm_name }}</h1>
+            <h2> {{ $Standardization->name }}</h2>
+            <h3>Products</h3>
+            @foreach($Standardization->products as $product)
+                <div>{{ $product->name }}</div>
+            @endforeach
         </div>
 
         <div class="footer">
@@ -277,7 +281,7 @@
             </div>
             
             <div class="back-footer">
-                <p class="text-danger" style="white-space: nowrap"><strong>Note:</strong> Cardholder is a Standardized Firm, not a government entity / official.</p>
+                <p class="text-danger" style="white-space: nowrap"><strong>Note: Cardholder is a Standardized Firm, not a government entity.</strong></p>
                 <p>
                     Issued by IT Cell, C&W Department Govt. of Khyber Pakhtunkhwa.<br />
                 </p>

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\ContractorAuth;
+use App\Http\Middleware\StandardizationAuth;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\NewsController;
 use App\Http\Controllers\Site\PageController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Site\SliderController;
 use App\Http\Controllers\Site\TenderController;
 use App\Http\Controllers\Site\CommentController;
 use App\Http\Controllers\Site\GalleryController;
+use App\Http\Controllers\Site\ProductController;
 use App\Http\Controllers\Site\ProjectController;
 use App\Http\Controllers\Site\DownloadController;
 use App\Http\Controllers\Site\SeniorityController;
@@ -26,6 +28,7 @@ use App\Http\Middleware\ContractorRedirectIfAuthenticated;
 use App\Http\Controllers\Site\DevelopmentProjectController;
 use App\Http\Controllers\Site\ContractorMachineryController;
 use App\Http\Controllers\Site\ContractorRegistrationController;
+use App\Http\Middleware\StandardizationRedirectIfAuthenticated;
 use App\Http\Controllers\Site\ContractorHumanResourceController;
 use App\Http\Controllers\Site\ContractorWorkExperienceController;
 
@@ -93,7 +96,36 @@ Route::prefix('contractors')->as('contractors.')->group(function () {
 Route::prefix('standardizations')->as('standardizations.')->group(function () {
     Route::get('/apply', [StandardizationController::class, 'create'])->name('create');
     Route::post('/', [StandardizationController::class, 'store'])->name('store');
-    Route::get('/approved/{id}', [StandardizationController::class, 'approvedProducts'])->name('approved');
+    Route::post('/check', [StandardizationController::class, 'checkFields'])->name('check');
+    Route::get('/approved/{uuid}', [StandardizationController::class, 'approvedProducts'])->name('approved');
+
+    Route::middleware([StandardizationRedirectIfAuthenticated::class])->group(function () {
+        Route::get('/login', [StandardizationController::class, 'view_login'])->name('login.get');
+        Route::post('/login', [StandardizationController::class, 'login'])->name('login.post');
+        Route::get('/register', [StandardizationController::class, 'register'])->name('register');
+    });
+
+    Route::middleware(StandardizationAuth::class)->group(function () {
+        Route::get('/dashboard', [StandardizationController::class, 'dashboard'])->name('dashboard');
+        Route::post('/logout', [StandardizationController::class, 'logout'])->name('logout');
+
+        Route::get('/password', [StandardizationController::class, 'PasswordView'])->name('password.view');
+        Route::post('/password', [StandardizationController::class, 'updatePassword'])->name('password.update');
+        
+        Route::get('/upload', [StandardizationController::class, 'uploadDocsView'])->name('upload.get');
+        Route::patch('/upload', [StandardizationController::class, 'uploadDocs'])->name('upload');
+
+        Route::get('/edit', [StandardizationController::class, 'edit'])->name('edit');
+        Route::patch('/update', [StandardizationController::class, 'update'])->name('update');
+        
+        Route::prefix('product')->as('product.')->group(function () {
+            Route::get('/view', [ProductController::class, 'index'])->name('index');
+            Route::get('/', [ProductController::class, 'create'])->name('create');
+            Route::post('/', [ProductController::class, 'store'])->name('store');
+            Route::get('/{id}', [ProductController::class, 'show'])->name('show');
+        });
+    });
+
 });
 
 Route::prefix('stories')->as('stories.')->group(function () {

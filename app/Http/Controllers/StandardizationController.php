@@ -64,9 +64,10 @@ class StandardizationController extends Controller
         ]);
     }
 
-    public function showDetail(Standardization $standardization)
+    public function showDetail($id)
     {
-        if (!$standardization) {
+        $Standardization = Standardization::find($id);
+        if (!$Standardization) {
             return response()->json([
                 'success' => false,
                 'data' => [
@@ -83,9 +84,10 @@ class StandardizationController extends Controller
         ]);
     }
 
-    public function showCard(Standardization $standardization)
+    public function showCard($id)
     {
-        if ($standardization->status !== 'approved') {
+        $Standardization = Standardization::find($id);
+        if ($Standardization->status !== 'approved') {
             return response()->json([
                 'success' => false,
                 'data' => [
@@ -93,7 +95,7 @@ class StandardizationController extends Controller
                 ],
             ]);
         }
-        $data = route('standardizations.approved', ['id' => $standardization->id]);
+        $data = route('standardizations.approved', ['uuid' => $Standardization->uuid]);
         $qrCode = Builder::create()
             ->writer(new PngWriter())
             ->data($data)
@@ -154,7 +156,7 @@ class StandardizationController extends Controller
     {
         if (!in_array($standardization->status, ['approved', 'rejected'])) {
             $standardization->status = 'rejected';
-            $standardization->rejection_reason = $request->reason;
+            $standardization->remarks = $request->remarks;
 
             if($standardization->save()) {
                 Mail::to($standardization->email)->queue(new RejectedMail($standardization, $request->reason));

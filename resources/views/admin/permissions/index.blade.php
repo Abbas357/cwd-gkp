@@ -84,7 +84,7 @@
                                 </div>
                             </div>
                             <!-- Pagination links -->
-                            {{ $permissions->links() }}
+                            {{ $permissions->withQueryString()->links() }}
                         </div>
                     </div>
                 </div>

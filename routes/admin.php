@@ -13,6 +13,7 @@ use App\Http\Controllers\SliderController;
 use App\Http\Controllers\TenderController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SettingController;
@@ -24,14 +25,14 @@ use App\Http\Controllers\ContractorController;
 use App\Http\Controllers\NewsLetterController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ActivityLogController;
-use App\Http\Controllers\ContractorHumanResourceController;
-use App\Http\Controllers\ContractorMachineryController;
 use App\Http\Controllers\ProjectFileController;
 use App\Http\Controllers\ServiceCardController;
 use App\Http\Controllers\PublicContactController;
 use App\Http\Controllers\StandardizationController;
 use App\Http\Controllers\DevelopmentProjectController;
+use App\Http\Controllers\ContractorMachineryController;
 use App\Http\Controllers\ContractorRegistrationController;
+use App\Http\Controllers\ContractorHumanResourceController;
 use App\Http\Controllers\ContractorWorkExperienceController;
 
 Route::middleware('auth')->group(function () { 
@@ -118,6 +119,13 @@ Route::middleware('auth')->group(function () {
             Route::patch('/renew/{standardization}', [StandardizationController::class, 'renew'])->name('renew')->can('renew', 'Standardization');
             Route::patch('/update/field/{standardization}', [StandardizationController::class, 'updateField'])->name('updateField')->can('update', 'Standardization');
             Route::patch('/upload/file/{standardization}', [StandardizationController::class, 'uploadFile'])->name('uploadFile')->can('update', 'Standardization');
+            
+            Route::prefix('product')->as('product.')->group(function () {
+                Route::get('/{Standardization}', [ProductController::class, 'detail'])->name('detail')->can('view', 'Product');
+                Route::post('/{id}/update', [ProductController::class, 'update'])->name('update');
+                Route::patch('/{id}/upload', [ProductController::class, 'upload'])->name('upload');
+                Route::delete('{id}', [ProductController::class, 'destroy'])->name('destroy');
+            });
         });
         
         Route::prefix('downloads')->as('downloads.')->group(function () {

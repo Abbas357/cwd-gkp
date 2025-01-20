@@ -101,6 +101,6 @@
     <script src="{{ asset('site/js/core.min.js') }}?v=11"></script>
 
     @stack('script')
-    <script src="{{ asset('site/js/custom.min.js') }}?v=10"></script>
+    <script src="{{ asset('site/js/custom.min.js') }}?v=11"></script>
 </body>
 </html>

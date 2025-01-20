@@ -87,7 +87,7 @@
                     </div>
                 </div>
                 <!-- Pagination links -->
-                {{ $categories->links() }}
+                {{ $categories->withQueryString()->links() }}
             </div>
         </div>
     </div>
