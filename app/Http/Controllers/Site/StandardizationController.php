@@ -59,12 +59,7 @@ class StandardizationController extends Controller
             'email' => 'The provided credentials do not match our records.',
         ])->withInput($request->except('password'));
     }
-
-    public function create()
-    {
-        return view('site.standardizations.create');
-    }
-
+    
     public function store(StoreStandardizationRequest $request)
     {
         $standardization = new Standardization();

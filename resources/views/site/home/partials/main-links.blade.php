@@ -11,7 +11,7 @@
                 </a>
             </div>
             <div class="col action-container">
-                <a href="{{ route('standardizations.create') }}" class="action-link">
+                <a href="{{ route('standardizations.login.get') }}" class="action-link">
                     <div class="action-button">
                         <i class="bi-award action-icon"></i>
                         <div class="action-label">E-Standardization</div>

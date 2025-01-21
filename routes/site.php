@@ -43,7 +43,7 @@ Route::prefix('partials')->as('partials.')->group(function () {
     Route::get('/contact', [HomeController::class, 'contactPartial'])->name('contact');
 });
 
-Route::prefix('contractors')->as('contractors.')->group(function () {
+Route::prefix('contractors')->as('contractors.')->middleware('route_lock')->group(function () {
     Route::get('/', [ContractorController::class, 'registration'])->name('registration');
     Route::post('/', [ContractorController::class, 'store'])->name('store');
     Route::post('/check', [ContractorController::class, 'checkFields'])->name('check');
@@ -93,8 +93,7 @@ Route::prefix('contractors')->as('contractors.')->group(function () {
     });
 });
 
-Route::prefix('standardizations')->as('standardizations.')->group(function () {
-    Route::get('/apply', [StandardizationController::class, 'create'])->name('create');
+Route::prefix('standardizations')->as('standardizations.')->middleware('route_lock')->group(function () {
     Route::post('/', [StandardizationController::class, 'store'])->name('store');
     Route::post('/check', [StandardizationController::class, 'checkFields'])->name('check');
     Route::get('/approved/{uuid}', [StandardizationController::class, 'approvedProducts'])->name('approved');
@@ -128,6 +127,12 @@ Route::prefix('standardizations')->as('standardizations.')->group(function () {
 
 });
 
+Route::prefix('service_cards')->as('service_cards.')->middleware('route_lock')->group(function () {
+    Route::get('/apply', [ServiceCardController::class, 'create'])->name('create');
+    Route::post('/', [ServiceCardController::class, 'store'])->name('store');
+    Route::get('/verified/{uuid}', [ServiceCardController::class, 'verified'])->name('verified');
+});
+
 Route::prefix('stories')->as('stories.')->group(function () {
     Route::post('/', [StoryController::class, 'getStories'])->name('get');
     Route::patch('/viewed/{story}', [StoryController::class, 'incrementSeen'])->name('viewed');
@@ -152,12 +157,6 @@ Route::prefix('positions')->as('positions.')->group(function () {
 
 Route::prefix('contacts')->as('contacts.')->group(function () {
     Route::get('/', [UserController::class, 'contacts'])->name('index');
-});
-
-Route::prefix('service_cards')->as('service_cards.')->group(function () {
-    Route::get('/apply', [ServiceCardController::class, 'create'])->name('create');
-    Route::post('/', [ServiceCardController::class, 'store'])->name('store');
-    Route::get('/verified/{id}', [ServiceCardController::class, 'verified'])->name('verified');
 });
 
 Route::prefix('news')->as('news.')->group(function () {

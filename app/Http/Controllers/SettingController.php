@@ -19,10 +19,22 @@ class SettingController extends Controller
     {
         $validatedData = $request->validated();
         $message = '';
+
+        if ($request->has('maintenance_routes')) {
+            $maintenanceRoutes = [];
+            foreach ($request->maintenance_routes as $route => $status) {
+                $maintenanceRoutes[$route] = (bool) $status;
+            }
+            $validatedData['maintenance_routes'] = $maintenanceRoutes;
+        } else {
+            $validatedData['maintenance_routes'] = [];
+        }
+
         Setting::updateOrCreate(
             ['id' => 1],
             $validatedData
         );
+
         $message = 'Settings saved successfully.';
         Cache::forget('settings');
 

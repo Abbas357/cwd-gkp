@@ -26,6 +26,8 @@ class UpdateSettingRequest extends FormRequest
             'youtube' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
             'secret_key' => 'nullable|string|max:500',
+            'maintenance_routes' => 'nullable|array',
+            'maintenance_routes.*' => 'boolean',
         ];
     }
 }

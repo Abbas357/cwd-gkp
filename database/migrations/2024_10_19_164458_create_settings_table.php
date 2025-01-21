@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('youtube')->default('CWDKPGovt');
             $table->text('meta_description')->nullable();
             $table->string('secret_key')->nullable();
+            $table->longText('maintenance_routes')->nullable();
             $table->timestamps();
         });
         

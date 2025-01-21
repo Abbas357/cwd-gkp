@@ -16,7 +16,11 @@ class Setting extends Model implements HasMedia
 
     protected $fillable = [
         'site_name', 'description', 'email', 'maintenance_mode', 'contact_phone', 'contact_address',
-        'whatsapp', 'facebook', 'twitter', 'youtube', 'meta_description', 'secret_key',
+        'whatsapp', 'facebook', 'twitter', 'youtube', 'meta_description', 'secret_key', 'maintenance_routes',
+    ];
+
+    protected $casts = [
+        'maintenance_routes' => 'array'
     ];
 
     protected static $recordEvents = ['updated'];

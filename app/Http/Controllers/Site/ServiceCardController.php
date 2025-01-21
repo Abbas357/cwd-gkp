@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Site;
 
 use App\Models\Category;
 use App\Models\ServiceCard;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
-use App\Http\Requests\StoreServiceCardRequest;
 use App\Mail\ServiceCard\AppliedMail;
+use App\Http\Requests\StoreServiceCardRequest;
 
 class ServiceCardController extends Controller
 {
@@ -34,6 +35,7 @@ class ServiceCardController extends Controller
     public function store(StoreServiceCardRequest $request)
     {
         $card = new ServiceCard();
+        $card->uuid = Str::uuid();
         $card->name = $request->name;
         $card->father_name = $request->father_name;
         $card->cnic = $request->cnic;
@@ -64,9 +66,9 @@ class ServiceCardController extends Controller
         return redirect()->route('service_cards.create')->with('error', 'There is an error submitting your data');
     }
 
-    public function verified(Request $request, $cardId)
+    public function verified(Request $request, $uuid)
     {
-        $service_card = ServiceCard::findOrFail($cardId);
+        $service_card = ServiceCard::where('uuid', $uuid)->first();
         return view('site.service_cards.verified', compact('service_card'));
     }
 }

@@ -2,6 +2,7 @@
 
 use Illuminate\Foundation\Application;
 use App\Http\Middleware\CheckMaintenanceMode;
+use App\Http\Middleware\RouteMaintenanceMode;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
@@ -14,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->web(append: [
             CheckMaintenanceMode::class,
+        ]);
+        $middleware->alias([
+            'route_lock' => RouteMaintenanceMode::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

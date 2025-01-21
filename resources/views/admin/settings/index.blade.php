@@ -183,6 +183,34 @@
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
+                                    <div class="mb-4">
+                                        <h5>Lock Modules</h5>
+                                        <div class="route-maintenance-list">
+                                            @php
+                                                $maintenanceRoutes = is_array($settings->maintenance_routes) 
+                                                    ? $settings->maintenance_routes 
+                                                    : (json_decode($settings->maintenance_routes, true) ?? []);
+                                            @endphp
+                                            
+                                            @foreach([
+                                                'service_cards.*' => 'Service Card',
+                                                'contractors.*' => 'Contractor',
+                                                'standardizations.*' => 'Standardization'
+                                            ] as $route => $label)
+                                                <div class="form-check mb-2">
+                                                    <input type="checkbox" 
+                                                           class="form-check-input route-group" 
+                                                           id="route_{{ $route }}"
+                                                           name="maintenance_routes[{{ $route }}]"
+                                                           value="1"
+                                                           {{ isset($maintenanceRoutes[$route]) && $maintenanceRoutes[$route] ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="route_{{ $route }}">
+                                                        {{ $label }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 

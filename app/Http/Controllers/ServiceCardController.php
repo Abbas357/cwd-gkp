@@ -172,7 +172,7 @@ class ServiceCardController extends Controller
             ]);
         }
 
-        $data = route('service_cards.verified', ['id' => $service_card->id]);
+        $data = route('service_cards.verified', ['uuid' => $service_card->uuid]);
         $qrCode = Builder::create()
             ->writer(new SvgWriter())
             ->data($data)

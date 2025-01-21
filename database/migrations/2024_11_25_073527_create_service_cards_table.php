@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('service_cards', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->string('name');
             $table->string('father_name')->nullable();
             $table->string('cnic')->nullable();
