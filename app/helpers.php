@@ -1,5 +1,7 @@
 <?php 
 
+use Illuminate\Helpers\Str;
+
 function getProfilePic(App\Models\User $user): string
 {
     $url = asset($user->getFirstMediaUrl('profile_pictures', 'thumb'));
@@ -54,4 +56,14 @@ function getDocumentIcon($mimeType)
         default:
             return 'bi bi-file-earmark';
     }
+}
+
+function formatRouteName(string $routeName): string
+{
+    $formattedName = explode('.', $routeName)[0];
+        $formattedName = str_replace('_', ' ', $formattedName);
+        $formattedName = ucwords($formattedName);
+        $words = explode(' ', $formattedName);
+        $words[count($words) - 1] = \Illuminate\Support\Str::singular($words[count($words) - 1]);
+        return implode(' ', $words);
 }
