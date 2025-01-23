@@ -16,16 +16,13 @@ return new class extends Migration
             $table->string('email', 100)->unique();
             $table->string('cnic', 15)->nullable()->unique();
             $table->string('mobile_number', 15)->nullable();
-            $table->string('phone_number')->nullable();
             $table->string('district', 45)->nullable();
             $table->string('address')->nullable();
             $table->string('password', 100);
-            $table->enum('status', ['new', 'approved', 'rejected', 'blacklisted'])->default('new');
-            $table->text('remarks')->nullable();
-            $table->timestamp('card_issue_date')->nullable();
-            $table->timestamp('card_expiry_date')->nullable();
+            $table->enum('status', ['draft', 'approved', 'rejected', 'blacklisted'])->default('draft');
             $table->timestamp('status_updated_at')->nullable();
             $table->unsignedBigInteger('status_updated_by')->nullable();
+            $table->text('remarks')->nullable();
             $table->timestamp('password_updated_at')->nullable();
             $table->timestamps();
         });
@@ -38,14 +35,13 @@ return new class extends Migration
             $table->string('ntn_number');
             $table->string('sale_tax_number');
             $table->enum('location_type', ['Factory', 'Warehouse', 'Store', 'Distribution Center'])->default('Factory');
-            $table->enum('status', ['new', 'approved', 'rejected'])->default('new');
+            $table->enum('status', ['draft', 'approved', 'rejected'])->default('draft');
             $table->timestamp('status_updated_at')->nullable();
             $table->unsignedBigInteger('status_updated_by')->nullable();
             $table->text('remarks')->nullable();
             $table->foreignId('standardization_id')->references('id')->on('standardizations')->onDelete('cascade');
             $table->timestamps();
         });
-
 
     }
 

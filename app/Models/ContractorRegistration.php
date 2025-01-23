@@ -7,8 +7,11 @@ use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use App\Observers\ContractorRegistrationObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy([ContractorRegistrationObserver::class])]
 class ContractorRegistration extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, LogsActivity;
@@ -45,17 +48,6 @@ class ContractorRegistration extends Model implements HasMedia
         $this->addMediaCollection('pec_attachments')->singleFile();
         $this->addMediaCollection('form_h_attachments')->singleFile();
         $this->addMediaCollection('pre_enlistment_attachments')->singleFile();
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-        static::updating(function ($model) {
-            if ($model->isDirty('status')) {
-                $model->status_updated_at = now();
-                $model->status_updated_by = request()->user()->id ?? null;
-            }
-        });
     }
 
     public function contractor()
