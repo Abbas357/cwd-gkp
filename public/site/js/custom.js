@@ -1027,7 +1027,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeToggle = document.createElement('button');
     themeToggle.id = 'theme-toggle';
     themeToggle.className = 'position-fixed';
-    themeToggle.style.cssText = 'right: 0; top: 33vh; z-index: 1040; color: white; border: none; padding: .3rem .5rem; border-radius: 5px; cursor: pointer;background-color: #febd17';
+    themeToggle.style.cssText = 'right: 0; top: 8rem; z-index: 1040; color: white; border: none; padding: .3rem .5rem; border-radius: 5px; cursor: pointer;background-color: #0b7240';
 
     const icon = document.createElement('i');
     icon.className = 'bi bi-palette';
