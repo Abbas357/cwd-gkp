@@ -2,17 +2,20 @@
 
 namespace App\Models;
 
+use App\Traits\HasComments;
+use App\Observers\NewsObserver;
 use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use App\Traits\HasComments;
 
 use Spatie\Activitylog\Traits\LogsActivity;
 
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy([NewsObserver::class])]
 class News extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, LogsActivity, HasComments;
@@ -43,27 +46,6 @@ class News extends Model implements HasMedia
     {
         static::addGlobalScope('published', function (Builder $builder) {
             $builder->where('status', 'published')->whereNotNull('published_at');
-        });
-
-        static::created(function ($news) {
-            SiteNotification::create([
-                'title' => $news->title,
-                'url' => route('news.show', $news->slug, false),
-                'notifiable_id' => $news->id,
-                'notifiable_type' => get_class($news),
-            ]);
-        });
-
-        static::updated(function ($news) {
-            if ($news->isDirty('status')) {
-                $news->notifications()->withoutGlobalScopes()->update([
-                    'published_at' => $news->status === 'published' ? $news->published_at : null,
-                ]);
-            }
-        });
-
-        static::deleted(function ($news) {
-            $news->notifications()->withoutGlobalScopes()->delete();
         });
     }
 

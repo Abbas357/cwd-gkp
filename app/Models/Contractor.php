@@ -5,14 +5,17 @@ namespace App\Models;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\Activitylog\LogOptions;
 use App\Models\ContractorMachinery;
-use App\Models\ContractorHumanResource;
+use App\Observers\ContractorObserver;
 
+use App\Models\ContractorHumanResource;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ContractorWorkExperience;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy([ContractorObserver::class])]
 class Contractor extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, LogsActivity;
@@ -48,20 +51,6 @@ class Contractor extends Model implements HasMedia
         $this->addMediaCollection('contractor_pictures')->singleFile();
         $this->addMediaCollection('contractor_cnic_front')->singleFile();
         $this->addMediaCollection('contractor_cnic_back')->singleFile();
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-        static::updating(function ($model) {
-            if ($model->isDirty('status')) {
-                $model->status_updated_at = now();
-                $model->status_updated_by = request()->user()->id ?? null;
-            }
-            if ($model->isDirty('password')) {
-                $model->password_updated_at = now();
-            }
-        });
     }
 
     public function humanResources()

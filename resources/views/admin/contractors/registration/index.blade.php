@@ -157,9 +157,9 @@
                     , cancelButtonText: 'Cancel'
                 });
 
-                if (reason) {
+                if (remarks) {
                     const success = await fetchRequest(url, 'PATCH', {
-                        reason
+                        remarks
                     });
                     if (success) {
                         $("#contractors-registration").DataTable().ajax.reload();

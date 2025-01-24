@@ -12,11 +12,11 @@ class ApprovedMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $contractor;
+    public $registration;
 
-    public function __construct($contractor)
+    public function __construct($registration)
     {
-        $this->contractor = $contractor;
+        $this->registration = $registration;
     }
 
     public function envelope(): Envelope
@@ -31,9 +31,9 @@ class ApprovedMail extends Mailable implements ShouldQueue
         return new Content(
             view: 'emails.contractor.approved',
             with: [
-                'owner_name' => $this->contractor->owner_name,
-                'contractor_name' => $this->contractor->contractor_name,
-                'pec_number' => $this->contractor->pec_number,
+                'name' => $this->registration->contractor->name,
+                'firm_name' => $this->registration->contractor->firm_name,
+                'pec_number' => $this->registration->pec_number,
             ],
         );
     }

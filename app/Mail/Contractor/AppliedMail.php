@@ -12,30 +12,30 @@ class AppliedMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $contractor;
+    public $registration;
 
-    public function __construct($contractor)
+    public function __construct($registration)
     {
-        $this->contractor = $contractor;
+        $this->registration = $registration;
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Contractor Registration Submitted',
+            subject: 'Registration Submitted',
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'emails.contractor.applied',
+            view: 'emails.registration.applied',
             with: [
-                'owner_name' => $this->contractor->owner_name,
-                'contractor_name' => $this->contractor->contractor_name,
+                'name' => $this->registration->contractor->name,
+                'firm_name' => $this->registration->contractor->firm_name,
                 'applied_date' => now()->format('Y-m-d'),
-                'pec_number' => $this->contractor->pec_number,
-                'email' => $this->contractor->email,
+                'pec_number' => $this->registration->pec_number,
+                'email' => $this->registration->contractor->email,
             ],
         );
     }

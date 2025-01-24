@@ -2,16 +2,19 @@
 
 namespace App\Models;
 
+use App\Traits\HasComments;
+use App\Observers\TenderObserver;
 use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
+
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
-use App\Traits\HasComments;
-
+#[ObservedBy([TenderObserver::class])]
 class Tender extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, LogsActivity, HasComments;
@@ -44,27 +47,6 @@ class Tender extends Model implements HasMedia
     {
         static::addGlobalScope('published', function (Builder $builder) {
             $builder->where('status', 'published')->whereNotNull('published_at');
-        });
-
-        static::created(function ($tender) {
-            SiteNotification::create([
-                'title' => $tender->title,
-                'url' => route('tenders.show', $tender->slug, false),
-                'notifiable_id' => $tender->id,
-                'notifiable_type' => get_class($tender),
-            ]);
-        });
-
-        static::updated(function ($tender) {
-            if ($tender->isDirty('status')) {
-                $tender->notifications()->withoutGlobalScopes()->update([
-                    'published_at' => $tender->status === 'published' ? $tender->published_at : null,
-                ]);
-            }
-        });
-
-        static::deleted(function ($tender) {
-            $tender->notifications()->withoutGlobalScopes()->delete();
         });
     }
 

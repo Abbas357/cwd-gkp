@@ -3,20 +3,21 @@
 namespace App\Models;
 
 use Spatie\MediaLibrary\HasMedia;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\InteractsWithMedia;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Observers\StandardizationObserver;
 
 use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Activitylog\LogOptions;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy([StandardizationObserver::class])]
 class Standardization extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, LogsActivity;
 
     protected $guarded = [];
-
-    protected static $recordEvents = ['updated', 'deleted'];
 
     protected function casts(): array
     {
@@ -27,6 +28,7 @@ class Standardization extends Model implements HasMedia
         ];
     }
     
+    protected static $recordEvents = ['updated', 'deleted'];
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
@@ -53,22 +55,13 @@ class Standardization extends Model implements HasMedia
         $this->addMediaCollection('standardization_firms_pictures')->singleFile();
     }
 
-    protected static function boot()
-    {
-        parent::boot();
-        static::updating(function ($model) {
-            if ($model->isDirty('status')) {
-                $model->status_updated_at = now();
-                $model->status_updated_by = request()->user()->id ?? null;
-            }
-            if ($model->isDirty('password')) {
-                $model->password_updated_at = now();
-            }
-        });
-    }
-
     public function products()
     {
         return $this->hasMany(Product::class, 'standardization_id');
+    }
+
+    public function card()
+    {
+        return $this->morphOne(Card::class, 'cardable');
     }
 }

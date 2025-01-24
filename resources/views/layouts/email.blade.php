@@ -13,14 +13,23 @@
             <div style="background:url('https://ci3.googleusercontent.com/meips/ADKq_NbxychL5989Q-2P8WhD3zaZmExFOLHjdLeT5MrwjjlOVPOvxSpuQWNGPRMByF4vZvmtKK5fMGKQe2Os6kHKWlqPIbWmYpzaYnLq84ZyShRUP_UKf6W5Gg=s0-d-e1-ft#https://www.gstatic.com/android/market_images/email/email_top.png') no-repeat;width:100%;height:75px;display:block">
                 <div style="padding-top:30px;padding-left:50px;padding-right:50px">
                     <a href="{{ route('site') }}" target="_blank">
-                        <img src="{{ $logo }}" alt="C&W Logo" style="border:none">
+                        <div align="center">
+                            <img 
+                                src="https://cwd.gkp.pk/site/images/logo-mobile.png"
+                                alt="Logo" 
+                                width="200" 
+                                style="display: block; max-width: 300px; height: auto; border: 0;"
+                                border="0"
+                            >
+                        </div>
                     </a>
                 </div>
             </div>
             <div style="background:url('https://ci3.googleusercontent.com/meips/ADKq_NYzAKgKbrls_po-Au9Y4mXCjRLC2A-BxL0CEgaamcmlzrAOgtxe-ncyBvLtrwVprDSm7dTXQfZQ8xJuP85Xg889qdYDqyvbVK5MbDwuUYtwmstb_ItNbQ=s0-d-e1-ft#https://www.gstatic.com/android/market_images/email/email_mid.png') repeat-y;width:100%;display:block">
                 <div style="padding-left:50px;padding-right:50px;padding-bottom:1px">
-                    <div style="border-bottom:1px solid #ededed"></div>
-                    Hello, <p><b>{{ $title }}</b></p>
+                    <div style="border-bottom:2px solid #ededed;"></div>
+                    <h2>Hello,</h2>
+                    <h4>{{ $title }}</h4>
 
                     <div style="background:white;padding:3%">
                         {{ $slot }}

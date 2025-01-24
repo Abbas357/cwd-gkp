@@ -9,6 +9,8 @@ class Card extends Model
 {
     use HasFactory;
     
+    protected $guarded = [];
+    
     public function cardable()
     {
         return $this->morphTo();

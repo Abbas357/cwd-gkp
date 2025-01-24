@@ -12,19 +12,19 @@ class DeferredSecondMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $contractor;
-    public $deferred_reason;
+    public $registration;
+    public $remarks;
 
-    public function __construct($contractor, $deferred_reason)
+    public function __construct($registration, $remarks)
     {
-        $this->contractor = $contractor;
-        $this->deferred_reason = $deferred_reason;
+        $this->registration = $registration;
+        $this->remarks = $remarks;
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Contractor Registration Deferred - Second Notification',
+            subject: 'Registration Deferred - Second Notification',
         );
     }
 
@@ -33,10 +33,10 @@ class DeferredSecondMail extends Mailable implements ShouldQueue
         return new Content(
             view: 'emails.contractor.second-deferment',
             with: [
-                'owner_name' => $this->contractor->owner_name,
-                'contractor_name' => $this->contractor->contractor_name,
-                'pec_number' => $this->contractor->pec_number,
-                'deferred_reason' => $this->deferred_reason,
+                'name' => $this->registration->contractor->name,
+                'firm_name' => $this->registration->contractor->firm_name,
+                'pec_number' => $this->registration->pec_number,
+                'remarks' => $this->remarks,
             ],
         );
     }

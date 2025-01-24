@@ -9,7 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use App\Observers\ContractorHumanResourceObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy([ContractorHumanResourceObserver::class])]
 class ContractorHumanResource extends Model implements HasMedia
 {
     use InteractsWithMedia, LogsActivity;
@@ -41,17 +44,6 @@ class ContractorHumanResource extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('contractor_hr_resumes')->singleFile();
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-        static::updating(function ($model) {
-            if ($model->isDirty('status')) {
-                $model->status_updated_at = now();
-                $model->status_updated_by = request()->user()->id ?? null;
-            }
-        });
     }
 
     public function contractor()

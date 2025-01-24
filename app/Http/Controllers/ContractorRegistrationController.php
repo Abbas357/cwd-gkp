@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 use Endroid\QrCode\Builder\Builder;
 use App\Http\Controllers\Controller;
+use App\Mail\Contractor\RenewedMail;
 use Endroid\QrCode\Writer\PngWriter;
+use Illuminate\Support\Facades\Mail;
 use Endroid\QrCode\Encoding\Encoding;
 use App\Models\ContractorRegistration;
-use Yajra\DataTables\DataTables;
 
 class ContractorRegistrationController extends Controller
 {
@@ -77,13 +79,10 @@ class ContractorRegistrationController extends Controller
         $ContractorRegistration->remarks = $request->remarks;
         if ($ContractorRegistration->status == "new") {
             $ContractorRegistration->status = "deffered_once";
-            // Mail::to($ContractorRegistration->email)->queue(new DeferredFirstMail($ContractorRegistration, $request->reason));
         } elseif ($ContractorRegistration->status == "deffered_once") {
             $ContractorRegistration->status = "deffered_twice";
-            // Mail::to($ContractorRegistration->email)->queue(new DeferredSecondMail($ContractorRegistration, $request->reason));
         } elseif ($ContractorRegistration->status == "deffered_twice") {
             $ContractorRegistration->status = "deffered_thrice";
-            // Mail::to($ContractorRegistration->email)->queue(new DeferredThirdMail($ContractorRegistration, $request->reason));
         }
         if($ContractorRegistration->save()) {
             return response()->json(['success' => 'Contractor has been deferred successfully.']);
@@ -91,40 +90,40 @@ class ContractorRegistrationController extends Controller
         return response()->json(['error' => 'Contractor can\'t be deferred further or has already been approved.']);
     }
 
-
     public function approve(Request $request, ContractorRegistration $ContractorRegistration)
     {
         if (!in_array($ContractorRegistration->status, ["deffered_thrice", 'approved'])) {
             $ContractorRegistration->status = 'approved';
-            $ContractorRegistration->card_issue_date = Carbon::now();
-            $ContractorRegistration->card_expiry_date = Carbon::now()->addYears(1);
             $ContractorRegistration->save();
-            // Mail::to($ContractorRegistration->email)->queue(new ApprovedMail($ContractorRegistration));
             return response()->json(['success' => 'Contractor has been approved successfully.']);
         }
         return response()->json(['error' => 'Contractor can\'t be approved.']);
     }
 
-    public function renew(Request $request, ContractorRegistration $ContractorRegistration)
+    public function renew(ContractorRegistration $ContractorRegistration)
     {
         $currentDate = Carbon::now();
+        $latestCard = $ContractorRegistration->getLatestCard();
 
-        if ($ContractorRegistration->status === 'approved') {
-            if ($currentDate->greaterThanOrEqualTo($ContractorRegistration->card_expiry_date)) {
-                $ContractorRegistration->card_issue_date = $request->issue_date ?? $currentDate;
-                $ContractorRegistration->card_expiry_date = Carbon::parse($ContractorRegistration->card_issue_date)->addYears(1);
+        if (!$latestCard) {
+            return response()->json(['error' => 'No active card found for renewal.']);
+        }
+        
+        $ContractorRegistration->cards()->where('status', 'active')->update(['status' => 'expired']);
 
-                if ($ContractorRegistration->save()) {
-                    // Mail::to($ContractorRegistration->email)->queue(new RenewedMail($ContractorRegistration));
-                    return response()->json(['success' => 'Contractor card has been renewed successfully.']);
-                } else {
-                    return response()->json(['error' => 'An error occurred while saving the card data. Please try again.']);
-                }
-            } else {
-                return response()->json(['error' => 'Contractor card cannot be renewed because it has not yet expired.']);
-            }
+        if ($currentDate->greaterThanOrEqualTo($latestCard->expiry_date)) {
+            $ContractorRegistration->cards()->create([
+                'uuid' => \Illuminate\Support\Str::uuid(),
+                'issue_date' => $currentDate,
+                'expiry_date' => $currentDate->addYear(),
+                'status' => 'active',
+            ]);
+            
+            Mail::to($ContractorRegistration->contractor->email)->queue(new RenewedMail($ContractorRegistration));
+
+            return response()->json(['success' => 'Contractor card has been renewed successfully.']);
         } else {
-            return response()->json(['error' => 'Contractor card status does not allow renewal.']);
+            return response()->json(['error' => 'Contractor card cannot be renewed because it has not yet expired.']);
         }
     }
 

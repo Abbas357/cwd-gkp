@@ -7,10 +7,12 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 
-use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use App\Observers\ContractorMachineryObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy([ContractorMachineryObserver::class])]
 class ContractorMachinery extends Model implements HasMedia
 {
     use InteractsWithMedia, LogsActivity;
@@ -36,17 +38,6 @@ class ContractorMachinery extends Model implements HasMedia
     {
         $this->addMediaCollection('contractor_machinery_docs');
         $this->addMediaCollection('contractor_machinery_pics');
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-        static::updating(function ($model) {
-            if ($model->isDirty('status')) {
-                $model->status_updated_at = now();
-                $model->status_updated_by = request()->user()->id ?? null;
-            }
-        });
     }
 
     public function contractor()

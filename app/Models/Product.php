@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Standardization;
 use Spatie\MediaLibrary\HasMedia;
+use App\Observers\ProductObserver;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy([ProductObserver::class])]
 class Product extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, LogsActivity;
@@ -41,17 +45,6 @@ class Product extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('product_images');
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-        static::updating(function ($model) {
-            if ($model->isDirty('status')) {
-                $model->status_updated_at = now();
-                $model->status_updated_by = request()->user()->id ?? null;
-            }
-        });
     }
 
     public function standardization()

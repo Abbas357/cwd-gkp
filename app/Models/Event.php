@@ -2,16 +2,19 @@
 
 namespace App\Models;
 
+use App\Traits\HasComments;
+use App\Observers\EventObserver;
 use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Activitylog\LogOptions;
 
-use App\Traits\HasComments;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy([EventObserver::class])]
 class Event extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, LogsActivity, HasComments;
@@ -44,27 +47,6 @@ class Event extends Model implements HasMedia
     {
         static::addGlobalScope('published', function (Builder $builder) {
             $builder->where('status', 'published')->whereNotNull('published_at');
-        });
-
-        static::created(function ($event) {
-            SiteNotification::create([
-                'title' => $event->title,
-                'url' => route('events.show', $event->slug, false),
-                'notifiable_id' => $event->id,
-                'notifiable_type' => get_class($event),
-            ]);
-        });
-
-        static::updated(function ($event) {
-            if ($event->isDirty('status')) {
-                $event->notifications()->withoutGlobalScopes()->update([
-                    'published_at' => $event->status === 'published' ? $event->published_at : null,
-                ]);
-            }
-        });
-
-        static::deleted(function ($event) {
-            $event->notifications()->withoutGlobalScopes()->delete();
         });
     }
 

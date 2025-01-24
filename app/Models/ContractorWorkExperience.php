@@ -6,10 +6,12 @@ use Spatie\MediaLibrary\HasMedia;
 
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use App\Observers\ContractorWorkExperienceObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy([ContractorWorkExperienceObserver::class])]
 class ContractorWorkExperience extends Model implements HasMedia
 {
     use InteractsWithMedia, LogsActivity;
@@ -34,17 +36,6 @@ class ContractorWorkExperience extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('contractor_work_orders')->singleFile();
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-        static::updating(function ($model) {
-            if ($model->isDirty('status')) {
-                $model->status_updated_at = now();
-                $model->status_updated_by = request()->user()->id ?? null;
-            }
-        });
     }
 
     public function contractor()

@@ -17,14 +17,6 @@ class ContractorRegistration extends Model implements HasMedia
     use HasFactory, InteractsWithMedia, LogsActivity;
 
     protected $guarded = [];
-    
-    protected function casts(): array
-    {
-        return [
-            'card_issue_date' => 'datetime',
-            'card_expiry_date' => 'datetime',
-        ];
-    }
 
     protected static $recordEvents = ['updated', 'deleted'];
 
@@ -53,5 +45,18 @@ class ContractorRegistration extends Model implements HasMedia
     public function contractor()
     {
         return $this->belongsTo(Contractor::class, 'contractor_id');
+    }
+
+    public function cards() 
+    { 
+        return $this->morphMany(Card::class, 'cardable'); 
+    }
+
+    public function getLatestCard()
+    {
+        return $this->cards()
+                    ->where('status', 'active')
+                    ->latest('created_at')
+                    ->first();
     }
 }

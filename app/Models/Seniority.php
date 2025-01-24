@@ -2,17 +2,20 @@
 
 namespace App\Models;
 
-use Spatie\Activitylog\LogOptions;
-use Illuminate\Database\Eloquent\Model;
-
-use Illuminate\Database\Eloquent\Builder;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Traits\HasComments;
-
 use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 
+use Spatie\Activitylog\LogOptions;
+use App\Observers\SeniorityObserver;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+
+#[ObservedBy([SeniorityObserver::class])]
 class Seniority extends Model implements HasMedia
 {
     use HasFactory, LogsActivity, InteractsWithMedia, HasComments;
@@ -30,27 +33,6 @@ class Seniority extends Model implements HasMedia
     {
         static::addGlobalScope('published', function (Builder $builder) {
             $builder->where('status', 'published')->whereNotNull('published_at');
-        });
-
-        static::created(function ($seniority) {
-            SiteNotification::create([
-                'title' => $seniority->title,
-                'url' => route('seniority.show', $seniority->slug, false),
-                'notifiable_id' => $seniority->id,
-                'notifiable_type' => get_class($seniority),
-            ]);
-        });
-
-        static::updated(function ($seniority) {
-            if ($seniority->isDirty('status')) {
-                $seniority->notifications()->withoutGlobalScopes()->update([
-                    'published_at' => $seniority->status === 'published' ? $seniority->published_at : null,
-                ]);
-            }
-        });
-
-        static::deleted(function ($seniority) {
-            $seniority->notifications()->withoutGlobalScopes()->delete();
         });
     }
 

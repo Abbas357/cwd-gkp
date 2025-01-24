@@ -2,17 +2,20 @@
 
 namespace App\Models;
 
+use App\Traits\HasComments;
 use Spatie\MediaLibrary\HasMedia;
+use App\Observers\GalleryObserver;
 use Spatie\Activitylog\LogOptions;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-
 use Spatie\Activitylog\Traits\LogsActivity;
+
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
-use App\Traits\HasComments;
-
+#[ObservedBy([GalleryObserver::class])]
 class Gallery extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, LogsActivity, HasComments;
@@ -65,27 +68,6 @@ class Gallery extends Model implements HasMedia
     {
         static::addGlobalScope('published', function (Builder $builder) {
             $builder->where('status', 'published')->whereNotNull('published_at');
-        });
-
-        static::created(function ($gallery) {
-            SiteNotification::create([
-                'title' => $gallery->title,
-                'url' => route('gallery.show', $gallery->slug, false),
-                'notifiable_id' => $gallery->id,
-                'notifiable_type' => get_class($gallery),
-            ]);
-        });
-
-        static::updated(function ($gallery) {
-            if ($gallery->isDirty('status')) {
-                $gallery->notifications()->withoutGlobalScopes()->update([
-                    'published_at' => $gallery->status === 'published' ? $gallery->published_at : null,
-                ]);
-            }
-        });
-
-        static::deleted(function ($gallery) {
-            $gallery->notifications()->withoutGlobalScopes()->delete();
         });
     }
 
