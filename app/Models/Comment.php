@@ -2,18 +2,20 @@
 
 namespace App\Models;
 
+use Spatie\MediaLibrary\HasMedia;
 use Spatie\Activitylog\LogOptions;
-use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Comment extends Model
+class Comment extends Model implements HasMedia
 {
-    use HasFactory, LogsActivity;
+    use HasFactory, LogsActivity, InteractsWithMedia;
 
-    protected $fillable = ['body', 'name', 'email', 'parent_id'];
+    protected $fillable = ['body', 'name', 'email', 'commentable_type', 'commentable_id', 'status', 'published_by', 'published_at', 'parent_id' ,'user_id'];
 
     protected static $recordEvents = ['updated', 'deleted'];
 
@@ -22,6 +24,11 @@ class Comment extends Model
         return [
             'published_at' => 'datetime',
         ];
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('comment_attachments')->singleFile();
     }
 
     public function getActivitylogOptions(): LogOptions
@@ -54,6 +61,16 @@ class Comment extends Model
         return $this->morphTo();
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'parent_id')->nullable();
+    }
+
     public function replies()
     {
         return $this->hasMany(self::class, 'parent_id');
@@ -62,4 +79,5 @@ class Comment extends Model
     public function publishBy() {
         return $this->belongsTo(User::class, 'published_by');
     }
+
 }

@@ -33,6 +33,8 @@
 
     </div>
 
+    <x-sharer :title="$pageData['title'].' - '.config('app.name')" :url="url()->current()" />
+
     @push('script')
         <script src="{{ asset('site/lib/lightbox/lightbox.min.js') }}"></script>
         <script>

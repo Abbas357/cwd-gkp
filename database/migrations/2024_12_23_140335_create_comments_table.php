@@ -11,14 +11,15 @@ return new class extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->longText('body');
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->string('commentable_type', 191);
             $table->unsignedBigInteger('commentable_id');
             $table->foreignId('parent_id')->nullable()->constrained('comments')->onDelete('cascade');
-            $table->enum('status', ['new', 'published', 'archived'])->default('new');
+            $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
             $table->timestamp('published_at')->nullable();
             $table->foreignId('published_by')->nullable()->constrained('users');
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamps();
         
             $table->index(['commentable_type', 'commentable_id'], 'comments_commentable_index');

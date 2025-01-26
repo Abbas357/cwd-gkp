@@ -596,29 +596,15 @@ input[type=email]::placeholder {
     }
 }
 
-.sharer-title {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 0px;
-    display: flex;
-    justify-content: center;
-    background: var(--cw-simple-beta);
-    padding: .4rem 1rem;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-}
-
 .sharer-container {
     padding: 5px;
-    border: 1px solid #ddd;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: center;
-    gap: 5px;
+    align-items: center;
+    gap: 2px;
     flex-wrap: wrap;
-    background-color: #f8f9fa;
 }
 .sharer-button {
     text-align: center;
@@ -626,7 +612,7 @@ input[type=email]::placeholder {
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 .sharer-button i {
-    font-size: 24px;
+    font-size: clamp(20px, 2vw, 24px);
     color: #6c757d;
 }
 .sharer-button span {
@@ -641,6 +627,18 @@ input[type=email]::placeholder {
 }
 .sharer-button:hover i, .sharer-button:hover span {
     color: var(--cw-primary-light);
+}
+
+@media (max-width: 576px) {
+    .sharer-button span {
+        display: none;
+    }
+    .sharer-container {
+        gap: 5px;
+    }
+    .sharer-button {
+        width: 30px;
+    }
 }
 
 .cw-shadow {

@@ -1126,18 +1126,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
-document.querySelectorAll('.cw-btn').forEach(button => {
-    button.addEventListener('click', function(e) {
-        if (this.closest('form')) {
-            e.preventDefault();
-        }
+document.querySelectorAll('.needs-validation').forEach(form => {
+    form.addEventListener('submit', function(event) {
+        const button = form.querySelector('.cw-btn');
         
-        this.setAttribute('data-loading', 'true');
-        this.disabled = true;
-        
-        const form = this.closest('form');
-        if (form) {
-            setTimeout(() => form.submit(), 10);
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            if (button) {
+                button.setAttribute('data-loading', 'true');
+                button.disabled = true;
+                
+                setTimeout(() => form.submit(), 10);
+            }
         }
+
+        form.classList.add('was-validated');
+    });
+
+    form.querySelectorAll('.cw-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            if (!form.checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                form.classList.add('was-validated');
+            }
+        });
     });
 });

@@ -10,7 +10,7 @@
     }
 
     .contractor-card_front {
-        background-image: url('{{ asset('admin/images/cards/contractor-card-front.png') }}?v=14');
+        background-image: url('{{ asset('admin/images/cards/contractor-card-front.png') }}?v=15');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;
@@ -157,7 +157,7 @@
     }
 
     .contractor-card_back {
-        background-image: url('{{ asset('admin/images/cards/contractor-card-back.png') }}?v=14');
+        background-image: url('{{ asset('admin/images/cards/contractor-card-back.png') }}?v=15');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;

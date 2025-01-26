@@ -162,16 +162,6 @@
     <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            const forms = document.querySelectorAll('.needs-validation');
-            Array.from(forms).forEach(form => {
-                form.addEventListener('submit', event => {
-                    if (!form.checkValidity()) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated');
-                }, false);
-            });
 
             $('#mobile_number').mask('0000-0000000', {
                 placeholder: "____-_______"

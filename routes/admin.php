@@ -333,6 +333,8 @@ Route::middleware('auth')->group(function () {
             Route::patch('/publish/{comment}', [CommentController::class, 'publishComment'])->name('publish')->can('publish', App\Models\Comment::class);
             Route::patch('/archive/{comment}', [CommentController::class, 'archiveComment'])->name('archive')->can('archive', App\Models\Comment::class);
             Route::delete('/{comment}', [CommentController::class, 'destroy'])->name('destroy')->can('delete', App\Models\Comment::class);
+            Route::get('/response/{comment}', [CommentController::class, 'getResponseView'])->name('getResponseView')->can('response', App\Models\Comment::class);
+            Route::post('/response', [CommentController::class, 'postResponse'])->name('postResponse')->can('response', App\Models\Comment::class);
         });
 
         Route::prefix('search')->as('search.')->group(function () {

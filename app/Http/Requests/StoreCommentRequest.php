@@ -17,7 +17,6 @@ class StoreCommentRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'nullable|email|max:255',
             'body' => 'required|string',
-            'parent_id' => 'nullable|exists:comments,id',
         ];
     }
 }

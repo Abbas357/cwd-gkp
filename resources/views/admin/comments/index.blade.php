@@ -9,7 +9,7 @@
     <div class="card-header mb-3">
         <ul class="nav nav-tabs nav-tabs-table">
             <li class="nav-item">
-                <a id="new-tab" class="nav-link" data-bs-toggle="tab" href="#new">New</a>
+                <a id="draft-tab" class="nav-link" data-bs-toggle="tab" href="#draft">Draft</a>
             </li>
             <li class="nav-item">
                 <a id="published-tab" class="nav-link" data-bs-toggle="tab" href="#published">Published</a>
@@ -138,13 +138,13 @@
                 table: table
                 , dataTableUrl: "{{ route('admin.comments.index') }}"
                 , tabToHashMap: {
-                    "#new-tab": '#new'
+                    "#draft-tab": '#draft'
                     , "#published-tab": '#published'
                     , "#archived-tab": '#archived'
                 , }
                 , hashToParamsMap: {
-                    '#new': {
-                        status: 'new'
+                    '#draft': {
+                        status: 'draft'
                     }
                     , '#published': {
                         status: 'published'
@@ -153,7 +153,7 @@
                         status: 'archived'
                     }
                 , }
-                , defaultHash: '#new'
+                , defaultHash: '#draft'
             });
 
             $('#comments-datatable').colResizable({
@@ -170,6 +170,38 @@
                 btnSelector: '.view-btn',
                 title: 'Comment Details',
                 modalSize: 'lg',
+            });
+
+            pushStateModal({
+                fetchUrl: "{{ route('admin.comments.getResponseView', ':id') }}"
+                , btnSelector: '.add-comment-btn'
+                , title: 'Add response'
+                , actionButtonName: 'Post Response'
+                , modalSize: 'md'
+                , includeForm: true
+                , formAction: "{{ route('admin.comments.postResponse') }}"
+                , modalHeight: '50vh'
+            , }).then((modal) => {
+                const userModal = $('#' + modal);
+                const updateUserBtn = userModal.find('button[type="submit"]');
+                userModal.find('form').on('submit', async function(e) {
+                    e.preventDefault();
+                    const form = this;
+                    const formData = new FormData(form);
+                    const url = $(this).attr('action');
+                    setButtonLoading(updateUserBtn, true);
+                    try {
+                        const result = await fetchRequest(url, 'POST', formData);
+                        if (result) {
+                            setButtonLoading(updateUserBtn, false);
+                            userModal.modal('hide');
+                            table.ajax.reload();
+                        }
+                    } catch (error) {
+                        setButtonLoading(updateUserBtn, false);
+                        console.error('Error during form submission:', error);
+                    }
+                });
             });
             
         });

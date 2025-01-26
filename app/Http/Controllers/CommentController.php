@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
@@ -29,8 +30,8 @@ class CommentController extends Controller
                 })
                 ->addColumn('published_by', function ($row) {
                     return $row->publishBy?->position
-                    ? '<a href="'.route('admin.users.show', $row->publishBy->id).'" target="_blank">'.$row->publishBy->position.'</a>' 
-                    : ($row->publishBy?->designation ?? 'N/A');
+                        ? '<a href="' . route('admin.users.show', $row->publishBy->id) . '" target="_blank">' . $row->publishBy->position . '</a>'
+                        : ($row->publishBy?->designation ?? 'N/A');
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');
@@ -74,12 +75,12 @@ class CommentController extends Controller
 
     public function publishComment(Request $request, Comment $comment)
     {
-        if ($comment->status === 'new') {
+        if ($comment->status === 'draft') {
             $comment->published_at = now();
             $comment->status = 'published';
             $message = 'Comment has been published successfully.';
         } else {
-            $comment->status = 'new';
+            $comment->status = 'draft';
             $message = 'Comment has been unpublished.';
         }
         $comment->published_by = $request->user()->id;
@@ -105,5 +106,77 @@ class CommentController extends Controller
             }
         }
         return response()->json(['error' => 'Published, Archived, or Draft comment that were once published cannot be deleted.']);
+    }
+
+    public function response(Request $request, Comment $comment)
+    {
+        $responseComment = Comment::create([
+            'body' => $request->reply,
+            'commentable_type' => $comment->commentable_type,
+            'commentable_id' => $comment->commentable_id,
+            'status' => 'published',
+            'published_by' => Auth::id(),
+            'published_at' => now(),
+            'parent_id' => $comment->id,
+            'user_id' => Auth::id(),
+        ]);
+
+        if ($responseComment) {
+            return response()->json(['success' => 'Response posted successfully.']);
+        }
+
+        return response()->json(['error' => 'Unable to post response.'], 500);
+    }
+
+    public function getResponseView(Comment $Comment)
+    {
+        if (!$Comment) {
+            return response()->json([
+                'success' => false,
+                'data' => [
+                    'result' => 'Unable to load Comment Detail',
+                ],
+            ]);
+        }
+        $html = view('admin.comments.partials.add', compact('Comment'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
+    }
+
+    public function postResponse(Request $request) 
+    {
+        $responseComment = Comment::create([
+            'body' => $request->body,
+            'commentable_type' => $request->commentable_type,
+            'commentable_id' => $request->commentable_id,
+            'status' => 'published',
+            'published_by' => Auth::id(),
+            'published_at' => now(),
+            'parent_id' => $request->parent_id ?? null,
+            'user_id' => Auth::id(),
+        ]);
+
+        if ($request->hasFile('attachment')) {
+            $responseComment->addMedia($request->file('attachment'))
+                ->toMediaCollection('comment_attachments');
+        }
+
+        if ($responseComment) {    
+            if ($request->wantsJson()) {
+                return response()->json(['success' =>  'Comment added successfully']);
+            }
+    
+            return redirect()->route('admin.news.index')->with(['success' => 'Comment added successfully']);
+        }
+        
+        if ($request->wantsJson()) {
+            return response()->json(['error' => 'Failed to add the comment.']);
+        }
+    
+        return redirect()->route('admin.news.index')->with(['error' => 'Failed to add the comment.']);
     }
 }
