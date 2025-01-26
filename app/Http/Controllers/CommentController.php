@@ -25,6 +25,12 @@ class CommentController extends Controller
                 ->addColumn('action', function ($row) {
                     return view('admin.comments.partials.buttons', compact('row'))->render();
                 })
+                ->editColumn('name', function ($row) {
+                    return $row->name ?? '<span class="badge bg-info">'. $row->user->name .'</span>';
+                })
+                ->editColumn('email', function ($row) {
+                    return $row->email ?? '<span class="badge bg-info">'. $row->user->email .'</span>';
+                })
                 ->editColumn('status', function ($row) {
                     return view('admin.comments.partials.status', compact('row'))->render();
                 })
@@ -39,7 +45,7 @@ class CommentController extends Controller
                 ->editColumn('updated_at', function ($row) {
                     return $row->updated_at->diffForHumans();
                 })
-                ->rawColumns(['action', 'status', 'published_by']);
+                ->rawColumns(['action', 'status', 'published_by', 'name', 'email']);
 
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
                 $dataTable->filter(function ($query) use ($request) {

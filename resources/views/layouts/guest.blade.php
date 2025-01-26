@@ -11,15 +11,17 @@
     <link href="{{ asset('admin/css/bootstrap.min.css') }}" rel="stylesheet">
 
     <link href="{{ asset('admin/css/bootstrap-extended.css') }}" rel="stylesheet">
-    <link href="{{ asset('admin/css/main.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/css/bootstrap-icons.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/css/open-props.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/css/main.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/dark-theme.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/responsive.css') }}" rel="stylesheet">
     @stack('style')
-    <link href="{{ asset('admin/css/custom.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/css/custom.min.css') }}" rel="stylesheet">
 </head>
 <body class="bg-image">
     <header>
-        <div class="px-3 py-2 border-bottom">
+        <div class="px-3 py-2">
           <div class="container">
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
               <a href="/" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
@@ -58,7 +60,7 @@
     </div>    
     <script src="{{ asset('admin/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('admin/js/jquery.min.js') }}"></script>
-    <script src="{{ asset('admin/js/custom.js') }}"></script>
+    <script src="{{ asset('admin/js/custom.min.js') }}"></script>
     @stack('script')
 </body>
 </html>

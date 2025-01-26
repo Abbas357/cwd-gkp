@@ -10,7 +10,7 @@
     }
 
     .product-card_front {
-        background-image: url('{{ asset('admin/images/cards/product-card-front.png') }}?v=15');
+        background-image: url('{{ asset('admin/images/cards/product-card-front.png') }}?cw=16');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;
@@ -157,7 +157,7 @@
     }
 
     .product-card_back {
-        background-image: url('{{ asset('admin/images/cards/product-card-back.png') }}?v=15');
+        background-image: url('{{ asset('admin/images/cards/product-card-back.png') }}?cw=16');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;

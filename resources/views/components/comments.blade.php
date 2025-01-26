@@ -5,7 +5,7 @@
             <div class="card-body p-0">
                 <div class="d-flex align-items-center mb-2 bg-light p-2 px-3">
                     <div class="me-3">
-                        <img src="{{ $comment->user?->getFirstMediaUrl('profile_pictures') ?? asset('site/images/default-dp.png') }}" alt="User Avatar" class="rounded-circle" style="width: 40px; height: 40px;">
+                        <img src="{{ $comment->user?->getFirstMediaUrl('profile_pictures') ?? $comment->avatar }}" alt="User Avatar" class="rounded-circle" style="width: 40px; height: 40px;">
                     </div>
                     <div>
                         <h6 class="mb-0">
@@ -35,7 +35,7 @@
                         <div class="border mb-3" style="box-shadow: 0 0 10px #00000025">
                             <div class="d-flex align-items-center mb-2 bg-light p-2 px-3">
                                 <div class="me-3">
-                                    <img src="{{ $reply->user->getFirstMediaUrl('profile_pictures') ?? asset('site/images/default-dp.png') }}" alt="User Avatar" class="rounded-circle" style="width: 40px; height: 40px;">
+                                    <img src="{{ $reply->user->getFirstMediaUrl('profile_pictures') ?? $comment->avatar }}" alt="User Avatar" class="rounded-circle" style="width: 40px; height: 40px;">
                                 </div>
                                 <div>
                                     <h6 class="mb-0">

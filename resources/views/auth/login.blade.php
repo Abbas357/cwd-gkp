@@ -38,10 +38,10 @@
         <div class="row">
             <div class="col-12 col-md-8 col-lg-6 col-xl-5 col-xxl-4 mx-auto">
                 <div class="card p-3 overflow-hidden login-box">
-                    <div class="card-body p-4 position-relative">
-                        <div class="bg-light text-center py-4 rounded-top">
-                            <h4 class="fw-bold mb-0">Welcome Back!</h4>
-                            <p class="small mb-0">Please login to continue</p>
+                    <div class="card-body p-2 py-3 position-relative">
+                        <div class="border text-center py-4 rounded-top" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.15)">
+                            <h4 class="fw-bold mb-2" style="text-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5)">WELCOME BACK</h4>
+                            <p class="small mb-0">PLEASE LOGIN TO CONTINUE</p>
                         </div>
             
                         @if (session('status'))
@@ -56,7 +56,7 @@
             
                                 <div class="col-12">
                                     <label for="email" class="form-label text-secondary">Email</label>
-                                    <input type="email" class="form-control shadow-sm" id="email" name="email" placeholder="Enter email" value="{{ old('email') }}" required autofocus autocomplete="email">
+                                    <input type="email" class="form-control shadow-sm" id="email" name="email" placeholder="Email" value="{{ old('email') }}" required autofocus autocomplete="email">
                                     @foreach($errors->get('email') as $error)
                                         <span class="text-danger small"> {{ $error }}</span>
                                     @endforeach
@@ -65,7 +65,7 @@
                                 <div class="col-12">
                                     <label for="password" class="form-label text-secondary">Password</label>
                                     <div class="input-group" id="show_hide_password">
-                                        <input type="password" class="form-control shadow-sm" id="password" placeholder="Enter Password" name="password" required autocomplete="current-password">
+                                        <input type="password" class="form-control shadow-sm" id="password" placeholder="Password" name="password" required autocomplete="current-password">
                                         <button type="button" class="input-group-text bg-white" style="border: 1px solid #999" onclick="togglePasswordVisibility()">
                                             <i class="bi bi-eye-fill" id="togglePasswordIcon"></i>
                                         </button>
@@ -83,7 +83,7 @@
                                 </div>
             
                                 <div class="col-12 mt-3">
-                                    <button type="submit" class="btn btn-primary btn-block shadow-lg w-100 py-2 fw-bold" style="border-radius: 10px;">Login</button>
+                                    <button type="submit" class="cw-btn block">Login</button>
                                 </div>
                             </form>
                         </div>

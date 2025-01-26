@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use App\Helpers\Image;
 use Spatie\MediaLibrary\HasMedia;
-use Spatie\Activitylog\LogOptions;
 
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -54,6 +55,11 @@ class Comment extends Model implements HasMedia
     public function resolveRouteBinding($value, $route = null)
     {
         return static::withoutGlobalScopes()->where('id', $value)->firstOrFail();
+    }
+
+    public function getAvatarAttribute()
+    {
+        return Image::getAvatar($this->name, $this->id);
     }
 
     public function commentable()

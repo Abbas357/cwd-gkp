@@ -100,7 +100,7 @@
 
     </div>
 
-    <x-sharer :title="$projectData['title'].' - '.config('app.name')" :url="url()->current()" />
+    <x-sharer :title="$projectData['name'].' - '.config('app.name')" :url="url()->current()" />
     <x-comments :comments="$projectData['comments']" modelType="DevelopmentProject" :modelId="$projectData['id']" />
 
     @push('script')
@@ -111,7 +111,6 @@
                 'wrapAround': true,
                 'disableScrolling': true,
             });
-
         </script>
     @endpush
 
