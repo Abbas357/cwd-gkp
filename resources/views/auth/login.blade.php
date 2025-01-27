@@ -25,12 +25,6 @@
         .shadow-lg {
             box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
         }
-        .login-box {
-            border-radius: 10px;
-            background: #ffffff99; 
-            box-shadow:  20px 20px 60px #bebebe,-20px -20px 60px #ffffff;
-            border: 1px solid #ddd;
-        }
     </style>
     @endpush
     
