@@ -27,6 +27,7 @@ return new class extends Migration
             $table->enum('status', ['Draft', 'In-Progress', 'On-Hold', 'Completed'])->default('In-Progress');    
             $table->date('year_of_completion')->nullable();
             $table->unsignedBigInteger('views_count')->default(0);
+            $table->boolean('comments_allowed')->default(1);
             $table->timestamps();
         });
     }

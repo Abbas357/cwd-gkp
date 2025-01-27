@@ -31,6 +31,7 @@ return new class extends Migration
             $table->decimal('revised_allocation', 15, 3)->nullable();
             $table->decimal('prog_releases', 15, 3)->nullable();
             $table->decimal('progressive_exp', 15, 3)->nullable();
+            $table->boolean('comments_allowed')->default(1);
             $table->timestamps();
 
             $table->unique(['scheme_code', 'year']);

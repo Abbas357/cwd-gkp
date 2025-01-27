@@ -25,6 +25,7 @@ return new class extends Migration
             $table->timestamp('published_at')->nullable();
             $table->foreignId('published_by')->constrained('users');
             $table->unsignedBigInteger('views_count')->default(0);
+            $table->boolean('comments_allowed')->default(1);
             $table->timestamps();
         });
     }

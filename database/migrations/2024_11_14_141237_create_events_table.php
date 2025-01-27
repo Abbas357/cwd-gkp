@@ -29,6 +29,7 @@ return new class extends Migration
             $table->integer('no_of_participants')->nullable();
             $table->enum('event_type', ['review_meeting', 'conference', 'workshop', 'seminar', 'webinar', 'training'])->nullable();
             $table->boolean('is_featured')->default(false);
+            $table->boolean('comments_allowed')->default(1);
             $table->unsignedBigInteger('views_count')->default(0);
             $table->timestamps();
         });
