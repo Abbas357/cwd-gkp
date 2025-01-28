@@ -83,6 +83,27 @@
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
+
+                                    <div class="mb-4">
+                                        <label class="mb-3">Enable Comments</label>
+                                        @foreach($tables as $table)
+                                            <div class="form-check form-switch mb-2">
+                                                <input class="form-check-input" 
+                                                       type="checkbox" 
+                                                       id="commentable_table_{{ $table }}" 
+                                                       name="commentable_tables[]" 
+                                                       value="{{ $table }}"
+                                                       {{ in_array($table, json_decode($settings->commentable_tables ?? '[]', true)) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="commentable_table_{{ $table }}">
+                                                    {{ ucfirst($table) }}
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                        @error('commentable_tables')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
                                 </div>
 
                                 <!-- Contact Information -->

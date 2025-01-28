@@ -114,6 +114,9 @@
     </div>
 
     <x-sharer :title="$tenderData['title'].' - '.config('app.name')" :url="url()->current()" />
-    <x-comments :comments="$tenderData['comments']" modelType="Tender" :modelId="$tenderData['id']" />
+
+    @if(in_array('Tender', json_decode(App\Models\Setting::first()->commentable_tables ?? '[]', true)))
+        <x-comments :comments="$tenderData['comments']" modelType="Tender" :modelId="$tenderData['id']" />
+    @endif
 
 </x-main-layout>

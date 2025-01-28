@@ -13,6 +13,10 @@ class CommentController extends Controller
         $class = "App\\Models\\$type";
         
         $model = $class::findOrFail($id);
+        
+        if ($model->comments_allowed != 1) {
+            return redirect()->back()->with(['error' => 'Comments are disabled for this item.']);
+        }
 
         $ipAddress = request()->ip();
         $sessionKey = "comment_{$type}_{$id}_" . md5($ipAddress);

@@ -18,12 +18,12 @@
     <link href="{{ asset('admin/css/open-props.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/bootstrap-extended.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/dark-theme.css') }}" rel="stylesheet">
-    <link href="{{ asset('admin/css/main.min.css') }}?cw=17" rel="stylesheet">
+    <link href="{{ asset('admin/css/main.min.css') }}?cw=18" rel="stylesheet">
     <link href="{{ asset('admin/css/semi-dark.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/bordered-theme.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/responsive.css') }}" rel="stylesheet">
     @stack('style')
-    <link href="{{ asset('admin/css/custom.min.css') }}?cw=17" rel="stylesheet">
+    <link href="{{ asset('admin/css/custom.min.css') }}?cw=18" rel="stylesheet">
     <style>
         .page-loader {
             height: 5px;
@@ -118,8 +118,8 @@
     <script src="{{ asset('admin/plugins/simplebar/js/simplebar.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/sweetalert2@11.js') }}"></script>
     
-    <script src="{{ asset('admin/js/helpers.min.js') }}?cw=17"></script> 
-    <script src="{{ asset('admin/js/custom.min.js') }}?cw=17"></script>
+    <script src="{{ asset('admin/js/helpers.min.js') }}?cw=18"></script> 
+    <script src="{{ asset('admin/js/custom.min.js') }}?cw=18"></script>
     @stack('script')
     <script>
         window.onload = function() {

@@ -28,6 +28,7 @@ class UpdateSettingRequest extends FormRequest
             'secret_key' => 'nullable|string|max:500',
             'maintenance_routes' => 'nullable|array',
             'maintenance_routes.*' => 'boolean',
+            'commentable_tables.*' => 'string',
         ];
     }
 }

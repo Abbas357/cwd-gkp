@@ -766,3 +766,11 @@ html[data-bs-theme="dark"] div.dt-container div.dtb-popover-close {
 .cw-btn[data-loading="true"] .loader {
     display: block;
 }
+
+.form-switch .form-check-input {
+    width: 2.5em;
+    height: 1.3em;
+}
+.form-switch .form-check-label {
+    margin-left: 10px;
+}

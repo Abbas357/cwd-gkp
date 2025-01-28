@@ -526,6 +526,15 @@ input[type=email]::placeholder {
     opacity: 1;
 }
 
+.form-switch .form-check-input {
+    width: 2.5em;
+    height: 1.3em;
+}
+
+.form-switch .form-check-label {
+    margin-left: 10px;
+}
+
 .animated-gradient-text {
     display: inline-block;
     margin-left: 5rem;

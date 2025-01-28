@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('published_by')->nullable()->constrained('users');
             $table->integer('order')->default(0);
             $table->unsignedBigInteger('views_count')->default(0);
+            $table->boolean('comments_allowed')->default(1);
             $table->timestamps();
         });
     }

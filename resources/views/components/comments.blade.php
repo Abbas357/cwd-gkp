@@ -1,5 +1,16 @@
 <div class="container mt-4">
-    <h3 class="mb-4">Comments</h3>
+    <div class="d-flex justify-content-start align-items-center mb-4">
+        <h4 class="mb-4"> {{ $comments->count() + $comments->sum(fn($comment) => $comment->replies->count()) }} Comments</h4>
+
+        <div class="mb-3" style="width:7rem; margin-left:2rem">
+            <select class="form-select" id="sortComments" onchange="sortComments(this.value)">
+                <option>Sort</option>
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+            </select>
+        </div>
+    </div>
+
     @foreach ($comments as $comment)
         <div class="card mb-3" style="box-shadow: 0 0 10px #00000025">
             <div class="card-body p-0">
@@ -87,6 +98,7 @@
         </div>
     @endforeach
 
+    @if($commentsAllowed)
     <form class="container needs-validation p-2" method="POST" action="{{ route('comments.store', ['type' => $modelType, 'id' => $modelId]) }}" novalidate>
         @csrf
         <div class="mb-3 d-flex justify-content-between gap-3 inputs d-none">
@@ -99,6 +111,9 @@
         <button type="reset" class="btn btn-light close-form d-none">Cancel</button>
         <x-button type="submit" data-icon="bi-send" text="Comment" />
     </form>
+    @else
+    <p class="text-center">Comments are disabled. <a href="#">Learn more</a></p>
+    @endif
 </div>
 
 <script>

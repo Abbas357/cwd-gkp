@@ -12,7 +12,8 @@ class SettingController extends Controller
     public function index()
     {
         $settings = Setting::first();
-        return view('admin.settings.index', compact('settings'));
+        $tables = ['Slider', 'Gallery', 'News', 'Seniority', 'DevelopmentProject', 'Tender', 'Event'];
+        return view('admin.settings.index', compact('settings', 'tables'));
     }
 
     public function update(UpdateSettingRequest $request)
@@ -28,6 +29,12 @@ class SettingController extends Controller
             $validatedData['maintenance_routes'] = $maintenanceRoutes;
         } else {
             $validatedData['maintenance_routes'] = [];
+        }
+
+        if ($request->has('commentable_tables')) {
+            $validatedData['commentable_tables'] = json_encode($request->commentable_tables);
+        } else {
+            $validatedData['commentable_tables'] = json_encode([]);
         }
 
         Setting::updateOrCreate(

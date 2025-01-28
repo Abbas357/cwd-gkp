@@ -101,7 +101,11 @@
     </div>
 
     <x-sharer :title="$projectData['name'].' - '.config('app.name')" :url="url()->current()" />
-    <x-comments :comments="$projectData['comments']" modelType="DevelopmentProject" :modelId="$projectData['id']" />
+
+    @if(in_array('DevelopmentProject', json_decode(App\Models\Setting::first()->commentable_tables ?? '[]', true)))
+        <x-comments :comments="$projectData['comments']" modelType="DevelopmentProject" :modelId="$projectData['id']" />
+    @endif
+    
 
     @push('script')
         <script src="{{ asset('site/lib/lightbox/lightbox.min.js') }}"></script>
