@@ -106,6 +106,32 @@
             </tr>
 
         </table>
+
+        <form class="needs-validation" action="{{ route('admin.comments.postResponse') }}" method="post" enctype="multipart/form-data" novalidate>
+            @csrf
+            <div class="card mb-4">
+                <div class="card-header bg-light fw-bold text-uppercase">
+                    Add Comment
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12 mb-2">
+                            <label for="body">Body</label>
+                            <textarea name="body" id="body" class="form-control" style="height:100px">{{ old('body') }}</textarea>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <label for="attachment">Attachment</label>
+                            <input type="file" class="form-control" id="attachment" name="attachment">
+                            <img id="previewAttachment" src="#" alt="Attachment Preview" style="display:none; margin-top: 10px; max-height: 100px;">
+                        </div>
+                        <input type="hidden" name="commentable_type" value="{{ get_class($slider) }}">
+                        <input type="hidden" name="commentable_id" value="{{ $slider->id }}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Comment</button>
+                </div>
+            </div>
+        </form>
+
     </div>
 </div>
 <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
