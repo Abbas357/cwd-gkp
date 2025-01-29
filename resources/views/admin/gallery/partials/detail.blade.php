@@ -10,6 +10,24 @@
     <div class="col-md-12">
 
         <table class="table table-bordered mt-3">
+            <tr>
+                <th class="table-cell">
+                    <label class="form-check-label" for="commentsSwitch">
+                        Allow Comments
+                    </label>
+                </th>
+                <td class="d-flex justify-content-between align-items-center gap-2">
+                    <div class="form-check form-switch">
+                        <input type="checkbox" 
+                               class="form-check-input" 
+                               id="commentsSwitch" 
+                               role="switch"
+                               {{ $gallery->comments_allowed ? 'checked' : '' }}
+                               data-url="{{ route('admin.gallery.comments', $gallery->id) }}">
+                    </div>
+                </td>
+            </tr>
+
             <!-- File Name -->
             <tr>
                 <th class="table-cell"> Title</th>
@@ -114,6 +132,24 @@
 </div>
 <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
 <script>
+
+    document.getElementById('commentsSwitch').addEventListener('change', async function() {
+        const url = this.dataset.url;
+        const newValue = this.checked ? 1 : 0;
+        
+        const success = await fetchRequest(
+            url,
+            'PATCH',
+            { comments_allowed: newValue },
+            'Comments visibility updated',
+            'Failed to update'
+        );
+
+        if (!success) {
+            this.checked = !this.checked;
+        }
+    });
+    
     $(document).ready(function() {
         imageCropper({
             fileInput: '.file-input'

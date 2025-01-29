@@ -200,4 +200,17 @@ class SliderController extends Controller
 
         return response()->json(['error' => 'Published, Archived, or Draft sliders that were once published cannot be deleted.']);
     }
+
+    public function updateComments(Request $request, Slider $Slider)
+    {
+        $validated = $request->validate([
+            'comments_allowed' => 'required|boolean',
+        ]);
+
+        $Slider->update($validated);
+
+        return response()->json([
+            'success' => 'Comments visibility updated',
+        ]);
+    }
 }

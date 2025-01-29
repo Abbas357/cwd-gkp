@@ -205,4 +205,17 @@ class TenderController extends Controller
 
         return response()->json(['error' => 'Published, Archived, or Draft tender that were once published cannot be deleted.']);
     }
+
+    public function updateComments(Request $request, Tender $tender)
+    {
+        $validated = $request->validate([
+            'comments_allowed' => 'required|boolean',
+        ]);
+
+        $tender->update($validated);
+
+        return response()->json([
+            'success' => 'Comments visibility updated',
+        ]);
+    }
 }

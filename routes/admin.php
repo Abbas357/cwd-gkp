@@ -151,6 +151,7 @@ Route::middleware('auth')->group(function () {
             Route::patch('/archive/{event}', [EventController::class, 'archiveEvent'])->name('archive')->can('archive', 'event');
             Route::patch('/update/field/{event}', [EventController::class, 'updateField'])->name('updateField')->can('update', 'event');
             Route::delete('/{event}', [EventController::class, 'destroy'])->name('destroy')->can('delete', 'event');
+            Route::patch('/{event}/comments', [EventController::class, 'updateComments'])->name('comments')->can('update', 'event');
         });
         
         Route::prefix('gallery')->as('gallery.')->group(function () {
@@ -164,6 +165,7 @@ Route::middleware('auth')->group(function () {
             Route::patch('/update/field/{gallery}', [GalleryController::class, 'updateField'])->name('updateField')->can('update', 'gallery');
             Route::patch('/upload/file/{gallery}', [GalleryController::class, 'uploadFile'])->name('uploadFile')->can('update', 'gallery');
             Route::delete('/{gallery}', [GalleryController::class, 'destroy'])->name('destroy')->can('delete', 'gallery');
+            Route::patch('/{gallery}/comments', [GalleryController::class, 'updateComments'])->name('comments')->can('update', 'gallery');
         });
         
         Route::prefix('newsletter')->as('newsletter.')->group(function () {
@@ -191,6 +193,7 @@ Route::middleware('auth')->group(function () {
             Route::patch('/update/field/{news}', [NewsController::class, 'updateField'])->name('updateField')->can('update', 'news');
             Route::patch('/upload/file/{news}', [NewsController::class, 'uploadFile'])->name('uploadFile')->can('update', 'news');
             Route::delete('/{news}', [NewsController::class, 'destroy'])->name('destroy')->can('delete', 'news');
+            Route::patch('/{news}/comments', [NewsController::class, 'updateComments'])->name('comments')->can('update', 'news');
         });
         
         Route::prefix('seniority')->as('seniority.')->group(function () {
@@ -204,6 +207,7 @@ Route::middleware('auth')->group(function () {
             Route::patch('/update/field/{seniority}', [SeniorityController::class, 'updateField'])->name('updateField')->can('update', 'seniority');
             Route::patch('/upload/file/{seniority}', [SeniorityController::class, 'uploadFile'])->name('uploadFile')->can('update', 'seniority');
             Route::delete('/{seniority}', [SeniorityController::class, 'destroy'])->name('destroy')->can('delete', 'seniority');
+            Route::patch('/{seniority}/comments', [SeniorityController::class, 'updateComments'])->name('comments')->can('update', 'seniority');
         });
         
         Route::prefix('development_projects')->as('development_projects.')->group(function () {
@@ -216,6 +220,7 @@ Route::middleware('auth')->group(function () {
             Route::patch('/archive/{DevelopmentProject}', [DevelopmentProjectController::class, 'archiveDevelopmentProject'])->name('archive')->can('archive', 'DevelopmentProject');
             Route::patch('/update/field/{DevelopmentProject}', [DevelopmentProjectController::class, 'updateField'])->name('updateField')->can('update', 'DevelopmentProject');
             Route::delete('/{DevelopmentProject}', [DevelopmentProjectController::class, 'destroy'])->name('destroy')->can('delete', 'DevelopmentProject');
+            Route::patch('/{DevelopmentProject}/comments', [DevelopmentProjectController::class, 'updateComments'])->name('comments')->can('update', 'DevelopmentProject');
         });
         
         Route::prefix('projects')->as('projects.')->group(function () {
@@ -253,6 +258,7 @@ Route::middleware('auth')->group(function () {
             Route::patch('/update/field/{slider}', [SliderController::class, 'updateField'])->name('updateField')->can('update', 'slider');
             Route::patch('/upload/file/{slider}', [SliderController::class, 'uploadFile'])->name('uploadFile')->can('update', 'slider');
             Route::delete('/{slider}', [SliderController::class, 'destroy'])->name('destroy')->can('delete', 'slider');
+            Route::patch('/{slider}/comments', [SliderController::class, 'updateComments'])->name('comments')->can('update', 'slider');
         });
         
         Route::prefix('pages')->as('pages.')->group(function () {
@@ -286,6 +292,7 @@ Route::middleware('auth')->group(function () {
             Route::patch('/archive/{tender}', [TenderController::class, 'archiveTender'])->name('archive')->can('archive', 'tender');
             Route::patch('/update/field/{tender}', [TenderController::class, 'updateField'])->name('updateField')->can('update', 'tender');
             Route::delete('/{tender}', [TenderController::class, 'destroy'])->name('destroy')->can('delete', 'tender');
+            Route::patch('/{tender}/comments', [TenderController::class, 'updateComments'])->name('comments')->can('update', 'tender');
         });
         
         Route::prefix('schemes')->as('schemes.')->group(function () {

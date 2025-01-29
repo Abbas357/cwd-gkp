@@ -13,6 +13,25 @@
     <div class="col-md-12">
 
         <table class="table table-bordered mt-3">
+
+            <tr>
+                <th class="table-cell">
+                    <label class="form-check-label" for="commentsSwitch">
+                        Allow Comments
+                    </label>
+                </th>
+                <td class="d-flex justify-content-between align-items-center gap-2">
+                    <div class="form-check form-switch">
+                        <input type="checkbox" 
+                               class="form-check-input" 
+                               id="commentsSwitch" 
+                               role="switch"
+                               {{ $DevelopmentProject->comments_allowed ? 'checked' : '' }}
+                               data-url="{{ route('admin.development_projects.comments', $DevelopmentProject->id) }}">
+                    </div>
+                </td>
+            </tr>
+            
             <!-- File Name -->
             <tr>
                 <th class="table-cell">Name</th>
@@ -160,6 +179,24 @@
 <script src="{{ asset('admin/plugins/summernote/summernote-bs5.min.js') }}"></script>
 <script src="{{ asset('admin/plugins/flatpickr/flatpickr.js') }}"></script>
 <script>
+
+    document.getElementById('commentsSwitch').addEventListener('change', async function() {
+        const url = this.dataset.url;
+        const newValue = this.checked ? 1 : 0;
+        
+        const success = await fetchRequest(
+            url,
+            'PATCH',
+            { comments_allowed: newValue },
+            'Comments visibility updated',
+            'Failed to update'
+        );
+
+        if (!success) {
+            this.checked = !this.checked;
+        }
+    });
+    
     function enableEditing(field) {
         $('#text-' + field).addClass('d-none');
         $('#input-' + field).removeClass('d-none');

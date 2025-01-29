@@ -183,4 +183,17 @@ class DevelopmentProjectController extends Controller
         }
         return response()->json(['error' => 'Only draft projects can be deleted.']);
     }
+
+    public function updateComments(Request $request, DevelopmentProject $DevelopmentProject)
+    {
+        $validated = $request->validate([
+            'comments_allowed' => 'required|boolean',
+        ]);
+
+        $DevelopmentProject->update($validated);
+
+        return response()->json([
+            'success' => 'Comments visibility updated',
+        ]);
+    }
 }

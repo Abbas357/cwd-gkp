@@ -198,4 +198,17 @@ class NewsController extends Controller
 
         return response()->json(['error' => 'Published, Archived, or Draft news that were once published cannot be deleted.']);
     }
+
+    public function updateComments(Request $request, News $News)
+    {
+        $validated = $request->validate([
+            'comments_allowed' => 'required|boolean',
+        ]);
+
+        $News->update($validated);
+
+        return response()->json([
+            'success' => 'Comments visibility updated',
+        ]);
+    }
 }

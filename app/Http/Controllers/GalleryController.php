@@ -209,4 +209,17 @@ class GalleryController extends Controller
         }
         return response()->json(['error' => 'Published, Archived, or Draft gallery that were once published cannot be deleted.']);
     }
+
+    public function updateComments(Request $request, Gallery $Gallery)
+    {
+        $validated = $request->validate([
+            'comments_allowed' => 'required|boolean',
+        ]);
+
+        $Gallery->update($validated);
+
+        return response()->json([
+            'success' => 'Comments visibility updated',
+        ]);
+    }
 }
