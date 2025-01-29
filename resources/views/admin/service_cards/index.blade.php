@@ -12,7 +12,7 @@
     <div class="card-header mb-3">
         <ul class="nav nav-tabs nav-tabs-table">
             <li class="nav-item">
-                <a id="new-tab" class="nav-link" data-bs-toggle="tab" href="#new">New</a>
+                <a id="draft-tab" class="nav-link" data-bs-toggle="tab" href="#draft">Draft</a>
             </li>
             <li class="nav-item">
                 <a id="verified-tab" class="nav-link" data-bs-toggle="tab" href="#verified">Verified</a>
@@ -139,22 +139,22 @@
                 table: table
                 , dataTableUrl: "{{ route('admin.service_cards.index') }}"
                 , tabToHashMap: {
-                    "#new-tab": '#new'
+                    "#draft-tab": '#draft'
                     , "#verified-tab": '#verified'
                     , "#rejected-tab": '#rejected'
                 , }
                 , hashToParamsMap: {
-                    '#new': {
-                        status: 'New'
+                    '#draft': {
+                        status: 'draft'
                     }
                     , '#verified': {
-                        status: 'Verified'
+                        status: 'verified'
                     }
                     , '#rejected': {
-                        status: 'Rejected'
+                        status: 'rejected'
                     }
                 , }
-                , defaultHash: '#new'
+                , defaultHash: '#draft'
             });
 
             $("#cards-datatable").on('click', '.verify-btn', async function() {

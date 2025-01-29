@@ -44,4 +44,17 @@ class ServiceCard extends Model implements HasMedia
             ->singleFile()
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif']);
     }
+
+    public function cards() 
+    { 
+        return $this->morphMany(Card::class, 'cardable'); 
+    }
+
+    public function getLatestCard()
+    {
+        return $this->cards()
+                    ->where('status', 'active')
+                    ->latest('created_at')
+                    ->first();
+    }
 }

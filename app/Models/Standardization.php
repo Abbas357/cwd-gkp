@@ -60,8 +60,16 @@ class Standardization extends Model implements HasMedia
         return $this->hasMany(Product::class, 'standardization_id');
     }
 
-    public function card()
+    public function cards() 
+    { 
+        return $this->morphMany(Card::class, 'cardable'); 
+    }
+
+    public function getLatestCard()
     {
-        return $this->morphOne(Card::class, 'cardable');
+        return $this->cards()
+                    ->where('status', 'active')
+                    ->latest('created_at')
+                    ->first();
     }
 }
