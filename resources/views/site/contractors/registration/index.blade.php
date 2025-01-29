@@ -7,7 +7,7 @@
             font-size: 0.875rem;
             font-weight: 500;
         }
-        .status-new { background: #3094f8; color: #fff; }
+        .status-draft { background: #3094f8; color: #fff; }
         .status-deffered_once { background: #fa8611; color: #fff; }
         .status-deffered_twice { background: #fa511d; color: #fff; }
         .status-deffered_thrice { background: #d31b1b; color: #fff; }
@@ -100,7 +100,7 @@
                         <div class="col-md-2">
                             <select name="status" class="form-select">
                                 <option value="">All Status</option>
-                                <option value="new" {{ request('status') === 'new' ? 'selected' : '' }}>New</option>
+                                <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>New</option>
                                 <option value="deffered_once" {{ request('status') === 'deffered_once' ? 'selected' : '' }}>Deferred Once</option>
                                 <option value="deffered_twice" {{ request('status') === 'deffered_twice' ? 'selected' : '' }}>Deferred Twice</option>
                                 <option value="deffered_thrice" {{ request('status') === 'deffered_thrice' ? 'selected' : '' }}>Deferred Thrice</option>

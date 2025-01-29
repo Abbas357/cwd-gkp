@@ -10,6 +10,14 @@ class Card extends Model
     use HasFactory;
     
     protected $guarded = [];
+
+    protected function casts(): array
+    {
+        return [
+            'issue_date' => 'datetime',
+            'expiry_date' => 'datetime',
+        ];
+    }
     
     public function cardable()
     {

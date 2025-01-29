@@ -111,8 +111,8 @@
         <button type="reset" class="btn btn-light close-form d-none">Cancel</button>
         <x-button type="submit" data-icon="bi-send" text="Comment" />
     </form>
-    @else
-    <p class="text-center">Comments are disabled. <a href="#">Learn more</a></p>
+    {{-- @else
+    <p class="text-center">Comments are disabled. <a href="#">Learn more</a></p> --}}
     @endif
 </div>
 

@@ -216,7 +216,7 @@
         </div>
 
         <div class="header-right">
-            <span class="expires">EXPIRES: {{ $ContractorRegistration->card_expiry_date->format('j, M Y'); }}</span>
+            <span class="expires">EXPIRES: {{ $ContractorRegistration->getLatestCard()->expiry_date->format('j, M Y'); }}</span>
         </div>
 
         <div class="image">
@@ -262,7 +262,7 @@
                     </div>
                     <div class="d-flex justify-content-between align-items-center ml-auto">
                         <div class="fw-bold">Issue Date: &emsp;</div>
-                        <div>{{ $ContractorRegistration->card_issue_date->format('d/m/Y') }}</div>
+                        <div>{{ $ContractorRegistration->getLatestCard()->issue_date->format('d/m/Y') }}</div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
@@ -272,7 +272,7 @@
                     </div>
                     <div class="d-flex justify-content-around align-items-center ml-auto">
                         <div class="fw-bold">Registration No: &emsp;</div>
-                        <div>{{ $ContractorRegistration->contractor->reg_no }}</div>
+                        <div>{{ $ContractorRegistration->reg_number }}</div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">

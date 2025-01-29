@@ -30,9 +30,7 @@ return new class extends Migration
             $table->string('designation')->nullable();
             $table->string('bps')->nullable();
             $table->string('office')->nullable();
-            $table->timestamp('issue_date')->nullable();
-            $table->timestamp('expiry_date')->nullable();
-            $table->enum('status', ['New', 'Verified', 'Rejected'])->nullable();
+            $table->enum('status', ['draft', 'verified', 'rejected'])->nullable();
             $table->text('rejection_reason')->nullable();
             $table->timestamps();
         });

@@ -9,7 +9,7 @@
     <div class="card-header mb-3">
         <ul class="nav nav-tabs nav-tabs-table">
             <li class="nav-item">
-                <a id="new-tab" class="nav-link" data-bs-toggle="tab" href="#new">New</a>
+                <a id="draft-tab" class="nav-link" data-bs-toggle="tab" href="#draft">Draft</a>
             </li>
             <li class="nav-item">
                 <a id="deferred-once-tab" class="nav-link" data-bs-toggle="tab" href="#deferred_once">Deferred once</a>
@@ -209,15 +209,15 @@
                 table: table
                 , dataTableUrl: "{{ route('admin.contractors.registration.index') }}"
                 , tabToHashMap: {
-                    "#new-tab": '#new'
+                    "#draft-tab": '#draft'
                     , "#deferred-once-tab": '#deferred_once'
                     , "#deferred-twice-tab": '#deferred_twice'
                     , "#deferred-thrice-tab": '#deferred_thrice'
                     , "#approved-tab": '#approved'
                 , }
                 , hashToParamsMap: {
-                    '#new': {
-                        status: 'new'
+                    '#draft': {
+                        status: 'draft'
                     }
                     , '#deferred_once': {
                         status: 'deffered_once'
@@ -232,7 +232,7 @@
                         status: 'approved'
                     }
                 , }
-                , defaultHash: '#new'
+                , defaultHash: '#draft'
             });
 
             $('#contractors-registration').colResizable({

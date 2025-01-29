@@ -28,7 +28,7 @@ return new class extends Migration
 
         Schema::create('contractor_registrations', function (Blueprint $table) {
             $table->id();
-            $table->uuid('uuid')->unique();
+            $table->string('reg_number')->unique();
             $table->string('pec_number', 100);
             $table->string('category_applied', 45)->nullable();
             $table->string('pec_category', 45)->nullable();

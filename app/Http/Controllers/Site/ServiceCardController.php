@@ -52,7 +52,6 @@ class ServiceCardController extends Controller
         $card->designation = $request->designation;
         $card->bps = $request->bps;
         $card->office = $request->office;
-        $card->status = 'New';
 
         if ($request->hasFile('profile_picture')) {
             $card->addMedia($request->file('profile_picture'))

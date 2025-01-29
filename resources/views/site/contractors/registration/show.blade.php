@@ -18,7 +18,7 @@
             font-size: 0.875rem;
             font-weight: 500;
         }
-        .status-new { background: #e3f2fd; color: #1976d2; }
+        .status-draft { background: #e3f2fd; color: #1976d2; }
         .status-deferred_one { background: #fff3e0; color: #f57c00; }
         .status-deferred_two { background: #fbe9e7; color: #d84315; }
         .status-deferred_three { background: #ffebee; color: #c62828; }
@@ -103,7 +103,7 @@
                                         <td>
                                             <span class="badge badge-lg
                                                 @switch($registration->status)
-                                                    @case('new')
+                                                    @case('draft')
                                                         bg-primary
                                                         @break
                                                     @case('deferred_once')
