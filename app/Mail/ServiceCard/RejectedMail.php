@@ -13,12 +13,12 @@ class RejectedMail extends Mailable
     use Queueable, SerializesModels;
 
     public $service_card;
-    public $rejected_reason;
+    public $remarks;
 
-    public function __construct($service_card, $rejected_reason)
+    public function __construct($service_card, $remarks)
     {
         $this->service_card = $service_card;
-        $this->rejected_reason = $rejected_reason;
+        $this->remarks = $remarks;
     }
 
     public function envelope(): Envelope
@@ -36,7 +36,7 @@ class RejectedMail extends Mailable
                 'name' => $this->service_card->name,
                 'father_name' => $this->service_card->father_name,
                 'personnel_number' => $this->service_card->personnel_number,
-                'rejected_reason' => $this->rejected_reason,
+                'remarks' => $this->remarks,
             ],
         );
     }

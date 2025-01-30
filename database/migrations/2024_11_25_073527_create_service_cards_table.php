@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('bps')->nullable();
             $table->string('office')->nullable();
             $table->enum('status', ['draft', 'verified', 'rejected'])->nullable();
-            $table->text('rejection_reason')->nullable();
+            $table->text('remarks')->nullable();
             $table->timestamps();
         });
     }
