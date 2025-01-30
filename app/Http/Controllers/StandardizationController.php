@@ -12,8 +12,6 @@ use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Support\Facades\Mail;
 use Endroid\QrCode\Encoding\Encoding;
 use App\Mail\Standardization\RenewedMail;
-use App\Mail\Standardization\ApprovedMail;
-use App\Mail\Standardization\RejectedMail;
 
 class StandardizationController extends Controller
 {
@@ -71,7 +69,7 @@ class StandardizationController extends Controller
             return response()->json([
                 'success' => false,
                 'data' => [
-                    'result' => 'Unable to load Product detail',
+                    'result' => 'Unable to load Standardization detail',
                 ],
             ]);
         }
@@ -91,7 +89,7 @@ class StandardizationController extends Controller
             return response()->json([
                 'success' => false,
                 'data' => [
-                    'result' => 'The Product is not standardized',
+                    'result' => 'The Standardization is not standardized',
                 ],
             ]);
         }
@@ -119,36 +117,37 @@ class StandardizationController extends Controller
     {
         if ($standardization->status !== 'approved') {
             $standardization->status = 'approved';
-            $standardization->card_issue_date = Carbon::now();
-            $standardization->card_expiry_date = Carbon::now()->addYears(3);
             if($standardization->save()) {
-                Mail::to($standardization->email)->queue(new ApprovedMail($standardization));
-                return response()->json(['success' => 'Product has been approved successfully.']);
+                return response()->json(['success' => 'Standardization has been approved successfully.']);
             }
         }
-        return response()->json(['error' => 'Product can\'t be approved.']);
+        return response()->json(['error' => 'Standardization can\'t be approved.']);
     }
 
-    public function renew(Request $request, Standardization $standardization)
+    public function renew(Request $request, Standardization $Standardization)
     {
         $currentDate = Carbon::now();
+        $latestCard = $Standardization->getLatestCard();
 
-        if ($standardization->status === 'approved') {
-            if ($currentDate->greaterThanOrEqualTo($standardization->card_expiry_date)) {
-                $standardization->card_issue_date = $request->issue_date ?? $currentDate;
-                $standardization->card_expiry_date = Carbon::parse($standardization->card_issue_date)->addYears(3);
+        if (!$latestCard) {
+            return response()->json(['error' => 'No active card found for renewal.']);
+        }
+        
+        $Standardization->cards()->where('status', 'active')->update(['status' => 'expired']);
 
-                if ($standardization->save()) {
-                    Mail::to($standardization->email)->queue(new RenewedMail($standardization));
-                    return response()->json(['success' => 'Card has been renewed successfully.']);
-                } else {
-                    return response()->json(['error' => 'An error occurred while saving the card data. Please try again.']);
-                }
-            } else {
-                return response()->json(['error' => 'Card cannot be renewed because it has not yet expired.']);
-            }
+        if ($currentDate->greaterThanOrEqualTo($latestCard->expiry_date)) {
+            $Standardization->cards()->create([
+                'uuid' => \Illuminate\Support\Str::uuid(),
+                'issue_date' => $currentDate,
+                'expiry_date' => $currentDate->addYear(),
+                'status' => 'active',
+            ]);
+            
+            Mail::to($Standardization->email)->queue(new RenewedMail($Standardization));
+
+            return response()->json(['success' => 'Standardization Card has been renewed successfully.']);
         } else {
-            return response()->json(['error' => 'Card status does not allow renewal.']);
+            return response()->json(['error' => 'Standardization Card cannot be renewed because it has not yet expired.']);
         }
     }
 
@@ -156,14 +155,12 @@ class StandardizationController extends Controller
     {
         if (!in_array($standardization->status, ['approved', 'rejected'])) {
             $standardization->status = 'rejected';
-            $standardization->remarks = $request->remarks;
 
             if($standardization->save()) {
-                Mail::to($standardization->email)->queue(new RejectedMail($standardization, $request->reason));
-                return response()->json(['success' => 'Product has been rejected.']);
+                return response()->json(['success' => 'Application has been rejected.']);
             }
         }
-        return response()->json(['error' => 'Product can\'t be rejected.']);
+        return response()->json(['error' => 'Standardization application can\'t be rejected.']);
     }
 
     public function updateField(Request $request, Standardization $standardization)
@@ -174,7 +171,7 @@ class StandardizationController extends Controller
         ]);
 
         if(($request->has('expiry_date') || $request->has('issue_date')) && $standardization->status !== 'new') {
-            return response()->json(['error' => 'Approved or Rejected Products cannot be updated']);
+            return response()->json(['error' => 'Approved or Rejected Standardization cannot be updated']);
         }
         $standardization->{$request->field} = $request->value;
         $standardization->save();
@@ -185,7 +182,7 @@ class StandardizationController extends Controller
     public function uploadFile(Request $request, Standardization $standardization)
     {
         if($request->hasFile('firm_pictures') && $standardization->status !== 'new') {
-            return response()->json(['error' => 'Approved or Rejected Products cannot be updated']);
+            return response()->json(['error' => 'Approved or Rejected Standardization cannot be updated']);
         }
         $file = $request->file;
         $collection = $request->collection;

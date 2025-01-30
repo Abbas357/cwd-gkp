@@ -10,7 +10,7 @@
     <div class="card-header mb-3">
         <ul class="nav nav-tabs nav-tabs-table">
             <li class="nav-item">
-                <a id="new-tab" class="nav-link" data-bs-toggle="tab" href="#new">New</a>
+                <a id="draft-tab" class="nav-link" data-bs-toggle="tab" href="#draft">Draft</a>
             </li>
             <li class="nav-item">
                 <a id="approved-tab" class="nav-link" data-bs-toggle="tab" href="#approved">Approved</a>
@@ -31,7 +31,6 @@
                 <th scope="col" class="p-3">Firm Name</th>
                 <th scope="col" class="p-3">Address</th>
                 <th scope="col" class="p-3">Mobile Number</th>
-                <th scope="col" class="p-3">Phone Number</th>
                 <th scope="col" class="p-3">Email</th>
                 <th scope="col" class="p-3">Created At</th>
                 <th scope="col" class="p-3">Updated At</th>
@@ -66,10 +65,6 @@
                     }
                     , {
                         data: "mobile_number"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "phone_number"
                         , searchBuilderType: "string"
                     }
                     , {
@@ -170,14 +165,14 @@
                 table: table
                 , dataTableUrl: "{{ route('admin.standardizations.index') }}"
                 , tabToHashMap: {
-                    "#new-tab": '#new'
+                    "#draft-tab": '#draft'
                     , "#approved-tab": '#approved'
                     , "#rejected-tab": '#rejected'
                     , "#blacklisted-tab": '#blacklisted'
                 , }
                 , hashToParamsMap: {
-                    '#new': {
-                        status: 'new'
+                    '#draft': {
+                        status: 'draft'
                     }
                     , '#approved': {
                         status: 'approved'
@@ -189,7 +184,7 @@
                         status: 'blacklisted'
                     }
                 , }
-                , defaultHash: '#new'
+                , defaultHash: '#draft'
             });
 
             $('#standardizations').colResizable({

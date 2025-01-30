@@ -25,8 +25,6 @@
     @push('script')
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/col-resizable.js') }}"></script>
-    <script src="{{ asset('admin/plugins/html2canvas/html2canvas.min.js') }}"></script>
-
     <script>
         $(document).ready(function() {
             var table = initDataTable('#log-datatable', {

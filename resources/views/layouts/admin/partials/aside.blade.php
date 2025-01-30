@@ -136,6 +136,9 @@
                     @can('view any standardization')
                     <li><a href="{{ route('admin.standardizations.index') }}"><i class="bi-patch-check-fill fs-6"></i>&nbsp; E-Standardization</a></li>
                     @endcan
+                    @can('view any cards')
+                    <li><a href="{{ route('admin.cards.index') }}"><i class="bi-credit-card fs-6"></i>&nbsp; All Cards</a></li>
+                    @endcan
                 </ul>
             </li>
             @endcanany

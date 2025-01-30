@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PageController;
@@ -349,7 +350,10 @@ Route::middleware('auth')->group(function () {
             Route::post('/clear', [HomeController::class, 'clearRecentSearches'])->name('clear');
         });
         
-        Route::get('/logs', ActivityLogController::class)->name('logs')->can('view', Spatie\Activitylog\Models\Activity::class);
+        Route::prefix('cards')->as('cards.')->group(function () {
+            Route::get('/', [CardController::class, 'index'])->name('index')->can('view', App\Models\Card::class);
+        });
 
+        Route::get('/logs', ActivityLogController::class)->name('logs')->can('view', Spatie\Activitylog\Models\Activity::class);
     });
 });

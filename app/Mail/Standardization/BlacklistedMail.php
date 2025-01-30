@@ -8,32 +8,33 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class AppliedMail extends Mailable implements ShouldQueue
+class BlacklistedMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $Standardization;
+    public $remarks;
 
-    public function __construct($Standardization)
+    public function __construct($Standardization, $remarks)
     {
         $this->Standardization = $Standardization;
+        $this->remarks = $remarks;
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Standardization application Submitted',
+            subject: 'Your Firm is blacklisted',
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'emails.standardization.applied',
+            view: 'emails.standardization.blacklisted',
             with: [
                 'firm_name' => $this->Standardization->firm_name,
-                'applied_date' => now()->format('Y-m-d'),
-                'email' => $this->Standardization->email,
+                'remarks' => $this->remarks,
             ],
         );
     }

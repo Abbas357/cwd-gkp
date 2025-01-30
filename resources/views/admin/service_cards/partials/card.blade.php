@@ -215,17 +215,17 @@
         </div>
 
         <div class="header-right">
-            <span class="expires">EXPIRES: {{ $service_card->expiry_date->format('j, M Y'); }}</span>
+            <span class="expires">EXPIRES: {{ $ServiceCard->getLatestCard()->expiry_date->format('j, M Y'); }}</span>
         </div>
 
         <div class="image">
-            <img src="{{ $service_card->getFirstMediaUrl('service_card_pictures') ?? '' }}" alt="{{ $service_card->name }}">
+            <img src="{{ $ServiceCard->getFirstMediaUrl('service_card_pictures') ?? '' }}" alt="{{ $ServiceCard->name }}">
         </div>
 
         <div class="main">
-            <h1>{{ $service_card->name }}</h1>
-            <h2> {{ $service_card->designation }}</h2>
-            <h3> OFFICE: {{ $service_card->office }}</h3>
+            <h1>{{ $ServiceCard->name }}</h1>
+            <h2> {{ $ServiceCard->designation }}</h2>
+            <h3> OFFICE: {{ $ServiceCard->office }}</h3>
         </div>
 
         <div class="footer">
@@ -257,47 +257,47 @@
                 <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="fw-bold">Personnel No: &emsp;</div>
-                        <div>{{ $service_card->personnel_number }}</div>
+                        <div>{{ $ServiceCard->personnel_number }}</div>
                     </div>
                     <div class="d-flex justify-content-between align-items-center ml-auto">
                         <div class="fw-bold">Issue Date: &emsp;</div>
-                        <div>{{ $service_card->issue_date->format('d/m/Y') }}</div>
+                        <div>{{ $ServiceCard->getLatestCard()->issue_date->format('d/m/Y') }}</div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
                     <div class="d-flex justify-content-around align-items-center">
                         <div class="fw-bold">Father Name: &emsp;</div>
-                        <div>{{ $service_card->father_name }}</div>
+                        <div>{{ $ServiceCard->father_name }}</div>
                     </div>
                     <div class="d-flex justify-content-around align-items-center ml-auto">
                         <div class="fw-bold">Blood Group: &emsp;</div>
-                        <div>{{ $service_card->blood_group }}</div>
+                        <div>{{ $ServiceCard->blood_group }}</div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
                     <div class="d-flex justify-content-around align-items-center">
                         <div class="fw-bold">Date of Birth: &emsp;</div>
-                        <div>{{ $service_card->date_of_birth->format('d/m/Y') }}</div>
+                        <div>{{ $ServiceCard->date_of_birth->format('d/m/Y') }}</div>
                     </div>
                     <div class="d-flex justify-content-around align-items-center ml-auto">
                         <div class="fw-bold">Identification Mark: &emsp;</div>
-                        <div style="overflow: hidden; text-overflow: ellipsis;">{{ $service_card->mark_of_identification }}</div>
+                        <div style="overflow: hidden; text-overflow: ellipsis;">{{ $ServiceCard->mark_of_identification }}</div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
                     <div class="d-flex justify-content-around align-items-center">
                         <div class="fw-bold">CNIC: &emsp;</div>
-                        <div style="overflow: hidden; text-overflow: ellipsis;">{{ $service_card->cnic }}</div>
+                        <div style="overflow: hidden; text-overflow: ellipsis;">{{ $ServiceCard->cnic }}</div>
                     </div>
                     <div class="d-flex justify-content-around align-items-center ml-auto">
                         <div class="fw-bold">Emergency #: &emsp;</div>
-                        <div style="overflow: hidden; text-overflow: ellipsis;">{{ $service_card->emergency_contact }}</div>
+                        <div style="overflow: hidden; text-overflow: ellipsis;">{{ $ServiceCard->emergency_contact }}</div>
                     </div>
                 </div>
                 
                 <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
                     <div class="fw-bold">Present Address: &emsp;</div>
-                    <div style="overflow: hidden; text-overflow: ellipsis;">{{ $service_card->present_address }}</div>
+                    <div style="overflow: hidden; text-overflow: ellipsis;">{{ $ServiceCard->present_address }}</div>
                 </div>
             </div>
             

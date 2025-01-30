@@ -7,20 +7,11 @@ use Illuminate\Support\Str;
 use App\Models\Standardization;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Standardization\ApprovedMail;
+use App\Mail\Standardization\RejectedMail;
+use App\Mail\Standardization\BlacklistedMail;
 
 class StandardizationObserver
 {
-    public function updated(Standardization $Standardization): void
-    {
-        if ($Standardization->wasChanged('status')) {
-            if ($Standardization->status === 'approved') {
-                $this->handleApproval($Standardization);
-            } elseif ($Standardization->status === 'rejected') {
-                $this->handleRejection($Standardization);
-            }
-        }
-    }
-
     public function updating($Standardization)
     {
         if ($Standardization->isDirty('status')) {
@@ -32,6 +23,17 @@ class StandardizationObserver
         }
     }
 
+    public function updated(Standardization $Standardization): void
+    {
+        if ($Standardization->wasChanged('status')) {
+            if ($Standardization->status === 'approved') {
+                $this->handleApproval($Standardization);
+            } elseif (in_array($Standardization->status, ['rejected', 'blacklisted'])) {
+                $this->handleRejection($Standardization);
+            }
+        }
+    }
+
     protected function handleApproval(Standardization $Standardization): void
     {
         $Standardization->cards()->update([
@@ -39,8 +41,8 @@ class StandardizationObserver
             'expiry_date' => now(),
         ]);
 
-        if ($Standardization->contractor->email) {
-            Mail::to($Standardization->contractor->email)->queue(new ApprovedMail($Standardization));
+        if ($Standardization->email) {
+            Mail::to($Standardization->email)->queue(new ApprovedMail($Standardization));
         }
 
         Card::create([
@@ -56,16 +58,15 @@ class StandardizationObserver
     protected function handleRejection(Standardization $Standardization): void
     {
         $mailClass = match ($Standardization->status) {
-            'deffered_once' => DeferredFirstMail::class,
-            'deffered_twice' => DeferredSecondMail::class,
-            'deffered_thrice' => DeferredThirdMail::class,
+            'rejected' => RejectedMail::class,
+            'blacklisted' => BlacklistedMail::class,
             default => null,
         };
 
-        $contractorEmail = $Standardization->contractor->email;
-        if ($mailClass && $contractorEmail) {
-            if ($contractorEmail) {
-                Mail::to($contractorEmail)->queue(new $mailClass($Standardization, $Standardization->remarks));
+        $email = $Standardization->email;
+        if ($mailClass && $email) {
+            if ($email) {
+                Mail::to($email)->queue(new $mailClass($Standardization, $Standardization->remarks));
             }
         }
     }

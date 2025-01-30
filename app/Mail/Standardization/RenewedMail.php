@@ -12,17 +12,17 @@ class RenewedMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $standardization;
+    public $Standardization;
 
-    public function __construct($standardization)
+    public function __construct($Standardization)
     {
-        $this->standardization = $standardization;
+        $this->Standardization = $Standardization;
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your Product card is renewed',
+            subject: 'Your Standardization card is renewed',
         );
     }
 
@@ -31,9 +31,7 @@ class RenewedMail extends Mailable implements ShouldQueue
         return new Content(
             view: 'emails.standardization.approved',
             with: [
-                'product_name' => $this->standardization->product_name,
-                'firm_name' => $this->standardization->firm_name,
-                'specification_details' => $this->standardization->specification_details,
+                'firm_name' => $this->Standardization->firm_name,
             ],
         );
     }

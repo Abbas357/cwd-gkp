@@ -221,7 +221,7 @@
         </div>
 
         <div class="header-right">
-            <span class="expires">EXPIRES: {{ $Standardization->card_expiry_date->format('j, M Y'); }}</span>
+            <span class="expires">EXPIRES: {{ $Standardization->getLatestCard()->expiry_date->format('j, M Y'); }}</span>
         </div>
 
         <div class="image">

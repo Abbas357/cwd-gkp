@@ -70,7 +70,6 @@ class StandardizationController extends Controller
         $standardization->cnic = $request->input('cnic');
         $standardization->district = $request->input('district');
         $standardization->mobile_number = $request->input('mobile_number');
-        $standardization->phone_number = $request->input('phone_number');
         $standardization->email = $request->input('email');
         $standardization->password = $request->input('password');
 
@@ -80,7 +79,6 @@ class StandardizationController extends Controller
         }
 
         if ($standardization->save()) {
-            // Mail::to($standardization->email)->queue(new AppliedMail($standardization));
             session(['standardization_id' => $standardization->id]);
             return redirect()->route('standardizations.dashboard')->with('success', 'Congratulation! Account successfully created. Please use this portal for managing your account.');
         }
@@ -136,7 +134,6 @@ class StandardizationController extends Controller
             'firm_name' => 'required|string|max:100',
             'cnic' => 'required|string|max:45',
             'mobile_number' => 'required|string|max:45',
-            'phone_number' => 'required|string|max:45',
             'email' => 'required|email|max:100',
             'address' => 'required|string',
             'district' => 'required|string|max:100',

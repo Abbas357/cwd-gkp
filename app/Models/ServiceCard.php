@@ -5,11 +5,14 @@ namespace App\Models;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\Activitylog\LogOptions;
 
+use App\Observers\ServiceCardObserver;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy([ServiceCardObserver::class])]
 class ServiceCard extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, LogsActivity;
@@ -53,8 +56,8 @@ class ServiceCard extends Model implements HasMedia
     public function getLatestCard()
     {
         return $this->cards()
-                    ->where('status', 'active')
-                    ->latest('created_at')
-                    ->first();
+            ->where('status', 'active')
+            ->latest('created_at')
+            ->first();
     }
 }

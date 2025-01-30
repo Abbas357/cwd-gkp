@@ -12,19 +12,19 @@ class RejectedMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $standardization;
-    public $rejected_reason;
+    public $Standardization;
+    public $remarks;
 
-    public function __construct($standardization, $rejected_reason)
+    public function __construct($Standardization, $remarks)
     {
-        $this->standardization = $standardization;
-        $this->rejected_reason = $rejected_reason;
+        $this->Standardization = $Standardization;
+        $this->remarks = $remarks;
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your Product is rejected',
+            subject: 'Your Application is rejected',
         );
     }
 
@@ -33,10 +33,8 @@ class RejectedMail extends Mailable
         return new Content(
             view: 'emails.standardization.rejected',
             with: [
-                'product_name' => $this->standardization->product_name,
-                'firm_name' => $this->standardization->firm_name,
-                'specification_details' => $this->standardization->specification_details,
-                'rejected_reason' => $this->rejected_reason,
+                'firm_name' => $this->Standardization->firm_name,
+                'remarks' => $this->remarks,
             ],
         );
     }
