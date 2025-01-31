@@ -247,8 +247,8 @@
                                 <span>TEAM</span>
                             </a>
                         </li>
-                        <li role="none" class="cw-top-menu {{ request()->routeIs('pages.show', 'achievements') ? 'uActived' : '' }}" data-tier-id="7">
-                            <a href="{{ route('pages.show', 'achievements') }}" data-tier-id="7" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
+                        <li role="none" class="cw-top-menu {{ request()->routeIs('achievements.index') ? 'uActived' : '' }}" data-tier-id="7">
+                            <a href="{{ route('achievements.index') }}" data-tier-id="7" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>ACHIEVEMENTS</span>
                             </a>
                         </li>
