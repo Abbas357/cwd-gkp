@@ -90,6 +90,9 @@
                     @can('view any project')
                     <li><a href="{{ route('admin.schemes.index') }}"><i class="bi-building fs-6"></i>&nbsp; Schemes</a></li>
                     @endcan
+                    @can('view any achievement')
+                    <li><a href="{{ route('admin.achievements.index') }}"><i class="bi-building fs-6"></i>&nbsp; Achievements</a></li>
+                    @endcan
                 </ul>
             </li>
             @endcanany

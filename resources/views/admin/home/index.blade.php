@@ -237,11 +237,17 @@
             </a>
             @endcan
 
-            {{-- Assuming schemes have similar permissions to projects --}}
             @can('view any project')
             <a href="{{ route('admin.schemes.index') }}" class="app-tile">
                 <i class="bi bi-building" style="color: #028be1"></i>
                 <p>Schemes</p>
+            </a>
+            @endcan
+
+            @can('view any achievement')
+            <a href="{{ route('admin.achievements.index') }}" class="app-tile">
+                <i class="bi bi-award" style="color: #2ef782"></i>
+                <p>Achievements</p>
             </a>
             @endcan
         </div>
