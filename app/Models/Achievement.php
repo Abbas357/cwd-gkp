@@ -20,6 +20,8 @@ class Achievement extends Model implements HasMedia
     protected function casts(): array
     {
         return [
+            'start_date' => 'datetime',
+            'end_date' => 'datetime',
             'published_at' => 'datetime',
         ];
     }
