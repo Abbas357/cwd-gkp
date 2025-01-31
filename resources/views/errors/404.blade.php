@@ -1,8 +1,8 @@
 <x-guest-layout title="404 Page">
 
-  <div class="container-fluid py-5" style="background: linear-gradient(rgba(19, 53, 123, 0.1), rgba(19, 53, 153, 0.1)); object-fit: cover;">
+  <div class="container-fluid py-5">
     <div class="container py-5 text-center">
-        <div class="row justify-content-center">
+        <div class="row justify-content-center p-5" style="background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)); object-fit: cover; border-radius:20px">
             <div class="col-lg-6">
                 <i class="bi bi-exclamation-triangle display-1 text-primary"></i>
                 <h1 class="display-1">404</h1>

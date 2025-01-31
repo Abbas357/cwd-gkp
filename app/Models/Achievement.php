@@ -60,7 +60,7 @@ class Achievement extends Model implements HasMedia
         return $this->belongsTo(User::class, 'author_id');
     }
 
-    public function publishedBy() {
+    public function publishBy() {
         return $this->belongsTo(User::class, 'published_by');
     }
 }

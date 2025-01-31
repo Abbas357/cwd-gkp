@@ -183,7 +183,7 @@ Route::prefix('seniority')->as('seniority.')->group(function () {
 
 Route::prefix('achievements')->as('achievements.')->group(function () {
     Route::get('/', [AchievementController::class, 'index'])->name('index');
-    Route::get('/{slug}', [AchievementController::class, 'showSeniority'])->name('show');
+    Route::get('/{slug}', [AchievementController::class, 'showAchievement'])->name('show');
 });
 
 Route::prefix('development_projects')->as('development_projects.')->group(function () {
