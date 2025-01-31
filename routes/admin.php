@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AchievementController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\HomeController;
@@ -260,6 +261,19 @@ Route::middleware('auth')->group(function () {
             Route::patch('/upload/file/{slider}', [SliderController::class, 'uploadFile'])->name('uploadFile')->can('update', 'slider');
             Route::delete('/{slider}', [SliderController::class, 'destroy'])->name('destroy')->can('delete', 'slider');
             Route::patch('/{slider}/comments', [SliderController::class, 'updateComments'])->name('comments')->can('update', 'slider');
+        });
+
+        Route::prefix('achievements')->as('achievements.')->group(function () {
+            Route::get('/', [AchievementController::class, 'index'])->name('index')->can('viewAny', App\Models\Slider::class);
+            Route::get('/create', [AchievementController::class, 'create'])->name('create')->can('create', App\Models\Slider::class);
+            Route::post('/', [AchievementController::class, 'store'])->name('store')->can('create', App\Models\Slider::class);
+            Route::get('/{achievement}', [AchievementController::class, 'show'])->name('show')->can('view', App\Models\Slider::class);
+            Route::get('/get/{achievement}', [AchievementController::class, 'showDetail'])->name('detail')->can('view', 'achievement');
+            Route::patch('/publish/{achievement}', [AchievementController::class, 'publishSlider'])->name('publish')->can('publish', 'achievement');
+            Route::patch('/archive/{achievement}', [AchievementController::class, 'archiveSlider'])->name('archive')->can('archive', 'achievement');
+            Route::patch('/update/field/{achievement}', [AchievementController::class, 'updateField'])->name('updateField')->can('update', 'achievement');
+            Route::patch('/upload/file/{achievement}', [AchievementController::class, 'uploadFile'])->name('uploadFile')->can('update', 'achievement');
+            Route::delete('/{achievement}', [AchievementController::class, 'destroy'])->name('destroy')->can('delete', 'achievement');
         });
         
         Route::prefix('pages')->as('pages.')->group(function () {

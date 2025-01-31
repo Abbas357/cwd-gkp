@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Site\AchievementController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\ContractorAuth;
 use App\Http\Middleware\StandardizationAuth;
@@ -180,6 +181,11 @@ Route::prefix('seniority')->as('seniority.')->group(function () {
     Route::get('/{slug}', [SeniorityController::class, 'showSeniority'])->name('show');
 });
 
+Route::prefix('achievements')->as('achievements.')->group(function () {
+    Route::get('/', [AchievementController::class, 'index'])->name('index');
+    Route::get('/{slug}', [AchievementController::class, 'showSeniority'])->name('show');
+});
+
 Route::prefix('development_projects')->as('development_projects.')->group(function () {
     Route::get('/', [DevelopmentProjectController::class, 'index'])->name('index');
     Route::get('/{slug}', [DevelopmentProjectController::class, 'showDevelopmentProject'])->name('show');
@@ -188,6 +194,12 @@ Route::prefix('development_projects')->as('development_projects.')->group(functi
 Route::prefix('gallery')->as('gallery.')->group(function () {
     Route::get('/', [GalleryController::class, 'index'])->name('index');
     Route::get('/{slug}', [GalleryController::class, 'showGalleryDetail'])->name('show');
+});
+
+Route::prefix('news')->as('news.')->group(function () {
+    Route::get('/', [NewsController::class, 'index'])->name('index');
+    Route::get('/ticker', [NewsController::class, 'newsTicker'])->name('ticker');;
+    Route::get('/{slug}', [NewsController::class, 'showNews'])->name('show');
 });
 
 Route::prefix('pages')->as('pages.')->group(function () {

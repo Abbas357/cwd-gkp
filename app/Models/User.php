@@ -159,6 +159,11 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(Slider::class);
     }
 
+    public function achievements()
+    {
+        return $this->hasMany(Achievement::class);
+    }
+
     public function boss()
     {
         // $boss = $user->boss->first();
