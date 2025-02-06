@@ -114,7 +114,7 @@
             </li>
             @endcanany
     
-            @canany(['view any service card', 'view any contractor', 'view any standardization'])
+            @canany(['view any service card', 'view any contractor', 'view any standardization', 'view any vehicle'])
             <li>
                 <a href="javascript:;" class="has-arrow">
                     <div class="parent-icon"><i class="bi-app-indicator text-info"></i></div>
@@ -141,6 +141,18 @@
                     @endcan
                     @can('view any cards')
                     <li><a href="{{ route('admin.cards.index') }}"><i class="bi-credit-card fs-6"></i>&nbsp; All Cards</a></li>
+                    @endcan
+                    @can('view any vehicle')
+                    <li>
+                        <a href="javascript:;" class="has-arrow">
+                            <div class="parent-icon"><i class="bi-person-vcard fs-6"></i></div>
+                            <div class="menu-title">Vehicle Mgt.</div>
+                        </a>
+                        <ul class="p-2 menu-items">
+                            <li><a href="{{ route('admin.vehicle-users.index') }}"><i class="bi-person-vcard fs-6"></i>&nbsp; Users</a></li>
+                            <li><a href="{{ route('admin.vehicles.index') }}"><i class="bi-credit-card fs-6"></i>&nbsp; Vehicles</a></li>
+                        </ul>
+                    </li>
                     @endcan
                 </ul>
             </li>

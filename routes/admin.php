@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AchievementController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\HomeController;
@@ -19,6 +18,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DownloadController;
@@ -26,9 +26,11 @@ use App\Http\Controllers\SeniorityController;
 use App\Http\Controllers\ContractorController;
 use App\Http\Controllers\NewsLetterController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\ProjectFileController;
 use App\Http\Controllers\ServiceCardController;
+use App\Http\Controllers\VehicleUserController;
 use App\Http\Controllers\PublicContactController;
 use App\Http\Controllers\StandardizationController;
 use App\Http\Controllers\DevelopmentProjectController;
@@ -367,7 +369,34 @@ Route::middleware('auth')->group(function () {
         Route::prefix('cards')->as('cards.')->group(function () {
             Route::get('/', [CardController::class, 'index'])->name('index')->can('view', App\Models\Card::class);
         });
-
+    
         Route::get('/logs', ActivityLogController::class)->name('logs')->can('view', Spatie\Activitylog\Models\Activity::class);
+        
+        Route::prefix('vehicles')->as('vehicles.')->group(function () {
+            Route::get('/', [VehicleController::class, 'index'])->name('index')->can('viewAny', App\Models\Vehicle::class);
+            Route::get('/create', [VehicleController::class, 'create'])->name('create')->can('create', App\Models\Vehicle::class);
+            Route::post('/', [VehicleController::class, 'store'])->name('store')->can('create', App\Models\Vehicle::class);
+            Route::get('/{vehicle}', [VehicleController::class, 'show'])->name('show')->can('view', App\Models\Vehicle::class);
+            Route::get('/get/{vehicle}', [VehicleController::class, 'showDetail'])->name('detail')->can('view', 'vehicle');
+            Route::patch('/publish/{vehicle}', [VehicleController::class, 'publishTender'])->name('publish')->can('publish', 'vehicle');
+            Route::patch('/archive/{vehicle}', [VehicleController::class, 'archiveTender'])->name('archive')->can('archive', 'vehicle');
+            Route::patch('/update/field/{vehicle}', [VehicleController::class, 'updateField'])->name('updateField')->can('update', 'vehicle');
+            Route::delete('/{vehicle}', [VehicleController::class, 'destroy'])->name('destroy')->can('delete', 'vehicle');
+            Route::patch('/{vehicle}/comments', [VehicleController::class, 'updateComments'])->name('comments')->can('update', 'vehicle');
+        });
+
+        Route::prefix('vehicle-users')->as('vehicle-users.')->group(function () {
+            Route::get('/', [VehicleUserController::class, 'index'])->name('index')->can('viewAny', App\Models\Vehicle::class);
+            Route::get('/create', [VehicleUserController::class, 'create'])->name('create')->can('create', App\Models\Vehicle::class);
+            Route::post('/', [VehicleUserController::class, 'store'])->name('store')->can('create', App\Models\Vehicle::class);
+            Route::get('/{user}', [VehicleUserController::class, 'show'])->name('show')->can('view', App\Models\Vehicle::class);
+            Route::get('/get/{user}', [VehicleUserController::class, 'showDetail'])->name('detail')->can('view', 'user');
+            Route::patch('/publish/{user}', [VehicleUserController::class, 'publishTender'])->name('publish')->can('publish', 'user');
+            Route::patch('/archive/{user}', [VehicleUserController::class, 'archiveTender'])->name('archive')->can('archive', 'user');
+            Route::patch('/update/field/{user}', [VehicleUserController::class, 'updateField'])->name('updateField')->can('update', 'user');
+            Route::delete('/{user}', [VehicleUserController::class, 'destroy'])->name('destroy')->can('delete', 'user');
+            Route::patch('/{user}/comments', [VehicleUserController::class, 'updateComments'])->name('comments')->can('update', 'user');
+        });
+
     });
 });
