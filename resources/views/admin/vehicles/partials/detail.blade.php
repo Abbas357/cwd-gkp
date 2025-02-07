@@ -9,70 +9,136 @@
     }
 </style>
 
-<div class="row achievements-details">
+<div class="row vehicles-details">
     <div class="col-md-12">
 
         <table class="table table-bordered mt-3">
-            <!-- File Name -->
+
             <tr>
-                <th class="table-cell">Title</th>
+                <th class="table-cell">Type</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-title">{{ $achievement->title }}</span>
-                    @if (!in_array($achievement->status, ['published', 'archived']))
-                    <input type="text" id="input-title" value="{{ $achievement->title }}" class="d-none form-control" onkeypress="if (achievement.key === 'Enter') updateField('title', {{ $achievement->id }})" />
-                    <button id="save-btn-title" class="btn btn-sm btn-light d-none" onclick="updateField('title', {{ $achievement->id }})"><i class="bi-send-fill"></i></button>
-                    <button id="edit-btn-title" class="no-print btn btn-sm edit-button" onclick="enableEditing('title')"><i class="bi-pencil fs-6"></i></button>
+                    <span id="text-type">{{ $vehicle->type }}</span>
+                    @if (!in_array($vehicle->status, ['published', 'archived']))
+                    <select id="input-type" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('type', {{ $vehicle->id }})">
+                        @foreach ($cat['vehicle_type'] as $type)
+                        <option value="{{ $type->name }}" {{ $vehicle->type == $type->name ? 'selected' : '' }}>
+                            {{ $type->name }}
+                        </option>
+                        @endforeach
+                    </select>
+                    <button id="save-btn-type" class="btn btn-sm btn-light d-none" onclick="updateField('type', {{ $vehicle->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="edit-btn-type" class="no-print btn btn-sm edit-button" onclick="enableEditing('type')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
             </tr>
 
             <tr>
-                <th class="table-cell">Start Date & Time</th>
+                <th class="table-cell">Functional Status</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-start_datetime">{{ $achievement->start_datetime }}</span>
-                    @if (!in_array($achievement->status, ['published', 'archived']))
-                    <input type="date" id="input-start_datetime" value="{{ $achievement->start_datetime }}" class="d-none form-control" onkeypress="if (achievement.key === 'Enter') updateField('start_datetime', {{ $achievement->id }})" />
-                    <button id="save-btn-start_datetime" class="btn btn-sm btn-light d-none" onclick="updateField('start_datetime', {{ $achievement->id }})"><i class="bi-send-fill"></i></button>
-                    <button id="edit-btn-start_datetime" class="no-print btn btn-sm edit-button" onclick="enableEditing('start_datetime')"><i class="bi-pencil fs-6"></i></button>
+                    <span id="text-functional_status">{{ $vehicle->functional_status }}</span>
+                    @if (!in_array($vehicle->status, ['published', 'archived']))
+                    <select id="input-functional_status" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('functional_status', {{ $vehicle->id }})">
+                        @foreach ($cat['vehicle_functional_status'] as $functional_status)
+                        <option value="{{ $functional_status->name }}" {{ $vehicle->functional_status == $functional_status->name ? 'selected' : '' }}>
+                            {{ $functional_status->name }}
+                        </option>
+                        @endforeach
+                    </select>
+                    <button id="save-btn-functional_status" class="btn btn-sm btn-light d-none" onclick="updateField('functional_status', {{ $vehicle->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="edit-btn-functional_status" class="no-print btn btn-sm edit-button" onclick="enableEditing('functional_status')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
             </tr>
 
             <tr>
-                <th class="table-cell">End Date & Time</th>
+                <th class="table-cell">Color</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="date-end_datetime">{{ $achievement->end_datetime }}</span>
-                    @if (!in_array($achievement->status, ['published', 'archived']))
-                    <input type="text" id="input-end_datetime" value="{{ $achievement->end_datetime }}" class="d-none form-control" onkeypress="if (achievement.key === 'Enter') updateField('end_datetime', {{ $achievement->id }})" />
-                    <button id="save-btn-end_datetime" class="btn btn-sm btn-light d-none" onclick="updateField('end_datetime', {{ $achievement->id }})"><i class="bi-send-fill"></i></button>
-                    <button id="edit-btn-end_datetime" class="no-print btn btn-sm edit-button" onclick="enableEditing('end_datetime')"><i class="bi-pencil fs-6"></i></button>
+                    <span id="text-color">{{ $vehicle->color }}</span>
+                    @if (!in_array($vehicle->status, ['published', 'archived']))
+                    <select id="input-color" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('color', {{ $vehicle->id }})">
+                        @foreach ($cat['vehicle_color'] as $color)
+                        <option value="{{ $color->name }}" {{ $vehicle->color == $color->name ? 'selected' : '' }}>
+                            {{ $color->name }}
+                        </option>
+                        @endforeach
+                    </select>
+                    <button id="save-btn-color" class="btn btn-sm btn-light d-none" onclick="updateField('color', {{ $vehicle->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="edit-btn-color" class="no-print btn btn-sm edit-button" onclick="enableEditing('color')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
             </tr>
 
             <tr>
-                <th class="table-cell">Location</th>
+                <th class="table-cell">Registration Number</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-location">{{ $achievement->location }}</span>
-                    @if (!in_array($achievement->status, ['published', 'archived']))
-                    <input type="text" id="input-location" value="{{ $achievement->location }}" class="d-none form-control" onkeypress="if (achievement.key === 'Enter') updateField('location', {{ $achievement->id }})" />
-                    <button id="save-btn-location" class="btn btn-sm btn-light d-none" onclick="updateField('location', {{ $achievement->id }})"><i class="bi-send-fill"></i></button>
-                    <button id="edit-btn-location" class="no-print btn btn-sm edit-button" onclick="enableEditing('location')"><i class="bi-pencil fs-6"></i></button>
+                    <span id="text-registration_number">{{ $vehicle->registration_number }}</span>
+                    <input type="text" id="input-registration_number" value="{{ $vehicle->registration_number }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('registration_number', {{ $vehicle->id }})" />
+                    <button id="save-btn-registration_number" class="btn btn-sm btn-light d-none" onclick="updateField('registration_number', {{ $vehicle->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="edit-btn-registration_number" class="no-print btn btn-sm edit-button" onclick="enableEditing('registration_number')"><i class="bi-pencil fs-6"></i></button>
+                </td>
+            </tr>
+
+            <tr>
+                <th class="table-cell">Fuel Type</th>
+                <td class="d-flex justify-content-between align-items-center gap-2">
+                    <span id="text-fuel_type">{{ $vehicle->fuel_type }}</span>
+                    @if (!in_array($vehicle->status, ['published', 'archived']))
+                    <select id="input-fuel_type" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('fuel_type', {{ $vehicle->id }})">
+                        @foreach ($cat['fuel_type'] as $fuel_type)
+                        <option value="{{ $fuel_type->name }}" {{ $vehicle->fuel_type == $fuel_type->name ? 'selected' : '' }}>
+                            {{ $fuel_type->name }}
+                        </option>
+                        @endforeach
+                    </select>
+                    <button id="save-btn-fuel_type" class="btn btn-sm btn-light d-none" onclick="updateField('fuel_type', {{ $vehicle->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="edit-btn-fuel_type" class="no-print btn btn-sm edit-button" onclick="enableEditing('fuel_type')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
             </tr>
 
             <tr>
-                <th class="table-cell">Content</th>
+                <th class="table-cell">Brand</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-content">{!! $achievement->content !!}</span>
-                    @if (!in_array($achievement->status, ['published', 'archived']))
+                    <span id="text-brand">{{ $vehicle->brand }}</span>
+                    @if (!in_array($vehicle->status, ['published', 'archived']))
+                    <select id="input-brand" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('brand', {{ $vehicle->id }})">
+                        @foreach ($cat['vehicle_brand'] as $brand)
+                        <option value="{{ $brand->name }}" {{ $vehicle->brand == $brand->name ? 'selected' : '' }}>
+                            {{ $brand->name }}
+                        </option>
+                        @endforeach
+                    </select>
+                    <button id="save-btn-brand" class="btn btn-sm btn-light d-none" onclick="updateField('brand', {{ $vehicle->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="edit-btn-brand" class="no-print btn btn-sm edit-button" onclick="enableEditing('brand')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
+                </td>
+            </tr>
+
+            <tr>
+                <th class="table-cell">Registration Status</th>
+                <td class="d-flex justify-content-between align-items-center gap-2">
+                <span id="text-registration_status">{{ $vehicle->registration_status }}</span>
+                <select id="input-registration_status" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('registration_status', {{ $vehicle->id }})">
+                    @foreach ($cat['vehicle_registration_status'] as $registration_status)
+                    <option value="{{ $registration_status->name }}" {{ $vehicle->registration_status == $registration_status->name ? 'selected' : '' }}>
+                        {{ $registration_status->name }}
+                    </option>
+                    @endforeach
+                </select>
+                <button id="save-btn-registration_status" class="btn btn-sm btn-light d-none" onclick="updateField('registration_status', {{ $vehicle->id }})"><i class="bi-send-fill"></i></button>
+                <button id="edit-btn-registration_status" class="no-print btn btn-sm edit-button" onclick="enableEditing('registration_status')"><i class="bi-pencil fs-6"></i></button>
+                </td>
+            </tr>
+
+            <tr>
+                <th class="table-cell">Remarks</th>
+                <td class="d-flex justify-content-between align-items-center gap-2">
+                    <span id="text-remarks">{{ $vehicle->remarks }}</span>
                     <div class="mb-3 w-100">
-                        <textarea name="content" id="input-content" class="form-control d-none" style="height:150px">{!! old('content', $achievement->content) !!}</textarea>
+                        <textarea name="remarks" id="input-remarks" class="form-control d-none" style="height:150px">{!! old('remarks', $vehicle->remarks) !!}</textarea>
                     </div>
-                    <button id="save-btn-content" class="btn btn-sm btn-light d-none" onclick="updateField('content', {{ $achievement->id }})"><i class="bi-send-fill"></i></button>
-                    <button id="edit-btn-content" class="no-print btn btn-sm edit-button" onclick="enableEditing('content')"><i class="bi-pencil fs-6"></i></button>
-                    @endif
+                    <button id="save-btn-remarks" class="btn btn-sm btn-light d-none" onclick="updateField('remarks', {{ $vehicle->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="edit-btn-remarks" class="no-print btn btn-sm edit-button" onclick="enableEditing('remarks')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
             
@@ -104,7 +170,7 @@
     async function updateField(field, id) {
         const newValue = (field === 'content') ? $('#input-' + field).summernote('code') : $('#input-' + field).val();
 
-        const url = "{{ route('admin.achievements.updateField', ':id') }}".replace(':id', id);
+        const url = "{{ route('admin.vehicles.updateField', ':id') }}".replace(':id', id);
         const data = {
             field: field
             , value: newValue

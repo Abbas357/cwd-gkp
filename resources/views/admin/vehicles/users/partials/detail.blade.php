@@ -17,7 +17,7 @@
                 <th class="table-cell">Name</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-name">{{ $user->name }}</span>
-                    <input type="text" id="input-name" value="{{ $user->name }}" class="d-none form-control" onkeypress="if (achievement.key === 'Enter') updateField('name', {{ $user->id }})" />
+                    <input type="text" id="input-name" value="{{ $user->name }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('name', {{ $user->id }})" />
                     <button id="save-btn-name" class="btn btn-sm btn-light d-none" onclick="updateField('name', {{ $user->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-name" class="no-print btn btn-sm edit-button" onclick="enableEditing('name')"><i class="bi-pencil fs-6"></i></button>
                 </td>
@@ -27,8 +27,8 @@
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-designation">{{ $user->designation }}</span>
                     @if (!in_array($user->status, ['published', 'archived']))
-                    <select id="input-designation" class="d-none form-control" onkeypress="if (user.key === 'Enter') updateField('designation', {{ $user->id }})">
-                        @foreach ($designations as $designation)
+                    <select id="input-designation" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('designation', {{ $user->id }})">
+                        @foreach ($cat['designations'] as $designation)
                         <option value="{{ $designation->name }}" {{ $user->designation == $designation->name ? 'selected' : '' }}>
                             {{ $designation->name }}
                         </option>
@@ -44,8 +44,8 @@
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-office">{{ $user->office }}</span>
                     @if (!in_array($user->status, ['published', 'archived']))
-                    <select id="input-office" class="d-none form-control" onkeypress="if (user.key === 'Enter') updateField('office', {{ $user->id }})">
-                        @foreach ($offices as $office)
+                    <select id="input-office" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('office', {{ $user->id }})">
+                        @foreach ($cat['offices'] as $office)
                         <option value="{{ $office->name }}" {{ $user->office == $office->name ? 'selected' : '' }}>
                             {{ $office->name }}
                         </option>
@@ -61,7 +61,7 @@
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-office_type">{{ $user->office_type }}</span>
                     @if (!in_array($user->status, ['published', 'archived']))
-                    <select id="input-office_type" class="d-none form-control" onkeypress="if (user.key === 'Enter') updateField('office_type', {{ $user->id }})">
+                    <select id="input-office_type" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('office_type', {{ $user->id }})">
                         <option value="division" {{ $user->office_type == 'division' ? 'selected' : '' }}>Division</option>
                         <option value="circle" {{ $user->office_type == 'circle' ? 'selected' : '' }}>Circle</option>
                     </select>

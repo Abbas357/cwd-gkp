@@ -1,7 +1,5 @@
 <?php 
 
-use Illuminate\Helpers\Str;
-
 function getProfilePic(App\Models\User $user): string
 {
     $url = asset($user->getFirstMediaUrl('profile_pictures', 'thumb'));
@@ -19,6 +17,7 @@ function categoryType()
     return [
         'position', 'designation', 'office', 'file_type', 'download_category', 'contractor_category',
         'provincial_entity', 'gallery_type', 'news_category', 'page_type', 'tender_domain',
+        'vehicle_type', 'vehicle_functional_status', 'vehicle_color', 'fuel_type', 'vehicle_registration_status', 'vehicle_brand'
     ];
 }
 

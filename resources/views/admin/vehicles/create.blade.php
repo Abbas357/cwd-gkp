@@ -17,6 +17,45 @@
 
                             <div class="row">
                                 <div class="col-md-4 mb-4">
+                                    <label for="type">Type</label>
+                                    <select class="form-select" id="type" name="type" required>
+                                        <option value="">Choose...</option>
+                                        @foreach ($cat['vehicle_type'] as $type)
+                                        <option value="{{ $type->name }}">{{ $type->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('type')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-4 mb-4">
+                                    <label for="functional_status">Functional Status</label>
+                                    <select class="form-select" id="functional_status" name="functional_status" required>
+                                        <option value="">Choose...</option>
+                                        @foreach ($cat['vehicle_functional_status'] as $functional_status)
+                                        <option value="{{ $functional_status->name }}">{{ $functional_status->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('functional_status')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-4 mb-4">
+                                    <label for="color">Color</label>
+                                    <select class="form-select" id="color" name="color" required>
+                                        <option value="">Choose...</option>
+                                        @foreach ($cat['vehicle_color'] as $color)
+                                        <option value="{{ $color->name }}">{{ $color->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('color')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-4 mb-4">
                                     <label for="registration_number">Registration Number*</label>
                                     <input type="text" class="form-control @error('registration_number') is-invalid @enderror" 
                                            id="registration_number" name="registration_number" value="{{ old('registration_number') }}" required>
@@ -26,20 +65,28 @@
                                 </div>
 
                                 <div class="col-md-4 mb-4">
-                                    <label for="type">Vehicle Type</label>
-                                    <input type="text" class="form-control @error('type') is-invalid @enderror" 
-                                           id="type" name="type" value="{{ old('type') }}">
-                                    @error('type')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <label for="fuel_type">Fuel Type</label>
+                                    <select class="form-select" id="fuel_type" name="fuel_type" required>
+                                        <option value="">Choose...</option>
+                                        @foreach ($cat['fuel_type'] as $fuel_type)
+                                        <option value="{{ $fuel_type->name }}">{{ $fuel_type->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('fuel_type')
+                                    <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="col-md-4 mb-4">
-                                    <label for="brand">Brand*</label>
-                                    <input type="text" class="form-control @error('brand') is-invalid @enderror" 
-                                           id="brand" name="brand" value="{{ old('brand') }}" required>
+                                    <label for="brand">Brand</label>
+                                    <select class="form-select" id="brand" name="brand" required>
+                                        <option value="">Choose...</option>
+                                        @foreach ($cat['vehicle_brand'] as $brand)
+                                        <option value="{{ $brand->name }}">{{ $brand->name }}</option>
+                                        @endforeach
+                                    </select>
                                     @error('brand')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
 
@@ -63,53 +110,15 @@
                                 </div>
 
                                 <div class="col-md-4 mb-4">
-                                    <label for="color">Color</label>
-                                    <input type="text" class="form-control @error('color') is-invalid @enderror" 
-                                           id="color" name="color" value="{{ old('color') }}">
-                                    @error('color')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="col-md-4 mb-4">
-                                    <label for="fuel_type">Fuel Type*</label>
-                                    <select class="form-select @error('fuel_type') is-invalid @enderror" 
-                                            id="fuel_type" name="fuel_type" required>
-                                        <option value="">Select Fuel Type</option>
-                                        <option value="petrol" {{ old('fuel_type') == 'petrol' ? 'selected' : '' }}>Petrol</option>
-                                        <option value="diesel" {{ old('fuel_type') == 'diesel' ? 'selected' : '' }}>Diesel</option>
-                                        <option value="electric" {{ old('fuel_type') == 'electric' ? 'selected' : '' }}>Electric</option>
-                                    </select>
-                                    @error('fuel_type')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="col-md-4 mb-4">
-                                    <label for="functional_status">Functional Status</label>
-                                    <select class="form-select @error('functional_status') is-invalid @enderror" 
-                                            id="functional_status" name="functional_status">
-                                        <option value="">Select Status</option>
-                                        <option value="operational" {{ old('functional_status') == 'operational' ? 'selected' : '' }}>Operational</option>
-                                        <option value="maintenance" {{ old('functional_status') == 'maintenance' ? 'selected' : '' }}>Under Maintenance</option>
-                                        <option value="repair" {{ old('functional_status') == 'repair' ? 'selected' : '' }}>Needs Repair</option>
-                                    </select>
-                                    @error('functional_status')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="col-md-4 mb-4">
                                     <label for="registration_status">Registration Status</label>
-                                    <select class="form-select @error('registration_status') is-invalid @enderror" 
-                                            id="registration_status" name="registration_status">
-                                        <option value="">Select Status</option>
-                                        <option value="active" {{ old('registration_status') == 'active' ? 'selected' : '' }}>Active</option>
-                                        <option value="expired" {{ old('registration_status') == 'expired' ? 'selected' : '' }}>Expired</option>
-                                        <option value="pending" {{ old('registration_status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                                    <select class="form-select" id="registration_status" name="registration_status" required>
+                                        <option value="">Choose...</option>
+                                        @foreach ($cat['vehicle_registration_status'] as $registration_status)
+                                        <option value="{{ $registration_status->name }}">{{ $registration_status->name }}</option>
+                                        @endforeach
                                     </select>
                                     @error('registration_status')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
 
@@ -136,7 +145,7 @@
                                     <select class="form-select @error('vehicle_user_id') is-invalid @enderror" 
                                             id="vehicle_user_id" name="vehicle_user_id" required>
                                         <option value="">Select User</option>
-                                        @foreach($vehicleUsers as $user)
+                                        @foreach($cat['vehicleUsers'] as $user)
                                             <option value="{{ $user->id }}" {{ old('vehicle_user_id') == $user->id ? 'selected' : '' }}>
                                                 {{ $user->name }}
                                             </option>
@@ -155,6 +164,17 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
+
+                                <div class="row">
+                                    <div class="col-md-12 mb-4">
+                                        <label for="images">Images</label>
+                                        <input type="file" class="form-control" id="images" name="images[]" multiple>
+                                        @error('images')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
                             </div>
 
                             <div class="form-actions mb-4 mt-2">

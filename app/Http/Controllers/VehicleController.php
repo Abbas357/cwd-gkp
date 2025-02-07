@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vehicle;
+use App\Models\Category;
 use App\Models\VehicleUser;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreVehicleRequest;
 use Yajra\DataTables\DataTables;
+use App\Http\Requests\StoreVehicleRequest;
 
 class VehicleController extends Controller
 {
@@ -50,28 +51,45 @@ class VehicleController extends Controller
     }
 
     public function create()
-    {
-        $vehicleUsers = VehicleUser::all();
-        return view('admin.vehicles.create', compact('vehicleUsers'));
+    {        
+        $cat = [
+            'vehicleUsers' => VehicleUser::all(),
+            'vehicle_type' => Category::where('type', 'vehicle_type')->get(),
+            'vehicle_functional_status' => Category::where('type', 'vehicle_functional_status')->get(),
+            'vehicle_color' => Category::where('type', 'vehicle_color')->get(),
+            'fuel_type' => Category::where('type', 'fuel_type')->get(),
+            'vehicle_registration_status' => Category::where('type', 'vehicle_registration_status')->get(),
+            'vehicle_brand' => Category::where('type', 'vehicle_brand')->get(),
+        ];
+        
+        return view('admin.vehicles.create', compact('cat'));
     }
 
     public function store(StoreVehicleRequest $request)
     {
         $vehicle = new Vehicle();
-        $vehicle->registration_number = $request->registration_number;
-        $vehicle->vehicle_user_id = $request->vehicle_user_id;
-        $vehicle->brand = $request->brand;
-        $vehicle->model = $request->model;
-        $vehicle->model_year = $request->model_year;
-        $vehicle->fuel_type = $request->fuel_type;
         $vehicle->type = $request->type;
         $vehicle->functional_status = $request->functional_status;
         $vehicle->color = $request->color;
+        $vehicle->registration_number = $request->registration_number;
+        $vehicle->fuel_type = $request->fuel_type;
+        $vehicle->brand = $request->brand;
+        $vehicle->model = $request->model;
+        $vehicle->model_year = $request->model_year;
         $vehicle->registration_status = $request->registration_status;
         $vehicle->chassis_number = $request->chassis_number;
         $vehicle->engine_number = $request->engine_number;
+        $vehicle->vehicle_user_id = $request->vehicle_user_id;
         $vehicle->user_id = $request->user()->id;
         $vehicle->remarks = $request->remarks;
+
+        $images = $request->file('images');
+
+        if ($images) {
+            foreach ($images as $image) {
+                $vehicle->addMedia($image)->toMediaCollection('vehicle_pictures');
+            }
+        }
 
         if ($vehicle->save()) {
             return redirect()->route('admin.vehicles.index')
@@ -80,5 +98,64 @@ class VehicleController extends Controller
 
         return redirect()->route('admin.vehicles.create')
             ->with('danger', 'There was an error adding the vehicle');
+    }
+
+    public function showDetail($id)
+    {
+        $cat = [
+            'vehicle_type' => Category::where('type', 'vehicle_type')->get(),
+            'vehicle_functional_status' => Category::where('type', 'vehicle_functional_status')->get(),
+            'vehicle_color' => Category::where('type', 'vehicle_color')->get(),
+            'fuel_type' => Category::where('type', 'fuel_type')->get(),
+            'vehicle_registration_status' => Category::where('type', 'vehicle_registration_status')->get(),
+            'vehicle_brand' => Category::where('type', 'vehicle_brand')->get(),
+        ];
+
+        $vehicle = Vehicle::find($id);
+
+        if (!$vehicle) {
+            return response()->json([
+                'success' => false,
+                'data' => [
+                    'result' => 'Unable to load Vehicle Detail',
+                ],
+            ]);
+        }
+
+        $html = view('admin.vehicles.partials.detail', compact('vehicle', 'cat'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
+    }
+
+    public function updateField(Request $request, $id)
+    {
+        $vehicle = Vehicle::find($id);
+        $request->validate([
+            'field' => 'required|string',
+            'value' => 'required|string',
+        ]);
+
+        $vehicle->{$request->field} = $request->value;
+
+        if ($vehicle->isDirty($request->field)) {
+            $vehicle->save();
+            return response()->json(['success' => 'Field updated successfully'], 200);
+        }
+
+        return response()->json(['error' => 'No changes were made to the field'], 200);
+    }
+
+    public function destroy($id)
+    {
+        $vehicle = Vehicle::find($id);
+        if (request()->user()->isAdmin() && $vehicle->delete()) {
+            return response()->json(['success' => 'Vehicle has been deleted successfully.']);
+        }
+
+        return response()->json(['error' => 'You are not authorized to delete the vehicle.']);
     }
 }

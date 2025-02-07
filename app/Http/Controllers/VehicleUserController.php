@@ -74,18 +74,22 @@ class VehicleUserController extends Controller
     public function showDetail($id)
     {
         $user = VehicleUser::find($id);
-        $designations = Category::where('type', 'designation')->get();
-        $offices = Category::where('type', 'office')->get();
+
+        $cat = [
+            'designations' => Category::where('type', 'designation')->get(),
+            'offices' => Category::where('type', 'office')->get(),
+        ];
+
         if (!$user) {
             return response()->json([
                 'success' => false,
                 'data' => [
-                    'result' => 'Unable to load Achievement Detail',
+                    'result' => 'Unable to load User Detail',
                 ],
             ]);
         }
 
-        $html = view('admin.vehicles.users.partials.detail', compact('user', 'designations', 'offices'))->render();
+        $html = view('admin.vehicles.users.partials.detail', compact('user', 'cat'))->render();
         return response()->json([
             'success' => true,
             'data' => [
