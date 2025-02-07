@@ -26,9 +26,9 @@ class CommentController extends Controller
         }
 
         $model->addComment([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'body' => $request->input('body'),
+            'name' => htmlspecialchars($request->input('name')),
+            'email' => htmlspecialchars($request->input('email')),
+            'body' => strip_tags($request->input('body')),
         ]);
 
         session()->put($sessionKey, true);

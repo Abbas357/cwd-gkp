@@ -21,32 +21,32 @@
             </div>
         </div>
         <div class="col-lg-6">
-            <h1 class="text-white mb-3">Contact Us</h1>
+            <h1 class="text-white mb-3">Contact Us (You should follow below format otherwise message will not be sent)</h1>
             <form action="{{ route('public_contact.store') }}" method="POST">
                 @csrf
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control bg-white border-0" id="name" name="name" placeholder="Your Name" required>
-                            <label for="name">Your Name</label>
+                            <input type="text" class="form-control bg-white border-0" id="name" name="name" placeholder="eg. Aslam Khan" required>
+                            <label for="name">Name</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="email" class="form-control bg-white border-0" id="email" name="email" placeholder="Your Email" required>
-                            <label for="email">Your Email</label>
+                            <input type="email" class="form-control bg-white border-0" id="email" name="email" placeholder="eg. aslam@gmail.com" required>
+                            <label for="email">Email</label>
                         </div>
                     </div>
             
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control bg-white border-0" id="contact_number" name="contact_number" placeholder="Phone / Mobile Number" required>
-                            <label for="contact_number">Phone/Mobile Number</label>
+                            <input type="text" class="form-control bg-white border-0" id="contact_number" name="contact_number" placeholder="03001122333 or 923001122333" required>
+                            <label for="contact_number">Phone / Mobile Number</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control bg-white border-0" id="cnic" name="cnic" placeholder="CNIC" required>
+                            <input type="text" class="form-control bg-white border-0" id="cnic" name="cnic" placeholder="eg. aslamkhan@gmail.com" required>
                             <label for="cnic">CNIC Number</label>
                         </div>
                     </div>
