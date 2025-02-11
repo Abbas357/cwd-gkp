@@ -28,6 +28,7 @@ use App\Http\Controllers\NewsLetterController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\VehicleAllotmentController;
 use App\Http\Controllers\ProjectFileController;
 use App\Http\Controllers\ServiceCardController;
 use App\Http\Controllers\VehicleUserController;
@@ -383,6 +384,13 @@ Route::middleware('auth')->group(function () {
             Route::patch('/update/field/{vehicle}', [VehicleController::class, 'updateField'])->name('updateField')->can('update', 'vehicle');
             Route::delete('/{vehicle}', [VehicleController::class, 'destroy'])->name('destroy')->can('delete', 'vehicle');
             Route::patch('/{vehicle}/comments', [VehicleController::class, 'updateComments'])->name('comments')->can('update', 'vehicle');
+            
+            Route::prefix('allotment')->as('allotment.')->group(function () {
+                Route::get('/{vehicle}', [VehicleAllotmentController::class, 'create'])->name('create')->can('view', 'allotment');
+                Route::post('', [VehicleAllotmentController::class, 'store'])->name('store')->can('view', 'allotment');
+                Route::delete('/{allotment}', [VehicleAllotmentController::class, 'delete'])->name('delete')->can('delete', 'allotment');
+            });
+
         });
 
         Route::prefix('vehicle-users')->as('vehicle-users.')->group(function () {
@@ -397,6 +405,8 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{user}', [VehicleUserController::class, 'destroy'])->name('destroy')->can('delete', 'user');
             Route::patch('/{user}/comments', [VehicleUserController::class, 'updateComments'])->name('comments')->can('update', 'user');
         });
+
+        
 
     });
 });

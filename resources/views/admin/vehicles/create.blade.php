@@ -4,7 +4,7 @@
     </x-slot>
 
     <div class="wrapper">
-        <form class="needs-validation" action="{{ route('admin.vehicles.store') }}" method="post" novalidate>
+        <form class="needs-validation" action="{{ route('admin.vehicles.store') }}" method="post" enctype="multipart/form-data" novalidate>
             @csrf
             <div class="card">
                 <div class="card-body">
@@ -141,18 +141,10 @@
                                 </div>
 
                                 <div class="col-md-4 mb-4">
-                                    <label for="vehicle_user_id">Assign *</label>
-                                    <select class="form-select @error('vehicle_user_id') is-invalid @enderror" 
-                                            id="vehicle_user_id" name="vehicle_user_id" required>
-                                        <option value="">Select User</option>
-                                        @foreach($cat['vehicleUsers'] as $user)
-                                            <option value="{{ $user->id }}" {{ old('vehicle_user_id') == $user->id ? 'selected' : '' }}>
-                                                {{ $user->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('vehicle_user_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <label for="images">Images</label>
+                                    <input type="file" class="form-control" id="images" name="images[]" multiple>
+                                    @error('images')
+                                    <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
 
@@ -165,15 +157,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-md-12 mb-4">
-                                        <label for="images">Images</label>
-                                        <input type="file" class="form-control" id="images" name="images[]" multiple>
-                                        @error('images')
-                                        <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
+                                
 
                             </div>
 

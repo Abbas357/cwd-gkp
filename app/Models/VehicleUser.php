@@ -11,6 +11,11 @@ class VehicleUser extends Model
     
     public function vehicles()
     {
-        return $this->hasMany(Vehicle::class);
+        return $this->hasMany(Vehicle::class, 'user_id');
+    }
+
+    public function vehicleAllotments()
+    {
+        return $this->hasMany(VehicleAllotment::class, 'user_id');
     }
 }

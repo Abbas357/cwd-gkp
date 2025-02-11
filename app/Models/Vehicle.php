@@ -25,19 +25,19 @@ class Vehicle extends Model implements HasMedia
                 return "Vehicle {$eventName}";
             });
     }
-    
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('vehicle_pictures');
     }
-
-    public function vehicleUser()
-    {
-        return $this->belongsTo(VehicleUser::class);
-    }
-
+    
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(VehicleUser::class, 'user_id');
+    }
+
+    public function allotment()
+    {
+        return $this->hasOne(VehicleAllotment::class, 'vehicle_id');
     }
 }

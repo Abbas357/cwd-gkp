@@ -25,7 +25,6 @@ class StoreVehicleRequest extends FormRequest
             'registration_status' => 'nullable|string|max:255',
             'chassis_number' => 'nullable|string|max:255',
             'engine_number' => 'nullable|string|max:255',
-            'vehicle_user_id' => 'required|exists:vehicle_users,id',
             'remarks' => 'nullable|string',
         ];
     }

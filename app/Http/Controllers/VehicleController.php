@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Vehicle;
 use App\Models\Category;
+use App\Models\VehicleAllotment;
 use App\Models\VehicleUser;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Requests\StoreVehicleRequest;
+use App\Http\Requests\StoreVehicleAllotmentRequest;
 
 class VehicleController extends Controller
 {
@@ -79,7 +81,6 @@ class VehicleController extends Controller
         $vehicle->registration_status = $request->registration_status;
         $vehicle->chassis_number = $request->chassis_number;
         $vehicle->engine_number = $request->engine_number;
-        $vehicle->vehicle_user_id = $request->vehicle_user_id;
         $vehicle->user_id = $request->user()->id;
         $vehicle->remarks = $request->remarks;
 
