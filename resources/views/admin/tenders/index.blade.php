@@ -90,12 +90,13 @@
                         , type: "html"
                     }
                 ]
-                , defaultOrderColumn: 9
+                , defaultOrderColumn: 7
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
                     targets: [0]
                     , visible: false
                 }]
+                , pageLength: 25
                 , customButton: {
                     text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Tender</span>`
                     , action: function(e, dt, node, config) {

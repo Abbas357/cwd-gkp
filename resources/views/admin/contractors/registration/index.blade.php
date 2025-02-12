@@ -132,12 +132,13 @@
                         , type: "html"
                     }
                 ]
-                , defaultOrderColumn: 15
+                , defaultOrderColumn: 14
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
                     targets: [0, 2, 3, 6, 11, 12, 13, 14, 15]
                     , visible: false
                 }]
+                , pageLength: 25
             });
 
             $("#contractors-registration").on('click', '.defer-btn', async function() {

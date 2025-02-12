@@ -113,6 +113,7 @@
                     targets: [0, 7]
                     , visible: false
                 }]
+                , pageLength: 25
             });
 
             hashTabsNavigator({

@@ -85,12 +85,13 @@
                     , searchable: false
                     , type: "html"
                 }]
-                , defaultOrderColumn: 11
+                , defaultOrderColumn: 0
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
                     targets: [7, 8]
                     , visible: false
                 }]
+                , pageLength: 25
                 , customButton: {
                     text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add User</span>`
                     , action: function(e, dt, node, config) {

@@ -182,12 +182,13 @@
                         , type: "html"
                     }
                 ]
-                , defaultOrderColumn: 0
+                , defaultOrderColumn: 17
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
                     targets: [0,3,5,6,7]
                     , visible: false
                 }]
+                , pageLength: 25
                 , customButton: {
                     text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Sync Schemes</span>`
                     , action: function(e, dt, node, config) {

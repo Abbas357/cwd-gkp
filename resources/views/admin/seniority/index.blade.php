@@ -91,12 +91,13 @@
                         , type: "html"
                     }
                 ]
-                , defaultOrderColumn: 7
+                , defaultOrderColumn: 8
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
                     targets: [0]
                     , visible: false
                 }]
+                , pageLength: 25
                 , customButton: {
                     text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Seniority</span>`
                     , action: function(e, dt, node, config) {

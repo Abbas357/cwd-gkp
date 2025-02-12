@@ -116,12 +116,13 @@
                         , type: "html"
                     }
                 ]
-                , defaultOrderColumn: 9
+                , defaultOrderColumn: 16
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
                     targets: [0, 3, 4, 5, 7, 8, 9, 10, 11, 12]
                     , visible: false
                 }]
+                , pageLength: 25
                 , customButton: {
                     text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Vehicle</span>`
                     , action: function(e, dt, node, config) {

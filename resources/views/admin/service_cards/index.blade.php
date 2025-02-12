@@ -127,7 +127,8 @@
                     , searchable: false
                     , type: "html"
                 }]
-                , defaultOrderColumn: 11
+                , pageLength: 25
+                , defaultOrderColumn: 17
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
                     targets: [0, 2, 3, 5, 6, 8, 11, 12, 14, 15]

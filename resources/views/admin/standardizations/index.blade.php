@@ -86,7 +86,8 @@
                         , type: "html"
                     }
                 ]
-                , defaultOrderColumn: 9
+                , pageLength: 25
+                , defaultOrderColumn: 5
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
                     targets: [0, 2, 5]

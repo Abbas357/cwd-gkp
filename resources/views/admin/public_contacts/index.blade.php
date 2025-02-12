@@ -93,6 +93,7 @@
                         , type: "html"
                     }
                 ]
+                , pageLength: 25
                 , defaultOrderColumn: 8
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{

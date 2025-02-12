@@ -178,22 +178,69 @@
         @enderror
     </div>
 
-    <div class="col-md-6 mb-4">
+    <div class="col-md-6 mb-3">
         <label for="office_type">Office Type</label>
         <select class="form-select" id="office_type" name="office_type" required {{ $vehicle->allotment ? 'disabled' : '' }}>
             <option value="">Choose...</option>
-            @foreach ($cat['office_type'] as $office_type)
-            <option value="{{ $office_type }}">{{ $office_type }}</option>
+            @foreach (array_keys($cat['office_type']) as $type)
+            <option value="{{ $type }}" {{ old('office_type') == $type ? 'selected' : '' }}>
+                {{ $type }}
+            </option>
             @endforeach
         </select>
         @error('office_type')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
+
+    <div class="col-md-6 mb-3">
+        <label for="office">Office</label>
+        <select class="form-select" id="office" name="office" required {{ $vehicle->allotment ? 'disabled' : '' }}>
+            <option value="">Select Office Type First</option>
+            @if(old('office_type'))
+                @foreach ($cat['office_type'][old('office_type')] as $office)
+                    <option value="{{ $office }}" {{ old('office') == $office ? 'selected' : '' }}>
+                        {{ $office }}
+                    </option>
+                @endforeach
+            @endif
+        </select>
+        @error('office')
+        <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
+
 </div>
 
 <script>
-    // Simple slideshow functionality
+    // Add this script after the existing slideshow script
+    const officeData = @json($cat['office_type']);
+    const officeTypeSelect = document.getElementById('office_type');
+    const officeSelect = document.getElementById('office');
+
+    officeTypeSelect.addEventListener('change', function() {
+        const selectedType = this.value;
+        officeSelect.innerHTML = '<option value="">Select Office</option>';
+        
+        if (selectedType && officeData[selectedType]) {
+            officeData[selectedType].forEach(office => {
+                const option = document.createElement('option');
+                option.value = office;
+                option.textContent = office;
+                officeSelect.appendChild(option);
+            });
+        }
+    });
+
+    @if(old('office_type'))
+        officeTypeSelect.dispatchEvent(new Event('change'));
+        @if(old('office'))
+            setTimeout(() => {
+                officeSelect.value = @json(old('office'));
+            }, 100);
+        @endif
+    @endif
+
     let currentSlide = 0;
     const slides = document.querySelectorAll('.slide');
     const navButtons = document.querySelectorAll('.slide-nav button');

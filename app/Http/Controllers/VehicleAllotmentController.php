@@ -14,8 +14,30 @@ class VehicleAllotmentController extends Controller
         $vehicle = Vehicle::find($id);
         
         $cat = [
-            'allotment_type' => ['Pool','Temporary','Permanent'],
-            'office_type' => ['Division','Sub Division','Executive Office', 'Secretariat', 'Circle', 'Others'],
+            'allotment_type' => ['Permanent','Temporary'],
+            'office_type' => [
+                'Secretariat' => [
+                    'Section Officer General',
+                    'Director IT',
+                    'Additional Secretary',
+                    'Deputy Secretary'
+                ],
+                'Executive Office' => [
+                    'Chief Engineer North',
+                    'Chief Engineer South',
+                    'Chief Architect'
+                ],
+                'Circle' => [
+                    'Superintendent Engineer Swat',
+                    'Superintendent Engineer Malakand',
+                    'Superintendent Engineer Buner'
+                ],
+                'Division' => [
+                    'Executive Engineer Dir Upper',
+                    'Executive Engineer Dir Lower',
+                    'Sub-Divisional Officer'
+                ]
+            ],
             'vehicleUsers' => VehicleUser::all(),
         ];
 

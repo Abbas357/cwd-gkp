@@ -92,6 +92,7 @@
                     targets: [0]
                     , visible: false
                 }]
+                , pageLength: 25
             });
 
             $("#comments-datatable").on('click', '.publish-btn', async function() {
