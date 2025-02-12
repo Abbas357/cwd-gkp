@@ -166,14 +166,29 @@ class User extends Authenticatable implements HasMedia
 
     public function boss()
     {
-        // $boss = $user->boss->first();
-        return $this->belongsToMany(User::class, 'user_hierarchy', 'user_id', 'boss_id');
+        return $this->belongsTo(User::class, 'boss_id');
     }
 
     public function subordinates()
     {
-        // $subordinates = $user->subordinates;
-        return $this->belongsToMany(User::class, 'user_hierarchy', 'boss_id', 'user_id');
+        return $this->hasMany(User::class, 'boss_id');
+    }
+
+    public function subordinatesTree()
+    {
+        return $this->hasMany(User::class, 'boss_id')->with('allSubordinates');
+    }
+
+    public function getAllSubordinates()
+    {
+        $subordinates = collect();
+
+        foreach ($this->subordinates as $subordinate) {
+            $subordinates->push($subordinate);
+            $subordinates = $subordinates->merge($subordinate->getAllSubordinates());
+        }
+
+        return $subordinates;
     }
 
     public function districts()

@@ -35,10 +35,11 @@ return new class extends Migration
             $table->string('otp')->nullable();
             $table->enum('status', ['Inactive', 'Active', 'Archived'])->nullable();
             $table->text('message')->nullable();
-            $table->boolean('featured_on')->default(null);
+            $table->string('featured_on')->default(null);
             $table->string('password');
             $table->timestamp('password_updated_at')->nullable();
             $table->unsignedBigInteger('views_count')->default(0);
+            $table->foreignId('boss_id')->nullable()->constrained('users')->onDelete('set null');
             $table->rememberToken();
             $table->timestamps();
         });
@@ -58,12 +59,6 @@ return new class extends Migration
             $table->integer('last_activity')->index();
         });
 
-        Schema::create('user_hierarchy', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreignId('boss_id')->references('id')->on('users')->onDelete('cascade');
-            $table->timestamps();
-        });
     }
 
     /**

@@ -258,17 +258,21 @@ class UserController extends Controller
         return response()->json(['error' => 'User updation failed']);
     }
 
-    public function destroy(User $user)
+    public function hierarchy()
     {
-        if (request()->user()->isAdmin()) {
-            if ($user->delete()) {
-                Cache::forget('message_partial');
-                Cache::forget('team_partial');
-                return response()->json(['success' => 'User has been deleted successfully.']);
-            }
-        }
+        $users = User::withCount('subordinates')->get();
+        $initialSelection = User::limit(3)->pluck('id');
+        
+        return view('admin.users.hierarchy', compact('users', 'initialSelection'));
+    }
 
-        return response()->json(['error' => 'User can\'t be deleted.']);
+    public function updateBoss(User $user, Request $request)
+    {
+        $request->validate(['boss_id' => 'nullable|exists:users,id']);
+        
+        $user->update(['boss_id' => $request->boss_id]);
+        
+        return response()->json(['success' => true]);
     }
 
     private function generateUsername($email)
@@ -285,16 +289,16 @@ class UserController extends Controller
         return $username;
     }
 
-    public function assignBoss(Request $request)
+    public function destroy(User $user)
     {
-        $user = User::find($request->input('user_id'));
-        $boss = User::find($request->input('boss_id'));
+        if (request()->user()->isAdmin()) {
+            if ($user->delete()) {
+                Cache::forget('message_partial');
+                Cache::forget('team_partial');
+                return response()->json(['success' => 'User has been deleted successfully.']);
+            }
+        }
 
-        $user->boss()->sync([$boss->id]);
-
-        return redirect()->back()->with('success', 'Boss assigned successfully.');
-
-        // $boss = $user->boss->first();
-        // $subordinates = $user->subordinates;
+        return response()->json(['error' => 'User can\'t be deleted.']);
     }
 }
