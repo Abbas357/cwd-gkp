@@ -82,7 +82,8 @@
         }
 
         async function updateUserBoss(userId, bossId) {
-            await fetch(`/users/${userId}/boss`, {
+            const url = "{{ route('admin.users.hierarchy', ':id') }}".replace(':id', userId);
+            await fetch(url, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

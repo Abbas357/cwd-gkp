@@ -59,7 +59,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/{user}', [UserController::class, 'show'])->name('show')->can('view', 'user');
             Route::patch('/{user}', [UserController::class, 'update'])->name('update')->can('update', 'user');
             Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy')->can('delete', 'user');
-            Route::get('/hierarchy', [UserController::class, 'hierarchy'])->name('hierarchy')->can('hierarchy', 'user');
+            Route::get('/hierarchy/setup', [UserController::class, 'hierarchy'])->name('hierarchy')->can('hierarchy', 'user');
             Route::put('/{user}/boss', [UserController::class, 'updateBoss'])->name('update-boss')->can('update-boss', 'user');
         });
 
