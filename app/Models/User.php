@@ -191,6 +191,18 @@ class User extends Authenticatable implements HasMedia
         return $subordinates;
     }
 
+    public function hasAncestor($userId)
+    {
+        $currentBoss = $this->boss;
+        while ($currentBoss) {
+            if ($currentBoss->id == $userId) {
+                return true;
+            }
+            $currentBoss = $currentBoss->boss;
+        }
+        return false;
+    }
+
     public function districts()
     {
         return $this->belongsToMany(District::class, 'district_user', 'user_id', 'district_id');

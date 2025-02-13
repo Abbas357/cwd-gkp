@@ -144,9 +144,10 @@ class UserController extends Controller
     }
 
     public function show(User $user)
-    {
-        return response()->json($user);
-    }
+        {
+            $user->load('subordinates');
+            return response()->json($user);
+        }
 
     public function activateUser(Request $request, User $user)
     {
@@ -261,7 +262,7 @@ class UserController extends Controller
     public function hierarchy()
     {
         $users = User::withCount('subordinates')->get();
-        $initialSelection = User::limit(3)->pluck('id');
+        $initialSelection = User::limit(1)->pluck('id');
         
         return view('admin.users.hierarchy', compact('users', 'initialSelection'));
     }
@@ -270,9 +271,34 @@ class UserController extends Controller
     {
         $request->validate(['boss_id' => 'nullable|exists:users,id']);
         
-        $user->update(['boss_id' => $request->boss_id]);
+        // Prevent self-assignment
+        if ($request->boss_id == $user->id) {
+            return response()->json([
+                'success' => false,
+                'status' => 'A user cannot be their own boss'
+            ], 422);
+        }
         
-        return response()->json(['success' => true]);
+        // Prevent circular references
+        if ($request->boss_id) {
+            $potentialBoss = User::find($request->boss_id);
+            if ($potentialBoss && $potentialBoss->hasAncestor($user->id)) {
+                return response()->json([
+                    'success' => false,
+                    'status' => 'This would create a circular reference in the hierarchy'
+                ], 422);
+            }
+        }
+        
+        try {
+            $user->update(['boss_id' => $request->boss_id]);
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'status' => 'Failed to update user hierarchy'
+            ], 500);
+        }
     }
 
     private function generateUsername($email)
@@ -287,6 +313,15 @@ class UserController extends Controller
         }
 
         return $username;
+    }
+
+    public function availableSubordinates(User $user)
+    {
+        $currentSubordinateIds = $user->subordinates()->pluck('id');
+        $availableUsers = User::whereNotIn('id', $currentSubordinateIds)
+                            ->where('id', '!=', $user->id)
+                            ->get(['id', 'name', 'email']);
+        return response()->json($availableUsers);
     }
 
     public function destroy(User $user)

@@ -61,6 +61,7 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy')->can('delete', 'user');
             Route::get('/hierarchy/setup', [UserController::class, 'hierarchy'])->name('hierarchy')->can('hierarchy', 'user');
             Route::put('/{user}/boss', [UserController::class, 'updateBoss'])->name('update-boss')->can('update-boss', 'user');
+            Route::get('/{user}/available-subordinates', [UserController::class, 'availableSubordinates'])->name('available-subordinates');
         });
 
         Route::prefix('service_cards')->as('service_cards.')->group(function () {            
