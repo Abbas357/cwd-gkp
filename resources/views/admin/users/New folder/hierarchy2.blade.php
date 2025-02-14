@@ -3,6 +3,7 @@
     <link href="https://cdn.jsdelivr.net/npm/jkanban@1.3.1/dist/jkanban.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
     <style>
+        /* TomSelect adjustments */
         .subordinate-selector .ts-wrapper {
             width: 100% !important;
             min-width: 200px;
@@ -20,38 +21,25 @@
             max-height: 200px;
             overflow-y: auto;
         }
+        /* jKanban customizations */
         .kanban-board {
-            background: #ffffff;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: .2rem;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-        .kanban-board .kanban-drag {
-            padding: .2rem;
-            height:300px;
-            overflow-y: auto;
-        }
-        .kanban-board header {
-            padding: .3rem;
-            background: #ebecee;
+            /* We want each board to look like a card */
+            background: #f1f3f5;
+            border-radius: 0.25rem;
+            padding: 10px;
         }
         .kanban-board-header {
-            font-size: .7rem;
-            font-weight: bold;
+            font-weight: 600;
             margin-bottom: 10px;
-            color: #333;
         }
         .kanban-item {
             cursor: move;
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            padding: 10px 15px;
-            margin-bottom: 10px;
-            transition: background-color 0.3s ease;
+            margin: 8px 0;
+            padding: 12px;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            user-select: none;
         }
         .kanban-item:hover {
             background-color: #f8f9fa;
@@ -64,6 +52,7 @@
             background-color: rgba(0, 123, 255, 0.1);
             border: 2px dashed #007bff;
         }
+        /* Footer for the subordinate selector */
         .subordinate-selector {
             margin-top: 10px;
         }
@@ -73,9 +62,11 @@
     <div class="container-fluid">
         <div class="row mb-4">
             <div class="col-md-12">
+                <!-- Main selector for which users’ boards to show -->
                 <select id="userSelector" class="form-select" multiple placeholder="Select users to show their teams..."></select>
             </div>
         </div>
+        <!-- The single global Kanban container -->
         <div id="kanbanContainer"></div>
     </div>
 
@@ -83,11 +74,13 @@
     <script src="https://cdn.jsdelivr.net/npm/jkanban@1.3.1/dist/jkanban.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
     <script>
-        let globalKanban;
-        let subordinateSelectors = new Map();
-        let mainSelector = null;
-        let boardsData = {};
+        // Global variables
+        let globalKanban; // our single jKanban instance
+        let subordinateSelectors = new Map(); // map of TomSelect instances by userId
+        let mainSelector = null; // main TomSelect for boards
+        let boardsData = {}; // cache of board data by userId
 
+        // Initialize the main user selector
         mainSelector = new TomSelect('#userSelector', {
             valueField: 'id',
             labelField: 'name',
@@ -96,6 +89,7 @@
             maxOptions: null,
             plugins: ['remove_button'],
             onInitialize() {
+                // Load all users from backend
                 this.addOptions(@json($users->toArray()));
             },
             onChange(selected) {
@@ -103,6 +97,7 @@
             }
         });
 
+        // Fetch full user data (including subordinates) via AJAX
         async function fetchUserData(userId) {
             const url = "{{ route('admin.users.show', ':id') }}".replace(':id', userId);
             const response = await fetch(url, {
@@ -114,6 +109,7 @@
             return await response.json();
         }
 
+        // Update user’s boss via AJAX
         async function updateUserBoss(userId, bossId) {
             const url = "{{ route('admin.users.update-boss', ':id') }}".replace(':id', userId);
             const response = await fetch(url, {
@@ -132,13 +128,15 @@
             return await response.json();
         }
 
+        // Initialize a single global jKanban instance that will hold all boards
         function initializeGlobalKanban() {
             globalKanban = new jKanban({
                 element: '#kanbanContainer',
                 gutter: '15px',
                 boards: [],
-                dragBoards: false,
+                dragBoards: false, // we only need item dragging
                 itemHandle: '.kanban-item',
+                // When starting to drag an item, highlight drop targets
                 dragEl: function(el, source) {
                     document.querySelectorAll('.kanban-board').forEach(board => {
                         board.style.backgroundColor = '#f8f9fa';
@@ -151,42 +149,33 @@
                     });
                     el.style.backgroundColor = '';
                 },
+                // When an item is dropped into a board, update its boss
                 dropEl: async function(el, target, source, sibling) {
                     const userId = el.getAttribute('data-eid');
                     const newBossId = target.closest('.kanban-board').getAttribute('data-id');
                     const sourceBossId = source.closest('.kanban-board').getAttribute('data-id');
                     try {
                         await updateUserBoss(userId, newBossId);
+                        // Refresh both affected boards
                         await refreshKanbanBoard(newBossId);
                         if (sourceBossId !== newBossId) {
                             await refreshKanbanBoard(sourceBossId);
                         }
-                        reorderBoards();
                     } catch (error) {
                         console.error('Drag failed:', error);
+                        // Revert the item visually
                         source.appendChild(el);
                     }
                 }
             });
         }
 
-        function reorderBoards() {
-            requestAnimationFrame(() => {
-                const container = document.querySelector('#kanbanContainer');
-                const order = mainSelector.getValue(); 
-                order.forEach(id => {
-                    const board = container.querySelector(`.kanban-board[data-id="${id}"]`);
-                    if (board) {
-                        container.appendChild(board);
-                    }
-                });
-            });
-        }
-
+        // Create or update a board (column) for a given user
         async function createOrUpdateBoard(userId) {
             const userData = await fetchUserData(userId);
             boardsData[userId] = userData;
 
+            // Prepare board object for jKanban
             const boardObj = {
                 id: userData.id.toString(),
                 title: `${userData.name} (Subordinates: ${userData.subordinates?.length || 0})`,
@@ -198,39 +187,40 @@
                 }))
             };
 
+            // If the board already exists, remove it first so we can update it
             let boardElement = document.querySelector(`.kanban-board[data-id="${userData.id}"]`);
             if (boardElement) {
                 globalKanban.removeBoard(userData.id.toString());
             }
 
+            // Add the new/updated board
             globalKanban.addBoards([boardObj]);
 
+            // After the board is rendered, modify its header and add a subordinate selector footer.
             setTimeout(() => {
-                boardElement = document.querySelector(`.kanban-board[data-id="${userData.id}"]`) ||
-                               document.querySelector(`.kanban-board[kanban-id="${userData.id}"]`);
+                boardElement = document.querySelector(`.kanban-board[data-id="${userData.id}"]`);
                 if (boardElement) {
-                    boardElement.setAttribute('data-id', userData.id);
-                    let header = boardElement.querySelector('.kanban-board-header');
-                    if (!header) {
-                        header = document.createElement('div');
-                        header.className = 'kanban-board-header';
-                        boardElement.prepend(header);
+                    // Replace default header with custom header containing remove button
+                    const header = boardElement.querySelector('.kanban-board-header');
+                    if (header) {
+                        header.innerHTML = `
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>${userData.name} (Subordinates: ${userData.subordinates?.length || 0})</span>
+                                <button class="btn btn-sm btn-outline-danger remove-board" data-id="${userData.id}">&times;</button>
+                            </div>
+                        `;
+                        header.querySelector('.remove-board').addEventListener('click', (e) => {
+                            e.preventDefault();
+                            removeBoard(userData.id);
+                        });
                     }
-                    header.innerHTML = `
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span>${userData.name} (Subordinates: ${userData.subordinates?.length || 0})</span>
-                            <i class="bi-x fs-4 p-1 cursor-pointer remove-board" data-id="${userData.id}"></i>
-                        </div>
-                    `;
-                    header.querySelector('.remove-board').addEventListener('click', (e) => {
-                        e.preventDefault();
-                        removeBoard(userData.id);
-                    });
+                    // Append a footer (if not already present) for the subordinate selector
                     if (!boardElement.querySelector('.subordinate-selector')) {
                         const footer = document.createElement('div');
                         footer.className = 'subordinate-selector';
                         footer.innerHTML = `<select class="form-select add-subordinate" placeholder="Add team member..."></select>`;
                         boardElement.appendChild(footer);
+                        // Initialize TomSelect on the subordinate selector
                         const selectEl = footer.querySelector('select.add-subordinate');
                         const subordinateSelector = new TomSelect(selectEl, {
                             valueField: 'id',
@@ -259,7 +249,9 @@
                             onItemAdd: async (value) => {
                                 try {
                                     await updateUserBoss(value, userData.id);
+                                    // Refresh this board
                                     await refreshKanbanBoard(userData.id);
+                                    // Refresh available subordinates
                                     const response = await fetch(`/admin/users/${userData.id}/available-subordinates`);
                                     const availableUsers = await response.json();
                                     subordinateSelector.clearOptions();
@@ -274,41 +266,45 @@
                         });
                         subordinateSelectors.set(userData.id, subordinateSelector);
                     }
-                    reorderBoards();
                 }
-            }, 150);
+            }, 100);
         }
 
+        // Refresh a board by re-fetching its data and updating its contents
         async function refreshKanbanBoard(userId) {
             await createOrUpdateBoard(userId);
         }
 
+        // Remove a board from the global Kanban (and clean up its TomSelect instance)
         function removeBoard(userId) {
             globalKanban.removeBoard(userId.toString());
             if (subordinateSelectors.has(userId)) {
                 subordinateSelectors.get(userId).destroy();
                 subordinateSelectors.delete(userId);
             }
+            // Also update the main selector to remove this user
             const currentValue = mainSelector.getValue();
             const newValue = currentValue.filter(id => id !== userId.toString());
             mainSelector.setValue(newValue, true);
-            reorderBoards();
         }
 
+        // Add/update boards according to the main selector’s chosen user IDs
         async function updateKanbanVisibility(selectedUserIds) {
             const userIds = Array.isArray(selectedUserIds) ? selectedUserIds : [selectedUserIds];
+            // Remove boards that are no longer selected
             const existingBoards = Array.from(document.querySelectorAll('.kanban-board')).map(el => el.getAttribute('data-id'));
             existingBoards.forEach(id => {
                 if (!userIds.includes(id)) {
                     removeBoard(parseInt(id));
                 }
             });
+            // Create or update boards for each selected user
             for (const userId of userIds) {
                 await createOrUpdateBoard(userId);
             }
-            reorderBoards();
         }
 
+        // On page load, initialize the global Kanban and set initial boards
         document.addEventListener('DOMContentLoaded', () => {
             initializeGlobalKanban();
             const initialSelection = @json($initialSelection);

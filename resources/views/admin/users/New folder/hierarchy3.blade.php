@@ -30,13 +30,11 @@
             transition: all 0.3s ease;
         }
         .kanban-board .kanban-drag {
-            padding: .2rem;
-            height:300px;
-            overflow-y: auto;
+            padding: .2rem
         }
         .kanban-board header {
             padding: .3rem;
-            background: #ebecee;
+            background: #ebecee
         }
         .kanban-board-header {
             font-size: .7rem;
@@ -171,15 +169,13 @@
         }
 
         function reorderBoards() {
-            requestAnimationFrame(() => {
-                const container = document.querySelector('#kanbanContainer');
-                const order = mainSelector.getValue(); 
-                order.forEach(id => {
-                    const board = container.querySelector(`.kanban-board[data-id="${id}"]`);
-                    if (board) {
-                        container.appendChild(board);
-                    }
-                });
+            const container = document.querySelector('#kanbanContainer');
+            const order = mainSelector.getValue(); // desired order of board IDs
+            order.forEach(id => {
+                const board = container.querySelector(`.kanban-board[data-id="${id}"]`);
+                if (board) {
+                    container.appendChild(board);
+                }
             });
         }
 
@@ -219,7 +215,7 @@
                     header.innerHTML = `
                         <div class="d-flex justify-content-between align-items-center">
                             <span>${userData.name} (Subordinates: ${userData.subordinates?.length || 0})</span>
-                            <i class="bi-x fs-4 p-1 cursor-pointer remove-board" data-id="${userData.id}"></i>
+                            <button class="btn btn-sm btn-outline-danger remove-board" data-id="${userData.id}">&times;</button>
                         </div>
                     `;
                     header.querySelector('.remove-board').addEventListener('click', (e) => {
