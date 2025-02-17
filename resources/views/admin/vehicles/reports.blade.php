@@ -1,0 +1,239 @@
+<x-app-layout title="Vehicle Reports">
+    @push('style')
+    <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
+    <style>
+        .table > :not(caption) > * > * {
+            vertical-align: middle;
+        }
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        .vehicle-details {
+            line-height: 1.6;
+        }
+        .vehicle-details small {
+            color: #6c757d;
+            display: block;
+        }
+        .status-badge {
+            padding: 0.35em 0.65em;
+            font-size: 0.75em;
+            font-weight: 500;
+            border-radius: 0.25rem;
+            text-transform: capitalize;
+        }
+        .table-container {
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        .filter-section {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+    @endpush
+    
+    <x-slot name="header">
+        <li class="breadcrumb-item active" aria-current="page">Vehicle Reports</li>
+    </x-slot>
+
+    <div class="wrapper">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h3 class="card-title mb-0">Vehicle Reports</h3>
+            </div>
+            <div class="card-body">
+                <form method="GET" class="filter-section">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold d-flex justify-content-between" for="load-users"><span>User / Office</span> 
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="includeSubordinates" name="include_subordinates" value="1" @checked(request('include_subordinates'))>
+                                    <label class="form-check-label fw-bold" for="includeSubordinates">
+                                        Subordinates
+                                    </label>
+                                </div>
+                            </label>
+                            <select class="form-select form-select-md" data-placeholder="Choose" id="load-users" name="user_id">
+                                @if(request('user_id'))
+                                    <option value="{{ request('user_id') }}" selected>Loading...</option>
+                                @endif
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Vehicle Type</label>
+                            <select name="type" class="form-select">
+                                <option value="">All Types</option>
+                                @foreach($cat['vehicle_type'] as $type)
+                                    <option value="{{ $type->id }}" @selected(request('type') == $type->id)>
+                                        {{ $type->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Status</label>
+                            <select name="status" class="form-select">
+                                <option value="">All Status</option>
+                                @foreach($cat['vehicle_functional_status'] as $status)
+                                    <option value="{{ $status->id }}" @selected(request('status') == $status->id)>
+                                        {{ $status->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        
+                        <div class="col-12">
+                            <button type="submit" class="cw-btn">
+                                <i class="fas fa-filter me-1"></i> Generate Report
+                            </button>
+                            <a href="{{ route('admin.vehicles.reports') }}" class="btn btn-secondary">
+                                <i class="fas fa-undo me-1"></i> Reset
+                            </a>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="table-container">
+                    <button type="button" id="print-vehicle-details" class="no-print btn btn-light float-end me-2 m-2">
+                        <span class="d-flex align-items-center">
+                            <i class="bi-print"></i>
+                            Print
+                        </span>
+                    </button>
+                    <table class="table table-hover mb-0" id="vehicle-report">
+                        <thead>
+                            <tr>
+                                <th class="bg-light">Vehicle Details</th>
+                                <th class="bg-light">Registration</th>
+                                <th class="bg-light">Assigned To</th>
+                                <th class="bg-light">Status</th>
+                                <th class="bg-light">Allotment Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($allotments as $allotment)
+                                <tr>
+                                    <td>
+                                        <div class="vehicle-details">
+                                            <strong>{{ $allotment->vehicle->brand }} {{ $allotment->vehicle->model }}</strong>
+                                            <small>Type: {{ $allotment->vehicle->type }}</small>
+                                            <small>Color: {{ $allotment->vehicle->color }}</small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="vehicle-details">
+                                            <strong>{{ $allotment->vehicle->registration_number }}</strong>
+                                            <small>Chassis: {{ $allotment->vehicle->chassis_number }}</small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="fw-medium">{{ $allotment->allottedUser->position ?? 'N/A' }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="status-badge bg-{{ $allotment->vehicle->functional_status === 'Active' ? 'success' : 'warning' }} text-white">
+                                            {{ $allotment->vehicle->functional_status }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="text-muted">
+                                            {{ $allotment->date ? $allotment->date->format('j F, Y') : 'N/A' }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        <div class="text-muted">
+                                            <i class="fas fa-inbox fa-2x mb-2"></i>
+                                            <p class="mb-0">No vehicles found matching the criteria</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    @push('script')
+    <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
+    <script src="{{ asset('admin/plugins/printThis/printThis.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            const userSelect = $('#load-users');
+            const selectedUserId = '{{ request('user_id') }}';
+
+            userSelect.select2({
+                theme: "bootstrap-5",
+                dropdownParent: userSelect.parent(),
+                ajax: {
+                    url: '{{ route("admin.users.api") }}',
+                    dataType: 'json',
+                    data: function(params) {
+                        return {
+                            q: params.term,
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function(data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data.items,
+                            pagination: {
+                                more: data.pagination.more
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 0,
+                templateResult(user) {
+                    return user.position;
+                },
+                templateSelection(user) {
+                    return user.position;
+                }
+            });
+
+            if (selectedUserId) {
+                $.ajax({
+                    url: '{{ route("admin.users.api") }}',
+                    data: {
+                        id: selectedUserId
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.items && data.items.length > 0) {
+                            const user = data.items[0];
+                            const option = new Option(user.position, user.id, true, true);
+                            userSelect.append(option).trigger('change');
+                        }
+                    }
+                });
+            }
+        });
+
+        $('#print-vehicle-details').on('click', () => {
+        $("#vehicle-report").printThis({
+            pageTitle: "Report",
+            beforePrint() {
+                document.querySelector('.page-loader').classList.remove('hidden');
+            },
+            afterPrint() {
+                document.querySelector('.page-loader').classList.add('hidden');
+            }
+        });
+    });
+    </script>
+    @endpush
+</x-app-layout>

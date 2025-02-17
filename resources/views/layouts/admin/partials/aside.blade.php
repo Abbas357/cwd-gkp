@@ -27,6 +27,9 @@
                     @can('view any seniority')
                     <li><a href="{{ route('admin.seniority.index') }}"><i class="bi-graph-up-arrow fs-6"></i>&nbsp; Seniority</a></li>
                     @endcan
+                    @can('view hierarchy')
+                    <li><a href="{{ route('admin.users.hierarchy') }}"><i class="bi-person-circle fs-6"></i>&nbsp; Hierarchy</a></li>
+                    @endcan
                 </ul>
             </li>
             @endcanany
@@ -149,7 +152,7 @@
                             <div class="menu-title">Vehicle Mgt.</div>
                         </a>
                         <ul class="p-2 menu-items">
-                            <li><a href="{{ route('admin.vehicle-users.index') }}"><i class="bi-person-vcard fs-6"></i>&nbsp; Users</a></li>
+                            <li><a href="{{ route('admin.vehicles.reports') }}"><i class="bi-person-vcard fs-6"></i>&nbsp; Reports</a></li>
                             <li><a href="{{ route('admin.vehicles.index') }}"><i class="bi-credit-card fs-6"></i>&nbsp; Vehicles</a></li>
                         </ul>
                     </li>

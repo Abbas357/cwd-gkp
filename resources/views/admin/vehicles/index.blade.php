@@ -1,5 +1,7 @@
 <x-app-layout title="Vehicles">
     @push('style')
+    <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header">
@@ -36,6 +38,7 @@
     @push('script')
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/col-resizable.js') }}"></script>
+    <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
 
     <script>
         $(document).ready(function() {
@@ -168,7 +171,7 @@
                 , modalSize: 'xl'
                 , includeForm: true
                 , formAction: "{{ route('admin.vehicles.allotment.store', ':id') }}"
-                , modalHeight: '70vh'
+                , modalHeight: '60vh'
             , }).then((modal) => {
                 const vehicleModal = $('#' + modal);
                 const updateVehicleBtn = vehicleModal.find('button[type="submit"]');

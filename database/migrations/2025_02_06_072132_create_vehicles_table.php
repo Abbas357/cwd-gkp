@@ -8,15 +8,6 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('vehicle_users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->nullable();
-            $table->string('designation')->nullable();
-            $table->string('office')->nullable();
-            $table->string('office_type')->nullable();
-            $table->timestamps();
-        });
-
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
             $table->string('type')->nullable();

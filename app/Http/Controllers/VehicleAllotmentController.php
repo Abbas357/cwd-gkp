@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Vehicle;
-use App\Models\VehicleAllotment;
 use App\Models\VehicleUser;
+use App\Models\VehicleAllotment;
 use App\Http\Requests\StoreVehicleAllotmentRequest;
 
 class VehicleAllotmentController extends Controller
@@ -15,30 +16,7 @@ class VehicleAllotmentController extends Controller
         
         $cat = [
             'allotment_type' => ['Permanent','Temporary'],
-            'office_type' => [
-                'Secretariat' => [
-                    'Section Officer General',
-                    'Director IT',
-                    'Additional Secretary',
-                    'Deputy Secretary'
-                ],
-                'Executive Office' => [
-                    'Chief Engineer North',
-                    'Chief Engineer South',
-                    'Chief Architect'
-                ],
-                'Circle' => [
-                    'Superintendent Engineer Swat',
-                    'Superintendent Engineer Malakand',
-                    'Superintendent Engineer Buner'
-                ],
-                'Division' => [
-                    'Executive Engineer Dir Upper',
-                    'Executive Engineer Dir Lower',
-                    'Sub-Divisional Officer'
-                ]
-            ],
-            'vehicleUsers' => VehicleUser::all(),
+            'users' => User::all(),
         ];
 
         if (!$vehicle) {
@@ -66,7 +44,6 @@ class VehicleAllotmentController extends Controller
         $allotment->date = $request->date;
         $allotment->alloted_to = $request->alloted_to;
         $allotment->vehicle_id = $request->vehicle_id;
-        $allotment->office_type = $request->office_type;
         $allotment->user_id = request()->user()->id;
 
         if ($allotment->save()) {

@@ -203,6 +203,16 @@ class User extends Authenticatable implements HasMedia
         return false;
     }
 
+    public function vehicles()
+    {
+        return $this->hasMany(Vehicle::class, 'user_id');
+    }
+
+    public function vehicleAllotments()
+    {
+        return $this->hasMany(VehicleAllotment::class, 'user_id');
+    }
+    
     public function districts()
     {
         return $this->belongsToMany(District::class, 'district_user', 'user_id', 'district_id');

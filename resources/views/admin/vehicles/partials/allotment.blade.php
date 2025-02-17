@@ -140,110 +140,74 @@
 </div>
 
 <div class="row allot-vehicle mt-4">
-    <div class="col-md-6 mb-3">
-        <label for="type">Allotment Type</label>
-        <select class="form-select" id="type" name="type" required {{ $vehicle->allotment ? 'disabled' : '' }}>
-            <option value="">Choose...</option>
-            @foreach ($cat['allotment_type'] as $type)
-            <option value="{{ $type }}">{{ $type }}</option>
-            @endforeach
-        </select>
-        @error('type')
-        <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-
-    <input type="hidden" name="vehicle_id" value="{{ $vehicle->id }}">
-
-    <div class="col-md-6 mb-3">
-        <label for="date">Allotment Date</label>
-        <input type="date" class="form-control @error('date') is-invalid @enderror" id="date" name="date" value="{{ old('date') }}" required {{ $vehicle->allotment ? 'disabled' : '' }}>
-        @error('date')
-        <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
-    </div>
-
-    <div class="col-md-6 mb-3">
-        <label for="alloted_to">Allot to</label>
-        <select class="form-select @error('alloted_to') is-invalid @enderror" id="alloted_to" name="alloted_to" required {{ $vehicle->allotment ? 'disabled' : '' }}>
-            <option value="">Select User</option>
-            @foreach($cat['vehicleUsers'] as $user)
-            <option value="{{ $user->id }}" {{ old('alloted_to') == $user->id ? 'selected' : '' }}>
-                {{ $user->name }}
-            </option>
-            @endforeach
-        </select>
-        @error('alloted_to')
-        <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
-    </div>
-
-    <div class="col-md-6 mb-3">
-        <label for="office_type">Office Type</label>
-        <select class="form-select" id="office_type" name="office_type" required {{ $vehicle->allotment ? 'disabled' : '' }}>
-            <option value="">Choose...</option>
-            @foreach (array_keys($cat['office_type']) as $type)
-            <option value="{{ $type }}" {{ old('office_type') == $type ? 'selected' : '' }}>
-                {{ $type }}
-            </option>
-            @endforeach
-        </select>
-        @error('office_type')
-        <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-
-    <div class="col-md-6 mb-3">
-        <label for="office">Office</label>
-        <select class="form-select" id="office" name="office" required {{ $vehicle->allotment ? 'disabled' : '' }}>
-            <option value="">Select Office Type First</option>
-            @if(old('office_type'))
-                @foreach ($cat['office_type'][old('office_type')] as $office)
-                    <option value="{{ $office }}" {{ old('office') == $office ? 'selected' : '' }}>
-                        {{ $office }}
-                    </option>
+    @if(!$vehicle->allotment)
+        <div class="col-md-4 mb-3">
+            <label for="type">Allotment Type</label>
+            <select class="form-select" id="type" name="type" required>
+                <option value="">Choose...</option>
+                @foreach ($cat['allotment_type'] as $type)
+                <option value="{{ $type }}">{{ $type }}</option>
                 @endforeach
-            @endif
-        </select>
-        @error('office')
-        <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
+            </select>
+            @error('type')
+            <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
 
+        <input type="hidden" name="vehicle_id" value="{{ $vehicle->id }}">
+
+        <div class="col-md-4 mb-3">
+            <label for="date">Allotment Date</label>
+            <input type="date" class="form-control @error('date') is-invalid @enderror" id="date" name="date" value="{{ old('date') }}" required>
+            @error('date')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <label for="load-users">Allot to </label>
+            <select class="form-select form-select-md" data-placeholder="Choose" id="load-users" name="alloted_to">
+            </select>
+        </div>
+    @endif
 </div>
 
 <script>
-    // Add this script after the existing slideshow script
-    const officeData = @json($cat['office_type']);
-    const officeTypeSelect = document.getElementById('office_type');
-    const officeSelect = document.getElementById('office');
-
-    officeTypeSelect.addEventListener('change', function() {
-        const selectedType = this.value;
-        officeSelect.innerHTML = '<option value="">Select Office</option>';
-        
-        if (selectedType && officeData[selectedType]) {
-            officeData[selectedType].forEach(office => {
-                const option = document.createElement('option');
-                option.value = office;
-                option.textContent = office;
-                officeSelect.appendChild(option);
-            });
-        }
-    });
-
-    @if(old('office_type'))
-        officeTypeSelect.dispatchEvent(new Event('change'));
-        @if(old('office'))
-            setTimeout(() => {
-                officeSelect.value = @json(old('office'));
-            }, 100);
-        @endif
-    @endif
-
     let currentSlide = 0;
     const slides = document.querySelectorAll('.slide');
     const navButtons = document.querySelectorAll('.slide-nav button');
+
+    $('#load-users').select2({
+        theme: "bootstrap-5"
+        , dropdownParent: $('#load-users').parent()
+        , ajax: {
+            url: '{{ route("admin.users.api") }}'
+            , dataType: 'json'
+            , data: function(params) {
+                return {
+                    q: params.term
+                    , page: params.page || 1
+                };
+            }
+            , processResults: function(data, params) {
+                params.page = params.page || 1;
+                return {
+                    results: data.items
+                    , pagination: {
+                        more: data.pagination.more
+                    }
+                };
+            }
+            , cache: true
+        }
+        , minimumInputLength: 0
+        , templateResult(user) {
+            return user.position;
+        }
+        , templateSelection(user) {
+            return user.position;
+        }
+    });
 
     function showSlide(index) {
         if (slides.length === 0) return;
@@ -256,7 +220,6 @@
         currentSlide = index;
     }
 
-    // Auto advance slides every 5 seconds if there are multiple slides
     if (slides.length > 1) {
         setInterval(() => {
             currentSlide = (currentSlide + 1) % slides.length;

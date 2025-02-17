@@ -16,7 +16,7 @@ class StoreVehicleAllotmentRequest extends FormRequest
         return [
             'type' => 'required|string',
             'date' => 'required|date',
-            'office_type' => 'required|string',
+            'alloted_to' => 'required|integer',
         ];
     }
 }

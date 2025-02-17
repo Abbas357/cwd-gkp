@@ -9,6 +9,13 @@ class VehicleAllotment extends Model
 {
     use HasFactory;
 
+    protected function casts(): array
+    {
+        return [
+            'date' => 'datetime',
+        ];
+    }
+
     public function vehicle()
     {
         return $this->belongsTo(Vehicle::class, 'vehicle_id');
@@ -16,11 +23,11 @@ class VehicleAllotment extends Model
 
     public function allottedUser()
     {
-        return $this->belongsTo(VehicleUser::class, 'alloted_to');
+        return $this->belongsTo(User::class, 'alloted_to');
     }
 
     public function user()
     {
-        return $this->belongsTo(VehicleUser::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

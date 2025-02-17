@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Vehicle;
 use App\Models\Category;
-use App\Models\VehicleAllotment;
-use App\Models\VehicleUser;
 use Illuminate\Http\Request;
+use App\Models\VehicleAllotment;
 use Yajra\DataTables\DataTables;
 use App\Http\Requests\StoreVehicleRequest;
-use App\Http\Requests\StoreVehicleAllotmentRequest;
 
 class VehicleController extends Controller
 {
@@ -29,7 +28,7 @@ class VehicleController extends Controller
                     : ($row->user?->designation ?? 'N/A');
                 })
                 ->addColumn('assigned_to', function ($row) {
-                    return $row->vehicleUser?->name ?? 'N/A' . ' (' . $row->vehicleUser?->designation . ')';
+                    return $row->allotment->allottedUser->position ?? 'N/A';
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');
@@ -55,7 +54,7 @@ class VehicleController extends Controller
     public function create()
     {        
         $cat = [
-            'vehicleUsers' => VehicleUser::all(),
+            'users' => User::all(),
             'vehicle_type' => Category::where('type', 'vehicle_type')->get(),
             'vehicle_functional_status' => Category::where('type', 'vehicle_functional_status')->get(),
             'vehicle_color' => Category::where('type', 'vehicle_color')->get(),
@@ -148,6 +147,54 @@ class VehicleController extends Controller
         }
 
         return response()->json(['error' => 'No changes were made to the field'], 200);
+    }
+
+    public function reports(Request $request)
+    {        
+        $cat = [
+            'users' => User::all(),
+            'vehicle_type' => Category::where('type', 'vehicle_type')->get(),
+            'vehicle_functional_status' => Category::where('type', 'vehicle_functional_status')->get(),
+            'vehicle_color' => Category::where('type', 'vehicle_color')->get(),
+            'fuel_type' => Category::where('type', 'fuel_type')->get(),
+            'vehicle_registration_status' => Category::where('type', 'vehicle_registration_status')->get(),
+            'vehicle_brand' => Category::where('type', 'vehicle_brand')->get(),
+        ];
+
+        $user_id = $request->input('user_id');
+        $include_subordinates = $request->boolean('include_subordinates', false);
+        $status = $request->input('status');
+        $type = $request->input('type');
+        
+        $query = VehicleAllotment::query()
+            ->with(['vehicle', 'allottedUser', 'vehicle.user']);
+
+        if ($user_id) {
+            if ($include_subordinates) {
+                $user = User::find($user_id);
+                $subordinates = $user->getAllSubordinates()->pluck('id');
+                $subordinates->push($user_id);
+                $query->whereIn('alloted_to', $subordinates);
+            } else {
+                $query->where('alloted_to', $user_id);
+            }
+        }
+
+        if ($status) {
+            $query->whereHas('vehicle', function($q) use ($status) {
+                $q->where('functional_status', $status);
+            });
+        }
+
+        if ($type) {
+            $query->whereHas('vehicle', function($q) use ($type) {
+                $q->where('type', $type);
+            });
+        }
+
+        $allotments = $query->latest()->get();
+        
+        return view('admin.vehicles.reports', compact('cat', 'allotments'));
     }
 
     public function destroy($id)
