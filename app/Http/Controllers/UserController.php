@@ -320,7 +320,7 @@ class UserController extends Controller
         $currentSubordinateIds = $user->subordinates()->pluck('id');
         $availableUsers = User::whereNotIn('id', $currentSubordinateIds)
                             ->where('id', '!=', $user->id)
-                            ->get(['id', 'name', 'email']);
+                            ->get(['id', 'name', 'email', 'designation', 'position']);
         return response()->json($availableUsers);
     }
 

@@ -90,8 +90,8 @@
 
         mainSelector = new TomSelect('#userSelector', {
             valueField: 'id',
-            labelField: 'name',
-            searchField: ['name', 'email'],
+            labelField: 'position',
+            searchField: ['name', 'email', 'designation', 'position'],
             persist: false,
             maxOptions: null,
             plugins: ['remove_button'],
@@ -189,10 +189,10 @@
 
             const boardObj = {
                 id: userData.id.toString(),
-                title: `${userData.name} (Subordinates: ${userData.subordinates?.length || 0})`,
+                title: `${userData.position} (Subordinates: ${userData.subordinates?.length || 0})`,
                 item: (userData.subordinates || []).map(sub => ({
                     id: sub.id.toString(),
-                    title: sub.name,
+                    title: sub.position,
                     drag: true,
                     attributes: { 'data-eid': sub.id.toString() }
                 }))
@@ -209,7 +209,7 @@
                 boardElement = document.querySelector(`.kanban-board[data-id="${userData.id}"]`) ||
                                document.querySelector(`.kanban-board[kanban-id="${userData.id}"]`);
                 if (boardElement) {
-                    boardElement.setAttribute('data-id', userData.id);
+                    boardElement?.setAttribute('data-id', userData.id);
                     let header = boardElement.querySelector('.kanban-board-header');
                     if (!header) {
                         header = document.createElement('div');
@@ -218,7 +218,7 @@
                     }
                     header.innerHTML = `
                         <div class="d-flex justify-content-between align-items-center">
-                            <span>${userData.name} (Subordinates: ${userData.subordinates?.length || 0})</span>
+                            <span>${userData.position} (Subordinates: ${userData.subordinates?.length || 0})</span>
                             <i class="bi-x fs-4 p-1 cursor-pointer remove-board" data-id="${userData.id}"></i>
                         </div>
                     `;
@@ -229,22 +229,22 @@
                     if (!boardElement.querySelector('.subordinate-selector')) {
                         const footer = document.createElement('div');
                         footer.className = 'subordinate-selector';
-                        footer.innerHTML = `<select class="form-select add-subordinate" placeholder="Add team member..."></select>`;
+                        footer.innerHTML = `<select class="form-select add-subordinate" placeholder="Add User.."></select>`;
                         boardElement.appendChild(footer);
                         const selectEl = footer.querySelector('select.add-subordinate');
                         const subordinateSelector = new TomSelect(selectEl, {
                             valueField: 'id',
-                            labelField: 'name',
-                            searchField: ['name', 'email'],
+                            labelField: 'position',
+                            searchField: ['name', 'email', 'designation', 'position'],
                             persist: false,
                             maxItems: 1,
                             plugins: ['clear_button'],
                             render: {
                                 option: function(data, escape) {
-                                    return `<div class="py-2 px-3">${escape(data.name)}</div>`;
+                                    return `<div class="py-2 px-3">${escape(data.position)}</div>`;
                                 },
                                 item: function(data, escape) {
-                                    return `<div>${escape(data.name)}</div>`;
+                                    return `<div>${escape(data.position)}</div>`;
                                 }
                             },
                             onInitialize: async function() {
@@ -253,7 +253,7 @@
                                 const availableUsers = await response.json();
                                 this.addOptions(availableUsers);
                                 if (this.control) {
-                                    this.control.querySelector('.ts-control').setAttribute('placeholder', 'Add team member...');
+                                    this.control.querySelector('.ts-control')?.setAttribute('placeholder', 'Add User...');
                                 }
                             },
                             onItemAdd: async (value) => {
