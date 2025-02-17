@@ -53,16 +53,4 @@ class VehicleAllotmentController extends Controller
         return response()->json(['error' => 'There was an error alloting the vehicle.'], 500);
     }
 
-    public function delete($id)
-    {
-        $allotment = VehicleAllotment::findOrFail($id);
-
-        if ($allotment->delete()) {
-            return redirect()->back()->with('success', 'Allotment deleted successfully');
-        }
-
-        return redirect()->back()->with('error', 'Allotment cannot be deleted');
-    }
-
-
 }

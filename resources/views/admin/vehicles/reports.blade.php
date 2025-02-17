@@ -3,6 +3,7 @@
     <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
     <style>
+        /* General Table and Layout Styles */
         .table > :not(caption) > * > * {
             vertical-align: middle;
         }
@@ -31,12 +32,44 @@
             border: 1px solid #dee2e6;
             border-radius: 0.5rem;
             overflow: hidden;
+            margin-bottom: 2rem;
         }
         .filter-section {
             background-color: #f8f9fa;
-            padding: 1.5rem;
+            padding: 2rem;
             border-radius: 0.5rem;
             margin-bottom: 1.5rem;
+        }
+        /* Enhanced Styles */
+        .card-header {
+            background-color: #e9ecef; /* Lighter grey */
+        }
+        .card-body {
+            background: linear-gradient(to bottom, #ffffff, #f8f9fa); /* Very subtle gradient */
+        }
+        .cw-btn, .btn {
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .cw-btn:hover, .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 123, 255, 0.05);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        /* Print Styling */
+        @media print {
+            .no-print, .table-container {
+                display: none;
+            }
+            body {
+                font-size: 12pt;
+            }
+            table {
+                page-break-inside: avoid;
+            }
         }
     </style>
     @endpush

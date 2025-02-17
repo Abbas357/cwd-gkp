@@ -10,19 +10,6 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    .delete-allotment {
-        background: #dc3545;
-        color: white;
-        border: none;
-        padding: 0.25rem 0.75rem;
-        border-radius: 0.25rem;
-        cursor: pointer;
-    }
-
-    .delete-allotment:hover {
-        background: #c82333;
-    }
-
     .slideshow {
         position: relative;
         height: 300px;
@@ -102,15 +89,20 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <span>Alloted to:</span>
                     <div class="d-flex align-items-center gap-2">
-                        <span>{{ $vehicle->allotment->allottedUser->name }}
-                            ({{ $vehicle->allotment->allottedUser->designation }})</span>
-                        <form action="{{ route('admin.vehicles.allotment.delete', $vehicle->allotment->id) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="delete-allotment" onclick="return confirm('Are you sure you want to delete this allotment?')">
-                                Delete
-                            </button>
-                        </form>
+
+                        <table class="table table-striped table-bordered mb-0">
+                            <tbody>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>{{ $vehicle->allotment->allottedUser->name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Designation</td>
+                                    <td>{{ $vehicle->allotment->allottedUser->position }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
                     </div>
                 </div>
             </li>
@@ -140,36 +132,34 @@
 </div>
 
 <div class="row allot-vehicle mt-4">
-    @if(!$vehicle->allotment)
-        <div class="col-md-4 mb-3">
-            <label for="type">Allotment Type</label>
-            <select class="form-select" id="type" name="type" required>
-                <option value="">Choose...</option>
-                @foreach ($cat['allotment_type'] as $type)
-                <option value="{{ $type }}">{{ $type }}</option>
-                @endforeach
-            </select>
-            @error('type')
-            <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
+    <div class="col-md-4 mb-3">
+        <label for="type">Allotment Type</label>
+        <select class="form-select" id="type" name="type" required>
+            <option value="">Choose...</option>
+            @foreach ($cat['allotment_type'] as $type)
+            <option value="{{ $type }}">{{ $type }}</option>
+            @endforeach
+        </select>
+        @error('type')
+        <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
 
-        <input type="hidden" name="vehicle_id" value="{{ $vehicle->id }}">
+    <input type="hidden" name="vehicle_id" value="{{ $vehicle->id }}">
 
-        <div class="col-md-4 mb-3">
-            <label for="date">Allotment Date</label>
-            <input type="date" class="form-control @error('date') is-invalid @enderror" id="date" name="date" value="{{ old('date') }}" required>
-            @error('date')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
+    <div class="col-md-4 mb-3">
+        <label for="date">Allotment Date</label>
+        <input type="date" class="form-control @error('date') is-invalid @enderror" id="date" name="date" value="{{ old('date') }}" required>
+        @error('date')
+        <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
 
-        <div class="col-md-4 mb-4">
-            <label for="load-users">Allot to </label>
-            <select class="form-select form-select-md" data-placeholder="Choose" id="load-users" name="alloted_to">
-            </select>
-        </div>
-    @endif
+    <div class="col-md-4 mb-4">
+        <label for="load-users">Allot to </label>
+        <select class="form-select form-select-md" data-placeholder="Choose" id="load-users" name="alloted_to">
+        </select>
+    </div>
 </div>
 
 <script>
