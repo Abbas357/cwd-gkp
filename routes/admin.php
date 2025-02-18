@@ -380,6 +380,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [VehicleController::class, 'index'])->name('index')->can('viewAny', App\Models\Vehicle::class);
             Route::get('/create', [VehicleController::class, 'create'])->name('create')->can('create', App\Models\Vehicle::class);
             Route::get('/reports', [VehicleController::class, 'reports'])->name('reports')->can('view', 'vehicle');
+            Route::get('/search', [VehicleController::class, 'search'])->name('search')->can('view', 'vehicle');
             Route::post('/', [VehicleController::class, 'store'])->name('store')->can('create', App\Models\Vehicle::class);
             Route::get('/{vehicle}', [VehicleController::class, 'show'])->name('show')->can('view', App\Models\Vehicle::class);
             Route::get('/get/{vehicle}', [VehicleController::class, 'showDetail'])->name('detail')->can('view', 'vehicle');

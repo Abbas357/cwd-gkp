@@ -79,7 +79,7 @@
     <input type="hidden" name="vehicle_id" value="{{ $vehicle->id }}">
     <div class="col-md-6 mb-3">
         <label for="start_date">Allotment Date</label>
-        <input type="date" class="form-control" id="start_date" name="start_date" value="{{ old('start_date') }}" required>
+        <input type="date" class="form-control" id="start_date" placeholder="Start Date" name="start_date" value="{{ old('start_date') }}" required>
     </div>
     <div class="col-md-12 mb-3">
         <label for="load-users">Allot to</label>
@@ -91,24 +91,39 @@
 <script src="{{ asset('admin/plugins/flatpickr/flatpickr.js') }}"></script>
 <script>
     $(document).ready(function () {
-        $('#load-users').select2({
+        const userSelect = $('#load-users');
+        userSelect.select2({
             theme: "bootstrap-5",
-            dropdownParent: $('#load-users').parent(),
+            placeholder: "Select User / Office",
+            allowClear: true,
             ajax: {
                 url: '{{ route("admin.users.api") }}',
                 dataType: 'json',
-                data: function (params) {
-                    return { q: params.term, page: params.page || 1 };
+                data: function(params) {
+                    return {
+                        q: params.term,
+                        page: params.page || 1
+                    };
                 },
-                processResults: function (data, params) {
+                processResults: function(data, params) {
                     params.page = params.page || 1;
-                    return { results: data.items, pagination: { more: data.pagination.more } };
+                    return {
+                        results: data.items,
+                        pagination: {
+                            more: data.pagination.more
+                        }
+                    };
                 },
                 cache: true
             },
             minimumInputLength: 0,
-            templateResult: user => user.position,
-            templateSelection: user => user.position
+            templateResult: function(user) {
+                if (user.loading) return user.text;
+                return user.position;
+            },
+            templateSelection: function(user) {
+                return user.position || 'Select User / Office'; // Fallback text
+            }
         });
 
         $("#start_date").flatpickr({

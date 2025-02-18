@@ -86,15 +86,25 @@
             <div class="card-body">
                 <form method="GET" class="filter-section">
                     <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold d-flex justify-content-between" for="load-users"><span>User / Office</span> 
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="includeSubordinates" name="include_subordinates" value="1" @checked(request('include_subordinates'))>
-                                    <label class="form-check-label fw-bold" for="includeSubordinates">
-                                        Subordinates
-                                    </label>
-                                </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="includeSubordinates" name="include_subordinates" value="1" @checked(request('include_subordinates'))>
+                            <label class="form-check-label fw-bold" for="includeSubordinates">
+                                Include Subordinates
                             </label>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" 
+                                    id="showHistory" name="show_history" value="1" 
+                                    @checked(request('show_history'))>
+                            <label class="form-check-label fw-bold" for="showHistory">
+                                Include Past Allotments
+                            </label>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold" for="load-users">User / Office</label>
                             <select class="form-select form-select-md" data-placeholder="Choose" id="load-users" name="user_id">
                                 @if(request('user_id'))
                                     <option value="{{ request('user_id') }}" selected>Loading...</option>
@@ -119,6 +129,43 @@
                                 @foreach($cat['vehicle_functional_status'] as $status)
                                     <option value="{{ $status->id }}" @selected(request('status') == $status->id)>
                                         {{ $status->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Specific Vehicle</label>
+                            <select name="vehicle_id" class="form-select" data-placeholder="Select Vehicle">
+                                <option value=""></option>
+                                @foreach(App\Models\Vehicle::all() as $Vehicle)
+                                    <option value="{{ $Vehicle->id }}" @selected($filters['vehicle_id'] == $Vehicle->id)>
+                                        {{ $Vehicle->registration_number }} - {{ $Vehicle->brand }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    
+                        <!-- Additional Filters -->
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Color</label>
+                            <select name="color" class="form-select">
+                                <option value="">All Colors</option>
+                                @foreach($cat['vehicle_color'] as $color)
+                                    <option value="{{ $color->name }}" @selected($filters['color'] == $color->name)>
+                                        {{ $color->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Fuel Type</label>
+                            <select name="fuel_type" class="form-select">
+                                <option value="">All Fuel Types</option>
+                                @foreach($cat['fuel_type'] as $fuel)
+                                    <option value="{{ $fuel->name }}" @selected($filters['fuel_type'] == $fuel->name)>
+                                        {{ $fuel->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -150,6 +197,9 @@
                                 <th class="bg-light">Alloted To</th>
                                 <th class="bg-light">Status</th>
                                 <th class="bg-light">Allotment Date</th>
+                                @if(request('show_history'))
+                                    <th class="bg-light">End Date</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -181,6 +231,13 @@
                                             {{ $allotment->start_date ? $allotment->start_date->format('j F, Y') : 'N/A' }}
                                         </span>
                                     </td>
+                                    @if(request('show_history'))
+                                    <td>
+                                        <span class="text-muted">
+                                            {{ $allotment->end_date ? $allotment->end_date->format('j F, Y') : 'Current' }}
+                                        </span>
+                                    </td>
+                                    @endif
                                 </tr>
                             @empty
                                 <tr>
@@ -205,10 +262,31 @@
         $(document).ready(function() {
             const userSelect = $('#load-users');
             const selectedUserId = '{{ request('user_id') }}';
+            const vehicleSelect = $('[name="vehicle_id"]');
 
+            vehicleSelect.select2({
+                theme: "bootstrap-5",
+                placeholder: "Select Vehicle",
+                allowClear: true,
+                ajax: {
+                    url: '{{ route("admin.vehicles.search") }}',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return { q: params.term };
+                    },
+                    processResults: function(data) {
+                        return { results: data };
+                    }
+                },
+                templateResult: function(vehicle) {
+                    return vehicle.text || vehicle.registration_number + ' - ' + vehicle.brand;
+                }
+            });
             userSelect.select2({
                 theme: "bootstrap-5",
-                dropdownParent: userSelect.parent(),
+                placeholder: "Select User / Office",
+                allowClear: true,
                 ajax: {
                     url: '{{ route("admin.users.api") }}',
                     dataType: 'json',
@@ -230,11 +308,12 @@
                     cache: true
                 },
                 minimumInputLength: 0,
-                templateResult(user) {
+                templateResult: function(user) {
+                    if (user.loading) return user.text;
                     return user.position;
                 },
-                templateSelection(user) {
-                    return user.position;
+                templateSelection: function(user) {
+                    return user.position || 'Select User / Office'; // Fallback text
                 }
             });
 

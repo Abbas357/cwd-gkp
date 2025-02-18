@@ -173,7 +173,7 @@ class VehicleController extends Controller
     }
 
     public function reports(Request $request)
-    {        
+    {
         $cat = [
             'users' => User::all(),
             'vehicle_type' => Category::where('type', 'vehicle_type')->get(),
@@ -184,40 +184,79 @@ class VehicleController extends Controller
             'vehicle_brand' => Category::where('type', 'vehicle_brand')->get(),
         ];
 
-        $user_id = $request->input('user_id');
-        $include_subordinates = $request->boolean('include_subordinates', false);
-        $status = $request->input('status');
-        $type = $request->input('type');
+        $filters = [
+            'user_id' => null,
+            'vehicle_id' => null,
+            'type' => null,
+            'status' => null,
+            'color' => null,
+            'fuel_type' => null,
+            'registration_status' => null,
+            'brand' => null
+        ];
         
-        $query = VehicleAllotment::query()
-            ->with(['vehicle', 'user']);
+        $filters = array_merge($filters, $request->only(array_keys($filters)));
 
-        if ($user_id) {
+        $include_subordinates = $request->boolean('include_subordinates', false);
+        $show_history = $request->boolean('show_history', false);
+
+        $query = VehicleAllotment::query()
+            ->with(['vehicle', 'user'])
+            ->when(!$show_history, fn($q) => $q->whereNull('end_date'));
+
+        if ($filters['user_id']) {
             if ($include_subordinates) {
-                $user = User::find($user_id);
-                $subordinates = $user->getAllSubordinates()->pluck('id');
-                $subordinates->push($user_id);
+                $user = User::find($filters['user_id']);
+                $subordinates = $user->getAllSubordinates()->pluck('id')->push($user->id);
                 $query->whereIn('user_id', $subordinates);
             } else {
-                $query->where('user_id', $user_id);
+                $query->where('user_id', $filters['user_id']);
             }
         }
 
-        if ($status) {
-            $query->whereHas('vehicle', function($q) use ($status) {
-                $q->where('functional_status', $status);
-            });
+        if ($filters['vehicle_id']) {
+            $query->where('vehicle_id', $filters['vehicle_id']);
         }
 
-        if ($type) {
-            $query->whereHas('vehicle', function($q) use ($type) {
-                $q->where('type', $type);
-            });
-        }
+        $query->whereHas('vehicle', function($q) use ($filters, $cat) {
+            if ($filters['status']) {
+                $status = $cat['vehicle_functional_status']->firstWhere('id', $filters['status']);
+                $q->where('functional_status', $status->name ?? '');
+            }
+
+            if ($filters['type']) {
+                $type = $cat['vehicle_type']->firstWhere('id', $filters['type']);
+                $q->where('type', $type->name ?? '');
+            }
+
+            $additionalFilters = [
+                'color' => 'vehicle_color',
+                'fuel_type' => 'fuel_type',
+                'registration_status' => 'vehicle_registration_status',
+                'brand' => 'vehicle_brand'
+            ];
+
+            foreach ($additionalFilters as $field => $categoryType) {
+                if ($filters[$field]) {
+                    $category = $cat[$categoryType]->firstWhere('id', $filters[$field]);
+                    $q->where($field, $category->name ?? '');
+                }
+            }
+        });
 
         $allotments = $query->latest()->get();
-        
-        return view('admin.vehicles.reports', compact('cat', 'allotments'));
+
+        return view('admin.vehicles.reports', compact('cat', 'allotments', 'filters'));
+    }
+
+    public function search(Request $request)
+    {
+        return Vehicle::query()
+        ->when($request->q, fn($q) => $q->where('registration_number', 'like', "%{$request->q}%")
+            ->orWhere('brand', 'like', "%{$request->q}%"))
+        ->limit(10)
+        ->get()
+        ->map(fn($v) => ['id' => $v->id, 'text' => "{$v->registration_number} - {$v->brand}"]);
     }
 
     public function destroy($id)
