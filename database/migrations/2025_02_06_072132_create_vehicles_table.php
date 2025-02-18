@@ -29,14 +29,12 @@ return new class extends Migration
         Schema::create('vehicle_allotments', function (Blueprint $table) {
             $table->id();
             $table->string('type')->nullable();
-            $table->timestamp('date')->nullable();
+            $table->timestamp('start_date')->nullable();
+            $table->timestamp('end_date')->nullable();
             $table->unsignedBigInteger('vehicle_id')->nullable();
-            $table->unsignedBigInteger('alloted_to')->nullable();
-            $table->string('office_type')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
         });
-             
     }
 
     public function down(): void

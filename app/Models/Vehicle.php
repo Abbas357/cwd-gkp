@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use Spatie\MediaLibrary\HasMedia;
+use App\Observers\VehicleObserver;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy([VehicleObserver::class])]
 class Vehicle extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, LogsActivity;
@@ -38,6 +41,13 @@ class Vehicle extends Model implements HasMedia
 
     public function allotment()
     {
-        return $this->hasOne(VehicleAllotment::class, 'vehicle_id');
+        return $this->hasOne(VehicleAllotment::class)
+            ->whereNull('end_date')
+            ->latest('created_at');
+    }
+
+    public function allotments()
+    {
+        return $this->hasMany(VehicleAllotment::class)->latest();
     }
 }

@@ -28,7 +28,7 @@ class VehicleController extends Controller
                     : ($row->user?->designation ?? 'N/A');
                 })
                 ->addColumn('assigned_to', function ($row) {
-                    return $row->allotment->allottedUser->position ?? 'N/A';
+                    return $row->allotment->user->position ?? 'N/A';
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');
@@ -131,6 +131,29 @@ class VehicleController extends Controller
         ]);
     }
 
+    public function vehicleHistory($id)
+    {
+        $vehicle = Vehicle::find($id);
+        $allotments = $vehicle->allotments;
+
+        if (!$vehicle) {
+            return response()->json([
+                'success' => false,
+                'data' => [
+                    'result' => 'Unable to load Vehicle History',
+                ],
+            ]);
+        }
+
+        $html = view('admin.vehicles.partials.history', compact('vehicle', 'allotments'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
+    }
+
     public function updateField(Request $request, $id)
     {
         $vehicle = Vehicle::find($id);
@@ -167,16 +190,16 @@ class VehicleController extends Controller
         $type = $request->input('type');
         
         $query = VehicleAllotment::query()
-            ->with(['vehicle', 'allottedUser', 'vehicle.user']);
+            ->with(['vehicle', 'user']);
 
         if ($user_id) {
             if ($include_subordinates) {
                 $user = User::find($user_id);
                 $subordinates = $user->getAllSubordinates()->pluck('id');
                 $subordinates->push($user_id);
-                $query->whereIn('alloted_to', $subordinates);
+                $query->whereIn('user_id', $subordinates);
             } else {
-                $query->where('alloted_to', $user_id);
+                $query->where('user_id', $user_id);
             }
         }
 

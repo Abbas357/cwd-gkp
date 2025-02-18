@@ -1,8 +1,7 @@
 <x-app-layout title="Vehicles">
     @push('style')
-    <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
+    
     @endpush
     <x-slot name="header">
         <li class="breadcrumb-item active" aria-current="page">Vehicles</li>
@@ -37,8 +36,7 @@
     <!--end row-->
     @push('script')
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
-    <script src="{{ asset('admin/plugins/col-resizable.js') }}"></script>
-    <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
+    <script src="{{ asset('admin/plugins/col-resizable.js') }}"></script>   
 
     <script>
         $(document).ready(function() {
@@ -164,14 +162,21 @@
             });
 
             pushStateModal({
+                fetchUrl: "{{ route('admin.vehicles.history', ':id') }}",
+                btnSelector: '.history-btn',
+                title: 'Vehicle History',
+                modalSize: 'xl',
+            });
+
+            pushStateModal({
                 fetchUrl: "{{ route('admin.vehicles.allotment.create', ':id') }}"
                 , btnSelector: '.allot-btn'
                 , title: 'Vehicle Allotment'
                 , actionButtonName: 'Allot Vehicle'
-                , modalSize: 'xl'
+                , modalSize: 'md'
                 , includeForm: true
                 , formAction: "{{ route('admin.vehicles.allotment.store', ':id') }}"
-                , modalHeight: '60vh'
+                , modalHeight: '55vh'
             , }).then((modal) => {
                 const vehicleModal = $('#' + modal);
                 const updateVehicleBtn = vehicleModal.find('button[type="submit"]');

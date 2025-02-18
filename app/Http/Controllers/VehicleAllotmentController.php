@@ -15,7 +15,7 @@ class VehicleAllotmentController extends Controller
         $vehicle = Vehicle::find($id);
         
         $cat = [
-            'allotment_type' => ['Permanent','Temporary'],
+            'allotment_type' => ['Pool', 'Permanent','Temporary'],
             'users' => User::all(),
         ];
 
@@ -41,11 +41,10 @@ class VehicleAllotmentController extends Controller
     {
         $allotment = new VehicleAllotment();
         $allotment->type = $request->type;
-        $allotment->date = $request->date;
-        $allotment->alloted_to = $request->alloted_to;
+        $allotment->start_date = $request->start_date;
         $allotment->vehicle_id = $request->vehicle_id;
-        $allotment->user_id = request()->user()->id;
-
+        $allotment->user_id = $request->user_id;
+        
         if ($allotment->save()) {
             return response()->json(['success' => 'Vehicle has been alloted successfully.']);
         }

@@ -383,6 +383,7 @@ Route::middleware('auth')->group(function () {
             Route::post('/', [VehicleController::class, 'store'])->name('store')->can('create', App\Models\Vehicle::class);
             Route::get('/{vehicle}', [VehicleController::class, 'show'])->name('show')->can('view', App\Models\Vehicle::class);
             Route::get('/get/{vehicle}', [VehicleController::class, 'showDetail'])->name('detail')->can('view', 'vehicle');
+            Route::get('/history/{vehicle}', [VehicleController::class, 'vehicleHistory'])->name('history')->can('view', 'vehicle');
             Route::patch('/update/field/{vehicle}', [VehicleController::class, 'updateField'])->name('updateField')->can('update', 'vehicle');
             Route::delete('/{vehicle}', [VehicleController::class, 'destroy'])->name('destroy')->can('delete', 'vehicle');
             

@@ -126,10 +126,10 @@
                         
                         <div class="col-12">
                             <button type="submit" class="cw-btn">
-                                <i class="fas fa-filter me-1"></i> Generate Report
+                                <i class="bi-filter me-1"></i> Generate Report
                             </button>
-                            <a href="{{ route('admin.vehicles.reports') }}" class="btn btn-secondary">
-                                <i class="fas fa-undo me-1"></i> Reset
+                            <a href="{{ route('admin.vehicles.reports') }}" class="btn btn-light">
+                                <i class="bi-undo me-1"></i> Reset
                             </a>
                         </div>
                     </div>
@@ -147,7 +147,7 @@
                             <tr>
                                 <th class="bg-light">Vehicle Details</th>
                                 <th class="bg-light">Registration</th>
-                                <th class="bg-light">Assigned To</th>
+                                <th class="bg-light">Alloted To</th>
                                 <th class="bg-light">Status</th>
                                 <th class="bg-light">Allotment Date</th>
                             </tr>
@@ -169,7 +169,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="fw-medium">{{ $allotment->allottedUser->position ?? 'N/A' }}</span>
+                                        <span class="fw-medium">{{ $allotment->user->position ?? 'N/A' }}</span>
                                     </td>
                                     <td>
                                         <span class="status-badge bg-{{ $allotment->vehicle->functional_status === 'Active' ? 'success' : 'warning' }} text-white">
@@ -178,7 +178,7 @@
                                     </td>
                                     <td>
                                         <span class="text-muted">
-                                            {{ $allotment->date ? $allotment->date->format('j F, Y') : 'N/A' }}
+                                            {{ $allotment->start_date ? $allotment->start_date->format('j F, Y') : 'N/A' }}
                                         </span>
                                     </td>
                                 </tr>
@@ -257,16 +257,16 @@
         });
 
         $('#print-vehicle-details').on('click', () => {
-        $("#vehicle-report").printThis({
-            pageTitle: "Report",
-            beforePrint() {
-                document.querySelector('.page-loader').classList.remove('hidden');
-            },
-            afterPrint() {
-                document.querySelector('.page-loader').classList.add('hidden');
-            }
+            $("#vehicle-report").printThis({
+                pageTitle: "Report",
+                beforePrint() {
+                    document.querySelector('.page-loader').classList.remove('hidden');
+                },
+                afterPrint() {
+                    document.querySelector('.page-loader').classList.add('hidden');
+                }
+            });
         });
-    });
     </script>
     @endpush
 </x-app-layout>
