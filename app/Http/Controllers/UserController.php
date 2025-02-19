@@ -63,13 +63,16 @@ class UserController extends Controller
 
     public function users(Request $request)
     {
-        $search = $request->get('q');
-        $users = User::where('position', 'LIKE', "%{$search}%")
-            ->select('id', 'position')
+        $users = User::query()
+            ->when($request->q, fn($q) => $q->where('position', 'like', "%{$request->q}%")
+                ->orWhere('name', 'like', "%{$request->q}%"))
             ->paginate(10);
 
         return response()->json([
-            'items' => $users->items(),
+            'results' => collect($users->items())->map(fn($u) => [
+                'id' => $u->id,
+                'text' => "{$u->position} - {$u->name}"
+            ]),
             'pagination' => [
                 'more' => $users->hasMorePages()
             ]

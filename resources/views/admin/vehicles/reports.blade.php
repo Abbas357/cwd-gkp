@@ -105,12 +105,16 @@
 
                         <div class="col-md-6">
                             <label class="form-label fw-bold" for="load-users">User / Office</label>
-                            <select class="form-select form-select-md" data-placeholder="Choose" id="load-users" name="user_id">
-                                @if(request('user_id'))
-                                    <option value="{{ request('user_id') }}" selected>Loading...</option>
-                                @endif
+                            <select name="user_id" id="load-users" class="form-select" data-placeholder="Select User / Office">
+                                <option value=""></option>
+                                @foreach(App\Models\User::all() as $user)
+                                    <option value="{{ $user->id }}" @selected($filters['user_id'] == $user->id)>
+                                        {{ $user->position }} - {{ $user->name }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
+
                         <div class="col-md-3">
                             <label class="form-label fw-bold">Vehicle Type</label>
                             <select name="type" class="form-select">
@@ -122,6 +126,7 @@
                                 @endforeach
                             </select>
                         </div>
+
                         <div class="col-md-3">
                             <label class="form-label fw-bold">Status</label>
                             <select name="status" class="form-select">
@@ -140,7 +145,7 @@
                                 <option value=""></option>
                                 @foreach(App\Models\Vehicle::all() as $Vehicle)
                                     <option value="{{ $Vehicle->id }}" @selected($filters['vehicle_id'] == $Vehicle->id)>
-                                        {{ $Vehicle->registration_number }} - {{ $Vehicle->brand }}
+                                        {{ $Vehicle->type }} - {{ $Vehicle->model }}
                                     </option>
                                 @endforeach
                             </select>
@@ -222,7 +227,7 @@
                                         <span class="fw-medium">{{ $allotment->user->position ?? 'N/A' }}</span>
                                     </td>
                                     <td>
-                                        <span class="status-badge bg-{{ $allotment->vehicle->functional_status === 'Active' ? 'success' : 'warning' }} text-white">
+                                        <span class="status-badge bg-{{ $allotment->vehicle->functional_status === 'Functional' ? 'success' : 'danger' }} text-white">
                                             {{ $allotment->vehicle->functional_status }}
                                         </span>
                                     </td>
@@ -266,6 +271,7 @@
 
             vehicleSelect.select2({
                 theme: "bootstrap-5",
+                dropdownParent: $('#load-users').parent(),
                 placeholder: "Select Vehicle",
                 allowClear: true,
                 ajax: {
@@ -280,16 +286,19 @@
                     }
                 },
                 templateResult: function(vehicle) {
-                    return vehicle.text || vehicle.registration_number + ' - ' + vehicle.brand;
+                    return vehicle.text;
                 }
             });
+
             userSelect.select2({
                 theme: "bootstrap-5",
+                dropdownParent: $('#load-users').parent(),
                 placeholder: "Select User / Office",
                 allowClear: true,
                 ajax: {
                     url: '{{ route("admin.users.api") }}',
                     dataType: 'json',
+                    delay: 250,
                     data: function(params) {
                         return {
                             q: params.term,
@@ -298,8 +307,9 @@
                     },
                     processResults: function(data, params) {
                         params.page = params.page || 1;
+                        
                         return {
-                            results: data.items,
+                            results: data.results,
                             pagination: {
                                 more: data.pagination.more
                             }
@@ -307,32 +317,17 @@
                     },
                     cache: true
                 },
-                minimumInputLength: 0,
                 templateResult: function(user) {
-                    if (user.loading) return user.text;
-                    return user.position;
+                    if (user.loading) {
+                        return 'Loading...';
+                    }
+                    return user.text;
                 },
                 templateSelection: function(user) {
-                    return user.position || 'Select User / Office'; // Fallback text
+                    return user.text || 'Select User / Office';
                 }
             });
 
-            if (selectedUserId) {
-                $.ajax({
-                    url: '{{ route("admin.users.api") }}',
-                    data: {
-                        id: selectedUserId
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        if (data.items && data.items.length > 0) {
-                            const user = data.items[0];
-                            const option = new Option(user.position, user.id, true, true);
-                            userSelect.append(option).trigger('change');
-                        }
-                    }
-                });
-            }
         });
 
         $('#print-vehicle-details').on('click', () => {

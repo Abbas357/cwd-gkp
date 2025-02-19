@@ -12,6 +12,146 @@ use App\Http\Requests\StoreVehicleRequest;
 
 class VehicleController extends Controller
 {
+    public function dashboard()
+{
+    // Get total vehicles count
+    $totalVehicles = Vehicle::count();
+    
+    // Get vehicles by functional status
+    $functionalVehicles = Vehicle::where('functional_status', 'Functional')->count();
+    $condemnedVehicles = Vehicle::where('functional_status', 'Condemned')->count();
+    
+    // Get allotment statistics
+    $allotedVehicles = VehicleAllotment::whereNull('end_date')->count();
+    
+    // Get vehicles by allotment type
+    $permanentAlloted = VehicleAllotment::whereNull('end_date')
+        ->where('type', 'Permanent')
+        ->count();
+    
+    $temporaryAlloted = VehicleAllotment::whereNull('end_date')
+        ->where('type', 'Temparory')
+        ->count();
+    
+    $inPool = VehicleAllotment::whereNull('end_date')
+        ->where('type', 'Pool')
+        ->count();
+    
+    // Get monthly allotment data for chart
+    $monthlyAllotments = VehicleAllotment::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as count')
+        ->groupBy('month')
+        ->orderBy('month')
+        ->limit(6)
+        ->get();
+
+    // Get distribution data for various attributes
+    $distributions = [
+        'type' => $this->getDistribution('type'),
+        'color' => $this->getDistribution('color'),
+        'fuel_type' => $this->getDistribution('fuel_type'),
+        'registration_status' => $this->getDistribution('registration_status'),
+        'brand' => $this->getDistribution('brand'),
+        'model_year' => $this->getDistribution('model_year')
+    ];
+
+    // Get model distribution by brand
+    $modelsByBrand = Vehicle::selectRaw('brand, model, COUNT(*) as count')
+        ->whereNotNull('brand')
+        ->whereNotNull('model')
+        ->groupBy('brand', 'model')
+        ->get()
+        ->groupBy('brand');
+
+    // Get recent allotments for activity feed
+    $recentAllotments = VehicleAllotment::with(['vehicle', 'user'])
+        ->latest()
+        ->take(5)
+        ->get();
+
+    // Get vehicles requiring attention (e.g., maintenance due)
+    $vehiclesNeedingAttention = Vehicle::where('functional_status', 'Needs Maintenance')
+        ->orWhere('functional_status', 'Under Repair')
+        ->with('allotment.user')
+        ->take(5)
+        ->get();
+
+    // Get statistics by fuel type
+    $fuelTypeStats = Vehicle::selectRaw('fuel_type, COUNT(*) as count')
+        ->whereNotNull('fuel_type')
+        ->groupBy('fuel_type')
+        ->get();
+
+    // Calculate percentage distributions
+    $functionalPercentage = $totalVehicles > 0 ? ($functionalVehicles / $totalVehicles) * 100 : 0;
+    $allotedPercentage = $totalVehicles > 0 ? ($allotedVehicles / $totalVehicles) * 100 : 0;
+    $poolPercentage = $totalVehicles > 0 ? ($inPool / $totalVehicles) * 100 : 0;
+
+    // Get year-wise registration data
+    $yearWiseRegistrations = Vehicle::selectRaw('YEAR(created_at) as year, COUNT(*) as count')
+        ->groupBy('year')
+        ->orderBy('year', 'desc')
+        ->get();
+
+    // Get brand-wise functional status
+    $brandWiseStatus = Vehicle::selectRaw('brand, functional_status, COUNT(*) as count')
+        ->whereNotNull('brand')
+        ->whereNotNull('functional_status')
+        ->groupBy('brand', 'functional_status')
+        ->get()
+        ->groupBy('brand');
+
+    // Get allocation trends
+    $allocationTrends = VehicleAllotment::selectRaw('
+            YEAR(created_at) as year, 
+            MONTH(created_at) as month,
+            type,
+            COUNT(*) as count
+        ')
+        ->whereYear('created_at', '>=', now()->subYear())
+        ->groupBy('year', 'month', 'type')
+        ->orderBy('year')
+        ->orderBy('month')
+        ->get()
+        ->groupBy('type');
+
+    // Compact all variables for the view
+    return view('admin.vehicles.dashboard', compact(
+        'totalVehicles',
+        'functionalVehicles',
+        'condemnedVehicles',
+        'allotedVehicles',
+        'permanentAlloted',
+        'temporaryAlloted',
+        'inPool',
+        'monthlyAllotments',
+        'distributions',
+        'modelsByBrand',
+        'recentAllotments',
+        'vehiclesNeedingAttention',
+        'fuelTypeStats',
+        'functionalPercentage',
+        'allotedPercentage',
+        'poolPercentage',
+        'yearWiseRegistrations',
+        'brandWiseStatus',
+        'allocationTrends'
+    ));
+}
+
+private function getDistribution($field)
+{
+    return Vehicle::selectRaw("$field, COUNT(*) as count")
+        ->whereNotNull($field)
+        ->groupBy($field)
+        ->orderBy('count', 'desc')
+        ->get();
+}
+
+private function formatPercentage($value, $decimals = 2)
+{
+    return round($value, $decimals);
+}
+
     public function index(Request $request)
     {
         $vehicles = Vehicle::query();
@@ -23,9 +163,9 @@ class VehicleController extends Controller
                     return view('admin.vehicles.partials.buttons', compact('row'))->render();
                 })
                 ->addColumn('added_by', function ($row) {
-                    return $row->user?->position 
-                    ? '<a href="'.route('admin.users.show', $row->user->id).'" target="_blank">'.$row->user->position.'</a>' 
-                    : ($row->user?->designation ?? 'N/A');
+                    return $row->user?->position
+                        ? '<a href="' . route('admin.users.show', $row->user->id) . '" target="_blank">' . $row->user->position . '</a>'
+                        : ($row->user?->designation ?? 'N/A');
                 })
                 ->addColumn('assigned_to', function ($row) {
                     return $row->allotment->user->position ?? 'N/A';
@@ -52,7 +192,7 @@ class VehicleController extends Controller
     }
 
     public function create()
-    {        
+    {
         $cat = [
             'users' => User::all(),
             'vehicle_type' => Category::where('type', 'vehicle_type')->get(),
@@ -62,8 +202,14 @@ class VehicleController extends Controller
             'vehicle_registration_status' => Category::where('type', 'vehicle_registration_status')->get(),
             'vehicle_brand' => Category::where('type', 'vehicle_brand')->get(),
         ];
-        
-        return view('admin.vehicles.create', compact('cat'));
+
+        $html = view('admin.vehicles.partials.create', compact('cat'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
     }
 
     public function store(StoreVehicleRequest $request)
@@ -92,12 +238,10 @@ class VehicleController extends Controller
         }
 
         if ($vehicle->save()) {
-            return redirect()->route('admin.vehicles.index')
-                ->with('success', 'Vehicle added successfully');
+            return response()->json(['success' => 'Vehicle added successfully.']);
         }
 
-        return redirect()->route('admin.vehicles.create')
-            ->with('danger', 'There was an error adding the vehicle');
+        return response()->json(['error' => 'There was an error adding the vehicle.']);
     }
 
     public function showDetail($id)
@@ -194,7 +338,7 @@ class VehicleController extends Controller
             'registration_status' => null,
             'brand' => null
         ];
-        
+
         $filters = array_merge($filters, $request->only(array_keys($filters)));
 
         $include_subordinates = $request->boolean('include_subordinates', false);
@@ -218,7 +362,7 @@ class VehicleController extends Controller
             $query->where('vehicle_id', $filters['vehicle_id']);
         }
 
-        $query->whereHas('vehicle', function($q) use ($filters, $cat) {
+        $query->whereHas('vehicle', function ($q) use ($filters, $cat) {
             if ($filters['status']) {
                 $status = $cat['vehicle_functional_status']->firstWhere('id', $filters['status']);
                 $q->where('functional_status', $status->name ?? '');
@@ -252,11 +396,11 @@ class VehicleController extends Controller
     public function search(Request $request)
     {
         return Vehicle::query()
-        ->when($request->q, fn($q) => $q->where('registration_number', 'like', "%{$request->q}%")
-            ->orWhere('brand', 'like', "%{$request->q}%"))
-        ->limit(10)
-        ->get()
-        ->map(fn($v) => ['id' => $v->id, 'text' => "{$v->registration_number} - {$v->brand}"]);
+            ->when($request->q, fn($q) => $q->where('registration_number', 'like', "%{$request->q}%")
+                ->orWhere('brand', 'like', "%{$request->q}%"))
+            ->limit(10)
+            ->get()
+            ->map(fn($v) => ['id' => $v->id, 'text' => "{$v->brand} - {$v->model}"]);
     }
 
     public function destroy($id)

@@ -379,6 +379,7 @@ Route::middleware('auth')->group(function () {
         Route::prefix('vehicles')->as('vehicles.')->group(function () {
             Route::get('/', [VehicleController::class, 'index'])->name('index')->can('viewAny', App\Models\Vehicle::class);
             Route::get('/create', [VehicleController::class, 'create'])->name('create')->can('create', App\Models\Vehicle::class);
+            Route::get('/dashboard', [VehicleController::class, 'dashboard'])->name('dashboard')->can('view', App\Models\Vehicle::class);
             Route::get('/reports', [VehicleController::class, 'reports'])->name('reports')->can('view', 'vehicle');
             Route::get('/search', [VehicleController::class, 'search'])->name('search')->can('view', 'vehicle');
             Route::post('/', [VehicleController::class, 'store'])->name('store')->can('create', App\Models\Vehicle::class);

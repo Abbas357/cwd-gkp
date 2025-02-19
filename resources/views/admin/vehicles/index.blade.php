@@ -125,9 +125,41 @@
                 }]
                 , pageLength: 25
                 , customButton: {
-                    text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Vehicle</span>`
+                    text: `<span class="symbol-container fw-bold create-btn"><i class="bi-plus-circle"></i>&nbsp; Add Vehicle</span>`
                     , action: function(e, dt, node, config) {
-                        window.location.href = "{{ route('admin.vehicles.create') }}";
+
+                        pushStateModal({
+                            fetchUrl: "{{ route('admin.vehicles.create') }}"
+                            , btnSelector: '.create-btn'
+                            , title: 'Add Vehicle'
+                            , actionButtonName: 'Add Vehicle'
+                            , modalSize: 'lg'
+                            , includeForm: true
+                            , formAction: "{{ route('admin.vehicles.store') }}"
+                            , modalHeight: '60vh'
+                        , }).then((modal) => {
+                            const vehicleModal = $('#' + modal);
+                            const updateVehicleBtn = vehicleModal.find('button[type="submit"]');
+                            vehicleModal.find('form').on('submit', async function(e) {
+                                e.preventDefault();
+                                const form = this;
+                                const formData = new FormData(form);
+                                const url = $(this).attr('action');
+                                setButtonLoading(updateVehicleBtn, true);
+                                try {
+                                    const result = await fetchRequest(url, 'POST', formData);
+                                    if (result) {
+                                        setButtonLoading(updateVehicleBtn, false);
+                                        vehicleModal.modal('hide');
+                                        table.ajax.reload();
+                                    }
+                                } catch (error) {
+                                    setButtonLoading(updateVehicleBtn, false);
+                                    console.error('Error during form submission:', error);
+                                }
+                            });
+                        });
+
                     },
                 }
             });

@@ -17,7 +17,7 @@
 
 <div class="row vehicle-details">
     <div class="col-md-12">
-        <table class="table table-striped table-bordered">
+        <table class="table shadow table-striped table-bordered">
             <tbody>
                 <tr>
                     <th>Vehicle Type</th>
@@ -81,10 +81,18 @@
         <label for="start_date">Allotment Date</label>
         <input type="date" class="form-control" id="start_date" placeholder="Start Date" name="start_date" value="{{ old('start_date') }}" required>
     </div>
-    <div class="col-md-12 mb-3">
-        <label for="load-users">Allot to</label>
-        <select class="form-select form-select-md" data-placeholder="Choose" id="load-users" name="user_id"></select>
+    <div class="col-md-12">
+        <label class="form-label fw-bold" for="load-users">Allot to User / Office</label>
+        <select name="user_id" id="load-users" class="form-select" data-placeholder="Select User / Office">
+            <option value=""></option>
+            @foreach(App\Models\User::all() as $user)
+                <option value="{{ $user->id }}">
+                    {{ $user->position }} - {{ $user->name }}
+                </option>
+            @endforeach
+        </select>
     </div>
+
 </div>
 
 <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
@@ -94,11 +102,13 @@
         const userSelect = $('#load-users');
         userSelect.select2({
             theme: "bootstrap-5",
+            dropdownParent: $('#load-users').parent(),
             placeholder: "Select User / Office",
             allowClear: true,
             ajax: {
                 url: '{{ route("admin.users.api") }}',
                 dataType: 'json',
+                delay: 250,
                 data: function(params) {
                     return {
                         q: params.term,
@@ -107,8 +117,9 @@
                 },
                 processResults: function(data, params) {
                     params.page = params.page || 1;
+                    
                     return {
-                        results: data.items,
+                        results: data.results,
                         pagination: {
                             more: data.pagination.more
                         }
@@ -116,13 +127,14 @@
                 },
                 cache: true
             },
-            minimumInputLength: 0,
             templateResult: function(user) {
-                if (user.loading) return user.text;
-                return user.position;
+                if (user.loading) {
+                    return 'Loading...';
+                }
+                return user.text;
             },
             templateSelection: function(user) {
-                return user.position || 'Select User / Office'; // Fallback text
+                return user.text || 'Select User / Office';
             }
         });
 
