@@ -44,6 +44,43 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('offices', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->nullable(); // Chief Engineer North
+            $table->string('type')->nullable(); // Chief Engineer, Superintendent Engineer
+            $table->unsignedBigInteger('parent_id')->default(0);
+            $table->timestamps();
+        });
+
+        Schema::create('designations', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->nullable(); // Chief Engineer
+            $table->string('bps')->nullable(); // BPS 20
+            $table->enum('status', ['Active', 'Inactive'])->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('sanction_posts', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('office_id')->default(0);
+            $table->unsignedBigInteger('designation_id')->default(0);
+            $table->enum('status', ['Active', 'Inactive'])->nullable();
+            $table->integer('total');
+            $table->timestamps();
+        });
+
+        Schema::create('postings', function (Blueprint $table) {
+            $table->id();
+            $table->enum('type', ['appointment', 'transfer'])->nullable();
+            $table->unsignedBigInteger('designation_id')->default(0);
+            $table->unsignedBigInteger('office_id')->default(0);
+            $table->unsignedBigInteger('user_id')->default(0);
+            $table->timestamp('from')->nullable();
+            $table->timestamp('to')->nullable();
+            $table->enum('status', ['Active', 'Inactive'])->nullable();
+            $table->timestamps();
+        });
+
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email', 191)->primary();
             $table->string('token');
