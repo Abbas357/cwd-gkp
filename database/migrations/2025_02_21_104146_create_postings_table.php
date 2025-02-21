@@ -13,6 +13,16 @@ return new class extends Migration
     {
         Schema::create('postings', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained();
+            $table->foreignId('office_id')->constrained();
+            $table->foreignId('designation_id')->constrained();
+            $table->enum('type', ['Appointment', 'Transfer', 'Promotion', 'Retirement', 'Termination'])->default('Appointment');
+            $table->date('start_date');
+            $table->date('end_date')->nullable();
+            $table->boolean('is_current')->default(false);
+            $table->string('order_number')->nullable();
+            $table->text('remarks')->nullable();
+            $table->index(['user_id', 'is_current']);
             $table->timestamps();
         });
     }

@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('sanctioned_posts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('office_id')->constrained();
+            $table->foreignId('designation_id')->constrained();
+            $table->integer('total_positions');
+            $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();
         });
     }

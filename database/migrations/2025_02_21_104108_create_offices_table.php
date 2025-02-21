@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('offices', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('type')->nullable();
+            $table->foreignId('parent_id')->nullable()->constrained('offices')->onDelete('set null');
+            $table->enum('level', ['Provincial', 'Regional', 'Divisional', 'District', 'SubDivisional'])->nullable();
+            $table->enum('status', ['Active', 'Inactive', 'Archived'])->default('Active');
             $table->timestamps();
         });
     }

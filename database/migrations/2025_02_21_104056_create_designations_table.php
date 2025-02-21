@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('designations', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('bps')->nullable();
+            $table->enum('status', ['Active', 'Inactive', 'Archived'])->default('Active');
             $table->timestamps();
         });
     }

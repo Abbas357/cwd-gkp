@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('hierarchies', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('boss_id')->constrained('postings');
+            $table->foreignId('subordinate_id')->constrained('postings');
+            $table->date('start_date');
+            $table->date('end_date')->nullable();
+            $table->boolean('is_current')->default(false);
             $table->timestamps();
         });
     }
