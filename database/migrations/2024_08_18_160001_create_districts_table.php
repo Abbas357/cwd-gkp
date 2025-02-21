@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('districts', function (Blueprint $table) {
@@ -16,13 +13,18 @@ return new class extends Migration
             $table->string('name');
             $table->timestamps();
         });
+
+        Schema::create('district_posting', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('district_id')->constrained()->onDelete('cascade');
+            $table->foreignId('posting_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('districts');
+        Schema::dropIfExists('district_posting');
     }
 };

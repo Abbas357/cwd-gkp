@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
@@ -16,68 +13,81 @@ return new class extends Migration
             $table->string('name');
             $table->uuid('uuid')->unique();
             $table->string('username', 191)->unique();
-            $table->string('cnic')->nullable();
             $table->string('email', 191)->unique();
+            $table->string('password');
+            $table->timestamp('password_updated_at')->nullable();
+            $table->enum('status', ['Inactive', 'Active', 'Archived'])->default('Active');
+            $table->string('otp')->nullable();
+            $table->rememberToken();
+            $table->timestamps();
+        });
+
+        Schema::create('user_profiles', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('cnic')->nullable();
             $table->string('mobile_number')->nullable();
             $table->string('landline_number')->nullable();
             $table->string('whatsapp')->nullable();
             $table->string('facebook')->nullable();
             $table->string('twitter')->nullable();
-            $table->string('designation')->nullable();
-            $table->string('position')->nullable();
-            $table->string('office')->nullable();
-            $table->string('title')->nullable();
-            $table->string('bps')->nullable();
-            $table->enum('posting_type', ['appointment', 'transfer'])->nullable();
-            $table->date('posting_date')->nullable();
-            $table->enum('exit_type', ['transfer', 'retired'])->nullable();
-            $table->date('exit_date')->nullable();
-            $table->string('otp')->nullable();
-            $table->enum('status', ['Inactive', 'Active', 'Archived'])->nullable();
             $table->text('message')->nullable();
-            $table->string('featured_on')->default(null);
-            $table->string('password');
-            $table->timestamp('password_updated_at')->nullable();
             $table->unsignedBigInteger('views_count')->default(0);
-            $table->foreignId('boss_id')->nullable()->constrained('users')->onDelete('set null');
-            $table->rememberToken();
-            $table->timestamps();
-        });
-
-        Schema::create('offices', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->nullable(); // Chief Engineer North
-            $table->string('type')->nullable(); // Chief Engineer, Superintendent Engineer
-            $table->unsignedBigInteger('parent_id')->default(0);
+            $table->string('featured_on')->nullable();
             $table->timestamps();
         });
 
         Schema::create('designations', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable(); // Chief Engineer
-            $table->string('bps')->nullable(); // BPS 20
-            $table->enum('status', ['Active', 'Inactive'])->nullable();
+            $table->string('name');
+            $table->string('bps')->nullable();
+            $table->enum('status', ['Active', 'Inactive', 'Archived'])->default('Active');
             $table->timestamps();
         });
 
-        Schema::create('sanction_posts', function (Blueprint $table) {
+        Schema::create('offices', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('office_id')->default(0);
-            $table->unsignedBigInteger('designation_id')->default(0);
-            $table->enum('status', ['Active', 'Inactive'])->nullable();
-            $table->integer('total');
+            $table->string('name');
+            $table->string('type')->nullable();
+            $table->foreignId('parent_id')->nullable()->constrained('offices')->onDelete('set null');
+            $table->enum('level', ['Provincial', 'Regional', 'Divisional', 'District', 'SubDivisional'])->nullable();
+            $table->enum('status', ['Active', 'Inactive', 'Archived'])->default('Active');
+            $table->timestamps();
+        });
+
+        Schema::create('sanctioned_posts', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('office_id')->constrained();
+            $table->foreignId('designation_id')->constrained();
+            $table->integer('total_positions');
+            $table->integer('filled')->default(1);
+            $table->integer('vacant')->default(0);
+            $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();
         });
 
         Schema::create('postings', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', ['appointment', 'transfer'])->nullable();
-            $table->unsignedBigInteger('designation_id')->default(0);
-            $table->unsignedBigInteger('office_id')->default(0);
-            $table->unsignedBigInteger('user_id')->default(0);
-            $table->timestamp('from')->nullable();
-            $table->timestamp('to')->nullable();
-            $table->enum('status', ['Active', 'Inactive'])->nullable();
+            $table->foreignId('user_id')->constrained();
+            $table->foreignId('office_id')->constrained();
+            $table->foreignId('designation_id')->constrained();
+            $table->enum('type', ['Appointment', 'Transfer', 'Promotion', 'Retirement', 'Termination'])->default('Appointment');
+            $table->date('start_date');
+            $table->date('end_date')->nullable();
+            $table->boolean('is_current')->default(false);
+            $table->string('order_number')->nullable();
+            $table->text('remarks')->nullable();
+            $table->index(['user_id', 'is_current']);
+            $table->timestamps();
+        });
+
+        Schema::create('hierarchies', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('boss_id')->constrained('postings');
+            $table->foreignId('subordinate_id')->constrained('postings');
+            $table->date('start_date');
+            $table->date('end_date')->nullable();
+            $table->boolean('is_current')->default(false);
             $table->timestamps();
         });
 
@@ -103,8 +113,13 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_hierarchy');
         Schema::dropIfExists('users');
+        Schema::dropIfExists('user_profiles');
+        Schema::dropIfExists('designations');
+        Schema::dropIfExists('offices');
+        Schema::dropIfExists('sanctioned_posts');
+        Schema::dropIfExists('postings');
+        Schema::dropIfExists('reporting_relationships');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }
