@@ -60,8 +60,6 @@ return new class extends Migration
             $table->foreignId('office_id')->constrained();
             $table->foreignId('designation_id')->constrained();
             $table->integer('total_positions');
-            $table->integer('filled')->default(1);
-            $table->integer('vacant')->default(0);
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();
         });

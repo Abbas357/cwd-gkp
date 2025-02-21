@@ -222,4 +222,96 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->id === 1;
     }
+
+
+    
+
+
+    public function profile()
+    {
+        return $this->hasOne(UserProfile::class);
+    }
+
+    // All postings (historical and current)
+    public function postings()
+    {
+        return $this->hasMany(Posting::class);
+    }
+
+    // Current active posting
+    public function currentPosting()
+    {
+        return $this->hasOne(Posting::class)->where('is_current', true);
+    }
+
+    // Get current designation through current posting
+    public function currentDesignation()
+    {
+        return $this->hasOneThrough(Designation::class, Posting::class, 'user_id', 'id', 'id', 'designation_id')
+            ->where('postings.is_current', true);
+    }
+
+    // Get current office through current posting
+    public function currentOffice()
+    {
+        return $this->hasOneThrough(Office::class, Posting::class, 'user_id', 'id', 'id', 'office_id')
+            ->where('postings.is_current', true);
+    }
+
+    // Get current districts through current posting
+    public function currentDistricts()
+    {
+        return $this->hasManyThrough(
+            District::class,
+            'district_posting',
+            'posting_id',
+            'id',
+            'id',
+            'district_id'
+        )->whereHas('postings', function ($query) {
+            $query->where('user_id', $this->id)->where('is_current', true);
+        });
+    }
+
+    // public function currentDistricts()
+    // {
+    //     return $this->hasManyThrough(
+    //         District::class,
+    //         Posting::class,
+    //         'user_id', // Foreign key on postings
+    //         'id', // Local key on districts
+    //         'id', // Local key on users
+    //         'id' // District id via district_posting pivot
+    //     )->wherePivot('is_current', true);
+    // }
+
+    // Get current boss through reporting relationships
+    public function currentBoss()
+    {
+        return $this->hasOneThrough(
+            User::class,
+            Hierarchy::class,
+            'subordinate_id',
+            'id',
+            'id',
+            'boss_id'
+        )->whereHas('postings', function ($query) {
+            $query->where('id', 'boss_id')->where('is_current', true);
+        });
+    }
+
+    // Get current subordinates through reporting relationships
+    public function currentSubordinates()
+    {
+        return $this->hasManyThrough(
+            User::class,
+            Hierarchy::class,
+            'boss_id',
+            'id',
+            'id',
+            'subordinate_id'
+        )->whereHas('postings', function ($query) {
+            $query->where('id', 'subordinate_id')->where('is_current', true);
+        });
+    }
 }
