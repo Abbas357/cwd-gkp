@@ -153,8 +153,8 @@
                         </a>
                         <ul class="p-2 menu-items">
                             <li><a href="{{ route('admin.vehicles.dashboard') }}"><i class="bi-person-vcard fs-6"></i>&nbsp; Home</a></li>
-                            <li><a href="{{ route('admin.vehicles.reports') }}"><i class="bi-person-vcard fs-6"></i>&nbsp; Reports</a></li>
                             <li><a href="{{ route('admin.vehicles.index') }}"><i class="bi-credit-card fs-6"></i>&nbsp; Vehicles</a></li>
+                            <li><a href="{{ route('admin.vehicles.reports') }}"><i class="bi-person-vcard fs-6"></i>&nbsp; Reports</a></li>
                         </ul>
                     </li>
                     @endcan

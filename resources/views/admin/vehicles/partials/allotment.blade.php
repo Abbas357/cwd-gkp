@@ -4,7 +4,7 @@
 
 <style>
     .table td, .table th {
-        padding: .5rem !important;
+        padding: .4rem !important;
         vertical-align: middle;
     }
 
@@ -17,7 +17,7 @@
 
 <div class="row vehicle-details">
     <div class="col-md-12">
-        <table class="table shadow table-striped table-bordered">
+        <table class="table table-striped table-bordered" style="box-shadow: 0 0 15px #00000033">
             <tbody>
                 <tr>
                     <th>Vehicle Type</th>
@@ -81,8 +81,16 @@
         <label for="start_date">Allotment Date</label>
         <input type="date" class="form-control" id="start_date" placeholder="Start Date" name="start_date" value="{{ old('start_date') }}" required>
     </div>
+    <div class="col-md-6 mb-3">
+        <label for="end_date">Return Date <span class="badge bg-secondary mb-1">Optional</span></label>
+        <input type="date" class="form-control" id="end_date" placeholder="End Date" name="end_date" value="{{ old('end_date') }}">
+    </div>
+    <div class="col-md-6 mb-3">
+        <label for="allotment_order">Allotment Order <span class="badge bg-secondary mb-1">Optional</span></label>
+        <input type="file" class="form-control" id="allotment_order" placeholder="Allotment Order" name="allotment_order">
+    </div>
     <div class="col-md-12">
-        <label class="form-label fw-bold" for="load-users">Allot to User / Office</label>
+        <label class="form-label" for="load-users">Allot to User / Office</label>
         <select name="user_id" id="load-users" class="form-select" data-placeholder="Select User / Office">
             <option value=""></option>
             @foreach(App\Models\User::all() as $user)
@@ -139,6 +147,11 @@
         });
 
         $("#start_date").flatpickr({
+            enableTime: true,
+            dateFormat: "Y-m-d H:i:S",
+        });
+
+        $("#end_date").flatpickr({
             enableTime: true,
             dateFormat: "Y-m-d H:i:S",
         });

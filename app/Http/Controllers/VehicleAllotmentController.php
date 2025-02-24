@@ -42,8 +42,14 @@ class VehicleAllotmentController extends Controller
         $allotment = new VehicleAllotment();
         $allotment->type = $request->type;
         $allotment->start_date = $request->start_date;
+        $allotment->end_date = $request->end_date ?: null;
         $allotment->vehicle_id = $request->vehicle_id;
         $allotment->user_id = $request->user_id;
+
+        if ($request->hasFile('allotment_order')) {
+            $allotment->addMedia($request->file('allotment_order'))
+                ->toMediaCollection('vehicle_allotment_orders');
+        }
         
         if ($allotment->save()) {
             return response()->json(['success' => 'Vehicle has been alloted successfully.']);

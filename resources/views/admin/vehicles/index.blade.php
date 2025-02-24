@@ -136,7 +136,8 @@
                             , modalSize: 'lg'
                             , includeForm: true
                             , formAction: "{{ route('admin.vehicles.store') }}"
-                            , modalHeight: '60vh'
+                            , modalHeight: '65vh'
+                            , hash: false
                         , }).then((modal) => {
                             const vehicleModal = $('#' + modal);
                             const updateVehicleBtn = vehicleModal.find('button[type="submit"]');
@@ -205,10 +206,10 @@
                 , btnSelector: '.allot-btn'
                 , title: 'Vehicle Allotment'
                 , actionButtonName: 'Allot Vehicle'
-                , modalSize: 'md'
+                , modalSize: 'lg'
                 , includeForm: true
                 , formAction: "{{ route('admin.vehicles.allotment.store', ':id') }}"
-                , modalHeight: '55vh'
+                , modalHeight: '65vh'
             , }).then((modal) => {
                 const vehicleModal = $('#' + modal);
                 const updateVehicleBtn = vehicleModal.find('button[type="submit"]');

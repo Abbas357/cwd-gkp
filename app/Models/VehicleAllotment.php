@@ -4,15 +4,19 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use App\Observers\VehicleAllotmentObserver;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
 #[ObservedBy([VehicleAllotmentObserver::class])]
-class VehicleAllotment extends Model
+class VehicleAllotment extends Model implements HasMedia
 {
-    use HasFactory;
+    use HasFactory, InteractsWithMedia, LogsActivity;
 
     protected function casts(): array
     {
@@ -20,6 +24,24 @@ class VehicleAllotment extends Model
             'start_date' => 'datetime',
             'end_date' => 'datetime',
         ];
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll()
+            ->logExcept(['id', 'updated_at', 'created_at'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->useLogName('Vehicle Allotments')
+            ->setDescriptionForEvent(function (string $eventName) {
+                return "Vehicle Allotment {$eventName}";
+            });
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('vehicle_orders');
     }
 
     public function getDurationAttribute()

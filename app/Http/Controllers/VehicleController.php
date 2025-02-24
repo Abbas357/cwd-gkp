@@ -229,12 +229,24 @@ private function formatPercentage($value, $decimals = 2)
         $vehicle->user_id = $request->user()->id;
         $vehicle->remarks = $request->remarks;
 
-        $images = $request->file('images');
+        if ($request->hasFile('front_view')) {
+            $vehicle->addMedia($request->file('front_view'))
+                ->toMediaCollection('vehicle_front_pictures');
+        }
 
-        if ($images) {
-            foreach ($images as $image) {
-                $vehicle->addMedia($image)->toMediaCollection('vehicle_pictures');
-            }
+        if ($request->hasFile('side_view')) {
+            $vehicle->addMedia($request->file('side_view'))
+                ->toMediaCollection('vehicle_side_pictures');
+        }
+
+        if ($request->hasFile('rear_view')) {
+            $vehicle->addMedia($request->file('rear_view'))
+                ->toMediaCollection('vehicle_rear_pictures');
+        }
+        
+        if ($request->hasFile('interior_view')) {
+            $vehicle->addMedia($request->file('interior_view'))
+                ->toMediaCollection('vehicle_interior_pictures');
         }
 
         if ($vehicle->save()) {

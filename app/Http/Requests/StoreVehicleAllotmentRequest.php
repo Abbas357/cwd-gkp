@@ -15,6 +15,8 @@ class StoreVehicleAllotmentRequest extends FormRequest
     {
         return [
             'type' => 'required|string',
+            'start_date' => 'required|date',
+            'end_date' => 'nullable|date',
         ];
     }
 }

@@ -8,18 +8,20 @@ class VehicleAllotmentObserver
 {
     public function creating(VehicleAllotment $vehicleAllotment)
     {
-        if ($vehicleAllotment->type === 'Pool') {
+        if ($vehicleAllotment->type === 'Pool' && !$vehicleAllotment->start_date) {
             $vehicleAllotment->start_date = now();
         }
         
-        $latestAllotment = VehicleAllotment::where('vehicle_id', $vehicleAllotment->vehicle_id)
-            ->whereNull('end_date')
-            ->latest('created_at')
+        $vehicleAllotment->is_current = 1;
+        
+        $currentAllotment = VehicleAllotment::where('vehicle_id', $vehicleAllotment->vehicle_id)
+            ->where('is_current', 1)
             ->first();
 
-        if ($latestAllotment) {
-            $latestAllotment->end_date = now();
-            $latestAllotment->save();
+        if ($currentAllotment) {
+            $currentAllotment->end_date = now();
+            $currentAllotment->is_current = 0;
+            $currentAllotment->save();
         }
     }
 }

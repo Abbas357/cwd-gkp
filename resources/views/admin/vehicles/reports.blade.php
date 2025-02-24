@@ -203,8 +203,9 @@
                                 <th class="bg-light">Status</th>
                                 <th class="bg-light">Allotment Date</th>
                                 @if(request('show_history'))
-                                    <th class="bg-light">End Date</th>
+                                <th class="bg-light">End Date</th>
                                 @endif
+                                <th class="bg-light no-print">Allotment Order</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -241,6 +242,18 @@
                                         <span class="text-muted">
                                             {{ $allotment->end_date ? $allotment->end_date->format('j F, Y') : 'Current' }}
                                         </span>
+                                    </td>
+                                    @endif
+                                    @if($allotment->hasMedia('vehicle_allotment_orders'))
+                                    <td class="no-print">
+                                        <a href="{{ $allotment->getFirstMediaUrl('vehicle_allotment_orders') }}" target="_blank">
+                                            <i class="bi-file-earmark-text"></i> View Order
+                                        </a>
+                                    </td>
+                                    @else
+                                    <td class="no-print">
+                                        <span class="text-muted
+                                        ">Not Available</span>
                                     </td>
                                     @endif
                                 </tr>

@@ -33,6 +33,7 @@ return new class extends Migration
             $table->timestamp('end_date')->nullable();
             $table->unsignedBigInteger('vehicle_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->boolean('is_current')->default(false);
             $table->timestamps();
         });
     }
