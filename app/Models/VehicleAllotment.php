@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 class VehicleAllotment extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, LogsActivity;
+    
+    protected $guarded = [];
 
     protected function casts(): array
     {

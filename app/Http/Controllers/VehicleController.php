@@ -13,144 +13,129 @@ use App\Http\Requests\StoreVehicleRequest;
 class VehicleController extends Controller
 {
     public function dashboard()
-{
-    // Get total vehicles count
-    $totalVehicles = Vehicle::count();
-    
-    // Get vehicles by functional status
-    $functionalVehicles = Vehicle::where('functional_status', 'Functional')->count();
-    $condemnedVehicles = Vehicle::where('functional_status', 'Condemned')->count();
-    
-    // Get allotment statistics
-    $allotedVehicles = VehicleAllotment::whereNull('end_date')->count();
-    
-    // Get vehicles by allotment type
-    $permanentAlloted = VehicleAllotment::whereNull('end_date')
-        ->where('type', 'Permanent')
-        ->count();
-    
-    $temporaryAlloted = VehicleAllotment::whereNull('end_date')
-        ->where('type', 'Temparory')
-        ->count();
-    
-    $inPool = VehicleAllotment::whereNull('end_date')
-        ->where('type', 'Pool')
-        ->count();
-    
-    // Get monthly allotment data for chart
-    $monthlyAllotments = VehicleAllotment::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as count')
-        ->groupBy('month')
-        ->orderBy('month')
-        ->limit(6)
-        ->get();
+    {
+        $totalVehicles = Vehicle::count();
 
-    // Get distribution data for various attributes
-    $distributions = [
-        'type' => $this->getDistribution('type'),
-        'color' => $this->getDistribution('color'),
-        'fuel_type' => $this->getDistribution('fuel_type'),
-        'registration_status' => $this->getDistribution('registration_status'),
-        'brand' => $this->getDistribution('brand'),
-        'model_year' => $this->getDistribution('model_year')
-    ];
+        $functionalVehicles = Vehicle::where('functional_status', 'Functional')->count();
+        $condemnedVehicles = Vehicle::where('functional_status', 'Condemned')->count();
 
-    // Get model distribution by brand
-    $modelsByBrand = Vehicle::selectRaw('brand, model, COUNT(*) as count')
-        ->whereNotNull('brand')
-        ->whereNotNull('model')
-        ->groupBy('brand', 'model')
-        ->get()
-        ->groupBy('brand');
+        $allotedVehicles = VehicleAllotment::whereNull('end_date')->count();
 
-    // Get recent allotments for activity feed
-    $recentAllotments = VehicleAllotment::with(['vehicle', 'user'])
-        ->latest()
-        ->take(5)
-        ->get();
+        $permanentAlloted = VehicleAllotment::whereNull('end_date')
+            ->where('type', 'Permanent')
+            ->count();
 
-    // Get vehicles requiring attention (e.g., maintenance due)
-    $vehiclesNeedingAttention = Vehicle::where('functional_status', 'Needs Maintenance')
-        ->orWhere('functional_status', 'Under Repair')
-        ->with('allotment.user')
-        ->take(5)
-        ->get();
+        $temporaryAlloted = VehicleAllotment::whereNull('end_date')
+            ->where('type', 'Temparory')
+            ->count();
 
-    // Get statistics by fuel type
-    $fuelTypeStats = Vehicle::selectRaw('fuel_type, COUNT(*) as count')
-        ->whereNotNull('fuel_type')
-        ->groupBy('fuel_type')
-        ->get();
+        $inPool = VehicleAllotment::whereNull('end_date')
+            ->where('type', 'Pool')
+            ->count();
 
-    // Calculate percentage distributions
-    $functionalPercentage = $totalVehicles > 0 ? ($functionalVehicles / $totalVehicles) * 100 : 0;
-    $allotedPercentage = $totalVehicles > 0 ? ($allotedVehicles / $totalVehicles) * 100 : 0;
-    $poolPercentage = $totalVehicles > 0 ? ($inPool / $totalVehicles) * 100 : 0;
+        $monthlyAllotments = VehicleAllotment::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as count')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->limit(6)
+            ->get();
 
-    // Get year-wise registration data
-    $yearWiseRegistrations = Vehicle::selectRaw('YEAR(created_at) as year, COUNT(*) as count')
-        ->groupBy('year')
-        ->orderBy('year', 'desc')
-        ->get();
+        $distributions = [
+            'type' => $this->getDistribution('type'),
+            'color' => $this->getDistribution('color'),
+            'fuel_type' => $this->getDistribution('fuel_type'),
+            'registration_status' => $this->getDistribution('registration_status'),
+            'brand' => $this->getDistribution('brand'),
+            'model_year' => $this->getDistribution('model_year')
+        ];
 
-    // Get brand-wise functional status
-    $brandWiseStatus = Vehicle::selectRaw('brand, functional_status, COUNT(*) as count')
-        ->whereNotNull('brand')
-        ->whereNotNull('functional_status')
-        ->groupBy('brand', 'functional_status')
-        ->get()
-        ->groupBy('brand');
+        $modelsByBrand = Vehicle::selectRaw('brand, model, COUNT(*) as count')
+            ->whereNotNull('brand')
+            ->whereNotNull('model')
+            ->groupBy('brand', 'model')
+            ->get()
+            ->groupBy('brand');
 
-    // Get allocation trends
-    $allocationTrends = VehicleAllotment::selectRaw('
+        $recentAllotments = VehicleAllotment::with(['vehicle', 'user'])
+            ->latest()
+            ->take(5)
+            ->get();
+
+        $vehiclesNeedingAttention = Vehicle::where('functional_status', 'Needs Maintenance')
+            ->orWhere('functional_status', 'Under Repair')
+            ->with('allotment.user')
+            ->take(5)
+            ->get();
+
+        $fuelTypeStats = Vehicle::selectRaw('fuel_type, COUNT(*) as count')
+            ->whereNotNull('fuel_type')
+            ->groupBy('fuel_type')
+            ->get();
+
+        $functionalPercentage = $totalVehicles > 0 ? ($functionalVehicles / $totalVehicles) * 100 : 0;
+        $allotedPercentage = $totalVehicles > 0 ? ($allotedVehicles / $totalVehicles) * 100 : 0;
+        $poolPercentage = $totalVehicles > 0 ? ($inPool / $totalVehicles) * 100 : 0;
+
+        $yearWiseRegistrations = Vehicle::selectRaw('YEAR(created_at) as year, COUNT(*) as count')
+            ->groupBy('year')
+            ->orderBy('year', 'desc')
+            ->get();
+
+        $brandWiseStatus = Vehicle::selectRaw('brand, functional_status, COUNT(*) as count')
+            ->whereNotNull('brand')
+            ->whereNotNull('functional_status')
+            ->groupBy('brand', 'functional_status')
+            ->get()
+            ->groupBy('brand');
+
+        $allocationTrends = VehicleAllotment::selectRaw('
             YEAR(created_at) as year, 
             MONTH(created_at) as month,
             type,
             COUNT(*) as count
         ')
-        ->whereYear('created_at', '>=', now()->subYear())
-        ->groupBy('year', 'month', 'type')
-        ->orderBy('year')
-        ->orderBy('month')
-        ->get()
-        ->groupBy('type');
+            ->whereYear('created_at', '>=', now()->subYear())
+            ->groupBy('year', 'month', 'type')
+            ->orderBy('year')
+            ->orderBy('month')
+            ->get()
+            ->groupBy('type');
 
-    // Compact all variables for the view
-    return view('admin.vehicles.dashboard', compact(
-        'totalVehicles',
-        'functionalVehicles',
-        'condemnedVehicles',
-        'allotedVehicles',
-        'permanentAlloted',
-        'temporaryAlloted',
-        'inPool',
-        'monthlyAllotments',
-        'distributions',
-        'modelsByBrand',
-        'recentAllotments',
-        'vehiclesNeedingAttention',
-        'fuelTypeStats',
-        'functionalPercentage',
-        'allotedPercentage',
-        'poolPercentage',
-        'yearWiseRegistrations',
-        'brandWiseStatus',
-        'allocationTrends'
-    ));
-}
+        return view('admin.vehicles.dashboard', compact(
+            'totalVehicles',
+            'functionalVehicles',
+            'condemnedVehicles',
+            'allotedVehicles',
+            'permanentAlloted',
+            'temporaryAlloted',
+            'inPool',
+            'monthlyAllotments',
+            'distributions',
+            'modelsByBrand',
+            'recentAllotments',
+            'vehiclesNeedingAttention',
+            'fuelTypeStats',
+            'functionalPercentage',
+            'allotedPercentage',
+            'poolPercentage',
+            'yearWiseRegistrations',
+            'brandWiseStatus',
+            'allocationTrends'
+        ));
+    }
 
-private function getDistribution($field)
-{
-    return Vehicle::selectRaw("$field, COUNT(*) as count")
-        ->whereNotNull($field)
-        ->groupBy($field)
-        ->orderBy('count', 'desc')
-        ->get();
-}
+    private function getDistribution($field)
+    {
+        return Vehicle::selectRaw("$field, COUNT(*) as count")
+            ->whereNotNull($field)
+            ->groupBy($field)
+            ->orderBy('count', 'desc')
+            ->get();
+    }
 
-private function formatPercentage($value, $decimals = 2)
-{
-    return round($value, $decimals);
-}
+    private function formatPercentage($value, $decimals = 2)
+    {
+        return round($value, $decimals);
+    }
 
     public function index(Request $request)
     {
@@ -168,7 +153,7 @@ private function formatPercentage($value, $decimals = 2)
                         : ($row->user?->designation ?? 'N/A');
                 })
                 ->addColumn('assigned_to', function ($row) {
-                    return $row->allotment->user->position ?? 'N/A';
+                    return $row->allotment->user->position ?? 'Pool';
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');
@@ -243,7 +228,7 @@ private function formatPercentage($value, $decimals = 2)
             $vehicle->addMedia($request->file('rear_view'))
                 ->toMediaCollection('vehicle_rear_pictures');
         }
-        
+
         if ($request->hasFile('interior_view')) {
             $vehicle->addMedia($request->file('interior_view'))
                 ->toMediaCollection('vehicle_interior_pictures');
