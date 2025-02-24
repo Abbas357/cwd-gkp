@@ -129,13 +129,19 @@
             </div>
             
             <div class="no-print d-flex align-items-center overflow-auto" style="flex-basis: 50%; max-width: 50%; white-space: nowrap;">
-                @forelse($vehicle->getMedia('vehicle_pictures') as $index => $image)
-                    <img src="{{ $image->getUrl() }}" class="g-2 mx-1 slide {{ $index === 0 ? 'active' : '' }}" alt="Vehicle Image {{ $index + 1 }}" style="height:150px; display: inline-block;">
-                @empty
-                    <div class="d-flex align-items-center justify-content-center w-100">
-                        <p class="text-muted">No images available</p>
-                    </div>
-                @endforelse
+                @foreach([
+                    ['collection' => 'vehicle_front_pictures', 'label' => 'Front View'],
+                    ['collection' => 'vehicle_side_pictures', 'label' => 'Side View'],
+                    ['collection' => 'vehicle_rear_pictures', 'label' => 'Rear View'],
+                    ['collection' => 'vehicle_interior_pictures', 'label' => 'Interior View'],
+                ] as $view)
+                    @if($vehicle->hasMedia($view['collection']))
+                        <div class="slide" style="height:150px; display: inline-block; position: relative; margin-right:10px;">
+                            <img src="{{ $vehicle->getFirstMediaUrl($view['collection']) }}" alt="{{ $view['label'] }}" style="height:100%;">
+                            <span style="position: absolute; top:10px; left:10px; background-color: rgba(0,0,0,0.5); color: white; padding:5px;">{{ $view['label'] }}</span>
+                        </div>
+                    @endif
+                @endforeach
             </div>
         </div>
 

@@ -6,21 +6,23 @@
         <li class="breadcrumb-item active" aria-current="page">Activity Log</li>
     </x-slot>
 
-    <table id="log-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
-        <thead>
-            <tr>
-                <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Table</th>
-                <th scope="col" class="p-3">Description</th>
-                <th scope="col" class="p-3">Effected Record</th>
-                <th scope="col" class="p-3">Change by</th>
-                <th scope="col" class="p-3">Changed Properties</th>
-                <th scope="col" class="p-3">Date</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table id="log-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+            <thead>
+                <tr>
+                    <th scope="col" class="p-3">ID</th>
+                    <th scope="col" class="p-3">Table</th>
+                    <th scope="col" class="p-3">Description</th>
+                    <th scope="col" class="p-3">Effected Record</th>
+                    <th scope="col" class="p-3">Change by</th>
+                    <th scope="col" class="p-3">Changed Properties</th>
+                    <th scope="col" class="p-3">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
     <!--end row-->
     @push('script')
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>

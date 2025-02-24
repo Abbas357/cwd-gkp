@@ -67,17 +67,18 @@ class SeniorityController extends Controller
         for ($i = 1; $i <= 22; $i++) {
             $bps[] = sprintf("BPS-%02d", $i);
         }
-        $stats = [
-            'totalCount' => Seniority::withoutGlobalScope('published')->count(),
-            'publishedCount' => Seniority::withoutGlobalScope('published')->where('status', 'published')->whereNotNull('published_at')->count(),
-            'archivedCount' => Seniority::withoutGlobalScope('published')->where('status', 'archived')->count(),
-            'unPublishedCount' => Seniority::withoutGlobalScope('published')->where('status', 'draft')->count(),
-        ];
         $cat = [
             'designations' => Category::where('type', 'designation')->get(),
             'bps' => $bps,
         ];
-        return view('admin.seniority.create', compact('cat', 'stats'));
+        
+        $html = view('admin.seniority.partials.create', compact('cat'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
     }
 
     public function store(StoreSeniorityRequest $request)
@@ -96,10 +97,10 @@ class SeniorityController extends Controller
         }
 
         if ($request->user()->seniority()->save($seniority)) {
-            return redirect()->route('admin.seniority.create')->with('success', 'Seniority Added successfully');
+            return response()->json(['success' => 'Seniority Added successfully']);
         }
 
-        return redirect()->route('admin.seniority.create')->with('error', 'There is an error adding the Seniority');
+        return redirect()->json(['error' => 'There is an error adding the Seniority']);
     }
 
     public function show(Seniority $seniority)

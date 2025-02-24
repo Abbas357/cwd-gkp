@@ -60,7 +60,13 @@ class StoryController extends Controller
 
     public function create()
     {
-        return view('admin.stories.create');
+        $html = view('admin.stories.partials.create')->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
     }
 
     public function store(StoreStoryRequest $request)
@@ -73,10 +79,10 @@ class StoryController extends Controller
                 ->toMediaCollection('stories');
         }
         if ($request->user()->stories()->save($story)) {
-            return redirect()->route('admin.stories.create')->with('success', 'Story added successfully');
+            return response()->json(['success' => 'Story added successfully']);
         }
 
-        return redirect()->route('admin.stories.create')->with('danger', 'Error submitting the story');
+        return response()->json(['error' => 'Error submitting the story']);
     }
 
     public function publishStory(Request $request, Story $story)

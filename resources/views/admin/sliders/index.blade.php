@@ -20,23 +20,25 @@
         </ul>
     </div>
 
-    <table id="sliders-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
-        <thead>
-            <tr>
-                <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Title</th>
-                <th scope="col" class="p-3">Short Description</th>
-                <th scope="col" class="p-3">Image</th>
-                <th scope="col" class="p-3">User</th>
-                <th scope="col" class="p-3">Status</th>
-                <th scope="col" class="p-3">Created At</th>
-                <th scope="col" class="p-3">Updated At</th>
-                <th scope="col" class="p-3">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table id="sliders-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+            <thead>
+                <tr>
+                    <th scope="col" class="p-3">ID</th>
+                    <th scope="col" class="p-3">Title</th>
+                    <th scope="col" class="p-3">Short Description</th>
+                    <th scope="col" class="p-3">Image</th>
+                    <th scope="col" class="p-3">User</th>
+                    <th scope="col" class="p-3">Status</th>
+                    <th scope="col" class="p-3">Created At</th>
+                    <th scope="col" class="p-3">Updated At</th>
+                    <th scope="col" class="p-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
     <!--end row-->
     @push('script')
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
@@ -94,9 +96,40 @@
                     , visible: false
                 }]
                 , customButton: {
-                    text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Sliders</span>`
+                    text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Sliders</span>`
                     , action: function(e, dt, node, config) {
-                        window.location.href = "{{ route('admin.sliders.create') }}";
+                        pushStateModal({
+                            fetchUrl: "{{ route('admin.sliders.create') }}"
+                            , btnSelector: '.create-btn'
+                            , title: 'Add Slider'
+                            , actionButtonName: 'Add Slider'
+                            , modalSize: 'xl'
+                            , includeForm: true
+                            , formAction: "{{ route('admin.sliders.store') }}"
+                            , modalHeight: '70vh'
+                            , hash: false
+                        , }).then((modal) => {
+                            const sliderModal = $('#' + modal);
+                            const updateSliderBtn = sliderModal.find('button[type="submit"]');
+                            sliderModal.find('form').on('submit', async function(e) {
+                                e.preventDefault();
+                                const form = this;
+                                const formData = new FormData(form);
+                                const url = $(this).attr('action');
+                                setButtonLoading(updateSliderBtn, true);
+                                try {
+                                    const result = await fetchRequest(url, 'POST', formData);
+                                    if (result) {
+                                        setButtonLoading(updateSliderBtn, false);
+                                        sliderModal.modal('hide');
+                                        table.ajax.reload();
+                                    }
+                                } catch (error) {
+                                    setButtonLoading(updateSliderBtn, false);
+                                    console.error('Error during form submission:', error);
+                                }
+                            });
+                        });
                     },
                 }
             });

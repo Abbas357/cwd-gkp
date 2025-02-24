@@ -20,26 +20,28 @@
         </ul>
     </div>
 
-    <table id="events-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
-        <thead>
-            <tr>
-                <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Title</th>
-                <th scope="col" class="p-3">Location</th>
-                <th scope="col" class="p-3">Start Date & Time</th>
-                <th scope="col" class="p-3">End Date & Time</th>
-                <th scope="col" class="p-3">Uploaded By</th>
-                <th scope="col" class="p-3">Event Type</th>
-                <th scope="col" class="p-3">Chairperson</th>
-                <th scope="col" class="p-3">Status</th>
-                <th scope="col" class="p-3">Created At</th>
-                <th scope="col" class="p-3">Updated At</th>
-                <th scope="col" class="p-3">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table id="events-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+            <thead>
+                <tr>
+                    <th scope="col" class="p-3">ID</th>
+                    <th scope="col" class="p-3">Title</th>
+                    <th scope="col" class="p-3">Location</th>
+                    <th scope="col" class="p-3">Start Date & Time</th>
+                    <th scope="col" class="p-3">End Date & Time</th>
+                    <th scope="col" class="p-3">Uploaded By</th>
+                    <th scope="col" class="p-3">Event Type</th>
+                    <th scope="col" class="p-3">Chairperson</th>
+                    <th scope="col" class="p-3">Status</th>
+                    <th scope="col" class="p-3">Created At</th>
+                    <th scope="col" class="p-3">Updated At</th>
+                    <th scope="col" class="p-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
     <!--end row-->
     @push('script')
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
@@ -109,9 +111,40 @@
                 }]
                 , pageLength: 25
                 , customButton: {
-                    text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Event</span>`
+                    text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Event</span>`
                     , action: function(e, dt, node, config) {
-                        window.location.href = "{{ route('admin.events.create') }}";
+                        pushStateModal({
+                            fetchUrl: "{{ route('admin.events.create') }}"
+                            , btnSelector: '.create-btn'
+                            , title: 'Add Event'
+                            , actionButtonName: 'Add Event'
+                            , modalSize: 'xl'
+                            , includeForm: true
+                            , formAction: "{{ route('admin.events.store') }}"
+                            , modalHeight: '75vh'
+                            , hash: false
+                        , }).then((modal) => {
+                            const eventModal = $('#' + modal);
+                            const updateEventBtn = eventModal.find('button[type="submit"]');
+                            eventModal.find('form').on('submit', async function(e) {
+                                e.preventDefault();
+                                const form = this;
+                                const formData = new FormData(form);
+                                const url = $(this).attr('action');
+                                setButtonLoading(updateEventBtn, true);
+                                try {
+                                    const result = await fetchRequest(url, 'POST', formData);
+                                    if (result) {
+                                        setButtonLoading(updateEventBtn, false);
+                                        eventModal.modal('hide');
+                                        table.ajax.reload();
+                                    }
+                                } catch (error) {
+                                    setButtonLoading(updateEventBtn, false);
+                                    console.error('Error during form submission:', error);
+                                }
+                            });
+                        });
                     },
                 }
             });

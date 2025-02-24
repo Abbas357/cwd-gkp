@@ -60,14 +60,14 @@ class SliderController extends Controller
     }
 
     public function create()
-    {
-        $stats = [
-            'totalCount' => Slider::withoutGlobalScope('published')->count(),
-            'publishedCount' => Slider::withoutGlobalScope('published')->where('status', 'published')->whereNotNull('published_at')->count(),
-            'archivedCount' => Slider::withoutGlobalScope('published')->where('status', 'archived')->count(),
-            'unPublishedCount' => Slider::withoutGlobalScope('published')->where('status', 'draft')->count(),
-        ];
-        return view('admin.sliders.create', compact('stats'));
+    { 
+        $html = view('admin.sliders.partials.create')->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
     }
 
     public function store(StoreSliderRequest $request)
@@ -87,9 +87,9 @@ class SliderController extends Controller
         Cache::forget('sliders');
 
         if ($request->user()->sliders()->save($slider)) {
-            return redirect()->route('admin.sliders.create')->with('success', 'Slider Added successfully');
+            return response()->json(['success' => 'Slider Added successfully']);
         }
-        return redirect()->route('admin.sliders.create')->with('danger', 'There is an error adding the slider');
+        return response()->json(['danger' => 'There is an error adding the slider']);
     }
 
     public function show(Slider $slider)

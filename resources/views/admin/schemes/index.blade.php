@@ -26,32 +26,34 @@
         </div>
     </div>
 
-    <table id="schemes-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
-        <thead>
-            <tr>
-                <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">ADP Number</th>
-                <th scope="col" class="p-3">Scheme Code</th>
-                <th scope="col" class="p-3">Year</th>
-                <th scope="col" class="p-3">Scheme Name</th>
-                <th scope="col" class="p-3">Sector Name</th>
-                <th scope="col" class="p-3">Sub Sector Name</th>
-                <th scope="col" class="p-3">Local Cost</th>
-                <th scope="col" class="p-3">Foreign Cost</th>
-                <th scope="col" class="p-3">Previous Expenditure</th>
-                <th scope="col" class="p-3">Capital Allocation</th>
-                <th scope="col" class="p-3">Revenue Allocation</th>
-                <th scope="col" class="p-3">Total Allocation</th>
-                <th scope="col" class="p-3">F Allocation</th>
-                <th scope="col" class="p-3">TF</th>
-                <th scope="col" class="p-3">Revised Allocation</th>
-                <th scope="col" class="p-3">Prog Release</th>
-                <th scope="col" class="p-3">Progressive Expenditure</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table id="schemes-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+            <thead>
+                <tr>
+                    <th scope="col" class="p-3">ID</th>
+                    <th scope="col" class="p-3">ADP Number</th>
+                    <th scope="col" class="p-3">Scheme Code</th>
+                    <th scope="col" class="p-3">Year</th>
+                    <th scope="col" class="p-3">Scheme Name</th>
+                    <th scope="col" class="p-3">Sector Name</th>
+                    <th scope="col" class="p-3">Sub Sector Name</th>
+                    <th scope="col" class="p-3">Local Cost</th>
+                    <th scope="col" class="p-3">Foreign Cost</th>
+                    <th scope="col" class="p-3">Previous Expenditure</th>
+                    <th scope="col" class="p-3">Capital Allocation</th>
+                    <th scope="col" class="p-3">Revenue Allocation</th>
+                    <th scope="col" class="p-3">Total Allocation</th>
+                    <th scope="col" class="p-3">F Allocation</th>
+                    <th scope="col" class="p-3">TF</th>
+                    <th scope="col" class="p-3">Revised Allocation</th>
+                    <th scope="col" class="p-3">Prog Release</th>
+                    <th scope="col" class="p-3">Progressive Expenditure</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
     <!--end row-->
     @push('script')
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
@@ -190,7 +192,7 @@
                 }]
                 , pageLength: 25
                 , customButton: {
-                    text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Sync Schemes</span>`
+                    text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Sync Schemes</span>`
                     , action: function(e, dt, node, config) {
                         window.location.href = "{{ route('admin.schemes.sync') }}";
                     }

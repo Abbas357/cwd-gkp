@@ -69,16 +69,13 @@ class TenderController extends Controller
 
     public function create()
     {
-        $stats = [
-            'totalCount' => Tender::withoutGlobalScope('published')->count(),
-            'publishedCount' => Tender::withoutGlobalScope('published')->where('status', 'published')->whereNotNull('published_at')->count(),
-            'archivedCount' => Tender::withoutGlobalScope('published')->where('status', 'archived')->count(),
-            'unPublishedCount' => Tender::withoutGlobalScope('published')->where('status', 'draft')->count(),
-        ];
-        $cat = [
-            'tender_domain' => Category::where('type', 'tender_domain')->get(),
-        ];
-        return view('admin.tenders.create', compact('stats', 'cat'));
+        $html = view('admin.tenders.partials.create')->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
     }
 
     public function store(StoreTenderRequest $request)
@@ -87,12 +84,9 @@ class TenderController extends Controller
         $tender->title = $request->title;
         $tender->slug = Str::uuid();
         $tender->description = $request->description;
-        $tender->procurement_entity = $request->procurement_entity;
         $tender->date_of_advertisement = $request->date_of_advertisement;
         $tender->closing_date = $request->closing_date;
-        $tender->domain = $request->tender_domain;
         $tender->user_id = $request->user ?? $request->user()->id;
-        $tender->status = 'draft';
         
         $tender_documents = $request->file('tender_documents');
         $tender_eoi_documents = $request->file('tender_eoi_documents');
@@ -115,11 +109,12 @@ class TenderController extends Controller
                 $tender->addMedia($document)->toMediaCollection('bidding_documents');
             }
         }
-
+        
         if ($tender->save()) {
-            return redirect()->route('admin.tenders.create')->with('success', 'Tender Added successfully');
+            return response()->json(['success' => 'Tender added successfully.']);
         }
-        return redirect()->route('admin.tenders.create')->with('danger', 'There is an error adding the tender');
+
+        return response()->json(['error' => 'There was an error adding the tender.']);
     }
 
     public function show(Tender $tender)

@@ -6,21 +6,23 @@
         <li class="breadcrumb-item active" aria-current="page">Projects</li>
     </x-slot>
 
-    <table id="projects-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
-        <thead>
-            <tr>
-                <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Name</th>
-                <th scope="col" class="p-3">Funding Source</th>
-                <th scope="col" class="p-3">Location</th>
-                <th scope="col" class="p-3">Start Date</th>
-                <th scope="col" class="p-3">End Date</th>
-                <th scope="col" class="p-3">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table id="projects-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+            <thead>
+                <tr>
+                    <th scope="col" class="p-3">ID</th>
+                    <th scope="col" class="p-3">Name</th>
+                    <th scope="col" class="p-3">Funding Source</th>
+                    <th scope="col" class="p-3">Location</th>
+                    <th scope="col" class="p-3">Start Date</th>
+                    <th scope="col" class="p-3">End Date</th>
+                    <th scope="col" class="p-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
     <!--end row-->
     @push('script')
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
@@ -70,9 +72,40 @@
                 }]
                 , pageLength: 25
                 , customButton: {
-                    text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Project</span>`
+                    text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Project</span>`
                     , action: function(e, dt, node, config) {
-                        window.location.href = "{{ route('admin.projects.create') }}";
+                        pushStateModal({
+                            fetchUrl: "{{ route('admin.projects.create') }}"
+                            , btnSelector: '.create-btn'
+                            , title: 'Add Project'
+                            , actionButtonName: 'Add Project'
+                            , modalSize: 'xl'
+                            , includeForm: true
+                            , formAction: "{{ route('admin.projects.store') }}"
+                            , modalHeight: '75vh'
+                            , hash: false
+                        , }).then((modal) => {
+                            const projectModal = $('#' + modal);
+                            const updateProjectBtn = projectModal.find('button[type="submit"]');
+                            projectModal.find('form').on('submit', async function(e) {
+                                e.preventDefault();
+                                const form = this;
+                                const formData = new FormData(form);
+                                const url = $(this).attr('action');
+                                setButtonLoading(updateProjectBtn, true);
+                                try {
+                                    const result = await fetchRequest(url, 'POST', formData);
+                                    if (result) {
+                                        setButtonLoading(updateProjectBtn, false);
+                                        projectModal.modal('hide');
+                                        table.ajax.reload();
+                                    }
+                                } catch (error) {
+                                    setButtonLoading(updateProjectBtn, false);
+                                    console.error('Error during form submission:', error);
+                                }
+                            });
+                        });
                     },
                 }
             });

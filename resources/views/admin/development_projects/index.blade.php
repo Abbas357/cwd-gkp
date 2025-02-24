@@ -26,26 +26,28 @@
         </ul>
     </div>
 
-    <table id="dev-projects-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
-        <thead>
-            <tr>
-                <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Name</th>
-                <th scope="col" class="p-3">Commencement Date</th>
-                <th scope="col" class="p-3">Total Cost (Millions)</th>
-                <th scope="col" class="p-3">District</th>
-                <th scope="col" class="p-3">Chief Engineer</th>
-                <th scope="col" class="p-3">Progress Percentage</th>
-                <th scope="col" class="p-3">Year of Completion</th>
-                <th scope="col" class="p-3">Uploaded By</th>
-                <th scope="col" class="p-3">Created At</th>
-                <th scope="col" class="p-3">Updated At</th>
-                <th scope="col" class="p-3">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table id="dev-projects-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+            <thead>
+                <tr>
+                    <th scope="col" class="p-3">ID</th>
+                    <th scope="col" class="p-3">Name</th>
+                    <th scope="col" class="p-3">Commencement Date</th>
+                    <th scope="col" class="p-3">Total Cost (Millions)</th>
+                    <th scope="col" class="p-3">District</th>
+                    <th scope="col" class="p-3">Chief Engineer</th>
+                    <th scope="col" class="p-3">Progress Percentage</th>
+                    <th scope="col" class="p-3">Year of Completion</th>
+                    <th scope="col" class="p-3">Uploaded By</th>
+                    <th scope="col" class="p-3">Created At</th>
+                    <th scope="col" class="p-3">Updated At</th>
+                    <th scope="col" class="p-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
     <!--end row-->
     @push('script')
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
@@ -115,9 +117,41 @@
                 }]
                 , pageLength: 25
                 , customButton: {
-                    text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Dev. Project</span>`
+                    text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Dev. Project</span>`
                     , action: function(e, dt, node, config) {
                         window.location.href = "{{ route('admin.development_projects.create') }}";
+                        pushStateModal({
+                            fetchUrl: "{{ route('admin.development_projects.create') }}"
+                            , btnSelector: '.create-btn'
+                            , title: 'Add Development Project'
+                            , actionButtonName: 'Add Development Project'
+                            , modalSize: 'xl'
+                            , includeForm: true
+                            , formAction: "{{ route('admin.development_projects.store') }}"
+                            , modalHeight: '75vh'
+                            , hash: false
+                        , }).then((modal) => {
+                            const devProjectModal = $('#' + modal);
+                            const updateDevProjectBtn = devProjectModal.find('button[type="submit"]');
+                            devProjectModal.find('form').on('submit', async function(e) {
+                                e.preventDefault();
+                                const form = this;
+                                const formData = new FormData(form);
+                                const url = $(this).attr('action');
+                                setButtonLoading(updateDevProjectBtn, true);
+                                try {
+                                    const result = await fetchRequest(url, 'POST', formData);
+                                    if (result) {
+                                        setButtonLoading(updateDevProjectBtn, false);
+                                        devProjectModal.modal('hide');
+                                        table.ajax.reload();
+                                    }
+                                } catch (error) {
+                                    setButtonLoading(updateDevProjectBtn, false);
+                                    console.error('Error during form submission:', error);
+                                }
+                            });
+                        });
                     }
                 , }
             });

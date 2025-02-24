@@ -23,34 +23,36 @@
         </ul>
     </div>
 
-    <table id="cards-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
-        <thead>
-            <tr>
-                <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Name</th>
-                <th scope="col" class="p-3">Father Name</th>
-                <th scope="col" class="p-3">Date of Birth</th>
-                <th scope="col" class="p-3">CNIC</th>
-                <th scope="col" class="p-3">Email</th>
-                <th scope="col" class="p-3">Personnel Number</th>
-                <th scope="col" class="p-3">Mobile Number</th>
-                <th scope="col" class="p-3">Landline Number</th>
-                <th scope="col" class="p-3">Designation</th>
-                <th scope="col" class="p-3">BPS</th>
-                <th scope="col" class="p-3">Office</th>
-                <th scope="col" class="p-3">Mark Of Identification</th>
-                <th scope="col" class="p-3">Blood Group</th>
-                <th scope="col" class="p-3">Emergency Contact</th>
-                <th scope="col" class="p-3">Parmanent Address</th>
-                <th scope="col" class="p-3">Present Address</th>
-                <th scope="col" class="p-3">Created At</th>
-                <th scope="col" class="p-3">Updated At</th>
-                <th scope="col" class="p-3">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table id="cards-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+            <thead>
+                <tr>
+                    <th scope="col" class="p-3">ID</th>
+                    <th scope="col" class="p-3">Name</th>
+                    <th scope="col" class="p-3">Father Name</th>
+                    <th scope="col" class="p-3">Date of Birth</th>
+                    <th scope="col" class="p-3">CNIC</th>
+                    <th scope="col" class="p-3">Email</th>
+                    <th scope="col" class="p-3">Personnel Number</th>
+                    <th scope="col" class="p-3">Mobile Number</th>
+                    <th scope="col" class="p-3">Landline Number</th>
+                    <th scope="col" class="p-3">Designation</th>
+                    <th scope="col" class="p-3">BPS</th>
+                    <th scope="col" class="p-3">Office</th>
+                    <th scope="col" class="p-3">Mark Of Identification</th>
+                    <th scope="col" class="p-3">Blood Group</th>
+                    <th scope="col" class="p-3">Emergency Contact</th>
+                    <th scope="col" class="p-3">Parmanent Address</th>
+                    <th scope="col" class="p-3">Present Address</th>
+                    <th scope="col" class="p-3">Created At</th>
+                    <th scope="col" class="p-3">Updated At</th>
+                    <th scope="col" class="p-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
     <form action=""></form>
     <!--end row-->
     @push('script')

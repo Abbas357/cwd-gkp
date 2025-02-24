@@ -22,25 +22,26 @@
             </li>
         </ul>
     </div>
-
-    <table id="users-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
-        <thead>
-            <tr>
-                <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Name</th>
-                <th scope="col" class="p-3">Email</th>
-                <th scope="col" class="p-3">Designation</th>
-                <th scope="col" class="p-3">Position</th>
-                <th scope="col" class="p-3">Office</th>
-                <th scope="col" class="p-3">Password Updated</th>
-                <th scope="col" class="p-3">Created At</th>
-                <th scope="col" class="p-3">Updated At</th>
-                <th scope="col" class="p-3">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table id="users-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+            <thead>
+                <tr>
+                    <th scope="col" class="p-3">ID</th>
+                    <th scope="col" class="p-3">Name</th>
+                    <th scope="col" class="p-3">Email</th>
+                    <th scope="col" class="p-3">Designation</th>
+                    <th scope="col" class="p-3">Position</th>
+                    <th scope="col" class="p-3">Office</th>
+                    <th scope="col" class="p-3">Password Updated</th>
+                    <th scope="col" class="p-3">Created At</th>
+                    <th scope="col" class="p-3">Updated At</th>
+                    <th scope="col" class="p-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
     <!--end row-->
     @push('script')
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
@@ -93,7 +94,7 @@
                 }]
                 , pageLength: 25
                 , customButton: {
-                    text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add User</span>`
+                    text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add User</span>`
                     , action: function(e, dt, node, config) {
                         window.location.href = "{{ route('admin.users.create') }}";
                     },

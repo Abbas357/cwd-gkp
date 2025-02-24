@@ -20,24 +20,24 @@
         </ul>
     </div>
 
-    <table id="tenders-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
-        <thead>
-            <tr>
-                <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Title</th>
-                <th scope="col" class="p-3">Date of Advertisment</th>
-                <th scope="col" class="p-3">Closing Date</th>
-                <th scope="col" class="p-3">Procurement Entity</th>
-                <th scope="col" class="p-3">Domain</th>
-                <th scope="col" class="p-3">Status</th>
-                <th scope="col" class="p-3">Created At</th>
-                <th scope="col" class="p-3">Updated At</th>
-                <th scope="col" class="p-3">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table id="tenders-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+            <thead>
+                <tr>
+                    <th scope="col" class="p-3">ID</th>
+                    <th scope="col" class="p-3">Title</th>
+                    <th scope="col" class="p-3">Date of Advertisment</th>
+                    <th scope="col" class="p-3">Closing Date</th>
+                    <th scope="col" class="p-3">Status</th>
+                    <th scope="col" class="p-3">Created At</th>
+                    <th scope="col" class="p-3">Updated At</th>
+                    <th scope="col" class="p-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
     <!--end row-->
     @push('script')
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
@@ -64,14 +64,7 @@
                         data: "closing_date"
                         , searchBuilderType: "string"
                     }
-                    , {
-                        data: "procurement_entity"
-                        , searchBuilderType: "string"
-                    }, {
-                        data: "domain"
-                        , searchBuilderType: "string"
-                    }, 
-                        {
+                    ,  {
                         data: "status"
                         , searchBuilderType: "string"
                     }
@@ -98,9 +91,40 @@
                 }]
                 , pageLength: 25
                 , customButton: {
-                    text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Tender</span>`
+                    text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Tender</span>`
                     , action: function(e, dt, node, config) {
-                        window.location.href = "{{ route('admin.tenders.create') }}";
+                        pushStateModal({
+                            fetchUrl: "{{ route('admin.tenders.create') }}"
+                            , btnSelector: '.create-btn'
+                            , title: 'Add Tender'
+                            , actionButtonName: 'Add Tender'
+                            , modalSize: 'xl'
+                            , includeForm: true
+                            , formAction: "{{ route('admin.tenders.store') }}"
+                            , modalHeight: '75vh'
+                            , hash: false
+                        , }).then((modal) => {
+                            const tenderModal = $('#' + modal);
+                            const updateTenderBtn = tenderModal.find('button[type="submit"]');
+                            tenderModal.find('form').on('submit', async function(e) {
+                                e.preventDefault();
+                                const form = this;
+                                const formData = new FormData(form);
+                                const url = $(this).attr('action');
+                                setButtonLoading(updateTenderBtn, true);
+                                try {
+                                    const result = await fetchRequest(url, 'POST', formData);
+                                    if (result) {
+                                        setButtonLoading(updateTenderBtn, false);
+                                        tenderModal.modal('hide');
+                                        table.ajax.reload();
+                                    }
+                                } catch (error) {
+                                    setButtonLoading(updateTenderBtn, false);
+                                    console.error('Error during form submission:', error);
+                                }
+                            });
+                        });
                     },
                 }
             });

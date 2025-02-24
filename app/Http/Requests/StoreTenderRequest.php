@@ -15,10 +15,8 @@ class StoreTenderRequest extends FormRequest
     {
         return [
             'title' => 'required',
-            'procurement_entity' => 'required',
             'date_of_advertisement' => 'required',
             'closing_date' => 'required',
-            // 'tender_domain' => 'required',
         ];
     }
 }

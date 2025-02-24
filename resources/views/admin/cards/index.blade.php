@@ -20,22 +20,24 @@
         </ul>
     </div>
 
-    <table id="cards-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
-        <thead>
-            <tr>
-                <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Type</th>
-                <th scope="col" class="p-3">Status</th>
-                <th scope="col" class="p-3">View</th>
-                <th scope="col" class="p-3">Issue Date</th>
-                <th scope="col" class="p-3">Expiry Date</th>
-                <th scope="col" class="p-3">Created At</th>
-                <th scope="col" class="p-3">Updated At</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table id="cards-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+            <thead>
+                <tr>
+                    <th scope="col" class="p-3">ID</th>
+                    <th scope="col" class="p-3">Type</th>
+                    <th scope="col" class="p-3">Status</th>
+                    <th scope="col" class="p-3">View</th>
+                    <th scope="col" class="p-3">Issue Date</th>
+                    <th scope="col" class="p-3">Expiry Date</th>
+                    <th scope="col" class="p-3">Created At</th>
+                    <th scope="col" class="p-3">Updated At</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
     <!--end row-->
     @push('script')
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>

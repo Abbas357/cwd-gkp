@@ -17,22 +17,24 @@
         </ul>
     </div>
 
-    <table id="pages-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
-        <thead>
-            <tr>
-                <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Title</th>
-                <th scope="col" class="p-3">Page Type</th>
-                <th scope="col" class="p-3">Attachment</th>
-                <th scope="col" class="p-3">Status</th>
-                <th scope="col" class="p-3">Created At</th>
-                <th scope="col" class="p-3">Updated At</th>
-                <th scope="col" class="p-3">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table id="pages-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+            <thead>
+                <tr>
+                    <th scope="col" class="p-3">ID</th>
+                    <th scope="col" class="p-3">Title</th>
+                    <th scope="col" class="p-3">Page Type</th>
+                    <th scope="col" class="p-3">Attachment</th>
+                    <th scope="col" class="p-3">Status</th>
+                    <th scope="col" class="p-3">Created At</th>
+                    <th scope="col" class="p-3">Updated At</th>
+                    <th scope="col" class="p-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
     <!--end row-->
     @push('script')
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
@@ -86,9 +88,40 @@
                 }]
                 , pageLength: 25
                 , customButton: {
-                    text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Page</span>`
+                    text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Page</span>`
                     , action: function(e, dt, node, config) {
-                        window.location.href = "{{ route('admin.pages.create') }}";
+                        pushStateModal({
+                            fetchUrl: "{{ route('admin.pages.create') }}"
+                            , btnSelector: '.create-btn'
+                            , title: 'Add Page'
+                            , actionButtonName: 'Add Page'
+                            , modalSize: 'xl'
+                            , includeForm: true
+                            , formAction: "{{ route('admin.pages.store') }}"
+                            , modalHeight: '75vh'
+                            , hash: false
+                        , }).then((modal) => {
+                            const pageModal = $('#' + modal);
+                            const updatePageBtn = pageModal.find('button[type="submit"]');
+                            pageModal.find('form').on('submit', async function(e) {
+                                e.preventDefault();
+                                const form = this;
+                                const formData = new FormData(form);
+                                const url = $(this).attr('action');
+                                setButtonLoading(updatePageBtn, true);
+                                try {
+                                    const result = await fetchRequest(url, 'POST', formData);
+                                    if (result) {
+                                        setButtonLoading(updatePageBtn, false);
+                                        pageModal.modal('hide');
+                                        table.ajax.reload();
+                                    }
+                                } catch (error) {
+                                    setButtonLoading(updatePageBtn, false);
+                                    console.error('Error during form submission:', error);
+                                }
+                            });
+                        });
                     },
                 }
             });

@@ -774,3 +774,16 @@ html[data-bs-theme="dark"] div.dt-container div.dtb-popover-close {
 .form-switch .form-check-label {
     margin-left: 10px;
 }
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 767px) {
+    .table-responsive {
+        border: 0;
+    }
+}

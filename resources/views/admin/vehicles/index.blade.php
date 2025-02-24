@@ -1,38 +1,42 @@
 <x-app-layout title="Vehicles">
     @push('style')
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
-    
+    <style>
+        
+    </style>
     @endpush
     <x-slot name="header">
         <li class="breadcrumb-item active" aria-current="page">Vehicles</li>
     </x-slot>
 
-    <table id="vehicles-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
-        <thead>
-            <tr>
-                <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Type</th>
-                <th scope="col" class="p-3">Functional Status</th>
-                <th scope="col" class="p-3">Color</th>
-                <th scope="col" class="p-3">Fuel Type</th>
-                <th scope="col" class="p-3">Registration Status</th>
-                <th scope="col" class="p-3">Brand</th>
-                <th scope="col" class="p-3">Model</th>
-                <th scope="col" class="p-3">Registration Number</th>
-                <th scope="col" class="p-3">Model Year</th>
-                <th scope="col" class="p-3">Chassis Number</th>
-                <th scope="col" class="p-3">Engine Number</th>
-                <th scope="col" class="p-3">Remarks</th>
-                <th scope="col" class="p-3">Added By</th>
-                <th scope="col" class="p-3">Assigned To</th>
-                <th scope="col" class="p-3">Created At</th>
-                <th scope="col" class="p-3">Updated At</th>
-                <th scope="col" class="p-3">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table id="vehicles-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+            <thead>
+                <tr>
+                    <th scope="col" class="p-3">ID</th>
+                    <th scope="col" class="p-3">Type</th>
+                    <th scope="col" class="p-3">Functional Status</th>
+                    <th scope="col" class="p-3">Color</th>
+                    <th scope="col" class="p-3">Fuel Type</th>
+                    <th scope="col" class="p-3">Registration Status</th>
+                    <th scope="col" class="p-3">Brand</th>
+                    <th scope="col" class="p-3">Model</th>
+                    <th scope="col" class="p-3">Registration Number</th>
+                    <th scope="col" class="p-3">Model Year</th>
+                    <th scope="col" class="p-3">Chassis Number</th>
+                    <th scope="col" class="p-3">Engine Number</th>
+                    <th scope="col" class="p-3">Remarks</th>
+                    <th scope="col" class="p-3">Added By</th>
+                    <th scope="col" class="p-3">Assigned To</th>
+                    <th scope="col" class="p-3">Created At</th>
+                    <th scope="col" class="p-3">Updated At</th>
+                    <th scope="col" class="p-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
     <!--end row-->
     @push('script')
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>

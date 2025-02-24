@@ -16,20 +16,12 @@
                     <tbody>
                         @if (!empty($tenderData['published_by']) || !empty($tenderData['published_at']))
                         <tr>
-                            <th>Procurement Entity</th>
-                            <td>{{ $tenderData['procurement_entity'] ?? 'Not Provided' }}</td>
-                        </tr>
-                        <tr>
                             <th>Date of Advertisement</th>
                             <td>{{ $tenderData['date_of_advertisement'] ?? 'Not Provided' }}</td>
                         </tr>
                         <tr>
                             <th>Closing Date</th>
                             <td>{{ $tenderData['closing_date'] ?? 'Not Provided' }}</td>
-                        </tr>
-                        <tr>
-                            <th>Tender Domain</th>
-                            <td>{{ $tenderData['domain'] }}</td>
                         </tr>
                         <tr>
                             <th>Office</th>

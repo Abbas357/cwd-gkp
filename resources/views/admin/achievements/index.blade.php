@@ -20,24 +20,26 @@
         </ul>
     </div>
 
-    <table id="achievements-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
-        <thead>
-            <tr>
-                <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Title</th>
-                <th scope="col" class="p-3">Location</th>
-                <th scope="col" class="p-3">Start Date</th>
-                <th scope="col" class="p-3">End Date</th>
-                <th scope="col" class="p-3">Uploaded By</th>
-                <th scope="col" class="p-3">Status</th>
-                <th scope="col" class="p-3">Created At</th>
-                <th scope="col" class="p-3">Updated At</th>
-                <th scope="col" class="p-3">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table id="achievements-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+            <thead>
+                <tr>
+                    <th scope="col" class="p-3">ID</th>
+                    <th scope="col" class="p-3">Title</th>
+                    <th scope="col" class="p-3">Location</th>
+                    <th scope="col" class="p-3">Start Date</th>
+                    <th scope="col" class="p-3">End Date</th>
+                    <th scope="col" class="p-3">Uploaded By</th>
+                    <th scope="col" class="p-3">Status</th>
+                    <th scope="col" class="p-3">Created At</th>
+                    <th scope="col" class="p-3">Updated At</th>
+                    <th scope="col" class="p-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
     <!--end row-->
     @push('script')
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
@@ -98,9 +100,40 @@
                 }]
                 , pageLength: 25
                 , customButton: {
-                    text: `<span class="symbol-container fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Achievement</span>`
+                    text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Achievement</span>`
                     , action: function(e, dt, node, config) {
-                        window.location.href = "{{ route('admin.achievements.create') }}";
+                        pushStateModal({
+                            fetchUrl: "{{ route('admin.achievements.create') }}"
+                            , btnSelector: '.create-btn'
+                            , title: 'Add Achievement'
+                            , actionButtonName: 'Add Achievement'
+                            , modalSize: 'xl'
+                            , includeForm: true
+                            , formAction: "{{ route('admin.achievements.store') }}"
+                            , modalHeight: '75vh'
+                            , hash: false
+                        , }).then((modal) => {
+                            const achievementModal = $('#' + modal);
+                            const updateAchievementBtn = achievementModal.find('button[type="submit"]');
+                            achievementModal.find('form').on('submit', async function(e) {
+                                e.preventDefault();
+                                const form = this;
+                                const formData = new FormData(form);
+                                const url = $(this).attr('action');
+                                setButtonLoading(updateAchievementBtn, true);
+                                try {
+                                    const result = await fetchRequest(url, 'POST', formData);
+                                    if (result) {
+                                        setButtonLoading(updateAchievementBtn, false);
+                                        achievementModal.modal('hide');
+                                        table.ajax.reload();
+                                    }
+                                } catch (error) {
+                                    setButtonLoading(updateAchievementBtn, false);
+                                    console.error('Error during form submission:', error);
+                                }
+                            });
+                        });
                     },
                 }
             });

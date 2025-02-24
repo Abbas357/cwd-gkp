@@ -45,19 +45,6 @@
                     @endif
                 </td>
             </tr>
-
-            <tr>
-                <th class="table-cell">Procurement Entity</th>
-                <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-procurement_entity">{{ $tender->procurement_entity }}</span>
-                    @if (!in_array($tender->status, ['published', 'archived']))
-                    <input type="text" id="input-procurement_entity" value="{{ $tender->procurement_entity }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('procurement_entity', {{ $tender->id }})" />
-                    <button id="save-btn-procurement_entity" class="btn btn-sm btn-light d-none" onclick="updateField('procurement_entity', {{ $tender->id }})"><i class="bi-send-fill"></i></button>
-                    <button id="edit-btn-procurement_entity" class="no-print btn btn-sm edit-button" onclick="enableEditing('procurement_entity')"><i class="bi-pencil fs-6"></i></button>
-                    @endif
-                </td>
-            </tr>
-
             <tr>
                 <th class="table-cell">Description</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
@@ -92,25 +79,6 @@
                     <input type="text" id="input-closing_date" value="{{ $tender->closing_date }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('closing_date', {{ $tender->id }})" />
                     <button id="save-btn-closing_date" class="btn btn-sm btn-light d-none" onclick="updateField('closing_date', {{ $tender->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-closing_date" class="no-print btn btn-sm edit-button" onclick="enableEditing('closing_date')"><i class="bi-pencil fs-6"></i></button>
-                    @endif
-                </td>
-            </tr>
-
-            <!-- File Category -->
-            <tr>
-                <th class="table-cell">Tender Domain</th>
-                <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-domain">{{ $tender->domain }}</span>
-                    @if (!in_array($tender->status, ['published', 'archived']))
-                    <select id="input-domain" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('domain', {{ $tender->id }})">
-                        @foreach ($cat['tender_domain'] as $domain)
-                        <option value="{{ $domain->name }}" {{ $tender->domain == $domain->name ? 'selected' : '' }}>
-                            {{ $domain->name }}
-                        </option>
-                        @endforeach
-                    </select>
-                    <button id="save-btn-domain" class="btn btn-sm btn-light d-none" onclick="updateField('domain', {{ $tender->id }})"><i class="bi-send-fill"></i></button>
-                    <button id="edit-btn-domain" class="no-print btn btn-sm edit-button" onclick="enableEditing('domain')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
             </tr>

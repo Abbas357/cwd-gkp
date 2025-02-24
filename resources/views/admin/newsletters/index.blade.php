@@ -18,21 +18,23 @@
         <a href="{{ route('admin.newsletter.create_mass_email') }}" class="btn btn-light">Send Mass Email</a>
     </div>
 
-    <table id="newsletter-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
-        <thead>
-            <tr>
-                <th scope="col" class="p-3">ID</th>
-                <th scope="col" class="p-3">Email</th>
-                <th scope="col" class="p-3">Subscribed At</th>
-                <th scope="col" class="p-3">IP Address</th>
-                <th scope="col" class="p-3">Device Info</th>
-                <th scope="col" class="p-3">Status</th>
-                <th scope="col" class="p-3">Created At</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table id="newsletter-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+            <thead>
+                <tr>
+                    <th scope="col" class="p-3">ID</th>
+                    <th scope="col" class="p-3">Email</th>
+                    <th scope="col" class="p-3">Subscribed At</th>
+                    <th scope="col" class="p-3">IP Address</th>
+                    <th scope="col" class="p-3">Device Info</th>
+                    <th scope="col" class="p-3">Status</th>
+                    <th scope="col" class="p-3">Created At</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
     <!--end row-->
     @push('script')
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
