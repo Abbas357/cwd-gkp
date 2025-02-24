@@ -136,7 +136,7 @@
                             , modalSize: 'lg'
                             , includeForm: true
                             , formAction: "{{ route('admin.vehicles.store') }}"
-                            , modalHeight: '65vh'
+                            , modalHeight: '50vh'
                             , hash: false
                         , }).then((modal) => {
                             const vehicleModal = $('#' + modal);
