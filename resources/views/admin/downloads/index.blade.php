@@ -104,34 +104,36 @@
                     text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Download</span>`
                     , action: function(e, dt, node, config) {
                         pushStateModal({
-                            fetchUrl: "{{ route('admin.downloads.create') }}"
-                            , btnSelector: '.create-btn'
-                            , title: 'Add Download'
-                            , actionButtonName: 'Add Download'
-                            , modalSize: 'lg'
-                            , includeForm: true
-                            , formAction: "{{ route('admin.downloads.store') }}"
-                            , modalHeight: '35vh'
-                            , hash: false
-                        , }).then((modal) => {
-                            const downloadModal = $('#' + modal);
-                            const updateDownloadBtn = downloadModal.find('button[type="submit"]');
-                            downloadModal.find('form').on('submit', async function(e) {
+                            fetchUrl: "{{ route('admin.downloads.create') }}",
+                            title: 'Add Download',
+                            actionButtonName: 'Add Download', 
+                            modalSize: 'lg', 
+                            includeForm: true, 
+                            formAction: "{{ route('admin.downloads.store') }}",
+                            modalHeight: '35vh', 
+                            hash: false
+                        }).then(modalId => {
+                            const $modal = $('#' + modalId);
+                            const $submitBtn = $modal.find('button[type="submit"]');
+                            
+                            $modal.find('form').on('submit', async function(e) {
                                 e.preventDefault();
-                                const form = this;
-                                const formData = new FormData(form);
-                                const url = $(this).attr('action');
-                                setButtonLoading(updateDownloadBtn, true);
+                                if (this.isSubmitting) return false;
+                                
+                                this.isSubmitting = true;
+                                setButtonLoading($submitBtn, true);
+                                
                                 try {
-                                    const result = await fetchRequest(url, 'POST', formData);
-                                    if (result) {
-                                        setButtonLoading(updateDownloadBtn, false);
-                                        downloadModal.modal('hide');
+                                    if (await fetchRequest($(this).attr('action'), 'POST', new FormData(this))) {
+                                        $modal.modal('hide');
                                         table.ajax.reload();
                                     }
                                 } catch (error) {
-                                    setButtonLoading(updateDownloadBtn, false);
-                                    console.error('Error during form submission:', error);
+                                    console.error('Error Adding Download:', error);
+                                } finally {
+                                    this.isSubmitting = false;
+                                    setButtonLoading($submitBtn, false);
+                                    $submitBtn.prop('disabled', false);
                                 }
                             });
                         });

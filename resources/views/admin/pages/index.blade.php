@@ -106,6 +106,10 @@
                             pageModal.find('form').on('submit', async function(e) {
                                 e.preventDefault();
                                 const form = this;
+                                if (form.isSubmitting) {
+                                    return false;
+                                }
+                                form.isSubmitting = true;
                                 const formData = new FormData(form);
                                 const url = $(this).attr('action');
                                 setButtonLoading(updatePageBtn, true);
@@ -117,8 +121,11 @@
                                         table.ajax.reload();
                                     }
                                 } catch (error) {
+                                    console.error('Error Adding Page: ', error);
+                                } finally {
+                                    form.isSubmitting = false;
                                     setButtonLoading(updatePageBtn, false);
-                                    console.error('Error during form submission:', error);
+                                    updatePageBtn.prop('disabled', false);
                                 }
                             });
                         });

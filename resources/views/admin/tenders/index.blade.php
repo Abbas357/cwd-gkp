@@ -109,6 +109,10 @@
                             tenderModal.find('form').on('submit', async function(e) {
                                 e.preventDefault();
                                 const form = this;
+                                if (form.isSubmitting) {
+                                    return false;
+                                }
+                                form.isSubmitting = true;
                                 const formData = new FormData(form);
                                 const url = $(this).attr('action');
                                 setButtonLoading(updateTenderBtn, true);
@@ -120,8 +124,11 @@
                                         table.ajax.reload();
                                     }
                                 } catch (error) {
+                                    console.error('Error Adding Tender: ', error);
+                                } finally {
+                                    form.isSubmitting = false;
                                     setButtonLoading(updateTenderBtn, false);
-                                    console.error('Error during form submission:', error);
+                                    updateTenderBtn.prop('disabled', false);
                                 }
                             });
                         });
