@@ -4,7 +4,7 @@
 <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
 
 <div class="row mx-1">
-    <div class="col-md-6 mb-3">
+    <div class="col-md-4 mb-3">
         <label for="name">Name</label>
         <input type="text" class="form-control" id="name" value="{{ old('name') }}" placeholder="Project Name" name="name" required>
         @error('name')
@@ -12,7 +12,7 @@
         @enderror
     </div>
 
-    <div class="col-md-6 mb-3">
+    <div class="col-md-4 mb-3">
         <label for="funding_source">Funding Source</label>
         <input type="text" class="form-control" id="funding_source" value="{{ old('funding_source') }}" placeholder="Funding Source" name="funding_source" required>
         @error('funding_source')
@@ -20,7 +20,7 @@
         @enderror
     </div>
 
-    <div class="col-md-6 mb-3">
+    <div class="col-md-4 mb-3">
         <label for="attachment">Attachment</label>
         <input type="file" class="form-control" id="attachment" value="{{ old('attachment') }}" placeholder="Funding Source" name="attachment" required>
         @error('attachment')
@@ -30,9 +30,7 @@
 
     <div class="col-md-12 mb-3">
         <label for="introduction">Introduction</label>
-        <div class="mb-3">
-            <textarea name="introduction" id="introduction" class="form-control" style="height:150px">{{ old('introduction') }}</textarea>
-        </div>
+        <textarea name="introduction" id="introduction" class="form-control" style="height:120px">{{ old('introduction') }}</textarea>
     </div>
 
     <div class="col-md-6 mb-3">
@@ -73,7 +71,7 @@
     $(document).ready(function() {
 
         $('#introduction').summernote({
-            height: 300
+            height: 200
         , });
 
         imageCropper({

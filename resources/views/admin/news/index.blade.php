@@ -108,10 +108,10 @@
                             , btnSelector: '.create-btn'
                             , title: 'Add News'
                             , actionButtonName: 'Add News'
-                            , modalSize: 'xl'
+                            , modalSize: 'lg'
                             , includeForm: true
                             , formAction: "{{ route('admin.news.store') }}"
-                            , modalHeight: '75vh'
+                            , modalHeight: '65vh'
                             , hash: false
                         , }).then((modal) => {
                             const newsModal = $('#' + modal);

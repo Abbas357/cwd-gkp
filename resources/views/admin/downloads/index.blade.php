@@ -108,10 +108,10 @@
                             , btnSelector: '.create-btn'
                             , title: 'Add Download'
                             , actionButtonName: 'Add Download'
-                            , modalSize: 'xl'
+                            , modalSize: 'lg'
                             , includeForm: true
                             , formAction: "{{ route('admin.downloads.store') }}"
-                            , modalHeight: '75vh'
+                            , modalHeight: '35vh'
                             , hash: false
                         , }).then((modal) => {
                             const downloadModal = $('#' + modal);

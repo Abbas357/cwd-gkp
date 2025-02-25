@@ -57,13 +57,13 @@ class AchievementController extends Controller
 
     public function create()
     {
-        $stats = [
-            'totalCount' => Achievement::withoutGlobalScope('published')->count(),
-            'publishedCount' => Achievement::withoutGlobalScope('published')->where('status', 'published')->whereNotNull('published_at')->count(),
-            'archivedCount' => Achievement::withoutGlobalScope('published')->where('status', 'archived')->count(),
-            'unPublishedCount' => Achievement::withoutGlobalScope('published')->where('status', 'draft')->count(),
-        ];
-        return view('admin.achievements.create', compact('stats'));
+        $html = view('admin.achievements.partials.create')->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
     }
 
     public function store(StoreAchievementRequest $request)
@@ -85,9 +85,9 @@ class AchievementController extends Controller
             }
         }
         if ($request->user()->achievements()->save($achievement)) {
-            return redirect()->route('admin.achievements.create')->with('success', 'Achievement Added successfully');
+            return response()->json(['success' => 'Achievement added successfully'], 200);
         }
-        return redirect()->route('admin.achievements.create')->with('danger', 'There is an error adding the achievement');
+        return response()->json(['error' => 'There was an error adding the achievement'], 500);
     }
 
     public function show(Achievement $achievement)

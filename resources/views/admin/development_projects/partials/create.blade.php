@@ -29,12 +29,10 @@
 
     <div class="col-md-12 mb-3">
         <label for="introduction">Introduction</label>
-        <div class="mb-3">
-            <textarea name="introduction" id="introduction" class="form-control" style="height:100px">{{ old('introduction') }}</textarea>
-        </div>
+        <textarea name="introduction" id="introduction" class="form-control" style="height:100px">{{ old('introduction') }}</textarea>
     </div>
 
-    <div class="col-md-4 mb-4">
+    <div class="col-md-4 mb-3">
         <label for="district">District</label>
         <select class="form-select form-select-md" id="district" name="district_id">
             <option value="">Select Option</option>
@@ -47,7 +45,7 @@
         @enderror
     </div>
 
-    <div class="col-md-4 mb-4">
+    <div class="col-md-4 mb-3">
         <label for="chiefEnginner">Chief Engineer</label>
         <select class="form-select form-select-md" id="chiefEnginner" name="chiefEnginner">
             <option value="">Select Option</option>
@@ -60,7 +58,7 @@
         @enderror
     </div>
 
-    <div class="col-md-4 mb-4">
+    <div class="col-md-4 mb-3">
         <label for="superintendentEngineer">Superintendent Engineer</label>
         <select class="form-select form-select-md" id="superintendentEngineer" name="superintendentEngineer">
             <option value="">Select Option</option>
@@ -74,32 +72,33 @@
     </div>
 
     <div class="col-md-6 mb-3">
-        <label for="progress_percentage" class=" mb-1">Progress Percentage: <span id="progress_value" class="bg-light px-2 py-1  fw-bold">50</span>%</label>
-        <input type="range" class="form-control" id="progress_percentage" name="progress_percentage" value="{{ old('progress_percentage', 50) }}" min="1" max="100">
-        @error('progress_percentage')
-        <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-
-    <div class="col-md-6 mb-3">
-        <label for="attachments">Images</label>
-        <input type="file" class="form-control" id="attachments" value="{{ old('attachments') }}" name="attachments[]" multiple required>
-        @error('attachments')
-        <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-
-    <div class="col-md-6 mb-3">
         <label for="work_location">Work Location</label>
         <input type="text" class="form-control" id="work_location" value="{{ old('work_location') }}" placeholder="eg. Near Park" name="work_location">
         @error('work_location')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
+
     <div class="col-md-6 mb-3">
         <label for="year_of_completion">Year of Completion</label>
         <input type="date" class="form-control" id="year_of_completion" value="{{ old('year_of_completion') }}" name="year_of_completion">
         @error('year_of_completion')
+        <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label for="progress_percentage" class=" mb-1">Progress Percentage: <span id="progress_value" class="bg-light px-2 py-1  fw-bold">50</span>%</label>
+        <input type="range" class="form-control" id="progress_percentage" name="progress_percentage" value="{{ old('progress_percentage', 50) }}" min="1" max="100">
+        @error('progress_percentage')
+        <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
+    
+    <div class="col-md-6 mb-3">
+        <label for="attachments">Images</label>
+        <input type="file" class="form-control" id="attachments" value="{{ old('attachments') }}" name="attachments[]" multiple required>
+        @error('attachments')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>

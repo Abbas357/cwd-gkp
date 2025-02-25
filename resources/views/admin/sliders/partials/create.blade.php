@@ -2,7 +2,7 @@
 <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
 <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
 <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
-<div class="row mx-2">
+<div class="row mx-1">
     <div class="col-md-6 mb-3">
         <label for="title">Title</label>
         <input type="text" class="form-control" id="title" value="{{ old('title') }}" placeholder="Slider title" name="title" required>

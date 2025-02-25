@@ -108,10 +108,10 @@
                             , btnSelector: '.create-btn'
                             , title: 'Add Project File'
                             , actionButtonName: 'Add Project File'
-                            , modalSize: 'xl'
+                            , modalSize: 'lg'
                             , includeForm: true
                             , formAction: "{{ route('admin.project_files.store') }}"
-                            , modalHeight: '75vh'
+                            , modalHeight: '35vh'
                             , hash: false
                         , }).then((modal) => {
                             const projectFileModal = $('#' + modal);

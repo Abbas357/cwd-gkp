@@ -107,7 +107,7 @@
                             , btnSelector: '.create-btn'
                             , title: 'Add Achievement'
                             , actionButtonName: 'Add Achievement'
-                            , modalSize: 'xl'
+                            , modalSize: 'lg'
                             , includeForm: true
                             , formAction: "{{ route('admin.achievements.store') }}"
                             , modalHeight: '75vh'

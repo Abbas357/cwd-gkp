@@ -64,17 +64,17 @@ class EventController extends Controller
 
     public function create()
     {
-        $stats = [
-            'totalCount' => Event::withoutGlobalScope('published')->count(),
-            'publishedCount' => Event::withoutGlobalScope('published')->where('status', 'published')->whereNotNull('published_at')->count(),
-            'archivedCount' => Event::withoutGlobalScope('published')->where('status', 'archived')->count(),
-            'unPublishedCount' => Event::withoutGlobalScope('published')->where('status', 'draft')->count(),
-        ];
         $cat = [
             'participants_type' => ['Contractors', 'Internal Officers', 'Consultants', 'Secretaries', 'Engineers', 'Public'],
             'event_type' => ['review_meeting', 'conference', 'workshop', 'seminar', 'webinar', 'training'],
         ];
-        return view('admin.events.create', compact('stats', 'cat'));
+        $html = view('admin.events.partials.create', compact('cat'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
     }
 
     public function store(StoreEventRequest $request)
@@ -102,9 +102,9 @@ class EventController extends Controller
         }
 
         if ($request->user()->events()->save($event)) {
-            return redirect()->route('admin.events.create')->with('success', 'Event Added successfully');
+            return response()->json(['success' => 'Event Added successfully'], 200);
         }
-        return redirect()->route('admin.events.create')->with('error', 'There is an error adding the event');
+        return response()->json(['error' => 'There is an error adding the event'], 500);
     }
 
     public function show(Event $event)

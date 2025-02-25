@@ -36,7 +36,13 @@ class ProjectController extends Controller
 
     public function create()
     {
-        return view('admin.projects.create');
+        $html = view('admin.projects.partials.create')->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
     }
 
     public function store(StoreProjectRequest $request)
@@ -56,9 +62,12 @@ class ProjectController extends Controller
                 ->toMediaCollection('project_documents');
         }
 
-        $project->save();
+        if($project->save()) {
+            return response()->json(['success' => 'Project added successfully']);
+        } else {
+            return response()->json(['error' => 'There is an error adding the project']);
+        }
 
-        return redirect()->route('admin.projects.index')->with('success', 'Project added successfully');
     }
 
     public function show(Project $project)

@@ -1,6 +1,6 @@
 <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
 
-<div class="row">
+<div class="row mx-1">
     <div class="col-md-8">
         <div class="col mb-4">
             <label for="name">Title</label>

@@ -67,7 +67,6 @@
     </x-slot>
 
     <div class="wrapper">
-        <!-- Main Stats Row -->
         <div class="row g-3 mb-4">
             <div class="col-md-3">
                 <div class="stat-card card bg-light h-100">
@@ -135,7 +134,6 @@
             </div>
         </div>
 
-        <!-- Allotment Stats Row -->
         <div class="row g-3 mb-4">
             <div class="col-md-4">
                 <div class="stat-card card bg-light h-100">
@@ -184,11 +182,8 @@
             </div>
         </div>
 
-        <!-- Charts & Activity Section -->
         <div class="row g-3">
-            <!-- Left Column - Charts -->
             <div class="col-md-8">
-                <!-- Monthly Allotments Chart -->
                 <div class="card mb-4">
                     <div class="card-header bg-light d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">Monthly Allotments</h5>
@@ -202,7 +197,6 @@
                     </div>
                 </div>
 
-                <!-- Distribution Charts Grid -->
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="card">
@@ -247,9 +241,7 @@
                 </div>
             </div>
 
-            <!-- Right Column - Activity & Alerts -->
             <div class="col-md-4">
-                <!-- Recent Activity -->
                 <div class="card mb-4">
                     <div class="card-header bg-light">
                         <h5 class="card-title mb-0">Recent Activity</h5>
@@ -267,7 +259,6 @@
                     </div>
                 </div>
 
-                <!-- Vehicles Needing Attention -->
                 <div class="card">
                     <div class="card-header bg-light">
                         <h5 class="card-title mb-0">Vehicles Needing Attention</h5>
@@ -290,7 +281,6 @@
             </div>
         </div>
 
-        <!-- Brand Distribution Section -->
         <div class="row g-3 mt-4">
             <div class="col-12">
                 <div class="card">

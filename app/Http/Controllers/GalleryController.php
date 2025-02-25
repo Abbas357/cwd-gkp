@@ -60,16 +60,16 @@ class GalleryController extends Controller
 
     public function create()
     {
-        $stats = [
-            'totalCount' => Gallery::withoutGlobalScope('published')->count(),
-            'publishedCount' => Gallery::withoutGlobalScope('published')->where('status', 'published')->whereNotNull('published_at')->count(),
-            'archivedCount' => Gallery::withoutGlobalScope('published')->where('status', 'archived')->count(),
-            'unPublishedCount' => Gallery::withoutGlobalScope('published')->where('status', 'draft')->count(),
-        ];
         $cat = [
             'gallery_type' => Category::where('type', 'gallery_type')->get(),
         ];
-        return view('admin.gallery.create', compact('stats', 'cat'));
+        $html = view('admin.gallery.partials.create', compact('cat'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
     }
 
     public function store(StoreGalleryRequest $request)
@@ -99,10 +99,10 @@ class GalleryController extends Controller
         }
 
         if ($request->user()->gallery()->save($gallery)) {
-            return redirect()->route('admin.gallery.create')->with('success', 'Gallery added successfully');
+            return response()->json(['success' => 'Gallery added successfully'], 200);
         }
 
-        return redirect()->route('admin.gallery.create')->with('error', 'There was an error adding your Gallery');
+        return response()->json(['error' => 'There was an error adding your Gallery'], 500);
     }
 
     public function show(Gallery $Gallery)

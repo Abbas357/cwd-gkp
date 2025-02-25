@@ -68,7 +68,15 @@ class ProjectFileController extends Controller
             'projects' => Project::select('id', 'name')->get(),
             'file_type' => Category::where('type', 'file_type')->get()
         ];
-        return view('admin.project_files.create', compact('cat'));
+
+        $html = view('admin.project_files.partials.create', compact('cat'))->render();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
     }
 
     public function store(StoreProjectFileRequest $request)
@@ -86,9 +94,9 @@ class ProjectFileController extends Controller
         }
 
         if ($project->save()) {
-            return redirect()->route('admin.project_files.create')->with('success', 'File Added successfully');
+            return response()->json(['success' => 'File Added successfully']);
         }
-        return redirect()->route('admin.project_files.create')->with('danger', 'There is an error adding your project file');
+        return response()->json(['danger' => 'There is an error adding your project file']);
     }
 
     public function show(ProjectFile $project_file)

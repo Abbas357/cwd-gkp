@@ -1,6 +1,6 @@
 <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
 <link href="{{ asset('admin/plugins/flatpickr/flatpickr.min.css') }}" rel="stylesheet">
-<div class="row">
+<div class="row mx-1">
     
     <div class="col-md-6 mb-4">
         <label for="title">Title</label>

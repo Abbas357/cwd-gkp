@@ -79,7 +79,13 @@ class DevelopmentProjectController extends Controller
             'superintendentEngineers' => User::where('designation', 'Superintendent Engineer')->get(),
         ];
         
-        return view('admin.development_projects.create', compact('cat'));
+        $html = view('admin.development_projects.partials.create', compact('cat'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
     }
 
     public function store(StoreDevelopmentProjectRequest $request)
@@ -107,10 +113,10 @@ class DevelopmentProjectController extends Controller
         }
 
         if ($request->user()->developmentProjects()->save($dev_project)) {
-            return redirect()->route('admin.development_projects.create')->with('success', 'Development Project added successfully');
+            return response()->json(['success' => 'Development Project added successfully'], 200);
         }
 
-        return redirect()->route('admin.development_projects.index')->with('error', 'There is an error adding DevelopmentProject');
+        return response()->json(['error' => 'There is an error adding DevelopmentProject'], 500);
     }
 
     public function show(DevelopmentProject $DevelopmentProject)

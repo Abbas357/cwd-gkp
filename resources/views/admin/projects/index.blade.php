@@ -79,7 +79,7 @@
                             , btnSelector: '.create-btn'
                             , title: 'Add Project'
                             , actionButtonName: 'Add Project'
-                            , modalSize: 'xl'
+                            , modalSize: 'lg'
                             , includeForm: true
                             , formAction: "{{ route('admin.projects.store') }}"
                             , modalHeight: '75vh'

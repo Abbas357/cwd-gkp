@@ -62,16 +62,16 @@ class NewsController extends Controller
 
     public function create()
     {
-        $stats = [
-            'totalCount' => News::withoutGlobalScope('published')->count(),
-            'publishedCount' => News::withoutGlobalScope('published')->where('status', 'published')->whereNotNull('published_at')->count(),
-            'archivedCount' => News::withoutGlobalScope('published')->where('status', 'archived')->count(),
-            'unPublishedCount' => News::withoutGlobalScope('published')->where('status', 'draft')->count(),
-        ];
         $cat = [
             'news_category' => Category::where('type', 'news_category')->get(),
         ];
-        return view('admin.news.create', compact('stats', 'cat'));
+        $html = view('admin.news.partials.create', compact('cat'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
     }
 
     public function store(StoreNewsRequest $request)
@@ -90,9 +90,9 @@ class NewsController extends Controller
         }
 
         if ($request->user()->news()->save($news)) {
-            return redirect()->route('admin.news.create')->with('success', 'News Added successfully');
+            return response()->json(['success' => 'News Added successfully'], 200);
         }
-        return redirect()->route('admin.news.create')->with('danger', 'There is an error adding the news');
+        return response()->json(['error' => 'There is an error adding the news'], 500);
     }
 
     public function show(News $news)

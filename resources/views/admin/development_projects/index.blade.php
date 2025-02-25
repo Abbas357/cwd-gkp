@@ -119,13 +119,12 @@
                 , customButton: {
                     text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Dev. Project</span>`
                     , action: function(e, dt, node, config) {
-                        window.location.href = "{{ route('admin.development_projects.create') }}";
                         pushStateModal({
                             fetchUrl: "{{ route('admin.development_projects.create') }}"
                             , btnSelector: '.create-btn'
                             , title: 'Add Development Project'
                             , actionButtonName: 'Add Development Project'
-                            , modalSize: 'xl'
+                            , modalSize: 'lg'
                             , includeForm: true
                             , formAction: "{{ route('admin.development_projects.store') }}"
                             , modalHeight: '75vh'

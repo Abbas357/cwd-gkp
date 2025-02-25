@@ -61,7 +61,13 @@ class PageController extends Controller
         $cat = [
             'page_type' => Category::where('type', 'page_type')->get(),
         ];
-        return view('admin.pages.create', compact('cat'));
+        $html = view('admin.pages.partials.create', compact('cat'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
     }
 
     public function store(StorePageRequest $request)
@@ -85,9 +91,9 @@ class PageController extends Controller
         }
 
         if ($page->save()) {
-            return redirect()->route('admin.pages.create')->with('success', 'Page Added successfully');
+            return response()->json(['success' => 'Page added successfully'], 200);
         }
-        return redirect()->route('admin.pages.create')->with('danger', 'There is an error adding the page');
+        return response()->json(['error' => 'There was an error adding the page'], 500);
     }
 
     public function show(Page $page)

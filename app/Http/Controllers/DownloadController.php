@@ -61,17 +61,17 @@ class DownloadController extends Controller
 
     public function create()
     {
-        $stats = [
-            'totalCount' => Download::withoutGlobalScope('published')->count(),
-            'publishedCount' => Download::withoutGlobalScope('published')->where('status', 'published')->whereNotNull('published_at')->count(),
-            'archivedCount' => Download::withoutGlobalScope('published')->where('status', 'archived')->count(),
-            'unPublishedCount' => Download::withoutGlobalScope('published')->where('status', 'draft')->count(),
-        ];
         $cat = [
             'file_type' => Category::where('type', 'file_type')->get(),
             'download_category' => Category::where('type', 'download_category')->get(),
         ];
-        return view('admin.downloads.create', compact('stats', 'cat'));
+        $html = view('admin.downloads.partials.create', compact('cat'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
     }
 
     public function store(StoreDownloadRequest $request)
@@ -88,9 +88,9 @@ class DownloadController extends Controller
         }
 
         if ($request->user()->downloads()->save($download)) {
-            return redirect()->route('admin.downloads.create')->with('success', 'File Added successfully');
+            return response()->json(['success' => 'File Added successfully'], 200);
         }
-        return redirect()->route('admin.downloads.create')->with('danger', 'There is an error adding your download');
+        return response()->json(['error' => 'There is an error adding your download'], 500);
     }
 
     public function show(Download $Download)
