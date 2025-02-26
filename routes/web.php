@@ -5,9 +5,20 @@ use App\Http\Controllers\HomeController as AdminController;
 use App\Http\Controllers\Site\HomeController as SiteController;
     
 Route::get('/', [SiteController::class, 'site'])->name('site');
-Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('admin.dashboard');
+
+Route::prefix('admin')->as('admin.')->middleware(['auth'])->group(function () {
+    Route::get('/apps', [AdminController::class, 'apps'])->name('apps');
+
+    require __DIR__ . '/modules/admin.php';
+
+    Route::prefix('app')->as('app.')->middleware(['auth'])->group(function () {
+        require __DIR__ . '/modules/contractor.php';
+        require __DIR__ . '/modules/service_card.php';
+        require __DIR__ . '/modules/standardization.php';
+        require __DIR__ . '/modules/vehicle.php';
+    });
+
+});
 
 require __DIR__ . '/auth.php';
-require __DIR__ . '/site.php';
-require __DIR__ . '/admin.php';
-require __DIR__ . '/module.php';
+require __DIR__ . '/modules/site.php';

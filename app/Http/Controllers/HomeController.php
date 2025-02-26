@@ -8,9 +8,14 @@ use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
-    public function dashboard()
+    public function home()
     {
         return view('admin.home.index');
+    }
+
+    public function apps()
+    {
+        return view('admin.home.master');
     }
 
     public function searchLinks(Request $request)
@@ -24,10 +29,6 @@ class HomeController extends Controller
         foreach ($routes as $route) {
             $uri = $route->uri();
             
-            // Only include routes that:
-            // 1. Are GET routes
-            // 2. Don't contain any parameters (no curly braces)
-            // 3. Contain 'admin'
             if (in_array('GET', $route->methods()) && 
                 !str_contains($uri, '{') && 
                 str_contains($uri, 'admin')) {

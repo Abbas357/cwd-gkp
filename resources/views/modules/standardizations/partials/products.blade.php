@@ -163,7 +163,7 @@ $(document).ready(function() {
         input.on('blur', function() {
             const newValue = $(this).val();
             const productId = span.closest('tr').data('id');
-            const url = '{{ route("admin.standardizations.product.update", ":id") }}'.replace(':id', productId);
+            const url = '{{ route("admin.app.standardizations.product.update", ":id") }}'.replace(':id', productId);
 
             $.ajax({
                 url: url,
@@ -197,7 +197,7 @@ $(document).ready(function() {
         const productId = select.closest('tr').data('id');
         const field = select.data('field');
         const newValue = select.val();
-        const url = '{{ route("admin.standardizations.product.update", ":id") }}'.replace(':id', productId);
+        const url = '{{ route("admin.app.standardizations.product.update", ":id") }}'.replace(':id', productId);
 
         $.ajax({
             url: url,
@@ -235,7 +235,7 @@ $(document).ready(function() {
                 formData.append('file', file);
                 formData.append('_method', 'PATCH');
 
-                const url = '{{ route("admin.standardizations.product.upload", ":id") }}'.replace(':id', productId);
+                const url = '{{ route("admin.app.standardizations.product.upload", ":id") }}'.replace(':id', productId);
 
                 const response = await fetch(url, {
                     method: 'POST',
@@ -275,7 +275,7 @@ $(document).ready(function() {
         const form = $(this).closest('.delete-product-form');
         const productId = form.data('product-id');
         const row = form.closest('tr');
-        const url = '{{ route("admin.standardizations.product.destroy", ":id") }}'.replace(':id', productId);
+        const url = '{{ route("admin.app.standardizations.product.destroy", ":id") }}'.replace(':id', productId);
         
         const result = await confirmAction('Do you want to delete this product?');
         if (result && result.isConfirmed) {

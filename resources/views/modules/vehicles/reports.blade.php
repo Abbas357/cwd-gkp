@@ -1,4 +1,4 @@
-<x-module-layout title="Vehicle Reports">
+<x-vehicle-layout title="Vehicle Reports">
     @push('style')
     <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
@@ -180,7 +180,7 @@
                             <button type="submit" class="cw-btn">
                                 <i class="bi-filter me-1"></i> Generate Report
                             </button>
-                            <a href="{{ route('module.vehicles.reports') }}" class="btn btn-light">
+                            <a href="{{ route('admin.app.vehicles.reports') }}" class="btn btn-light">
                                 <i class="bi-undo me-1"></i> Reset
                             </a>
                         </div>
@@ -288,7 +288,7 @@
                 placeholder: "Select Vehicle",
                 allowClear: true,
                 ajax: {
-                    url: '{{ route("module.vehicles.search") }}',
+                    url: '{{ route("admin.app.vehicles.search") }}',
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
@@ -356,4 +356,4 @@
         });
     </script>
     @endpush
-</x-module-layout>
+</x-vehicle-layout>

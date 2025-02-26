@@ -1,5 +1,5 @@
 <aside class="sidebar-wrapper">
-    <a href="{{ route('admin.dashboard') }}" class="sidebar-header d-flex align-items-center">
+    <a href="{{ route('admin.apps') }}" class="sidebar-header d-flex align-items-center">
         <div class="logo-icon">
             <img src="{{ asset('admin/images/logo-square.png') }}" style="width:40px; border-radius:5px" class="mt-2" alt="Logo Desktop">
         </div>

@@ -76,9 +76,9 @@
 <body class="loading">
     <div class="page-loader"></div>
     
-    @include("layouts.module.partials.header")
+    @include("layouts.vehicle.partials.header")
     @if ($showAside)
-        @include("layouts.module.partials.aside")
+        @include("layouts.vehicle.partials.aside")
     @endif
 
     <main class="main-wrapper" style="{{ !$showAside ? 'margin-left: 0;' : '' }}">
@@ -106,8 +106,8 @@
     
     <div class="overlay btn-toggle"></div>
 
-    @include("layouts.module.partials.footer")
-    @include("layouts.module.partials.theme-switcher")
+    @include("layouts.vehicle.partials.footer")
+    @include("layouts.vehicle.partials.theme-switcher")
 
     <script src="{{ asset('admin/js/bootstrap.bundle.min.js') }}"></script>
 

@@ -1,4 +1,4 @@
-<x-module-layout title="Service Card">
+<x-service-card-layout title="Service Card">
     @push('style')
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
@@ -65,7 +65,7 @@
     <script>
         $(document).ready(function() {
             var table = initDataTable('#cards-datatable', {
-                ajaxUrl: "{{ route('module.service_cards.index') }}"
+                ajaxUrl: "{{ route('admin.app.service_cards.index') }}"
                 , columns: [{
                     data: "id"
                     , searchBuilderType: "num"
@@ -140,7 +140,7 @@
 
             hashTabsNavigator({
                 table: table
-                , dataTableUrl: "{{ route('module.service_cards.index') }}"
+                , dataTableUrl: "{{ route('admin.app.service_cards.index') }}"
                 , tabToHashMap: {
                     "#draft-tab": '#draft'
                     , "#verified-tab": '#verified'
@@ -162,7 +162,7 @@
 
             $("#cards-datatable").on('click', '.verify-btn', async function() {
                 const cardId = $(this).data("id");
-                const url = "{{ route('module.service_cards.verify', ':id') }}".replace(':id', cardId);
+                const url = "{{ route('admin.app.service_cards.verify', ':id') }}".replace(':id', cardId);
 
                 const result = await confirmAction('Do you want to Verify this service card?');
                 if (result && result.isConfirmed) {
@@ -175,7 +175,7 @@
 
             $("#cards-datatable").on('click', '.reject-btn', async function() {
                 const cardId = $(this).data("id");
-                const url = "{{ route('module.service_cards.reject', ':id') }}".replace(':id', cardId);
+                const url = "{{ route('admin.app.service_cards.reject', ':id') }}".replace(':id', cardId);
 
                 const {
                     value: reason
@@ -204,7 +204,7 @@
 
             $("#cards-datatable").on('click', '.renew-btn', async function() {
                 const cardId = $(this).data("id");
-                const url = "{{ route('module.service_cards.renew', ':id') }}".replace(':id', cardId);
+                const url = "{{ route('admin.app.service_cards.renew', ':id') }}".replace(':id', cardId);
 
                 const {
                     value: issue_date
@@ -229,7 +229,7 @@
 
             $("#cards-datatable").on('click', '.restore-btn', async function() {
                 const cardId = $(this).data("id");
-                const url = "{{ route('module.service_cards.restore', ':id') }}".replace(':id', cardId);
+                const url = "{{ route('admin.app.service_cards.restore', ':id') }}".replace(':id', cardId);
 
                 const result = await confirmAction('Would you like to reconsider this service card\'s status?');
                 if (result && result.isConfirmed) {
@@ -243,14 +243,14 @@
             resizableTable('#cards-datatable');
 
             pushStateModal({
-                fetchUrl: "{{ route('module.service_cards.detail', ':id') }}"
+                fetchUrl: "{{ route('admin.app.service_cards.detail', ':id') }}"
                 , btnSelector: '.view-btn'
                 , title: 'User Details'
                 , modalSize: 'lg'
             , });
 
             pushStateModal({
-                fetchUrl: "{{ route('module.service_cards.showCard', ':id') }}"
+                fetchUrl: "{{ route('admin.app.service_cards.showCard', ':id') }}"
                 , btnSelector: '.card-btn'
                 , title: 'Service Card'
                 , modalSize: 'md'
@@ -278,4 +278,4 @@
 
     </script>
     @endpush
-</x-module-layout>
+</x-service-card-layout>

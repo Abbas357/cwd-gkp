@@ -1,4 +1,4 @@
-<x-module-layout title="Vehicle Dashboard">
+<x-vehicle-layout title="Vehicle Dashboard">
     @push('style')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.42.0/apexcharts.min.css">
@@ -515,4 +515,4 @@
         });
     </script>
     @endpush
-</x-module-layout>
+</x-vehicle-layout>

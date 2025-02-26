@@ -14,7 +14,55 @@ use App\Http\Requests\StoreVehicleRequest;
 
 class VehicleController extends Controller
 {
-    public function dashboard()
+    public function all(Request $request)
+    {
+        $vehicles = Vehicle::query();
+
+        if ($request->ajax()) {
+            $dataTable = Datatables::of($vehicles)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    return view('modules.vehicles.partials.buttons', compact('row'))->render();
+                })
+                ->addColumn('added_by', function ($row) {
+                    return $row->user?->position
+                        ? '<a href="' . route('admin.users.show', $row->user->id) . '" target="_blank">' . $row->user->position . '</a>'
+                        : ($row->user?->designation ?? 'N/A');
+                })
+                ->addColumn('assigned_to', function ($row) {
+                    return $row->allotment->user->position ?? 'Pool';
+                })
+                ->editColumn('created_at', function ($row) {
+                    return $row->created_at->format('j, F Y');
+                })
+                ->editColumn('updated_at', function ($row) {
+                    return $row->updated_at->diffForHumans();
+                })
+                ->rawColumns(['action', 'added_by', 'user']);
+
+            if (!$request->input('search.value') && $request->has('searchBuilder')) {
+                $dataTable->filter(function ($query) use ($request) {
+                    $sb = new \App\Helpers\SearchBuilder($request, $query);
+                    $sb->build();
+                });
+            }
+
+            return $dataTable->toJson();
+        }
+
+        return view('modules.vehicles.index');
+    }
+
+    private function getDistribution($field)
+    {
+        return Vehicle::selectRaw("$field, COUNT(*) as count")
+            ->whereNotNull($field)
+            ->groupBy($field)
+            ->orderBy('count', 'desc')
+            ->get();
+    }
+
+    public function index(Request $request)
     {
         $totalVehicles = Vehicle::count();
 
@@ -123,59 +171,7 @@ class VehicleController extends Controller
             'brandWiseStatus',
             'allocationTrends'
         ));
-    }
-
-    private function getDistribution($field)
-    {
-        return Vehicle::selectRaw("$field, COUNT(*) as count")
-            ->whereNotNull($field)
-            ->groupBy($field)
-            ->orderBy('count', 'desc')
-            ->get();
-    }
-
-    private function formatPercentage($value, $decimals = 2)
-    {
-        return round($value, $decimals);
-    }
-
-    public function index(Request $request)
-    {
-        $vehicles = Vehicle::query();
-
-        if ($request->ajax()) {
-            $dataTable = Datatables::of($vehicles)
-                ->addIndexColumn()
-                ->addColumn('action', function ($row) {
-                    return view('modules.vehicles.partials.buttons', compact('row'))->render();
-                })
-                ->addColumn('added_by', function ($row) {
-                    return $row->user?->position
-                        ? '<a href="' . route('admin.users.show', $row->user->id) . '" target="_blank">' . $row->user->position . '</a>'
-                        : ($row->user?->designation ?? 'N/A');
-                })
-                ->addColumn('assigned_to', function ($row) {
-                    return $row->allotment->user->position ?? 'Pool';
-                })
-                ->editColumn('created_at', function ($row) {
-                    return $row->created_at->format('j, F Y');
-                })
-                ->editColumn('updated_at', function ($row) {
-                    return $row->updated_at->diffForHumans();
-                })
-                ->rawColumns(['action', 'added_by', 'user']);
-
-            if (!$request->input('search.value') && $request->has('searchBuilder')) {
-                $dataTable->filter(function ($query) use ($request) {
-                    $sb = new \App\Helpers\SearchBuilder($request, $query);
-                    $sb->build();
-                });
-            }
-
-            return $dataTable->toJson();
-        }
-
-        return view('modules.vehicles.index');
+        
     }
 
     public function create()

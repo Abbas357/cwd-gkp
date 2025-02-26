@@ -210,7 +210,7 @@
                 formData.append('collection', input.dataset.collection);
                 formData.append('_method', "PATCH");
 
-                const url = "{{ route('module.contractors.registration.uploadFile', ':id') }}".replace(':id', '{{ $ContractorRegistration->id }}');
+                const url = "{{ route('admin.app.contractors.registration.uploadFile', ':id') }}".replace(':id', '{{ $ContractorRegistration->id }}');
                 try {
                     const result = await fetchRequest(url, 'POST', formData);
                     if (result) {
@@ -246,7 +246,7 @@
 
     async function updateField(field, id) {
         const newValue = $('#input-' + field).val();
-        const url = "{{ route('module.contractors.registration.updateField', ':id') }}".replace(':id', id);
+        const url = "{{ route('admin.app.contractors.registration.updateField', ':id') }}".replace(':id', id);
         const data = {
             field: field
             , value: newValue

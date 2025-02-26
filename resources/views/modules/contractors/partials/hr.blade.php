@@ -153,7 +153,7 @@
                 const resourceId = span.closest('tr').data('id');
 
                 $.ajax({
-                    url: `{{ route('module.contractors.hr.update', ':resourceId') }}`.replace(':resourceId', resourceId)
+                    url: `{{ route('admin.app.contractors.hr.update', ':resourceId') }}`.replace(':resourceId', resourceId)
                     , method: 'POST'
                     , data: {
                         _token: '{{ csrf_token() }}'
@@ -185,7 +185,7 @@
             const newStatus = select.val();
 
             $.ajax({
-                url: `{{ route('module.contractors.hr.update', ':resourceId') }}`.replace(':resourceId', resourceId)
+                url: `{{ route('admin.app.contractors.hr.update', ':resourceId') }}`.replace(':resourceId', resourceId)
                 , method: 'POST'
                 , data: {
                     _token: '{{ csrf_token() }}'
@@ -219,7 +219,7 @@
                     formData.append('file', file);
                     formData.append('_method', 'PATCH');
 
-                    const url = '{{ route("admin.contractors.hr.upload", ":id") }}'.replace(':id', resourceId);
+                    const url = '{{ route("admin.app.contractors.hr.upload", ":id") }}'.replace(':id', resourceId);
 
                     const response = await fetch(url, {
                         method: 'POST'
@@ -258,7 +258,7 @@
             const form = $(this).closest('.delete-hr-form');
             const hrId = form.data('hr-id');
             const row = form.closest('tr');
-            const url = `{{ route('module.contractors.hr.destroy', ':hrId') }}`.replace(':hrId', hrId);
+            const url = `{{ route('admin.app.contractors.hr.destroy', ':hrId') }}`.replace(':hrId', hrId);
             const result = await confirmAction(`Do you want to delete this user?`);
             if (result && result.isConfirmed) {
                 const success = await fetchRequest(url, 'DELETE');

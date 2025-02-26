@@ -7,7 +7,7 @@ use App\Models\Setting;
 use Illuminate\View\Component;
 use Illuminate\Contracts\View\View;
 
-class ModuleLayout extends Component
+class ServiceCardLayout extends Component
 {
     public $title;
     public $settings;
@@ -25,6 +25,6 @@ class ModuleLayout extends Component
 
     public function render(): View
     {
-        return view('layouts.module.index', ['title' => $this->title, 'settings' => $this->settings, 'showAside' => $this->showAside]);
+        return view('layouts.service_card.index', ['title' => $this->title, 'settings' => $this->settings, 'showAside' => $this->showAside]);
     }
 }

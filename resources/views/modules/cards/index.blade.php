@@ -47,7 +47,7 @@
         $(document).ready(function() {
             var table = initDataTable('#cards-datatable', {
                 // serverSide: false,
-                ajaxUrl: "{{ route('module.cards.index') }}"
+                ajaxUrl: "{{ route('admin.app.cards.index') }}"
                 , columns: [
                     { data: 'id', searchBuilderType: "num" },
                     { data: 'type', searchBuilderType: 'string' },
@@ -69,7 +69,7 @@
 
             hashTabsNavigator({
                 table: table
-                , dataTableUrl: "{{ route('module.cards.index') }}"
+                , dataTableUrl: "{{ route('admin.app.cards.index') }}"
                 , tabToHashMap: {
                     "#service-card-tab": '#service-card'
                     , "#contractor-tab": '#contractor'

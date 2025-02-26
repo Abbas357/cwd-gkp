@@ -7,13 +7,13 @@
                     <i class="bi-three-dots-vertical"></i>
                 </div>
                 @else
-                <a href="{{ route('admin.dashboard') }}" class="logo-icon">
+                <a href="{{ route('admin.apps') }}" class="logo-icon">
                     <img src="{{ asset('admin/images/logo.png') }}" style="width:190px; border-radius:5px" alt="Logo Desktop">
                 </a>
                 @endif
                 @if (isset($header))
                 <div class="page-breadcrumb d-none d-sm-flex align-items-center bg-light px-2 shadow-sm">
-                    <div class="breadcrumb-title pe-2"><a href="{{ route('admin.dashboard') }}">Home</a></div> <span class="fs-5">/</span>
+                    <div class="breadcrumb-title pe-2"><a href="{{ route('admin.apps') }}">Home</a></div> <span class="fs-5">/</span>
                     <div class="ps-2">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb mb-0 p-0">
@@ -147,7 +147,7 @@
                                 @endcan
                         
                                 @can('view any contractor')
-                                <a href="{{ route('module.contractors.index') }}" class="grid-item text-decoration-none text-dark">
+                                <a href="{{ route('admin.app.contractors.index') }}" class="grid-item text-decoration-none text-dark">
                                     <div class="app-wrapper d-flex flex-column gap-2 text-center p-3">
                                         <div class="app-icon">
                                             <i style="font-size: 26px; color: #00a4e4" class="bi bi-clipboard"></i>
@@ -160,7 +160,7 @@
                                 @endcan
                         
                                 @can('view any standardization')
-                                <a href="{{ route('module.standardizations.index') }}" class="grid-item text-decoration-none text-dark">
+                                <a href="{{ route('admin.app.standardizations.index') }}" class="grid-item text-decoration-none text-dark">
                                     <div class="app-wrapper d-flex flex-column gap-2 text-center p-3">
                                         <div class="app-icon">
                                             <i style="font-size: 26px; color: #49c0b6" class="bi bi-shield-lock"></i>
@@ -173,7 +173,7 @@
                                 @endcan
                         
                                 @can('view any service card')
-                                <a href="{{ route('module.service_cards.index') }}" class="grid-item text-decoration-none text-dark">
+                                <a href="{{ route('admin.app.service_cards.index') }}" class="grid-item text-decoration-none text-dark">
                                     <div class="app-wrapper d-flex flex-column gap-2 text-center p-3">
                                         <div class="app-icon">
                                             <i style="font-size: 26px; color: #a4c649" class="bi bi-credit-card"></i>

@@ -170,7 +170,7 @@
     async function updateField(field, id) {
         const newValue = (field === 'content') ? $('#input-' + field).summernote('code') : $('#input-' + field).val();
 
-        const url = "{{ route('module.vehicles.updateField', ':id') }}".replace(':id', id);
+        const url = "{{ route('admin.app.vehicles.updateField', ':id') }}".replace(':id', id);
         const data = {
             field: field
             , value: newValue
