@@ -105,6 +105,7 @@
                     , action: function(e, dt, node, config) {
                         pushStateModal({
                             fetchUrl: "{{ route('admin.downloads.create') }}",
+                            btnSelector: '.create-btn',
                             title: 'Add Download',
                             actionButtonName: 'Add Download', 
                             modalSize: 'lg', 
@@ -112,30 +113,8 @@
                             formAction: "{{ route('admin.downloads.store') }}",
                             modalHeight: '35vh', 
                             hash: false
-                        }).then(modalId => {
-                            const $modal = $('#' + modalId);
-                            const $submitBtn = $modal.find('button[type="submit"]');
-                            
-                            $modal.find('form').on('submit', async function(e) {
-                                e.preventDefault();
-                                if (this.isSubmitting) return false;
-                                
-                                this.isSubmitting = true;
-                                setButtonLoading($submitBtn, true);
-                                
-                                try {
-                                    if (await fetchRequest($(this).attr('action'), 'POST', new FormData(this))) {
-                                        $modal.modal('hide');
-                                        table.ajax.reload();
-                                    }
-                                } catch (error) {
-                                    console.error('Error Adding Download:', error);
-                                } finally {
-                                    this.isSubmitting = false;
-                                    setButtonLoading($submitBtn, false);
-                                    $submitBtn.prop('disabled', false);
-                                }
-                            });
+                        , }).then((modal) => {
+                            pushStateModalFormSubmission(modal, table);
                         });
                     },
                 }

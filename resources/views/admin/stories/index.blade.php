@@ -101,33 +101,7 @@
                             , modalHeight: '45vh'
                             , hash: false
                         , }).then((modal) => {
-                            const storyModal = $('#' + modal);
-                            const updateStoryBtn = storyModal.find('button[type="submit"]');
-                            storyModal.find('form').on('submit', async function(e) {
-                                e.preventDefault();
-                                const form = this;
-                                if (form.isSubmitting) {
-                                    return false;
-                                }
-                                form.isSubmitting = true;
-                                const formData = new FormData(form);
-                                const url = $(this).attr('action');
-                                setButtonLoading(updateStoryBtn, true);
-                                try {
-                                    const result = await fetchRequest(url, 'POST', formData);
-                                    if (result) {
-                                        setButtonLoading(updateStoryBtn, false);
-                                        storyModal.modal('hide');
-                                        table.ajax.reload();
-                                    }
-                                } catch (error) {
-                                    console.error('Error Adding Story: ', error);
-                                } finally {
-                                    form.isSubmitting = false;
-                                    setButtonLoading(updateStoryBtn, false);
-                                    updateStoryBtn.prop('disabled', false);
-                                }
-                            });
+                            pushStateModalFormSubmission(modal, table);
                         });
                     },
                 }

@@ -143,7 +143,7 @@
                             , modalHeight: '50vh'
                             , hash: false
                         , }).then((modal) => {
-                            pushStateModalFormSubmission(modal, 'button[type="submit"]', table);
+                            pushStateModalFormSubmission(modal, table);
                         });
 
                     },
@@ -151,10 +151,10 @@
             });
 
             $("#vehicles-datatable").on('click', '.delete-btn', async function() {
-                const achievementId = $(this).data("id");
-                const url = "{{ route('admin.vehicles.destroy', ':id') }}".replace(':id', achievementId);
+                const vehicleId = $(this).data("id");
+                const url = "{{ route('admin.vehicles.destroy', ':id') }}".replace(':id', vehicleId);
 
-                const result = await confirmAction(`Do you want to delete this achievement?`);
+                const result = await confirmAction(`Do you want to delete this vehicle?`);
                 if (result && result.isConfirmed) {
                     const success = await fetchRequest(url, 'DELETE');
                     if (success) {

@@ -130,26 +130,7 @@
                             , modalHeight: '75vh'
                             , hash: false
                         , }).then((modal) => {
-                            const devProjectModal = $('#' + modal);
-                            const updateDevProjectBtn = devProjectModal.find('button[type="submit"]');
-                            devProjectModal.find('form').on('submit', async function(e) {
-                                e.preventDefault();
-                                const form = this;
-                                const formData = new FormData(form);
-                                const url = $(this).attr('action');
-                                setButtonLoading(updateDevProjectBtn, true);
-                                try {
-                                    const result = await fetchRequest(url, 'POST', formData);
-                                    if (result) {
-                                        setButtonLoading(updateDevProjectBtn, false);
-                                        devProjectModal.modal('hide');
-                                        table.ajax.reload();
-                                    }
-                                } catch (error) {
-                                    setButtonLoading(updateDevProjectBtn, false);
-                                    console.error('Error during form submission:', error);
-                                }
-                            });
+                            pushStateModalFormSubmission(modal, table);
                         });
                     }
                 , }

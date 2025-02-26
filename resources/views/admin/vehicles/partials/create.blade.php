@@ -364,7 +364,7 @@
 
         if (prevBtn && nextBtn) {
             prevBtn.style.display = step === 1 ? 'none' : 'block';
-            nextBtn.textContent = step === totalSteps ? 'Submit' : 'Next';
+            nextBtn.style.display = step === totalSteps ? 'none' : 'block';
         }
     }
 

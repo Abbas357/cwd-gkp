@@ -858,9 +858,9 @@ function pushStateModal({
     });
 }
 
-function pushStateModalFormSubmission(modal, submitButton, tableToRefresh) {
+function pushStateModalFormSubmission(modal, tableToRefresh) {
     const modalElement = $('#' + modal);
-    const submitBtn = modalElement.find(submitButton || 'button[type="submit"]');
+    const submitBtn = modalElement.find('button[type="submit"]');
     
     modalElement.find('form').on('submit', async function(e) {
         e.preventDefault();

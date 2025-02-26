@@ -114,33 +114,7 @@
                             , modalHeight: '35vh'
                             , hash: false
                         , }).then((modal) => {
-                            const projectFileModal = $('#' + modal);
-                            const updateProjectFileBtn = projectFileModal.find('button[type="submit"]');
-                            projectFileModal.find('form').on('submit', async function(e) {
-                                e.preventDefault();
-                                const form = this;
-                                if (form.isSubmitting) {
-                                    return false;
-                                }
-                                form.isSubmitting = true;
-                                const formData = new FormData(form);
-                                const url = $(this).attr('action');
-                                setButtonLoading(updateProjectFileBtn, true);
-                                try {
-                                    const result = await fetchRequest(url, 'POST', formData);
-                                    if (result) {
-                                        setButtonLoading(updateProjectFileBtn, false);
-                                        projectFileModal.modal('hide');
-                                        table.ajax.reload();
-                                    }
-                                } catch (error) {
-                                    console.error('Error Adding Project File: ', error);
-                                } finally {
-                                    form.isSubmitting = false;
-                                    setButtonLoading(updateProjectFileBtn, false);
-                                    updateProjectFileBtn.prop('disabled', false);
-                                }
-                            });
+                            pushStateModalFormSubmission(modal, table);
                         });
                     },
                 }

@@ -114,33 +114,7 @@
                             , modalHeight: '65vh'
                             , hash: false
                         , }).then((modal) => {
-                            const newsModal = $('#' + modal);
-                            const updateNewsBtn = newsModal.find('button[type="submit"]');
-                            newsModal.find('form').on('submit', async function(e) {
-                                e.preventDefault();
-                                const form = this;
-                                if (form.isSubmitting) {
-                                    return false;
-                                }
-                                form.isSubmitting = true;
-                                const formData = new FormData(form);
-                                const url = $(this).attr('action');
-                                setButtonLoading(updateNewsBtn, true);
-                                try {
-                                    const result = await fetchRequest(url, 'POST', formData);
-                                    if (result) {
-                                        setButtonLoading(updateNewsBtn, false);
-                                        newsModal.modal('hide');
-                                        table.ajax.reload();
-                                    }
-                                } catch (error) {
-                                    console.error('Error Adding News: ', error);
-                                } finally {
-                                    form.isSubmitting = false;
-                                    setButtonLoading(updateNewsBtn, false);
-                                    updateNewsBtn.prop('disabled', false);
-                                }
-                            });
+                            pushStateModalFormSubmission(modal, table);
                         });
                     },
                 }

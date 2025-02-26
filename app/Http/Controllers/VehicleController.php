@@ -404,6 +404,7 @@ class VehicleController extends Controller
     {
         $vehicle = Vehicle::find($id);
         if (request()->user()->isAdmin() && $vehicle->delete()) {
+            $vehicle->allotments()->delete();
             return response()->json(['success' => 'Vehicle has been deleted successfully.']);
         }
 

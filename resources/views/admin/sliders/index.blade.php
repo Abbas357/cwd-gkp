@@ -109,33 +109,7 @@
                             , modalHeight: '70vh'
                             , hash: false
                         , }).then((modal) => {
-                            const sliderModal = $('#' + modal);
-                            const updateSliderBtn = sliderModal.find('button[type="submit"]');
-                            sliderModal.find('form').on('submit', async function(e) {
-                                e.preventDefault();
-                                const form = this;
-                                if (form.isSubmitting) {
-                                    return false;
-                                }
-                                form.isSubmitting = true;
-                                const formData = new FormData(form);
-                                const url = $(this).attr('action');
-                                setButtonLoading(updateSliderBtn, true);
-                                try {
-                                    const result = await fetchRequest(url, 'POST', formData);
-                                    if (result) {
-                                        setButtonLoading(updateSliderBtn, false);
-                                        sliderModal.modal('hide');
-                                        table.ajax.reload();
-                                    }
-                                } catch (error) {
-                                    console.error('Error Adding Slider: ', error);
-                                } finally {
-                                    form.isSubmitting = false;
-                                    setButtonLoading(updateSliderBtn, false);
-                                    updateSliderBtn.prop('disabled', false);
-                                }
-                            });
+                            8pushStateModalFormSubmission(modal, table);
                         });
                     },
                 }

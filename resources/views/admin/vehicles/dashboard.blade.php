@@ -69,7 +69,7 @@
     <div class="wrapper">
         <div class="row g-3 mb-4">
             <div class="col-md-3">
-                <div class="stat-card card bg-light h-100">
+                <div class="stat-card card h-100" style="background: #0000ff15; border: 1px solid #0000ff20;">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
@@ -85,7 +85,7 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="stat-card card bg-light h-100">
+                <div class="stat-card card h-100" style="background: #00ff0015; border: 1px solid #00ff0020;">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
@@ -101,7 +101,7 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="stat-card card bg-light h-100">
+                <div class="stat-card card h-100" style="background: #ffd90015; border: 1px solid #ffd90020;">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
@@ -117,7 +117,7 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="stat-card card bg-light h-100">
+                <div class="stat-card card h-100" style="background: #ff000015; border: 1px solid #ff000020">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
@@ -136,7 +136,7 @@
 
         <div class="row g-3 mb-4">
             <div class="col-md-4">
-                <div class="stat-card card bg-light h-100">
+                <div class="stat-card card h-100" style="background: #cbee2e15; border: 1px solid #cbee2e20">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
@@ -151,7 +151,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="stat-card card bg-light h-100">
+                <div class="stat-card card h-100" style="background: #1065e415; border: 1px solid #1065e420">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
@@ -166,7 +166,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="stat-card card bg-light h-100">
+                <div class="stat-card card h-100" style="background: #00b69e15; border: 1px solid #00b69e20">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
