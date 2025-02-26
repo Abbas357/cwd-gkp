@@ -1,4 +1,4 @@
-<x-module-layout title="Cards">
+<x-app-layout title="Cards">
     @push('style')
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
     @endpush
@@ -94,4 +94,4 @@
 
     </script>
     @endpush
-</x-module-layout>
+</x-app-layout>
