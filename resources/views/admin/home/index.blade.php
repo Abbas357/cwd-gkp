@@ -137,27 +137,6 @@
             </a>
             @endcan
 
-            @can('view any contractor')
-            <a href="{{ route('admin.contractors.index') }}" class="app-tile">
-                <i class="bi bi-clipboard" style="color: #00a4e4"></i>
-                <p>Registration</p>
-            </a>
-            @endcan
-
-            @can('view any standardization')
-            <a href="{{ route('admin.standardizations.index') }}" class="app-tile">
-                <i class="bi bi-shield-lock" style="color: #49c0b6"></i>
-                <p>Standardization</p>
-            </a>
-            @endcan
-
-            @can('view any service card')
-            <a href="{{ route('admin.service_cards.index') }}" class="app-tile">
-                <i class="bi bi-credit-card" style="color: #a4c649"></i>
-                <p>Service Card</p>
-            </a>
-            @endcan
-
             @can('view any page')
             <a href="{{ route('admin.pages.index') }}" class="app-tile">
                 <i class="bi bi-file-earmark-post" style="color: #ffc168"></i>
@@ -200,7 +179,6 @@
             </a>
             @endcan
 
-            {{-- Settings is typically for admins only --}}
             @can('view any user')
             <a href="{{ route('admin.settings.index') }}" class="app-tile">
                 <i class="bi bi-gear" style="color: #f1632a"></i>
@@ -208,7 +186,6 @@
             </a>
             @endcan
 
-            {{-- Logs are typically for admins only --}}
             @can('view any user')
             <a href="{{ route('admin.logs') }}" class="app-tile">
                 <i class="bi bi-activity" style="color: #ce1126"></i>

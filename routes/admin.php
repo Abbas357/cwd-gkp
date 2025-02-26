@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PageController;
@@ -14,31 +13,21 @@ use App\Http\Controllers\SliderController;
 use App\Http\Controllers\TenderController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GalleryController;
-use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SettingController;
-use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\SeniorityController;
-use App\Http\Controllers\ContractorController;
 use App\Http\Controllers\NewsLetterController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\ActivityLogController;
-use App\Http\Controllers\VehicleAllotmentController;
 use App\Http\Controllers\ProjectFileController;
-use App\Http\Controllers\ServiceCardController;
-use App\Http\Controllers\VehicleUserController;
 use App\Http\Controllers\PublicContactController;
-use App\Http\Controllers\StandardizationController;
 use App\Http\Controllers\DevelopmentProjectController;
-use App\Http\Controllers\ContractorMachineryController;
-use App\Http\Controllers\ContractorRegistrationController;
-use App\Http\Controllers\ContractorHumanResourceController;
-use App\Http\Controllers\ContractorWorkExperienceController;
+
 
 Route::middleware('auth')->group(function () { 
     Route::prefix('admin')->as('admin.')->group(function () {
@@ -62,78 +51,6 @@ Route::middleware('auth')->group(function () {
             Route::get('/hierarchy/setup', [UserController::class, 'hierarchy'])->name('hierarchy')->can('hierarchy', 'user');
             Route::put('/{user}/boss', [UserController::class, 'updateBoss'])->name('update-boss')->can('update-boss', 'user');
             Route::get('/{user}/available-subordinates', [UserController::class, 'availableSubordinates'])->name('available-subordinates');
-        });
-
-        Route::prefix('service_cards')->as('service_cards.')->group(function () {            
-            Route::get('/', [ServiceCardController::class, 'index'])->name('index')->can('viewAny', App\Models\ServiceCard::class);
-            Route::get('/{service_card}', [ServiceCardController::class, 'show'])->name('show')->can('view', App\Models\ServiceCard::class);
-            Route::get('/get/{service_card}', [ServiceCardController::class, 'showDetail'])->name('detail')->can('view', 'service_card');
-            Route::get('/card/{service_card}', [ServiceCardController::class, 'showCard'])->name('showCard')->can('view', 'service_card');
-            Route::patch('/verify/{service_card}', [ServiceCardController::class, 'verify'])->name('verify')->can('verify', 'service_card');
-            Route::patch('/reject/{service_card}', [ServiceCardController::class, 'reject'])->name('reject')->can('reject', 'service_card');
-            Route::patch('/restore/{service_card}', [ServiceCardController::class, 'restore'])->name('restore')->can('restore', 'service_card');
-            Route::patch('/renew/{service_card}', [ServiceCardController::class, 'renew'])->name('renew')->can('renew', 'service_card');
-            Route::patch('/update/field/{service_card}', [ServiceCardController::class, 'updateField'])->name('updateField')->can('update', 'service_card');
-            Route::patch('/upload/file/{service_card}', [ServiceCardController::class, 'uploadFile'])->name('uploadFile')->can('update', 'service_card');
-        });
-        
-        Route::prefix('contractors')->as('contractors.')->group(function () {
-            Route::get('/', [ContractorController::class, 'index'])->name('index')->can('viewAny', App\Models\Contractor::class);
-            Route::get('/{Contractor}/detail', [ContractorController::class, 'detail'])->name('detail')->can('view', 'Contractor');
-            Route::patch('/update/field/{Contractor}', [ContractorController::class, 'updateField'])->name('updateField')->can('update', 'Contractor');
-            Route::patch('/update/file/{Contractor}', [ContractorController::class, 'uploadFile'])->name('uploadFile')->can('update', 'Contractor');
-
-            Route::prefix('hr')->as('hr.')->group(function () {
-                Route::get('/{Contractor}', [ContractorHumanResourceController::class, 'detail'])->name('detail')->can('view', 'Contractor');
-                Route::post('/{id}/update', [ContractorHumanResourceController::class, 'update'])->name('update');
-                Route::patch('/{id}/upload', [ContractorHumanResourceController::class, 'upload'])->name('upload');
-                Route::delete('{id}', [ContractorHumanResourceController::class, 'destroy'])->name('destroy');
-            });
-
-            Route::prefix('machinery')->as('machinery.')->group(function () {
-                Route::get('/{Contractor}', [ContractorMachineryController::class, 'detail'])->name('detail')->can('view', 'Contractor');
-                Route::post('/{id}/update', [ContractorMachineryController::class, 'update'])->name('update');
-                Route::patch('/{id}/upload', [ContractorMachineryController::class, 'upload'])->name('upload');
-                Route::delete('{id}', [ContractorMachineryController::class, 'destroy'])->name('destroy');
-            });
-
-            Route::prefix('experience')->as('experience.')->group(function () {
-                Route::get('/{Contractor}', [ContractorWorkExperienceController::class, 'detail'])->name('detail')->can('view', 'Contractor');
-                Route::post('/{id}/update', [ContractorWorkExperienceController::class, 'update'])->name('update');
-                Route::patch('/{id}/upload', [ContractorWorkExperienceController::class, 'upload'])->name('upload');
-                Route::delete('{id}', [ContractorWorkExperienceController::class, 'destroy'])->name('destroy');
-            });
-        
-            Route::prefix('registration')->as('registration.')->group(function () {
-                Route::get('/', [ContractorRegistrationController::class, 'index'])->name('index')->can('viewAny', App\Models\ContractorRegistration::class);
-                Route::patch('/defer/{ContractorRegistration}', [ContractorRegistrationController::class, 'defer'])->name('defer')->can('defer', 'Contractor');
-                Route::patch('/approve/{ContractorRegistration}', [ContractorRegistrationController::class, 'approve'])->name('approve')->can('approve', 'Contractor');
-                Route::get('/{ContractorRegistration}', [ContractorRegistrationController::class, 'show'])->name('show')->can('view', 'Contractor');
-                Route::get('/get/{ContractorRegistration}', [ContractorRegistrationController::class, 'showDetail'])->name('showDetail')->can('view', 'Contractor');
-                Route::get('/card/{ContractorRegistration}', [ContractorRegistrationController::class, 'showCard'])->name('showCard')->can('card', 'Contractor');
-                Route::patch('/renew/{ContractorRegistration}', [ContractorRegistrationController::class, 'renew'])->name('renew')->can('renew', 'Contractor');
-                Route::patch('/update/field/{ContractorRegistration}', [ContractorRegistrationController::class, 'updateField'])->name('updateField')->can('update', 'Contractor');
-                Route::patch('/update/file/{ContractorRegistration}', [ContractorRegistrationController::class, 'uploadFile'])->name('uploadFile')->can('update', 'Contractor');
-            });
-        });
-        
-        Route::prefix('standardizations')->as('standardizations.')->group(function () {
-            Route::get('/', [StandardizationController::class, 'index'])->name('index')->can('viewAny', App\Models\Standardization::class);
-            Route::patch('/approve/{standardization}', [StandardizationController::class, 'approve'])->name('approve')->can('approve', 'Standardization');
-            Route::patch('/reject/{standardization}', [StandardizationController::class, 'reject'])->name('reject')->can('reject', 'Standardization');
-            Route::get('/{standardization}', [StandardizationController::class, 'show'])->name('show')->can('view', 'Standardization');
-            Route::get('/get/{standardization}', [StandardizationController::class, 'showDetail'])->name('detail')->can('view', 'Standardization');
-            Route::get('/card/{standardization}', [StandardizationController::class, 'showCard'])->name('card')->can('card', 'Standardization');
-            Route::patch('/renew/{standardization}', [StandardizationController::class, 'renew'])->name('renew')->can('renew', 'Standardization');
-            Route::patch('/update/field/{standardization}', [StandardizationController::class, 'updateField'])->name('updateField')->can('update', 'Standardization');
-            Route::patch('/upload/file/{standardization}', [StandardizationController::class, 'uploadFile'])->name('uploadFile')->can('update', 'Standardization');
-            
-            Route::prefix('product')->as('product.')->group(function () {
-                Route::get('/{Standardization}', [ProductController::class, 'detail'])->name('detail')->can('view', 'Product');
-                Route::post('/{id}/update', [ProductController::class, 'update'])->name('update');
-                Route::patch('/{id}/upload', [ProductController::class, 'upload'])->name('upload');
-                Route::delete('{id}', [ProductController::class, 'destroy'])->name('destroy');
-            });
         });
         
         Route::prefix('downloads')->as('downloads.')->group(function () {
@@ -369,33 +286,8 @@ Route::middleware('auth')->group(function () {
             Route::get('/links', [HomeController::class, 'searchLinks'])->name('links');
             Route::post('/clear', [HomeController::class, 'clearRecentSearches'])->name('clear');
         });
-        
-        Route::prefix('cards')->as('cards.')->group(function () {
-            Route::get('/', [CardController::class, 'index'])->name('index')->can('view', App\Models\Card::class);
-        });
     
         Route::get('/logs', ActivityLogController::class)->name('logs')->can('view', Spatie\Activitylog\Models\Activity::class);
-        
-        Route::prefix('vehicles')->as('vehicles.')->group(function () {
-            Route::get('/', [VehicleController::class, 'index'])->name('index')->can('viewAny', App\Models\Vehicle::class);
-            Route::get('/create', [VehicleController::class, 'create'])->name('create')->can('create', App\Models\Vehicle::class);
-            Route::get('/dashboard', [VehicleController::class, 'dashboard'])->name('dashboard')->can('view', App\Models\Vehicle::class);
-            Route::get('/reports', [VehicleController::class, 'reports'])->name('reports')->can('view', 'vehicle');
-            Route::get('/search', [VehicleController::class, 'search'])->name('search')->can('view', 'vehicle');
-            Route::post('/', [VehicleController::class, 'store'])->name('store')->can('create', App\Models\Vehicle::class);
-            Route::get('/{vehicle}', [VehicleController::class, 'show'])->name('show')->can('view', App\Models\Vehicle::class);
-            Route::get('/get/{vehicle}', [VehicleController::class, 'showDetail'])->name('detail')->can('view', 'vehicle');
-            Route::get('/history/{vehicle}', [VehicleController::class, 'vehicleHistory'])->name('history')->can('view', 'vehicle');
-            Route::patch('/update/field/{vehicle}', [VehicleController::class, 'updateField'])->name('updateField')->can('update', 'vehicle');
-            Route::delete('/{vehicle}', [VehicleController::class, 'destroy'])->name('destroy')->can('delete', 'vehicle');
-            
-            Route::prefix('allotment')->as('allotment.')->group(function () {
-                Route::get('/{vehicle}', [VehicleAllotmentController::class, 'create'])->name('create')->can('view', 'allotment');
-                Route::post('', [VehicleAllotmentController::class, 'store'])->name('store')->can('view', 'allotment');
-                Route::delete('/{allotment}', [VehicleAllotmentController::class, 'delete'])->name('delete')->can('delete', 'allotment');
-            });
-
-        });
 
     });
 });

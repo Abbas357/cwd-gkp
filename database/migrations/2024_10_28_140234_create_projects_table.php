@@ -17,7 +17,7 @@ return new class extends Migration
             $table->mediumText('introduction')->nullable();
             $table->string('funding_source')->nullable();
             $table->string('location')->nullable();
-            $table->enum('status', ['pending', 'ongoing', 'completed'])->default('pending');
+            $table->enum('status', ['ongoing', 'completed'])->default('ongoing');
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->decimal('budget', 12, 2)->nullable();

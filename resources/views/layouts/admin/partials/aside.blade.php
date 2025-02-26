@@ -117,51 +117,6 @@
             </li>
             @endcanany
     
-            @canany(['view any service card', 'view any contractor', 'view any standardization', 'view any vehicle'])
-            <li>
-                <a href="javascript:;" class="has-arrow">
-                    <div class="parent-icon"><i class="bi-app-indicator text-info"></i></div>
-                    <div class="menu-title">Modules</div>
-                </a>
-                <ul class="p-2 menu-items">
-                    @can('view any service card')
-                    <li><a href="{{ route('admin.service_cards.index') }}"><i class="bi-credit-card fs-6"></i>&nbsp; Service Card</a></li>
-                    @endcan
-                    @can('view any contractor')
-                    <li>
-                        <a href="javascript:;" class="has-arrow">
-                            <div class="parent-icon"><i class="bi-person-vcard fs-6"></i></div>
-                            <div class="menu-title">Contractors</div>
-                        </a>
-                        <ul class="p-2 menu-items">
-                            <li><a href="{{ route('admin.contractors.index') }}"><i class="bi-credit-card fs-6"></i>&nbsp; List</a></li>
-                            <li><a href="{{ route('admin.contractors.registration.index') }}"><i class="bi-person-vcard fs-6"></i>&nbsp; Registration</a></li>
-                        </ul>
-                    </li>
-                    @endcan
-                    @can('view any standardization')
-                    <li><a href="{{ route('admin.standardizations.index') }}"><i class="bi-patch-check-fill fs-6"></i>&nbsp; E-Standardization</a></li>
-                    @endcan
-                    @can('view any cards')
-                    <li><a href="{{ route('admin.cards.index') }}"><i class="bi-credit-card fs-6"></i>&nbsp; All Cards</a></li>
-                    @endcan
-                    @can('view any vehicle')
-                    <li>
-                        <a href="javascript:;" class="has-arrow">
-                            <div class="parent-icon"><i class="bi-person-vcard fs-6"></i></div>
-                            <div class="menu-title">Vehicle Mgt.</div>
-                        </a>
-                        <ul class="p-2 menu-items">
-                            <li><a href="{{ route('admin.vehicles.dashboard') }}"><i class="bi-person-vcard fs-6"></i>&nbsp; Home</a></li>
-                            <li><a href="{{ route('admin.vehicles.index') }}"><i class="bi-credit-card fs-6"></i>&nbsp; Vehicles</a></li>
-                            <li><a href="{{ route('admin.vehicles.reports') }}"><i class="bi-person-vcard fs-6"></i>&nbsp; Reports</a></li>
-                        </ul>
-                    </li>
-                    @endcan
-                </ul>
-            </li>
-            @endcanany
-    
             @canany(['view any districts', 'view any category', 'view any role', 'view any permission'])
             <li class="menu-label">Others</li>
             <li>

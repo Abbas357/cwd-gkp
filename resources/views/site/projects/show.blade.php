@@ -72,7 +72,32 @@
             transition: transform 0.3s ease;
         }
         
-     
+        @keyframes rotatePulse {
+            0% {
+                transform: rotate(-15deg) scale(1);
+            }
+            20% {
+                transform: rotate(-25deg) scale(1.1);
+            }
+            40% {
+                transform: rotate(-15deg) scale(1);
+            }
+            60% {
+                transform: rotate(-5deg) scale(1.1);
+            }
+            80% {
+                transform: rotate(-15deg) scale(1);
+            }
+            100% {
+                transform: rotate(-15deg) scale(1);
+            }
+        }
+
+        .new-icon {
+            width: 2rem;
+            margin-left: 0.5rem;
+            animation: rotatePulse 2.5s infinite ease-in-out;
+        }
         
         .table td, .table th {
             vertical-align: middle;
@@ -181,14 +206,7 @@
                                             $isRecent = $file->published_at >= now()->subDays(7);
                                             @endphp
                                             @if ($isRecent)
-                                                <span class="new-file-icon me-2" title="Uploaded within last 7 days">
-                                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" 
-                                                            fill="#ff0000" stroke="#ff0000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                            <animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite"/>
-                                                        </path>
-                                                    </svg>
-                                                </span>
+                                                <img class="new-icon" src="{{ asset('site/images/new.png') }}" alt="New">
                                             @endif
                                         </td>
                                         <td>

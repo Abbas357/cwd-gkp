@@ -24,6 +24,6 @@ class AppLayout extends Component
 
     public function render(): View
     {
-        return view('layouts.admin.app', ['title' => $this->title, 'settings' => $this->settings, 'showAside' => $this->showAside]);
+        return view('layouts.admin.index', ['title' => $this->title, 'settings' => $this->settings, 'showAside' => $this->showAside]);
     }
 }

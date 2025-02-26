@@ -2,33 +2,29 @@
 
 namespace App\View\Components;
 
+use Closure;
 use App\Models\Setting;
-use Illuminate\View\View;
 use Illuminate\View\Component;
+use Illuminate\Contracts\View\View;
 
-class MainLayout extends Component
+class ModuleLayout extends Component
 {
     public $title;
     public $settings;
-    public $ogImage;
+    public $showAside;
 
-    public function __construct($title = null, $ogImage = null)
+    public function __construct($title = null, $showAside = true)
     {
         $this->settings = Setting::first();
-        
         $this->title = $title 
             ? $title .' | ' . ($this->settings->site_name ?? config('app.name'))
             : ($this->settings->site_name ?? config('app.name'));
         
-        $this->ogImage = $ogImage ?? asset('site/images/logo-square.png');
+        $this->showAside = $showAside;
     }
 
     public function render(): View
     {
-        return view('layouts.site.index', [
-            'title' => $this->title,
-            'settings' => $this->settings,
-            'ogImage' => $this->ogImage
-        ]);
+        return view('layouts.module.index', ['title' => $this->title, 'settings' => $this->settings, 'showAside' => $this->showAside]);
     }
 }
