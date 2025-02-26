@@ -1,6 +1,10 @@
 <x-app-layout title="Tenders">
     @push('style')
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/plugins/flatpickr/flatpickr.min.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header">
         <li class="breadcrumb-item active" aria-current="page">Tenders</li>
@@ -43,6 +47,9 @@
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/col-resizable.js') }}"></script>
     <script src="{{ asset('admin/plugins/html2canvas/html2canvas.min.js') }}"></script>
+    <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
+    <script src="{{ asset('admin/plugins/summernote/summernote-bs5.min.js') }}"></script>
+    <script src="{{ asset('admin/plugins/flatpickr/flatpickr.js') }}"></script>
 
     <script>
         $(document).ready(function() {

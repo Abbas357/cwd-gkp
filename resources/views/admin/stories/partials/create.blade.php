@@ -1,5 +1,3 @@
-<link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
-
 <div class="row mx-1">
     <div class="col-md-8">
         <div class="col mb-4">
@@ -27,13 +25,8 @@
             </div>
         </div>
     </div>
-
 </div>
 
-
-
-</div>
-<script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
 <script>
     $(document).ready(function() {
         imageCropper({

@@ -1,6 +1,7 @@
 <x-app-layout title="Stories">
     @push('style')
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header">
         <li class="breadcrumb-item active" aria-current="page">Stories</li>
@@ -40,6 +41,7 @@
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/col-resizable.js') }}"></script>
     <script src="{{ asset('admin/plugins/html2canvas/html2canvas.min.js') }}"></script>
+    <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
 
     <script>
         $(document).ready(function() {

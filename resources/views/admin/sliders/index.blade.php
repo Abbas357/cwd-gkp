@@ -109,7 +109,7 @@
                             , modalHeight: '70vh'
                             , hash: false
                         , }).then((modal) => {
-                            8pushStateModalFormSubmission(modal, table);
+                            pushStateModalFormSubmission(modal, table);
                         });
                     },
                 }

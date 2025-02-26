@@ -142,7 +142,7 @@
                             , formAction: "{{ route('admin.vehicles.store') }}"
                             , modalHeight: '50vh'
                             , hash: false
-                        , }).then((modal) => {
+                       , }).then((modal) => {
                             pushStateModalFormSubmission(modal, table);
                         });
 
