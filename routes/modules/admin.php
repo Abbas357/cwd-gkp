@@ -33,8 +33,8 @@ Route::prefix('site')->middleware(['can:manage website'])->group(function () {
     Route::get('/', [HomeController::class, 'home'])->name('home');
     
     Route::prefix('profile')->as('profile.')->group(function () {
-        Route::get('/', [ProfileController::class, 'edit'])->name('edit');
-        Route::patch('/', [ProfileController::class, 'update'])->name('update');
+        Route::get('/', [ProfileController::class, 'edit'])->name('edit')->can('editProfile', App\Models\User::class);
+        Route::patch('/', [ProfileController::class, 'update'])->name('update')->can('editProfile', App\Models\User::class);
     });
 
     Route::prefix('users')->as('users.')->group(function () {

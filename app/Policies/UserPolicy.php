@@ -43,4 +43,9 @@ class UserPolicy
     {
         return $user->id === $model->id || $user->can('archive user');
     }
+
+    public function editProfile(User $user, User $model): bool
+    {
+        return $user->id === $model->id || $user->can('edit profile');
+    }
 }
