@@ -57,7 +57,7 @@
     <script>
         $(document).ready(function() {
             var table = initDataTable('#contractors', {
-                ajaxUrl: "{{ route('admin.app.contractors.index') }}"
+                ajaxUrl: "{{ route('admin.apps.contractors.index') }}"
                 , columns: [{
                         data: "id"
                         , searchBuilderType: "num"
@@ -120,7 +120,7 @@
 
             hashTabsNavigator({
                 table: table
-                , dataTableUrl: "{{ route('admin.app.contractors.index') }}"
+                , dataTableUrl: "{{ route('admin.apps.contractors.index') }}"
                 , tabToHashMap: {
                     "#active-tab": '#active'
                     , "#blacklisted-tab": '#blacklisted'
@@ -154,7 +154,7 @@
             , });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.app.contractors.detail', ':id') }}"
+                fetchUrl: "{{ route('admin.apps.contractors.detail', ':id') }}"
                 , btnSelector: '.view-btn'
                 , title: 'Contractor Details'
                 , modalSize: 'lg'
@@ -162,21 +162,21 @@
             });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.app.contractors.hr.detail', ':id') }}"
+                fetchUrl: "{{ route('admin.apps.contractors.hr.detail', ':id') }}"
                 , btnSelector: '.hr-btn'
                 , title: 'Contractor Human Resource'
                 , modalSize: 'xl'
             });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.app.contractors.machinery.detail', ':id') }}"
+                fetchUrl: "{{ route('admin.apps.contractors.machinery.detail', ':id') }}"
                 , btnSelector: '.machinery-btn'
                 , title: 'Contractor Machinery'
                 , modalSize: 'xl'
             });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.app.contractors.experience.detail', ':id') }}"
+                fetchUrl: "{{ route('admin.apps.contractors.experience.detail', ':id') }}"
                 , btnSelector: '.experience-btn'
                 , title: 'Contractor Work Experience'
                 , modalSize: 'xl'

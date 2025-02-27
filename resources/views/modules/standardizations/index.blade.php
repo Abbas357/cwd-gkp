@@ -52,7 +52,7 @@
     <script>
         $(document).ready(function() {
             var table = initDataTable('#standardizations', {
-                ajaxUrl: "{{ route('admin.app.standardizations.index') }}"
+                ajaxUrl: "{{ route('admin.apps.standardizations.index') }}"
                 , columns: [{
                         data: "id"
                         , searchBuilderType: "num"
@@ -99,7 +99,7 @@
 
             $("#standardizations").on('click', '.approve-btn', async function() {
                 const standardizationId = $(this).data("id");
-                const url = "{{ route('admin.app.standardizations.approve', ':id') }}".replace(':id', standardizationId);
+                const url = "{{ route('admin.apps.standardizations.approve', ':id') }}".replace(':id', standardizationId);
 
                 const result = await confirmAction('Do you want to approve this firm?');
                 if (result && result.isConfirmed) {
@@ -112,7 +112,7 @@
 
             $("#standardizations").on('click', '.renew-btn', async function() {
                 const standardizationId = $(this).data("id");
-                const url = "{{ route('admin.app.standardizations.renew', ':id') }}".replace(':id', standardizationId);
+                const url = "{{ route('admin.apps.standardizations.renew', ':id') }}".replace(':id', standardizationId);
 
                 const {
                     value: issue_date
@@ -137,7 +137,7 @@
 
             $("#standardizations").on('click', '.reject-btn', async function() {
                 const standardizationId = $(this).data("id");
-                const url = "{{ route('admin.app.standardizations.reject', ':id') }}".replace(':id', standardizationId);
+                const url = "{{ route('admin.apps.standardizations.reject', ':id') }}".replace(':id', standardizationId);
 
                 const {
                     value: remarks
@@ -166,7 +166,7 @@
 
             hashTabsNavigator({
                 table: table
-                , dataTableUrl: "{{ route('admin.app.standardizations.index') }}"
+                , dataTableUrl: "{{ route('admin.apps.standardizations.index') }}"
                 , tabToHashMap: {
                     "#draft-tab": '#draft'
                     , "#approved-tab": '#approved'
@@ -200,7 +200,7 @@
             , });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.app.standardizations.card', ':id') }}",
+                fetchUrl: "{{ route('admin.apps.standardizations.card', ':id') }}",
                 btnSelector: '.card-btn',
                 title: 'Standardization Card',
                 actionButtonName: 'Download Card',
@@ -222,14 +222,14 @@
             });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.app.standardizations.detail', ':id') }}",
+                fetchUrl: "{{ route('admin.apps.standardizations.detail', ':id') }}",
                 btnSelector: '.view-btn',
                 title: 'Standardization Details',
                 modalSize: 'lg',
             });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.app.standardizations.product.detail', ':id') }}"
+                fetchUrl: "{{ route('admin.apps.standardizations.product.detail', ':id') }}"
                 , btnSelector: '.product-btn'
                 , title: 'Products'
                 , modalSize: 'xl'

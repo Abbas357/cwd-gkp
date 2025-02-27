@@ -16,7 +16,7 @@
         <ul class="metismenu" id="sidenav">
        
             @can('view any service card')
-            <li><a href="{{ route('admin.app.service_cards.index') }}"><i class="bi-credit-card text-success"></i>&nbsp; Cards</a></li>
+            <li><a href="{{ route('admin.apps.service_cards.index') }}"><i class="bi-credit-card text-success"></i>&nbsp; Cards</a></li>
             @endcan
 
             @can('view service card report')

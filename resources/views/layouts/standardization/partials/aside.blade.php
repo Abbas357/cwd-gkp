@@ -16,7 +16,7 @@
         <ul class="metismenu" id="sidenav">
 
             @can('view any standardization')
-            <li><a href="{{ route('admin.app.standardizations.index') }}"><i class="bi-patch-check-fill text-success"></i>&nbsp; Standardizations</a></li>
+            <li><a href="{{ route('admin.apps.standardizations.index') }}"><i class="bi-patch-check-fill text-success"></i>&nbsp; Standardizations</a></li>
             @endcan
 
             @can('view any standardization')

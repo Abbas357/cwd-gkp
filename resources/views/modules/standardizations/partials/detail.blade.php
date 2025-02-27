@@ -187,7 +187,7 @@
                 formData.append('id', "{{ $Standardization->id }}");
                 formData.append('_method', "PATCH");
 
-                const url = "{{ route('admin.app.standardizations.uploadFile', ':id') }}".replace(':id', '{{ $Standardization->id }}');
+                const url = "{{ route('admin.apps.standardizations.uploadFile', ':id') }}".replace(':id', '{{ $Standardization->id }}');
                 try {
                     const result = await fetchRequest(url, 'POST', formData);
                     if (result) {
@@ -216,7 +216,7 @@
 
     async function updateField(field, id) {
         const newValue = $('#input-' + field).val();
-        const url = "{{ route('admin.app.standardizations.updateField', ':id') }}".replace(':id', id);
+        const url = "{{ route('admin.apps.standardizations.updateField', ':id') }}".replace(':id', id);
         const data = {
             field: field
             , value: newValue

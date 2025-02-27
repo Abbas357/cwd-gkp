@@ -17,13 +17,13 @@
 
             @can('view any contractor')
             <li>
-                <a href="{{ route('admin.app.contractors.index') }}"><i class="bi-person-vcard text-success"></i>&nbsp; Contractor List</a>
+                <a href="{{ route('admin.apps.contractors.index') }}"><i class="bi-person-vcard text-success"></i>&nbsp; Contractor List</a>
             </li>
             @endcan
 
             @can('view any contractor')
             <li>
-                <a href="{{ route('admin.app.contractors.registration.index') }}"><i class="bi-list-check text-success"></i>&nbsp; Registrations</a>
+                <a href="{{ route('admin.apps.contractors.registration.index') }}"><i class="bi-list-check text-success"></i>&nbsp; Registrations</a>
             </li>
             @endcan
     

@@ -59,6 +59,7 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
             backdrop-filter: blur(5px);
             transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
         
         #searchBar:focus {
@@ -75,7 +76,7 @@
         
         .app-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 1.5rem;
             justify-content: center;
         }
@@ -85,11 +86,12 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 150px;
+            height: 140px;
             background: rgba(255, 255, 255, 0.9);
             border-radius: 16px;
-            padding: 1.5rem;
+            padding: 1rem;
             text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.2);
             text-decoration: none;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
             backdrop-filter: blur(5px);
@@ -101,6 +103,7 @@
         [data-bs-theme=dark] .app-tile {
             background: rgba(30, 30, 30, 0.8);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .app-tile::before {

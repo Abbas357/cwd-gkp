@@ -62,7 +62,7 @@
     <script>
         $(document).ready(function() {
             var table = initDataTable('#contractors-registration', {
-                ajaxUrl: "{{ route('admin.app.contractors.registration.index') }}"
+                ajaxUrl: "{{ route('admin.apps.contractors.registration.index') }}"
                 , columns: [{
                         data: "id"
                         , searchBuilderType: "num"
@@ -144,7 +144,7 @@
 
             $("#contractors-registration").on('click', '.defer-btn', async function() {
                 const registrationId = $(this).data("id");
-                const url = "{{ route('admin.app.contractors.registration.defer', ':id') }}".replace(':id', registrationId);
+                const url = "{{ route('admin.apps.contractors.registration.defer', ':id') }}".replace(':id', registrationId);
 
                 const { value: remarks } = await confirmWithInput({
                     inputType: "textarea",
@@ -171,7 +171,7 @@
 
             $("#contractors-registration").on('click', '.renew-btn', async function() {
                 const registrationId = $(this).data("id");
-                const url = "{{ route('admin.app.contractors.registration.renew', ':id') }}".replace(':id', registrationId);
+                const url = "{{ route('admin.apps.contractors.registration.renew', ':id') }}".replace(':id', registrationId);
 
                 const {
                     value: issue_date
@@ -196,7 +196,7 @@
 
             $("#contractors-registration").on('click', '.approve-btn', async function() {
                 const registrationId = $(this).data("id");
-                const url = "{{ route('admin.app.contractors.registration.approve', ':id') }}".replace(':id', registrationId);
+                const url = "{{ route('admin.apps.contractors.registration.approve', ':id') }}".replace(':id', registrationId);
 
                 const result = await confirmAction('Do you want to approve this registration?');
                 if (result && result.isConfirmed) {
@@ -209,7 +209,7 @@
 
             hashTabsNavigator({
                 table: table
-                , dataTableUrl: "{{ route('admin.app.contractors.registration.index') }}"
+                , dataTableUrl: "{{ route('admin.apps.contractors.registration.index') }}"
                 , tabToHashMap: {
                     "#draft-tab": '#draft'
                     , "#deferred-once-tab": '#deferred_once'
@@ -247,14 +247,14 @@
             , });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.app.contractors.registration.showDetail', ':id') }}"
+                fetchUrl: "{{ route('admin.apps.contractors.registration.showDetail', ':id') }}"
                 , btnSelector: '.view-btn'
                 , title: 'Registrations Details'
                 , modalSize: 'lg'
             , });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.app.contractors.registration.showCard', ':id') }}"
+                fetchUrl: "{{ route('admin.apps.contractors.registration.showCard', ':id') }}"
                 , btnSelector: '.card-btn'
                 , title: 'Contractor Card'
                 , modalSize: 'md'

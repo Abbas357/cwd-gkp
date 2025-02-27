@@ -146,7 +146,7 @@ $(document).ready(function() {
             const experienceId = span.closest('tr').data('id');
 
             $.ajax({
-                url: `{{ route('admin.app.contractors.experience.update', ':experienceId') }}`.replace(':experienceId', experienceId),
+                url: `{{ route('admin.apps.contractors.experience.update', ':experienceId') }}`.replace(':experienceId', experienceId),
                 method: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
@@ -182,7 +182,7 @@ $(document).ready(function() {
         const newValue = select.val();
 
         $.ajax({
-            url: `{{ route('admin.app.contractors.experience.update', ':experienceId') }}`.replace(':experienceId', experienceId),
+            url: `{{ route('admin.apps.contractors.experience.update', ':experienceId') }}`.replace(':experienceId', experienceId),
             method: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
@@ -215,7 +215,7 @@ $(document).ready(function() {
                 formData.append('file', file);
                 formData.append('_method', 'PATCH');
 
-                const url = '{{ route("admin.app.contractors.experience.upload", ":id") }}'.replace(':id', experienceId);
+                const url = '{{ route("admin.apps.contractors.experience.upload", ":id") }}'.replace(':id', experienceId);
 
                 const response = await fetch(url, {
                     method: 'POST',
@@ -255,7 +255,7 @@ $(document).ready(function() {
         const form = $(this).closest('.delete-experience-form');
         const experienceId = form.data('experience-id');
         const row = form.closest('tr');
-        const url = `{{ route('admin.app.contractors.experience.destroy', ':experienceId') }}`.replace(':experienceId', experienceId);
+        const url = `{{ route('admin.apps.contractors.experience.destroy', ':experienceId') }}`.replace(':experienceId', experienceId);
         
         const result = await confirmAction(`Do you want to delete this experience?`);
         

@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
-    public function home()
+    public function websiteAdmin()
     {
         return view('admin.home.index');
     }
 
-    public function apps()
+    public function masterAdmin()
     {
         return view('admin.home.master');
     }

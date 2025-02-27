@@ -16,15 +16,15 @@
         <ul class="metismenu" id="sidenav">
        
             @can('view any vehicle')
-            <li><a href="{{ route('admin.app.vehicles.index') }}"><i class="bi-bus-front text-info"></i>&nbsp; Home</a></li>
+            <li><a href="{{ route('admin.apps.vehicles.index') }}"><i class="bi-bus-front text-info"></i>&nbsp; Home</a></li>
             @endcan
 
             @can('view any vehicle')
-            <li><a href="{{ route('admin.app.vehicles.all') }}"><i class="bi-speedometer text-success"></i>&nbsp; Vehicles</a></li>
+            <li><a href="{{ route('admin.apps.vehicles.all') }}"><i class="bi-speedometer text-success"></i>&nbsp; Vehicles</a></li>
             @endcan
 
             @can('view any vehicle')
-            <li><a href="{{ route('admin.app.vehicles.reports') }}"><i class="bi-flag text-info"></i>&nbsp; Reports</a></li>
+            <li><a href="{{ route('admin.apps.vehicles.reports') }}"><i class="bi-flag text-info"></i>&nbsp; Reports</a></li>
             @endcan
     
         </ul>

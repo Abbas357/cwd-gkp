@@ -2,7 +2,7 @@
     @push('style')
     <style>
         .wrapper {
-            margin: 0 auto;
+            margin: 0 auto !important;
             max-width: 1000px;
             width: 90%;
             text-align: center;
@@ -22,6 +22,7 @@
             transition: all 0.3s ease;
             position: relative;
             z-index: 10;
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         #searchBar:focus {
@@ -55,7 +56,7 @@
             position: relative;
             z-index: 10;
             transition: all 0.3s ease;
-            border: 2px solid transparent;
+            border: 3px solid transparent;
             text-decoration: none;
             display: flex;
             flex-direction: column;
@@ -101,7 +102,6 @@
             opacity: 1;
         }
 
-        /* New styles for accent borders */
         .app-tile::before {
             content: '';
             position: absolute;
@@ -119,7 +119,6 @@
             opacity: 0.8;
         }
 
-        /* Individual accent colors */
         .accent-purple::before {
             border-color: #8d0fe0;
         }
@@ -133,14 +132,13 @@
         }
 
         .accent-teal::before {
-            border-color: #1cc7d0;
+            border-color: #1a9ea5;
         }
 
-        .accent-blue::before {
-            border-color: #146eb4;
+        .accent-orange::before {
+            border-color: #f47721;
         }
 
-        /* Optional: Accent color glow effect on hover */
         .accent-purple:hover {
             box-shadow: 0 15px 30px rgba(141, 15, 224, 0.2);
         }
@@ -154,11 +152,11 @@
         }
 
         .accent-teal:hover {
-            box-shadow: 0 15px 30px rgba(28, 199, 208, 0.2);
+            box-shadow: 0 15px 30px rgba(17, 148, 155, 0.2);
         }
 
-        .accent-blue:hover {
-            box-shadow: 0 15px 30px rgba(20, 110, 180, 0.2);
+        .accent-orange:hover {
+            box-shadow: 0 15px 30px rgba(244, 119, 33, 0.4);
         }
 
         [data-bs-theme=dark] .app-tile:hover::before {
@@ -174,15 +172,15 @@
         }
 
         [data-bs-theme=dark] .accent-green:hover {
-            box-shadow: 0 15px 30px rgba(150, 187, 5, 0.4);
+            box-shadow: 0 15px 30px rgba(20, 122, 255, 0.4);
         }
 
         [data-bs-theme=dark] .accent-teal:hover {
-            box-shadow: 0 15px 30px rgba(28, 199, 208, 0.4);
+            box-shadow: 0 15px 30px rgba(12, 199, 209, 0.4);
         }
 
-        [data-bs-theme=dark] .accent-blue:hover {
-            box-shadow: 0 15px 30px rgba(20, 110, 180, 0.4);
+        [data-bs-theme=dark] .accent-orange:hover {
+            box-shadow: 0 15px 30px rgba(255, 134, 53, 0.4);
         }
 
         #particles-js {
@@ -240,29 +238,29 @@
             @endcan
 
             @can('manage vehicles')
-            <a href="{{ route('admin.app.vehicles.index') }}" class="app-tile accent-red">
+            <a href="{{ route('admin.apps.vehicles.index') }}" class="app-tile accent-red">
                 <i class="bi-bus-front" style="color: #ff000d"></i>
                 <p>Vehicle Mgt.</p>
             </a>
             @endcan
 
             @can('manage standardizations')
-            <a href="{{ route('admin.app.standardizations.index') }}" class="app-tile accent-green">
+            <a href="{{ route('admin.apps.standardizations.index') }}" class="app-tile accent-green">
                 <i class="bi-patch-check-fill" style="color: #1DA1F2"></i>
                 <p>Standardization</p>
             </a>
             @endcan
 
             @can('manage contractors')
-            <a href="{{ route('admin.app.contractors.index') }}" class="app-tile accent-teal">
+            <a href="{{ route('admin.apps.contractors.index') }}" class="app-tile accent-teal">
                 <i class="bi-person-vcard" style="color: #1cc7d0"></i>
                 <p>Contractors</p>
             </a>
             @endcan
 
             @can('manage service cards')
-            <a href="{{ route('admin.app.service_cards.index') }}" class="app-tile accent-blue">
-                <i class="bi-credit-card" style="color: #146eb4"></i>
+            <a href="{{ route('admin.apps.service_cards.index') }}" class="app-tile accent-orange">
+                <i class="bi-credit-card" style="color: #f47721"></i>
                 <p>Service Card</p>
             </a>
             @endcan

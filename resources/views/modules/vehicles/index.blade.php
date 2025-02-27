@@ -45,7 +45,7 @@
     <script>
         $(document).ready(function() {
             var table = initDataTable('#vehicles-datatable', {
-                ajaxUrl: "{{ route('admin.app.vehicles.all') }}"
+                ajaxUrl: "{{ route('admin.apps.vehicles.all') }}"
                 , columns: [{
                         data: "id"
                         , searchBuilderType: "num"
@@ -133,13 +133,13 @@
                     , action: function(e, dt, node, config) {
 
                         pushStateModal({
-                            fetchUrl: "{{ route('admin.app.vehicles.create') }}"
+                            fetchUrl: "{{ route('admin.apps.vehicles.create') }}"
                             , btnSelector: '.create-btn'
                             , title: 'Add Vehicle'
                             , actionButtonName: 'Add Vehicle'
                             , modalSize: 'lg'
                             , includeForm: true
-                            , formAction: "{{ route('admin.app.vehicles.store') }}"
+                            , formAction: "{{ route('admin.apps.vehicles.store') }}"
                             , modalHeight: '50vh'
                             , hash: false
                        , }).then((modal) => {
@@ -152,7 +152,7 @@
 
             $("#vehicles-datatable").on('click', '.delete-btn', async function() {
                 const vehicleId = $(this).data("id");
-                const url = "{{ route('admin.app.vehicles.destroy', ':id') }}".replace(':id', vehicleId);
+                const url = "{{ route('admin.apps.vehicles.destroy', ':id') }}".replace(':id', vehicleId);
 
                 const result = await confirmAction(`Do you want to delete this vehicle?`);
                 if (result && result.isConfirmed) {
@@ -173,27 +173,27 @@
             , });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.app.vehicles.detail', ':id') }}",
+                fetchUrl: "{{ route('admin.apps.vehicles.detail', ':id') }}",
                 btnSelector: '.view-btn',
                 title: 'Vehicle Details',
                 modalSize: 'lg',
             });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.app.vehicles.history', ':id') }}",
+                fetchUrl: "{{ route('admin.apps.vehicles.history', ':id') }}",
                 btnSelector: '.history-btn',
                 title: 'Vehicle History',
                 modalSize: 'xl',
             });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.app.vehicles.allotment.create', ':id') }}"
+                fetchUrl: "{{ route('admin.apps.vehicles.allotment.create', ':id') }}"
                 , btnSelector: '.allot-btn'
                 , title: 'Vehicle Allotment'
                 , actionButtonName: 'Allot Vehicle'
                 , modalSize: 'lg'
                 , includeForm: true
-                , formAction: "{{ route('admin.app.vehicles.allotment.store', ':id') }}"
+                , formAction: "{{ route('admin.apps.vehicles.allotment.store', ':id') }}"
                 , modalHeight: '65vh'
             , }).then((modal) => {
                 const vehicleModal = $('#' + modal);

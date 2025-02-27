@@ -140,7 +140,7 @@ $(document).ready(function() {
             const machineId = span.closest('tr').data('id');
 
             $.ajax({
-                url: `{{ route('admin.app.contractors.machinery.update', ':machineId') }}`.replace(':machineId', machineId),
+                url: `{{ route('admin.apps.contractors.machinery.update', ':machineId') }}`.replace(':machineId', machineId),
                 method: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
@@ -172,7 +172,7 @@ $(document).ready(function() {
         const newStatus = select.val();
 
         $.ajax({
-            url: `{{ route('admin.app.contractors.machinery.update', ':machineId') }}`.replace(':machineId', machineId),
+            url: `{{ route('admin.apps.contractors.machinery.update', ':machineId') }}`.replace(':machineId', machineId),
             method: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
@@ -208,7 +208,7 @@ $(document).ready(function() {
                 formData.append('collection', collection);
                 formData.append('_method', 'PATCH');
 
-                const url = '{{ route("admin.app.contractors.machinery.upload", ":id") }}'.replace(':id', machineId);
+                const url = '{{ route("admin.apps.contractors.machinery.upload", ":id") }}'.replace(':id', machineId);
 
                 const response = await fetch(url, {
                     method: 'POST',
@@ -248,7 +248,7 @@ $(document).ready(function() {
             const form = $(this).closest('.delete-machine-form');
             const machineId = form.data('machine-id');
             const row = form.closest('tr');
-            const url = `{{ route('admin.app.contractors.machinery.destroy', ':machineId') }}`.replace(':machineId', machineId);
+            const url = `{{ route('admin.apps.contractors.machinery.destroy', ':machineId') }}`.replace(':machineId', machineId);
             const result = await confirmAction(`Do you want to delete this machinery?`);
             if (result && result.isConfirmed) {
                 const success = await fetchRequest(url, 'DELETE');

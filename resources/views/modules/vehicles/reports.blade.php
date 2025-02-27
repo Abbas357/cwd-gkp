@@ -180,7 +180,7 @@
                             <button type="submit" class="cw-btn">
                                 <i class="bi-filter me-1"></i> Generate Report
                             </button>
-                            <a href="{{ route('admin.app.vehicles.reports') }}" class="btn btn-light">
+                            <a href="{{ route('admin.apps.vehicles.reports') }}" class="btn btn-light">
                                 <i class="bi-undo me-1"></i> Reset
                             </a>
                         </div>
@@ -288,7 +288,7 @@
                 placeholder: "Select Vehicle",
                 allowClear: true,
                 ajax: {
-                    url: '{{ route("admin.app.vehicles.search") }}',
+                    url: '{{ route("admin.apps.vehicles.search") }}',
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {

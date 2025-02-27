@@ -6,7 +6,7 @@ use App\Http\Controllers\Module\VehicleAllotmentController;
 
 use App\Models\Vehicle;
 
-Route::group(['as' => 'vehicles.', 'middleware' => ['can:manage,App\Models\Vehicle']], function () {
+Route::group(['prefix' => 'vehicles', 'as' => 'vehicles.', 'middleware' => ['can:manage,App\Models\Vehicle']], function () {
     Route::get('/', [VehicleController::class, 'index'])->name('index')->can('viewAny', Vehicle::class);
     Route::get('/all', [VehicleController::class, 'all'])->name('all')->can('viewAny', Vehicle::class);
     Route::get('/create', [VehicleController::class, 'create'])->name('create')->can('create', Vehicle::class);

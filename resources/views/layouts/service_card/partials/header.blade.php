@@ -147,7 +147,7 @@
                                 @endcan
                         
                                 @can('view any contractor')
-                                <a href="{{ route('admin.app.contractors.index') }}" class="grid-item text-decoration-none text-dark">
+                                <a href="{{ route('admin.apps.contractors.index') }}" class="grid-item text-decoration-none text-dark">
                                     <div class="app-wrapper d-flex flex-column gap-2 text-center p-3">
                                         <div class="app-icon">
                                             <i style="font-size: 26px; color: #00a4e4" class="bi bi-clipboard"></i>
@@ -160,7 +160,7 @@
                                 @endcan
                         
                                 @can('view any standardization')
-                                <a href="{{ route('admin.app.standardizations.index') }}" class="grid-item text-decoration-none text-dark">
+                                <a href="{{ route('admin.apps.standardizations.index') }}" class="grid-item text-decoration-none text-dark">
                                     <div class="app-wrapper d-flex flex-column gap-2 text-center p-3">
                                         <div class="app-icon">
                                             <i style="font-size: 26px; color: #49c0b6" class="bi bi-shield-lock"></i>
@@ -173,7 +173,7 @@
                                 @endcan
                         
                                 @can('view any service card')
-                                <a href="{{ route('admin.app.service_cards.index') }}" class="grid-item text-decoration-none text-dark">
+                                <a href="{{ route('admin.apps.service_cards.index') }}" class="grid-item text-decoration-none text-dark">
                                     <div class="app-wrapper d-flex flex-column gap-2 text-center p-3">
                                         <div class="app-icon">
                                             <i style="font-size: 26px; color: #a4c649" class="bi bi-credit-card"></i>
