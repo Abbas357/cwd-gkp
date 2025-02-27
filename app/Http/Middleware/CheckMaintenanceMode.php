@@ -30,7 +30,7 @@ class CheckMaintenanceMode
                 return $next($request);
             }
 
-            return response()->view('misc.maintenance');
+            return response()->view('misc.core.maintenance');
         }
 
         return $next($request);

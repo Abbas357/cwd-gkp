@@ -140,7 +140,7 @@
                             , modalSize: 'lg'
                             , includeForm: true
                             , formAction: "{{ route('admin.apps.vehicles.store') }}"
-                            , modalHeight: '50vh'
+                            , modalHeight: '60vh'
                             , hash: false
                        , }).then((modal) => {
                             pushStateModalFormSubmission(modal, table);

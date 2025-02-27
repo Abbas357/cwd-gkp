@@ -15,7 +15,7 @@ class HomeController extends Controller
 
     public function masterAdmin()
     {
-        return view('admin.home.master');
+        return view('misc.home');
     }
 
     public function searchLinks(Request $request)

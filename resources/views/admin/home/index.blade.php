@@ -1,4 +1,4 @@
-<x-app-layout title="Homepage" id="particles-js">
+<x-app-layout title="Homepage" :showAside="false" id="particles-js">
     @push('style')
     <style>
         .dashboard-container {

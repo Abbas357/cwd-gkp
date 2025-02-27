@@ -18,7 +18,7 @@ class RouteMaintenanceMode
             if ($isLocked && str_ends_with($route, '*')) {
                 $groupPrefix = rtrim($route, '*');
                 if (str_starts_with($routeName, $groupPrefix)) {
-                    return response()->view('misc.route_maintenance', [
+                    return response()->view('misc.core.route_maintenance', [
                         'routeName' => $routeName
                     ]);
                 }

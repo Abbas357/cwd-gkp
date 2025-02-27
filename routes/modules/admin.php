@@ -2,24 +2,24 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\NewsController;
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\EventController;
-use App\Http\Controllers\StoryController;
-use App\Http\Controllers\SchemeController;
-use App\Http\Controllers\SliderController;
-use App\Http\Controllers\TenderController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\GalleryController;
-use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\DownloadController;
-use App\Http\Controllers\SeniorityController;
-use App\Http\Controllers\NewsLetterController;
-use App\Http\Controllers\AchievementController;
-use App\Http\Controllers\ProjectFileController;
-use App\Http\Controllers\PublicContactController;
-use App\Http\Controllers\DevelopmentProjectController;
+use App\Http\Controllers\Admin\NewsController;
+use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\StoryController;
+use App\Http\Controllers\Admin\SchemeController;
+use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\TenderController;
+use App\Http\Controllers\Admin\CommentController;
+use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\Admin\ProjectController;
+use App\Http\Controllers\Admin\DownloadController;
+use App\Http\Controllers\Admin\SeniorityController;
+use App\Http\Controllers\Admin\NewsLetterController;
+use App\Http\Controllers\Admin\AchievementController;
+use App\Http\Controllers\Admin\ProjectFileController;
+use App\Http\Controllers\Admin\PublicContactController;
+use App\Http\Controllers\Admin\DevelopmentProjectController;
 
 Route::get('/site', [HomeController::class, 'websiteAdmin'])->name('home');
 Route::prefix('site')->middleware(['can:manage website'])->group(function () {
