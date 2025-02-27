@@ -239,7 +239,7 @@ class VehicleController extends Controller
         return response()->json(['error' => 'There was an error adding the vehicle.']);
     }
 
-    public function showDetail($id)
+    public function showDetail(Vehicle $vehicle)
     {
         $cat = [
             'vehicle_type' => Category::where('type', 'vehicle_type')->get(),
@@ -249,8 +249,6 @@ class VehicleController extends Controller
             'vehicle_registration_status' => Category::where('type', 'vehicle_registration_status')->get(),
             'vehicle_brand' => Category::where('type', 'vehicle_brand')->get(),
         ];
-
-        $vehicle = Vehicle::find($id);
 
         if (!$vehicle) {
             return response()->json([
@@ -270,9 +268,8 @@ class VehicleController extends Controller
         ]);
     }
 
-    public function vehicleHistory($id)
+    public function vehicleHistory(Vehicle $vehicle)
     {
-        $vehicle = Vehicle::find($id);
         $allotments = $vehicle->allotments;
 
         if (!$vehicle) {
@@ -293,9 +290,8 @@ class VehicleController extends Controller
         ]);
     }
 
-    public function updateField(Request $request, $id)
+    public function updateField(Request $request, Vehicle $vehicle)
     {
-        $vehicle = Vehicle::find($id);
         $request->validate([
             'field' => 'required|string',
             'value' => 'required|string',

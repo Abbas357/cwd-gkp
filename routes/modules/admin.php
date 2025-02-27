@@ -39,7 +39,7 @@ Route::prefix('site')->middleware(['can:manage website'])->group(function () {
 
     Route::prefix('users')->as('users.')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index')->can('viewAny', App\Models\User::class);
-        Route::get('/api', [UserController::class, 'users'])->name('api');
+        Route::get('/api', [UserController::class, 'users'])->name('api')->withoutMiddleware(['can:manage website']);;
         Route::get('/create', [UserController::class, 'create'])->name('create')->can('create', App\Models\User::class);
         Route::get('/edit/{user}', [UserController::class, 'edit'])->name('edit')->can('update',  'user');
         Route::patch('/activate/{user}', [UserController::class, 'activateUser'])->name('activate')->can('activate', 'user');
