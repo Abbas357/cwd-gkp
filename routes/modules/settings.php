@@ -53,5 +53,9 @@ Route::prefix('settings')->middleware(['can:manage settings'])->group(function (
         Route::post('/clear', [HomeController::class, 'clearRecentSearches'])->name('clear');
     });
 
-    Route::get('/logs', ActivityLogController::class)->name('logs')->can('view', Spatie\Activitylog\Models\Activity::class);
+    Route::prefix('activity')->as('activity.')->group(function () {
+        Route::get('/', [ActivityLogController::class, 'index'])->name('index')->can('view', Spatie\Activitylog\Models\Activity::class);
+        Route::get('/notifications', [ActivityLogController::class, 'getNotifications'])->name('notifications');
+    });
+    
 });

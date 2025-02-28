@@ -298,7 +298,7 @@
             @endcan
 
             @can('view any user')
-            <a href="{{ route('admin.logs') }}" class="app-tile" style="--accent-color: #ce1126; --accent-color-secondary: #ff6384;">
+            <a href="{{ route('admin.activity.index') }}" class="app-tile" style="--accent-color: #ce1126; --accent-color-secondary: #ff6384;">
                 <i class="bi bi-activity" style="color: #ce1126"></i>
                 <p>Activity Log</p>
             </a>

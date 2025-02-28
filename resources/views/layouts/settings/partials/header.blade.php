@@ -212,7 +212,7 @@
                                 @endcan
                         
                                 @can('view any user')
-                                <a href="{{ route('admin.logs') }}" class="grid-item text-decoration-none text-dark">
+                                <a href="{{ route('admin.activity.index') }}" class="grid-item text-decoration-none text-dark">
                                     <div class="app-wrapper d-flex flex-column gap-2 text-center p-3">
                                         <div class="app-icon">
                                             <i style="font-size: 26px; color: #ce1126" class="bi bi-activity"></i>
@@ -403,7 +403,7 @@
                     <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('admin.settings.index') }}"><i class="bi-gear-fill"></i>Settings</a>
                     @endcan
                     @can('view activity')
-                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('admin.logs') }}"><i class="bi-activity"></i>Activity Log</a>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('admin.activity.index') }}"><i class="bi-activity"></i>Activity Log</a>
                     @endcan
                     <hr class="dropdown-divider">
                     <form method="POST" action="{{ route('logout') }}" disabled>

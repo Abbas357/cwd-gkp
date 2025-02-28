@@ -142,7 +142,7 @@ input::placeholder {
 }
 
 .top-header .navbar .nav-item {
-    height: 70px;
+    height: 50px;
     display: flex;
     align-items: center;
 }

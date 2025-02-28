@@ -1,3 +1,286 @@
+<style>
+    .admin-grid {
+        height: 400px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 1px;
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 1px;
+    }
+
+    .grid-item {
+        position: relative;
+    }
+
+    .app-wrapper {
+        min-height: 100px;
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+    .grid-item:hover .app-wrapper {
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    .app-icon i {
+        transition: transform 0.2s ease;
+    }
+
+    .grid-item:hover .app-icon i {
+        transform: scale(1.1);
+    }
+
+    .grid-item {
+        cursor: pointer;
+    }
+
+    .grid-item:active .app-wrapper {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .app-name p {
+        color: #777;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .admin-grid::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .admin-grid::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .admin-grid::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+    }
+
+    .admin-grid::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .grid-container {
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        }
+    }
+
+    @media (max-width: 480px) {
+        .grid-container {
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        }
+
+        .app-wrapper {
+            min-height: 80px;
+            padding: 2px !important;
+        }
+
+        .app-icon i {
+            font-size: 20px !important;
+        }
+
+        .app-name p {
+            font-size: 12px;
+        }
+    }
+
+    .rotate-180 {
+        transform: rotate(180deg);
+        transition: transform 0.3s ease;
+    }
+
+    .bi-chevron-down {
+        transition: transform 0.3s ease;
+    }
+
+    .dropdown-menu {
+        transition: max-height 0.3s ease;
+    }
+    .dropdown-item:hover {
+        background: rgba(0, 0, 0, 0.09)
+    }
+
+    .dropdown-notify {
+        width: 320px;
+        max-height: 400px;
+    }
+    
+    .notify-list {
+        max-height: 350px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    
+    .notify-title {
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 2px;
+        color: #333;
+        display: flex;
+        align-items: center;
+    }
+    
+    .notify-desc {
+        font-size: 12px;
+        color: #666;
+    }
+    
+    .notify-time {
+        font-size: 11px;
+        color: #999;
+    }
+    
+    .badge-notify {
+        position: absolute;
+        top: 5;
+        right: 0;
+        font-size: 10px;
+        padding: 0 5px;
+        background-color: #ff0000;
+        color: white;
+        border-radius: 50%;
+        transform: translate(25%, -25%);
+    }
+    
+    .notify-list .text-center .bi-bell-slash,
+    .notify-list .text-center .bi-exclamation-circle {
+        opacity: 0.5;
+    }
+    
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    .dropdown-item {
+        animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    .badge.bg-success {
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+
+    .app-dropdown-menu {
+    padding: 15px;
+    width: 300px;
+}
+
+.custom-app-dropdown-menu {
+      padding: 15px;
+      width: 300px;
+    }
+
+    .custom-app-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .custom-app-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      padding: 8px 5px;
+      border-radius: 8px;
+      transition: all 0.25s ease;
+    }
+
+    .custom-app-tile:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-app-icon-container {
+      height: 40px;
+      width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 5px;
+      border-radius: 8px;
+    }
+
+    .custom-app-icon {
+      font-size: 18px;
+    }
+
+    .custom-app-name {
+      margin: 0;
+      font-size: 11px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .custom-purple-theme {
+      background-color: rgba(141, 15, 224, 0.05);
+      border: 1px solid rgba(141, 15, 224, 0.1);
+    }
+    .custom-purple-theme .custom-app-icon-container {
+      background-color: rgba(141, 15, 224, 0.1);
+    }
+    .custom-purple-theme .custom-app-icon {
+      color: #8d0fe0;
+    }
+
+    .custom-red-theme {
+      background-color: rgba(255, 0, 13, 0.05);
+      border: 1px solid rgba(255, 0, 13, 0.1);
+    }
+    .custom-red-theme .custom-app-icon-container {
+      background-color: rgba(255, 0, 13, 0.1);
+    }
+    .custom-red-theme .custom-app-icon {
+      color: #ff000d;
+    }
+
+    .custom-green-theme {
+      background-color: rgba(29, 161, 242, 0.05);
+      border: 1px solid rgba(29, 161, 242, 0.1);
+    }
+    .custom-green-theme .custom-app-icon-container {
+      background-color: rgba(29, 161, 242, 0.1);
+    }
+    .custom-green-theme .custom-app-icon {
+      color: #1DA1F2;
+    }
+
+    .custom-teal-theme {
+      background-color: rgba(28, 199, 208, 0.05);
+      border: 1px solid rgba(28, 199, 208, 0.1);
+    }
+    .custom-teal-theme .custom-app-icon-container {
+      background-color: rgba(28, 199, 208, 0.1);
+    }
+    .custom-teal-theme .custom-app-icon {
+      color: #1cc7d0;
+    }
+
+    .custom-orange-theme {
+      background-color: rgba(244, 119, 33, 0.05);
+      border: 1px solid rgba(244, 119, 33, 0.1);
+    }
+    .custom-orange-theme .custom-app-icon-container {
+      background-color: rgba(244, 119, 33, 0.1);
+    }
+    .custom-orange-theme .custom-app-icon {
+      color: #f47721;
+    }
+
+    [data-bs-theme="dark"] .custom-app-name {
+      color: #eee;
+    }
+
+</style>
+
 <header class="top-header">
     <nav class="navbar navbar-expand align-items-center gap-2" style="{{ !$showAside ? 'left: 0;' : '' }}">
         <div class="d-flex flex-grow-1 justify-content-between align-items-center">
@@ -41,15 +324,13 @@
                             <div class="card-body search-content">
                                 <p class="search-title">Recent Searches</p>
                                 <div class="d-flex align-items-start flex-wrap gap-2 kewords-wrapper">
-                                    <a href="javascript:;" class="kewords"><span>Tenders</span><i class="bi-search fs-6"></i></a>
                                     <a href="javascript:;" class="kewords"><span>E-Bidding</span><i class="bi-search fs-6"></i></a>
-                                    <a href="javascript:;" class="kewords"><span>Latest news</span><i class="bi-search fs-6"></i></a>
                                 </div>
                                 <hr>
                                 <p class="search-title">Searches</p>
                                 <div class="search-list d-flex flex-column gap-2">
                                     <div class="search-list-item d-flex align-items-center gap-3">
-                                        <h5 class="mb-0 search-list-title"><a href="#">Events</a></h5>
+                                        <h5 class="mb-0 search-list-title"><a href="#">Tenders</a></h5>
                                     </div>
                                 </div>
                             </div>
@@ -63,257 +344,71 @@
                 <a class="nav-link" href="javascript:;"><i class="bi-search"></i></a>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" data-bs-auto-close="outside" data-bs-toggle="dropdown" href="javascript:;"><i class="bi-grid-3x3-gap-fill"></i></a>
-                <div class="border dropdown-menu dropdown-menu-end dropdown-apps shadow-lg p-1">
-                    <div class="rounded-4 overflow-hidden">
-                        <div class="admin-grid">
-                            <div class="grid-container">
-                                @can('view any user')
-                                <a href="{{ route('admin.users.index') }}" class="grid-item text-decoration-none text-dark">
-                                    <div class="app-wrapper d-flex flex-column gap-2 text-center p-3">
-                                        <div class="app-icon">
-                                            <i style="font-size: 26px; color: #8d0fe0" class="bi bi-person-circle"></i>
-                                        </div>
-                                        <div class="app-name">
-                                            <p class="mb-0">Users</p>
-                                        </div>
-                                    </div>
-                                </a>
-                                @endcan
-                        
-                                @can('view any tender')
-                                <a href="{{ route('admin.tenders.index') }}" class="grid-item text-decoration-none text-dark">
-                                    <div class="app-wrapper d-flex flex-column gap-2 text-center p-3">
-                                        <div class="app-icon">
-                                            <i style="font-size: 26px; color: #ff000d" class="bi bi-briefcase"></i>
-                                        </div>
-                                        <div class="app-name">
-                                            <p class="mb-0">Tenders</p>
-                                        </div>
-                                    </div>
-                                </a>
-                                @endcan
-                        
-                                @can('view any event')
-                                <a href="{{ route('admin.events.index') }}" class="grid-item text-decoration-none text-dark">
-                                    <div class="app-wrapper d-flex flex-column gap-2 text-center p-3">
-                                        <div class="app-icon">
-                                            <i style="font-size: 26px; color: #96bb05" class="bi bi-calendar2-event"></i>
-                                        </div>
-                                        <div class="app-name">
-                                            <p class="mb-0">Events</p>
-                                        </div>
-                                    </div>
-                                </a>
-                                @endcan
-                        
-                                @can('view any news')
-                                <a href="{{ route('admin.news.index') }}" class="grid-item text-decoration-none text-dark">
-                                    <div class="app-wrapper d-flex flex-column gap-2 text-center p-3">
-                                        <div class="app-icon">
-                                            <i style="font-size: 26px; color: #1cc7d0" class="bi bi-journal"></i>
-                                        </div>
-                                        <div class="app-name">
-                                            <p class="mb-0">News</p>
-                                        </div>
-                                    </div>
-                                </a>
-                                @endcan
-                        
-                                @can('create download')
-                                <a href="{{ route('admin.downloads.index') }}" class="grid-item text-decoration-none text-dark">
-                                    <div class="app-wrapper d-flex flex-column gap-2 text-center p-3">
-                                        <div class="app-icon">
-                                            <i style="font-size: 26px; color: #fb8a2e" class="bi bi-download"></i>
-                                        </div>
-                                        <div class="app-name">
-                                            <p class="mb-0">Downloads</p>
-                                        </div>
-                                    </div>
-                                </a>
-                                @endcan
-                        
-                                @can('view any gallery')
-                                <a href="{{ route('admin.gallery.index') }}" class="grid-item text-decoration-none text-dark">
-                                    <div class="app-wrapper d-flex flex-column gap-2 text-center p-3">
-                                        <div class="app-icon">
-                                            <i style="font-size: 26px; color: #11862f" class="bi bi-card-image"></i>
-                                        </div>
-                                        <div class="app-name">
-                                            <p class="mb-0">Gallery</p>
-                                        </div>
-                                    </div>
-                                </a>
-                                @endcan
-                        
-                                @can('view any story')
-                                <a href="{{ route('admin.stories.index') }}" class="grid-item text-decoration-none text-dark">
-                                    <div class="app-wrapper d-flex flex-column gap-2 text-center p-3">
-                                        <div class="app-icon">
-                                            <i style="font-size: 26px; color: #0389ff" class="bi bi-app"></i>
-                                        </div>
-                                        <div class="app-name">
-                                            <p class="mb-0">Stories</p>
-                                        </div>
-                                    </div>
-                                </a>
-                                @endcan
-                        
-                                @can('view any user')
-                                <a href="{{ route('admin.settings.index') }}" class="grid-item text-decoration-none text-dark">
-                                    <div class="app-wrapper d-flex flex-column gap-2 text-center p-3">
-                                        <div class="app-icon">
-                                            <i style="font-size: 26px; color: #f1632a" class="bi bi-gear"></i>
-                                        </div>
-                                        <div class="app-name">
-                                            <p class="mb-0">Settings</p>
-                                        </div>
-                                    </div>
-                                </a>
-                                @endcan
-                        
-                                @can('view any user')
-                                <a href="{{ route('admin.logs') }}" class="grid-item text-decoration-none text-dark">
-                                    <div class="app-wrapper d-flex flex-column gap-2 text-center p-3">
-                                        <div class="app-icon">
-                                            <i style="font-size: 26px; color: #ce1126" class="bi bi-activity"></i>
-                                        </div>
-                                        <div class="app-name">
-                                            <p class="mb-0">Activity</p>
-                                        </div>
-                                    </div>
-                                </a>
-                                @endcan
-                        
-                                @can('view any seniority')
-                                <a href="{{ route('admin.seniority.index') }}" class="grid-item text-decoration-none text-dark">
-                                    <div class="app-wrapper d-flex flex-column gap-2 text-center p-3">
-                                        <div class="app-icon">
-                                            <i style="font-size: 26px; color: #790bdf" class="bi bi-graph-up-arrow"></i>
-                                        </div>
-                                        <div class="app-name">
-                                            <p class="mb-0">Seniority</p>
-                                        </div>
-                                    </div>
-                                </a>
-                                @endcan
-                        
-                                @can('create development project')
-                                <a href="{{ route('admin.development_projects.index') }}" class="grid-item text-decoration-none text-dark">
-                                    <div class="app-wrapper d-flex flex-column gap-2 text-center p-3">
-                                        <div class="app-icon">
-                                            <i style="font-size: 26px; color: #0096a0" class="bi bi-buildings"></i>
-                                        </div>
-                                        <div class="app-name">
-                                            <p class="mb-0">ADP</p>
-                                        </div>
-                                    </div>
-                                </a>
-                                @endcan
-                            </div>
-                        
-                            <style>
-                                .admin-grid {
-                                    height: 400px;
-                                    overflow-y: auto;
-                                    overflow-x: hidden;
-                                    padding: 1px;
-                                }
-                        
-                                .grid-container {
-                                    display: grid;
-                                    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-                                    gap: 1px;
-                                }
-                        
-                                .grid-item {
-                                    position: relative;
-                                }
-                        
-                                .app-wrapper {
-                                    min-height: 100px;
-                                    transition: all 0.3s ease;
-                                    height: 100%;
-                                }
-                        
-                                .grid-item:hover .app-wrapper {
-                                    background-color: rgba(0, 0, 0, 0.02);
-                                }
-                        
-                                .app-icon i {
-                                    transition: transform 0.2s ease;
-                                }
-                        
-                                .grid-item:hover .app-icon i {
-                                    transform: scale(1.1);
-                                }
-                        
-                                .grid-item {
-                                    cursor: pointer;
-                                }
-                        
-                                .grid-item:active .app-wrapper {
-                                    background-color: rgba(0, 0, 0, 0.05);
-                                }
-                        
-                                .app-name p {
-                                    color: #777;
-                                    font-size: 14px;
-                                    font-weight: 500;
-                                }
-                        
-                                .admin-grid::-webkit-scrollbar {
-                                    width: 8px;
-                                }
-                        
-                                .admin-grid::-webkit-scrollbar-track {
-                                    background: transparent;
-                                }
-                        
-                                .admin-grid::-webkit-scrollbar-thumb {
-                                    background: #888;
-                                    border-radius: 4px;
-                                }
-                        
-                                .admin-grid::-webkit-scrollbar-thumb:hover {
-                                    background: #555;
-                                }
-                        
-                                /* Responsive adjustments */
-                                @media (max-width: 768px) {
-                                    .grid-container {
-                                        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-                                    }
-                                }
-                        
-                                @media (max-width: 480px) {
-                                    .grid-container {
-                                        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-                                    }
-                                    
-                                    .app-wrapper {
-                                        min-height: 80px;
-                                        padding: 2px !important;
-                                    }
-                                    
-                                    .app-icon i {
-                                        font-size: 20px !important;
-                                    }
-                                    
-                                    .app-name p {
-                                        font-size: 12px;
-                                    }
-                                }
-                            </style>
-                        </div>
-                    </div>
+                <a
+                  class="nav-link dropdown-toggle dropdown-toggle-nocaret"
+                  data-bs-auto-close="outside"
+                  data-bs-toggle="dropdown"
+                  href="javascript:;"
+                >
+                  <i class="bi-grid-3x3-gap-fill"></i>
+                </a>
+                <div
+                  class="border dropdown-menu dropdown-menu-end custom-app-dropdown-menu shadow-lg"
+                >
+                  <h6 class="dropdown-header text-center mb-2">Apps</h6>
+                  <div class="custom-app-grid">
+                    @can('manage website')
+                    <a href="{{ route('admin.home') }}" class="custom-app-tile custom-purple-theme">
+                      <div class="custom-app-icon-container">
+                        <i class="bi-globe custom-app-icon"></i>
+                      </div>
+                      <p class="custom-app-name">Website</p>
+                    </a>
+                    @endcan
+        
+                    @can('manage vehicles')
+                    <a href="{{ route('admin.apps.vehicles.index') }}" class="custom-app-tile custom-red-theme">
+                      <div class="custom-app-icon-container">
+                        <i class="bi-bus-front custom-app-icon"></i>
+                      </div>
+                      <p class="custom-app-name">Vehicle Mgt.</p>
+                    </a>
+                    @endcan
+        
+                    @can('manage standardizations')
+                    <a href="{{ route('admin.apps.standardizations.index') }}" class="custom-app-tile custom-green-theme">
+                      <div class="custom-app-icon-container">
+                        <i class="bi-patch-check-fill custom-app-icon"></i>
+                      </div>
+                      <p class="custom-app-name">Standard</p>
+                    </a>
+                    @endcan
+        
+                    @can('manage contractors')
+                    <a href="{{ route('admin.apps.contractors.index') }}" class="custom-app-tile custom-teal-theme">
+                      <div class="custom-app-icon-container">
+                        <i class="bi-person-vcard custom-app-icon"></i>
+                      </div>
+                      <p class="custom-app-name">Contractors</p>
+                    </a>
+                    @endcan
+        
+                    @can('manage service cards')
+                    <a href="{{ route('admin.apps.service_cards.index') }}" class="custom-app-tile custom-orange-theme">
+                      <div class="custom-app-icon-container">
+                        <i class="bi-credit-card custom-app-icon"></i>
+                      </div>
+                      <p class="custom-app-name">Service Card</p>
+                    </a>
+                    @endcan
+                  </div>
                 </div>
-            </li>
+              </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" data-bs-auto-close="outside" data-bs-toggle="dropdown" href="javascript:;"><i class="bi-bell"></i>
-                    <span class="badge-notify">1</span>
+                    <span class="badge-notify"></span>
                 </a>
-                <div class="dropdown-menu border dropdown-notify dropdown-menu-end shadow">
+                <div class="dropdown-menu border dropdown-notify dropdown-menu-end shadow" style="overflow:hidden">
                     <div class="px-3 py-1 d-flex align-items-center justify-content-between border-bottom">
                         <h5 class="notiy-title mb-0">Notifications</h5>
                         <div class="dropdown">
@@ -321,61 +416,82 @@
                                 <span class="bi-three-dots-vertical"></span>
                             </button>
                             <div class="dropdown-menu dropdown-option dropdown-menu-end shadow">
-                                <div><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:;">Mark all as read</a></div>
-                                <div><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:;">Archive</a></div>
+                                <div><a class="dropdown-item d-flex align-items-center gap-2 py-1" href="javascript:;">Mark all as read</a></div>
+                                <div><a class="dropdown-item d-flex align-items-center gap-2 py-1" href="javascript:;">Archive</a></div>
                             </div>
                         </div>
                     </div>
                     <div class="notify-list">
-                        <div>
-                            <a class="dropdown-item border-bottom py-2" href="javascript:;">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="">
-                                        <img src="{{ getProfilePic(auth()->user()) }}" class="rounded-circle" width="45" height="45" alt="">
-                                    </div>
-                                    <div class="">
-                                        <h5 class="notify-title">Welcome {{ auth()->user()->name }}</h5>
-                                        <p class="mb-0 notify-desc">Your account is created </p>
-                                        <p class="mb-0 notify-time">{{ auth()->user()->created_at->diffForHumans() }}</p>
-                                    </div>
-                                    <div class="notify-close position-absolute end-0 me-3">
-                                        <i class="bi-x-circle fs-6"></i>
-                                    </div>
-                                </div>
-                            </a>
+                        <div class="text-center p-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mb-0 mt-3">Loading activity logs...</p>
                         </div>
                     </div>
                 </div>
             </li>
             <li class="nav-item dropdown">
                 <a href="javascrpt:;" class="dropdown-toggle dropdown-toggle-nocaret" data-bs-toggle="dropdown">
-                    <img src="{{ getProfilePic(auth()->user()) }}" class="rounded-circle p-1 border" width="45" height="45">
+                    <img src="{{ getProfilePic(auth()->user()) }}" class="rounded-circle border" width="40" height="40">
                 </a>
-                <div class="dropdown-menu border dropdown-user dropdown-menu-end shadow">
-                    <a class="dropdown-item  gap-2 py-2" href="{{ route('admin.profile.edit') }}">
+                <div class="dropdown-menu border dropdown-user dropdown-menu-end shadow" style="max-height: 85vh; overflow-y: auto;">
+                    <a class="dropdown-item" href="{{ route('admin.profile.edit') }}">
                         <div class="text-center">
-                            <img src="{{ getProfilePic(auth()->user()) }}" class="rounded-circle p-1 shadow mb-3" width="90" height="90" alt="">
-                            <h5 class="user-name mb-0 fw-bold">Hello, {{ auth()->user()->name }}</h5>
+                            <img src="{{ getProfilePic(auth()->user()) }}" class="rounded-circle p-1 shadow mb-1" width="80" height="80" alt="">
+                            <h6 class="user-name mb-0 fw-bold">{{ auth()->user()->designation }}</h6>
                         </div>
                     </a>
                     <hr class="dropdown-divider">
-                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('admin.profile.edit') }}"><i class="bi-person-circle"></i>Profile</a>
-                    @can('view settings')
-                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('admin.settings.index') }}"><i class="bi-gear-fill"></i>Settings</a>
-                    @endcan
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.profile.edit') }}"><i class="bi-person-circle"></i>Profile</a>
                     @can('view activity')
-                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('admin.logs') }}"><i class="bi-activity"></i>Activity Log</a>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.activity.index') }}"><i class="bi-clock-history"></i>Activity Log</a>
                     @endcan
+                    @canany(['view settings', 'view any role', 'view any permission', 'view any district', 'view any category'])
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="#" onclick="event.preventDefault(); event.stopPropagation(); document.getElementById('collapseMenuItems').classList.toggle('show');">
+                        <i class="bi-arrow-down-circle-fill"></i>Settings
+                    </a>
+                    <div class="collapse px-3" id="collapseMenuItems">
+                        @can('view settings')
+                        <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.settings.index') }}" onclick="event.stopPropagation();">
+                            <i class="bi-gear-fill"></i>Core Settings
+                        </a>
+                        @endcan
+                        @can('view any role')
+                        <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.roles.index') }}" onclick="event.stopPropagation();">
+                            <i class="bi-person-badge"></i>Roles
+                        </a>
+                        @endcan
+                        @can('view any permission')
+                        <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.permissions.index') }}" onclick="event.stopPropagation();">
+                            <i class="bi-key"></i>Permissions
+                        </a>
+                        @endcan
+                        @can('view any district')
+                        <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.districts.index') }}" onclick="event.stopPropagation();">
+                            <i class="bi-geo-alt"></i>Districts
+                        </a>
+                        @endcan
+                        @can('view any category')
+                        <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.categories.index') }}" onclick="event.stopPropagation();">
+                            <i class="bi-list-nested"></i>Categories
+                        </a>
+                        @endcan
+                    </div>
+                    @endcan
+
                     <hr class="dropdown-divider">
                     <form method="POST" action="{{ route('logout') }}" disabled>
                         @csrf
-                        <a class="dropdown-item d-flex align-items-center cursor-pointer gap-2 py-2" onclick="event.preventDefault();
+                        <a class="dropdown-item d-flex align-items-center cursor-pointer gap-2 py-1" onclick="event.preventDefault();
                             this.closest('form').submit();
                             this.closest('.top-right-menu').classList.add('hidden');
                             "><i class="bi-power"></i>Logout
-                    </form></a>
+                        </a>
+                    </form>
                 </div>
             </li>
+
         </ul>
 
     </nav>
@@ -388,13 +504,14 @@
         const searchPopup = document.querySelector('.search-popup');
         const keywordsWrapper = document.querySelector('.kewords-wrapper');
         const searchList = document.querySelector('.search-list');
-        
+
         let typingTimer;
         const doneTypingInterval = 500;
         let recentUrlMap = {};
 
         function performSearch(query) {
-            fetch(`/admin/search/links?query=${encodeURIComponent(query)}`)
+            const url = "{{ route('admin.search.links') }}?query=" + encodeURIComponent(query);
+            fetch(url)
                 .then(response => response.json())
                 .then(data => {
                     data.results.forEach(result => {
@@ -418,7 +535,6 @@
                         `;
                     }).join('');
 
-                    // Update search results
                     if (data.results.length === 0) {
                         searchList.innerHTML = `
                             <div class="search-list-item">
@@ -454,5 +570,152 @@
         searchInput.addEventListener('focus', () => searchPopup.style.display = 'block');
         document.querySelector('.search-close').addEventListener('click', () => searchPopup.style.display = 'none');
         document.querySelector('.mobile-search-close').addEventListener('click', () => searchPopup.style.display = 'none');
+
+        document.querySelectorAll('.dropdown-menu').forEach(function(dropdown) {
+            dropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        });
+
+        document.querySelector('a[onclick*="collapseMenuItems"]').addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            icon.classList.toggle('rotate-180');
+        });
+
+        const notifyList = document.querySelector('.notify-list');
+        const badgeNotify = document.querySelector('.badge-notify');
+        let currentPage = 1;
+        let loading = false;
+        let hasMorePages = true;
+        
+        function fetchActivityLogs(page = 1, append = false) {
+            if (loading || (!append && !hasMorePages)) return;
+            
+            loading = true;
+            
+            if (page === 1) {
+                notifyList.innerHTML = `
+                    <div class="text-center p-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mb-0 mt-3">Loading activity logs...</p>
+                    </div>
+                `;
+            } else if (append) {
+                const loadingEl = document.createElement('div');
+                loadingEl.className = 'text-center p-2 loading-indicator';
+                loadingEl.innerHTML = '<div class="spinner-border spinner-border-sm text-primary" role="status"></div>';
+                notifyList.appendChild(loadingEl);
+            }
+            
+            const url = "{{ route('admin.activity.notifications') }}?page=" + encodeURIComponent(page) + "&perPage=5";
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const loadingIndicator = notifyList.querySelector('.loading-indicator');
+                    if (loadingIndicator) {
+                        loadingIndicator.remove();
+                    }
+                    
+                    if (!append) {
+                        notifyList.innerHTML = '';
+                    }
+                    
+                    badgeNotify.textContent = data.todayCount > 99 ? '99+' : data.todayCount;
+                    
+                    if (data.todayCount === 0) {
+                        badgeNotify.style.display = 'none';
+                    } else {
+                        badgeNotify.style.display = 'block';
+                    }
+                    
+                    data.activities.forEach(activity => {
+                        const activityItem = document.createElement('div');
+                        
+                        let todayIndicator = '';
+                        if (activity.is_today) {
+                            todayIndicator = '<span class="badge bg-success rounded-pill ms-2">New</span>';
+                        }
+                        
+                        activityItem.innerHTML = `
+                            <a class="dropdown-item border-bottom py-2" href="javascript:;">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="">
+                                        <img src="${activity.causer_image}" class="rounded-circle" width="45" height="45" alt="">
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h5 class="notify-title">${activity.description} ${todayIndicator}</h5>
+                                        <p class="mb-0 notify-desc">By ${activity.causer_name} ${activity.subject_type ? 'on ' + activity.subject_type : ''}</p>
+                                        <p class="mb-0 notify-time">${activity.time}</p>
+                                    </div>
+                                    <div class="notify-close position-absolute end-0 me-3">
+                                        <i class="bi-x-circle fs-6"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        `;
+                        notifyList.appendChild(activityItem);
+                    });
+                    
+                    if (data.activities.length === 0 && !append) {
+                        notifyList.innerHTML = `
+                            <div class="text-center p-4">
+                                <i class="bi bi-bell-slash fs-2 text-muted"></i>
+                                <p class="mb-0 mt-2">No activity logs found</p>
+                            </div>
+                        `;
+                    }
+                    
+                    hasMorePages = data.hasMorePages;
+                    currentPage = page;
+                    loading = false;
+                })
+                .catch(error => {
+                    console.error('Error fetching activity logs:', error);
+                    loading = false;
+                    
+                    const loadingIndicator = notifyList.querySelector('.loading-indicator');
+                    if (loadingIndicator) {
+                        loadingIndicator.remove();
+                    }
+                    
+                    if (!append) {
+                        notifyList.innerHTML = `
+                            <div class="text-center p-4">
+                                <i class="bi bi-exclamation-circle fs-2 text-danger"></i>
+                                <p class="mb-0 mt-2">Failed to load notifications</p>
+                            </div>
+                        `;
+                    }
+                });
+        }
+        
+        fetchActivityLogs();
+        
+        document.querySelector('.notify-list').addEventListener('scroll', function() {
+            const { scrollTop, scrollHeight, clientHeight } = this;
+            
+            if (scrollTop + clientHeight >= scrollHeight - 50 && hasMorePages && !loading) {
+                fetchActivityLogs(currentPage + 1, true);
+            }
+        });
+        
+        const notificationButton = document.querySelector('a.nav-link[data-bs-toggle="dropdown"]');
+        notificationButton.addEventListener('click', function() {
+            if (!document.querySelector('.dropdown-notify').classList.contains('show')) {
+                currentPage = 1;
+                hasMorePages = true;
+                fetchActivityLogs();
+            }
+        });
+        
+        notifyList.addEventListener('click', function(e) {
+            if (e.target.closest('.notify-close')) {
+                e.target.closest('.dropdown-item').remove();
+            }
+        });
+
     });
+
 </script>

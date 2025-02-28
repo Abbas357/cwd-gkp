@@ -117,30 +117,6 @@
             </li>
             @endcanany
     
-            @canany(['view any districts', 'view any category', 'view any role', 'view any permission'])
-            <li class="menu-label">Others</li>
-            <li>
-                <a href="javascript:;" class="has-arrow">
-                    <div class="parent-icon"><i class="bi-diagram-3-fill text-primary"></i></div>
-                    <div class="menu-title">Collections</div>
-                </a>
-                <ul class="p-2 menu-items">
-                    @can('view any district')
-                    <li><a href="{{ route('admin.districts.index') }}"><i class="bi-arrow-right-short fs-6"></i>&nbsp; Districts</a></li>
-                    @endcan
-                    @can('view any category')
-                    <li><a href="{{ route('admin.categories.index') }}"><i class="bi-arrow-right-short fs-6"></i>&nbsp; Categories</a></li>
-                    @endcan
-                    @can('view any roles')
-                    <li><a href="{{ route('admin.roles.index') }}"><i class="bi-arrow-right-short fs-6"></i>&nbsp; Roles</a></li>
-                    @endcan
-                    @can('view any permissions')
-                    <li><a href="{{ route('admin.permissions.index') }}"><i class="bi-arrow-right-short fs-6"></i>&nbsp; Permissions</a></li>
-                    @endcan
-                </ul>
-            </li>
-            @endcanany
-    
             @canany(['update comment', 'view any newsletter', 'view any public contact'])
             <li>
                 <a href="javascript:;" class="has-arrow">
@@ -185,7 +161,7 @@
             </a>
             <div class="dropdown-menu dropdown-option dropdown-menu-end shadow">
                 @can('view activity')
-                    <div><a class="dropdown-item d-flex align-items-center gap-3 py-2" href="{{ route('admin.logs') }}"><i class="bi-activity"></i>Activity Log</a></div>
+                    <div><a class="dropdown-item d-flex align-items-center gap-3 py-2" href="{{ route('admin.activity.index') }}"><i class="bi-activity"></i>Activity Log</a></div>
                 @endcan
                 @can('view settings')
                     <div><a class="dropdown-item d-flex align-items-center gap-3 py-2" href="{{ route('admin.settings.index') }}"><i class="bi-gear"></i>Settings</a></div>

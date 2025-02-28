@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Settings;
 
-use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use App\Http\Controllers\Controller;
 use Spatie\Activitylog\Models\Activity;
 
 class ActivityLogController extends Controller
 {
-    public function __invoke(Request $request)
+    public function index(Request $request)
     {
         $logs = Activity::query()->latest('id');
 
@@ -53,5 +54,48 @@ class ActivityLogController extends Controller
         }
 
         return view('admin.activity_logs.index');
+    }
+
+    public function getNotifications(Request $request)
+    {
+        $page = $request->input('page', 1);
+        $perPage = $request->input('perPage', 5);
+        $user = $request->user();
+        
+        $query = Activity::query()->orderBy('created_at', 'desc');
+        
+        if (!$user->isAdmin()) {
+            $query->where('causer_id', $user->id);
+        }
+        
+        $activities = $query->paginate($perPage, ['*'], 'page', $page);
+        
+        $todayCount = Activity::where('created_at', '>=', Carbon::today())
+            ->when(!$user->isAdmin(), function($q) use ($user) {
+                return $q->where('causer_id', $user->id);
+            })
+            ->count();
+        
+        $hasMorePages = $activities->hasMorePages();
+        
+        $formattedActivities = $activities->map(function ($activity) {
+            return [
+                'id' => $activity->id,
+                'description' => $activity->description,
+                'causer_name' => $activity->causer ? $activity->causer->name : 'System',
+                'causer_image' => $activity->causer ? getProfilePic($activity->causer) : asset('admin/images/no-profile.png'),
+                'subject_type' => $activity->subject_type ? class_basename($activity->subject_type) : null,
+                'time' => $activity->created_at->diffForHumans(),
+                'created_at' => $activity->created_at->format('Y-m-d H:i:s'),
+                'is_today' => $activity->created_at->isToday(),
+            ];
+        });
+        
+        return response()->json([
+            'activities' => $formattedActivities,
+            'hasMorePages' => $hasMorePages,
+            'total' => $activities->total(),
+            'todayCount' => $todayCount,
+        ]);
     }
 }

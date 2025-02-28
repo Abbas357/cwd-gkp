@@ -248,7 +248,7 @@
                                 }
                             },
                             onInitialize: async function() {
-                                const url = `/admin/users/${userData.id}/available-subordinates`;
+                                const url = "{{ route('admin.users.available-subordinates', ':id') }}".replace(':id', userData.id);
                                 const response = await fetch(url);
                                 const availableUsers = await response.json();
                                 this.addOptions(availableUsers);

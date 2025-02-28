@@ -31,7 +31,7 @@
         $(document).ready(function() {
             var table = initDataTable('#log-datatable', {
                 // serverSide: false,
-                ajaxUrl: "{{ route('admin.logs') }}"
+                ajaxUrl: "{{ route('admin.activity.index') }}"
                 , columns: [
                     { data: 'id', searchBuilderType: "num" },
                     { data: 'log_name', searchBuilderType: 'string' },
