@@ -67,6 +67,7 @@ class VehicleController extends Controller
         $totalVehicles = Vehicle::count();
 
         $functionalVehicles = Vehicle::where('functional_status', 'Functional')->count();
+        $nonFunctionalVehicles = Vehicle::where('functional_status', 'Non-Functional')->count();
         $condemnedVehicles = Vehicle::where('functional_status', 'Condemned')->count();
 
         $allotedVehicles = VehicleAllotment::whereNull('end_date')->count();
@@ -76,7 +77,7 @@ class VehicleController extends Controller
             ->count();
 
         $temporaryAlloted = VehicleAllotment::whereNull('end_date')
-            ->where('type', 'Temparory')
+            ->where('type', 'Temporary')
             ->count();
 
         $inPool = VehicleAllotment::whereNull('end_date')
@@ -110,8 +111,8 @@ class VehicleController extends Controller
             ->take(5)
             ->get();
 
-        $vehiclesNeedingAttention = Vehicle::where('functional_status', 'Needs Maintenance')
-            ->orWhere('functional_status', 'Under Repair')
+        $vehiclesNeedingAttention = Vehicle::where('functional_status', 'Non-Functional')
+            ->orWhere('functional_status', 'Condemned')
             ->with('allotment.user')
             ->take(5)
             ->get();
