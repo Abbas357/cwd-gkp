@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
 
 use App\Models\Tender;
 use App\Models\Category;
@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\SiteNotification;
 use Yajra\DataTables\DataTables;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Requests\StoreTenderRequest;
 
@@ -82,13 +83,14 @@ class TenderController extends Controller
 
     public function store(StoreTenderRequest $request)
     {
+        $name = User::find($request->user)->position;
         $tender = new Tender();
-        $tender->title = $request->title;
+        $tender->title = $request->title . ' ('.$name. ')';
         $tender->slug = Str::uuid();
         $tender->description = $request->description;
         $tender->date_of_advertisement = $request->date_of_advertisement;
         $tender->closing_date = $request->closing_date;
-        $tender->user_id = $request->user ?? $request->user()->id;
+        $tender->user_id = $request->user ?? 0;
         
         $tender_documents = $request->file('tender_documents');
         $tender_eoi_documents = $request->file('tender_eoi_documents');
