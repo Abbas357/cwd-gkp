@@ -25,6 +25,6 @@ class ServiceCardLayout extends Component
 
     public function render(): View
     {
-        return view('layouts.service_card.index', ['title' => $this->title, 'settings' => $this->settings, 'showAside' => $this->showAside]);
+        return view('layouts.apps.service-card', ['title' => $this->title, 'settings' => $this->settings, 'showAside' => $this->showAside]);
     }
 }

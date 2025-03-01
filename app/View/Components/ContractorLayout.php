@@ -25,6 +25,6 @@ class ContractorLayout extends Component
 
     public function render(): View
     {
-        return view('layouts.contractor.index', ['title' => $this->title, 'settings' => $this->settings, 'showAside' => $this->showAside]);
+        return view('layouts.apps.contractor', ['title' => $this->title, 'settings' => $this->settings, 'showAside' => $this->showAside]);
     }
 }

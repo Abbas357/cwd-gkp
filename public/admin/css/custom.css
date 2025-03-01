@@ -787,3 +787,258 @@ html[data-bs-theme="dark"] div.dt-container div.dtb-popover-close {
         border: 0;
     }
 }
+
+.admin-grid {
+    height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 1px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1px;
+}
+
+.grid-item {
+    position: relative;
+}
+
+.app-wrapper {
+    min-height: 100px;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.grid-item:hover .app-wrapper {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.app-icon i {
+    transition: transform 0.2s ease;
+}
+
+.grid-item:hover .app-icon i {
+    transform: scale(1.1);
+}
+
+.grid-item {
+    cursor: pointer;
+}
+
+.grid-item:active .app-wrapper {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.app-name p {
+    color: #777;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.admin-grid::-webkit-scrollbar {
+    width: 8px;
+}
+
+.admin-grid::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.admin-grid::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.admin-grid::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+.rotate-180 {
+    transform: rotate(180deg);
+    transition: transform 0.3s ease;
+}
+
+.bi-chevron-down {
+    transition: transform 0.3s ease;
+}
+
+.dropdown-menu {
+    transition: max-height 0.3s ease;
+}
+.dropdown-item:hover {
+    background: rgba(0, 0, 0, 0.09)
+}
+
+.dropdown-notify {
+    width: 320px;
+    max-height: 400px;
+}
+
+.notify-list {
+    max-height: 350px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.notify-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 2px;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+.notify-desc {
+    font-size: 12px;
+    color: #666;
+}
+
+.notify-time {
+    font-size: 11px;
+    color: #999;
+}
+
+.badge-notify {
+    position: absolute;
+    top: 5;
+    right: 0;
+    font-size: 10px;
+    padding: 0 5px;
+    background-color: #ff0000;
+    color: white;
+    border-radius: 50%;
+    transform: translate(25%, -25%);
+}
+
+.notify-list .text-center .bi-bell-slash,
+.notify-list .text-center .bi-exclamation-circle {
+    opacity: 0.5;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-item {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.badge.bg-success {
+    font-size: 10px;
+    padding: 3px 6px;
+}
+
+.app-dropdown-menu {
+padding: 15px;
+width: 300px;
+}
+
+.custom-app-dropdown-menu {
+  padding: 15px;
+  width: 300px;
+}
+
+.custom-app-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.custom-app-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  padding: 8px 5px;
+  border-radius: 8px;
+  transition: all 0.25s ease;
+}
+
+.custom-app-tile:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-app-icon-container {
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+  border-radius: 8px;
+}
+
+.custom-app-icon {
+  font-size: 18px;
+}
+
+.custom-app-name {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 500;
+  color: #333;
+}
+
+.custom-purple-theme {
+  background-color: rgba(141, 15, 224, 0.05);
+  border: 1px solid rgba(141, 15, 224, 0.1);
+}
+.custom-purple-theme .custom-app-icon-container {
+  background-color: rgba(141, 15, 224, 0.1);
+}
+.custom-purple-theme .custom-app-icon {
+  color: #8d0fe0;
+}
+
+.custom-red-theme {
+  background-color: rgba(255, 0, 13, 0.05);
+  border: 1px solid rgba(255, 0, 13, 0.1);
+}
+.custom-red-theme .custom-app-icon-container {
+  background-color: rgba(255, 0, 13, 0.1);
+}
+.custom-red-theme .custom-app-icon {
+  color: #ff000d;
+}
+
+.custom-green-theme {
+  background-color: rgba(29, 161, 242, 0.05);
+  border: 1px solid rgba(29, 161, 242, 0.1);
+}
+.custom-green-theme .custom-app-icon-container {
+  background-color: rgba(29, 161, 242, 0.1);
+}
+.custom-green-theme .custom-app-icon {
+  color: #1DA1F2;
+}
+
+.custom-teal-theme {
+  background-color: rgba(28, 199, 208, 0.05);
+  border: 1px solid rgba(28, 199, 208, 0.1);
+}
+.custom-teal-theme .custom-app-icon-container {
+  background-color: rgba(28, 199, 208, 0.1);
+}
+.custom-teal-theme .custom-app-icon {
+  color: #1cc7d0;
+}
+
+.custom-orange-theme {
+  background-color: rgba(244, 119, 33, 0.05);
+  border: 1px solid rgba(244, 119, 33, 0.1);
+}
+.custom-orange-theme .custom-app-icon-container {
+  background-color: rgba(244, 119, 33, 0.1);
+}
+.custom-orange-theme .custom-app-icon {
+  color: #f47721;
+}
+
+[data-bs-theme="dark"] .custom-app-name {
+  color: #eee;
+}

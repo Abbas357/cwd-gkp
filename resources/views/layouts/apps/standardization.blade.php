@@ -12,7 +12,7 @@
     <link href="{{ asset('admin/plugins/metismenu/metisMenu.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/plugins/metismenu/mm-vertical.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/plugins/simplebar/css/simplebar.css') }}" rel="stylesheet">
-    
+
     <link href="{{ asset('admin/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/bootstrap-icons.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/open-props.min.css') }}" rel="stylesheet">
@@ -46,9 +46,17 @@
         }
 
         @keyframes page-loader {
-            0%   {background-position: -150% 0, -150% 0;}
-            66%  {background-position: 250% 0, -150% 0;}
-            100% {background-position: 250% 0, 250% 0;}
+            0% {
+                background-position: -150% 0, -150% 0;
+            }
+
+            66% {
+                background-position: 250% 0, -150% 0;
+            }
+
+            100% {
+                background-position: 250% 0, 250% 0;
+            }
         }
 
         body.loading::before {
@@ -69,45 +77,61 @@
         body.loading {
             overflow: hidden;
         }
-        
+
     </style>
 </head>
 
 <body class="loading">
     <div class="page-loader"></div>
+
+    <x-header :show-aside="true">
+        <x-slot name="breadcrumb">
+            {{ $header }}
+        </x-slot>
+    </x-header>
     
-    @include("layouts.contractor.partials.header")
     @if ($showAside)
-        @include("layouts.contractor.partials.aside")
+    <x-sidebar app-name="STANDARDIZATION">
+        @can('view any standardization')
+        <li><a href="{{ route('admin.apps.standardizations.index') }}"><i class="bi-patch-check-fill text-success"></i>&nbsp; Standardizations</a></li>
+        @endcan
+
+        @can('view any standardization')
+        <li><a href="{{ route('standardizations.login.get') }}"><i class="bi-flag text-warning"></i>&nbsp; Reports</a></li>
+        @endcan
+    </x-sidebar>
     @endif
 
     <main class="main-wrapper" style="{{ !$showAside ? 'margin-left: 0;' : '' }}">
         <div class="main-content">
             @if (session('success'))
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        showMessage("{{ session('success') }}");
-                    });
-                </script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    showMessage("{{ session('success') }}");
+                });
+
+            </script>
             @endif
-    
+
             @if (session('danger'))
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        showMessage("{{ session('danger') }}", 'error');
-                    });
-                </script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    showMessage("{{ session('danger') }}", 'error');
+                });
+
+            </script>
             @endif
-    
+
             {{ $slot }}
             <br /><br />
         </div>
     </main>
-    
+
     <div class="overlay btn-toggle"></div>
 
-    @include("layouts.contractor.partials.footer")
-    @include("layouts.contractor.partials.theme-switcher")
+    <x-footer :show-aside="$showAside" :site-name="$settings->site_name" />
+    
+    <x-theme-switcher current-theme="LightTheme" />
 
     <script src="{{ asset('admin/js/bootstrap.bundle.min.js') }}"></script>
 
@@ -117,8 +141,8 @@
     <script src="{{ asset('admin/plugins/metismenu/metisMenu.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/simplebar/js/simplebar.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/sweetalert2@11.js') }}"></script>
-    
-    <script src="{{ asset('admin/js/helpers.min.js') }}?cw=19"></script> 
+
+    <script src="{{ asset('admin/js/helpers.min.js') }}?cw=19"></script>
     <script src="{{ asset('admin/js/custom.min.js') }}?cw=19"></script>
     @stack('script')
     <script>
@@ -126,6 +150,7 @@
             document.querySelector('.page-loader').classList.add('hidden');
             document.body.classList.remove('loading');
         }
+
     </script>
 </body>
 

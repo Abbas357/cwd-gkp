@@ -25,6 +25,6 @@ class SettingsLayout extends Component
 
     public function render(): View
     {
-        return view('layouts.settings.index', ['title' => $this->title, 'settings' => $this->settings, 'showAside' => $this->showAside]);
+        return view('layouts.settings', ['title' => $this->title, 'settings' => $this->settings, 'showAside' => $this->showAside]);
     }
 }

@@ -25,6 +25,6 @@ class VehicleLayout extends Component
 
     public function render(): View
     {
-        return view('layouts.vehicle.index', ['title' => $this->title, 'settings' => $this->settings, 'showAside' => $this->showAside]);
+        return view('layouts.apps.vehicle', ['title' => $this->title, 'settings' => $this->settings, 'showAside' => $this->showAside]);
     }
 }

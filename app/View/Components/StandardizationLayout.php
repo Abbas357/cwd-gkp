@@ -25,6 +25,6 @@ class StandardizationLayout extends Component
 
     public function render(): View
     {
-        return view('layouts.standardization.index', ['title' => $this->title, 'settings' => $this->settings, 'showAside' => $this->showAside]);
+        return view('layouts.apps.standardization', ['title' => $this->title, 'settings' => $this->settings, 'showAside' => $this->showAside]);
     }
 }

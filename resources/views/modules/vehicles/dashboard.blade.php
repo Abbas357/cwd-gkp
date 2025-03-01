@@ -271,7 +271,7 @@
                                 <h6 class="mb-1">{{ $vehicle->brand }} {{ $vehicle->model }}</h6>
                                 <p class="mb-0 small text-muted">{{ $vehicle->functional_status }}</p>
                                 @if($vehicle->allotment)
-                                <small class="text-muted">Alloted to: {{ $vehicle->allotment->user->position }}</small>
+                                <small class="text-muted">Alloted to: {{ $vehicle->allotment?->user?->position }}</small>
                                 @endif
                             </div>
                         </div>
