@@ -15,7 +15,7 @@ class SettingController extends Controller
     {
         $settings = Setting::first();
         $tables = ['Slider', 'Gallery', 'News', 'Seniority', 'DevelopmentProject', 'Tender', 'Event'];
-        return view('admin.settings.index', compact('settings', 'tables'));
+        return view('modules.settings.settings.index', compact('settings', 'tables'));
     }
 
     public function update(UpdateSettingRequest $request)

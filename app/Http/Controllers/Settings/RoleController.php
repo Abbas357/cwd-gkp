@@ -17,7 +17,7 @@ class RoleController extends Controller
     {
         $roles = Role::whereNotIn('name', ['admin'])->paginate(100);
         $users = User::with('roles')->paginate(10);
-        return view('admin.roles.index', compact('roles', 'users'));
+        return view('modules.settings.roles.index', compact('roles', 'users'));
     }
 
     public function store(StoreRoleRequest $request)

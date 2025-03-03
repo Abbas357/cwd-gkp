@@ -12,7 +12,7 @@ class DistrictController extends Controller
     public function index()
     {
         $districts = District::paginate(10);
-        return view('admin.districts.index', compact('districts'));
+        return view('modules.settings.districts.index', compact('districts'));
     }
 
     public function store(Request $request)

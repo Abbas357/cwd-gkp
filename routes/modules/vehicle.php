@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Module\VehicleController;
-use App\Http\Controllers\Module\VehicleAllotmentController;
+use App\Http\Controllers\Vehicle\VehicleController;
+use App\Http\Controllers\Vehicle\VehicleAllotmentController;
 
 use App\Models\Vehicle;
 

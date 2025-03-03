@@ -26,7 +26,7 @@
 
     <div class="container my-4">
 
-        <div class="mb-4">
+        {{-- <div class="mb-4">
             <form method="GET" action="{{ route('tenders.index') }}">
                 <div class="d-flex align-items-center">
                     <label for="category" class="me-2">Filter by Domain:</label>
@@ -40,7 +40,7 @@
                     </select>
                 </div>
             </form>
-        </div>
+        </div> --}}
 
         <!-- Tender Table -->
         <div class="table-responsive">
@@ -49,7 +49,6 @@
                     <tr>
                         <th>Title</th>
                         <th>Office</th>
-                        <th>Tender Domain</th>
                         <th>Published Date</th>
                         <th>EOI Documents</th>
                         <th>Bidding Documents</th>

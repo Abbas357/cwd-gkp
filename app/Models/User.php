@@ -164,6 +164,11 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(Achievement::class);
     }
 
+    public function porms()
+    {
+        return $this->hasMany(ProvincialOwnReceipt::class);
+    }
+
     public function boss()
     {
         return $this->belongsTo(User::class, 'boss_id');

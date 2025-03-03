@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Module\ProductController;
-use App\Http\Controllers\Module\StandardizationController;
+use App\Http\Controllers\Standardization\ProductController;
+use App\Http\Controllers\Standardization\StandardizationController;
 
 Route::prefix('standardizations')->as('standardizations.')->middleware(['can:manage standardizations'])->group(function () {
     Route::get('/', [StandardizationController::class, 'index'])->name('index')->can('viewAny', App\Models\Standardization::class);

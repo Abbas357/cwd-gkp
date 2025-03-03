@@ -139,6 +139,14 @@
             border-color: #f47721;
         }
 
+        .accent-yellow::before {
+            border-color: #c7bd03;
+        }
+
+        .accent-brown::before {
+            border-color: #d5641c;
+        }
+
         .accent-purple:hover {
             box-shadow: 0 15px 30px rgba(141, 15, 224, 0.2);
         }
@@ -157,6 +165,14 @@
 
         .accent-orange:hover {
             box-shadow: 0 15px 30px rgba(244, 119, 33, 0.4);
+        }
+        
+        .accent-yellow:hover {
+            box-shadow: 0 15px 30px rgba(226, 222, 5, 0.781);
+        }
+
+        .accent-brown:hover {
+            box-shadow: 0 15px 30px rgba(165, 145, 31, 0.445);
         }
 
         [data-bs-theme=dark] .app-tile:hover::before {
@@ -181,6 +197,14 @@
 
         [data-bs-theme=dark] .accent-orange:hover {
             box-shadow: 0 15px 30px rgba(255, 134, 53, 0.4);
+        }
+        
+        [data-bs-theme=dark] .accent-yellow:hover {
+            box-shadow: 0 15px 30px rgba(255, 242, 53, 0.4);
+        }
+        
+        [data-bs-theme=dark] .accent-brown:hover {
+            box-shadow: 0 15px 30px rgba(255, 245, 105, 0.479);
         }
 
         #particles-js {
@@ -262,6 +286,20 @@
             <a href="{{ route('admin.apps.service_cards.index') }}" class="app-tile accent-orange">
                 <i class="bi-credit-card" style="color: #f47721"></i>
                 <p>Service Card</p>
+            </a>
+            @endcan
+
+            @can('manage porms')
+            <a href="{{ route('admin.apps.porms.index') }}" class="app-tile accent-yellow">
+                <i class="bi-coin" style="color: #ffe600"></i>
+                <p>PORMS</p>
+            </a>
+            @endcan
+
+            @can('manage machinery')
+            <a href="{{ route('admin.apps.machineries.index') }}" class="app-tile accent-brown">
+                <i class="bi-building-gear" style="color: #d5641c"></i>
+                <p>Machinery Mgt.</p>
             </a>
             @endcan
         </div>

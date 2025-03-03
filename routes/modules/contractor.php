@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Module\ContractorController;
-use App\Http\Controllers\Module\ContractorMachineryController;
-use App\Http\Controllers\Module\ContractorRegistrationController;
-use App\Http\Controllers\Module\ContractorHumanResourceController;
-use App\Http\Controllers\Module\ContractorWorkExperienceController;
+use App\Http\Controllers\Contractor\ContractorController;
+use App\Http\Controllers\Contractor\ContractorMachineryController;
+use App\Http\Controllers\Contractor\ContractorRegistrationController;
+use App\Http\Controllers\Contractor\ContractorHumanResourceController;
+use App\Http\Controllers\Contractor\ContractorWorkExperienceController;
 
 Route::prefix('contractors')->as('contractors.')->middleware(['can:manage contractors'])->group(function () {
     Route::get('/', [ContractorController::class, 'index'])->name('index')->can('viewAny', App\Models\Contractor::class);

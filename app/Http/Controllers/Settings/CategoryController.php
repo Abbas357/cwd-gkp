@@ -18,7 +18,7 @@ class CategoryController extends Controller
             return $query->where('type', $type);
         })->paginate(100);
 
-        return view('admin.categories.index', compact('categories'));
+        return view('modules.settings.categories.index', compact('categories'));
     }
 
     public function store(StoreCategoryRequest $request)

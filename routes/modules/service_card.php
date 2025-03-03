@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Module\CardController;
-use App\Http\Controllers\Module\ServiceCardController;
+use App\Http\Controllers\ServiceCard\CardController;
+use App\Http\Controllers\ServiceCard\ServiceCardController;
 
 Route::prefix('service_cards')->as('service_cards.')->middleware(['can:manage service cards'])->group(function () {
     Route::get('/', [ServiceCardController::class, 'index'])->name('index')->can('viewAny', App\Models\ServiceCard::class);

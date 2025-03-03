@@ -236,5 +236,4 @@ Route::prefix('site')->middleware(['can:manage website'])->group(function () {
         Route::get('/response/{comment}', [CommentController::class, 'getResponseView'])->name('getResponseView')->can('response', App\Models\Comment::class);
         Route::post('/response', [CommentController::class, 'postResponse'])->name('postResponse')->can('response', App\Models\Comment::class);
     });
-
 });

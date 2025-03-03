@@ -30,13 +30,13 @@ class ActivityLogController extends Controller
                     : ($row->causer?->designation ?? 'System');
                 })
                 ->addColumn('subject', function ($row) {
-                    return view('admin.activity_logs.partials.subject', [
+                    return view('modules.settings.activity_logs.partials.subject', [
                         'subjectId' => $row->subject_id,
                         'subjectType' => $row->subject_type,
                     ])->render();
                 })
                 ->addColumn('properties', function ($row) {
-                    return view('admin.activity_logs.partials.properties', ['row' => $row])->render();
+                    return view('modules.settings.activity_logs.partials.properties', ['row' => $row])->render();
                 })
                 ->addColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y').' ('.$row->created_at->diffForHumans().')';
@@ -53,7 +53,7 @@ class ActivityLogController extends Controller
             return $dataTable->toJson();
         }
 
-        return view('admin.activity_logs.index');
+        return view('modules.settings.activity_logs.index');
     }
 
     public function getNotifications(Request $request)
