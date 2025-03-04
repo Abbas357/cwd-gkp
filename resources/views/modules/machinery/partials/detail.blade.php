@@ -18,7 +18,6 @@
                 <th class="table-cell">Type</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-type">{{ $machinery->type }}</span>
-                    @if (!in_array($machinery->status, ['published', 'archived']))
                     <select id="input-type" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('type', {{ $machinery->id }})">
                         @foreach ($cat['machinery_type'] as $type)
                         <option value="{{ $type->name }}" {{ $machinery->type == $type->name ? 'selected' : '' }}>
@@ -28,7 +27,6 @@
                     </select>
                     <button id="save-btn-type" class="btn btn-sm btn-light d-none" onclick="updateField('type', {{ $machinery->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-type" class="no-print btn btn-sm edit-button" onclick="enableEditing('type')"><i class="bi-pencil fs-6"></i></button>
-                    @endif
                 </td>
             </tr>
 
@@ -36,7 +34,6 @@
                 <th class="table-cell">Operational Status</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-operational_status">{{ $machinery->operational_status }}</span>
-                    @if (!in_array($machinery->status, ['published', 'archived']))
                     <select id="input-operational_status" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('operational_status', {{ $machinery->id }})">
                         @foreach ($cat['machinery_operational_status'] as $operational_status)
                         <option value="{{ $operational_status->name }}" {{ $machinery->operational_status == $operational_status->name ? 'selected' : '' }}>
@@ -46,7 +43,6 @@
                     </select>
                     <button id="save-btn-operational_status" class="btn btn-sm btn-light d-none" onclick="updateField('operational_status', {{ $machinery->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-operational_status" class="no-print btn btn-sm edit-button" onclick="enableEditing('operational_status')"><i class="bi-pencil fs-6"></i></button>
-                    @endif
                 </td>
             </tr>
 
@@ -54,7 +50,6 @@
                 <th class="table-cell">Manufacturer</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-manufacturer">{{ $machinery->manufacturer }}</span>
-                    @if (!in_array($machinery->status, ['published', 'archived']))
                     <select id="input-manufacturer" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('manufacturer', {{ $machinery->id }})">
                         @foreach ($cat['machinery_manufacturer'] as $manufacturer)
                         <option value="{{ $manufacturer->name }}" {{ $machinery->manufacturer == $manufacturer->name ? 'selected' : '' }}>
@@ -64,7 +59,6 @@
                     </select>
                     <button id="save-btn-manufacturer" class="btn btn-sm btn-light d-none" onclick="updateField('manufacturer', {{ $machinery->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-manufacturer" class="no-print btn btn-sm edit-button" onclick="enableEditing('manufacturer')"><i class="bi-pencil fs-6"></i></button>
-                    @endif
                 </td>
             </tr>
 
@@ -92,7 +86,6 @@
                 <th class="table-cell">Power Source</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-power_source">{{ $machinery->power_source }}</span>
-                    @if (!in_array($machinery->status, ['published', 'archived']))
                     <select id="input-power_source" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('power_source', {{ $machinery->id }})">
                         @foreach ($cat['machinery_power_source'] as $power_source)
                         <option value="{{ $power_source->name }}" {{ $machinery->power_source == $power_source->name ? 'selected' : '' }}>
@@ -102,7 +95,6 @@
                     </select>
                     <button id="save-btn-power_source" class="btn btn-sm btn-light d-none" onclick="updateField('power_source', {{ $machinery->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-power_source" class="no-print btn btn-sm edit-button" onclick="enableEditing('power_source')"><i class="bi-pencil fs-6"></i></button>
-                    @endif
                 </td>
             </tr>
 
@@ -190,7 +182,6 @@
                 <th class="table-cell">Certification Status</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-certification_status">{{ $machinery->certification_status }}</span>
-                    @if (!in_array($machinery->status, ['published', 'archived']))
                     <select id="input-certification_status" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('certification_status', {{ $machinery->id }})">
                         @foreach ($cat['machinery_certification_status'] as $certification_status)
                         <option value="{{ $certification_status->name }}" {{ $machinery->certification_status == $certification_status->name ? 'selected' : '' }}>
@@ -200,7 +191,6 @@
                     </select>
                     <button id="save-btn-certification_status" class="btn btn-sm btn-light d-none" onclick="updateField('certification_status', {{ $machinery->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-certification_status" class="no-print btn btn-sm edit-button" onclick="enableEditing('certification_status')"><i class="bi-pencil fs-6"></i></button>
-                    @endif
                 </td>
             </tr>
 
@@ -236,7 +226,6 @@
 <script src="{{ asset('admin/plugins/flatpickr/flatpickr.js') }}"></script>
 <script>
     $(document).ready(function() {
-        // Initialize the datepicker for date fields
         $(".datepicker").flatpickr({
             dateFormat: "Y-m-d"
         });

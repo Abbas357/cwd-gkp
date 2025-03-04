@@ -243,6 +243,7 @@ class VehicleController extends Controller
     public function showDetail(Vehicle $vehicle)
     {
         $cat = [
+            'users' => User::all(),
             'vehicle_type' => Category::where('type', 'vehicle_type')->get(),
             'vehicle_functional_status' => Category::where('type', 'vehicle_functional_status')->get(),
             'vehicle_color' => Category::where('type', 'vehicle_color')->get(),
