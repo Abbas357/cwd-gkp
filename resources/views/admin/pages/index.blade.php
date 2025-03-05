@@ -100,9 +100,8 @@
                             , formAction: "{{ route('admin.pages.store') }}"
                             , modalHeight: '75vh'
                             , hash: false
-                        , }).then((modal) => {
-                            pushStateModalFormSubmission(modal, table);
-                        });
+                            , tableToRefresh: table
+                        , });
                     },
                 }
             });

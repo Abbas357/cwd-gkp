@@ -110,9 +110,40 @@
                             , formAction: "{{ route('admin.tenders.store') }}"
                             , modalHeight: '75vh'
                             , hash: false
-                        , }).then((modal) => {
-                            pushStateModalFormSubmission(modal, table);
-                        });
+                            , tableToRefresh: table
+                        , });
+
+                        // pushStateWizardModal({
+                        //     fetchUrl: "{{ route('admin.tenders.create') }}",
+                        //     btnSelector: '.create-btn',
+                        //     title: 'Add Tender',
+                        //     actionButtonName: 'Add Tender',
+                        //     modalSize: 'xl',
+                        //     includeForm: true,
+                        //     formAction: "{{ route('admin.tenders.store') }}",
+                        //     modalHeight: '75vh',
+                        //     hash: false,
+                        //     tableToRefresh: table,
+                        //     isWizard: true,
+                        //     wizardSteps: [
+                        //         {
+                        //             title: "Basic Information",
+                        //             fields: ["#title", "#load-users"]
+                        //         },
+                        //         {
+                        //             title: "Dates",
+                        //             fields: ["#date_of_advertisement", "#closing_date"]
+                        //         },
+                        //         {
+                        //             title: "Description",
+                        //             fields: ["#description"]
+                        //         },
+                        //         {
+                        //             title: "Documents",
+                        //             fields: ["#tender_document", "#bidding_document", "#tender_eoi_document"]
+                        //         }
+                        //     ]
+                        // });
                     },
                 }
             });

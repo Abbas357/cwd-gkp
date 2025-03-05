@@ -94,9 +94,8 @@
                             , formAction: "{{ route('admin.apps.porms.store') }}"
                             , modalHeight: '55vh'
                             , hash: false
-                       , }).then((modal) => {
-                            pushStateModalFormSubmission(modal, table);
-                        });
+                            , tableToRefresh: table
+                       , });
 
                     },
                 }

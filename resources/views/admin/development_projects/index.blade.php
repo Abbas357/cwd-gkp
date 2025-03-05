@@ -129,9 +129,8 @@
                             , formAction: "{{ route('admin.development_projects.store') }}"
                             , modalHeight: '75vh'
                             , hash: false
-                        , }).then((modal) => {
-                            pushStateModalFormSubmission(modal, table);
-                        });
+                            , tableToRefresh: table
+                        , });
                     }
                 , }
             });

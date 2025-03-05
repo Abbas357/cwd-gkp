@@ -113,9 +113,8 @@
                             , formAction: "{{ route('admin.news.store') }}"
                             , modalHeight: '65vh'
                             , hash: false
-                        , }).then((modal) => {
-                            pushStateModalFormSubmission(modal, table);
-                        });
+                            , tableToRefresh: table
+                        , });
                     },
                 }
             });

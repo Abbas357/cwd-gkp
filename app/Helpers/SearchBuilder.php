@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Helpers\Database;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Builder;
 
 class SearchBuilder
@@ -12,6 +13,7 @@ class SearchBuilder
     protected $query;
     protected $allowedColumns;
     protected $mapColumns;
+    protected $debug = false;
 
     protected $sbRules = [
         '=' => '=',
@@ -32,20 +34,39 @@ class SearchBuilder
         '!between' => 'not between',
     ];
 
-    public function __construct(Request $request, Builder $query, array $allowedColumns = [], array $mapColumns = [])
+    public function __construct(Request $request, Builder $query, array $allowedColumns = [], array $mapColumns = [], bool $debug = false)
     {
         $this->request = $request;
         $this->query = $query;
         $this->allowedColumns = $allowedColumns ?: Database::getColumns($query->getModel()->getTable());
         $this->mapColumns = $mapColumns;
+        $this->debug = $debug;
+    }
+
+    public function debug(bool $enabled = true): self
+    {
+        $this->debug = $enabled;
+        return $this;
     }
 
     public function build(): Builder
     {
         if ($this->request->has('searchBuilder')) {
-            $searchBuilder = $this->request->searchBuilder;
+            $searchBuilder = $this->request->input('searchBuilder');
+            
             if ($searchBuilder && is_array($searchBuilder)) {
+                if ($this->debug) {
+                    Log::info('SearchBuilder Criteria:', ['criteria' => $searchBuilder]);
+                }
+                
                 $this->applySearchBuilderCriteria($this->query, $searchBuilder);
+                
+                if ($this->debug) {
+                    Log::info('SearchBuilder SQL:', [
+                        'sql' => $this->query->toSql(),
+                        'bindings' => $this->query->getBindings()
+                    ]);
+                }
             }
         }
 
@@ -57,34 +78,42 @@ class SearchBuilder
         $groupLogic = isset($searchBuilder['logic']) ? strtoupper($searchBuilder['logic']) : 'AND';
         $groupLogic = in_array($groupLogic, ['AND', 'OR']) ? $groupLogic : 'AND';
 
-        if (!isset($searchBuilder['criteria'])) {
+        if (!isset($searchBuilder['criteria']) || empty($searchBuilder['criteria'])) {
             return;
         }
 
         $query->where(function (Builder $subQuery) use ($searchBuilder, $groupLogic) {
-            foreach ($searchBuilder['criteria'] as $rule) {
+            foreach ($searchBuilder['criteria'] as $index => $rule) {
                 if (isset($rule['criteria'])) {
-                    $this->applyNestedGroup($subQuery, $rule, $groupLogic);
+                    $method = ($index > 0 && $groupLogic === 'OR') ? 'orWhere' : 'where';
+                    $this->applyNestedGroup($subQuery, $rule, $method);
                 } else {
-                    $this->applyRule($subQuery, $rule, $groupLogic);
+                    $method = ($index > 0 && $groupLogic === 'OR') ? 'orWhere' : 'where';
+                    $this->applyRule($subQuery, $rule, $method);
                 }
             }
-        }, null, null, $groupLogic);
+        });
     }
 
-    protected function applyNestedGroup(Builder $query, array $rule, string $parentLogic): void
+    protected function applyNestedGroup(Builder $query, array $rule, string $method): void
     {
         $groupLogic = isset($rule['logic']) ? strtoupper($rule['logic']) : 'AND';
         $groupLogic = in_array($groupLogic, ['AND', 'OR']) ? $groupLogic : 'AND';
 
-        $method = $parentLogic === 'OR' ? 'orWhere' : 'where';
-
         $query->{$method}(function (Builder $subQuery) use ($rule, $groupLogic) {
-            $this->applySearchBuilderCriteria($subQuery, $rule);
+            foreach ($rule['criteria'] as $index => $criterion) {
+                if (isset($criterion['criteria'])) {
+                    $nestedMethod = ($index > 0 && $groupLogic === 'OR') ? 'orWhere' : 'where';
+                    $this->applyNestedGroup($subQuery, $criterion, $nestedMethod);
+                } else {
+                    $ruleMethod = ($index > 0 && $groupLogic === 'OR') ? 'orWhere' : 'where';
+                    $this->applyRule($subQuery, $criterion, $ruleMethod);
+                }
+            }
         });
     }
 
-    protected function applyRule(Builder $query, array $rule, string $groupLogic): void
+    protected function applyRule(Builder $query, array $rule, string $method): void
     {
         if (!isset($rule['origData'], $rule['condition']) || !$this->isValidRule($rule)) {
             return;
@@ -102,8 +131,6 @@ class SearchBuilder
         }
 
         $values = $this->getFormattedValues($rule);
-        $method = $groupLogic === 'OR' ? 'orWhere' : 'where';
-
         $this->applyCondition($query, $method, $col, $operator, $values);
     }
 
@@ -116,7 +143,7 @@ class SearchBuilder
             return false;
         }
 
-        if (in_array($condition, ['between', '!between']) && !isset($rule['value1'])) {
+        if (in_array($condition, ['between', '!between']) && !isset($rule['value2'])) {
             return false;
         }
 
@@ -175,9 +202,13 @@ class SearchBuilder
 
     protected function isDate($value): bool
     {
+        if (!is_string($value)) {
+            return false;
+        }
+        
         return (bool) preg_match("/^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/", $value);
     }
-
+    
     protected function applyCondition(Builder $query, string $method, string $column, string $operator, array $values): void
     {
         switch ($operator) {

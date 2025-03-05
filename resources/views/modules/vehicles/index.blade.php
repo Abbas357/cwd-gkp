@@ -142,9 +142,8 @@
                             , formAction: "{{ route('admin.apps.vehicles.store') }}"
                             , modalHeight: '60vh'
                             , hash: false
-                       , }).then((modal) => {
-                            pushStateModalFormSubmission(modal, table);
-                        });
+                            , tableToRefresh: table
+                       , });
 
                     },
                 }

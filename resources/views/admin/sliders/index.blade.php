@@ -108,9 +108,8 @@
                             , formAction: "{{ route('admin.sliders.store') }}"
                             , modalHeight: '70vh'
                             , hash: false
-                        , }).then((modal) => {
-                            pushStateModalFormSubmission(modal, table);
-                        });
+                            , tableToRefresh: table
+                        , });
                     },
                 }
             });

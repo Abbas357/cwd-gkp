@@ -742,7 +742,8 @@ function pushStateModal({
     includeForm = false,
     formAction,
     modalHeight = "70vh",
-    hash = true
+    hash = true,
+    tableToRefresh = null
 }) {
     return new Promise((resolve) => {
         const calcModalType = modalType ?? btnSelector.replace(/^[.#]/, '').split('-')[0];
@@ -812,7 +813,7 @@ function pushStateModal({
         }
 
         function openModalFromUrl() {
-            if (!hash) return; // Skip URL checking if hash is disabled
+            if (!hash) return;
             
             const urlParams = new URLSearchParams(window.location.search);
             const recordId = urlParams.get("id");
@@ -852,43 +853,605 @@ function pushStateModal({
 
         openModalFromUrl();
 
+        if (includeForm) {
+            const modalElement = $(`#${modalId}`);
+            const submitBtn = modalElement.find('button[type="submit"]');
+            
+            modalElement.find('form').on('submit', async function(e) {
+                e.preventDefault();
+                const form = this;
+                
+                if (form.isSubmitting) {
+                    return false;
+                }
+                
+                form.isSubmitting = true;
+                const formData = new FormData(form);
+                const url = $(this).attr('action');
+                
+                setButtonLoading(submitBtn, true);
+                
+                try {
+                    const result = await fetchRequest(url, 'POST', formData);
+                    if (result) {
+                        setButtonLoading(submitBtn, false);
+                        modalElement.modal('hide');
+                        if (tableToRefresh) tableToRefresh.ajax.reload();
+                    }
+                } catch (error) {
+                    console.error('Error submitting form: ', error);
+                } finally {
+                    form.isSubmitting = false;
+                    setButtonLoading(submitBtn, false);
+                    submitBtn.prop('disabled', false);
+                }
+            });
+        }
+
         if (modalId.length) {
             resolve(modalId);
         }
     });
 }
 
-function pushStateModalFormSubmission(modal, tableToRefresh) {
-    const modalElement = $('#' + modal);
-    const submitBtn = modalElement.find('button[type="submit"]');
-    
-    modalElement.find('form').on('submit', async function(e) {
-        e.preventDefault();
-        const form = this;
-        
-        if (form.isSubmitting) {
-            return false;
+function pushStateWizardModal({
+    title = "Title",
+    fetchUrl,
+    btnSelector,
+    loadingSpinner = "loading-spinner",
+    actionButtonName,
+    modalSize = "xl",
+    modalType,
+    includeForm = true,
+    formAction,
+    modalHeight = "75vh",
+    hash = false,
+    tableToRefresh = null,
+    isWizard = false, // New parameter
+    wizardSteps = [] // New parameter: [{title: "Step 1", fields: ["field1", "field2"]}]
+}) {
+    return new Promise((resolve) => {
+        const calcModalType = modalType ?? btnSelector.replace(/^[.#]/, '').split('-')[0];
+        const modalId = `modal-${calcModalType}`;
+        const modalContentClass = `detail-${calcModalType}`;
+        const actionBtnId = actionButtonName && actionButtonName.replace(/\s+/g, '-').toLowerCase()+'-'+calcModalType;
+
+        const formTagOpen = includeForm ? `<form id="form-${calcModalType}" method="POST" enctype="multipart/form-data">` : '';
+        const formTagClose = includeForm ? `</form>` : '';
+
+        // Wizard navigation template with more compact design
+        const wizardNavigation = isWizard ? `
+            <div class="wizard-navigation mb-3">
+                <ul class="nav nav-pills nav-justified wizard-steps">
+                    ${wizardSteps.map((step, index) => `
+                        <li class="nav-item wizard-step-item">
+                            <button type="button" class="nav-link ${index === 0 ? 'active' : ''}" data-step="${index}">
+                                <div class="wizard-step-circle">
+                                    <span class="wizard-step-number">${index + 1}</span>
+                                </div>
+                                <span class="wizard-step-text">${step.title}</span>
+                                ${index < wizardSteps.length - 1 ? '<span class="wizard-step-connector"></span>' : ''}
+                            </button>
+                        </li>
+                    `).join('')}
+                </ul>
+            </div>
+        ` : '';
+
+        // Step indicator template with enhanced design
+        const wizardStepIndicator = isWizard ? `
+            <div class="wizard-step-indicator mb-4">
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-primary" role="progressbar" style="width: ${100 / wizardSteps.length}%" aria-valuenow="${100 / wizardSteps.length}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+        ` : '';
+
+        // Removed - wizard controls now go in footer
+
+        const modalTemplate = `
+        <div class="modal fade" id="${modalId}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-${modalSize} modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">${title}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    ${formTagOpen}
+                    <div class="modal-body" style="${includeForm && 'height:'+modalHeight}">
+                        ${isWizard ? wizardNavigation + wizardStepIndicator : ''}
+                        <div class="${loadingSpinner} text-center mt-2">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="${modalContentClass} p-1"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                        ${isWizard ? `
+                            <button type="button" class="btn btn-outline-primary wizard-prev me-2" style="display: none;">Previous</button>
+                            <button type="button" class="btn btn-primary wizard-next">Next</button>
+                            <button type="button" class="btn btn-success wizard-submit" style="display: none;">${actionButtonName}</button>
+                        ` : actionButtonName ? `<button type="submit" id="${actionBtnId}" class="btn btn-primary px-3">${actionButtonName}</button>` : ''}    
+                    </div>
+                    ${formTagClose}
+                </div>
+            </div>
+        </div>`;
+
+        if (!$(`#${modalId}`).length) {
+            $('body').append(modalTemplate);
+        }
+
+        async function openModal(recordId) {
+            const url = fetchUrl.replace(":id", recordId);
+
+            if (includeForm) {
+                $(`#form-${calcModalType}`).attr('action', formAction.replace(":id", recordId));
+            }
+
+            $(`#${modalId}`).modal("show");
+            $(`#${modalId} .${loadingSpinner}`).show();
+            $(`#${modalId} .${modalContentClass}`).hide();
+
+            const response = await fetchRequest(url);
+            const result = response['result'];
+
+            if (result) {
+                $(`#${modalId} .modal-title`).text(title);
+                $(`#${modalId} .${modalContentClass}`).html(result);
+                
+                // Initialize wizard if enabled
+                if (isWizard) {
+                    initWizard(modalId, wizardSteps);
+                }
+            } else {
+                $(`#${modalId} .modal-title`).text("Error");
+                $(`#${modalId} .${modalContentClass}`).html(
+                    '<p class="pb-0 pt-3 p-4">Unable to load content.</p>'
+                );
+            }
+
+            $(`#${modalId} .${loadingSpinner}`).hide();
+            $(`#${modalId} .${modalContentClass}`).show();
+        }
+
+        // Function to initialize wizard functionality with strict step validation
+        function initWizard(modalId, steps) {
+            const $modal = $(`#${modalId}`);
+            const $content = $modal.find(`.${modalContentClass}`);
+            let currentStep = 0;
+            
+            // Track validated steps
+            let validatedSteps = new Set([0]); // First step is considered accessible initially
+            
+            // Organize form fields into step containers
+            organizeWizardSteps($content, steps);
+            
+            // Show only the first step initially
+            showWizardStep(currentStep);
+            
+            // Function to check if a specific field is filled
+            function isFieldCompleted(field) {
+                const $field = $(field);
+                // Different check based on field type
+                if ($field.is('select')) {
+                    return $field.val() !== null && $field.val() !== '';
+                } else if ($field.is('input[type="checkbox"], input[type="radio"]')) {
+                    return $field.is(':checked');
+                } else {
+                    return $field.val() !== '';
+                }
+            }
+            
+            // Function to check if all required fields in a step are filled
+            function isStepCompleted(stepIndex) {
+                const $step = $modal.find(`.wizard-step[data-step="${stepIndex}"]`);
+                const $requiredFields = $step.find('[required]');
+                
+                // No required fields means step is complete by default
+                if ($requiredFields.length === 0) {
+                    return true;
+                }
+                
+                // Check each required field
+                let isCompleted = true;
+                $requiredFields.each(function() {
+                    if (!isFieldCompleted(this)) {
+                        isCompleted = false;
+                        return false; // break the loop
+                    }
+                });
+                
+                return isCompleted;
+            }
+            
+            // Simple check - only allow accessing the current step or step 0
+            // This forces linear navigation and prevents skipping steps
+            function canAccessStep(stepIndex) {
+                // Only allow access to current step or first step
+                if (stepIndex === currentStep || stepIndex === 0) {
+                    return true;
+                }
+                
+                // Only allow access to next step if current step is completed
+                if (stepIndex === currentStep + 1 && isStepCompleted(currentStep)) {
+                    return true;
+                }
+                
+                // Only allow access to previous step
+                if (stepIndex === currentStep - 1) {
+                    return true;
+                }
+                
+                // Disallow all other navigation
+                return false;
+            }
+            
+            // Update the visual state of navigation tabs based on accessibility
+            function updateNavigationState() {
+                // Check completion status of current step
+                const currentStepCompleted = isStepCompleted(currentStep);
+                
+                // Update the appearance of each navigation tab
+                $modal.find('.wizard-navigation .nav-link').each(function() {
+                    const stepIndex = parseInt($(this).data('step'));
+                    
+                    // Step indicators show completion status
+                    if (stepIndex < currentStep) {
+                        // Prior steps show as completed
+                        $(this).addClass('completed').removeClass('active disabled');
+                    } 
+                    else if (stepIndex === currentStep) {
+                        // Current step is active
+                        $(this).addClass('active').removeClass('completed disabled');
+                    }
+                    else if (stepIndex === currentStep + 1 && currentStepCompleted) {
+                        // Next step is enabled only if current step is complete
+                        $(this).removeClass('disabled completed active');
+                    }
+                    else {
+                        // All other steps are disabled
+                        $(this).addClass('disabled').removeClass('completed active');
+                    }
+                });
+                
+                // Enable/disable the next button based on current step completion
+                $modal.find('.wizard-next').prop('disabled', !currentStepCompleted);
+                
+                // Update the submit button on the final step
+                if (currentStep === steps.length - 1) {
+                    $modal.find('.wizard-submit').prop('disabled', !currentStepCompleted);
+                }
+            }
+            
+            // Initialize navigation buttons with strict linear progression
+            $modal.find('.wizard-next').on('click', function() {
+                // Only allow next if current step is completed
+                if (isStepCompleted(currentStep)) {
+                    const nextStep = currentStep + 1;
+                    if (nextStep < steps.length) {
+                        currentStep = nextStep;
+                        showWizardStep(currentStep);
+                        updateNavigationState();
+                        // Scroll to top of form
+                        $modal.find('.modal-body').scrollTop(0);
+                    }
+                } else {
+                    // Highlight missing required fields
+                    highlightMissingFields(currentStep);
+                    // Visual feedback for validation failure
+                    $(this).addClass('btn-shake');
+                    setTimeout(() => $(this).removeClass('btn-shake'), 500);
+                }
+            });
+            
+            $modal.find('.wizard-prev').on('click', function() {
+                // Simple previous step navigation
+                const prevStep = currentStep - 1;
+                if (prevStep >= 0) {
+                    currentStep = prevStep;
+                    showWizardStep(currentStep);
+                    updateNavigationState();
+                    // Scroll to top of form
+                    $modal.find('.modal-body').scrollTop(0);
+                }
+            });
+            
+            $modal.find('.wizard-submit').on('click', function() {
+                // Enforce that all steps must be completed before submission
+                let allStepsCompleted = true;
+                for (let i = 0; i < steps.length; i++) {
+                    if (!isStepCompleted(i)) {
+                        allStepsCompleted = false;
+                        // Highlight incomplete steps
+                        const $tab = $modal.find(`.wizard-navigation .nav-link[data-step="${i}"]`);
+                        $tab.addClass('tab-alert');
+                        setTimeout(() => $tab.removeClass('tab-alert'), 1500);
+                    }
+                }
+                
+                // Only allow submission if current step and all previous steps are completed
+                if (allStepsCompleted) {
+                    // Add loading state
+                    const $btn = $(this);
+                    $btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...');
+                    $btn.prop('disabled', true);
+                    
+                    // Submit the form
+                    $modal.find('form').submit();
+                } else {
+                    // Visual feedback for validation failure
+                    $(this).addClass('btn-shake');
+                    setTimeout(() => $(this).removeClass('btn-shake'), 500);
+                    
+                    // Highlight missing required fields on current step
+                    highlightMissingFields(currentStep);
+                }
+            });
+            
+            // Highlight missing required fields in a step
+            function highlightMissingFields(stepIndex) {
+                const $step = $modal.find(`.wizard-step[data-step="${stepIndex}"]`);
+                const $requiredFields = $step.find('[required]');
+                
+                $requiredFields.each(function() {
+                    if (!isFieldCompleted(this)) {
+                        $(this).addClass('is-invalid');
+                        // Add a small shake to the field
+                        $(this).addClass('field-shake');
+                        setTimeout(() => $(this).removeClass('field-shake'), 600);
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+            }
+            
+            // Highlight missing required fields in a step
+            function highlightMissingFields(stepIndex) {
+                const $step = $modal.find(`.wizard-step[data-step="${stepIndex}"]`);
+                const $requiredFields = $step.find('[required]');
+                
+                $requiredFields.each(function() {
+                    if (!$(this).val()) {
+                        $(this).addClass('is-invalid');
+                        // Add a small shake to the field
+                        $(this).addClass('field-shake');
+                        setTimeout(() => $(this).removeClass('field-shake'), 600);
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+            }
+            
+            // Step navigation tabs with strict linear progression
+            $modal.find('.wizard-navigation .nav-link').on('click', function() {
+                const stepIndex = parseInt($(this).data('step'));
+                
+                // Strict check: Only allow navigation to accessible steps
+                if (canAccessStep(stepIndex)) {
+                    currentStep = stepIndex;
+                    showWizardStep(currentStep);
+                    updateNavigationState();
+                    // Scroll to top of form
+                    $modal.find('.modal-body').scrollTop(0);
+                } else {
+                    // Visual feedback that step is not accessible
+                    $(this).addClass('nav-link-shake');
+                    setTimeout(() => $(this).removeClass('nav-link-shake'), 500);
+                    
+                    // For future steps, show a message about completing current step first
+                    if (stepIndex > currentStep) {
+                        // Show a message about completing the current step first
+                        alert("Please complete the current step before proceeding.");
+                    }
+                }
+            });
+            
+            // Attach listeners to form fields to update validation state in real-time
+            function attachFieldListeners() {
+                $modal.find('input, select, textarea').on('change input blur', function() {
+                    // Update button states based on current step completion
+                    updateNavigationState();
+                    
+                    // Remove invalid state when user interacts with the field
+                    $(this).removeClass('is-invalid');
+                });
+            }
+            
+            // Initialize field listeners
+            attachFieldListeners();
+            
+            // Initial update of navigation state
+            updateNavigationState();
         }
         
-        form.isSubmitting = true;
-        const formData = new FormData(form);
-        const url = $(this).attr('action');
+        // Function to organize form fields into step containers
+        function organizeWizardSteps($content, steps) {
+            // Create step containers
+            steps.forEach((step, index) => {
+                const $stepContainer = $(`<div class="wizard-step" data-step="${index}" style="display: none;"></div>`);
+                
+                // Add step title
+                $stepContainer.append(`<h4>${step.title}</h4>`);
+                
+                // Find and move fields to this step
+                if (step.fields && step.fields.length) {
+                    step.fields.forEach(fieldSelector => {
+                        // Find the field container (usually a div.col-*)
+                        const $field = $content.find(fieldSelector).closest('.col-md-12, .col-md-8, .col-md-6, .col-md-4, .col-md-3');
+                        if ($field.length) {
+                            $stepContainer.append($field);
+                        }
+                    });
+                } else if (step.selector) {
+                    // Alternative: use a CSS selector to find elements
+                    const $fields = $content.find(step.selector);
+                    $stepContainer.append($fields);
+                }
+                
+                $content.append($stepContainer);
+            });
+        }
         
-        setButtonLoading(submitBtn, true);
-        
-        try {
-            const result = await fetchRequest(url, 'POST', formData);
-            if (result) {
-                setButtonLoading(submitBtn, false);
-                modalElement.modal('hide');
-                if (tableToRefresh) tableToRefresh.ajax.reload();
+        // Function to show a specific wizard step with enhanced UI updates
+        function showWizardStep(stepIndex) {
+            const $modal = $(`#${modalId}`);
+            const totalSteps = wizardSteps.length;
+            
+            // Hide all steps
+            $modal.find('.wizard-step').hide();
+            
+            // Show current step
+            $modal.find(`.wizard-step[data-step="${stepIndex}"]`).show().addClass('active');
+            
+            // Update navigation buttons
+            $modal.find('.wizard-prev').toggle(stepIndex > 0);
+            $modal.find('.wizard-next').toggle(stepIndex < totalSteps - 1);
+            $modal.find('.wizard-submit').toggle(stepIndex === totalSteps - 1);
+            
+            // Update progress bar with animation
+            const progress = ((stepIndex + 1) / totalSteps) * 100;
+            $modal.find('.progress-bar')
+                .css('width', `${progress}%`)
+                .attr('aria-valuenow', progress);
+            
+            // Update navigation pills and mark completed steps
+            $modal.find('.wizard-navigation .nav-link').removeClass('active completed');
+            
+            // Mark all previous steps as completed
+            for (let i = 0; i < stepIndex; i++) {
+                $modal.find(`.wizard-navigation .nav-link[data-step="${i}"]`).addClass('completed');
             }
-        } catch (error) {
-            console.error('Error submitting form: ', error);
-        } finally {
-            form.isSubmitting = false;
-            setButtonLoading(submitBtn, false);
-            submitBtn.prop('disabled', false);
+            
+            // Mark current step as active
+            $modal.find(`.wizard-navigation .nav-link[data-step="${stepIndex}"]`).addClass('active');
+            
+            // Update document title with current step
+            const stepTitle = wizardSteps[stepIndex].title;
+            $modal.find('.modal-title').text(`${title} - ${stepTitle}`);
+            
+            // Make sure numbers are always visible (fix for completed steps)
+            $modal.find('.wizard-step-number').show();
+            
+            // Update connectors for completed steps
+            updateStepConnectors();
+        }
+        
+        // Function to update step connectors based on completed steps
+        function updateStepConnectors() {
+            const $modal = $(`#${modalId}`);
+            const $completedLinks = $modal.find('.wizard-navigation .nav-link.completed');
+            
+            $completedLinks.each(function() {
+                const $connector = $(this).find('.wizard-step-connector');
+                if ($connector.length) {
+                    $connector.css('background-color', '#0d6efd');
+                }
+            });
+        }
+        
+        // Function to validate a specific step
+        function validateStep(stepIndex) {
+            const $modal = $(`#${modalId}`);
+            const $step = $modal.find(`.wizard-step[data-step="${stepIndex}"]`);
+            const $requiredFields = $step.find('[required]');
+            let isValid = true;
+            
+            $requiredFields.each(function() {
+                if (!$(this).val()) {
+                    isValid = false;
+                    $(this).addClass('is-invalid');
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+            
+            return isValid;
+        }
+
+        // Rest of the original function...
+        function openModalFromUrl() {
+            if (!hash) return;
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const recordId = urlParams.get("id");
+            const type = urlParams.get("type");
+
+            if (recordId && type === calcModalType) {
+                openModal(recordId);
+            }
+        }
+
+        $(document).on("click", btnSelector, function () {
+            const recordId = $(this).data("id");
+            
+            if (hash) {
+                const currentUrl = new URL(window.location);
+                const newUrl = `${currentUrl.pathname}?id=${recordId}&type=${calcModalType}${window.location.hash}`;
+                history.pushState(null, null, newUrl);
+            }
+            
+            openModal(recordId, calcModalType);
+        });
+
+        if (hash) {
+            $(window).on("popstate", function () {
+                openModalFromUrl();
+            });
+
+            $(`#${modalId}`).on("hidden.bs.modal", function () {
+                const currentUrl = new URL(window.location);
+                currentUrl.searchParams.delete("id");
+                currentUrl.searchParams.delete("type");
+
+                const newUrl = `${currentUrl.pathname}${currentUrl.search}${window.location.hash}`;
+                history.pushState(null, null, newUrl);
+            });
+        }
+
+        openModalFromUrl();
+
+        if (includeForm) {
+            const modalElement = $(`#${modalId}`);
+            const submitBtn = isWizard ? modalElement.find('.wizard-submit') : modalElement.find('button[type="submit"]');
+            
+            // CSS will be added manually in the header
+            
+            modalElement.find('form').on('submit', async function(e) {
+                e.preventDefault();
+                const form = this;
+                
+                if (form.isSubmitting) {
+                    return false;
+                }
+                
+                form.isSubmitting = true;
+                const formData = new FormData(form);
+                const url = $(this).attr('action');
+                
+                setButtonLoading(submitBtn, true);
+                
+                try {
+                    const result = await fetchRequest(url, 'POST', formData);
+                    if (result) {
+                        setButtonLoading(submitBtn, false);
+                        modalElement.modal('hide');
+                        if (tableToRefresh) tableToRefresh.ajax.reload();
+                    }
+                } catch (error) {
+                    console.error('Error submitting form: ', error);
+                } finally {
+                    form.isSubmitting = false;
+                    setButtonLoading(submitBtn, false);
+                    submitBtn.prop('disabled', false);
+                }
+            });
+        }
+
+        if (modalId.length) {
+            resolve(modalId);
         }
     });
 }

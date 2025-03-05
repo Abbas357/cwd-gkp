@@ -1119,7 +1119,7 @@ form select.error, form textarea.error, form input.error, form input.error:focus
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url("../images/bg-image.jpg?cw=21");
+    background-image: url("../images/bg-image.jpg?cw=22");
     background-size: cover;
     background-position: center;
     filter: blur(5px);
@@ -1138,4 +1138,203 @@ form select.error, form textarea.error, form input.error, form input.error:focus
 
 .form-check-label-highlighter .form-check-input:checked[type=checkbox]~.form-check-label, .form-check-label-highlighter .form-check-input:checked[type=radio]~.form-check-label {
     border-color: #377dff;
+}
+
+@keyframes btnShake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+
+.btn-shake {
+    animation: btnShake 0.5s ease;
+}
+
+@keyframes navLinkShake {
+    0%, 100% { transform: translateY(0); }
+    20%, 60% { transform: translateY(-3px); }
+    40%, 80% { transform: translateY(3px); }
+}
+
+.nav-link-shake {
+    animation: navLinkShake 0.5s ease;
+}
+/* Wizard Navigation Styling */
+.wizard-navigation {
+    padding: 10px 0;
+}
+
+.wizard-steps {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+
+.wizard-step-item {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.wizard-steps .nav-link {
+    padding: 15px 10px;
+    border-radius: 0;
+    background: transparent;
+    color: #6c757d;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: none;
+}
+
+.wizard-steps .nav-link:hover {
+    background: transparent;
+    color: #495057;
+}
+
+.wizard-steps .nav-link.active {
+    background: transparent;
+    color: #0d6efd;
+    font-weight: 600;
+}
+
+.wizard-steps .nav-link.completed {
+    color: #28a745;
+}
+
+/* Step Circles */
+.wizard-step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    border: 2px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.wizard-steps .nav-link.active .wizard-step-circle {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 0 0 5px rgba(13, 110, 253, 0.2);
+}
+
+.wizard-steps .nav-link.completed .wizard-step-circle {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+}
+
+.wizard-step-number {
+    font-weight: bold;
+}
+
+.wizard-step-check {
+    display: none;
+    position: absolute;
+}
+
+.wizard-steps .nav-link.completed .wizard-step-number {
+    display: none;
+}
+
+.wizard-steps .nav-link.completed .wizard-step-check {
+    display: block;
+}
+
+.wizard-step-text {
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-top: 5px;
+}
+
+/* Step Connectors */
+.wizard-step-connector {
+    position: absolute;
+    top: 20px;
+    right: -50%;
+    width: 100%;
+    height: 2px;
+    background-color: #dee2e6;
+    z-index: -1;
+}
+
+.wizard-step-item:last-child .wizard-step-connector {
+    display: none;
+}
+
+.wizard-steps .nav-link.completed .wizard-step-connector,
+.wizard-steps .nav-link.active .wizard-step-connector {
+    background-color: #0d6efd;
+}
+
+/* Progress Bar */
+.wizard-step-indicator .progress {
+    border-radius: 10px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.wizard-step-indicator .progress-bar {
+    transition: width 0.6s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Step Content */
+.wizard-step {
+    padding: 15px 5px;
+    transition: all 0.3s ease;
+}
+
+.wizard-step h4 {
+    color: #0d6efd;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9ecef;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+/* Animations */
+.wizard-step.active {
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Form controls within wizard */
+.wizard-step .form-control:focus,
+.wizard-step .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Footer buttons */
+.modal-footer .wizard-prev,
+.modal-footer .wizard-next,
+.modal-footer .wizard-submit {
+    min-width: 100px;
+    transition: all 0.3s ease;
+}
+
+.modal-footer .wizard-submit {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.modal-footer .wizard-submit:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
 }

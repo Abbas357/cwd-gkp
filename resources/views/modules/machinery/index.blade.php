@@ -162,9 +162,8 @@
                             , formAction: "{{ route('admin.apps.machineries.store') }}"
                             , modalHeight: '60vh'
                             , hash: false
-                       , }).then((modal) => {
-                            pushStateModalFormSubmission(modal, table);
-                        });
+                            , tableToRefresh: table
+                       , });
 
                     },
                 }
@@ -215,28 +214,8 @@
                 , includeForm: true
                 , formAction: "{{ route('admin.apps.machineries.allocation.store', ':id') }}"
                 , modalHeight: '65vh'
-            , }).then((modal) => {
-                const machineryModal = $('#' + modal);
-                const updateMachineryBtn = machineryModal.find('button[type="submit"]');
-                machineryModal.find('form').on('submit', async function(e) {
-                    e.preventDefault();
-                    const form = this;
-                    const formData = new FormData(form);
-                    const url = $(this).attr('action');
-                    setButtonLoading(updateMachineryBtn, true);
-                    try {
-                        const result = await fetchRequest(url, 'POST', formData);
-                        if (result) {
-                            setButtonLoading(updateMachineryBtn, false);
-                            machineryModal.modal('hide');
-                            table.ajax.reload();
-                        }
-                    } catch (error) {
-                        setButtonLoading(updateMachineryBtn, false);
-                        console.error('Error during form submission:', error);
-                    }
-                });
-            });
+                , tableToRefresh: table
+            , });
             
         });
 

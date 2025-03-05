@@ -102,9 +102,8 @@
                             , formAction: "{{ route('admin.stories.store') }}"
                             , modalHeight: '45vh'
                             , hash: false
-                        , }).then((modal) => {
-                            pushStateModalFormSubmission(modal, table);
-                        });
+                            , tableToRefresh: table
+                        , });
                     },
                 }
             });

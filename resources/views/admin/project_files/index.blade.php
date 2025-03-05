@@ -113,9 +113,8 @@
                             , formAction: "{{ route('admin.project_files.store') }}"
                             , modalHeight: '35vh'
                             , hash: false
-                        , }).then((modal) => {
-                            pushStateModalFormSubmission(modal, table);
-                        });
+                            , tableToRefresh: table
+                        , });
                     },
                 }
             });

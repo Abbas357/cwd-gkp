@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Helpers\Database;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 
 class SearchBuilder
 {
@@ -31,21 +32,19 @@ class SearchBuilder
         '!between' => 'not between',
     ];
 
-    public function __construct(Request $request, $query, array $allowedColumns = [], array $mapColumns = [])
+    public function __construct(Request $request, Builder $query, array $allowedColumns = [], array $mapColumns = [])
     {
         $this->request = $request;
         $this->query = $query;
-        $this->allowedColumns = !empty($allowedColumns) 
-            ? $allowedColumns 
-            : Database::getColumns($query->getModel()->getTable());
+        $this->allowedColumns = $allowedColumns ?: Database::getColumns($query->getModel()->getTable());
         $this->mapColumns = $mapColumns;
     }
 
-    public function build()
+    public function build(): Builder
     {
         if ($this->request->has('searchBuilder')) {
             $searchBuilder = $this->request->searchBuilder;
-            if ($searchBuilder) {
+            if ($searchBuilder && is_array($searchBuilder)) {
                 $this->applySearchBuilderCriteria($this->query, $searchBuilder);
             }
         }
@@ -53,71 +52,150 @@ class SearchBuilder
         return $this->query;
     }
 
-    protected function applySearchBuilderCriteria($query, $searchBuilder, $logic = 'AND')
+    protected function applySearchBuilderCriteria(Builder $query, array $searchBuilder): void
     {
-        $logicValid = in_array($logic, ['AND', "OR"]);
+        $groupLogic = isset($searchBuilder['logic']) ? strtoupper($searchBuilder['logic']) : 'AND';
+        $groupLogic = in_array($groupLogic, ['AND', 'OR']) ? $groupLogic : 'AND';
 
-        if ($logicValid && isset($searchBuilder['criteria'])) {
-            $sbLogic = [];
+        if (!isset($searchBuilder['criteria'])) {
+            return;
+        }
+
+        $query->where(function (Builder $subQuery) use ($searchBuilder, $groupLogic) {
             foreach ($searchBuilder['criteria'] as $rule) {
                 if (isset($rule['criteria'])) {
-                    $this->applySearchBuilderCriteria($query, $rule, $rule['logic'] ?? 'AND');
+                    $this->applyNestedGroup($subQuery, $rule, $groupLogic);
                 } else {
-                    $col = $rule['origData'] ?? 'id';
-                    if (empty($col) || !in_array($col, $this->allowedColumns)) {
-                        $col = 'id';
-                    }
-
-                    $searchTerm = (!in_array($rule['condition'] ?? null, ['null', '!null'])) ? $rule['value1'] ?? false : true;
-
-                    if ($col && $searchTerm && array_key_exists($rule['condition'] ?? null, $this->sbRules) && in_array($col, $this->allowedColumns)) {
-                        if ($rule['condition'] === 'starts' || $rule['condition'] === '!starts') {
-                            $searchTerm = $searchTerm . '%';
-                        } elseif ($rule['condition'] === 'ends' || $rule['condition'] === '!ends') {
-                            $searchTerm = '%' . $searchTerm;
-                        } elseif ($rule['condition'] === 'contains' || $rule['condition'] === '!contains') {
-                            $searchTerm = '%' . $searchTerm . '%';
-                        } elseif ($rule['condition'] === 'between' || $rule['condition'] === '!between') {
-                            if (preg_match("/^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/", $rule['value1'])) {
-                                $date2 = $rule['value2'] ?? $rule['value1'];
-                                $searchTerm = [$rule['value1'] . " 00:00:00", $date2 . " 23:59:59"];
-                            } else {
-                                $searchTerm = [$rule['value1'], $rule['value2'] ?? null];
-                            }
-                        }
-
-                        $col = (!empty($this->mapColumns)) ? $this->mapColumns[$col] ?? $col : $col;
-                        $sbLogic[] = [$col, $this->sbRules[$rule['condition'] ?? null], $searchTerm];
-                    }
+                    $this->applyRule($subQuery, $rule, $groupLogic);
                 }
             }
+        }, null, null, $groupLogic);
+    }
 
-            if ($sbLogic) {
-                $query->where(function ($query) use ($sbLogic, $logic) {
-                    foreach ($sbLogic as $r) {
-                        $cond = 'where';
-                        if ($r[1] == 'between') {
-                            $cond = ($logic == 'AND') ? 'whereBetween' : 'orWhereBetween';
-                            $query->{$cond}($r[0], $r[2]);
-                        } elseif ($r[1] == 'not between') {
-                            $cond = ($logic == 'AND') ? 'whereNotBetween' : 'orWhereNotBetween';
-                            $query->{$cond}($r[0], $r[2]);
-                        } elseif ($r[1] == 'IS NULL') {
-                            $cond = ($logic == 'AND') ? 'whereNull' : 'orWhereNull';
-                            $query->{$cond}($r[0]);
-                        } elseif ($r[1] == 'IS NOT NULL') {
-                            $cond = ($logic == 'AND') ? 'whereNotNull' : 'orWhereNotNull';
-                            $query->{$cond}($r[0]);
-                        } else {
-                            if ($logic == 'AND') {
-                                $query->where($r[0], $r[1], $r[2]);
-                            } else {
-                                $query->orWhere($r[0], $r[1], $r[2]);
-                            }
-                        }
-                    }
-                });
-            }
+    protected function applyNestedGroup(Builder $query, array $rule, string $parentLogic): void
+    {
+        $groupLogic = isset($rule['logic']) ? strtoupper($rule['logic']) : 'AND';
+        $groupLogic = in_array($groupLogic, ['AND', 'OR']) ? $groupLogic : 'AND';
+
+        $method = $parentLogic === 'OR' ? 'orWhere' : 'where';
+
+        $query->{$method}(function (Builder $subQuery) use ($rule, $groupLogic) {
+            $this->applySearchBuilderCriteria($subQuery, $rule);
+        });
+    }
+
+    protected function applyRule(Builder $query, array $rule, string $groupLogic): void
+    {
+        if (!isset($rule['origData'], $rule['condition']) || !$this->isValidRule($rule)) {
+            return;
+        }
+
+        $col = $this->getValidColumn($rule['origData']);
+        if (!$col) {
+            return;
+        }
+
+        $condition = $rule['condition'];
+        $operator = $this->sbRules[$condition] ?? null;
+        if (!$operator) {
+            return;
+        }
+
+        $values = $this->getFormattedValues($rule);
+        $method = $groupLogic === 'OR' ? 'orWhere' : 'where';
+
+        $this->applyCondition($query, $method, $col, $operator, $values);
+    }
+
+    protected function isValidRule(array $rule): bool
+    {
+        $condition = $rule['condition'] ?? '';
+        $needsValue = !in_array($condition, ['null', '!null']);
+        
+        if ($needsValue && !isset($rule['value1'])) {
+            return false;
+        }
+
+        if (in_array($condition, ['between', '!between']) && !isset($rule['value1'])) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function getValidColumn(string $column): ?string
+    {
+        if (!in_array($column, $this->allowedColumns)) {
+            return null;
+        }
+
+        return $this->mapColumns[$column] ?? $column;
+    }
+
+    protected function getFormattedValues(array $rule): array
+    {
+        $condition = $rule['condition'];
+        $value1 = $rule['value1'] ?? null;
+        $value2 = $rule['value2'] ?? null;
+
+        switch ($condition) {
+            case 'starts':
+            case '!starts':
+                return [$value1 . '%'];
+            case 'ends':
+            case '!ends':
+                return ['%' . $value1];
+            case 'contains':
+            case '!contains':
+                return ['%' . $value1 . '%'];
+            case 'between':
+            case '!between':
+                return $this->formatBetweenValues($value1, $value2);
+            case 'null':
+            case '!null':
+                return [];
+            default:
+                return [$value1];
+        }
+    }
+
+    protected function formatBetweenValues($value1, $value2): array
+    {
+        $value2 = $value2 ?? $value1;
+
+        if ($this->isDate($value1)) {
+            return [
+                $value1 . ' 00:00:00',
+                ($this->isDate($value2) ? $value2 : $value1) . ' 23:59:59'
+            ];
+        }
+
+        return [$value1, $value2];
+    }
+
+    protected function isDate($value): bool
+    {
+        return (bool) preg_match("/^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/", $value);
+    }
+
+    protected function applyCondition(Builder $query, string $method, string $column, string $operator, array $values): void
+    {
+        switch ($operator) {
+            case 'between':
+                $query->{$method . 'Between'}($column, $values);
+                break;
+            case 'not between':
+                $query->{$method . 'NotBetween'}($column, $values);
+                break;
+            case 'IS NULL':
+                $query->{$method . 'Null'}($column);
+                break;
+            case 'IS NOT NULL':
+                $query->{$method . 'NotNull'}($column);
+                break;
+            default:
+                $query->{$method}($column, $operator, $values[0] ?? null);
+                break;
         }
     }
 }
