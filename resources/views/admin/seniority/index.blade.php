@@ -198,6 +198,10 @@
                 modalSize: 'lg',
             });
             
+            if (new URLSearchParams(window.location.search).get("create") === "true") {
+                document.querySelector(".create-btn")?.click();
+            }
+            
         });
 
     </script>

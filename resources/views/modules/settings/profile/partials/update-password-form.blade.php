@@ -10,9 +10,6 @@
                     Password never updated
                 @endif</h5>
         </div>
-
-
-
         <p class="mt-1 text-sm">
             {{ __('Ensure your account is using a long, random password to stay secure.') }}
         </p>
@@ -49,5 +46,6 @@
         <div class="flex items-center gap-4">
             <button type="submit" class="mt-2 btn btn-primary">Change Password</button>
         </div>
+
     </form>
 </section>

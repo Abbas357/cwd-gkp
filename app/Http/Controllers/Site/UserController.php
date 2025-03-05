@@ -12,6 +12,7 @@ class UserController extends Controller
     {
         $offices = User::select('office')
             ->distinct()
+            ->featuredOnContactOffice()
             ->pluck('office');
 
         $contactsByOffice = $offices->sortByDesc(function ($office) {

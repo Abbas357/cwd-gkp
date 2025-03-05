@@ -172,6 +172,7 @@
                         <option value="Home" {{ in_array('Home', $featuredOn) ? 'selected' : '' }}>Home</option>
                         <option value="Team" {{ in_array('Team', $featuredOn) ? 'selected' : '' }}>Team</option>
                         <option value="Contact" {{ in_array('Contact', $featuredOn) ? 'selected' : '' }}>Contact</option>
+                        <option value="ContactOffice" {{ in_array('ContactOffice', $featuredOn) ? 'selected' : '' }}>ContactOffice</option>
                     </select>
                 </div>
                 <div class="mb-3">

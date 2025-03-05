@@ -39,6 +39,14 @@
             border-radius: 12px;
             font-size: 1.8rem;
         }
+
+        .toast {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 9999;
+            max-width: 300px;
+        }
         
         .bg-gradient-primary {
             background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
@@ -338,16 +346,15 @@
                         <i class="bi bi-plus-lg me-1"></i> Add Content
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="actionsDropdown">
-                        <li><a class="dropdown-item" href="{{ route('admin.news.index') }}">New Article</a></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.events.index') }}">New Event</a></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.tenders.index') }}">New Tender</a></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.gallery.index') }}">New Gallery</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.news.index') }}?create=true">New News</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.events.index') }}?create=true">New Event</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.tenders.index') }}?create=true">New Tender</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.gallery.index') }}?create=true">New Gallery</a></li>
                     </ul>
                 </div>
             </div>
         </div>
         
-        <!-- Top Stats Cards -->
         <div class="row g-4 mb-4">
             <div class="col-md-3">
                 <div class="stat-card card h-100 bg-gradient-primary text-white">
@@ -435,7 +442,6 @@
             </div>
         </div>
         
-        <!-- Performance Metrics Row -->
         <div class="row g-4 mb-4">
             <div class="col-lg-8">
                 <div class="card h-100">
@@ -492,7 +498,6 @@
             </div>
         </div>
         
-        <!-- Content Distribution and Top Content -->
         <div class="row g-4 mb-4">
             <div class="col-md-6">
                 <div class="card h-100">
@@ -571,7 +576,6 @@
             </div>
         </div>
         
-        <!-- Module Stats and Recent Activity -->
         <div class="row g-4 mb-4">
             <div class="col-lg-8">
                 <div class="card h-100">
@@ -767,7 +771,6 @@
             const viewsChart = new ApexCharts(document.querySelector("#viewsChart"), viewsOptions);
             viewsChart.render();
             
-            // Content Creation Trend Chart
             const creationTrendData = @json($contentCreationTrend);
             const creationOptions = {
                 series: [{
@@ -808,32 +811,26 @@
             const creationChart = new ApexCharts(document.querySelector("#creationChart"), creationOptions);
             creationChart.render();
             
-            // Filter buttons for charts
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const chartType = this.getAttribute('data-chart');
                     
-                    // Update active button
                     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     
-                    // Show selected chart
                     document.querySelectorAll('.chart-element').forEach(chart => chart.style.display = 'none');
                     document.getElementById(chartType + 'Chart').style.display = 'block';
                 });
             });
             
-            // Refresh button
             document.getElementById('refreshStats').addEventListener('click', function() {
                 this.disabled = true;
                 this.innerHTML = '<i class="bi bi-arrow-clockwise me-1"></i> Refreshing...';
                 
-                // Simulate refresh (would be AJAX in production)
                 setTimeout(() => {
                     this.disabled = false;
                     this.innerHTML = '<i class="bi bi-arrow-clockwise me-1"></i> Refresh';
                     
-                    // Show success toast
                     const toastEl = document.createElement('div');
                     toastEl.className = 'toast align-items-center text-white bg-success';
                     toastEl.setAttribute('role', 'alert');

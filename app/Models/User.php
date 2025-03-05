@@ -114,6 +114,11 @@ class User extends Authenticatable implements HasMedia
         return $query->where('featured_on', 'LIKE', '%"Contact"%');
     }
 
+    public function scopeFeaturedOnContactOffice($query)
+    {
+        return $query->where('featured_on', 'LIKE', '%"ContactOffice"%');
+    }
+
     public function logs()
     {
         return $this->hasMany(Activity::class, 'causer_id');
