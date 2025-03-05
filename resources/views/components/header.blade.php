@@ -8,7 +8,7 @@
                 </div>
                 @else
                 <a href="{{ route('admin.apps') }}" class="logo-icon">
-                    <img src="{{ asset('admin/images/logo.png') }}" style="width:190px; border-radius:5px" alt="Logo Desktop">
+                    <img src="{{ asset('admin/images/logo-square.png') }}" style="width:50px; border-radius:5px" alt="Logo">
                 </a>
                 @endif
                 @if (isset($breadcrumb) && $breadcrumb->isNotEmpty())
@@ -200,5 +200,6 @@
     <script>
         var linksURL = "{{ route('admin.search.links') }}";
         var activityURL = "{{ route('admin.activity.notifications') }}";
+
     </script>
 </header>
