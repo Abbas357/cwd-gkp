@@ -2,7 +2,9 @@
     <div class="col-md-6 mb-3">
         <label for="ddo_code">DDO Code</label>
         <input type="text" class="form-control" id="ddo_code" name="ddo_code" required>
-        <span class="text-danger" id="ddo_code-error"></span>
+        @error('ddo_code')
+        <div class="text-danger">{{ $message }}</div>
+        @enderror
     </div>
 
     <div class="col-md-6 mb-3">
@@ -13,7 +15,9 @@
             <option value="{{ $district->id }}">{{ $district->name }}</option>
             @endforeach
         </select>
-        <span class="text-danger" id="district_id-error"></span>
+        @error('district_id')
+        <div class="text-danger">{{ $message }}</div>
+        @enderror
     </div>
 </div>
 
@@ -21,7 +25,9 @@
     <div class="col-md-4 mb-3">
         <label for="month">Month</label>
         <input type="month" class="form-control" id="month" name="month" required>
-        <span class="text-danger" id="month-error"></span>
+        @error('month')
+        <div class="text-danger">{{ $message }}</div>
+        @enderror
     </div>
 
     <div class="col-md-4 mb-3">
@@ -32,7 +38,9 @@
             <option value="{{ $type->name }}">{{ $type->name }}</option>
             @endforeach
         </select>
-        <span class="text-danger" id="type-error"></span>
+        @error('type')
+        <div class="text-danger">{{ $message }}</div>
+        @enderror
     </div>
 
     <div class="col-md-4 mb-3">
@@ -41,6 +49,9 @@
             <input type="number" step="0.01" class="form-control" id="amount" name="amount" required>
             <span class="input-group-text">In Millions</span>
         </div>
+        @error('amount')
+        <div class="text-danger">{{ $message }}</div>
+        @enderror
     </div>
 </div>
 
@@ -48,6 +59,8 @@
     <div class="col-md-12 mb-3">
         <label for="remarks">Remarks</label>
         <textarea class="form-control" id="remarks" name="remarks" rows="5"></textarea>
-        <span class="text-danger" id="remarks-error"></span>
+        @error('remarks')
+        <div class="text-danger">{{ $message }}</div>
+        @enderror
     </div>
 </div>

@@ -919,12 +919,12 @@ function formWizardModal({
         const modalTemplate = `
         <div class="modal fade" id="${modalId}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-${modalSize} modal-dialog-centered modal-dialog-scrollable">
-                <div class="modal-content">
+                <div class="modal-content" id="cw-wizard">
                     <div class="modal-header">
                         <h5 class="modal-title">${title}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="cw-wizard-navigation mb-1">
+                    <div class="cw-wizard-navigation">
                         <ul class="nav nav-pills nav-justified cw-wizard-steps">
                             ${wizardSteps.map((step, index) => `
                                 <li class="nav-item cw-wizard-step-item">
@@ -940,9 +940,13 @@ function formWizardModal({
                             `).join('')}
                         </ul>
                     </div>
-                    <div class="cw-wizard-step-indicator mb-1">
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-primary" role="progressbar" style="width: ${100 / wizardSteps.length}%" aria-valuenow="${100 / wizardSteps.length}" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="cw-wizard-step-indicator">
+                        <div class="progress progress-container">
+                            <div class="progress-bar bg-success custom-progress-bar" 
+                                role="progressbar" 
+                                style="width: ${100 / wizardSteps.length}%">
+                                <div class="progress-shine"></div>
+                            </div>
                         </div>
                     </div>
                     <div id="error-indicator"></div>
@@ -1057,6 +1061,18 @@ function formWizardModal({
             }
             
             function canAccessStep(targetStepIndex) {
+                let allStepsCompleted = true;
+                for (let i = 0; i < steps.length; i++) {
+                    if (!isStepCompleted(i)) {
+                        allStepsCompleted = false;
+                        break;
+                    }
+                }
+                
+                if (allStepsCompleted) {
+                    return true;
+                }
+                
                 if (targetStepIndex === 0) return true;
                 if (targetStepIndex === currentStep) return true;
                 if (targetStepIndex === currentStep - 1) return true;
@@ -1328,9 +1344,10 @@ function formWizardModal({
                     }
                 } else {
                     document.querySelector('#error-indicator').innerHTML = `
-                        <div class="alert alert-danger text-center" role="alert">
-                            Oops! Some fields need your attention. Please review and try again
-                        </div>
+                    <div class="alert alert-danger alert-dismissible fade show text-center" role="alert" style="position: relative; max-width: 600px; margin: 7px auto; border-radius: 3px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                        Oops! Some fields need your attention. Please review and try again.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="position: absolute; right: 5px;"></button>
+                    </div>
                     `;
                 }
             } catch (error) {
