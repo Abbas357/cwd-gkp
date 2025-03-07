@@ -1,7 +1,7 @@
 <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
 <link href="{{ asset('admin/plugins/flatpickr/flatpickr.min.css') }}" rel="stylesheet">
-<div class="row mx-1">
-    
+
+<div class="row" id="step-1">
     <div class="col-md-6 mb-4">
         <label for="title">Title</label>
         <input type="text" class="form-control" id="title" value="{{ old('title') }}" placeholder="Title" name="title" required>
@@ -24,7 +24,9 @@
             <textarea name="content" id="content" class="form-control" style="height:150px">{{ old('content') }}</textarea>
         </div>
     </div>
+</div>
 
+<div class="row" id="step-2">
     <div class="col-md-6 mb-3">
         <label for="start_date">Start Date</label>
         <input type="date" class="form-control" id="start_date" value="{{ old('start_date') }}" placeholder="Start Date & Time" name="start_date" required>
@@ -55,7 +57,7 @@
     $(document).ready(function() {
 
         $('#content').summernote({
-            height: 200
+            height: 150
         , });
 
         $("#start_date").flatpickr({

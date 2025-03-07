@@ -119,18 +119,37 @@
                 , customButton: {
                     text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Dev. Project</span>`
                     , action: function(e, dt, node, config) {
-                        pushStateModal({
-                            fetchUrl: "{{ route('admin.development_projects.create') }}"
-                            , btnSelector: '.create-btn'
-                            , title: 'Add Development Project'
-                            , actionButtonName: 'Add Development Project'
-                            , modalSize: 'lg'
-                            , includeForm: true
-                            , formAction: "{{ route('admin.development_projects.store') }}"
-                            , modalHeight: '75vh'
-                            , hash: false
-                            , tableToRefresh: table
-                        , });
+                        
+                        formWizardModal({
+                            title: 'Add Development Project',
+                            fetchUrl: "{{ route('admin.development_projects.create') }}",
+                            btnSelector: '.create-btn',
+                            actionButtonName: 'Add Development Project',
+                            modalSize: 'lg',
+                            formAction: "{{ route('admin.development_projects.store') }}",
+                            wizardSteps: [
+                                {
+                                    title: "Basic Info",
+                                    fields: ["#step-1"]
+                                },
+                                {
+                                    title: "Project Details",
+                                    fields: ["#step-2"]
+                                },
+                                {
+                                    title: "Validity",
+                                    fields: ["#step-3"]
+                                },
+                                {
+                                    title: "Progress & Files",
+                                    fields: ["#step-4"]
+                                }
+                            ],
+                            formSubmitted() {
+                                window.location.reload();
+                            }
+                        });
+
                     }
                 , }
             });

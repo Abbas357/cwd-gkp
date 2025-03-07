@@ -152,18 +152,39 @@
                     text: `<span class="symbol-container fw-bold create-btn"><i class="bi-plus-circle"></i>&nbsp; Add Machinery</span>`
                     , action: function(e, dt, node, config) {
 
-                        pushStateModal({
-                            fetchUrl: "{{ route('admin.apps.machineries.create') }}"
-                            , btnSelector: '.create-btn'
-                            , title: 'Add Machinery'
-                            , actionButtonName: 'Add Machinery'
-                            , modalSize: 'lg'
-                            , includeForm: true
-                            , formAction: "{{ route('admin.apps.machineries.store') }}"
-                            , modalHeight: '60vh'
-                            , hash: false
-                            , tableToRefresh: table
-                       , });
+                       formWizardModal({
+                            title: 'Add Machinery',
+                            fetchUrl: "{{ route('admin.apps.machineries.create') }}",
+                            btnSelector: '.create-btn',
+                            actionButtonName: 'Add Machinery',
+                            modalSize: 'lg',
+                            formAction: "{{ route('admin.apps.machineries.store') }}",
+                            wizardSteps: [
+                                {
+                                    title: "Basic Info",
+                                    fields: ["#step-1"]
+                                },
+                                {
+                                    title: "Technical Details",
+                                    fields: ["#step-2"]
+                                },
+                                {
+                                    title: "Maintenance Info",
+                                    fields: ["#step-3"]
+                                },
+                                {
+                                    title: "Images",
+                                    fields: ["#step-4"]
+                                },
+                                {
+                                    title: "Remarks",
+                                    fields: ["#step-5"]
+                                }
+                            ],
+                            formSubmitted() {
+                                window.location.reload();
+                            }
+                        });
 
                     },
                 }

@@ -90,18 +90,29 @@
                 , customButton: {
                     text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Page</span>`
                     , action: function(e, dt, node, config) {
-                        pushStateModal({
-                            fetchUrl: "{{ route('admin.pages.create') }}"
-                            , btnSelector: '.create-btn'
-                            , title: 'Add Page'
-                            , actionButtonName: 'Add Page'
-                            , modalSize: 'xl'
-                            , includeForm: true
-                            , formAction: "{{ route('admin.pages.store') }}"
-                            , modalHeight: '75vh'
-                            , hash: false
-                            , tableToRefresh: table
-                        , });
+                        
+                        formWizardModal({
+                            title: 'Add Page',
+                            fetchUrl: "{{ route('admin.pages.create') }}",
+                            btnSelector: '.create-btn',
+                            actionButtonName: 'Add Page',
+                            modalSize: 'lg',
+                            formAction: "{{ route('admin.pages.store') }}",
+                            wizardSteps: [
+                                {
+                                    title: "Basic Detail",
+                                    fields: ["#step-1"]
+                                },
+                                {
+                                    title: "Description",
+                                    fields: ["#step-2"]
+                                },
+                            ],
+                            formSubmitted() {
+                                window.location.reload();
+                            }
+                        });
+
                     },
                 }
             });

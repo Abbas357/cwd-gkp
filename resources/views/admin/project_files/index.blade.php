@@ -103,18 +103,29 @@
                 , customButton: {
                     text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Project Files</span>`
                     , action: function(e, dt, node, config) {
-                        pushStateModal({
-                            fetchUrl: "{{ route('admin.project_files.create') }}"
-                            , btnSelector: '.create-btn'
-                            , title: 'Add Project File'
-                            , actionButtonName: 'Add Project File'
-                            , modalSize: 'lg'
-                            , includeForm: true
-                            , formAction: "{{ route('admin.project_files.store') }}"
-                            , modalHeight: '35vh'
-                            , hash: false
-                            , tableToRefresh: table
-                        , });
+                        
+                        formWizardModal({
+                            title: 'Add Project File',
+                            fetchUrl: "{{ route('admin.project_files.create') }}",
+                            btnSelector: '.create-btn',
+                            actionButtonName: 'Add Project File',
+                            modalSize: 'lg',
+                            formAction: "{{ route('admin.project_files.store') }}",
+                            wizardSteps: [
+                                {
+                                    title: "File Details",
+                                    fields: ["#step-1"]
+                                },
+                                {
+                                    title: "Documents",
+                                    fields: ["#step-2"]
+                                }
+                            ],
+                            formSubmitted() {
+                                window.location.reload();
+                            }
+                        });
+
                     },
                 }
             });

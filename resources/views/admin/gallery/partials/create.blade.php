@@ -1,7 +1,6 @@
 <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
 <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
-<div class="row">
-
+<div class="row" id="step-1">
     <div class="col-md-6 mb-4">
         <label for="type">Gallery Type</label>
         <select class="form-select form-select-md" id="type" name="type" required>
@@ -22,7 +21,8 @@
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
-
+</div>
+<div class="row" id="step-2">
     <div class="col-md-6 mb-4">
         <label for="cover_photo">Cover Photo</label>
         <input type="file" class="form-control" id="cover_photo" name="cover_photo">
@@ -39,14 +39,14 @@
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
-
+</div>
+<div class="row" id="step-3">
     <div class="col-md-12 mb-4">
         <label for="description">Description</label>
         <div class="mb-3">
-            <textarea name="description" id="description" class="form-control" style="height:150px">{{ old('description') }}</textarea>
+            <textarea name="description" id="description" class="form-control" style="height:120px">{{ old('description') }}</textarea>
         </div>
     </div>
-
 </div>
 
 <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
@@ -54,7 +54,7 @@
 <script>
     $(document).ready(function() {
         $('#description').summernote({
-            height: 300
+            height: 200
         , });
 
         imageCropper({

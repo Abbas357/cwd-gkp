@@ -98,18 +98,29 @@
                 , customButton: {
                     text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Sliders</span>`
                     , action: function(e, dt, node, config) {
-                        pushStateModal({
-                            fetchUrl: "{{ route('admin.sliders.create') }}"
-                            , btnSelector: '.create-btn'
-                            , title: 'Add Slider'
-                            , actionButtonName: 'Add Slider'
-                            , modalSize: 'xl'
-                            , includeForm: true
-                            , formAction: "{{ route('admin.sliders.store') }}"
-                            , modalHeight: '70vh'
-                            , hash: false
-                            , tableToRefresh: table
-                        , });
+                        
+                        formWizardModal({
+                            title: 'Add Slider',
+                            fetchUrl: "{{ route('admin.sliders.create') }}",
+                            btnSelector: '.create-btn',
+                            actionButtonName: 'Add Slider',
+                            modalSize: 'lg',
+                            formAction: "{{ route('admin.sliders.store') }}",
+                            wizardSteps: [
+                                {
+                                    title: "Basic Info",
+                                    fields: ["#step-1"]
+                                },
+                                {
+                                    title: "Description & Attachment",
+                                    fields: ["#step-2"]
+                                },
+                            ],
+                            formSubmitted() {
+                                window.location.reload();
+                            }
+                        });
+
                     },
                 }
             });

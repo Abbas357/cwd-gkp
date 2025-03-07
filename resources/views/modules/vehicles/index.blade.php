@@ -132,18 +132,35 @@
                     text: `<span class="symbol-container fw-bold create-btn"><i class="bi-plus-circle"></i>&nbsp; Add Vehicle</span>`
                     , action: function(e, dt, node, config) {
 
-                        pushStateModal({
-                            fetchUrl: "{{ route('admin.apps.vehicles.create') }}"
-                            , btnSelector: '.create-btn'
-                            , title: 'Add Vehicle'
-                            , actionButtonName: 'Add Vehicle'
-                            , modalSize: 'lg'
-                            , includeForm: true
-                            , formAction: "{{ route('admin.apps.vehicles.store') }}"
-                            , modalHeight: '60vh'
-                            , hash: false
-                            , tableToRefresh: table
-                       , });
+                       formWizardModal({
+                            title: 'Add Vehicle',
+                            fetchUrl: "{{ route('admin.apps.vehicles.create') }}",
+                            btnSelector: '.create-btn',
+                            actionButtonName: 'Add Vehicle',
+                            modalSize: 'lg',
+                            formAction: "{{ route('admin.apps.vehicles.store') }}",
+                            wizardSteps: [
+                                {
+                                    title: "Basic Info",
+                                    fields: ["#step-1"]
+                                },
+                                {
+                                    title: "Model Info",
+                                    fields: ["#step-2"]
+                                },
+                                {
+                                    title: "Reg. info",
+                                    fields: ["#step-3"]
+                                },
+                                {
+                                    title: "Images",
+                                    fields: ["#step-4"]
+                                }
+                            ],
+                            formSubmitted() {
+                                window.location.reload();
+                            }
+                        });
 
                     },
                 }

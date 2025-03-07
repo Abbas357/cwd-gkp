@@ -113,18 +113,31 @@
                 , customButton: {
                     text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Event</span>`
                     , action: function(e, dt, node, config) {
-                        pushStateModal({
-                            fetchUrl: "{{ route('admin.events.create') }}"
-                            , btnSelector: '.create-btn'
-                            , title: 'Add Event'
-                            , actionButtonName: 'Add Event'
-                            , modalSize: 'xl'
-                            , includeForm: true
-                            , formAction: "{{ route('admin.events.store') }}"
-                            , modalHeight: '75vh'
-                            , hash: false
-                            , tableToRefresh: table
-                        , });
+                        formWizardModal({
+                            title: 'Add Event',
+                            fetchUrl: "{{ route('admin.events.create') }}",
+                            btnSelector: '.create-btn',
+                            actionButtonName: 'Add Event',
+                            modalSize: 'lg',
+                            formAction: "{{ route('admin.events.store') }}",
+                            wizardSteps: [
+                                {
+                                    title: "Basic Info",
+                                    fields: ["#step-1"]
+                                },
+                                {
+                                    title: "Detail Info",
+                                    fields: ["#step-2"]
+                                },
+                                {
+                                    title: "Description & Images",
+                                    fields: ["#step-3"]
+                                }
+                            ],
+                            formSubmitted() {
+                                window.location.reload();
+                            }
+                        });
                     },
                 }
             });

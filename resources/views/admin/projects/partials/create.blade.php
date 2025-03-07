@@ -3,27 +3,11 @@
 <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
 <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
 
-<div class="row mx-1">
-    <div class="col-md-4 mb-3">
+<div class="row" id="step-1">
+    <div class="col-md-12 mb-3">
         <label for="name">Name</label>
         <input type="text" class="form-control" id="name" value="{{ old('name') }}" placeholder="Project Name" name="name" required>
         @error('name')
-        <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-
-    <div class="col-md-4 mb-3">
-        <label for="funding_source">Funding Source</label>
-        <input type="text" class="form-control" id="funding_source" value="{{ old('funding_source') }}" placeholder="Funding Source" name="funding_source" required>
-        @error('funding_source')
-        <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-
-    <div class="col-md-4 mb-3">
-        <label for="attachment">Attachment</label>
-        <input type="file" class="form-control" id="attachment" value="{{ old('attachment') }}" placeholder="Funding Source" name="attachment" required>
-        @error('attachment')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
@@ -32,7 +16,8 @@
         <label for="introduction">Introduction</label>
         <textarea name="introduction" id="introduction" class="form-control" style="height:120px">{{ old('introduction') }}</textarea>
     </div>
-
+</div>
+<div class="row" id="step-2">
     <div class="col-md-6 mb-3">
         <label for="location">Location</label>
         <input type="text" class="form-control" id="location" value="{{ old('location') }}" placeholder="Location" name="location" required>
@@ -47,7 +32,16 @@
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
+    <div class="col-md-12 mb-3">
+        <label for="funding_source">Funding Source</label>
+        <input type="text" class="form-control" id="funding_source" value="{{ old('funding_source') }}" placeholder="Funding Source" name="funding_source" required>
+        @error('funding_source')
+        <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
+</div>
 
+<div class="row" id="step-3">
     <div class="col-md-6 mb-3">
         <label for="start_date">Start Date</label>
         <input type="date" class="form-control" id="start_date" value="{{ old('start_date') }}" placeholder="Start Date" name="start_date" required>
@@ -62,6 +56,14 @@
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
+    <div class="col-md-12 mb-3">
+        <label for="attachment">Attachment</label>
+        <input type="file" class="form-control" id="attachment" value="{{ old('attachment') }}" placeholder="Funding Source" name="attachment" required>
+        @error('attachment')
+        <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
+</div>
 </div>
 
 <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
@@ -71,7 +73,7 @@
     $(document).ready(function() {
 
         $('#introduction').summernote({
-            height: 200
+            height: 150
         , });
 
         imageCropper({

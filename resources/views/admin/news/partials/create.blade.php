@@ -1,7 +1,7 @@
 <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
 <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
-<div class="row mx-1">
-    <div class="col-md-4 mb-3">
+<div class="row mx-1" id="step-1">
+    <div class="col-md-6 mb-3">
         <label for="title">Title</label>
         <input type="text" class="form-control" id="title" value="{{ old('title') }}" placeholder="News title" name="title" required>
         @error('title')
@@ -9,7 +9,7 @@
         @enderror
     </div>
 
-    <div class="col-md-4 mb-3">
+    <div class="col-md-6 mb-3">
         <label for="news_category">Category</label>
         <select class="form-select form-select-md" id="news_category" name="news_category" required>
             <option value="">Select Option</option>
@@ -22,7 +22,9 @@
         @enderror
     </div>
 
-    <div class="col-md-4 mb-3">
+</div>
+<div class="row" id="step-2">
+    <div class="col-md-12 mb-3">
         <label for="attachment">Attachment</label>
         <input type="file" class="form-control" id="attachment" name="attachment" required>
         @error('attachment')
@@ -34,7 +36,8 @@
         <label for="summary">Short Description</label>
         <textarea name="summary" id="summary" class="form-control" style="height: 70px">{{ old('summary') }}</textarea>
     </div>
-
+</div>
+<div class="row" id="step-3">
     <div class="col-md-12 mb-3">
         <label for="content">Description</label>
         <div class="mb-3">

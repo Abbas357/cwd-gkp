@@ -1,10 +1,6 @@
 <x-app-layout title="Tenders">
     @push('style')
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('admin/plugins/flatpickr/flatpickr.min.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header">
         <li class="breadcrumb-item active" aria-current="page">Tenders</li>
@@ -47,9 +43,6 @@
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/col-resizable.js') }}"></script>
     <script src="{{ asset('admin/plugins/html2canvas/html2canvas.min.js') }}"></script>
-    <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
-    <script src="{{ asset('admin/plugins/summernote/summernote-bs5.min.js') }}"></script>
-    <script src="{{ asset('admin/plugins/flatpickr/flatpickr.js') }}"></script>
 
     <script>
         $(document).ready(function() {
@@ -100,50 +93,33 @@
                 , customButton: {
                     text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Tender</span>`
                     , action: function(e, dt, node, config) {
-                        pushStateModal({
-                            fetchUrl: "{{ route('admin.tenders.create') }}"
-                            , btnSelector: '.create-btn'
-                            , title: 'Add Tender'
-                            , actionButtonName: 'Add Tender'
-                            , modalSize: 'xl'
-                            , includeForm: true
-                            , formAction: "{{ route('admin.tenders.store') }}"
-                            , modalHeight: '75vh'
-                            , hash: false
-                            , tableToRefresh: table
-                        , });
 
-                        // pushStateWizardModal({
-                        //     fetchUrl: "{{ route('admin.tenders.create') }}",
-                        //     btnSelector: '.create-btn',
-                        //     title: 'Add Tender',
-                        //     actionButtonName: 'Add Tender',
-                        //     modalSize: 'xl',
-                        //     includeForm: true,
-                        //     formAction: "{{ route('admin.tenders.store') }}",
-                        //     modalHeight: '75vh',
-                        //     hash: false,
-                        //     tableToRefresh: table,
-                        //     isWizard: true,
-                        //     wizardSteps: [
-                        //         {
-                        //             title: "Basic Information",
-                        //             fields: ["#title", "#load-users"]
-                        //         },
-                        //         {
-                        //             title: "Dates",
-                        //             fields: ["#date_of_advertisement", "#closing_date"]
-                        //         },
-                        //         {
-                        //             title: "Description",
-                        //             fields: ["#description"]
-                        //         },
-                        //         {
-                        //             title: "Documents",
-                        //             fields: ["#tender_document", "#bidding_document", "#tender_eoi_document"]
-                        //         }
-                        //     ]
-                        // });
+                        formWizardModal({
+                            title: 'Add Tender',
+                            fetchUrl: "{{ route('admin.tenders.create') }}",
+                            btnSelector: '.create-btn',
+                            actionButtonName: 'Add Tender',
+                            modalSize: 'lg',
+                            formAction: "{{ route('admin.tenders.store') }}",
+                            wizardSteps: [
+                                {
+                                    title: "Basic Info",
+                                    fields: ["#step-1"]
+                                },
+                                {
+                                    title: "Description",
+                                    fields: ["#step-2"]
+                                },
+                                {
+                                    title: "Documents",
+                                    fields: ["#step-3"]
+                                }
+                            ],
+                            formSubmitted() {
+                                window.location.reload();
+                            }
+                        });
+
                     },
                 }
             });

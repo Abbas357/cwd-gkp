@@ -103,18 +103,33 @@
                 , customButton: {
                     text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add News</span>`
                     , action: function(e, dt, node, config) {
-                        pushStateModal({
-                            fetchUrl: "{{ route('admin.news.create') }}"
-                            , btnSelector: '.create-btn'
-                            , title: 'Add News'
-                            , actionButtonName: 'Add News'
-                            , modalSize: 'lg'
-                            , includeForm: true
-                            , formAction: "{{ route('admin.news.store') }}"
-                            , modalHeight: '65vh'
-                            , hash: false
-                            , tableToRefresh: table
-                        , });
+                    
+                        formWizardModal({
+                            title: 'Add News',
+                            fetchUrl: "{{ route('admin.news.create') }}",
+                            btnSelector: '.create-btn',
+                            actionButtonName: 'Add News',
+                            modalSize: 'lg',
+                            formAction: "{{ route('admin.news.store') }}",
+                            wizardSteps: [
+                                {
+                                    title: "Basic Info",
+                                    fields: ["#step-1"]
+                                },
+                                {
+                                    title: "Summary & Attachment",
+                                    fields: ["#step-2"]
+                                },
+                                {
+                                    title: "Description",
+                                    fields: ["#step-3"]
+                                }
+                            ],
+                            formSubmitted() {
+                                window.location.reload();
+                            }
+                        });
+
                     },
                 }
             });

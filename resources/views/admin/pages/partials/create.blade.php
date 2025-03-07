@@ -1,6 +1,6 @@
 <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
 <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
-<div class="row mx-1">
+<div class="row" id="step-1">
     <div class="col-md-6 mb-4">
         <label for="page_type">Page Type</label>
         <select class="form-select form-select-md" id="page_type" name="page_type" required>
@@ -29,15 +29,26 @@
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
+</div>
 
+<div class="row" id="step-2">
     <div class="col-md-12 mb-3">
         <label for="content">Content</label>
         <div class="mb-3">
             <textarea name="content" id="content" class="form-control">{{ old('content') }}</textarea>
         </div>
     </div>
-
 </div>
 
 <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
 <script src="{{ asset('admin/plugins/summernote/summernote-bs5.min.js') }}"></script>
+<script>
+    $(document).ready(function() {
+
+        $('#content').summernote({
+            height: 200
+        , });
+        
+    })
+
+</script>

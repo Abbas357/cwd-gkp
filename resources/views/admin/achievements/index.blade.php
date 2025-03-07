@@ -102,19 +102,29 @@
                 , customButton: {
                     text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Achievement</span>`
                     , action: function(e, dt, node, config) {
-                        pushStateModal({
-                            fetchUrl: "{{ route('admin.achievements.create') }}"
-                            , btnSelector: '.create-btn'
-                            , title: 'Add Achievement'
-                            , actionButtonName: 'Add Achievement'
-                            , modalSize: 'lg'
-                            , includeForm: true
-                            , formAction: "{{ route('admin.achievements.store') }}"
-                            , modalHeight: '75vh'
-                            , hash: false
-                        , }).then((modal) => {
-                            pushStateModalFormSubmission(modal, table);
+                        
+                        formWizardModal({
+                            title: 'Add Achievement',
+                            fetchUrl: "{{ route('admin.achievements.create') }}",
+                            btnSelector: '.create-btn',
+                            actionButtonName: 'Add Achievement',
+                            modalSize: 'lg',
+                            formAction: "{{ route('admin.achievements.store') }}",
+                            wizardSteps: [
+                                {
+                                    title: "Basic Info",
+                                    fields: ["#step-1"]
+                                },
+                                {
+                                    title: "Timeline & Files",
+                                    fields: ["#step-2"]
+                                }
+                            ],
+                            formSubmitted() {
+                                window.location.reload();
+                            }
                         });
+
                     },
                 }
             });

@@ -103,18 +103,32 @@
                 , customButton: {
                     text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Gallery</span>`
                     , action: function(e, dt, node, config) {
-                        pushStateModal({
-                            fetchUrl: "{{ route('admin.gallery.create') }}"
-                            , btnSelector: '.create-btn'
-                            , title: 'Add Gallery'
-                            , actionButtonName: 'Add Gallery'
-                            , modalSize: 'xl'
-                            , includeForm: true
-                            , formAction: "{{ route('admin.gallery.store') }}"
-                            , modalHeight: '75vh'
-                            , hash: false
-                            , tableToRefresh: table
-                        , });
+
+                        formWizardModal({
+                            title: 'Add Gallery',
+                            fetchUrl: "{{ route('admin.gallery.create') }}",
+                            btnSelector: '.create-btn',
+                            actionButtonName: 'Add Gallery',
+                            modalSize: 'lg',
+                            formAction: "{{ route('admin.gallery.store') }}",
+                            wizardSteps: [
+                                {
+                                    title: "Basic Info",
+                                    fields: ["#step-1"]
+                                },
+                                {
+                                    title: "Detail",
+                                    fields: ["#step-2"]
+                                },
+                                {
+                                    title: "Images",
+                                    fields: ["#step-3"]
+                                }
+                            ],
+                            formSubmitted() {
+                                window.location.reload();
+                            }
+                        });
                     },
                 }
             });

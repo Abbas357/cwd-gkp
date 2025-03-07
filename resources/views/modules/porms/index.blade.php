@@ -84,18 +84,31 @@
                     text: `<span class="symbol-container fw-bold create-btn"><i class="bi-plus-circle"></i>&nbsp; Add Receipt</span>`
                     , action: function(e, dt, node, config) {
 
-                        pushStateModal({
-                            fetchUrl: "{{ route('admin.apps.porms.create') }}"
-                            , btnSelector: '.create-btn'
-                            , title: 'Add Receipt'
-                            , actionButtonName: 'Add Receipt'
-                            , modalSize: 'lg'
-                            , includeForm: true
-                            , formAction: "{{ route('admin.apps.porms.store') }}"
-                            , modalHeight: '55vh'
-                            , hash: false
-                            , tableToRefresh: table
-                       , });
+                       formWizardModal({
+                            title: 'Add Receipt',
+                            fetchUrl: "{{ route('admin.apps.porms.create') }}",
+                            btnSelector: '.create-btn',
+                            actionButtonName: 'Add Receipt',
+                            modalSize: 'lg',
+                            formAction: "{{ route('admin.apps.porms.store') }}",
+                            wizardSteps: [
+                                {
+                                    title: "Basic Info",
+                                    fields: ["#step-1"]
+                                },
+                                {
+                                    title: "Receipt Details",
+                                    fields: ["#step-2"]
+                                },
+                                {
+                                    title: "Remarks",
+                                    fields: ["#step-3"]
+                                }
+                            ],
+                            formSubmitted() {
+                                window.location.reload();
+                            }
+                        });
 
                     },
                 }
