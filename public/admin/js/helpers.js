@@ -910,7 +910,7 @@ function formWizardModal({
 }) {
     return new Promise((resolve) => {
         const modalType = btnSelector.replace(/^[.#]/, '').split('-')[0];
-        const modalId = `modal-${modalType}`;
+        let modalId = `modal-${modalType}`;
         const modalContentClass = `detail-${modalType}`;
         const heightStyle = modalHeight === "auto" ? 
             "max-height: 80vh; height: auto;" : 
@@ -1015,6 +1015,11 @@ function formWizardModal({
             });
             
             $(`#${modalId} .modal-dialog`).addClass('modal-dialog-centered');
+        }
+
+        function clearModal() {
+            $(`#${modalId}`).remove();
+            modalId = null;
         }
 
         function initWizard(modalId, steps) {
@@ -1302,7 +1307,6 @@ function formWizardModal({
                 
                 adjustModalHeight();
                 
-                // Call the onStepShown callback if provided
                 if (typeof onStepShown === 'function') {
                     onStepShown(stepIndex, steps[stepIndex]);
                 }
@@ -1319,6 +1323,26 @@ function formWizardModal({
 
         const modalElement = $(`#${modalId}`);
         const submitBtn = modalElement.find('.cw-wizard-submit');
+
+        modalElement.data('form-submitted', false);
+        modalElement.on('hide.bs.modal', async function(e) {
+            if (modalElement.data('confirmed-close') || modalElement.data('form-submitted')) {
+                modalElement.data('confirmed-close', false);
+                return true;
+            }
+            
+            e.preventDefault();
+            const result = await confirmAction("Are you sure you want to exit? Any unsaved changes will be lost.");
+            if (result.isConfirmed) {
+                modalElement.data('confirmed-close', true);
+                modalElement.modal('hide');
+            }
+        });
+
+        modalElement.on('hidden.bs.modal', async function(e) {
+            clearModal();
+            modalElement.data('form-submitted', false);
+        });
         
         modalElement.find('form').on('submit', async function(e) {
             e.preventDefault();
@@ -1338,6 +1362,7 @@ function formWizardModal({
                 const result = await fetchRequest(url, 'POST', formData);
                 if (result) {
                     setButtonLoading(submitBtn, false);
+                    modalElement.data('form-submitted', true);
                     modalElement.modal('hide');
                     if (typeof formSubmitted === 'function') {
                         formSubmitted();

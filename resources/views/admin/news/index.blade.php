@@ -126,7 +126,7 @@
                                 }
                             ],
                             formSubmitted() {
-                                window.location.reload();
+                                table.ajax.reload();
                             }
                         });
 
