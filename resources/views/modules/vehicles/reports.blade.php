@@ -3,72 +3,257 @@
     <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
     <style>
-        /* General Table and Layout Styles */
+        :root {
+            --primary-color: #4361ee;
+            --primary-hover: #3a56d4;
+            --secondary-color: #f8f9fa;
+            --border-radius: 0.5rem;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
+        }
+        
         .table > :not(caption) > * > * {
             vertical-align: middle;
+            padding: 1rem;
         }
+        
         .table th {
-            background-color: #f8f9fa;
+            background-color: #f0f4f8;
             font-weight: 600;
             text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
+            font-size: 0.8rem;
+            letter-spacing: 0.6px;
+            color: #495057;
+            border-bottom: 2px solid #e9ecef;
         }
+        
         .vehicle-details {
-            line-height: 1.6;
+            line-height: 1.7;
         }
+        
+        .vehicle-details strong {
+            font-size: 1.05rem;
+            color: #212529;
+        }
+        
         .vehicle-details small {
             color: #6c757d;
             display: block;
+            margin-top: 0.1rem;
+            font-size: 0.8rem;
         }
+        
         .status-badge {
-            padding: 0.35em 0.65em;
+            padding: 0.4em 0.8em;
             font-size: 0.75em;
             font-weight: 500;
-            border-radius: 0.25rem;
+            border-radius: 50rem;
             text-transform: capitalize;
-        }
-        .table-container {
-            border: 1px solid #dee2e6;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            margin-bottom: 2rem;
-        }
-        .filter-section {
-            background-color: #f8f9fa;
-            padding: 2rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-        /* Enhanced Styles */
-        .card-header {
-            background-color: #e9ecef; /* Lighter grey */
-        }
-        .card-body {
-            background: linear-gradient(to bottom, #ffffff, #f8f9fa); /* Very subtle gradient */
-        }
-        .cw-btn, .btn {
-            transition: all 0.3s;
+            letter-spacing: 0.5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .cw-btn:hover, .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        
+        .table-container {
+            border: 1px solid #e9ecef;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
         }
+        
+        .table-container:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+        
+        .filter-section {
+            background: linear-gradient(145deg, #f8f9fa, #ffffff);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid #e9ecef;
+        }
+        
+        /* Card and Button Enhancements */
+        .card {
+            border: none;
+            box-shadow: var(--card-shadow);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+        
+        .card-header {
+            background: linear-gradient(to right, #e9ecef, #f8f9fa);
+            border-bottom: 1px solid #e9ecef;
+            padding: 1.25rem 1.5rem;
+        }
+        
+        .card-title {
+            font-weight: 700;
+            color: #212529;
+            margin: 0;
+            font-size: 1.4rem;
+        }
+        
+        .card-body {
+            background: linear-gradient(to bottom, #ffffff, #fafbfc);
+            padding: 2rem;
+        }
+        
+        .cw-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.2);
+        }
+        
+        .cw-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.3);
+            color: white;
+        }
+        
+        .btn {
+            border-radius: var(--border-radius);
+            padding: 0.6rem 1.2rem;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn i {
+            font-size: 1.1rem;
+        }
+        
+        /* Form Enhancement */
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #495057;
+            font-size: 0.9rem;
+        }
+        
+        .form-control, .form-select {
+            padding: 0.6rem 1rem;
+            border: 1px solid #dee2e6;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(67, 97, 238, 0.15);
+        }
+        
+        .form-check-input {
+            width: 1.2em;
+            height: 1.2em;
+            margin-top: 0.25em;
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .form-switch .form-check-input {
+            width: 2.5em;
+        }
+        
+        /* Table Hover and Row Styles */
+        .table-hover tbody tr {
+            transition: var(--transition);
+        }
+        
         .table-hover tbody tr:hover {
-            background-color: rgba(0, 123, 255, 0.05);
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            background-color: rgba(67, 97, 238, 0.05);
+            transform: scale(1.005);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
+        
+        tbody tr {
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        /* Empty State Enhancement */
+        .empty-state {
+            padding: 3rem;
+            text-align: center;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            color: #dee2e6;
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state p {
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+        
+        /* Button Group Styling */
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+        
+        /* Select2 Enhancement */
+        .select2-container--bootstrap-5 .select2-selection {
+            border-radius: var(--border-radius);
+            padding: 0.3rem 0.5rem;
+            border: 1px solid #dee2e6;
+            min-height: 42px;
+        }
+        
+        .select2-container--bootstrap-5.select2-container--focus .select2-selection {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(67, 97, 238, 0.15);
+        }
+        
         /* Print Styling */
         @media print {
-            .no-print, .table-container {
-                display: none;
+            .no-print {
+                display: none !important;
             }
+            
             body {
                 font-size: 12pt;
             }
+            
             table {
                 page-break-inside: avoid;
+            }
+            
+            .card, .table-container {
+                box-shadow: none !important;
+                border: 1px solid #dee2e6;
+            }
+            
+            .card-header {
+                background: #f8f9fa !important;
             }
         }
     </style>
@@ -80,31 +265,55 @@
 
     <div class="wrapper">
         <div class="card">
-            <div class="card-header bg-light">
-                <h3 class="card-title mb-0">Vehicle Reports</h3>
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="card-title mb-0">Vehicle Reports</h3>
+                    <span class="badge bg-primary rounded-pill">
+                        {{ $allotments->count() }} {{ Str::plural('vehicle', $allotments->count()) }}
+                    </span>
+                </div>
             </div>
-            <div class="card-body">
+            <div class="card-body p-1">
                 <form method="GET" class="filter-section">
                     <div class="row g-3">
-
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="includeSubordinates" name="include_subordinates" value="1" @checked(request('include_subordinates'))>
-                            <label class="form-check-label fw-bold" for="includeSubordinates">
-                                Include Subordinates
-                            </label>
-                        </div>
-
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" 
-                                    id="showHistory" name="show_history" value="1" 
-                                    @checked(request('show_history'))>
-                            <label class="form-check-label fw-bold" for="showHistory">
-                                Include Past Allotments
-                            </label>
+                        <div class="col-12 mb-2">
+                            <h4 class="text-muted mb-0 fs-5">Filter Options</h4>
+                            <hr class="mt-2 mb-3">
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-bold" for="load-users">User / Office</label>
+                            <label class="form-label" for="model_year">
+                                Model Year
+                            </label>
+                            <input type="number" id="model_year" name="model_year" class="form-control" 
+                                   placeholder="e.g. 2023" min="1900" max="{{ date('Y') + 1 }}" 
+                                   value="{{ request('model_year') ?? '' }}">
+                        </div>
+
+                        <div class="col-md-3 d-flex align-items-center mt-4">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="includeSubordinates" name="include_subordinates" value="1" @checked(request('include_subordinates'))>
+                                <label class="form-check-label" for="includeSubordinates">
+                                    Include Subordinates
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 d-flex align-items-center mt-4">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" 
+                                        id="showHistory" name="show_history" value="1" 
+                                        @checked(request('show_history'))>
+                                <label class="form-check-label" for="showHistory">
+                                    Include Past Allotments
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label" for="load-users">
+                                User / Office
+                            </label>
                             <select name="user_id" id="load-users" class="form-select" data-placeholder="Select User / Office">
                                 <option value=""></option>
                                 @foreach(App\Models\User::all() as $user)
@@ -116,8 +325,10 @@
                         </div>
 
                         <div class="col-md-3">
-                            <label class="form-label fw-bold">Vehicle Type</label>
-                            <select name="type" class="form-select">
+                            <label class="form-label" for="vehicle_type">
+                                Vehicle Type
+                            </label>
+                            <select name="type" id="vehicle_type" class="form-select">
                                 <option value="">All Types</option>
                                 @foreach($cat['vehicle_type'] as $type)
                                     <option value="{{ $type->id }}" @selected(request('type') == $type->id)>
@@ -128,8 +339,10 @@
                         </div>
 
                         <div class="col-md-3">
-                            <label class="form-label fw-bold">Status</label>
-                            <select name="status" class="form-select">
+                            <label class="form-label" for="status">
+                                Status
+                            </label>
+                            <select name="status" id="status" class="form-select">
                                 <option value="">All Status</option>
                                 @foreach($cat['vehicle_functional_status'] as $status)
                                     <option value="{{ $status->id }}" @selected(request('status') == $status->id)>
@@ -139,9 +352,25 @@
                             </select>
                         </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Specific Vehicle</label>
-                            <select name="vehicle_id" class="form-select" data-placeholder="Select Vehicle">
+                        <div class="col-md-3">
+                            <label class="form-label" for="registration_status">
+                                Registration Status
+                            </label>
+                            <select name="registration_status" id="registration_status" class="form-select">
+                                <option value="">All Registration Status</option>
+                                @foreach($cat['vehicle_registration_status'] as $status)
+                                    <option value="{{ $status->id }}" @selected(request('registration_status') == $status->id)>
+                                        {{ $status->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label" for="vehicle_id">
+                                Specific Vehicle
+                            </label>
+                            <select name="vehicle_id" id="vehicle_id" class="form-select" data-placeholder="Select Vehicle">
                                 <option value=""></option>
                                 @foreach(App\Models\Vehicle::all() as $Vehicle)
                                     <option value="{{ $Vehicle->id }}" @selected($filters['vehicle_id'] == $Vehicle->id)>
@@ -153,8 +382,10 @@
                     
                         <!-- Additional Filters -->
                         <div class="col-md-3">
-                            <label class="form-label fw-bold">Color</label>
-                            <select name="color" class="form-select">
+                            <label class="form-label" for="color">
+                                Color
+                            </label>
+                            <select name="color" id="color" class="form-select">
                                 <option value="">All Colors</option>
                                 @foreach($cat['vehicle_color'] as $color)
                                     <option value="{{ $color->name }}" @selected($filters['color'] == $color->name)>
@@ -165,8 +396,10 @@
                         </div>
                     
                         <div class="col-md-3">
-                            <label class="form-label fw-bold">Fuel Type</label>
-                            <select name="fuel_type" class="form-select">
+                            <label class="form-label" for="fuel_type">
+                                Fuel Type
+                            </label>
+                            <select name="fuel_type" id="fuel_type" class="form-select">
                                 <option value="">All Fuel Types</option>
                                 @foreach($cat['fuel_type'] as $fuel)
                                     <option value="{{ $fuel->name }}" @selected($filters['fuel_type'] == $fuel->name)>
@@ -175,25 +408,45 @@
                                 @endforeach
                             </select>
                         </div>
+                    
+                        <div class="col-md-3">
+                            <label class="form-label" for="brand">
+                                Brand
+                            </label>
+                            <select name="brand" id="brand" class="form-select">
+                                <option value="">All Brands</option>
+                                @foreach($cat['vehicle_brand'] as $brand)
+                                    <option value="{{ $brand->id }}" @selected($filters['brand'] == $brand->id)>
+                                        {{ $brand->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                         
                         <div class="col-12">
-                            <button type="submit" class="cw-btn">
-                                <i class="bi-filter me-1"></i> Generate Report
-                            </button>
-                            <a href="{{ route('admin.apps.vehicles.reports') }}" class="btn btn-light">
-                                <i class="bi-undo me-1"></i> Reset
-                            </a>
+                            <hr class="mt-1 mb-3">
+                            <div class="action-buttons">
+                                <button type="submit" class="cw-btn">
+                                    <i class="bi-filter me-2"></i> Generate Report
+                                </button>
+                                <a href="{{ route('admin.apps.vehicles.reports') }}" class="btn btn-sm px-3 py-1 btn-light">
+                                    <i class="bi-arrow-counterclockwise me-2"></i> Reset Filters
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </form>
 
-                <div class="table-container">
-                    <button type="button" id="print-vehicle-details" class="no-print btn btn-light float-end me-2 m-2">
-                        <span class="d-flex align-items-center">
-                            <i class="bi-print"></i>
-                            Print
-                        </span>
-                    </button>
+                <div class="table-container p-3">
+                    <div class="d-flex justify-content-between align-items-center p-3 bg-light border-bottom">
+                        <h5 class="m-0 fw-bold">Vehicle Allotment Results</h5>
+                        <button type="button" id="print-vehicle-details" class="no-print btn btn-primary btn-sm">
+                            <span class="d-flex align-items-center">
+                                <i class="bi-printer me-2"></i>
+                                Print Report
+                            </span>
+                        </button>
+                    </div>
                     <table class="table table-hover mb-0" id="vehicle-report">
                         <thead>
                             <tr>
@@ -205,7 +458,7 @@
                                 @if(request('show_history'))
                                 <th class="bg-light">End Date</th>
                                 @endif
-                                <th class="bg-light no-print">Allotment Order</th>
+                                <th class="bg-light no-print">Documents</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -216,6 +469,7 @@
                                             <strong>{{ $allotment->vehicle->brand }} {{ $allotment->vehicle->model }}</strong>
                                             <small>Type: {{ $allotment->vehicle->type }}</small>
                                             <small>Color: {{ $allotment->vehicle->color }}</small>
+                                            <small>Year: {{ $allotment->vehicle->model_year ?? 'N/A' }}</small>
                                         </div>
                                     </td>
                                     <td>
@@ -246,24 +500,24 @@
                                     @endif
                                     @if($allotment->hasMedia('vehicle_allotment_orders'))
                                     <td class="no-print">
-                                        <a href="{{ $allotment->getFirstMediaUrl('vehicle_allotment_orders') }}" target="_blank">
-                                            <i class="bi-file-earmark-text"></i> View Order
+                                        <a href="{{ $allotment->getFirstMediaUrl('vehicle_allotment_orders') }}" 
+                                           class="btn btn-sm btn-outline-primary" target="_blank">
+                                            <i class="bi-file-earmark-text me-1"></i> View Order
                                         </a>
                                     </td>
                                     @else
                                     <td class="no-print">
-                                        <span class="text-muted
-                                        ">Not Available</span>
+                                        <span class="badge bg-light text-secondary">Not Available</span>
                                     </td>
                                     @endif
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center py-4">
-                                        <div class="text-muted">
-                                            <i class="fas fa-inbox fa-2x mb-2"></i>
-                                            <p class="mb-0">No vehicles found matching the criteria</p>
-                                        </div>
+                                    <td colspan="7" class="empty-state">
+                                        <p>No vehicles found matching the criteria</p>
+                                        <a href="{{ route('admin.apps.vehicles.reports') }}" class="btn btn-sm btn-outline-primary mt-2">
+                                            Reset Filters
+                                        </a>
                                     </td>
                                 </tr>
                             @endforelse
@@ -278,81 +532,101 @@
     <script src="{{ asset('admin/plugins/printThis/printThis.js') }}"></script>
     <script>
         $(document).ready(function() {
-            const userSelect = $('#load-users');
-            const selectedUserId = '{{ request('user_id') }}';
-            const vehicleSelect = $('[name="vehicle_id"]');
+            const initSelect2 = (element, placeholder, url = null) => {
+                const options = {
+                    theme: "bootstrap-5",
+                    dropdownParent: element.parent(),
+                    placeholder: placeholder,
+                    allowClear: true,
+                    width: '100%'
+                };
+                
+                if (url) {
+                    options.ajax = {
+                        url: url,
+                        dataType: 'json',
+                        delay: 250,
+                        data: function(params) {
+                            return {
+                                q: params.term,
+                                page: params.page || 1
+                            };
+                        },
+                        processResults: function(data, params) {
+                            params.page = params.page || 1;
+                            
+                            return {
+                                results: data.results || data,
+                                pagination: {
+                                    more: data.pagination ? data.pagination.more : false
+                                }
+                            };
+                        },
+                        cache: true
+                    };
+                    
+                    options.templateResult = function(item) {
+                        if (item.loading) {
+                            return $('<div class="p-2"><i class="bi-hourglass-split me-2"></i>Loading...</div>');
+                        }
+                        return item.text;
+                    };
+                }
+                
+                element.select2(options);
+                
+                element.on('select2:open', function() {
+                    $('.select2-container--open .select2-dropdown').addClass('animate__animated animate__fadeIn');
+                    $('.select2-search__field').focus();
+                });
+            };
 
-            vehicleSelect.select2({
-                theme: "bootstrap-5",
-                dropdownParent: $('#load-users').parent(),
-                placeholder: "Select Vehicle",
-                allowClear: true,
-                ajax: {
-                    url: '{{ route("admin.apps.vehicles.search") }}',
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return { q: params.term };
-                    },
-                    processResults: function(data) {
-                        return { results: data };
+            initSelect2($('#load-users'), "Select User / Office", '{{ route("admin.users.api") }}');
+            initSelect2($('[name="vehicle_id"]'), "Select Vehicle", '{{ route("admin.apps.vehicles.search") }}');
+            
+            $('select:not(#load-users):not([name="vehicle_id"])').each(function() {
+                initSelect2($(this), $(this).find('option:first').text());
+            });
+            
+            $('.form-control, .form-select').on('focus', function() {
+                $(this).parent().find('.form-label').addClass('text-primary');
+            }).on('blur', function() {
+                $(this).parent().find('.form-label').removeClass('text-primary');
+            });
+
+            $('#print-vehicle-details').on('click', function() {
+                Swal.fire({
+                    title: 'Preparing Print View',
+                    text: 'Please wait...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
                     }
-                },
-                templateResult: function(vehicle) {
-                    return vehicle.text;
-                }
+                });
+                
+                setTimeout(() => {
+                    $("#vehicle-report").printThis({
+                        pageTitle: "Vehicle Report - " + new Date().toLocaleDateString(),
+                        importCSS: true,
+                        importStyle: true,
+                        loadCSS: "{{ asset('path/to/print.css') }}",
+                        header: "<h1 class='text-center mb-4'>Vehicle Allotment Report</h1>" +
+                                "<p class='text-center text-muted mb-4'>Generated on " + new Date().toLocaleDateString() + "</p>",
+                        footer: "<p class='text-center mt-4'>&copy; " + new Date().getFullYear() + " - All Rights Reserved</p>",
+                        beforePrint() {
+                            $('.no-print').hide();
+                        },
+                        afterPrint() {
+                            $('.no-print').show();
+                            Swal.close();
+                        }
+                    });
+                }, 500);
             });
-
-            userSelect.select2({
-                theme: "bootstrap-5",
-                dropdownParent: $('#load-users').parent(),
-                placeholder: "Select User / Office",
-                allowClear: true,
-                ajax: {
-                    url: '{{ route("admin.users.api") }}',
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            q: params.term,
-                            page: params.page || 1
-                        };
-                    },
-                    processResults: function(data, params) {
-                        params.page = params.page || 1;
-                        
-                        return {
-                            results: data.results,
-                            pagination: {
-                                more: data.pagination.more
-                            }
-                        };
-                    },
-                    cache: true
-                },
-                templateResult: function(user) {
-                    if (user.loading) {
-                        return 'Loading...';
-                    }
-                    return user.text;
-                },
-                templateSelection: function(user) {
-                    return user.text || 'Select User / Office';
-                }
-            });
-
-        });
-
-        $('#print-vehicle-details').on('click', () => {
-            $("#vehicle-report").printThis({
-                pageTitle: "Report",
-                beforePrint() {
-                    document.querySelector('.page-loader').classList.remove('hidden');
-                },
-                afterPrint() {
-                    document.querySelector('.page-loader').classList.add('hidden');
-                }
-            });
+            
+            $('.card').addClass('animate__animated animate__fadeIn');
+            $('.filter-section').addClass('animate__animated animate__fadeIn');
+            $('.table-container').addClass('animate__animated animate__fadeIn');
         });
     </script>
     @endpush

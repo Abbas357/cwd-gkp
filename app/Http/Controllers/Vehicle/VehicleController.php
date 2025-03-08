@@ -70,17 +70,17 @@ class VehicleController extends Controller
         $nonFunctionalVehicles = Vehicle::where('functional_status', 'Non-Functional')->count();
         $condemnedVehicles = Vehicle::where('functional_status', 'Condemned')->count();
 
-        $allotedVehicles = VehicleAllotment::whereNull('end_date')->count();
+        $allotedVehicles = VehicleAllotment::where('is_current', 1)->count();
 
-        $permanentAlloted = VehicleAllotment::whereNull('end_date')
+        $permanentAlloted = VehicleAllotment::where('is_current', 1)
             ->where('type', 'Permanent')
             ->count();
 
-        $temporaryAlloted = VehicleAllotment::whereNull('end_date')
+        $temporaryAlloted = VehicleAllotment::where('is_current', 1)
             ->where('type', 'Temporary')
             ->count();
 
-        $inPool = VehicleAllotment::whereNull('end_date')
+        $inPool = VehicleAllotment::where('is_current', 1)
             ->where('type', 'Pool')
             ->count();
 
@@ -329,7 +329,8 @@ class VehicleController extends Controller
             'color' => null,
             'fuel_type' => null,
             'registration_status' => null,
-            'brand' => null
+            'brand' => null,
+            'model_year' => null
         ];
 
         $filters = array_merge($filters, $request->only(array_keys($filters)));
@@ -339,7 +340,7 @@ class VehicleController extends Controller
 
         $query = VehicleAllotment::query()
             ->with(['vehicle', 'user'])
-            ->when(!$show_history, fn($q) => $q->whereNull('end_date'));
+            ->when(!$show_history, fn($q) => $q->whereNot('is_current', 0));
 
         if ($filters['user_id']) {
             if ($include_subordinates) {
@@ -366,13 +367,17 @@ class VehicleController extends Controller
                 $q->where('type', $type->name ?? '');
             }
 
+            if ($filters['model_year']) {
+                $q->where('model_year', $filters['model_year']);
+            }
+
             $additionalFilters = [
                 'color' => 'vehicle_color',
                 'fuel_type' => 'fuel_type',
                 'registration_status' => 'vehicle_registration_status',
                 'brand' => 'vehicle_brand'
             ];
-
+            
             foreach ($additionalFilters as $field => $categoryType) {
                 if ($filters[$field]) {
                     $category = $cat[$categoryType]->firstWhere('id', $filters[$field]);

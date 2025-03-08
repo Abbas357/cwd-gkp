@@ -39,31 +39,31 @@
 
 .modal-header {
     padding: .6rem 1rem !important;
-    border-bottom: 1px solid #eee;
-    background-color: #F0F0F0;
+    border-bottom: 1px solid #ccc;
+    background-color: #E5E5E5;
     box-shadow: 0 2px 5px #00000040;
     z-index: 1;
 }
 
 .modal-body {
-    padding: .5rem !important;
+    padding: .8rem !important;
 }
 
 .modal-footer {
     padding: .4rem .8rem !important;
-    border-top: 1px solid #eee;
-    background-color: #F0F0F0;
+    border-top: 1px solid #ccc;
+    background-color: #E5E5E5;
     box-shadow: 0 -2px 5px #00000040;
     z-index: 1;
 }
 
 [data-bs-theme=dark] .modal-header {
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid #555;
     background-color: #222;
 }
 
 [data-bs-theme=dark] .modal-footer {
-    border-top: 1px solid #333;
+    border-top: 1px solid #555;
     background-color: #222
 }
 

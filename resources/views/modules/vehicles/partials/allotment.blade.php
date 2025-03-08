@@ -42,21 +42,31 @@
                         <th>Alloted to</th>
                         <td colspan="3">
                             @if($vehicle->allotment->type === 'Pool')
-                                <span class="badge bg-danger fs-6">Pool</span>
+                                @if(!empty($vehicle->allotment->user_id))
+                                    <span class="badge bg-warning fs-6">Office Pool</span>
+                                    <span class="badge bg-warning fs-6">{{ $vehicle->allotment->user->position }}</span>
+                                @else
+                                    <span class="badge bg-danger fs-6">Department Pool</span>
+                                @endif
                             @else
-                                <table class="table mb-0">
-                                    <tbody>
-                                        <tr>
-                                            <th>Name</th>
-                                            <td>{{ $vehicle->allotment->user->name }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Designation</th>
-                                            <td>{{ $vehicle->allotment->user->position }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                @if(isset($vehicle->allotment->user))
+                                    <table class="table mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th>Name</th>
+                                                <td>{{ $vehicle->allotment->user->name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Designation</th>
+                                                <td>{{ $vehicle->allotment->user->position }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                @else
+                                    <p>User information not available.</p>
+                                @endif
                             @endif
+
                         </td>
                     </tr>
                 @endif
@@ -110,7 +120,7 @@
         const userSelect = $('#load-users');
         userSelect.select2({
             theme: "bootstrap-5",
-            dropdownParent: $('#load-users').parent(),
+            dropdownParent: $('#load-users').closest('.modal'),
             placeholder: "Select User / Office",
             allowClear: true,
             ajax: {
@@ -155,31 +165,5 @@
             enableTime: true,
             dateFormat: "Y-m-d H:i:S",
         });
-
-        function handleAllotmentTypeChange() {
-            const selectedType = $('#type').val();
-            const isPool = selectedType === 'Pool';
-            
-            const startDateField = $('#start_date');
-            const userSelect = $('#load-users');
-            
-            if (isPool) {
-                startDateField.prop('disabled', true).val('');
-                userSelect.prop('disabled', true).val(null).trigger('change');
-                
-                startDateField.prop('required', false);
-                userSelect.prop('required', false);
-            } else {
-                startDateField.prop('disabled', false);
-                userSelect.prop('disabled', false);
-                
-                startDateField.prop('required', true);
-                userSelect.prop('required', true);
-            }
-        }
-        
-        $('#type').on('change', handleAllotmentTypeChange);
-        
-        handleAllotmentTypeChange();
     });
 </script>

@@ -741,7 +741,7 @@ function pushStateModal({
     modalType,
     includeForm = false,
     formAction,
-    modalHeight = "70vh",
+    modalHeight = null,
     hash = true,
     tableToRefresh = null
 }) {
@@ -749,6 +749,9 @@ function pushStateModal({
         const calcModalType = modalType ?? btnSelector.replace(/^[.#]/, '').split('-')[0];
         const modalId = `modal-${calcModalType}`;
         const modalContentClass = `detail-${calcModalType}`;
+        const heightStyle = modalHeight === "auto" ? 
+            "max-height: 80vh; height: auto;" : 
+            `max-height: 80vh; height: ${modalHeight};`;
         const actionBtnId = actionButtonName && actionButtonName.replace(/\s+/g, '-').toLowerCase()+'-'+calcModalType;
 
         const formTagOpen = includeForm ? `<form id="form-${calcModalType}" method="POST" enctype="multipart/form-data">` : '';
@@ -763,7 +766,7 @@ function pushStateModal({
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     ${formTagOpen}
-                    <div class="modal-body" style="${includeForm && 'height:'+modalHeight}">
+                    <div class="modal-body" style="${heightStyle}">
                         <div class="${loadingSpinner} text-center mt-2">
                             <div class="spinner-border" role="status">
                                 <span class="visually-hidden">Loading...</span>
@@ -884,6 +887,7 @@ function pushStateModal({
                     form.isSubmitting = false;
                     setButtonLoading(submitBtn, false);
                     submitBtn.prop('disabled', false);
+                    submitBtn.text(actionButtonName);
                 }
             });
         }
@@ -970,9 +974,20 @@ function formWizardModal({
             </div>
         </div>`;
 
-        if (!$(`#${modalId}`).length) {
-            $('body').append(modalTemplate);
+        const existingModal = $(`#${modalId}`);
+        if (existingModal.length) {
+            try {
+                const modalInstance = bootstrap.Modal.getInstance(existingModal[0]);
+                if (modalInstance) {
+                    modalInstance.dispose();
+                }
+            } catch (e) {
+                console.error("Error disposing existing modal:", e);
+            }
+            existingModal.off().removeData().remove();
         }
+
+        $('body').append(modalTemplate);
 
         async function openModal(recordId) {
             const url = fetchUrl.replace(":id", recordId);
@@ -1018,7 +1033,30 @@ function formWizardModal({
         }
 
         function clearModal() {
-            $(`#${modalId}`).remove();
+            const $modal = $(`#${modalId}`);
+            
+            $modal.find('.cw-wizard-next, .cw-wizard-prev, .cw-wizard-submit').off();
+            $modal.find('.cw-wizard-steps .nav-link').off();
+            $modal.find('input, select, textarea').off('input change blur');
+            
+            $(document).off("click", btnSelector);
+            
+            $modal.off();
+            $modal.find('form').off();
+            
+            $modal.removeData();
+            
+            try {
+                const modalInstance = bootstrap.Modal.getInstance($modal[0]);
+                if (modalInstance) {
+                    modalInstance.dispose();
+                }
+            } catch (e) {
+                console.error("Error disposing modal:", e);
+            }
+            
+            $modal.remove();
+            
             modalId = null;
         }
 

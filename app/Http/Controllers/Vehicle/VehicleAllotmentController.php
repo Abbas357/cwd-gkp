@@ -54,10 +54,10 @@ class VehicleAllotmentController extends Controller
         }
         
         if ($allotment->save()) {
-            return response()->json(['success' => 'Vehicle has been alloted successfully.']);
+            return response()->json(['success' => 'Vehicle has been allotted successfully.']);
         }
 
-        return response()->json(['error' => 'There was an error alloting the vehicle.'], 500);
+        return response()->json(['error' => 'There was an error allotting the vehicle.'], 500);
     }
 
 }

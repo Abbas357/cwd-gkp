@@ -169,6 +169,16 @@
                                     <span class="user-designation">{{ $allotment->user->position ?? 'N/A' }}</span>
                                 </div>
                             </div>
+                        @elseif($allotment->type === 'Pool' && !empty($allotment->user_id))
+                            <div class="timeline-user">
+                                <div class="timeline-user-icon">
+                                    <img src="{{ asset('site/images/logo-square.png') }}" alt="C&W Department" style="width:45px; border-radius: 50px">
+                                </div>
+                                <div class="user-details">
+                                    <span class="user-name">Pool</span>
+                                    <span class="user-designation">{{ $allotment->user->position ?? 'N/A' }}</span>
+                                </div>
+                            </div>
                         @else
                             <div class="timeline-user">
                                 <div class="timeline-user-icon">
@@ -203,7 +213,7 @@
                     <td>
                         <span class="timeline-status border {{ $allotment->is_current === 1 ? 'status-active' : 'status-completed' }}">
                             @if($allotment->is_current === 1)
-                            <i class="bi-check-circle"></i>
+                            <i class="bi-check-circle"></i> 
                             @else
                             <i class="fs-6 bi-arrow-left-square"></i>
                             @endif

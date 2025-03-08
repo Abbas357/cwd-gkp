@@ -8,7 +8,7 @@
 
 @if ($showAside)
 <x-sidebar app-name="WEBSITE" app-url="{{ route('admin.home') }}">
-    @canany(['view any user', 'view any seniority'])
+    @canany(['view any user'])
     <li>
         <a href="javascript:;" class="has-arrow">
             <div class="parent-icon"><i class="bi-people-fill text-warning"></i></div>
@@ -18,9 +18,6 @@
             @can('view any user')
             <li><a href="{{ route('admin.users.index') }}"><i class="bi-person-circle fs-6"></i>&nbsp; Users</a></li>
             @endcan
-            @can('view any seniority')
-            <li><a href="{{ route('admin.seniority.index') }}"><i class="bi-graph-up-arrow fs-6"></i>&nbsp; Seniority</a></li>
-            @endcan
             @can('view hierarchy')
             <li><a href="{{ route('admin.users.hierarchy') }}"><i class="bi-person-circle fs-6"></i>&nbsp; Hierarchy</a></li>
             @endcan
@@ -28,13 +25,16 @@
     </li>
     @endcanany
 
-    @canany(['view any news', 'view any event', 'view any tender'])
+    @canany(['view any news', 'view any event', 'view any tender', 'view any slider', 'view any story', 'view any gallery', 'view any seniority'])
     <li>
         <a href="javascript:;" class="has-arrow">
             <div class="parent-icon"><i class="bi-megaphone text-primary"></i></div>
             <div class="menu-title">Updates</div>
         </a>
         <ul class="p-2 menu-items">
+            @can('view any seniority')
+            <li><a href="{{ route('admin.seniority.index') }}"><i class="bi-graph-up-arrow fs-6"></i>&nbsp; Seniority</a></li>
+            @endcan
             @can('view any news')
             <li><a href="{{ route('admin.news.index') }}"><i class="bi-newspaper fs-6"></i>&nbsp; News</a></li>
             @endcan
@@ -44,17 +44,6 @@
             @can('view any tender')
             <li><a href="{{ route('admin.tenders.index') }}"><i class="bi-briefcase fs-6"></i>&nbsp; Tenders</a></li>
             @endcan
-        </ul>
-    </li>
-    @endcanany
-
-    @canany(['view any slider', 'view any story', 'view any gallery'])
-    <li>
-        <a href="javascript:;" class="has-arrow">
-            <div class="parent-icon"><i class="bi-collection-play-fill text-success"></i></div>
-            <div class="menu-title">Media</div>
-        </a>
-        <ul class="p-2 menu-items">
             @can('view any slider')
             <li><a href="{{ route('admin.sliders.index') }}"><i class="bi-images fs-6"></i>&nbsp; Sliders</a></li>
             @endcan

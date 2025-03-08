@@ -3,25 +3,23 @@
 namespace App\Observers;
 
 use App\Models\VehicleAllotment;
+use Illuminate\Support\Facades\DB;
 
 class VehicleAllotmentObserver
 {
-    public function creating(VehicleAllotment $vehicleAllotment)
+    public function creating(VehicleAllotment $allotment): void
     {
-        if ($vehicleAllotment->type === 'Pool' && !$vehicleAllotment->start_date) {
-            $vehicleAllotment->start_date = now();
-        }
-        
-        $vehicleAllotment->is_current = 1;
-        
-        $currentAllotment = VehicleAllotment::where('vehicle_id', $vehicleAllotment->vehicle_id)
-            ->where('is_current', 1)
-            ->first();
+        $allotment->is_current = true;
+    }
 
-        if ($currentAllotment) {
-            $currentAllotment->end_date = now();
-            $currentAllotment->is_current = 0;
-            $currentAllotment->save();
-        }
+    public function created(VehicleAllotment $allotment): void
+    {
+        VehicleAllotment::where('vehicle_id', $allotment->vehicle_id)
+            ->where('id', '!=', $allotment->id)
+            ->where('is_current', true)
+            ->update([
+                'is_current' => false,
+                'end_date' => DB::raw('CASE WHEN end_date IS NULL THEN CURRENT_DATE ELSE end_date END')
+            ]);
     }
 }
