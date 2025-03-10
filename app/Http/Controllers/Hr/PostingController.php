@@ -68,7 +68,7 @@ class PostingController extends Controller
         $designations = Designation::where('status', 'Active')->get();
         $postingTypes = ['Appointment', 'Transfer', 'Promotion', 'Retirement', 'Termination'];
 
-        $html = view('modules.hr.postings.partials.create', compact('users', 'offices', 'designations', 'districts', 'postingTypes'))->render();
+        $html = view('modules.hr.postings.partials.create', compact('users', 'offices', 'designations', 'postingTypes'))->render();
         return response()->json([
             'success' => true,
             'data' => [

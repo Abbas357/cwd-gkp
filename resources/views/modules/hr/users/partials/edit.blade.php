@@ -55,7 +55,7 @@
     {{-- Basic Info Tab --}}
     <div class="tab-pane fade show active" id="basic-info-tab" role="tabpanel">
         <div class="row">
-            <div class="col-lg-4 d-flex justify-content-center align-items-center mb-3">
+            <div class="col-lg-4 d-flex justify-content-center align-items-center mb-2">
                 <label class="label" data-toggle="tooltip" title="Change Profile Picture">
                     <img id="image-label-preview" src="{{ getProfilePic($data['user']) }}" alt="avatar" class="change-image img-fluid rounded-circle">
                     <input type="file" id="image" name="image" class="sr-only" accept="image/*">
@@ -63,27 +63,27 @@
             </div>
             <div class="col-lg-8">
                 <div class="row">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-6 mb-2">
                         <label for="name">Name</label>
                         <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $data['user']->name) }}">
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-6 mb-2">
                         <label for="username">Username</label>
                         <input type="text" class="form-control" id="username" name="username" value="{{ old('username', $data['user']->username) }}">
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-6 mb-2">
                         <label for="email">Email</label>
                         <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $data['user']->email) }}">
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-6 mb-2">
                         <label for="password">Password</label>
                         <input type="password" class="form-control" id="password" name="password" placeholder="Leave blank to keep current password">
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-6 mb-2">
                         <label for="status">Status</label>
                         <select class="form-select" id="status" name="status">
                             <option value="Active" {{ $data['user']->status === 'Active' ? 'selected' : '' }}>Active</option>
@@ -99,35 +99,35 @@
     {{-- Profile Tab --}}
     <div class="tab-pane fade" id="profile-tab" role="tabpanel">
         <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-2">
                 <label for="cnic">CNIC</label>
                 <input type="text" class="form-control" id="cnic" name="profile[cnic]" value="{{ old('profile.cnic', $data['user']->profile->cnic ?? '') }}">
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-2">
                 <label for="mobile_number">Mobile Number</label>
                 <input type="text" class="form-control" id="mobile_number" name="profile[mobile_number]" value="{{ old('profile.mobile_number', $data['user']->profile->mobile_number ?? '') }}">
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-2">
                 <label for="landline_number">Landline Number</label>
                 <input type="text" class="form-control" id="landline_number" name="profile[landline_number]" value="{{ old('profile.landline_number', $data['user']->profile->landline_number ?? '') }}">
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-2">
                 <label for="whatsapp">WhatsApp</label>
                 <input type="text" class="form-control" id="whatsapp" name="profile[whatsapp]" value="{{ old('profile.whatsapp', $data['user']->profile->whatsapp ?? '') }}">
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-2">
                 <label for="facebook">Facebook</label>
                 <input type="text" class="form-control" id="facebook" name="profile[facebook]" value="{{ old('profile.facebook', $data['user']->profile->facebook ?? '') }}">
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-2">
                 <label for="twitter">Twitter</label>
                 <input type="text" class="form-control" id="twitter" name="profile[twitter]" value="{{ old('profile.twitter', $data['user']->profile->twitter ?? '') }}">
             </div>
-            <div class="col-12 mb-3">
+            <div class="col-12 mb-2">
                 <label for="message">Message</label>
                 <textarea class="form-control" id="message" name="profile[message]" rows="3">{{ old('profile.message', $data['user']->profile->message ?? '') }}</textarea>
             </div>
-            <div class="col-12 mb-3">
+            <div class="col-12 mb-2">
                 <label for="featured_on">Featured On</label>
                 <select class="form-select" id="featured_on" name="profile[featured_on][]" multiple>
                     @php
@@ -147,7 +147,7 @@
     {{-- Modified Posting Tab for User Edit Form --}}
     <div class="tab-pane fade" id="posting-tab" role="tabpanel">
         <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-2">
                 <label for="office_id">Office</label>
                 <select class="form-select" id="office_id" name="posting[office_id]">
                     <option value="">Select Office</option>
@@ -158,7 +158,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-2">
                 <label for="designation_id">Designation</label>
                 <select class="form-select" id="designation_id" name="posting[designation_id]">
                     <option value="">Select Designation</option>
@@ -168,9 +168,9 @@
                     </option>
                     @endforeach
                 </select>
-                <div id="vacancy-info" class="mt-2 small"></div>
+                <div id="vacancy-info" class="small"></div>
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-2">
                 <label for="posting_type">Posting Type</label>
                 <select class="form-select" id="posting_type" name="posting[type]">
                     <option value="">Select Posting Type</option>
@@ -181,21 +181,21 @@
                     <option value="Termination" {{ optional($data['user']->currentPosting)->type === 'Termination' ? 'selected' : '' }}>Termination</option>
                 </select>
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-2">
                 <label for="start_date">Start Date</label>
                 <input type="date" class="form-control" id="start_date" name="posting[start_date]" value="{{ old('posting.start_date', optional(optional($data['user']->currentPosting)->start_date)->format('Y-m-d')) }}">
             </div>
-            <div class="col-md-12 mb-3">
+            <div class="col-md-6 mb-2">
                 <label for="order_number">Order Number</label>
                 <input type="text" class="form-control" id="order_number" name="posting[order_number]" value="{{ old('posting.order_number', optional($data['user']->currentPosting)->order_number) }}">
             </div>         
-            <div class="col-12 mb-3">
+            <div class="col-md-6 mb-2">
                 <label for="remarks">Remarks</label>
-                <textarea class="form-control" id="remarks" name="posting[remarks]" rows="3">{{ old('posting.remarks', $data['user']->currentPosting->remarks ?? '') }}</textarea>
+                <input type="text" class="form-control" id="remarks" name="posting[remarks]" value="{{ old('posting.remarks', $data['user']->currentPosting->remarks ?? '') }}" />
             </div>
 
             <div class="col-12">
-                <div class="card bg-light mt-4">
+                <div class="card bg-light mt-3">
                     <div class="card-body">
                         <h6 class="card-title">Posting History</h6>
                         @if($data['user']->postings->count() > 0)
@@ -222,14 +222,14 @@
                             </tbody>
                         </table>
                         @else
-                        <p class="text-muted">No posting history available</p>
+                        <span class="text-muted">No posting history available</span>
                         @endif
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-12 mb-3">
+        <div class="col-md-12 mb-2">
             <div class="card bg-light">
                 <div class="card-header">
                     <h6 class="mb-0">District Information</h6>
@@ -285,8 +285,8 @@
 
     {{-- Roles Tab (Same as before) --}}
     <div class="tab-pane fade" id="roles-tab" role="tabpanel">
-        <h5 class="mb-3">Roles assigned</h5>
-        <div class="mb-3">
+        <h5 class="mb-2">Roles assigned</h5>
+        <div class="mb-2">
             <input type="text" id="roleSearch" class="form-control" placeholder="Search for a role..." />
         </div>
         <div id="roles" class="inline-block-items">
@@ -302,8 +302,8 @@
 
     {{-- Permissions Tab (Same as before) --}}
     <div class="tab-pane fade" id="permissions-tab" role="tabpanel">
-        <h5 class="mb-3">Direct Permissions (Use direct permission as a last resort)</h5>
-        <div class="mb-3">
+        <h5 class="mb-2">Direct Permissions (Use direct permission as a last resort)</h5>
+        <div class="mb-2">
             <input type="text" id="permissionSearch" class="form-control" placeholder="Search for a permission..." />
         </div>
         <div id="permissions" class="inline-block-items">
@@ -318,7 +318,7 @@
 
     <div class="tab-pane fade" id="reporting-tab" role="tabpanel">
         <div class="row">
-            <div class="col-12 mb-3">
+            <div class="col-12 mb-2">
                 <div class="card bg-light">
                     <div class="card-body">
                         <h6 class="card-title">Current Position</h6>
@@ -343,7 +343,7 @@
                 </div>
             </div>
 
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-2">
                 <div class="card">
                     <div class="card-header">
                         <h6 class="mb-0">Reports To</h6>
@@ -359,7 +359,7 @@
                 </div>
             </div>
 
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-2">
                 <div class="card">
                     <div class="card-header">
                         <h6 class="mb-0">Subordinates</h6>

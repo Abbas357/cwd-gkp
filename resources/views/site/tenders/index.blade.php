@@ -50,8 +50,8 @@
                         <th>Title</th>
                         <th>Office</th>
                         <th>Published Date</th>
-                        <th>EOI Documents</th>
                         <th>Bidding Documents</th>
+                        <th>EOI Documents</th>
                         <th>Views</th>
                         <th>Action</th>
                     </tr>

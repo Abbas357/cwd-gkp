@@ -17,7 +17,7 @@
     <li><a href="{{ route('admin.apps.hr.users.index') }}"><i class="bi-person-badge text-success"></i>&nbsp; Users</a></li>
     @endcan
 
-    @canany(['view any project', 'view project file', 'create development project'])
+    @canany(['view organization chart', 'view organogram'])
     <li>
         <a href="javascript:;" class="has-arrow">
             <div class="parent-icon"><i class="bi-bar-chart-line text-primary"></i></div>
@@ -28,20 +28,6 @@
             <li>
                 <a href="{{ route('admin.apps.hr.org-chart') }}">
                     <i class="bi-diagram-3 text-info fs-6"></i>&nbsp; Organization Chart
-                </a>
-            </li>
-            @endcan
-            @can('view office hierarchy')
-            <li>
-                <a href="{{ route('admin.apps.hr.office-hierarchy') }}">
-                    <i class="bi-diagram-3-fill text-info fs-6"></i>&nbsp; Office Hierarchy
-                </a>
-            </li>
-            @endcan
-            @can('view user relationship')
-            <li>
-                <a href="{{ route('admin.apps.hr.user-relationships') }}">
-                    <i class="bi-people text-success fs-6"></i>&nbsp; User Relationship
                 </a>
             </li>
             @endcan

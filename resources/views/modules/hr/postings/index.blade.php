@@ -84,10 +84,6 @@
                                     title: "Roles",
                                     fields: ["#step-3"]
                                 },
-                                {
-                                    title: "Images",
-                                    fields: ["#step-4"]
-                                }
                             ],
                             formSubmitted() {
                                 table.ajax.reload();
