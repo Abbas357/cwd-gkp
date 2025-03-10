@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\PageController;
-use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\StoryController;
 use App\Http\Controllers\Admin\SchemeController;
@@ -16,29 +15,15 @@ use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\DownloadController;
 use App\Http\Controllers\Admin\SeniorityController;
 use App\Http\Controllers\Admin\NewsLetterController;
+use App\Http\Controllers\Admin\CardController;
 use App\Http\Controllers\Admin\AchievementController;
 use App\Http\Controllers\Admin\ProjectFileController;
 use App\Http\Controllers\Admin\PublicContactController;
 use App\Http\Controllers\Admin\DevelopmentProjectController;
 
 Route::get('/site', [HomeController::class, 'websiteAdmin'])->name('home');
-Route::prefix('site')->middleware(['can:manage website'])->group(function () {
-    Route::prefix('users')->as('users.')->group(function () {
-        Route::get('/', [UserController::class, 'index'])->name('index')->can('viewAny', App\Models\User::class);
-        Route::get('/api', [UserController::class, 'users'])->name('api')->withoutMiddleware(['can:manage website']);
-        Route::get('/create', [UserController::class, 'create'])->name('create')->can('create', App\Models\User::class);
-        Route::get('/edit/{user}', [UserController::class, 'edit'])->name('edit')->can('update',  'user');
-        Route::patch('/activate/{user}', [UserController::class, 'activateUser'])->name('activate')->can('activate', 'user');
-        Route::patch('/archive/{user}', [UserController::class, 'archiveUser'])->name('archive')->can('archive', 'user');
-        Route::post('/', [UserController::class, 'store'])->name('store')->can('create', App\Models\User::class);
-        Route::get('/{user}', [UserController::class, 'show'])->name('show')->can('view', 'user');
-        Route::patch('/{user}', [UserController::class, 'update'])->name('update')->can('update', 'user');
-        Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy')->can('delete', 'user');
-        Route::get('/hierarchy/setup', [UserController::class, 'hierarchy'])->name('hierarchy')->can('hierarchy', 'user');
-        Route::put('/{user}/boss', [UserController::class, 'updateBoss'])->name('update-boss')->can('update-boss', 'user');
-        Route::get('/{user}/available-subordinates', [UserController::class, 'availableSubordinates'])->name('available-subordinates');
-    });
 
+Route::prefix('site')->middleware(['can:manage website'])->group(function () {
     Route::prefix('downloads')->as('downloads.')->group(function () {
         Route::get('/', [DownloadController::class, 'index'])->name('index')->can('viewAny', App\Models\Download::class);
         Route::get('/create', [DownloadController::class, 'create'])->name('create')->can('create', App\Models\Download::class);
@@ -235,5 +220,9 @@ Route::prefix('site')->middleware(['can:manage website'])->group(function () {
         Route::delete('/{comment}', [CommentController::class, 'destroy'])->name('destroy')->can('delete', App\Models\Comment::class);
         Route::get('/response/{comment}', [CommentController::class, 'getResponseView'])->name('getResponseView')->can('response', App\Models\Comment::class);
         Route::post('/response', [CommentController::class, 'postResponse'])->name('postResponse')->can('response', App\Models\Comment::class);
+    });
+
+    Route::prefix('cards')->as('cards.')->group(function () {
+        Route::get('/', [CardController::class, 'index'])->name('index')->can('view', App\Models\Card::class);
     });
 });

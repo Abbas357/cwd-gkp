@@ -2,12 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Settings\RoleController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\SettingController;
 use App\Http\Controllers\Settings\CategoryController;
 use App\Http\Controllers\Settings\DistrictController;
-use App\Http\Controllers\Settings\PermissionController;
 use App\Http\Controllers\Settings\ActivityLogController;
 
 Route::prefix('settings')->middleware(['can:manage settings'])->group(function () {
@@ -15,20 +13,6 @@ Route::prefix('settings')->middleware(['can:manage settings'])->group(function (
     Route::prefix('profile')->as('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'edit'])->name('edit');
         Route::patch('/', [ProfileController::class, 'update'])->name('update');
-    });
-
-    Route::prefix('roles')->as('roles.')->group(function () {
-        Route::get('/', [RoleController::class, 'index'])->name('index')->can('viewAny', Spatie\Permission\Models\Role::class);
-        Route::post('/', [RoleController::class, 'store'])->name('store')->can('create', Spatie\Permission\Models\Role::class);
-        Route::delete('/{role}', [RoleController::class, 'destroy'])->name('destroy')->can('delete', 'role');
-        Route::get('/{role}/permissions', [RoleController::class, 'getPermissions'])->name('getPermissions')->can('update', Spatie\Permission\Models\Role::class);
-        Route::patch('/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('updatePermissions')->can('update', Spatie\Permission\Models\Role::class);
-    });
-
-    Route::prefix('permissions')->as('permissions.')->group(function () {
-        Route::get('/', [PermissionController::class, 'index'])->name('index')->can('viewAny', Spatie\Permission\Models\Permission::class);
-        Route::post('/', [PermissionController::class, 'store'])->name('store')->can('create', Spatie\Permission\Models\Permission::class);
-        Route::delete('/{permission}', [PermissionController::class, 'destroy'])->name('destroy')->can('delete', 'permission');
     });
 
     Route::prefix('core')->as('settings.')->group(function () {

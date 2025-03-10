@@ -26,7 +26,7 @@ class ActivityLogController extends Controller
                 })
                 ->addColumn('causer', function ($row) {
                     return $row->causer?->position 
-                    ? '<a href="'.route('admin.users.show', $row->causer->id).'" target="_blank">'.$row->causer->position.'</a>' 
+                    ? '<a href="'.route('admin.apps.hr.users.show', $row->causer->id).'" target="_blank">'.$row->causer->position.'</a>' 
                     : ($row->causer?->designation ?? 'System');
                 })
                 ->addColumn('subject', function ($row) {

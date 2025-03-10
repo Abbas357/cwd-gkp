@@ -37,7 +37,7 @@ class SliderController extends Controller
                 })
                 ->addColumn('user', function ($row) {
                     return $row->user?->position 
-                    ? '<a href="'.route('admin.users.show', $row->user->id).'" target="_blank">'.$row->user->position.'</a>' 
+                    ? '<a href="'.route('admin.apps.hr.users.show', $row->user->id).'" target="_blank">'.$row->user->position.'</a>' 
                     : ($row->user?->designation ?? 'N/A');
                 })
                 ->editColumn('created_at', function ($row) {

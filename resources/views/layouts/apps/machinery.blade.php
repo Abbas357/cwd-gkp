@@ -2,7 +2,7 @@
 
 <x-header :show-aside="true">
     <x-slot name="breadcrumb">
-        {{ $header }}
+        {{ $header ?? 'Machinery' }}
     </x-slot>
 </x-header>
 

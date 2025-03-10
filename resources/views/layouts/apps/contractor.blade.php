@@ -1,7 +1,7 @@
 @include('layouts.partials.admin.header')
 <x-header :show-aside="true">
     <x-slot name="breadcrumb">
-        {{ $header }}
+        {{ $header ?? 'Contractors' }}
     </x-slot>
 </x-header>
 
@@ -12,7 +12,6 @@
         <a href="{{ route('admin.apps.contractors.index') }}"><i class="bi-person-vcard text-success"></i>&nbsp; Contractor List</a>
     </li>
     @endcan
-
     @can('view any contractor')
     <li>
         <a href="{{ route('admin.apps.contractors.registration.index') }}"><i class="bi-list-check text-success"></i>&nbsp; Registrations</a>

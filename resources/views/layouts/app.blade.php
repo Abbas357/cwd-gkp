@@ -8,23 +8,6 @@
 
 @if ($showAside)
 <x-sidebar app-name="WEBSITE" app-url="{{ route('admin.home') }}">
-    @canany(['view any user'])
-    <li>
-        <a href="javascript:;" class="has-arrow">
-            <div class="parent-icon"><i class="bi-people-fill text-warning"></i></div>
-            <div class="menu-title">User Management</div>
-        </a>
-        <ul class="p-2 menu-items">
-            @can('view any user')
-            <li><a href="{{ route('admin.users.index') }}"><i class="bi-person-circle fs-6"></i>&nbsp; Users</a></li>
-            @endcan
-            @can('view hierarchy')
-            <li><a href="{{ route('admin.users.hierarchy') }}"><i class="bi-person-circle fs-6"></i>&nbsp; Hierarchy</a></li>
-            @endcan
-        </ul>
-    </li>
-    @endcanany
-
     @canany(['view any news', 'view any event', 'view any tender', 'view any slider', 'view any story', 'view any gallery', 'view any seniority'])
     <li>
         <a href="javascript:;" class="has-arrow">
@@ -83,7 +66,7 @@
     </li>
     @endcanany
 
-    @canany(['view any page', 'create download'])
+    @canany(['view any page', 'create download', 'view any card'])
     <li>
         <a href="javascript:;" class="has-arrow">
             <div class="parent-icon"><i class="bi-database text-success"></i></div>
@@ -95,6 +78,9 @@
             @endcan
             @can('create download')
             <li><a href="{{ route('admin.downloads.index') }}"><i class="bi-cloud-arrow-down fs-6"></i>&nbsp; Downloads</a></li>
+            @endcan
+            @can('view any card')
+            <li><a href="{{ route('admin.cards.index') }}"><i class="bi-credit-card fs-6"></i>&nbsp; Cards</a></li>
             @endcan
         </ul>
     </li>

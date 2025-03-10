@@ -16,7 +16,3 @@ Route::prefix('service_cards')->as('service_cards.')->middleware(['can:manage se
     Route::patch('/update/field/{service_card}', [ServiceCardController::class, 'updateField'])->name('updateField')->can('update', 'service_card');
     Route::patch('/upload/file/{service_card}', [ServiceCardController::class, 'uploadFile'])->name('uploadFile')->can('update', 'service_card');
 });
-
-Route::prefix('cards')->as('cards.')->group(function () {
-    Route::get('/', [CardController::class, 'index'])->name('index')->can('view', App\Models\Card::class);
-});

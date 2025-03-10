@@ -111,7 +111,6 @@
                             modalSize: 'lg',
                             includeForm: true,
                             formAction: "{{ route('admin.downloads.store') }}",
-                            modalHeight: '35vh',
                             hash: false,
                             tableToRefresh: table
                         })

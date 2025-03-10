@@ -16,11 +16,6 @@ class District extends Model
     
     protected $fillable = ['name'];
 
-    public function users()
-    {
-        return $this->belongsToMany(User::class, 'district_user', 'district_id', 'user_id');
-    }
-
     public function developmentProjects()
     {
         return $this->hasMany(DevelopmentProject::class);
@@ -39,58 +34,85 @@ class District extends Model
             });
     }
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'district_user', 'district_id', 'user_id');
+    }
+
+    // Relationship to postings
     public function postings()
     {
         return $this->belongsToMany(Posting::class, 'district_posting');
     }
 
-    public function currentOfficers()
+    public function office()
     {
-        return $this->hasManyThrough(
-            User::class,
-            Posting::class,
-            'id',
-            'id',
-            'posting_id',
-            'user_id'
-        )->whereHas('postings', function ($query) {
-            $query->where('is_current', true);
-        });
+        return $this->hasOne(Office::class);
     }
 
-    public function getDistrictChainOfCommand($districtId) 
+    // Get all offices responsible for this district (direct and ancestors)
+    public function responsibleOffices()
     {
-        // Find the current posting assigned to this district
-        $directPosting = Posting::where('is_current', true)
-            ->whereHas('districts', function($query) use ($districtId) {
-                $query->where('districts.id', $districtId);
-            })
-            ->first();
-        
-        if (!$directPosting) {
+        $districtOffice = $this->office;
+        if (!$districtOffice) {
             return collect();
         }
         
-        $chain = collect([$directPosting]);
+        // Include the direct office and all its ancestors
+        $offices = collect([$districtOffice]);
+        $offices = $offices->merge($districtOffice->getAncestors());
         
-        // Walk up the reporting chain
-        $currentPosting = $directPosting;
-        while ($relationship = $currentPosting->asSubordinate()->where('is_current', true)->first()) {
-            $supervisorPosting = $relationship->supervisorPosting;
-            if ($supervisorPosting) {
-                $chain->push($supervisorPosting);
-                $currentPosting = $supervisorPosting;
-            } else {
-                break;
+        return $offices;
+    }
+
+    // Get all users currently posted to offices responsible for this district
+    public function currentOfficers()
+    {
+        $officeIds = $this->responsibleOffices()->pluck('id');
+        
+        return User::whereHas('currentPosting', function($query) use ($officeIds) {
+            $query->whereIn('office_id', $officeIds)
+                  ->where('is_current', true);
+        })->get();
+    }
+
+    // Get the direct officer responsible for this district (officer in the district office)
+    public function directOfficer()
+    {
+        $districtOffice = $this->office;
+        if (!$districtOffice) {
+            return null;
+        }
+        
+        return User::whereHas('currentPosting', function($query) use ($districtOffice) {
+            $query->where('office_id', $districtOffice->id)
+                  ->where('is_current', true);
+        })->first();
+    }
+
+    // Get the chain of command for this district
+    public function getDistrictChainOfCommand() 
+    {
+        $chain = collect();
+        $responsibleOffices = $this->responsibleOffices();
+        
+        foreach ($responsibleOffices as $office) {
+            $headUser = User::whereHas('currentPosting', function($query) use ($office) {
+                $query->where('office_id', $office->id)
+                      ->where('is_current', true);
+            })
+            ->with(['currentDesignation', 'currentOffice'])
+            ->first();
+            
+            if ($headUser) {
+                $chain->push([
+                    'user' => $headUser,
+                    'designation' => $headUser->currentDesignation ? $headUser->currentDesignation->name : null,
+                    'office' => $office->name
+                ]);
             }
         }
         
-        return $chain->map(function($posting) {
-            return [
-                'user' => $posting->user,
-                'designation' => $posting->designation->name,
-                'office' => $posting->office->name
-            ];
-        });
+        return $chain;
     }
 }

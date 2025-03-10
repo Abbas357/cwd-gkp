@@ -38,7 +38,7 @@ class CommentController extends Controller
                 })
                 ->addColumn('published_by', function ($row) {
                     return $row->publishBy?->position
-                        ? '<a href="' . route('admin.users.show', $row->publishBy->id) . '" target="_blank">' . $row->publishBy->position . '</a>'
+                        ? '<a href="' . route('admin.apps.hr.users.show', $row->publishBy->id) . '" target="_blank">' . $row->publishBy->position . '</a>'
                         : ($row->publishBy?->designation ?? 'N/A');
                 })
                 ->editColumn('created_at', function ($row) {

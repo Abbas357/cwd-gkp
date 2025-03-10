@@ -750,8 +750,8 @@ function pushStateModal({
         const modalId = `modal-${calcModalType}`;
         const modalContentClass = `detail-${calcModalType}`;
         const heightStyle = modalHeight === "auto" ? 
-            "max-height: 80vh; height: auto;" : 
-            `max-height: 80vh; height: ${modalHeight};`;
+            "max-height: 75vh; height: auto;" : 
+            `max-height: 75vh; height: ${modalHeight};`;
         const actionBtnId = actionButtonName && actionButtonName.replace(/\s+/g, '-').toLowerCase()+'-'+calcModalType;
 
         const formTagOpen = includeForm ? `<form id="form-${calcModalType}" method="POST" enctype="multipart/form-data">` : '';
@@ -917,8 +917,8 @@ function formWizardModal({
         let modalId = `modal-${modalType}`;
         const modalContentClass = `detail-${modalType}`;
         const heightStyle = modalHeight === "auto" ? 
-            "max-height: 80vh; height: auto;" : 
-            `max-height: 80vh; height: ${modalHeight};`;
+            "max-height: 75vh; height: auto;" : 
+            `max-height: 75vh; height: ${modalHeight};`;
 
         const modalTemplate = `
         <div class="modal fade" id="${modalId}" tabindex="-1" aria-hidden="true">

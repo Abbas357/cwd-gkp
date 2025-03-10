@@ -14,18 +14,6 @@
     </li>
     @endcan
 
-    @can('view any role')
-    <li>
-        <a href="{{ route('admin.roles.index') }}"><i class="bi-person-badge text-success"></i>&nbsp; Roles</a>
-    </li>
-    @endcan
-
-    @can('view any permission')
-    <li>
-        <a href="{{ route('admin.permissions.index') }}"><i class="bi-key text-success"></i>&nbsp; Permissions</a>
-    </li>
-    @endcan
-
     @can('view any category')
     <li>
         <a href="{{ route('admin.categories.index') }}"><i class="bi-tags text-success"></i>&nbsp; Categories</a>

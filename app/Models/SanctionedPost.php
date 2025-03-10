@@ -45,9 +45,24 @@ class SanctionedPost extends Model
             ->where('is_current', true);
     }
     
-    // Helper to calculate vacancies
     public function getVacanciesAttribute()
     {
         return $this->total_positions - $this->currentPostings()->count();
+    }
+    
+    public function getFilledPositionsAttribute()
+    {
+        return $this->currentPostings()->count();
+    }
+    
+    public function scopeWithVacancies($query)
+    {
+        return $query->whereColumn('total_positions', '>', function($query) {
+            $query->selectRaw('COUNT(*)')
+                ->from('postings')
+                ->whereColumn('postings.office_id', 'sanctioned_posts.office_id')
+                ->whereColumn('postings.designation_id', 'sanctioned_posts.designation_id')
+                ->where('postings.is_current', true);
+        });
     }
 }

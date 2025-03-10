@@ -45,7 +45,7 @@ class DevelopmentProjectController extends Controller
                 })
                 ->addColumn('uploaded_by', function ($row) {
                     return $row->user?->position 
-                    ? '<a href="'.route('admin.users.show', $row->user->id).'" target="_blank">'.$row->user->position.'</a>' 
+                    ? '<a href="'.route('admin.apps.hr.users.show', $row->user->id).'" target="_blank">'.$row->user->position.'</a>' 
                     : ($row->user?->designation ?? 'N/A');
                 })
                 ->addColumn('action', function ($row) {

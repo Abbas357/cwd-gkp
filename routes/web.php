@@ -13,6 +13,7 @@ Route::prefix('admin')->as('admin.')->middleware(['auth'])->group(function () {
     require __DIR__ . '/modules/settings.php';
 
     Route::prefix('apps')->as('apps.')->group(function () {
+        require __DIR__ . '/modules/hr.php';
         require __DIR__ . '/modules/contractor.php';
         require __DIR__ . '/modules/service_card.php';
         require __DIR__ . '/modules/standardization.php';
@@ -20,6 +21,7 @@ Route::prefix('admin')->as('admin.')->middleware(['auth'])->group(function () {
         require __DIR__ . '/modules/porms.php';
         require __DIR__ . '/modules/machinery.php';
     });
+    
 });
 
 require __DIR__ . '/auth.php';

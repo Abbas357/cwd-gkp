@@ -21,9 +21,9 @@ class Posting extends Model implements HasMedia
     protected $guarded = [];
 
     protected $casts = [
-        'start_date' => 'date',
-        'end_date' => 'date',
         'is_current' => 'boolean',
+        'start_date' => 'date',
+        'end_date' => 'date'
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -66,31 +66,29 @@ class Posting extends Model implements HasMedia
         return $this->belongsToMany(District::class, 'district_posting');
     }
 
-    public function asBoss()
-    {
-        return $this->hasMany(Hierarchy::class, 'boss_id');
-    }
-
-    public function asSubordinate()
-    {
-        return $this->hasMany(Hierarchy::class, 'subordinate_id');
-    }
-
-    // Helper methods
     public function endPosting($endDate)
     {
         $this->update([
             'end_date' => $endDate,
             'is_current' => false
         ]);
+    }
+    
+    public function isValidAgainstSanctionedPost()
+    {
+        $sanctionedPost = SanctionedPost::where('office_id', $this->office_id)
+            ->where('designation_id', $this->designation_id)
+            ->first();
+            
+        if (!$sanctionedPost) {
+            return false;
+        }
         
-        // End any active reporting relationships
-        Hierarchy::where('subordinate_id', $this->id)
-            ->orWhere('boss_id', $this->id)
+        $currentPostingsCount = Posting::where('office_id', $this->office_id)
+            ->where('designation_id', $this->designation_id)
             ->where('is_current', true)
-            ->update([
-                'end_date' => $endDate,
-                'is_current' => false
-            ]);
+            ->count();
+            
+        return $currentPostingsCount < $sanctionedPost->total_positions;
     }
 }

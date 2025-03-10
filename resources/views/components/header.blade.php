@@ -154,7 +154,7 @@
                     @can('view activity')
                     <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.activity.index') }}"><i class="bi-clock-history"></i>Activity Log</a>
                     @endcan
-                    @canany(['view settings', 'view any role', 'view any permission', 'view any district', 'view any category'])
+                    @canany(['view settings', 'view any district', 'view any category'])
                     <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="#" onclick="event.preventDefault(); event.stopPropagation(); document.getElementById('collapseMenuItems').classList.toggle('show');">
                         <i class="bi-arrow-down-circle-fill"></i>Settings
                     </a>
@@ -162,16 +162,6 @@
                         @can('view settings')
                         <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.settings.index') }}" onclick="event.stopPropagation();">
                             <i class="bi-gear-fill"></i>Core Settings
-                        </a>
-                        @endcan
-                        @can('view any role')
-                        <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.roles.index') }}" onclick="event.stopPropagation();">
-                            <i class="bi-person-badge"></i>Roles
-                        </a>
-                        @endcan
-                        @can('view any permission')
-                        <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.permissions.index') }}" onclick="event.stopPropagation();">
-                            <i class="bi-key"></i>Permissions
                         </a>
                         @endcan
                         @can('view any district')

@@ -127,7 +127,7 @@
             border-color: #ff000d;
         }
 
-        .accent-green::before {
+        .accent-blue::before {
             border-color: #1DA1F2;
         }
 
@@ -147,6 +147,10 @@
             border-color: #d5641c;
         }
 
+        .accent-green::before {
+            border-color: #00db87;
+        }
+
         .accent-purple:hover {
             box-shadow: 0 15px 30px rgba(141, 15, 224, 0.2);
         }
@@ -155,7 +159,7 @@
             box-shadow: 0 15px 30px rgba(255, 0, 13, 0.2);
         }
 
-        .accent-green:hover {
+        .accent-blue:hover {
             box-shadow: 0 15px 30px rgba(5, 120, 187, 0.2);
         }
 
@@ -175,6 +179,10 @@
             box-shadow: 0 15px 30px rgba(165, 145, 31, 0.445);
         }
 
+        .accent-green:hover {
+            box-shadow: 0 15px 30px rgba(31, 165, 131, 0.445);
+        }
+
         [data-bs-theme=dark] .app-tile:hover::before {
             opacity: 1;
         }
@@ -187,7 +195,7 @@
             box-shadow: 0 15px 30px rgba(255, 0, 13, 0.4);
         }
 
-        [data-bs-theme=dark] .accent-green:hover {
+        [data-bs-theme=dark] .accent-blue:hover {
             box-shadow: 0 15px 30px rgba(20, 122, 255, 0.4);
         }
 
@@ -205,6 +213,10 @@
         
         [data-bs-theme=dark] .accent-brown:hover {
             box-shadow: 0 15px 30px rgba(255, 245, 105, 0.479);
+        }
+        
+        [data-bs-theme=dark] .accent-green:hover {
+            box-shadow: 0 15px 30px rgba(105, 255, 173, 0.479);
         }
 
         #particles-js {
@@ -261,6 +273,13 @@
             </a>
             @endcan
 
+            @can('manage human resource')
+            <a href="{{ route('admin.apps.hr.index') }}" class="app-tile accent-green">
+                <i class="bi-people" style="color: #00db87"></i>
+                <p>HR</p>
+            </a>
+            @endcan
+
             @can('manage vehicles')
             <a href="{{ route('admin.apps.vehicles.index') }}" class="app-tile accent-red">
                 <i class="bi-bus-front" style="color: #ff000d"></i>
@@ -269,7 +288,7 @@
             @endcan
 
             @can('manage standardizations')
-            <a href="{{ route('admin.apps.standardizations.index') }}" class="app-tile accent-green">
+            <a href="{{ route('admin.apps.standardizations.index') }}" class="app-tile accent-blue">
                 <i class="bi-patch-check-fill" style="color: #1DA1F2"></i>
                 <p>Standardization</p>
             </a>
