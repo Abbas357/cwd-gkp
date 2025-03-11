@@ -581,7 +581,7 @@
                 });
             };
 
-            initSelect2($('#load-users'), "Select User / Office", '{{ route("admin.users.api") }}');
+            initSelect2($('#load-users'), "Select User / Office", '{{ route("admin.apps.hr.users.api") }}');
             initSelect2($('[name="vehicle_id"]'), "Select Vehicle", '{{ route("admin.apps.vehicles.search") }}');
             
             $('select:not(#load-users):not([name="vehicle_id"])').each(function() {

@@ -44,8 +44,8 @@ class PostingController extends Controller
                 ->addColumn('designation', function ($row) {
                     return $row->designation->name;
                 })
-                ->addColumn('districts', function ($row) {
-                    return $row->districts->pluck('name')->implode(', ');
+                ->addColumn('district', function ($row) {
+                    return $row->district->name;
                 })
                 ->editColumn('start_date', function ($row) {
                     return $row->start_date?->format('j, F Y');

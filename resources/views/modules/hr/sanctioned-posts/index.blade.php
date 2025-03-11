@@ -146,29 +146,7 @@
                 modalSize: 'md',
                 includeForm: true,
                 formAction: "{{ route('admin.apps.hr.sanctioned-posts.update', ':id') }}",
-                modalHeight: '60vh'
-            }).then((modal) => {
-                const spModal = $('#' + modal);
-                const updateBtn = spModal.find('button[type="submit"]');
-                spModal.find('form').on('submit', async function(e) {
-                    e.preventDefault();
-                    const form = this;
-                    const formData = new FormData(form);
-                    const url = $(this).attr('action');
-                    setButtonLoading(updateBtn, true);
-                    try {
-                        const result = await fetchRequest(url, 'POST', formData);
-                        if (result) {
-                            setButtonLoading(updateBtn, false);
-                            spModal.modal('hide');
-                            table.ajax.reload();
-                        }
-                    } catch (error) {
-                        setButtonLoading(updateBtn, false);
-                        console.error('Error during form submission:', error);
-                    }
-                });
-            });
+            })
         });
     </script>
     @endpush

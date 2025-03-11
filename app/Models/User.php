@@ -215,20 +215,6 @@ class User extends Authenticatable implements HasMedia
             ->where('postings.is_current', true);
     }
 
-    public function currentDistricts()
-    {
-        return $this->hasManyThrough(
-            District::class,
-            'district_posting',
-            'posting_id',
-            'id',
-            'id',
-            'district_id'
-        )->whereHas('postings', function ($query) {
-            $query->where('user_id', $this->id)->where('is_current', true);
-        });
-    }
-
     public function getPotentialSupervisors()
     {
         // User must have a current posting and office

@@ -34,11 +34,11 @@ Route::prefix('hr')->as('hr.')->middleware(['can:manage human resource'])->group
     Route::prefix('sanctioned-posts')->as('sanctioned-posts.')->group(function () {
         Route::get('/', [SanctionedPostController::class, 'index'])->name('index');
         Route::get('/create', [SanctionedPostController::class, 'create'])->name('create');
-        Route::post('', [SanctionedPostController::class, 'store'])->name('store');
+        Route::post('/', [SanctionedPostController::class, 'store'])->name('store');
         Route::get('/available-positions', [SanctionedPostController::class, 'getAvailablePositions'])->name('available-positions');
         Route::get('/{sanctionedPost}', [SanctionedPostController::class, 'show'])->name('show');
         Route::get('/{sanctionedPost}/edit', [SanctionedPostController::class, 'edit'])->name('edit');
-        Route::put('/{sanctionedPost}', [SanctionedPostController::class, 'update'])->name('update');
+        Route::patch('/{sanctionedPost}', [SanctionedPostController::class, 'update'])->name('update');
         Route::delete('/{sanctionedPost}', [SanctionedPostController::class, 'destroy'])->name('destroy');
     });
 

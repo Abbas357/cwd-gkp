@@ -149,6 +149,7 @@ class SanctionedPostController extends Controller
 
     public function update(Request $request, SanctionedPost $sanctionedPost)
     {
+        dd('ddd');
         $request->validate([
             'office_id' => 'required|exists:offices,id',
             'designation_id' => 'required|exists:designations,id',

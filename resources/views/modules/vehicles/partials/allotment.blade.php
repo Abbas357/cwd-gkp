@@ -124,7 +124,7 @@
             placeholder: "Select User / Office",
             allowClear: true,
             ajax: {
-                url: '{{ route("admin.users.api") }}',
+                url: '{{ route("admin.apps.hr.users.api") }}',
                 dataType: 'json',
                 delay: 250,
                 data: function(params) {

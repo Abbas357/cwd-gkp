@@ -104,7 +104,7 @@ $(document).ready(function() {
         theme: "bootstrap-5",
         width: '100%',
         placeholder: 'Select option',
-        dropdownParent: $('#office_id').closest('.modal-content')
+        dropdownParent: $('#office_id').closest('.modal')
     });
 
     imageCropper({

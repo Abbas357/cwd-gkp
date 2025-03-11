@@ -402,7 +402,6 @@
                     user_id: "{{ $data['user']->id }}"
                 }
                 , success: function(response) {
-                    // Update supervisor information
                     let supervisorHtml = '';
                     if (response.directSupervisor) {
                         supervisorHtml = `
@@ -437,7 +436,6 @@
                     }
                     $('#supervisor-container').html(supervisorHtml);
 
-                    // Update subordinates information
                     let subordinatesHtml = '';
                     if (response.subordinates && response.subordinates.length > 0) {
                         subordinatesHtml = '<div class="list-group">';
@@ -468,36 +466,33 @@
             });
         }
 
-        // Helper function to get user avatar
         function getUserAvatar(user) {
-            // Replace with your actual method to get user profile picture
             return "{{ asset('admin/images/no-profile.png') }}";
         }
     });
 
-    // Initialize image cropper
     imageCropper({
         fileInput: '#image'
         , inputLabelPreview: '#image-label-preview'
         , aspectRatio: 9 / 10
     , });
 
-    // Initialize Select2 for dropdowns
     $('#featured_on').select2({
-        theme: "bootstrap-5"
+        theme: "bootstrap-5" 
         , width: '100%'
         , placeholder: 'Select Featured On'
         , closeOnSelect: true
+        , dropdownParent: $('#office_id').closest('.modal')
     , });
-    // Initialize Select2 for other dropdowns
+
     $('#designation_id, #office_id').select2({
         theme: "bootstrap-5"
         , width: '100%'
         , placeholder: 'Select option'
         , closeOnSelect: true
+        , dropdownParent: $('#office_id').closest('.modal')
     , });
 
-    // Input masks
     $('#mobile_number, #whatsapp').mask('0000-0000000', {
         placeholder: "____-_______"
     });

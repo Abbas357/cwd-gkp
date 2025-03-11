@@ -80,13 +80,11 @@
 
 <script>
     $(document).ready(function() {
-        // Initialize Select2 for dropdowns
         $('#office_id, #designation_id').select2({
             theme: "bootstrap-5"
             , width: '100%'
             , placeholder: 'Select option'
-            , dropdownParent: $('#office_id').closest('.modal-content')
+            , dropdownParent: $('#office_id').closest('.modal')
         });
     });
-
 </script>

@@ -61,9 +61,13 @@ class Posting extends Model implements HasMedia
         return $this->belongsTo(Designation::class);
     }
 
-    public function districts()
+    public function district()
     {
-        return $this->belongsToMany(District::class, 'district_posting');
+        if (!$this->office) {
+            return null;
+        }
+
+        return $this->office->district;
     }
 
     public function endPosting($endDate)
