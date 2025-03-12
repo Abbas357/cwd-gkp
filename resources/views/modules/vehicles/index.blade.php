@@ -210,6 +210,7 @@
                 , modalSize: 'lg'
                 , includeForm: true
                 , formAction: "{{ route('admin.apps.vehicles.allotment.store', ':id') }}"
+                , tableToRefresh: table
             , });
             
         });

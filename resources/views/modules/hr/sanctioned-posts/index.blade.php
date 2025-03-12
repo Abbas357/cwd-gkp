@@ -146,6 +146,8 @@
                 modalSize: 'md',
                 includeForm: true,
                 formAction: "{{ route('admin.apps.hr.sanctioned-posts.update', ':id') }}",
+                tableToRefresh: table,
+                formType: 'edit'
             })
         });
     </script>

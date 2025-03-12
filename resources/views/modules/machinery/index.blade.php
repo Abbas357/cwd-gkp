@@ -236,6 +236,7 @@
                 , formAction: "{{ route('admin.apps.machineries.allocation.store', ':id') }}"
                 , modalHeight: '65vh'
                 , tableToRefresh: table
+                , formType: 'edit'
             , });
             
         });

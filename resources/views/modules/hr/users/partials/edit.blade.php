@@ -1,5 +1,3 @@
-{{-- resources/views/admin/users/partials/edit-form.blade.php --}}
-@method('patch')
 <ul class="nav nav-tabs nav-primary" role="tablist">
     <li class="nav-item" role="presentation">
         <a class="nav-link active" data-bs-toggle="tab" href="#basic-info-tab" role="tab" aria-selected="true">
@@ -526,40 +524,48 @@
     $(document).ready(function() {
         // Function to check sanctioned post vacancies
         function checkVacancies() {
-            const officeId = $('#office_id').val();
-            const designationId = $('#designation_id').val();
-            const userId = '{{ $data['user']->id }}';
-            if (officeId && designationId) {
-                $('#vacancy-info').html('<span class="text-info">Checking vacancy...</span>');
+    const officeId = $('#office_id').val();
+    const designationId = $('#designation_id').val();
+    const userId = '{{ $data['user']->id }}';
+    
+    if (officeId && designationId) {
+        $('#vacancy-info').html('<span class="text-info">Checking vacancy...</span>');
 
-                $.ajax({
-                    url: "{{ route('admin.apps.hr.sanctioned-posts.available-positions') }}"
-                    , type: "GET"
-                    , data: {
-                        office_id: officeId
-                        , user_id: userId
-                    }
-                    , success: function(data) {
-                        const position = data.find(p => p.id == designationId);
+        $.ajax({
+            url: "{{ route('admin.apps.hr.sanctioned-posts.available-positions') }}",
+            type: "GET",
+            data: {
+                office_id: officeId,
+                user_id: userId
+            },
+            dataType: 'json', // Ensure JSON response is parsed
+            success: function(response) {
+                console.log(response);
+                
+                // Make sure we're working with an array
+                const data = Array.isArray(response) ? response : [];
+                
+                const position = data.find(p => p.id == designationId);
 
-                        if (position) {
-                            if (position.is_full && !position.current_user) {
-                                $('#vacancy-info').html(`<span class="text-danger">No vacancy available. (${position.filled}/${position.total} positions filled)</span>`);
-                            } else {
-                                $('#vacancy-info').html(`<span class="text-success">Vacancy available. (${position.filled}/${position.total} positions filled)</span>`);
-                            }
-                        } else {
-                            $('#vacancy-info').html('<span class="text-danger">This position is not sanctioned for the selected office.</span>');
-                        }
+                if (position) {
+                    if (position.is_full && !position.current_user) {
+                        $('#vacancy-info').html(`<span class="text-danger">No vacancy available. (${position.filled}/${position.total} positions filled)</span>`);
+                    } else {
+                        $('#vacancy-info').html(`<span class="text-success">Vacancy available. (${position.filled}/${position.total} positions filled)</span>`);
                     }
-                    , error: function() {
-                        $('#vacancy-info').html('<span class="text-danger">Error checking vacancy.</span>');
-                    }
-                });
-            } else {
-                $('#vacancy-info').html('');
+                } else {
+                    $('#vacancy-info').html('<span class="text-danger">This position is not sanctioned for the selected office.</span>');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error:", error);
+                $('#vacancy-info').html('<span class="text-danger">Error checking vacancy.</span>');
             }
-        }
+        });
+    } else {
+        $('#vacancy-info').html('');
+    }
+}
 
         function fetchDistrictInformation() {
             const officeId = $('#office_id').val();

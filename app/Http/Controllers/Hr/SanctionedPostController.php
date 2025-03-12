@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Hr;
 
 use App\Models\Office;
+use App\Models\Posting;
 use App\Models\Designation;
 use Illuminate\Http\Request;
 use App\Models\SanctionedPost;
@@ -149,7 +150,6 @@ class SanctionedPostController extends Controller
 
     public function update(Request $request, SanctionedPost $sanctionedPost)
     {
-        dd('ddd');
         $request->validate([
             'office_id' => 'required|exists:offices,id',
             'designation_id' => 'required|exists:designations,id',
@@ -218,34 +218,36 @@ class SanctionedPostController extends Controller
     }
     
     public function getAvailablePositions(Request $request)
-    {
-        $officeId = $request->input('office_id');
-        $userId = $request->input('user_id');
+{
+    $officeId = $request->input('office_id');
+    $userId = $request->input('user_id');
+    
+    $sanctionedPosts = SanctionedPost::where('office_id', $officeId)
+        ->where('status', 'Active')
+        ->with('designation')
+        ->get()
+        ->map(function($post) use ($userId, $officeId) {
+            $currentUserHasPosting = Posting::where('user_id', $userId)
+                ->where('designation_id', $post->designation_id)
+                ->where('office_id', $officeId)
+                ->where('is_current', true)
+                ->exists();
+                
+            return [
+                'id' => $post->designation_id,
+                'name' => $post->designation->name,
+                'total' => $post->total_positions,
+                'filled' => $post->filledPositions,
+                'vacant' => $post->vacancies,
+                'is_full' => $post->vacancies <= 0,
+                'current_user' => $currentUserHasPosting
+            ];
+        })
+        ->filter(function($post) {
+            return $post['vacant'] > 0 || $post['current_user'];
+        })
+        ->values(); // Reindex the array after filtering
         
-        $sanctionedPosts = SanctionedPost::where('office_id', $officeId)
-            ->where('status', 'Active')
-            ->with('designation')
-            ->get()
-            ->map(function($post) {
-                return [
-                    'id' => $post->designation_id,
-                    'name' => $post->designation->name,
-                    'total' => $post->total_positions,
-                    'filled' => $post->filledPositions,
-                    'vacant' => $post->vacancies,
-                    'is_full' => $post->vacancies <= 0
-                ];
-            })
-            ->filter(function($post) use ($userId) {
-                // Either has vacancies or is already assigned to this user
-                return $post['vacant'] > 0 || 
-                       \App\Models\Posting::where('user_id', $userId)
-                           ->where('designation_id', $post['id'])
-                           ->where('office_id', request('office_id'))
-                           ->where('is_current', true)
-                           ->exists();
-            });
-            
-        return response()->json($sanctionedPosts);
-    }
+    return response()->json($sanctionedPosts);
+}
 }

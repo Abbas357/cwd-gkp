@@ -176,6 +176,7 @@
                 , includeForm: true
                 , formAction: "{{ route('admin.apps.hr.users.update', ':id') }}"
                 , tableToRefresh: table
+                , formType: 'edit'
             , });
 
         });

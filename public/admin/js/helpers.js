@@ -743,11 +743,12 @@ function pushStateModal({
     formAction,
     modalHeight = null,
     hash = true,
-    tableToRefresh = null
+    tableToRefresh = null,
+    formType = 'create'
 }) {
     return new Promise((resolve) => {
         const calcModalType = modalType ?? btnSelector.replace(/^[.#]/, '').split('-')[0];
-        const modalId = `modal-${calcModalType}`;
+        let modalId = `modal-${calcModalType}`;
         const modalContentClass = `detail-${calcModalType}`;
         const heightStyle = modalHeight === "auto" ? 
             "max-height: 75vh; height: auto;" : 
@@ -756,6 +757,10 @@ function pushStateModal({
 
         const formTagOpen = includeForm ? `<form id="form-${calcModalType}" method="POST" enctype="multipart/form-data">` : '';
         const formTagClose = includeForm ? `</form>` : '';
+
+        if ($(`#${modalId}`).length) {
+            $(`#${modalId}`).remove();
+        }
 
         const modalTemplate = `
         <div class="modal fade" id="${modalId}" tabindex="-1" aria-hidden="true">
@@ -783,9 +788,7 @@ function pushStateModal({
             </div>
         </div>`;
 
-        if (!$(`#${modalId}`).length) {
-            $('body').append(modalTemplate);
-        }
+        $('body').append(modalTemplate);
 
         async function openModal(recordId) {
             const url = fetchUrl.replace(":id", recordId);
@@ -798,21 +801,36 @@ function pushStateModal({
             $(`#${modalId} .${loadingSpinner}`).show();
             $(`#${modalId} .${modalContentClass}`).hide();
 
-            const response = await fetchRequest(url);
-            const result = response['result'];
+            try {
+                const response = await fetchRequest(url);
+                const result = response['result'];
 
-            if (result) {
-                $(`#${modalId} .modal-title`).text(title);
-                $(`#${modalId} .${modalContentClass}`).html(result);
-            } else {
+                if (result) {
+                    $(`#${modalId} .modal-title`).text(title);
+                    $(`#${modalId} .${modalContentClass}`).html(result);
+                } else {
+                    $(`#${modalId} .modal-title`).text("Error");
+                    $(`#${modalId} .${modalContentClass}`).html(
+                        '<p class="pb-0 pt-3 p-4">Unable to load content.</p>'
+                    );
+                }
+            } catch (error) {
+                console.error("Error fetching modal content:", error);
                 $(`#${modalId} .modal-title`).text("Error");
                 $(`#${modalId} .${modalContentClass}`).html(
                     '<p class="pb-0 pt-3 p-4">Unable to load content.</p>'
                 );
+            } finally {
+                $(`#${modalId} .${loadingSpinner}`).hide();
+                $(`#${modalId} .${modalContentClass}`).show();
             }
+        }
 
-            $(`#${modalId} .${loadingSpinner}`).hide();
-            $(`#${modalId} .${modalContentClass}`).show();
+        function resetModal() {
+            $(`#${modalId} .${modalContentClass}`).empty();
+            if (includeForm) {
+                $(`#form-${calcModalType}`)[0].reset();
+            }
         }
 
         function openModalFromUrl() {
@@ -827,6 +845,8 @@ function pushStateModal({
             }
         }
 
+        $(document).off("click", btnSelector);
+        
         $(document).on("click", btnSelector, function () {
             const recordId = $(this).data("id");
             
@@ -840,7 +860,8 @@ function pushStateModal({
         });
 
         if (hash) {
-            $(window).on("popstate", function () {
+            const popstateEvent = `popstate.${modalId}`;
+            $(window).off(popstateEvent).on(popstateEvent, function () {
                 openModalFromUrl();
             });
 
@@ -851,16 +872,18 @@ function pushStateModal({
 
                 const newUrl = `${currentUrl.pathname}${currentUrl.search}${window.location.hash}`;
                 history.pushState(null, null, newUrl);
+                
+                resetModal();
             });
         }
 
         openModalFromUrl();
-
+        
         if (includeForm) {
             const modalElement = $(`#${modalId}`);
             const submitBtn = modalElement.find('button[type="submit"]');
             
-            modalElement.find('form').on('submit', async function(e) {
+            modalElement.find('form').off('submit').on('submit', async function(e) {
                 e.preventDefault();
                 const form = this;
                 
@@ -870,10 +893,11 @@ function pushStateModal({
                 
                 form.isSubmitting = true;
                 const formData = new FormData(form);
+                formType === 'edit' && formData.append('_method', 'PATCH');
                 const url = $(this).attr('action');
                 
                 setButtonLoading(submitBtn, true);
-                
+                 
                 try {
                     const result = await fetchRequest(url, 'POST', formData);
                     if (result) {
@@ -892,9 +916,7 @@ function pushStateModal({
             });
         }
 
-        if (modalId.length) {
-            resolve(modalId);
-        }
+        resolve(modalId);
     });
 }
 
@@ -911,6 +933,8 @@ function formWizardModal({
     onModalLoaded = null,
     onStepShown = null,
     formSubmitted = null,
+    formType = 'create',
+    tableToRefresh = null,
 }) {
     return new Promise((resolve) => {
         const modalType = btnSelector.replace(/^[.#]/, '').split('-')[0];
@@ -1379,7 +1403,6 @@ function formWizardModal({
 
         modalElement.on('hidden.bs.modal', async function(e) {
             clearModal();
-            modalElement.data('form-submitted', false);
         });
         
         modalElement.find('form').on('submit', async function(e) {
@@ -1392,6 +1415,7 @@ function formWizardModal({
             
             form.isSubmitting = true;
             const formData = new FormData(form);
+            formType === 'edit' && formData.append('_method', 'PATCH');
             const url = $(this).attr('action');
             
             setButtonLoading(submitBtn, true);
@@ -1402,6 +1426,7 @@ function formWizardModal({
                     setButtonLoading(submitBtn, false);
                     modalElement.data('form-submitted', true);
                     modalElement.modal('hide');
+                    if (tableToRefresh) tableToRefresh.ajax.reload();
                     if (typeof formSubmitted === 'function') {
                         formSubmitted();
                     }
