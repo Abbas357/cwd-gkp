@@ -48,7 +48,7 @@ Route::prefix('hr')->as('hr.')->middleware(['can:manage human resource'])->group
         Route::post('/check-sanctioned', [PostingController::class, 'checkSanctionedPost'])->name('check-sanctioned');
         Route::post('/', [PostingController::class, 'store'])->name('store');
         Route::get('/{posting}', [PostingController::class, 'show'])->name('show');
-        Route::get('/{posting}/end', [PostingController::class, 'endPosting'])->name('end');
+        Route::patch('/{posting}/end', [PostingController::class, 'endPosting'])->name('end');
         Route::get('/{posting}/edit', [PostingController::class, 'edit'])->name('edit');
         Route::put('/{posting}', [PostingController::class, 'update'])->name('update');
         Route::delete('/{posting}', [PostingController::class, 'destroy'])->name('destroy');

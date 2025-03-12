@@ -25,7 +25,6 @@
                     <th scope="col">User</th>
                     <th scope="col">Office</th>
                     <th scope="col">Designation</th>
-                    <th scope="col">Districts</th>
                     <th scope="col">Type</th>
                     <th scope="col">Start Date</th>
                     <th scope="col">End Date</th>
@@ -48,7 +47,6 @@
                     { data: "user", searchBuilderType: "string" },
                     { data: "office", searchBuilderType: "string" },
                     { data: "designation", searchBuilderType: "string" },
-                    { data: "districts", searchBuilderType: "string" },
                     { data: "type", searchBuilderType: "string" },
                     { data: "start_date", searchBuilderType: "date" },
                     { data: "end_date", searchBuilderType: "date" },

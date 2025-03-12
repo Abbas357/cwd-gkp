@@ -21,7 +21,7 @@ class PostingController extends Controller
         $status = $request->query('status', 'current');
         
         $postings = Posting::query()
-            ->with(['user', 'office', 'designation', 'districts'])
+            ->with(['user', 'office', 'designation'])
             ->when($status === 'current', function ($query) {
                 return $query->where('is_current', true);
             })
@@ -43,9 +43,6 @@ class PostingController extends Controller
                 })
                 ->addColumn('designation', function ($row) {
                     return $row->designation->name;
-                })
-                ->addColumn('district', function ($row) {
-                    return $row->district->name;
                 })
                 ->editColumn('start_date', function ($row) {
                     return $row->start_date?->format('j, F Y');
@@ -82,12 +79,10 @@ class PostingController extends Controller
         DB::beginTransaction();
         
         try {
-            // End current posting if it exists
             if ($request->end_current && $currentPosting = Posting::where('user_id', $request->user_id)->where('is_current', true)->first()) {
                 $currentPosting->endPosting($request->start_date);
             }
             
-            // Create new posting
             $posting = Posting::create([
                 'user_id' => $request->user_id,
                 'office_id' => $request->office_id,
@@ -99,12 +94,6 @@ class PostingController extends Controller
                 'remarks' => $request->remarks,
             ]);
             
-            // Attach districts if provided
-            if ($request->has('districts')) {
-                $posting->districts()->attach($request->districts);
-            }
-            
-            // Add posting order document if provided
             if ($request->hasFile('posting_order')) {
                 $posting->addMedia($request->file('posting_order'))
                     ->toMediaCollection('posting_orders');
@@ -123,7 +112,7 @@ class PostingController extends Controller
 
     public function show(Posting $posting)
     {
-        $posting->load(['user', 'office', 'designation', 'districts']);        
+        $posting->load(['user', 'office', 'designation']);        
         return view('modules.hr.postings.show', compact('posting'));
     }
 
@@ -132,15 +121,9 @@ class PostingController extends Controller
         $users = User::all();
         $offices = Office::where('status', 'Active')->get();
         $designations = Designation::where('status', 'Active')->get();
-        $districts = District::all();
         $postingTypes = ['Appointment', 'Transfer', 'Promotion', 'Retirement', 'Termination'];
-        
-        $selectedDistricts = $posting->districts->pluck('id')->toArray();
-        
-        return view('modules.hr.postings.edit', compact(
-            'posting', 'users', 'offices', 'designations', 
-            'districts', 'postingTypes', 'selectedDistricts'
-        ));
+                
+        return view('modules.hr.postings.edit', compact('posting', 'users', 'offices', 'designations', 'postingTypes'));
     }
 
     public function update(Request $request, Posting $posting)
@@ -154,21 +137,12 @@ class PostingController extends Controller
             'is_current' => 'boolean',
             'order_number' => 'nullable|string|max:255',
             'remarks' => 'nullable|string',
-            'districts' => 'nullable|array',
-            'districts.*' => 'exists:districts,id',
         ]);
         
         DB::beginTransaction();
         
         try {
             $posting->update($validated);
-            
-            // Sync districts
-            if ($request->has('districts')) {
-                $posting->districts()->sync($request->districts);
-            } else {
-                $posting->districts()->detach();
-            }
             
             // Update posting order if provided
             if ($request->hasFile('posting_order')) {
@@ -192,10 +166,6 @@ class PostingController extends Controller
         DB::beginTransaction();
         
         try {            
-            // Detach districts
-            $posting->districts()->detach();
-            
-            // Delete posting
             $posting->delete();
             
             DB::commit();
@@ -215,16 +185,16 @@ class PostingController extends Controller
         
         try {
             $posting->endPosting($request->end_date);
-            return response()->json(['success' => true]);
+            return response()->json(['success' => 'Posting has been ended']);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+            return response()->json(['error' => 'Posting cannot be ended']);
         }
     }
-
+ 
     public function userPostingHistory(User $user)
     {
         $postings = Posting::where('user_id', $user->id)
-            ->with(['office', 'designation', 'districts'])
+            ->with(['office', 'designation'])
             ->orderBy('start_date', 'desc')
             ->get();
             

@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class District extends Model
 {
     use HasFactory, LogsActivity;
-    
+
     protected $fillable = ['name'];
 
     public function developmentProjects()
@@ -36,13 +36,28 @@ class District extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'district_user', 'district_id', 'user_id');
+        return $this->hasManyThrough(
+            User::class,
+            Office::class,
+            'district_id',
+            'id',
+            'id',
+            'id'
+        )->whereHas('currentPosting', function ($query) {
+            $query->where('is_current', true);
+        })->distinct();
     }
 
-    // Relationship to postings
     public function postings()
     {
-        return $this->belongsToMany(Posting::class, 'district_posting');
+        return $this->hasManyThrough(
+            Posting::class,
+            Office::class,
+            'district_id',
+            'office_id',
+            'id',
+            'id'
+        );
     }
 
     public function office()
@@ -50,18 +65,16 @@ class District extends Model
         return $this->hasOne(Office::class);
     }
 
-    // Get all offices responsible for this district (direct and ancestors)
     public function responsibleOffices()
     {
         $districtOffice = $this->office;
         if (!$districtOffice) {
             return collect();
         }
-        
-        // Include the direct office and all its ancestors
+
         $offices = collect([$districtOffice]);
         $offices = $offices->merge($districtOffice->getAncestors());
-        
+
         return $offices;
     }
 
@@ -69,10 +82,10 @@ class District extends Model
     public function currentOfficers()
     {
         $officeIds = $this->responsibleOffices()->pluck('id');
-        
-        return User::whereHas('currentPosting', function($query) use ($officeIds) {
+
+        return User::whereHas('currentPosting', function ($query) use ($officeIds) {
             $query->whereIn('office_id', $officeIds)
-                  ->where('is_current', true);
+                ->where('is_current', true);
         })->get();
     }
 
@@ -83,27 +96,27 @@ class District extends Model
         if (!$districtOffice) {
             return null;
         }
-        
-        return User::whereHas('currentPosting', function($query) use ($districtOffice) {
+
+        return User::whereHas('currentPosting', function ($query) use ($districtOffice) {
             $query->where('office_id', $districtOffice->id)
-                  ->where('is_current', true);
+                ->where('is_current', true);
         })->first();
     }
 
     // Get the chain of command for this district
-    public function getDistrictChainOfCommand() 
+    public function getDistrictChainOfCommand()
     {
         $chain = collect();
         $responsibleOffices = $this->responsibleOffices();
-        
+
         foreach ($responsibleOffices as $office) {
-            $headUser = User::whereHas('currentPosting', function($query) use ($office) {
+            $headUser = User::whereHas('currentPosting', function ($query) use ($office) {
                 $query->where('office_id', $office->id)
-                      ->where('is_current', true);
+                    ->where('is_current', true);
             })
-            ->with(['currentDesignation', 'currentOffice'])
-            ->first();
-            
+                ->with(['currentDesignation', 'currentOffice'])
+                ->first();
+
             if ($headUser) {
                 $chain->push([
                     'user' => $headUser,
@@ -112,7 +125,7 @@ class District extends Model
                 ]);
             }
         }
-        
+
         return $chain;
     }
 }
