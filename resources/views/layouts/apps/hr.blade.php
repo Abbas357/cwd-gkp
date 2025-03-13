@@ -37,18 +37,18 @@
             @can('view organization chart')
             <li>
                 <a href="{{ route('admin.apps.hr.org-chart') }}">
-                    <i class="bi-diagram-3 text-info fs-6"></i>Organization Chart
+                    <i class="bi-diagram-3 text-info"></i>Organization Chart
                 </a>
             </li>
             @endcan
             @can('view organogram')
             <li>
                 <a href="{{ route('admin.apps.hr.organogram.index') }}">
-                    <i class="bi-diagram-3 text-primary fs-6"></i>Organogram
+                    <i class="bi-diagram-3 text-primary"></i>Organogram
                 </a>
             </li>
             @endcan
-        </ul>        
+        </ul>
     </li>
     @endcanany
 
@@ -79,7 +79,8 @@
         <ul class="p-2 menu-items">
             @can('view any office')
             <li>
-                <a href="{{ route('admin.apps.hr.offices.index') }}"><i class="bi-building text-warning"></i>Offices</a>
+                <a href="{{ route('admin.apps.hr.offices.index') }}">
+                    <i class="bi-building text-warning"></i>Offices</a>
             </li>
             @endcan
 

@@ -41,7 +41,7 @@
                             <div class="card-body search-content">
                                 <p class="search-title">Recent Searches</p>
                                 <div class="d-flex align-items-start flex-wrap gap-2 kewords-wrapper">
-                                    <a href="javascript:;" class="kewords"><span>E-Bidding</span><i class="bi-search fs-6"></i></a>
+                                    <a href="javascript:;" class="kewords"><span>E-Bidding</span><i class="bi-search"></i></a>
                                 </div>
                                 <hr>
                                 <p class="search-title">Searches</p>

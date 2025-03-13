@@ -23,8 +23,14 @@
     <link href="{{ asset('admin/css/bordered-theme.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/responsive.css') }}" rel="stylesheet">
     <script>
+
         if(localStorage.getItem('theme') === 'dark') {
             document.documentElement.setAttribute('data-bs-theme', 'dark');
+        } else if(localStorage.getItem('theme')) {
+            document.documentElement.setAttribute('data-bs-theme', localStorage.getItem('theme'));
+        }
+        if(localStorage.getItem('sidebar-toggled') === 'true') {
+            document.body.classList.add('toggled');
         }
     </script>
     @stack('style')

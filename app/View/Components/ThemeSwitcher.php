@@ -24,6 +24,6 @@ class ThemeSwitcher extends Component
 
     public function render()
     {
-        return view('components.theme-switcher');
+        return view('layouts.partials.admin.components.theme-switcher');
     }
 }

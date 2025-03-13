@@ -297,10 +297,10 @@ $(document).ready(function () {
                                     <p class="mb-0 notify-desc">By ${
                                         activity.causer_name
                                     } ${
-                        activity.subject_type
-                            ? "on " + activity.subject_type
-                            : ""
-                    }</p>
+                                        activity.subject_type
+                                            ? "on " + activity.subject_type
+                                            : ""
+                                    }</p>
                                     <p class="mb-0 notify-time">${
                                         activity.time
                                     }</p>

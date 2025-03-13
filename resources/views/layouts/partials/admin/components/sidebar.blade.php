@@ -7,7 +7,10 @@
                 <img src="{{ $logoUrl }}" alt="Main Logo" class="mt-2">
             </a>
 
-            <span class="vertical-divider">|</span>
+            
+            <div class="sidebar-expanded-only">
+                <span class="vertical-divider vertical-app-bar">|</span>
+            </div>
 
             <a href="{{ $appUrl }}" class="logo-name flex-grow-1 mt-2">
                 <h5 class="mb-0 fs-6 fw-bold gradient-text">

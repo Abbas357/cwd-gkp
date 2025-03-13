@@ -469,6 +469,9 @@ input::placeholder {
 }
 
 .sidebar-wrapper .sidebar-nav .metismenu a .parent-icon {
+    padding: .3rem;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.08);
     line-height: 1;
 }
 
@@ -553,7 +556,7 @@ input::placeholder {
 }
 
 .sidebar-wrapper .menu-label {
-    padding: 10px 16px 10px 16px;
+    padding: 10px 16px 10px 5px;
     color: #b0afaf;
     text-transform: uppercase;
     font-size: 12px;
@@ -630,6 +633,23 @@ input::placeholder {
     body.toggled:not(.sidebar-hovered) .sidebar-bottom .dropdown-help {
         display: none;
     }
+}
+
+.sidebar-expanded-only {
+    display: none; /* Hidden by default */
+}
+
+body:not(.toggled) .sidebar-expanded-only {
+    display: block; /* Show when sidebar is expanded */
+}
+
+/* If you need the reverse (show only when sidebar is collapsed) */
+.sidebar-collapsed-only {
+    display: none; /* Hidden by default */
+}
+
+body.toggled .sidebar-collapsed-only {
+    display: block; /* Show when sidebar is collapsed */
 }
 
 .chip {
