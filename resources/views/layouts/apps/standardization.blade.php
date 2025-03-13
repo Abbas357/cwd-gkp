@@ -9,11 +9,21 @@
 @if ($showAside)
 <x-sidebar app-name="STANDARDIZATION" app-url="{{ route('admin.apps.standardizations.index') }}">
     @can('view any standardization')
-    <li><a href="{{ route('admin.apps.standardizations.index') }}"><i class="bi-patch-check-fill text-success"></i>&nbsp; Standardizations</a></li>
+    <li>
+        <a href="{{ route('admin.apps.standardizations.index') }}">
+            <div class="parent-icon"><i class="bi-patch-check-fill text-success"></i></div>
+            <div class="menu-title">Standardizations</div>
+        </a>
+    </li>
     @endcan
 
     @can('view any standardization')
-    <li><a href="{{ route('standardizations.login.get') }}"><i class="bi-flag text-warning"></i>&nbsp; Reports</a></li>
+    <li>
+        <a href="{{ route('standardizations.login.get') }}">
+            <div class="parent-icon"><i class="bi-flag text-warning"></i></div>
+            <div class="menu-title">Reports</div>
+        </a>
+    </li>
     @endcan
 </x-sidebar>
 @endif

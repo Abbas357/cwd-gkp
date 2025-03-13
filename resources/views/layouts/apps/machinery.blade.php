@@ -9,15 +9,30 @@
 @if ($showAside)
 <x-sidebar app-name="MACHINERY MGT." app-url="{{ route('admin.apps.machineries.index') }}">
     @can('view any machinery')
-    <li><a href="{{ route('admin.apps.machineries.index') }}"><i class="bi-bus-front text-info"></i>&nbsp; Home</a></li>
+    <li>
+        <a href="{{ route('admin.apps.machineries.index') }}">
+            <div class="parent-icon"><i class="bi-bus-front text-info"></i></div>
+            <div class="menu-title">Home</div>
+        </a>
+    </li>
     @endcan
 
     @can('view any machinery')
-    <li><a href="{{ route('admin.apps.machineries.all') }}"><i class="bi-speedometer text-success"></i>&nbsp; Machinery</a></li>
+    <li>
+        <a href="{{ route('admin.apps.machineries.all') }}">
+            <div class="parent-icon"><i class="bi-speedometer text-success"></i></div>
+            <div class="menu-title">Machinery</div>
+        </a>
+    </li>
     @endcan
 
-    @can('view  machinery report')
-    <li><a href="{{ route('admin.apps.machineries.reports') }}"><i class="bi-flag text-info"></i>&nbsp; Reports</a></li>
+    @can('view machinery report')
+    <li>
+        <a href="{{ route('admin.apps.machineries.reports') }}">
+            <div class="parent-icon"><i class="bi-flag text-info"></i></div>
+            <div class="menu-title">Reports</div>
+        </a>
+    </li>
     @endcan
 </x-sidebar>
 @endif

@@ -10,25 +10,45 @@
 
     @can('view settings')
     <li>
-        <a href="{{ route('admin.settings.index') }}"><i class="bi-gear text-success"></i>&nbsp; Settings</a>
+        <a href="{{ route('admin.settings.index') }}">
+            <div class="parant-icon">
+                <i class="bi-gear text-success"></i>
+            </div>
+            <div class="menu-title">Settings </div>
+        </a>
     </li>
     @endcan
 
     @can('view any category')
     <li>
-        <a href="{{ route('admin.categories.index') }}"><i class="bi-tags text-success"></i>&nbsp; Categories</a>
+        <a href="{{ route('admin.categories.index') }}">
+            <div class="parant-icon">
+                <i class="bi-tags text-info"></i>
+            </div>
+            <div class="menu-title">Categories </div>
+        </a>
     </li>
     @endcan
 
     @can('view any district')
     <li>
-        <a href="{{ route('admin.districts.index') }}"><i class="bi-map text-success"></i>&nbsp; Districts</a>
+        <a href="{{ route('admin.districts.index') }}">
+            <div class="parant-icon">
+                <i class="bi-map text-primary"></i>
+            </div>
+            <div class="menu-title">Districts </div>
+        </a>
     </li>
     @endcan
 
     @can('view any district')
     <li>
-        <a href="{{ route('admin.activity.index') }}"><i class="bi-clipboard-pulse text-success"></i>&nbsp; Activity Log</a>
+        <a href="{{ route('admin.activity.index') }}">
+            <div class="parant-icon">
+                <i class="bi-clipboard-pulse text-warning"></i>
+            </div>
+            <div class="menu-title">Activity Log</div>
+        </a>
     </li>
     @endcan
 

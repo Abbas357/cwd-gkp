@@ -9,12 +9,26 @@
 <x-sidebar app-name="CONTRACTOR" app-url="{{ route('admin.apps.contractors.index') }}">
     @can('view any contractor')
     <li>
-        <a href="{{ route('admin.apps.contractors.index') }}"><i class="bi-person-vcard text-success"></i>&nbsp; Contractor List</a>
+        <a href="{{ route('admin.apps.contractors.index') }}">
+            <div class="parent-icon">
+                <i class="bi-person-vcard text-primary"></i>
+            </div>
+            <div class="menu-title">
+                Contractor List
+            </div>
+        </a>
     </li>
     @endcan
     @can('view any contractor')
     <li>
-        <a href="{{ route('admin.apps.contractors.registration.index') }}"><i class="bi-list-check text-success"></i>&nbsp; Registrations</a>
+        <a href="{{ route('admin.apps.contractors.registration.index') }}">
+            <div class="parent-icon">
+                <i class="bi-list-check text-secondary"></i>
+            </div>
+            <div class="menu-title">
+                Registrations
+            </div>
+        </a>
     </li>
     @endcan
 </x-sidebar>

@@ -433,7 +433,9 @@ input::placeholder {
 }
 
 .sidebar-wrapper .sidebar-nav .metismenu li+li {
-    margin-top: 5px;
+    padding: .1rem;
+    margin-top: 0px !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .sidebar-wrapper .sidebar-nav .metismenu li:first-child {
@@ -471,23 +473,23 @@ input::placeholder {
 }
 
 .sidebar-wrapper .sidebar-nav .metismenu a .menu-title {
-    margin-left: 10px;
+    margin-left: 1.2rem;
 }
 
 .sidebar-wrapper .sidebar-nav .metismenu a:active {
-    color: #00A76F;
+    color: rgba(0, 0, 0, 0.5);
     text-decoration: none;
-    background-color: rgba(0, 167, 111, 0.12);
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 .sidebar-wrapper .sidebar-nav .metismenu a:focus {
     text-decoration: none;
-    background-color: rgba(0, 167, 111, 0.12);
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 .sidebar-wrapper .sidebar-nav .metismenu a:hover {
     text-decoration: none;
-    background-color: rgba(0, 167, 111, 0.09);
+    background-color: rgba(0, 0, 0, 0.05)
 }
 
 .sidebar-wrapper .sidebar-nav .metismenu ul {
@@ -496,13 +498,13 @@ input::placeholder {
 }
 
 .sidebar-wrapper .sidebar-nav .metismenu ul a {
-    padding: 6px 15px 6px 20px;
+    padding: 6px 5px 6px 25px;
     font-size: 15px;
     border: 0;
 }
 
 .sidebar-wrapper .sidebar-nav .metismenu ul a i {
-    margin-right: 5px;
+    margin-right: 1rem;
 }
 
 .sidebar-wrapper .sidebar-nav .metismenu ul ul a {
@@ -514,9 +516,9 @@ input::placeholder {
 }
 
 .sidebar-wrapper .sidebar-nav .metismenu .mm-active>a {
-    color: #00A76F;
+    color: rgba(0, 0, 0, 0.5);
     text-decoration: none;
-    background-color: rgba(0, 167, 111, 0.12);
+    background-color: rgba(0, 0, 0, 0.07);
 }
 
 .sidebar-wrapper .sidebar-bottom {
