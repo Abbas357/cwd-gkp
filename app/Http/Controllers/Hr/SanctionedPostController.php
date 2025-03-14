@@ -74,7 +74,6 @@ class SanctionedPostController extends Controller
             'office_id' => 'required|exists:offices,id',
             'designation_id' => 'required|exists:designations,id',
             'total_positions' => 'required|integer|min:1',
-            'status' => 'sometimes|in:Active,Inactive',
         ]);
         try {
             DB::beginTransaction();
@@ -94,7 +93,6 @@ class SanctionedPostController extends Controller
             $sanctionedPost->office_id = $request->office_id;
             $sanctionedPost->designation_id = $request->designation_id;
             $sanctionedPost->total_positions = $request->total_positions;
-            $sanctionedPost->status = $request->status ?? 'Active';
             
             $sanctionedPost->save();
             
@@ -197,6 +195,76 @@ class SanctionedPostController extends Controller
         }
     }
 
+    public function quickCreate(Request $request)
+    {
+        $request->validate([
+            'office_id' => 'required|exists:offices,id',
+            'designation_id' => 'required|exists:designations,id',
+            'total_positions' => 'required|integer|min:1',
+        ]);
+        
+        try {
+            // Check if this combination already exists
+            $exists = SanctionedPost::where('office_id', $request->office_id)
+                ->where('designation_id', $request->designation_id)
+                ->exists();
+
+            if ($exists) {
+                return response()->json([
+                    'error' => 'A sanctioned post already exists for this office and designation combination.'
+                ], 422);
+            }
+
+            $sanctionedPost = SanctionedPost::create([
+                'office_id' => $request->office_id,
+                'designation_id' => $request->designation_id,
+                'total_positions' => $request->total_positions,
+                'status' => 'Active'
+            ]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Sanctioned post created successfully',
+                'sanctioned_post' => $sanctionedPost
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to create sanctioned post: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function checkExists(Request $request)
+    {
+        $officeId = $request->input('office_id');
+        $designationId = $request->input('designation_id');
+        
+        $sanctionedPost = SanctionedPost::where('office_id', $officeId)
+            ->where('designation_id', $designationId)
+            ->where('status', 'Active')
+            ->first();
+        
+        if (!$sanctionedPost) {
+            return response()->json([
+                'exists' => false
+            ]);
+        }
+        
+        $filledPositions = Posting::where('office_id', $officeId)
+            ->where('designation_id', $designationId)
+            ->where('is_current', true)
+            ->count();
+        
+        return response()->json([
+            'exists' => true,
+            'total' => $sanctionedPost->total_positions,
+            'filled' => $filledPositions,
+            'vacant' => $sanctionedPost->total_positions - $filledPositions,
+            'is_full' => ($sanctionedPost->total_positions - $filledPositions) <= 0
+        ]);
+    }
+
     public function destroy(SanctionedPost $sanctionedPost)
     {
         if (request()->user()->isAdmin()) {
@@ -218,36 +286,45 @@ class SanctionedPostController extends Controller
     }
     
     public function getAvailablePositions(Request $request)
-{
-    $officeId = $request->input('office_id');
-    $userId = $request->input('user_id');
-    
-    $sanctionedPosts = SanctionedPost::where('office_id', $officeId)
-        ->where('status', 'Active')
-        ->with('designation')
-        ->get()
-        ->map(function($post) use ($userId, $officeId) {
-            $currentUserHasPosting = Posting::where('user_id', $userId)
-                ->where('designation_id', $post->designation_id)
-                ->where('office_id', $officeId)
-                ->where('is_current', true)
-                ->exists();
-                
-            return [
-                'id' => $post->designation_id,
-                'name' => $post->designation->name,
-                'total' => $post->total_positions,
-                'filled' => $post->filledPositions,
-                'vacant' => $post->vacancies,
-                'is_full' => $post->vacancies <= 0,
-                'current_user' => $currentUserHasPosting
-            ];
-        })
-        ->filter(function($post) {
-            return $post['vacant'] > 0 || $post['current_user'];
-        })
-        ->values(); // Reindex the array after filtering
+    {
+        $officeId = $request->input('office_id');
+        $userId = $request->input('user_id');
         
-    return response()->json($sanctionedPosts);
-}
+        $sanctionedPosts = SanctionedPost::where('office_id', $officeId)
+            ->where('status', 'Active')
+            ->with('designation')
+            ->get()
+            ->map(function($post) use ($userId, $officeId) {
+                // Check if the user already has this posting
+                $currentUserHasPosting = Posting::where('user_id', $userId)
+                    ->where('designation_id', $post->designation_id)
+                    ->where('office_id', $officeId)
+                    ->where('is_current', true)
+                    ->exists();
+                    
+                // Get filled positions count
+                $filledPositions = Posting::where('designation_id', $post->designation_id)
+                    ->where('office_id', $officeId)
+                    ->where('is_current', true)
+                    ->count();
+                    
+                return [
+                    'id' => $post->designation_id, // Important: This should match the designation_id 
+                    'designation_id' => $post->designation_id, // Add as fallback
+                    'name' => $post->designation->name,
+                    'total' => $post->total_positions,
+                    'filled' => $filledPositions,
+                    'vacant' => $post->total_positions - $filledPositions,
+                    'is_full' => ($post->total_positions - $filledPositions) <= 0,
+                    'current_user' => $currentUserHasPosting
+                ];
+            })
+            ->filter(function($post) use ($userId) {
+                // Return both: those with vacancies OR where the current user is already posted
+                return $post['vacant'] > 0 || $post['current_user'];
+            })
+            ->values(); // Reindex the array after filtering
+            
+        return response()->json($sanctionedPosts);
+    }
 }

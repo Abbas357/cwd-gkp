@@ -22,6 +22,7 @@ Route::prefix('hr')->as('hr.')->middleware(['can:manage human resource'])->group
         Route::get('/', [UserController::class, 'index'])->name('index')->can('viewAny', App\Models\User::class);
         Route::get('/api', [UserController::class, 'users'])->name('api')->withoutMiddleware(['can:manage website']);
         Route::get('/create', [UserController::class, 'create'])->name('create')->can('create', App\Models\User::class);
+        Route::get('/current-posting', [UserController::class, 'getCurrentPosting'])->name('current-posting');
         Route::get('/edit/{user}', [UserController::class, 'edit'])->name('edit')->can('update',  'user');
         Route::patch('/activate/{user}', [UserController::class, 'activateUser'])->name('activate')->can('activate', 'user');
         Route::patch('/archive/{user}', [UserController::class, 'archiveUser'])->name('archive')->can('archive', 'user');
@@ -36,6 +37,8 @@ Route::prefix('hr')->as('hr.')->middleware(['can:manage human resource'])->group
         Route::get('/create', [SanctionedPostController::class, 'create'])->name('create');
         Route::post('/', [SanctionedPostController::class, 'store'])->name('store');
         Route::get('/available-positions', [SanctionedPostController::class, 'getAvailablePositions'])->name('available-positions');
+        Route::post('/quick-create', [SanctionedPostController::class, 'quickCreate'])->name('quick-create');
+        Route::get('/check-exists', [SanctionedPostController::class, 'checkExists'])->name('check-exists');
         Route::get('/{sanctionedPost}', [SanctionedPostController::class, 'show'])->name('show');
         Route::get('/{sanctionedPost}/edit', [SanctionedPostController::class, 'edit'])->name('edit');
         Route::patch('/{sanctionedPost}', [SanctionedPostController::class, 'update'])->name('update');
@@ -46,6 +49,8 @@ Route::prefix('hr')->as('hr.')->middleware(['can:manage human resource'])->group
         Route::get('/', [PostingController::class, 'index'])->name('index');
         Route::get('/create', [PostingController::class, 'create'])->name('create');
         Route::post('/check-sanctioned', [PostingController::class, 'checkSanctionedPost'])->name('check-sanctioned');
+        Route::get('/check-occupancy', [PostingController::class, 'checkOccupancy'])->name('check-occupancy');
+        Route::get('/current-officers', [PostingController::class, 'getCurrentOfficers'])->name('current-officers');
         Route::post('/', [PostingController::class, 'store'])->name('store');
         Route::get('/{posting}', [PostingController::class, 'show'])->name('show');
         Route::patch('/{posting}/end', [PostingController::class, 'endPosting'])->name('end');

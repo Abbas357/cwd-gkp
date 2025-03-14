@@ -244,4 +244,36 @@ class PostingController extends Controller
             'message' => $valid ? 'Sanctioned post is available.' : 'All sanctioned posts are filled.'
         ]);
     }
+
+    public function checkOccupancy(Request $request)
+    {
+        $officeId = $request->input('office_id');
+        $designationId = $request->input('designation_id');
+        
+        $posting = Posting::where('office_id', $officeId)
+            ->where('designation_id', $designationId)
+            ->where('is_current', true)
+            ->with('user')
+            ->first();
+        
+        return response()->json([
+            'is_occupied' => !!$posting,
+            'user' => $posting ? $posting->user : null
+        ]);
+    }
+
+    public function getCurrentOfficers(Request $request)
+    {
+        $officeId = $request->input('office_id');
+        $designationId = $request->input('designation_id');
+        
+        $officers = User::whereHas('currentPosting', function($query) use ($officeId, $designationId) {
+            $query->where('office_id', $officeId)
+                ->where('designation_id', $designationId);
+        })->get();
+        
+        return response()->json([
+            'officers' => $officers
+        ]);
+    }
 }

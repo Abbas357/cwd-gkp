@@ -11,53 +11,87 @@ class UserController extends Controller
 {
     public function contacts()
     {
-        $offices = Office::whereHas('postings.user.profile', function ($query) {
-            $query->whereJsonContains('featured_on', 'ContactOffice');
-        })->get();
-
+        // Get regional offices and the Secretary C&W office
+        $offices = Office::where('type', 'Regional')
+            ->orWhere('name', 'Secretary C&W')
+            ->get();
+        
         $contactsByOffice = $offices->sortByDesc(function ($office) {
-            // Get the highest BPS user in this office
+            // Find the top-ranked user in this office for sorting purposes
             $topUser = User::whereHas('currentPosting', function ($query) use ($office) {
                 $query->where('office_id', $office->id);
             })
-                ->whereHas('currentDesignation', function ($query) {
-                    $query->orderByDesc('bps');
-                })
-                ->whereHas('profile', function ($query) {
-                    $query->whereJsonContains('featured_on', 'Contact');
-                })
-                ->with(['currentDesignation', 'profile'])
-                ->first();
-
-            return $topUser ? (is_numeric($topUser->currentDesignation->bps) ? $topUser->currentDesignation->bps : 0) : 0;
-        })->mapWithKeys(function ($office) {
-            // Get all featured contacts for this office
-            $contacts = User::whereHas('currentPosting', function ($query) use ($office) {
-                $query->where('office_id', $office->id);
+            ->whereHas('currentPosting.designation', function ($query) {
+                $query->orderByDesc('bps');
             })
-                ->whereHas('profile', function ($query) {
-                    $query->whereJsonContains('featured_on', 'Contact');
-                })
-                ->with(['profile', 'currentDesignation', 'currentOffice'])
-                ->get()
-                ->sortByDesc(function ($user) {
-                    return $user->currentDesignation ?
-                        (is_numeric($user->currentDesignation->bps) ? $user->currentDesignation->bps : 0) : 0;
-                })
-                ->map(function ($user) {
-                    // Transform to match the expected format in the view
-                    return (object) [
-                        'name' => $user->name,
-                        'position' => $user->currentDesignation ? $user->currentDesignation->name : 'N/A',
-                        'office' => $user->currentOffice ? $user->currentOffice->name : 'N/A',
-                        'bps' => $user->currentDesignation ? $user->currentDesignation->bps : null,
-                        'mobile_number' => $user->profile ? $user->profile->mobile_number : null,
-                        'landline_number' => $user->profile ? $user->profile->landline_number : null,
-                        'facebook' => $user->profile ? $user->profile->facebook : null,
-                        'twitter' => $user->profile ? $user->profile->twitter : null,
-                        'whatsapp' => $user->profile ? $user->profile->whatsapp : null,
-                    ];
+            ->featuredOnContact()
+            ->with(['currentPosting.designation', 'profile'])
+            ->first();
+
+            return $topUser && $topUser->currentPosting && $topUser->currentPosting->designation ? 
+                (is_numeric($topUser->currentPosting->designation->bps) ? $topUser->currentPosting->designation->bps : 0) : 0;
+        })->mapWithKeys(function ($office) {
+            // Base query for contacts
+            $query = User::whereHas('profile', function ($q) {
+                $q->whereJsonContains('featured_on', 'Contact');
+            })
+            ->with(['profile', 'currentPosting.designation', 'currentPosting.office']);
+            
+            if ($office->name === 'Secretary C&W') {
+                // For Secretary C&W, get all users in offices of type 'Secretariat'
+                $query->whereHas('currentPosting.office', function ($q) {
+                    $q->where('type', 'Secretariat');
                 });
+            } else {
+                // Get direct office members
+                $officeIds = [$office->id];
+                
+                // Also include all subordinate offices (for all team members)
+                $descendantOffices = $office->getAllDescendants();
+                if ($descendantOffices->isNotEmpty()) {
+                    $officeIds = array_merge($officeIds, $descendantOffices->pluck('id')->toArray());
+                }
+                
+                $query->whereHas('currentPosting', function ($q) use ($officeIds) {
+                    $q->whereIn('office_id', $officeIds);
+                });
+            }
+            
+            $contactsWithBps = $query->get()->map(function($user) {
+                $bpsValue = 0;
+                if ($user->currentPosting && $user->currentPosting->designation) {
+                    $bpsRaw = $user->currentPosting->designation->bps;
+                    if (preg_match('/(\d+)/', $bpsRaw, $matches)) {
+                        $bpsValue = (int)$matches[1];
+                    }
+                }
+                
+                return [
+                    'user' => $user,
+                    'bps_value' => $bpsValue
+                ];
+            });
+            
+            $sortedContacts = $contactsWithBps->sortByDesc('bps_value');
+            
+            // Map to the final format
+            $contacts = $sortedContacts->map(function ($item) {
+                $user = $item['user'];
+                return (object) [
+                    'name' => $user->name,
+                    'position' => $user->currentPosting && $user->currentPosting->designation ? 
+                        $user->currentPosting->designation->name : 'N/A',
+                    'office' => $user->currentPosting && $user->currentPosting->office ? 
+                        $user->currentPosting->office->name : 'N/A',
+                    'bps' => $user->currentPosting && $user->currentPosting->designation ? 
+                        $user->currentPosting->designation->bps : null,
+                    'mobile_number' => $user->profile ? $user->profile->mobile_number : null,
+                    'landline_number' => $user->profile ? $user->profile->landline_number : null,
+                    'facebook' => $user->profile ? $user->profile->facebook : null,
+                    'twitter' => $user->profile ? $user->profile->twitter : null,
+                    'whatsapp' => $user->profile ? $user->profile->whatsapp : null,
+                ];
+            });
 
             return [$office->name => $contacts];
         });
@@ -104,9 +138,6 @@ class UserController extends Controller
         return $userData;
     }
 
-    /**
-     * Get detailed user information
-     */
     public function getUserDetails($uuid)
     {
         $user = User::withoutGlobalScope('active')
@@ -120,10 +151,8 @@ class UserController extends Controller
             return response()->json(['success' => false, 'message' => 'User not found.'], 404);
         }
 
-        // Get current posting info
         $currentPosting = $user->currentPosting;
 
-        // Get profile info
         $profile = $user->profile;
 
         $userData = [
@@ -160,9 +189,6 @@ class UserController extends Controller
         return view('site.users.detail', ['user' => $userData]);
     }
 
-    /**
-     * Display team page
-     */
     public function team()
     {
         $roles = [
@@ -202,7 +228,7 @@ class UserController extends Controller
                 $query = $criteria['callback']($query);
             } else {
                 $query->whereHas('currentDesignation', function ($q) use ($criteria) {
-                    $q->where('name', $criteria['designation']);
+                    $q->where('name', 'LIKE', '%'.$criteria['designation'].'%');
                 });
             }
 

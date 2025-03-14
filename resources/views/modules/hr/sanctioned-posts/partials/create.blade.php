@@ -32,17 +32,7 @@
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
-
-    <div class="col-md-12 mb-3">
-        <label for="status">Status</label>
-        <select class="form-select" id="status" name="status">
-            <option value="Active" selected>Active</option>
-            <option value="Inactive">Inactive</option>
-        </select>
-        @error('status')
-        <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
+    
 </div>
 
 <script>

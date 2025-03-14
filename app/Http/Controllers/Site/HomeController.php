@@ -8,7 +8,9 @@ use App\Models\Page;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\Slider;
+use App\Models\Tender;
 use App\Models\Gallery;
+use App\Models\Seniority;
 use Illuminate\Http\Request;
 use App\Models\SiteNotification;
 use App\Http\Controllers\Controller;
@@ -50,43 +52,51 @@ class HomeController extends Controller
     public function messagePartial()
     {
         $data = Cache::remember('message_partial', 1440, function () {
-            $minister = User::select('id','uuid', 'name', 'title', 'designation', 'position', 'message')
-                ->where('position', 'minister')
-                ->with('media')
+            // Find the minister
+            $minister = User::select('id', 'uuid', 'name')
+                ->with(['currentPosting.designation', 'profile', 'media'])
+                ->whereHas('currentPosting.designation', function($query) {
+                    $query->where('name', 'Minister');
+                })
                 ->latest('created_at')
                 ->first();
-
-            $secretary = User::select('id', 'uuid', 'name', 'title', 'designation', 'position', 'message')
-                ->where('position', 'secretary')
-                ->with('media')
+            
+            // Find the secretary
+            $secretary = User::select('id', 'uuid', 'name')
+                ->with(['currentPosting.designation', 'profile', 'media'])
+                ->whereHas('currentPosting.designation', function($query) {
+                    $query->where('name', 'Secretary');
+                })
                 ->latest('created_at')
                 ->first();
-
+            
+            // Format minister data if exists
             $ministerData = $minister ? [
                 'id' => $minister->id,
                 'uuid' => $minister->uuid,
                 'name' => $minister->name,
-                'title' => $minister->title,
-                'designation' => $minister->designation,
-                'position' => $minister->position,
-                'message' => $minister->message,
-                'image' => $minister->getFirstMediaUrl('profile_pictures', 'small')
+                'title' => $minister->currentPosting->designation->name ?? null,
+                'designation' => $minister->currentPosting->designation->name ?? null,
+                'position' => $minister->currentPosting->designation->name ?? 'minister',
+                'message' => $minister->profile->message ?? null,
+                'image' => $minister->getFirstMediaUrl('profile_pictures', 'small') ?: asset('admin/images/default-avatar.jpg')
             ] : null;
-
+            
+            // Format secretary data if exists
             $secretaryData = $secretary ? [
                 'id' => $secretary->id,
                 'uuid' => $secretary->uuid,
                 'name' => $secretary->name,
-                'title' => $secretary->title,
-                'designation' => $secretary->designation,
-                'position' => $secretary->position,
-                'message' => $secretary->message,
-                'image' => $secretary->getFirstMediaUrl('profile_pictures', 'small')
+                'title' => $secretary->currentPosting->designation->name ?? null,
+                'designation' => $secretary->currentPosting->designation->name ?? null,
+                'position' => $secretary->currentPosting->designation->name ?? 'secretary',
+                'message' => $secretary->profile->message ?? null,
+                'image' => $secretary->getFirstMediaUrl('profile_pictures', 'small') ?: asset('admin/images/default-avatar.jpg')
             ] : null;
-
+            
             return compact('ministerData', 'secretaryData');
         });
-
+        
         return view('site.home.partials.message', $data);
     }
 
@@ -192,24 +202,28 @@ class HomeController extends Controller
     public function teamPartial()
     {
         $users = Cache::remember('team_partial', 43200, function () {
-            return User::select('id', 'name', 'uuid', 'title', 'position', 'bps')
+            return User::select('id', 'name', 'uuid')
                 ->featuredOnHome()
-                ->with('media')
+                ->with(['currentPosting.designation', 'profile', 'media'])
                 ->latest('created_at')
                 ->get()
                 ->map(function ($user) {
+                    $profile = $user->profile ?? null;
+                    $currentPosting = $user->currentPosting ?? null;
+                    $designation = $currentPosting ? $currentPosting->designation : null;
+                    
                     return [
                         'id' => $user->id,
                         'uuid' => $user->uuid,
                         'name' => $user->name,
-                        'title' => $user->title ?? 'N/A',
-                        'designation' => $user->designation ?? 'N/A',
-                        'position' => $user->position ?? 'N/A',
-                        'facebook' => $user->facebook ?? '#',
-                        'twitter' => $user->twitter ?? '#',
-                        'whatsapp' => $user->whatsapp ?? '#',
-                        'mobile_number' => $user->mobile_number ?? '#',
-                        'landline_number' => $user->landline_number ?? '#',
+                        'title' => $designation ? $designation->name : 'N/A',
+                        'designation' => $designation ? $designation->name : 'N/A',
+                        'position' => $designation ? $designation->name : 'N/A',
+                        'facebook' => $profile ? $profile->facebook : '#',
+                        'twitter' => $profile ? $profile->twitter : '#',
+                        'whatsapp' => $profile ? $profile->whatsapp : '#',
+                        'mobile_number' => $profile ? $profile->mobile_number : '#',
+                        'landline_number' => $profile ? $profile->landline_number : '#',
                         'image' => $user->getFirstMediaUrl('profile_pictures', 'small')
                             ?: asset('admin/images/default-avatar.jpg')
                     ];
@@ -250,11 +264,11 @@ class HomeController extends Controller
             ->get()
             ->map(function ($notification) {
                 $info = [
-                    \App\Models\Tender::class => ['bi-file-earmark-text', 'Tenders', '#fcaf4533', route('tenders.index')],
-                    \App\Models\Gallery::class => ['bi-images', 'Galleries', '#00c4ff33', route('gallery.index')],
-                    \App\Models\Event::class => ['bi-clock-history', 'Events', '#2dde9833', route('events.index')],
-                    \App\Models\News::class => ['bi-broadcast', 'News', '#ff000033', route('news.index')],
-                    \App\Models\Seniority::class => ['bi-person-lines-fill', 'Seniorities', '#9146ff33', route('seniority.index')],
+                    Tender::class => ['bi-file-earmark-text', 'Tenders', '#fcaf4533', route('tenders.index')],
+                    Gallery::class => ['bi-images', 'Galleries', '#00c4ff33', route('gallery.index')],
+                    Event::class => ['bi-clock-history', 'Events', '#2dde9833', route('events.index')],
+                    News::class => ['bi-broadcast', 'News', '#ff000033', route('news.index')],
+                    Seniority::class => ['bi-person-lines-fill', 'Seniorities', '#9146ff33', route('seniority.index')],
                 ];
 
                 return [

@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Hr;
 use App\Models\User;
 use App\Models\Office;
 
+use App\Models\Posting;
 use App\Models\District;
-use App\Models\Designation;
 
+use App\Models\Designation;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\SanctionedPost;
@@ -202,6 +203,7 @@ class UserController extends Controller
             $bps[] = sprintf("BPS-%02d", $i);
         }
 
+        $posting_types = ['Appointment', 'Deputation', 'Transfer', 'Mutual', 'Promotion', 'Suspension', 'OSD', 'Retirement', 'Termination'];
         if (!$user) {
             return response()->json([
                 'success' => false,
@@ -220,6 +222,7 @@ class UserController extends Controller
             'allDesignations' => Designation::where('status', 'Active')->get(),
             'allOffices' => Office::where('status', 'Active')->get(),
             'bps' => $bps,
+            'posting_types' => $posting_types
         ];
 
         $html = view('modules.hr.users.partials.edit', compact('data'))->render();
@@ -236,115 +239,61 @@ class UserController extends Controller
         DB::beginTransaction();
 
         try {
-            $userData = $request->only([
-                'name',
-                'username',
-                'email',
-                'status'
-            ]);
-
+            // Update basic user information
+            $userData = $request->only(['name', 'username', 'email', 'status']);
+            
             if ($request->filled('password')) {
                 $userData['password'] = Hash::make($request->password);
                 $userData['password_updated_at'] = now();
             }
 
             $user->update($userData);
-
+            
+            // Update profile data
             $profileData = $request->input('profile', []);
             if (isset($profileData['featured_on'])) {
                 $profileData['featured_on'] = json_encode($profileData['featured_on']);
             }
-
+            
             $user->profile()->updateOrCreate(
                 ['user_id' => $user->id],
                 $profileData
             );
 
+            // Handle posting changes
             if ($request->has('posting')) {
                 $postingData = $request->input('posting');
-
-                $hasPostingData = !empty($postingData['designation_id']) &&
-                    !empty($postingData['office_id']) &&
-                    !empty($postingData['type']);
-
-                if ($hasPostingData) {
+                $postingType = $postingData['type'] ?? null;
+                
+                if ($postingType && isset($postingData['office_id']) && isset($postingData['designation_id'])) {
                     $currentPosting = $user->currentPosting;
-
-                    $hasPostingChanges = !$currentPosting ||
-                        $currentPosting->designation_id != $postingData['designation_id'] ||
-                        $currentPosting->office_id != $postingData['office_id'] ||
-                        $currentPosting->type != $postingData['type'];
-
-                    if ($hasPostingChanges) {
-                        // Validate against sanctioned posts
-                        $sanctionedPost = \App\Models\SanctionedPost::where('office_id', $postingData['office_id'])
-                            ->where('designation_id', $postingData['designation_id'])
-                            ->where('status', 'Active')
-                            ->first();
-
-                        if (!$sanctionedPost) {
-                            return response()->json([
-                                'error' => 'This position is not sanctioned for the selected office.'
-                            ], 422);
-                        }
-
-                        // Check if there's vacancy (unless it's the same user in the same position)
-                        $isSamePosition = $currentPosting &&
-                            $currentPosting->office_id == $postingData['office_id'] &&
-                            $currentPosting->designation_id == $postingData['designation_id'];
-
-                        if (!$isSamePosition && $sanctionedPost->vacancies <= 0) {
-                            return response()->json([
-                                'error' => 'No vacancy available for this position in the selected office.'
-                            ], 422);
-                        }
-
-                        // End the current posting
-                        if ($currentPosting) {
-                            $currentPosting->update([
-                                'is_current' => false,
-                                'end_date' => now()
-                            ]);
-                        }
-
-                        // Create new posting
-                        $user->postings()->create([
-                            'designation_id' => $postingData['designation_id'],
-                            'office_id' => $postingData['office_id'],
-                            'type' => $postingData['type'],
-                            'start_date' => $postingData['start_date'] ?? now(),
-                            'remarks' => $postingData['remarks'] ?? null,
-                            'is_current' => true,
-                            'order_number' => $postingData['order_number'] ?? null
-                        ]);
-                    } else if ($currentPosting) {
-                        // Update existing posting details
-                        $updateData = [];
-
-                        if (isset($postingData['start_date'])) {
-                            $updateData['start_date'] = $postingData['start_date'];
-                        }
-
-                        if (isset($postingData['remarks'])) {
-                            $updateData['remarks'] = $postingData['remarks'];
-                        }
-
-                        if (isset($postingData['order_number'])) {
-                            $updateData['order_number'] = $postingData['order_number'];
-                        }
-
-                        if (!empty($updateData)) {
-                            $currentPosting->update($updateData);
-                        }
+                    
+                    // Handle based on posting type
+                    switch ($postingType) {
+                        case 'Mutual':
+                            $this->handleMutualTransfer($user, $postingData, $request);
+                            break;
+                            
+                        case 'Retirement':
+                        case 'Suspension':
+                        case 'OSD':
+                            $this->handleSpecialStatus($user, $postingType, $postingData);
+                            break;
+                            
+                        default: // Appointment, Transfer, Promotion
+                            $this->handleRegularPosting($user, $postingData, $request);
+                            break;
                     }
                 }
             }
 
+            // Handle file uploads
             if ($request->hasFile('image')) {
                 $user->addMedia($request->file('image'))
                     ->toMediaCollection('profile_pictures');
             }
 
+            // Handle roles and permissions
             if ($request->has('roles')) {
                 $user->syncRoles($request->roles);
             }
@@ -354,7 +303,6 @@ class UserController extends Controller
             }
 
             DB::commit();
-
             Cache::forget('message_partial');
             Cache::forget('team_partial');
 
@@ -362,6 +310,177 @@ class UserController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => 'Failed to update user: ' . $e->getMessage()]);
+        }
+    }
+
+    private function handleMutualTransfer(User $user, array $postingData, Request $request)
+    {
+        // Get current posting of the user
+        $currentPosting = $user->currentPosting;
+        
+        if (!$currentPosting) {
+            throw new \Exception('Cannot perform mutual transfer. The selected officer does not have an active posting.');
+        }
+        
+        // Check if mutual transfer partner is specified
+        $mutualPartnerId = $request->input('mutual_transfer_user_id');
+        
+        if (!$mutualPartnerId) {
+            // Check if there's someone in the target position
+            $partnerPosting = Posting::where('office_id', $postingData['office_id'])
+                ->where('designation_id', $postingData['designation_id'])
+                ->where('is_current', true)
+                ->first();
+                
+            if (!$partnerPosting) {
+                throw new \Exception('No officer found in the target position for mutual transfer.');
+            }
+            
+            $mutualPartnerId = $partnerPosting->user_id;
+        }
+        
+        $mutualPartner = User::findOrFail($mutualPartnerId);
+        $partnerPosting = $mutualPartner->currentPosting;
+        
+        if (!$partnerPosting) {
+            throw new \Exception('Mutual transfer partner does not have an active posting.');
+        }
+        
+        // End current postings
+        $currentPosting->update([
+            'is_current' => false,
+            'end_date' => now()
+        ]);
+        
+        $partnerPosting->update([
+            'is_current' => false,
+            'end_date' => now()
+        ]);
+        
+        // Create new postings (swapped)
+        $user->postings()->create([
+            'office_id' => $partnerPosting->office_id,
+            'designation_id' => $partnerPosting->designation_id,
+            'type' => 'Mutual',
+            'start_date' => $postingData['start_date'] ?? now(),
+            'remarks' => 'Mutual transfer with ' . $mutualPartner->name,
+            'order_number' => $postingData['order_number'] ?? null,
+            'is_current' => true
+        ]);
+        
+        $mutualPartner->postings()->create([
+            'office_id' => $currentPosting->office_id,
+            'designation_id' => $currentPosting->designation_id,
+            'type' => 'Mutual',
+            'start_date' => $postingData['start_date'] ?? now(),
+            'remarks' => 'Mutual transfer with ' . $user->name,
+            'order_number' => $postingData['order_number'] ?? null,
+            'is_current' => true
+        ]);
+    }
+
+    private function handleSpecialStatus(User $user, string $statusType, array $postingData)
+    {
+        // End current posting if exists
+        if ($currentPosting = $user->currentPosting) {
+            $currentPosting->update([
+                'is_current' => false,
+                'end_date' => now()
+            ]);
+        }
+        
+        // Create new posting with special status
+        $user->postings()->create([
+            'office_id' => null, // No office for these status types
+            'designation_id' => $postingData['designation_id'],
+            'type' => $statusType,
+            'start_date' => $postingData['start_date'] ?? now(),
+            'remarks' => $postingData['remarks'] ?? $statusType . ' status applied',
+            'order_number' => $postingData['order_number'] ?? null,
+            'is_current' => true
+        ]);
+    }
+
+    private function handleRegularPosting(User $user, array $postingData, Request $request)
+    {
+        // Check if vacating another officer
+        if ($request->has('vacate_officer_id')) {
+            $officerToVacate = User::findOrFail($request->input('vacate_officer_id'));
+            $vacateReason = $request->input('vacate_reason', 'Transfer');
+            
+            if ($currentVacatePosting = $officerToVacate->currentPosting) {
+                $currentVacatePosting->update([
+                    'is_current' => false,
+                    'end_date' => now()
+                ]);
+                
+                // If vacating with special status, create appropriate posting
+                if (in_array($vacateReason, ['Retirement', 'Suspension', 'OSD'])) {
+                    $officerToVacate->postings()->create([
+                        'office_id' => null,
+                        'designation_id' => $currentVacatePosting->designation_id,
+                        'type' => $vacateReason,
+                        'start_date' => now(),
+                        'remarks' => 'Vacated for new posting of ' . $user->name,
+                        'is_current' => true
+                    ]);
+                }
+            }
+        }
+        
+        // Check if exceeding sanctioned strength
+        if (!$request->has('override_sanctioned_post')) {
+            $sanctionedPost = SanctionedPost::where('office_id', $postingData['office_id'])
+                ->where('designation_id', $postingData['designation_id'])
+                ->where('status', 'Active')
+                ->first();
+                
+            if (!$sanctionedPost) {
+                throw new \Exception('This position is not sanctioned for the selected office.');
+            }
+            
+            if (!$sanctionedPost->isAvailableForPosting($postingData['type'], $user->id)) {
+                if (!$request->has('excess_justification')) {
+                    throw new \Exception('No vacancy available for this position in the selected office.');
+                }
+            }
+        }
+        
+        // End current posting if exists
+        if ($currentPosting = $user->currentPosting) {
+            $currentPosting->update([
+                'is_current' => false,
+                'end_date' => now()
+            ]);
+        }
+        
+        // Create new posting
+        $newPosting = $user->postings()->create([
+            'office_id' => $postingData['office_id'],
+            'designation_id' => $postingData['designation_id'],
+            'type' => $postingData['type'],
+            'start_date' => $postingData['start_date'] ?? now(),
+            'remarks' => $postingData['remarks'] ?? null,
+            'order_number' => $postingData['order_number'] ?? null,
+            'is_current' => true
+        ]);
+        
+        // If posting order file is provided
+        if ($request->hasFile('posting_order')) {
+            $newPosting->addMedia($request->file('posting_order'))
+                ->toMediaCollection('posting_orders');
+        }
+        
+        // Log if exceeding sanctioned strength
+        if ($request->has('excess_justification')) {
+            activity()
+                ->performedOn($newPosting)
+                ->causedBy($request->user())
+                ->withProperties([
+                    'justification' => $request->input('excess_justification'),
+                    'exceeded_sanctioned_strength' => true
+                ])
+                ->log('Created posting exceeding sanctioned strength');
         }
     }
 
@@ -377,6 +496,18 @@ class UserController extends Controller
         }
 
         return $username;
+    }
+
+    public function getCurrentPosting(Request $request)
+    {
+        $userId = $request->input('user_id');
+        $user = User::findOrFail($userId);
+        
+        $currentPosting = $user->currentPosting()->with(['office', 'designation'])->first();
+        
+        return response()->json([
+            'current_posting' => $currentPosting
+        ]);
     }
 
     public function destroy(User $user)

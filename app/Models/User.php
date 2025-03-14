@@ -101,25 +101,22 @@ class User extends Authenticatable implements HasMedia
 
     public function scopeFeaturedOnHome($query)
     {
-        return $query->where('featured_on', 'LIKE', '%"Home"%');
+        return $query->whereHas('profile', function($q) {
+            $q->where('featured_on', 'LIKE', '%"Home"%');
+        });
     }
 
     public function scopeFeaturedOnTeam($query)
     {
-        return $query->where('featured_on', 'LIKE', '%"Team"%');
+        return $query->whereHas('profile', function($q) {
+            $q->where('featured_on', 'LIKE', '%"Team"%');
+        });
     }
 
     public function scopeFeaturedOnContact($query)
     {
         return $query->whereHas('profile', function($q) {
-            $q->whereJsonContains('featured_on', 'Contact');
-        });
-    }
-
-    public function scopeFeaturedOnContactOffice($query)
-    {
-        return $query->whereHas('profile', function($q) {
-            $q->whereJsonContains('featured_on', 'Contact');
+            $q->where('featured_on', 'LIKE', '%"Contact"%');
         });
     }
 

@@ -5,7 +5,7 @@
 <div class="row" id="step-1">
     <div class="col-md-6 mb-3">
         <label for="name">Name <span class="text-danger">*</span></label>
-        <input type="text" class="form-control" id="name" name="name" required>
+        <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
         @error('name')
         <div class="text-danger">{{ $message }}</div>
         @enderror
@@ -13,7 +13,7 @@
     
     <div class="col-md-6 mb-3">
         <label for="email">Email <span class="text-danger">*</span></label>
-        <input type="email" class="form-control" id="email" name="email" required>
+        <input type="email" class="form-control" id="email" name="email" placeholder="Email Address" required>
         @error('email')
         <div class="text-danger">{{ $message }}</div>
         @enderror
@@ -21,7 +21,7 @@
     
     <div class="col-md-6 mb-3">
         <label for="password">Password <span class="text-danger">*</span></label>
-        <input type="password" class="form-control" id="password" name="password" required>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
         @error('password')
         <div class="text-danger">{{ $message }}</div>
         @enderror
@@ -29,7 +29,7 @@
     
     <div class="col-md-6 mb-3">
         <label for="landline_number">Landline Number</label>
-        <input type="text" class="form-control" id="landline_number" name="profile[landline_number]">
+        <input type="text" class="form-control" id="landline_number" placeholder="Phone/Landline Number" name="profile[landline_number]">
         @error('landline_number')
         <div class="text-danger">{{ $message }}</div>
         @enderror

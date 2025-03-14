@@ -117,6 +117,75 @@ async function fetchRequest(
     }
 }
 
+function fetchReq(url, method = 'GET', data = null, successCallback = null, errorCallback = null) {
+    const options = {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    };
+
+    if (method === 'GET' && data) {
+        const params = new URLSearchParams();
+        Object.keys(data).forEach(key => {
+            params.append(key, data[key]);
+        });
+        url = `${url}?${params.toString()}`;
+    } else if (data) {
+        if (data instanceof FormData) {
+            delete options.headers['Content-Type'];
+            options.body = data;
+        } else {
+            options.body = JSON.stringify(data);
+        }
+    }
+
+    if (method !== 'GET') {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        if (csrfToken) {
+            options.headers['X-CSRF-TOKEN'] = csrfToken;
+        }
+    }
+
+    return fetch(url, options)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (successCallback) {
+                successCallback(data);
+            }
+            return data;
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            if (errorCallback) {
+                errorCallback(error);
+            }
+            return Promise.reject(error);
+        });
+}
+
+function fetchGet(url, data, successCallback, errorCallback) {
+    return fetchReq(url, 'GET', data, successCallback, errorCallback);
+}
+
+function fetchPost(url, data, successCallback, errorCallback) {
+    return fetchReq(url, 'POST', data, successCallback, errorCallback);
+}
+
+function fetchPut(url, data, successCallback, errorCallback) {
+    return fetchReq(url, 'PUT', data, successCallback, errorCallback);
+}
+
+function fetchDelete(url, data, successCallback, errorCallback) {
+    return fetchReq(url, 'DELETE', data, successCallback, errorCallback);
+}
+
 function handleValidationErrors(errors) {
     $(".form-error").remove();
     setButtonLoading($('button[type="submit"]'), false);

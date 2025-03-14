@@ -43,7 +43,7 @@ class Posting extends Model implements HasMedia
     {
         $this->addMediaCollection('posting_orders')
             ->singleFile()
-            ->accepts9MimeTypes(['image/jpeg', 'image/png', 'image/gif', 'application/pdf']);
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'application/pdf']);
     }
 
     public function user()
