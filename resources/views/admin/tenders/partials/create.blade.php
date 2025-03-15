@@ -91,7 +91,7 @@
         const userSelect = $('#load-users');
         userSelect.select2({
             theme: "bootstrap-5"
-            , dropdownParent: $('body')
+            , dropdownParent: $('#load-users').closest('.modal')
             , placeholder: "Select User / Office"
             , allowClear: true
             , ajax: {

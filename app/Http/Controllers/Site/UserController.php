@@ -33,7 +33,7 @@ class UserController extends Controller
         })->mapWithKeys(function ($office) {
             // Base query for contacts
             $query = User::whereHas('profile', function ($q) {
-                $q->whereJsonContains('featured_on', 'Contact');
+                $q->where('featured_on', 'LIKE', '%"Contact"%');
             })
             ->with(['profile', 'currentPosting.designation', 'currentPosting.office']);
             
@@ -220,7 +220,7 @@ class UserController extends Controller
             $query = User::select('id', 'uuid', 'name')
                 ->where('status', 'Active')
                 ->whereHas('profile', function ($q) {
-                    $q->whereJsonContains('featured_on', 'Team');
+                    $q->where('featured_on', 'LIKE', '%"Team"%');
                 })
                 ->with(['profile', 'currentPosting.designation', 'currentPosting.office', 'media']);
 
