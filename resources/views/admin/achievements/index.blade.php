@@ -29,7 +29,7 @@
                     <th scope="col" class="p-3">Location</th>
                     <th scope="col" class="p-3">Start Date</th>
                     <th scope="col" class="p-3">End Date</th>
-                    <th scope="col" class="p-3">Uploaded By</th>
+                    <th scope="col" class="p-3">Publish By</th>
                     <th scope="col" class="p-3">Status</th>
                     <th scope="col" class="p-3">Created At</th>
                     <th scope="col" class="p-3">Updated At</th>
@@ -58,6 +58,10 @@
                         , searchBuilderType: "string"
                     }
                     , {
+                        data: "location"
+                        , searchBuilderType: "string"
+                    }
+                    , {
                         data: "start_date"
                         , searchBuilderType: "string"
                     }
@@ -66,11 +70,7 @@
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "location"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "uploaded_by"
+                        data: "publish_by"
                         , searchBuilderType: "string"
                     }
                     , {

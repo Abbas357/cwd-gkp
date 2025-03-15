@@ -51,6 +51,7 @@
                         <th>Office</th>
                         <th>Published Date</th>
                         <th>Bidding Documents</th>
+                        <th>Tender Documents</th>
                         <th>EOI Documents</th>
                         <th>Views</th>
                         <th>Action</th>
@@ -60,7 +61,7 @@
                     @foreach ($tenders as $tender)
                     <tr>
                         <td> {{ $tender->title }} </td>
-                        <td> {{ $tender->user->position }} </td>
+                        <td> {{ $tender->user->currentPosting->office->name }} </td>
                         <td> {{ $tender->published_at->format('j, F Y') }}
                         </td>
                         <td>

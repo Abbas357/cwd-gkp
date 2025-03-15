@@ -59,4 +59,8 @@ class ProjectFile extends Model implements HasMedia
         return $this->belongsTo(Project::class);
     }
 
+    public function publishBy()
+    {
+        return $this->belongsTo(User::class, 'published_by');
+    }
 }

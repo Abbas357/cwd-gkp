@@ -465,7 +465,8 @@ input::placeholder {
     overflow: hidden;
     letter-spacing: 0.5px;
     border-radius: 0.25rem;
-    transition: all 0.3s ease-out;
+    transition: all 0.1s ease-out;
+    border: 1px solid transparent;
 }
 
 .sidebar-wrapper .sidebar-nav .metismenu a .parent-icon {
@@ -473,6 +474,7 @@ input::placeholder {
     border-radius: 5px;
     background-color: rgba(0, 0, 0, 0.08);
     line-height: 1;
+    border: 1px solid rgba(0, 0, 0, 0.044);
 }
 
 .sidebar-wrapper .sidebar-nav .metismenu a .menu-title {
@@ -492,7 +494,8 @@ input::placeholder {
 
 .sidebar-wrapper .sidebar-nav .metismenu a:hover {
     text-decoration: none;
-    background-color: rgba(0, 0, 0, 0.05)
+    background-color: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-wrapper .sidebar-nav .metismenu ul {
@@ -519,9 +522,13 @@ input::placeholder {
 }
 
 .sidebar-wrapper .sidebar-nav .metismenu .mm-active>a {
-    color: rgba(0, 0, 0, 0.5);
+    color: #fff;
     text-decoration: none;
-    background-color: rgba(0, 0, 0, 0.07);
+    background-color: teal;
+}
+
+.sidebar-wrapper .sidebar-nav .metismenu .mm-active>a .parent-icon {
+    border: 1px solid #999;
 }
 
 .sidebar-wrapper .sidebar-bottom {

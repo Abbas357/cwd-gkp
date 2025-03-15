@@ -25,12 +25,12 @@ class VehicleController extends Controller
                     return view('modules.vehicles.partials.buttons', compact('row'))->render();
                 })
                 ->addColumn('added_by', function ($row) {
-                    return $row->user?->position
-                        ? '<a href="' . route('admin.apps.hr.users.show', $row->user->id) . '" target="_blank">' . $row->user->position . '</a>'
-                        : ($row->user?->designation ?? 'N/A');
+                    return $row->user->currentPosting?->designation->name 
+                    ? '<a href="'.route('admin.apps.hr.users.show', $row->user->id).'" target="_blank">'.$row->user->currentPosting?->designation->name .'</a>' 
+                    : ($row->user->currentPosting?->designation->name  ?? 'N/A');
                 })
                 ->addColumn('assigned_to', function ($row) {
-                    return $row->allotment->user->position ?? 'Pool';
+                    return $row->allotment->user->currentPosting->office->name ?? 'Pool';
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');
@@ -70,7 +70,7 @@ class VehicleController extends Controller
         $nonFunctionalVehicles = Vehicle::where('functional_status', 'Non-Functional')->count();
         $condemnedVehicles = Vehicle::where('functional_status', 'Condemned')->count();
 
-        $allotedVehicles = VehicleAllotment::where('is_current', 1)->count();
+        $allotedVehicles = VehicleAllotment::whereNot('type', 'Pool')->where('is_current', 1)->count();
 
         $permanentAlloted = VehicleAllotment::where('is_current', 1)
             ->where('type', 'Permanent')
@@ -80,8 +80,13 @@ class VehicleController extends Controller
             ->where('type', 'Temporary')
             ->count();
 
-        $inPool = VehicleAllotment::where('is_current', 1)
+        $departmentPool = VehicleAllotment::where('is_current', 1)
             ->where('type', 'Pool')
+            ->count();
+
+        $officePool = VehicleAllotment::where('is_current', 1)
+            ->where('type', 'Pool')
+            ->whereNotNull('user_id')
             ->count();
 
         $monthlyAllotments = VehicleAllotment::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as count')
@@ -98,13 +103,6 @@ class VehicleController extends Controller
             'brand' => $this->getDistribution('brand'),
             'model_year' => $this->getDistribution('model_year')
         ];
-
-        $modelsByBrand = Vehicle::selectRaw('brand, model, COUNT(*) as count')
-            ->whereNotNull('brand')
-            ->whereNotNull('model')
-            ->groupBy('brand', 'model')
-            ->get()
-            ->groupBy('brand');
 
         $recentAllotments = VehicleAllotment::with(['vehicle', 'user'])
             ->latest()
@@ -124,7 +122,7 @@ class VehicleController extends Controller
 
         $functionalPercentage = $totalVehicles > 0 ? ($functionalVehicles / $totalVehicles) * 100 : 0;
         $allotedPercentage = $totalVehicles > 0 ? ($allotedVehicles / $totalVehicles) * 100 : 0;
-        $poolPercentage = $totalVehicles > 0 ? ($inPool / $totalVehicles) * 100 : 0;
+        $poolPercentage = $totalVehicles > 0 ? ($departmentPool / $totalVehicles) * 100 : 0;
 
         $yearWiseRegistrations = Vehicle::selectRaw('YEAR(created_at) as year, COUNT(*) as count')
             ->groupBy('year')
@@ -158,10 +156,10 @@ class VehicleController extends Controller
             'allotedVehicles',
             'permanentAlloted',
             'temporaryAlloted',
-            'inPool',
+            'departmentPool',
+            'officePool',
             'monthlyAllotments',
             'distributions',
-            'modelsByBrand',
             'recentAllotments',
             'vehiclesNeedingAttention',
             'fuelTypeStats',
@@ -319,6 +317,7 @@ class VehicleController extends Controller
             'fuel_type' => Category::where('type', 'fuel_type')->get(),
             'vehicle_registration_status' => Category::where('type', 'vehicle_registration_status')->get(),
             'vehicle_brand' => Category::where('type', 'vehicle_brand')->get(),
+            'allotment_status' => ['Pool', 'Permanent', 'Temparory'],
         ];
 
         $filters = [
@@ -330,23 +329,43 @@ class VehicleController extends Controller
             'fuel_type' => null,
             'registration_status' => null,
             'brand' => null,
-            'model_year' => null
+            'model_year' => null,
+            'allotment_status' => null
         ];
 
         $filters = array_merge($filters, $request->only(array_keys($filters)));
 
         $include_subordinates = $request->boolean('include_subordinates', false);
         $show_history = $request->boolean('show_history', false);
+        
+        $perPage = $request->input('per_page', 10);
+        $showAll = $perPage === 'all';
+        
+        if (!$showAll && is_string($perPage)) {
+            $perPage = (int) $perPage;
+        }
 
         $query = VehicleAllotment::query()
             ->with(['vehicle', 'user'])
-            ->when(!$show_history, fn($q) => $q->whereNot('is_current', 0));
+            ->when(!$show_history, fn($q) => $q->whereNot('is_current', 0))
+            ->when(request('allotment_status'), function($q)  {
+                if (request('allotment_status') === 'Pool') {
+                    return $q->where('type', 'Pool');
+                } 
+                else {
+                    return $q->where('type', request('allotment_status'));
+                }
+            })
+            ->when(!request('allotment_status'), function($q) {
+                return $q->where('type', '!=', 'Pool');
+            });
 
         if ($filters['user_id']) {
             if ($include_subordinates) {
                 $user = User::find($filters['user_id']);
-                $subordinates = $user->getAllSubordinates()->pluck('id')->push($user->id);
-                $query->whereIn('user_id', $subordinates);
+                $subordinateIds = $user->getSubordinates()->pluck('id')->toArray();
+                $userIds = array_merge([$user->id], $subordinateIds);
+                $query->whereIn('user_id', $userIds);
             } else {
                 $query->where('user_id', $filters['user_id']);
             }
@@ -355,6 +374,10 @@ class VehicleController extends Controller
         if ($filters['vehicle_id']) {
             $query->where('vehicle_id', $filters['vehicle_id']);
         }
+
+        if ($filters['allotment_status']) {
+            $query->where('type', $filters['allotment_status']);
+        }    
 
         $query->whereHas('vehicle', function ($q) use ($filters, $cat) {
             if ($filters['status']) {
@@ -386,9 +409,29 @@ class VehicleController extends Controller
             }
         });
 
-        $allotments = $query->latest()->get();
+        $totalCount = $query->count();
+        
+        if ($showAll) {
+            $allotments = $query->latest()->get();
+        } else {
+            try {
+                $allotments = $query->latest()->paginate($perPage);
+                $allotments->appends($request->except('page'));
+            } catch (\Exception $e) {
+                $perPage = 10;
+                $allotments = $query->latest()->paginate($perPage);
+                $allotments->appends($request->except('page'));
+            }
+        }
+        
+        $paginationOptions = [
+            10 => '10 per page',
+            50 => '50 per page',
+            100 => '100 per page',
+            'all' => 'Show All'
+        ];
 
-        return view('modules.vehicles.reports', compact('cat', 'allotments', 'filters'));
+        return view('modules.vehicles.reports', compact('cat', 'allotments', 'filters', 'totalCount', 'perPage', 'paginationOptions'));
     }
 
     public function search(Request $request)

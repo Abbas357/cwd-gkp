@@ -44,7 +44,7 @@
                             @if($vehicle->allotment->type === 'Pool')
                                 @if(!empty($vehicle->allotment->user_id))
                                     <span class="badge bg-warning fs-6">Office Pool</span>
-                                    <span class="badge bg-warning fs-6">{{ $vehicle->allotment->user->position }}</span>
+                                    <span class="badge bg-warning fs-6">{{ $vehicle->allotment->user->currentPosting->office->name }}</span>
                                 @else
                                     <span class="badge bg-danger fs-6">Department Pool</span>
                                 @endif
@@ -58,7 +58,7 @@
                                             </tr>
                                             <tr>
                                                 <th>Designation</th>
-                                                <td>{{ $vehicle->allotment->user->position }}</td>
+                                                <td>{{ $vehicle->allotment->user->currentPosting->office->name }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -105,7 +105,7 @@
             <option value=""></option>
             @foreach(App\Models\User::all() as $user)
                 <option value="{{ $user->id }}">
-                    {{ $user->position }} - {{ $user->name }}
+                    {{ $user->currentPosting?->office->name }} - {{ $user->name }}
                 </option>
             @endforeach
         </select>

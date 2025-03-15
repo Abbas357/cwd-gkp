@@ -105,7 +105,7 @@ class OfficeController extends Controller
             ->get();
 
         $cat = [
-            'type' => ['Provincial', 'Regional', 'Divisional', 'District', 'SubDivisional'],
+            'type' => ['Provincial', 'Regional', 'Divisional', 'District', 'Tehsil'],
             'offices' => Office::where('status', 'Active')->get(),
             'districts' => $availableDistricts,
             'managedDistricts' => $office->getAllManagedDistricts()

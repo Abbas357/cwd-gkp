@@ -55,7 +55,7 @@
                                 <div class="team-title text-center rounded-bottom p-1 d-flex flex-column" style="overflow: hidden;">
                                     <div class="team-title-inner mb-auto">
                                         <h5 class="fs-6 mt-1 text-no-overflow">{{ $user['name'] }}</h5>
-                                        <p class="mb-1 text-no-overflow">{{ $user['position'] }}</p>
+                                        <p class="mb-1 text-no-overflow">{{ $user['office'] }}</p>
                                     </div>
                                     <div class="flex m-2">
                                         <a href="{{ route('positions.details', ['uuid' => $user['uuid'] ]) }}" class="cw-btn"><i class="bi-eye"></i> View Detail</a>

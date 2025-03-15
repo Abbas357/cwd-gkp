@@ -24,7 +24,7 @@
                                 {{ $comment->name }} 
                             @else 
                                 <a href="{{ route('positions.details', ['uuid' => $comment->user->uuid ]) }}">
-                                    {{ $comment->user->position }} 
+                                    {{ $comment->user->currentPosting->office->name }} 
                                     <i class="bi-patch-check-fill text-info"></i>
                                 </a>
                             @endif
@@ -51,7 +51,7 @@
                                 <div>
                                     <h6 class="mb-0">
                                         <a href="{{ route('positions.details', ['uuid' => $reply->user->uuid ]) }}">
-                                            {{ $reply->user->position }} 
+                                            {{ $reply->user->currentPosting->office->name }} 
                                             <i class="bi-patch-check-fill text-info"></i>
                                         </a>
                                     </h6>

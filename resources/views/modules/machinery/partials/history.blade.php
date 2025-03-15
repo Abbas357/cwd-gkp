@@ -166,7 +166,7 @@
                                 </div>
                                 <div class="user-details">
                                     <span class="user-name">{{ $allocation->user->name }}</span>
-                                    <span class="user-designation">{{ $allocation->user->position ?? 'N/A' }}</span>
+                                    <span class="user-designation">{{ $allocation->user->currentPosting->office->name ?? 'N/A' }}</span>
                                 </div>
                             </div>
                         @else

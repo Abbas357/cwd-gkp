@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use App\Models\PublicContact;
 use App\Mail\Query\DroppedMail;
 use Yajra\DataTables\DataTables;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Query\ReliefGrantedMail;
 use App\Mail\Query\ReliefNotGrantedMail;

@@ -166,17 +166,17 @@
                                 </div>
                                 <div class="user-details">
                                     <span class="user-name">{{ $allotment->user->name }}</span>
-                                    <span class="user-designation">{{ $allotment->user->position ?? 'N/A' }}</span>
+                                    <span class="user-designation">{{ $allotment->user->currentPosting->designation->name ?? 'N/A' }}</span>
                                 </div>
                             </div>
                         @elseif($allotment->type === 'Pool' && !empty($allotment->user_id))
                             <div class="timeline-user">
                                 <div class="timeline-user-icon">
-                                    <img src="{{ asset('site/images/logo-square.png') }}" alt="C&W Department" style="width:45px; border-radius: 50px">
+                                    <img src="{{ getProfilePic($allotment->user) }}" alt="{{ $allotment->user->name }}" style="width:45px; border-radius: 50px">
                                 </div>
                                 <div class="user-details">
-                                    <span class="user-name">Pool</span>
-                                    <span class="user-designation">{{ $allotment->user->position ?? 'N/A' }}</span>
+                                    <span class="user-name">Office Pool</span>
+                                    <span class="user-designation">{{ $allotment->user->currentPosting->designation->name ?? 'N/A' }}</span>
                                 </div>
                             </div>
                         @else

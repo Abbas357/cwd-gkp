@@ -37,9 +37,9 @@ class CommentController extends Controller
                     return view('admin.comments.partials.status', compact('row'))->render();
                 })
                 ->addColumn('published_by', function ($row) {
-                    return $row->publishBy?->position
-                        ? '<a href="' . route('admin.apps.hr.users.show', $row->publishBy->id) . '" target="_blank">' . $row->publishBy->position . '</a>'
-                        : ($row->publishBy?->designation ?? 'N/A');
+                    return $row->publishBy?->currentPosting?->designation->name 
+                        ? '<a href="' . route('admin.apps.hr.users.show', $row->publishBy->id) . '" target="_blank">' . $row->publishBy?->currentPosting?->designation->name . '</a>'
+                        : ($row->publishBy?->currentPosting?->designation->name ?? 'N/A');
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');

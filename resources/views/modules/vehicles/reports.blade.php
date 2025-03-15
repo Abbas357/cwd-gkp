@@ -57,7 +57,6 @@
             border: 1px solid #e9ecef;
             border-radius: var(--border-radius);
             overflow: hidden;
-            margin-bottom: 2rem;
             box-shadow: var(--card-shadow);
             transition: var(--transition);
         }
@@ -68,7 +67,7 @@
         
         .filter-section {
             background: linear-gradient(145deg, #f8f9fa, #ffffff);
-            padding: 2rem;
+            padding: 1rem;
             border-radius: var(--border-radius);
             margin-bottom: 2rem;
             box-shadow: var(--card-shadow);
@@ -274,11 +273,35 @@
                 </div>
             </div>
             <div class="card-body p-1">
+                <div class="col-12 p-2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="text-muted mb-0 fs-5">Filter Options</h4>
+                        <button type="button" id="toggleFilters" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi-chevron-up" id="filterIcon"></i>
+                            <span id="filterText">Hide Filters</span>
+                        </button>
+                    </div>
+                    <hr class="mt-2">
+                </div>
+
                 <form method="GET" class="filter-section">
-                    <div class="row g-3">
-                        <div class="col-12 mb-2">
-                            <h4 class="text-muted mb-0 fs-5">Filter Options</h4>
-                            <hr class="mt-2 mb-3">
+                    <div class="row g-2">
+
+                        <div class="d-flex align-items-center">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="includeSubordinates" name="include_subordinates" value="1" @checked(request('include_subordinates'))>
+                                <label class="form-check-label" for="includeSubordinates">
+                                    Include Subordinates
+                                </label>
+                            </div>
+                            <div class="form-check form-switch ms-3">
+                                <input class="form-check-input" type="checkbox" role="switch" 
+                                        id="showHistory" name="show_history" value="1" 
+                                        @checked(request('show_history'))>
+                                <label class="form-check-label" for="showHistory">
+                                    Include Past Allotments
+                                </label>
+                            </div>
                         </div>
 
                         <div class="col-md-6">
@@ -290,27 +313,7 @@
                                    value="{{ request('model_year') ?? '' }}">
                         </div>
 
-                        <div class="col-md-3 d-flex align-items-center mt-4">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" id="includeSubordinates" name="include_subordinates" value="1" @checked(request('include_subordinates'))>
-                                <label class="form-check-label" for="includeSubordinates">
-                                    Include Subordinates
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 d-flex align-items-center mt-4">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" 
-                                        id="showHistory" name="show_history" value="1" 
-                                        @checked(request('show_history'))>
-                                <label class="form-check-label" for="showHistory">
-                                    Include Past Allotments
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <label class="form-label" for="load-users">
                                 User / Office
                             </label>
@@ -318,7 +321,21 @@
                                 <option value=""></option>
                                 @foreach(App\Models\User::all() as $user)
                                     <option value="{{ $user->id }}" @selected($filters['user_id'] == $user->id)>
-                                        {{ $user->position }} - {{ $user->name }}
+                                        {{ $user->currentPosting?->office->name }} - {{ $user->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label" for="vehicle_type">
+                                Allotment Status
+                            </label>
+                            <select name="allotment_status" id="allotment_status" class="form-select">
+                                <option value="">Allotment Status</option>
+                                @foreach($cat['allotment_status'] as $allotment_status)
+                                    <option value="{{ $allotment_status }}" @selected(request('allotment_status') == $allotment_status)>
+                                        {{ $allotment_status }}
                                     </option>
                                 @endforeach
                             </select>
@@ -424,13 +441,13 @@
                         </div>
                         
                         <div class="col-12">
-                            <hr class="mt-1 mb-3">
+                            <hr class="">
                             <div class="action-buttons">
                                 <button type="submit" class="cw-btn">
-                                    <i class="bi-filter me-2"></i> Generate Report
+                                    <i class="bi-filter me-2"></i> GENERATE REPORT
                                 </button>
-                                <a href="{{ route('admin.apps.vehicles.reports') }}" class="btn btn-sm px-3 py-1 btn-light">
-                                    <i class="bi-arrow-counterclockwise me-2"></i> Reset Filters
+                                <a href="{{ route('admin.apps.vehicles.reports') }}" class="btn btn-sm px-3 border fs-6 py-1 btn-light">
+                                    <i class="bi-arrow-counterclockwise me-2"></i> RESET FILTERS
                                 </a>
                             </div>
                         </div>
@@ -438,7 +455,7 @@
                 </form>
 
                 <div class="table-container p-3">
-                    <div class="d-flex justify-content-between align-items-center p-3 bg-light border-bottom">
+                    <div class="d-flex justify-content-between align-items-center p-2 bg-light border-bottom">
                         <h5 class="m-0 fw-bold">Vehicle Allotment Results</h5>
                         <button type="button" id="print-vehicle-details" class="no-print btn btn-primary btn-sm">
                             <span class="d-flex align-items-center">
@@ -447,6 +464,26 @@
                             </span>
                         </button>
                     </div>
+                    
+                    <div class="d-flex p-4 justify-content-between align-items-center">
+                        <div class="pagination-info">
+                            @if(isset($totalCount))
+                                <span class="badge bg-primary rounded-pill fs-6">
+                                    {{ $totalCount }} {{ Str::plural('result', $totalCount) }} found
+                                </span>
+                            @endif
+                        </div>
+                        
+                        <div class="d-flex align-items-center">
+                            <span class="me-2">Display:</span>
+                            <select id="per-page-selector" class="form-select form-select-sm" style="width: auto;">
+                                @foreach($paginationOptions as $value => $label)
+                                    <option value="{{ $value }}" @selected($perPage == $value)>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
                     <table class="table table-hover mb-0" id="vehicle-report">
                         <thead>
                             <tr>
@@ -479,7 +516,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="fw-medium">{{ $allotment->user->position ?? 'N/A' }}</span>
+                                        <span class="fw-medium">{{ $allotment->user->currentPosting->office->name ?? 'Pool' }}</span>
                                     </td>
                                     <td>
                                         <span class="status-badge bg-{{ $allotment->vehicle->functional_status === 'Functional' ? 'success' : 'danger' }} text-white">
@@ -516,13 +553,30 @@
                                     <td colspan="7" class="empty-state">
                                         <p>No vehicles found matching the criteria</p>
                                         <a href="{{ route('admin.apps.vehicles.reports') }}" class="btn btn-sm btn-outline-primary mt-2">
-                                            Reset Filters
+                                            RESET FILTERS
                                         </a>
                                     </td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
+
+                    <div class="pagination-wrapper p-3 border-top d-flex justify-content-between align-items-center">
+                        <div class="pagination-info">
+                            @if(isset($allotments) && !($perPage === 'all') && $allotments instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                                <span class="text-muted">
+                                    Showing {{ $allotments->firstItem() ?? 0 }} to {{ $allotments->lastItem() ?? 0 }} of {{ $allotments->total() }} entries
+                                </span>
+                            @endif
+                        </div>
+                        
+                        <div class="pagination-links">
+                            @if(isset($allotments) && !($perPage === 'all') && $allotments instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                                {{ $allotments->links('pagination::bootstrap-5') }}
+                            @endif
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -532,6 +586,45 @@
     <script src="{{ asset('admin/plugins/printThis/printThis.js') }}"></script>
     <script>
         $(document).ready(function() {
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const hasRelevantParams = Array.from(urlParams.keys()).some(key => 
+                key !== 'page' && key !== 'per_page'
+            );
+            
+            const toggleFilters = () => {
+                $('.filter-section').slideToggle(300);
+                
+                if ($('#filterIcon').hasClass('bi-chevron-up')) {
+                    $('#filterIcon').removeClass('bi-chevron-up').addClass('bi-chevron-down');
+                    $('#filterText').text('Show Filters');
+                } else {
+                    $('#filterIcon').removeClass('bi-chevron-down').addClass('bi-chevron-up');
+                    $('#filterText').text('Hide Filters');
+                }
+            };
+            
+            if (hasRelevantParams) {
+                $('.filter-section').hide();
+                $('#filterIcon').removeClass('bi-chevron-up').addClass('bi-chevron-down');
+                $('#filterText').text('Show Filters');
+            }
+            
+            $('#toggleFilters').on('click', function() {
+                toggleFilters();
+            });
+
+            $('#per-page-selector').on('change', function() {
+                const url = new URL(window.location.href);
+                url.searchParams.set('per_page', $(this).val());
+                window.location.href = url.toString();
+            });
+            
+            $('.pagination .page-link').hover(
+                function() { $(this).addClass('bg-light'); },
+                function() { $(this).removeClass('bg-light'); }
+            );
+
             const initSelect2 = (element, placeholder, url = null) => {
                 const options = {
                     theme: "bootstrap-5",

@@ -95,7 +95,7 @@
                     <a href="{{ url('/positions/detail/' . $user->uuid) }}" class="cw-search-item-content">
                         <h3 class="fs-5 cw-search-item-title">
                             {{ $user->name }} 
-                            ({{ $user->position ? $user->position : $user->designation }})
+                            ({{ $user->currentPosting->office->name ?? $user->currentPosting->designation->name }})
                         </h3>
                     </a>
                 </li>

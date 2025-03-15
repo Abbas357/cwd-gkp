@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('offices', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('type', ['Secretariat', 'Provincial', 'Regional', 'Divisional', 'District', 'SubDivisional'])->nullable();
+            $table->enum('type', ['Secretariat', 'Provincial', 'Regional', 'Divisional', 'District', 'Tehsil'])->nullable();
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->unsignedBigInteger('district_id')->nullable();
             $table->enum('status', ['Active', 'Inactive', 'Archived'])->default('Active');

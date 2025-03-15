@@ -36,9 +36,9 @@ class StoryController extends Controller
                     return view('admin.stories.partials.image', compact('image'))->render();
                 })
                 ->addColumn('user', function ($row) {
-                    return $row->user?->position 
-                    ? '<a href="'.route('admin.apps.hr.users.show', $row->user->id).'" target="_blank">'.$row->user->position.'</a>' 
-                    : ($row->user?->designation ?? 'N/A');
+                    return $row->user->currentPosting?->designation->name 
+                    ? '<a href="'.route('admin.apps.hr.users.show', $row->user->id).'" target="_blank">'.$row->user->currentPosting?->designation->name .'</a>' 
+                    : ($row->user->currentPosting?->designation->name  ?? 'N/A');
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');

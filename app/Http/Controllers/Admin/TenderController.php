@@ -45,9 +45,9 @@ class TenderController extends Controller
                     return view('admin.tenders.partials.status', compact('row'))->render();
                 })
                 ->addColumn('user', function ($row) {
-                    return $row->user?->position 
-                    ? '<a href="'.route('admin.apps.hr.users.show', $row->user->id).'" target="_blank">'.$row->user->position.'</a>' 
-                    : ($row->user?->designation ?? 'N/A');
+                    return $row->user->currentPosting?->designation->name 
+                    ? '<a href="'.route('admin.apps.hr.users.show', $row->user->id).'" target="_blank">'.$row->user->currentPosting?->designation->name .'</a>' 
+                    : ($row->user->currentPosting?->designation->name  ?? 'N/A');
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');
@@ -83,7 +83,7 @@ class TenderController extends Controller
 
     public function store(StoreTenderRequest $request)
     {
-        $name = User::find($request->user)->position;
+        $name = User::find($request->user)->currentPosting->office->name;
         $tender = new Tender();
         $tender->title = $request->title . ' ('.$name. ')';
         $tender->slug = Str::uuid();

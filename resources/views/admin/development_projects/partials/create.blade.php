@@ -52,7 +52,7 @@
         <select class="form-select form-select-md" id="chiefEnginner" name="chiefEnginner">
             <option value="">Select Option</option>
             @foreach ($cat['chiefEngineers'] as $chiefEngineer)
-            <option value="{{ $chiefEngineer->id }}">{{ $chiefEngineer->name }} - {{ $chiefEngineer->position }}</option>
+            <option value="{{ $chiefEngineer->id }}">{{ $chiefEngineer->name }} - {{ $chiefEngineer->currentPosting->office->name }}</option>
             @endforeach
         </select>
         @error('chiefEnginner')
@@ -65,7 +65,7 @@
         <select class="form-select form-select-md" id="superintendentEngineer" name="superintendentEngineer">
             <option value="">Select Option</option>
             @foreach ($cat['superintendentEngineers'] as $superintendentEngineer)
-            <option value="{{ $superintendentEngineer->id }}">{{ $superintendentEngineer->name }} - {{ $superintendentEngineer->position }}</option>
+            <option value="{{ $superintendentEngineer->id }}">{{ $superintendentEngineer->name }} - {{ $superintendentEngineer->currentPosting->office->name }}</option>
             @endforeach
         </select>
         @error('superintendentEngineer')

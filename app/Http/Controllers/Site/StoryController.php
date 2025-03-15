@@ -63,7 +63,7 @@ class StoryController extends Controller
             $storiesData[] = [
                 'id'          => $user->id,
                 'photo'       => getProfilePic($user),
-                'name'        => $user->designation,
+                'name'        => $user->currentPosting->designation->name,
                 'link'        => null,
                 'lastUpdated' => $user->stories->max('created_at')->timestamp,
                 'items'       => $items,

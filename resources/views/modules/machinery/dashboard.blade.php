@@ -251,7 +251,7 @@
                             @foreach($recentAllocations as $allocation)
                             <div class="timeline-item">
                                 <h6 class="mb-1">{{ $allocation->machinery->manufacturer }} {{ $allocation->machinery->model }}</h6>
-                                <p class="mb-0 small">Allocated to {{ $allocation?->user?->position }}</p>
+                                <p class="mb-0 small">Allocated to {{ $allocation?->user?->currentPosting->office->name }}</p>
                                 <small class="text-muted">{{ $allocation->created_at->diffForHumans() }}</small>
                             </div>
                             @endforeach
@@ -271,7 +271,7 @@
                                 <h6 class="mb-1">{{ $machinery->manufacturer }} {{ $machinery->model }}</h6>
                                 <p class="mb-0 small text-muted">{{ $machinery->operational_status }}</p>
                                 @if($machinery->allocation)
-                                <small class="text-muted">Allocated to: {{ $machinery->allocation?->user?->position }}</small>
+                                <small class="text-muted">Allocated to: {{ $machinery->allocation?->user?->currentPosting->office->name }}</small>
                                 @endif
                             </div>
                         </div>

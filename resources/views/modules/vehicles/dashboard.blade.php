@@ -122,7 +122,8 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="text-muted mb-2">In Pool</h6>
-                                <h3 class="mb-0">{{ $inPool }}</h3>
+                                <h5 class="mb-0">Department: {{ $departmentPool }}</h5>
+                                <h5 class="mb-0">Office Pool: {{ $officePool }}</h5>
                                 <small class="text-info">{{ number_format($poolPercentage, 1) }}% available</small>
                             </div>
                             <div class="stat-icon bg-info bg-opacity-10">
@@ -251,7 +252,7 @@
                             @foreach($recentAllotments as $allotment)
                             <div class="timeline-item">
                                 <h6 class="mb-1">{{ $allotment->vehicle->brand }} {{ $allotment->vehicle->model }}</h6>
-                                <p class="mb-0 small">Alloted to {{ $allotment?->user?->position }}</p>
+                                <p class="mb-0 small">Alloted to {{ $allotment?->user?->currentPosting->office->name }}</p>
                                 <small class="text-muted">{{ $allotment->created_at->diffForHumans() }}</small>
                             </div>
                             @endforeach
@@ -271,7 +272,7 @@
                                 <h6 class="mb-1">{{ $vehicle->brand }} {{ $vehicle->model }}</h6>
                                 <p class="mb-0 small text-muted">{{ $vehicle->functional_status }}</p>
                                 @if($vehicle->allotment)
-                                <small class="text-muted">Alloted to: {{ $vehicle->allotment?->user?->position }}</small>
+                                <small class="text-muted">Alloted to: {{ $vehicle->allotment?->user?->currentPosting->office->name }}</small>
                                 @endif
                             </div>
                         </div>
@@ -281,18 +282,6 @@
             </div>
         </div>
 
-        <div class="row g-3 mt-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header bg-light">
-                        <h5 class="card-title mb-0">Brand & Model Distribution</h5>
-                    </div>
-                    <div class="card-body">
-                        <div id="modelsByBrandChart" style="height: 400px;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     @push('script')
@@ -405,96 +394,6 @@
         createDistributionChart("#colorChart", distributions.color, 'color');
         createDistributionChart("#fuelTypeChart", distributions.fuel_type, 'fuel_type');
         createDistributionChart("#registrationStatusChart", distributions.registration_status, 'registration_status');
-
-        // Models by Brand Chart
-        const modelsByBrand = @json($modelsByBrand);
-        const brandLabels = Object.keys(modelsByBrand);
-        const modelData = brandLabels.map(brand => ({
-            name: brand,
-            data: modelsByBrand[brand].map(model => ({
-                x: model.model,
-                y: model.count
-            }))
-        }));
-
-        const modelsByBrandOptions = {
-            series: modelData,
-            chart: {
-                type: 'bar',
-                height: 400,
-                stacked: true,
-                toolbar: {
-                    show: true,
-                    tools: {
-                        download: true,
-                        selection: false,
-                        zoom: false,
-                        zoomin: false,
-                        zoomout: false,
-                        pan: false,
-                        reset: false
-                    }
-                }
-            },
-            plotOptions: {
-                bar: {
-                    horizontal: true,
-                    dataLabels: {
-                        total: {
-                            enabled: true,
-                            offsetX: 0,
-                            style: {
-                                fontSize: '13px',
-                                fontWeight: 900
-                            }
-                        }
-                    }
-                },
-            },
-            stroke: {
-                width: 1,
-                colors: ['#fff']
-            },
-            xaxis: {
-                categories: [...new Set(Object.values(modelsByBrand).flat().map(item => item.model))],
-                labels: {
-                    formatter: function(val) {
-                        return Math.abs(Math.round(val));
-                    }
-                }
-            },
-            yaxis: {
-                title: {
-                    text: 'Models'
-                }
-            },
-            tooltip: {
-                shared: true,
-                intersect: false,
-                y: {
-                    formatter: function(val) {
-                        return Math.abs(val) + " vehicles";
-                    }
-                }
-            },
-            colors: getColors(brandLabels.length),
-            fill: {
-                opacity: 1
-            },
-            legend: {
-                position: 'top',
-                horizontalAlign: 'left',
-                offsetX: 40
-            },
-            title: {
-                text: 'Vehicle Models by Brand',
-                align: 'left',
-                margin: 10,
-                style: {
-                    fontSize: '15px'
-                }
-            }
-        };
 
         new ApexCharts(document.querySelector("#modelsByBrandChart"), modelsByBrandOptions).render();
 

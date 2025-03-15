@@ -109,7 +109,7 @@
                                 <option value=""></option>
                                 @foreach(App\Models\User::all() as $user)
                                     <option value="{{ $user->id }}" @selected($filters['user_id'] == $user->id)>
-                                        {{ $user->position }} - {{ $user->name }}
+                                        {{ $user->currentPosting?->office->name }} - {{ $user->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -249,7 +249,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="fw-medium">{{ $allocation->user->position ?? 'N/A' }}</span>
+                                        <span class="fw-medium">{{ $allocation->user->currentPosting->office->name ?? 'N/A' }}</span>
                                     </td>
                                     <td>
                                         <span class="status-badge bg-{{ $allocation->machinery->operational_status === 'Operational' ? 'success' : 'danger' }} text-white">

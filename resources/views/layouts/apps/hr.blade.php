@@ -7,7 +7,7 @@
 </x-header>
 
 @if ($showAside)
-<x-sidebar app-name="HR" app-url="{{ route('admin.apps.hr.index') }}">
+<x-sidebar app-name="HRMIS" app-url="{{ route('admin.apps.hr.index') }}">
 
     @can('view hr dashboard')
     <li>

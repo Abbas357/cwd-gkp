@@ -32,6 +32,7 @@ class OrganogramController extends Controller
         // Get the office to use as root
         $rootOfficeId = $request->input('office_id');
         $depth = $request->input('depth', 2); // Default to 2 levels of depth
+        $officeType = $request->input('office_type', 'both'); // Default to showing both types
         
         if ($rootOfficeId) {
             $rootOffice = Office::find($rootOfficeId);
@@ -47,58 +48,50 @@ class OrganogramController extends Controller
         }
         
         // Build the organogram data
-        $organogramData = $this->buildOrgChartData($rootOffice, 0, $depth);
+        $organogramData = $this->buildOrgChartData($rootOffice, 0, $depth, $officeType);
         
         return response()->json($organogramData);
     }
     
-    /**
-     * Build organogram data structure for a specific office
-     * 
-     * @param Office $office The office to build data for
-     * @param int $currentDepth Current depth level
-     * @param int $maxDepth Maximum depth to traverse (0 for unlimited)
-     * @return array The organized data
-     */
-    private function buildOrgChartData($office, $currentDepth = 0, $maxDepth = 2)
+    private function buildOrgChartData($office, $currentDepth = 0, $maxDepth = 2, $officeType = 'both')
     {
-        // Stop recursion if we've gone too deep
         if ($maxDepth > 0 && $currentDepth > $maxDepth) {
             return null;
         }
         
-        // Get office head (user with highest designation)
         $officeHead = User::whereHas('currentPosting', function($query) use ($office) {
             $query->where('office_id', $office->id)
-                  ->where('is_current', true);
+                ->where('is_current', true);
         })
         ->with(['currentDesignation', 'currentOffice'])
-        ->get()
-        ->sortByDesc(function($user) {
-            // Sort by designation BPS (higher first)
-            return $user->currentDesignation ? 
-                (is_numeric($user->currentDesignation->bps) ? 
-                    intval($user->currentDesignation->bps) : 0) : 0;
-        })
-        ->first();
+        ->get();
         
-        // Get total users in this office
+        $sortedUsers = $officeHead->sortByDesc(function($user) {
+            if (!$user->currentDesignation || !$user->currentDesignation->bps) {
+                return 0;
+            }
+            
+            preg_match('/(\d+)/', $user->currentDesignation->bps, $matches);
+            return isset($matches[1]) ? (int)$matches[1] : 0;
+        });
+        
+        $officeHead = $sortedUsers->first();
+        
         $usersCount = User::whereHas('currentPosting', function($query) use ($office) {
             $query->where('office_id', $office->id)
-                  ->where('is_current', true);
+                ->where('is_current', true);
         })->count();
         
-        // Build node data
         $nodeData = [
             'id' => 'office_' . $office->id,
             'name' => $office->name,
             'title' => $office->type ?? 'Office',
             'office_id' => $office->id,
-            'className' => 'level-' . $currentDepth,
+            'office_type' => $office->type,
+            'className' => 'level-' . $currentDepth . ' type-' . strtolower(str_replace(' ', '-', $office->type ?? 'unknown')),
             'users_count' => $usersCount > 0 ? $usersCount : null
         ];
         
-        // Add office head if available
         if ($officeHead) {
             $nodeData['head'] = [
                 'id' => $officeHead->id,
@@ -109,17 +102,26 @@ class OrganogramController extends Controller
             ];
         }
         
-        // Get child offices
-        $childOffices = Office::where('parent_id', $office->id)
-            ->where('status', 'Active')
-            ->get();
+        // Filter child offices based on office_type parameter
+        $childOfficesQuery = Office::where('parent_id', $office->id)
+            ->where('status', 'Active');
             
-        // Add children recursively (if not at max depth)
+        if ($officeType == 'secretariat') {
+            $childOfficesQuery->where('type', 'Secretariat');
+        } elseif ($officeType == 'field') {
+            $childOfficesQuery->where(function($query) {
+                $query->where('type', '!=', 'Secretariat')
+                      ->orWhereNull('type');
+            });
+        }
+        
+        $childOffices = $childOfficesQuery->get();
+            
         if ($childOffices->isNotEmpty() && ($maxDepth === 0 || $currentDepth < $maxDepth)) {
             $childrenData = [];
             
             foreach ($childOffices as $childOffice) {
-                $childData = $this->buildOrgChartData($childOffice, $currentDepth + 1, $maxDepth);
+                $childData = $this->buildOrgChartData($childOffice, $currentDepth + 1, $maxDepth, $officeType);
                 if ($childData) {
                     $childrenData[] = $childData;
                 }
@@ -133,26 +135,16 @@ class OrganogramController extends Controller
         return $nodeData;
     }
     
-    /**
-     * Get user hierarchy data for the organogram
-     */
     public function getUserHierarchy(Request $request)
     {
         $userId = $request->input('user_id');
         $user = User::with(['currentDesignation', 'currentOffice'])->findOrFail($userId);
         
-        // Build the user data hierarchy
         $userData = $this->buildUserHierarchyData($user);
         
         return response()->json($userData);
     }
     
-    /**
-     * Build user hierarchy data for organogram
-     * 
-     * @param User $user The user to build hierarchy for
-     * @return array The organized data
-     */
     private function buildUserHierarchyData($user)
     {
         // Get the direct supervisor

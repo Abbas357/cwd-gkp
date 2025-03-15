@@ -39,7 +39,7 @@ class EventsController extends Controller
             'participants_type' => $event->participants_type,
             'no_of_participants' => $event->no_of_participants,
             'event_type' => $event->event_type,
-            'published_by' => $event->user->designation,
+            'published_by' => $event->user->currentPosting->designation->name,
             'published_at' => $event->published_at->format('M d, Y'),
             'description' => $event->description,
             'views_count' => $event->views_count,

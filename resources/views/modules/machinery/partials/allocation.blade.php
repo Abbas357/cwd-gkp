@@ -56,7 +56,7 @@
                                         </tr>
                                         <tr>
                                             <th>Designation</th>
-                                            <td>{{ $machinery->allocation->user->position }}</td>
+                                            <td>{{ $machinery->allocation->user->currentPosting->office->name }}</td>
                                         </tr>
                                         @if($machinery->allocation->project_id)
                                         <tr>
@@ -104,7 +104,7 @@
             <option value=""></option>
             @foreach($cat['users'] as $user)
                 <option value="{{ $user->id }}">
-                    {{ $user->position }} - {{ $user->name }}
+                    {{ $user->currentPosting?->office->name }} - {{ $user->name }}
                 </option>
             @endforeach
         </select>

@@ -83,7 +83,7 @@
                         , type: "html"
                     }
                 ]
-                , defaultOrderColumn: 7
+                , defaultOrderColumn: 5
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
                     targets: [0]

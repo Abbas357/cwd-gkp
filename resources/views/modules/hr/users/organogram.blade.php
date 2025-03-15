@@ -145,6 +145,18 @@
             background-color: #e67e22;
         }
 
+        /* Different styles for office types */
+        .orgchart .node.type-secretariat .title {
+            border-left: 4px solid #e74c3c;
+        }
+
+        .orgchart .node.type-provincial .title,
+        .orgchart .node.type-regional .title,
+        .orgchart .node.type-divisional .title,
+        .orgchart .node.type-district .title {
+            border-left: 4px solid #2980b9;
+        }
+
         /* Make selected node stand out */
         .orgchart .node.focused {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -178,6 +190,16 @@
             z-index: 1000;
             width: 250px;
             display: none;
+        }
+        
+        /* Office type filter buttons */
+        .office-type-filter {
+            margin-bottom: 15px;
+        }
+        
+        .office-type-filter .btn-check:checked + .btn-outline-primary {
+            background-color: #0d6efd;
+            color: white;
         }
         
         /* Print-specific styles */
@@ -227,6 +249,20 @@
                 </div>
                 <div class="card-body">
                     <div class="filter-controls mb-3">
+                        <!-- Add Office Type Filter Buttons -->
+                        <div class="office-type-filter mb-3">
+                            <div class="btn-group" role="group" aria-label="Office Type">
+                                <input type="radio" class="btn-check" name="office-type" id="both-type" value="both" checked>
+                                <label class="btn btn-outline-primary" for="both-type">Both</label>
+                                
+                                <input type="radio" class="btn-check" name="office-type" id="secretariat-type" value="secretariat">
+                                <label class="btn btn-outline-primary" for="secretariat-type">Secretariat</label>
+                                
+                                <input type="radio" class="btn-check" name="office-type" id="field-type" value="field">
+                                <label class="btn btn-outline-primary" for="field-type">Field Formations</label>
+                            </div>
+                        </div>
+                        
                         <div class="row g-3">
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -289,9 +325,10 @@
             let orgChart = null;
             let zoomLevel = 1;
             const zoomStep = 0.1;
+            let currentOfficeType = 'both'; // Default to showing both
 
             // Function to generate org chart
-            function initOrganogram(officeId, depth) {
+            function initOrganogram(officeId, depth, officeType) {
                 $('.chart-loading').show();
                 $('#chart-container').css('min-height', '300px');
 
@@ -305,7 +342,8 @@
                     type: "GET",
                     data: {
                         office_id: officeId,
-                        depth: depth
+                        depth: depth,
+                        office_type: officeType
                     },
                     success: function(data) {
                         // Create the org chart with centered top node
@@ -323,13 +361,19 @@
                                 let nodeContent = '';
 
                                 // Add office details at the top
-                                nodeContent += `<div class="office-name"></div>`;
+                                nodeContent += `<div class="office-name">${data.name}</div>`;
+                                
+                                // Add office type if available
+                                if (data.title) {
+                                    nodeContent += `<div class="office-type">${data.title}</div>`;
+                                }
 
                                 // Add head user if available
                                 if (data.head) {
                                     nodeContent += `<div class="user-container" data-user-id="${data.head.id}">`;
                                     nodeContent += `<img class="user-image" src="${data.head.image}" alt="${data.head.name}">`;
                                     nodeContent += `<div class="user-name">${data.head.name}</div>`;
+                                    nodeContent += `<div class="user-title">${data.head.title}</div>`;
                                     nodeContent += `</div>`;
                                 }
 
@@ -337,6 +381,7 @@
 
                                 // Add data attributes for interaction
                                 $node.attr('data-office-id', data.office_id);
+                                $node.attr('data-office-type', data.office_type || 'unknown');
                                 if (data.head) {
                                     $node.attr('data-user-id', data.head.id);
                                 }
@@ -426,17 +471,23 @@
                 });
             }
 
-            // Initialize with default office
-            initOrganogram($('#root-office').val(), $('#chart-depth').val());
+            // Initialize with default office and both types
+            initOrganogram($('#root-office').val(), $('#chart-depth').val(), currentOfficeType);
+
+            // Handle office type change
+            $('input[name="office-type"]').on('change', function() {
+                currentOfficeType = $(this).val();
+                initOrganogram($('#root-office').val(), $('#chart-depth').val(), currentOfficeType);
+            });
 
             // Handle office change
             $('#root-office').on('change', function() {
-                initOrganogram($(this).val(), $('#chart-depth').val());
+                initOrganogram($(this).val(), $('#chart-depth').val(), currentOfficeType);
             });
 
             // Handle depth change
             $('#chart-depth').on('change', function() {
-                initOrganogram($('#root-office').val(), $(this).val());
+                initOrganogram($('#root-office').val(), $(this).val(), currentOfficeType);
             });
 
             // Handle user search

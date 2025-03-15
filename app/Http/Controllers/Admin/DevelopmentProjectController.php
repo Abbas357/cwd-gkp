@@ -32,7 +32,7 @@ class DevelopmentProjectController extends Controller
                     return $row->district?->name;
                 })
                 ->addColumn('chief_engineer', function ($row) {
-                    return $row->chiefEngineer?->position;
+                    return $row->chiefEngineer?->currentPosting?->office->name;
                 })
                 ->editColumn('year_of_completion', function($row) {
                     return $row->year_of_completion?->format('j, F Y');
@@ -44,9 +44,9 @@ class DevelopmentProjectController extends Controller
                     return $row->progress_percentage . '%';
                 })
                 ->addColumn('uploaded_by', function ($row) {
-                    return $row->user?->position 
-                    ? '<a href="'.route('admin.apps.hr.users.show', $row->user->id).'" target="_blank">'.$row->user->position.'</a>' 
-                    : ($row->user?->designation ?? 'N/A');
+                    return $row->user->currentPosting?->designation->name 
+                    ? '<a href="'.route('admin.apps.hr.users.show', $row->user->id).'" target="_blank">'.$row->user->currentPosting?->designation->name .'</a>' 
+                    : ($row->user->currentPosting?->designation->name  ?? 'N/A');
                 })
                 ->addColumn('action', function ($row) {
                     return view('admin.development_projects.partials.buttons', compact('row'))->render();

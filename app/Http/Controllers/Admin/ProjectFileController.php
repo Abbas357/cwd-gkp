@@ -36,9 +36,9 @@ class ProjectFileController extends Controller
                     return '<a target="_blank" href="' . $row->getFirstMediaUrl('project_files') . '" class="btn btn-light bi bi-file-earmark fs-4"></span>';
                 })
                 ->addColumn('uploaded_by', function ($row) {
-                    return $row->user?->position 
-                    ? '<a href="'.route('admin.apps.hr.users.show', $row->user->id).'" target="_blank">'.$row->user->position.'</a>' 
-                    : ($row->user?->designation ?? 'N/A');
+                    return $row->publishBy?->currentPosting?->designation->name 
+                        ? '<a href="' . route('admin.apps.hr.users.show', $row->publishBy->id) . '" target="_blank">' . $row->publishBy?->currentPosting?->designation->name . '</a>'
+                        : ($row->publishBy?->currentPosting?->designation->name ?? 'N/A');
                 })
                 ->addColumn('project', function ($row) {
                     return $row->project->name;

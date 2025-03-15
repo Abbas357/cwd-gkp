@@ -79,12 +79,9 @@ class UserController extends Controller
                 $user = $item['user'];
                 return (object) [
                     'name' => $user->name,
-                    'position' => $user->currentPosting && $user->currentPosting->designation ? 
-                        $user->currentPosting->designation->name : 'N/A',
-                    'office' => $user->currentPosting && $user->currentPosting->office ? 
-                        $user->currentPosting->office->name : 'N/A',
-                    'bps' => $user->currentPosting && $user->currentPosting->designation ? 
-                        $user->currentPosting->designation->bps : null,
+                    'office' => $user->currentPosting->office->name ?? 'N/A',
+                    'designation' => $user->currentPosting->designation->name ?? 'N/A',
+                    'bps' => $user->currentPosting->designation->bps ?? null,
                     'mobile_number' => $user->profile ? $user->profile->mobile_number : null,
                     'landline_number' => $user->profile ? $user->profile->landline_number : null,
                     'facebook' => $user->profile ? $user->profile->facebook : null,
@@ -228,7 +225,7 @@ class UserController extends Controller
                 $query = $criteria['callback']($query);
             } else {
                 $query->whereHas('currentDesignation', function ($q) use ($criteria) {
-                    $q->where('name', 'LIKE', '%'.$criteria['designation'].'%');
+                    $q->where('name', $criteria['designation']);
                 });
             }
 
@@ -239,10 +236,8 @@ class UserController extends Controller
                         'id' => $user->id,
                         'uuid' => $user->uuid,
                         'name' => $user->name,
-                        'title' => $user->currentPosting && $user->currentPosting->designation ?
-                            $user->currentPosting->designation->name : '-',
-                        'position' => $user->currentPosting && $user->currentPosting->designation ?
-                            $user->currentPosting->designation->name : '-',
+                        'designation' => $user->currentPosting->designation->name ?? '-',
+                        'office' => $user->currentPosting->office->name ?? '-',
                         'facebook' => $user->profile ? $user->profile->facebook ?? '#' : '#',
                         'twitter' => $user->profile ? $user->profile->twitter ?? '#' : '#',
                         'whatsapp' => $user->profile ? $user->profile->whatsapp ?? '#' : '#',

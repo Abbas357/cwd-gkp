@@ -31,10 +31,16 @@ class AchievementController extends Controller
                 ->editColumn('status', function ($row) {
                     return view('admin.achievements.partials.status', compact('row'))->render();
                 })
-                ->addColumn('uploaded_by', function ($row) {
-                    return $row->user?->position 
-                    ? '<a href="'.route('admin.apps.hr.users.show', $row->user->id).'" target="_blank">'.$row->user->position.'</a>' 
-                    : ($row->user?->designation ?? 'N/A');
+                ->editColumn('start_date', function ($row) {
+                    return $row->start_date->format('j, F Y');
+                })
+                ->editColumn('end_date', function ($row) {
+                    return $row->end_date->format('j, F Y');
+                })
+                ->addColumn('publish_by', function ($row) {
+                    return $row->publishBy->currentPosting?->designation->name 
+                    ? '<a href="'.route('admin.apps.hr.users.show', $row->publishBy->id).'" target="_blank">'.$row->publishBy->currentPosting?->designation->name .'</a>' 
+                    : ($row->publishBy->currentPosting?->designation->name  ?? 'N/A');
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');
@@ -42,7 +48,7 @@ class AchievementController extends Controller
                 ->editColumn('updated_at', function ($row) {
                     return $row->updated_at->diffForHumans();
                 })
-                ->rawColumns(['action', 'status', 'user']);
+                ->rawColumns(['action', 'status', 'publish_by', 'user']);
 
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
                 $dataTable->filter(function ($query) use ($request) {

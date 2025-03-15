@@ -37,7 +37,7 @@ class GalleryController extends Controller
             'slug' => $gallery->slug,
             'description' => $gallery->description,
             'type' => ucfirst(str_replace('_', ' ', $gallery->type)) ?? 'General',
-            'user' => $gallery->user->designation,
+            'user' => $gallery->user->currentPosting->designation->name,
             'views_count' => $gallery->views_count,
             'published_by' => $gallery->publishBy->designation,
             'published_at' => $gallery->published_at?->format('M d, Y'),

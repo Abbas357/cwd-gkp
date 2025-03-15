@@ -25,12 +25,12 @@ class MachineryController extends Controller
                     return view('modules.machinery.partials.buttons', compact('row'))->render();
                 })
                 ->addColumn('added_by', function ($row) {
-                    return $row->user?->position
-                        ? '<a href="' . route('admin.apps.hr.users.show', $row->user->id) . '" target="_blank">' . $row->user->position . '</a>'
-                        : ($row->user?->designation ?? 'N/A');
+                    return $row->user->currentPosting?->designation->name 
+                    ? '<a href="'.route('admin.apps.hr.users.show', $row->user->id).'" target="_blank">'.$row->user->currentPosting?->designation->name .'</a>' 
+                    : ($row->user->currentPosting?->designation->name  ?? 'N/A');
                 })
                 ->addColumn('assigned_to', function ($row) {
-                    return $row->allocation->user->position ?? 'Pool';
+                    return $row->allocation->user->currentPosting->office->name ?? 'Pool';
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');

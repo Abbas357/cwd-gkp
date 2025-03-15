@@ -19,7 +19,7 @@ class StoreOfficeRequest extends FormRequest
             'type' => [
                 'nullable', 
                 'string', 
-                'in:Provincial,Regional,Divisional,District,SubDivisional'
+                'in:Secretariat,Provincial,Regional,Divisional,District,Tehsil'
             ],
             'parent_id' => [
                 'nullable', 
@@ -46,7 +46,7 @@ class StoreOfficeRequest extends FormRequest
         return [
             'name.required' => 'The office name is required.',
             'name.unique' => 'This office name already exists.',
-            'type.in' => 'The selected type must either be Provincial, Regional, Divisional, District, SubDivisional',
+            'type.in' => 'The selected type must either be Provincial, Regional, Divisional, District, Tehsil',
             'parent_id.exists' => 'The selected parent office does not exist.',
             'district_id.unique' => 'This district is already assigned to another office.',
         ];

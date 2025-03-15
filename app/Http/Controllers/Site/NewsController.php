@@ -43,7 +43,7 @@ class NewsController extends Controller
             'summary' => $news->summary ?? 'No summary available.',
             'content' => $news->content ?? 'No content available.',
             'category' => $news->category ?? 'General',
-            'author' => $news->user->designation,
+            'author' => $news->user->currentPosting->designation->name,
             'published_by' => $news->publishBy->designation,
             'published_at' => $news->published_at->format('M d, Y'),
             'file_url' => $mediaUrl,
