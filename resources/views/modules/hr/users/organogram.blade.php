@@ -90,6 +90,30 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        
+        /* Styles for vacant positions */
+        .orgchart .node .vacant-post {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80px; /* Ensures consistent height with nodes that have users */
+        }
+        
+        .orgchart .node .vacancy-placeholder {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #f5f5f5;
+            border: 2px dashed #ccc;
+            margin: 3px auto;
+        }
+        
+        .orgchart .node .vacancy-text {
+            font-weight: bold;
+            color: #d35400;
+            font-style: italic;
+        }
 
         /* Improve lines: black and smooth */
         .orgchart .lines {
@@ -360,20 +384,16 @@
                                 // Create custom node content - Office name at top, then image, then name
                                 let nodeContent = '';
 
-                                // Add office details at the top
-                                nodeContent += `<div class="office-name">${data.name}</div>`;
-                                
-                                // Add office type if available
-                                if (data.title) {
-                                    nodeContent += `<div class="office-type">${data.title}</div>`;
-                                }
-
-                                // Add head user if available
+                                // Add head user if available, otherwise show "Post Vacant"
                                 if (data.head) {
                                     nodeContent += `<div class="user-container" data-user-id="${data.head.id}">`;
                                     nodeContent += `<img class="user-image" src="${data.head.image}" alt="${data.head.name}">`;
                                     nodeContent += `<div class="user-name">${data.head.name}</div>`;
-                                    nodeContent += `<div class="user-title">${data.head.title}</div>`;
+                                    nodeContent += `</div>`;
+                                } else {
+                                    nodeContent += `<div class="user-container vacant-post">`;
+                                    nodeContent += `<div class="vacancy-placeholder"></div>`;
+                                    nodeContent += `<div class="user-name vacancy-text">Post Vacant</div>`;
                                     nodeContent += `</div>`;
                                 }
 

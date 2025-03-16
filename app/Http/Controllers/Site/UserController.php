@@ -11,13 +11,11 @@ class UserController extends Controller
 {
     public function contacts()
     {
-        // Get regional offices and the Secretary C&W office
         $offices = Office::where('type', 'Regional')
             ->orWhere('name', 'Secretary C&W')
             ->get();
         
         $contactsByOffice = $offices->sortByDesc(function ($office) {
-            // Find the top-ranked user in this office for sorting purposes
             $topUser = User::whereHas('currentPosting', function ($query) use ($office) {
                 $query->where('office_id', $office->id);
             })
@@ -31,22 +29,18 @@ class UserController extends Controller
             return $topUser && $topUser->currentPosting && $topUser->currentPosting->designation ? 
                 (is_numeric($topUser->currentPosting->designation->bps) ? $topUser->currentPosting->designation->bps : 0) : 0;
         })->mapWithKeys(function ($office) {
-            // Base query for contacts
             $query = User::whereHas('profile', function ($q) {
                 $q->where('featured_on', 'LIKE', '%"Contact"%');
             })
             ->with(['profile', 'currentPosting.designation', 'currentPosting.office']);
             
             if ($office->name === 'Secretary C&W') {
-                // For Secretary C&W, get all users in offices of type 'Secretariat'
                 $query->whereHas('currentPosting.office', function ($q) {
                     $q->where('type', 'Secretariat');
                 });
             } else {
-                // Get direct office members
                 $officeIds = [$office->id];
                 
-                // Also include all subordinate offices (for all team members)
                 $descendantOffices = $office->getAllDescendants();
                 if ($descendantOffices->isNotEmpty()) {
                     $officeIds = array_merge($officeIds, $descendantOffices->pluck('id')->toArray());
@@ -74,7 +68,6 @@ class UserController extends Controller
             
             $sortedContacts = $contactsWithBps->sortByDesc('bps_value');
             
-            // Map to the final format
             $contacts = $sortedContacts->map(function ($item) {
                 $user = $item['user'];
                 return (object) [
@@ -116,7 +109,7 @@ class UserController extends Controller
             ->get();
 
         $userData = $users->map(function ($user) {
-            // Get the relevant posting for this position
+            
             $relevantPosting = $user->postings->first();
 
             return [
@@ -163,8 +156,8 @@ class UserController extends Controller
             'facebook' => $profile->facebook ?? '-',
             'twitter' => $profile->twitter ?? '-',
             'designation' => $currentPosting ? $currentPosting->designation->name ?? '-' : '-',
-            'position' => $currentPosting ? $currentPosting->designation->name ?? '-' : '-', // Using designation name as position
-            'title' => $currentPosting ? $currentPosting->designation->name ?? '-' : '-', // Title can be same as designation
+            'position' => $currentPosting ? $currentPosting->designation->name ?? '-' : '-', 
+            'title' => $currentPosting ? $currentPosting->designation->name ?? '-' : '-', 
             'posting_type' => $currentPosting ? $currentPosting->type ?? '-' : '-',
             'posting_date' => $currentPosting && $currentPosting->start_date ? $currentPosting->start_date->format('j, F Y') : '-',
             'exit_type' => $user->postings->where('is_current', false)->where('type', 'Retirement')->first() ? 'Retirement' : ($user->postings->where('is_current', false)->where('type', 'Termination')->first() ? 'Termination' : '-'),
@@ -225,7 +218,7 @@ class UserController extends Controller
                 $query = $criteria['callback']($query);
             } else {
                 $query->whereHas('currentDesignation', function ($q) use ($criteria) {
-                    $q->where('name', $criteria['designation']);
+                    $q->where('name', 'LIKE', $criteria['designation'] . '%');
                 });
             }
 

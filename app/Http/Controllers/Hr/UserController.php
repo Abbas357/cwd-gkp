@@ -203,7 +203,7 @@ class UserController extends Controller
             $bps[] = sprintf("BPS-%02d", $i);
         }
 
-        $posting_types = ['Appointment', 'Deputation', 'Transfer', 'Mutual', 'Promotion', 'Suspension', 'OSD', 'Retirement', 'Termination'];
+        $posting_types = ['Appointment', 'Deputation', 'Transfer', 'Mutual', 'Additional-Charge', 'Promotion', 'Suspension', 'OSD', 'Retirement', 'Termination'];
         if (!$user) {
             return response()->json([
                 'success' => false,
@@ -280,6 +280,10 @@ class UserController extends Controller
                             $this->handleSpecialStatus($user, $postingType, $postingData);
                             break;
                             
+                        case 'Additional-Charge':
+                            $this->handleAdditionalCharge($user, $postingData, $request);
+                            break;
+                            
                         default: // Appointment, Transfer, Promotion
                             $this->handleRegularPosting($user, $postingData, $request);
                             break;
@@ -311,6 +315,69 @@ class UserController extends Controller
             DB::rollBack();
             return response()->json(['error' => 'Failed to update user: ' . $e->getMessage()]);
         }
+    }
+
+    private function handleAdditionalCharge(User $user, array $postingData, Request $request)
+    {
+        // For Additional-Charge, we create a new posting but maintain the existing one as active
+
+        // Check if exceeding sanctioned strength
+        if (!$request->has('override_sanctioned_post')) {
+            $sanctionedPost = SanctionedPost::where('office_id', $postingData['office_id'])
+                ->where('designation_id', $postingData['designation_id'])
+                ->where('status', 'Active')
+                ->first();
+                
+            if (!$sanctionedPost) {
+                throw new \Exception('This position is not sanctioned for the selected office.');
+            }
+        }
+        
+        // Create new posting for the additional charge WITHOUT ending current posting
+        $newPosting = $user->postings()->create([
+            'office_id' => $postingData['office_id'],
+            'designation_id' => $postingData['designation_id'],
+            'type' => 'Additional-Charge',
+            'start_date' => $postingData['start_date'] ?? now(),
+            'remarks' => $postingData['remarks'] ?? 'Additional charge posting',
+            'order_number' => $postingData['order_number'] ?? null,
+            'is_current' => true  // This is also marked as current alongside the main posting
+        ]);
+        
+        // If posting order file is provided
+        if ($request->hasFile('posting_order')) {
+            $newPosting->addMedia($request->file('posting_order'))
+                ->toMediaCollection('posting_orders');
+        }
+        
+        // Check if vacating another officer from the additional charge position
+        if ($request->has('vacate_officer_id')) {
+            $officerToVacate = User::findOrFail($request->input('vacate_officer_id'));
+            
+            // Find the posting at the specific office/designation
+            $vacatePosting = $officerToVacate->postings()
+                ->where('office_id', $postingData['office_id'])
+                ->where('designation_id', $postingData['designation_id'])
+                ->where('is_current', true)
+                ->first();
+                
+            if ($vacatePosting) {
+                $vacatePosting->update([
+                    'is_current' => false,
+                    'end_date' => now()
+                ]);
+            }
+        }
+        
+        // Log additional charge
+        activity()
+            ->performedOn($newPosting)
+            ->causedBy($request->user())
+            ->withProperties([
+                'type' => 'Additional-Charge',
+                'maintains_current_posting' => true
+            ])
+            ->log('Created additional charge posting');
     }
 
     private function handleMutualTransfer(User $user, array $postingData, Request $request)
