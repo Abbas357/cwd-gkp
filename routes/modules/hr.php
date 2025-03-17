@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Hr\RoleController;
 use App\Http\Controllers\Hr\UserController;
 use App\Http\Controllers\Hr\OfficeController;
+use App\Http\Controllers\Hr\ReportController;
 use App\Http\Controllers\Hr\PostingController;
 use App\Http\Controllers\Hr\DashboardController;
 use App\Http\Controllers\Hr\OrganogramController;
@@ -101,6 +102,16 @@ Route::prefix('hr')->as('hr.')->middleware(['can:manage human resource'])->group
         Route::get('/', [PermissionController::class, 'index'])->name('index')->can('viewAny', Spatie\Permission\Models\Permission::class);
         Route::post('/', [PermissionController::class, 'store'])->name('store')->can('create', Spatie\Permission\Models\Permission::class);
         Route::delete('/{permission}', [PermissionController::class, 'destroy'])->name('destroy')->can('delete', 'permission');
+    });
+
+    Route::prefix('reports')->as('reports.')->group(function () {
+        Route::get('/vacancy', [ReportController::class, 'vacancyReport'])->name('vacancy');
+        Route::get('/employee-directory', [ReportController::class, 'employeeDirectory'])->name('employees');
+        Route::get('/office-strength', [ReportController::class, 'officeStrength'])->name('office-strength');
+        Route::get('/posting-history', [ReportController::class, 'postingHistory'])->name('posting-history');
+        Route::get('/service-length', [ReportController::class, 'serviceLengthReport'])->name('service-length');
+        Route::get('/retirement-forecast', [ReportController::class, 'retirementForecast'])->name('retirement-forecast');
+        Route::get('/office-staff', [ReportController::class, 'officeStaff'])->name('office-staff');
     });
     
 });

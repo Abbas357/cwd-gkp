@@ -105,6 +105,52 @@
     </li>
     @endcanany
 
+    @canany(['view vacancy report', 'view office strength', 'view posting history', 'view retirement forecast', 'view service length'])
+    <li>
+        <a href="javascript:;" class="has-arrow">
+            <div class="parent-icon"><i class="bi-bar-chart-line text-primary"></i></div>
+            <div class="menu-title">Reports</div>
+        </a>
+        <ul class="p-2 menu-items">
+            @can('view vacancy report')
+            <li>
+                <a href="{{ route('admin.apps.hr.reports.vacancy') }}">
+                    <i class="bi-clipboard-data text-warning"></i>Vacancy Report</a>
+            </li>
+            @endcan
+
+            @can('view office strength')
+            <li>
+                <a href="{{ route('admin.apps.hr.reports.office-strength') }}">
+                    <i class="bi-people text-info"></i>Office Strength</a>
+            </li>
+            @endcan
+
+            @can('view posting history')
+            <li>
+                <a href="{{ route('admin.apps.hr.reports.posting-history') }}">
+                    <i class="bi-person-lines-fill text-success"></i>Posting History</a>
+            </li>
+            @endcan
+
+            @can('view retirement forecast')
+            <li>
+                <a href="{{ route('admin.apps.hr.reports.retirement-forecast') }}">
+                    <i class="bi-calendar-check text-danger"></i>Retirement Forecast</a>
+            </li>
+            @endcan
+
+            @can('view service length')
+            <li>
+                <a href="{{ route('admin.apps.hr.reports.service-length') }}">
+                    <i class="bi-hourglass-split text-primary"></i>Service Length</a>
+            </li>
+            @endcan
+        </ul>        
+    </li>
+    @endcanany
+
+
 </x-sidebar>
 
 @endif
