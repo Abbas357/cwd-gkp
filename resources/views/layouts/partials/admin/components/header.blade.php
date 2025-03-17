@@ -75,6 +75,14 @@
                             <p class="custom-app-name">Website</p>
                         </a>
                         @endcan
+                        @can('manage human resource')
+                        <a href="{{ route('admin.apps.vehicles.index') }}" class="custom-app-tile custom-red-theme">
+                            <div class="custom-app-icon-container">
+                                <i class="bi-people custom-app-icon"></i>
+                            </div>
+                            <p class="custom-app-name">HRMIS</p>
+                        </a>
+                        @endcan
                         @can('manage vehicles')
                         <a href="{{ route('admin.apps.vehicles.index') }}" class="custom-app-tile custom-red-theme">
                             <div class="custom-app-icon-container">
@@ -105,6 +113,22 @@
                                 <i class="bi-credit-card custom-app-icon"></i>
                             </div>
                             <p class="custom-app-name">Service Card</p>
+                        </a>
+                        @endcan
+                        @can('manage porms')
+                        <a href="{{ route('admin.apps.porms.index') }}" class="custom-app-tile custom-orange-theme">
+                            <div class="custom-app-icon-container">
+                                <i class="bi-coin custom-app-icon"></i>
+                            </div>
+                            <p class="custom-app-name">PORMS</p>
+                        </a>
+                        @endcan
+                        @can('manage machinery')
+                        <a href="{{ route('admin.apps.machineries.index') }}" class="custom-app-tile custom-orange-theme">
+                            <div class="custom-app-icon-container">
+                                <i class="bi-building-gear custom-app-icon"></i>
+                            </div>
+                            <p class="custom-app-name">Machinery Mgt.</p>
                         </a>
                         @endcan
                     </div>

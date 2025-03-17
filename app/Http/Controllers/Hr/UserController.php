@@ -4,10 +4,7 @@ namespace App\Http\Controllers\Hr;
 
 use App\Models\User;
 use App\Models\Office;
-
 use App\Models\Posting;
-use App\Models\District;
-
 use App\Models\Designation;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -203,7 +200,7 @@ class UserController extends Controller
             $bps[] = sprintf("BPS-%02d", $i);
         }
 
-        $posting_types = ['Appointment', 'Deputation', 'Transfer', 'Mutual', 'Additional-Charge', 'Promotion', 'Suspension', 'OSD', 'Retirement', 'Termination'];
+        $posting_types = ['Appointment', 'Deputation', 'Transfer', 'Mutual', 'Additional-Charge', 'Promotion', 'Suspension', 'OSD', 'Out-Transfer', 'Retirement', 'Termination'];
         if (!$user) {
             return response()->json([
                 'success' => false,
@@ -239,7 +236,6 @@ class UserController extends Controller
         DB::beginTransaction();
 
         try {
-            // Update basic user information
             $userData = $request->only(['name', 'username', 'email', 'status']);
             
             if ($request->filled('password')) {
@@ -249,7 +245,6 @@ class UserController extends Controller
 
             $user->update($userData);
             
-            // Update profile data
             $profileData = $request->input('profile', []);
             if (isset($profileData['featured_on'])) {
                 $profileData['featured_on'] = json_encode($profileData['featured_on']);
@@ -260,30 +255,32 @@ class UserController extends Controller
                 $profileData
             );
 
-            // Handle posting changes
             if ($request->has('posting')) {
                 $postingData = $request->input('posting');
                 $postingType = $postingData['type'] ?? null;
                 
                 if ($postingType && isset($postingData['office_id']) && isset($postingData['designation_id'])) {
-                    $currentPosting = $user->currentPosting;
                     
-                    // Handle based on posting type
                     switch ($postingType) {
                         case 'Mutual':
                             $this->handleMutualTransfer($user, $postingData, $request);
                             break;
                             
-                        case 'Retirement':
                         case 'Suspension':
                         case 'OSD':
                             $this->handleSpecialStatus($user, $postingType, $postingData);
                             break;
-                            
+
                         case 'Additional-Charge':
                             $this->handleAdditionalCharge($user, $postingData, $request);
                             break;
-                            
+
+                        case 'Retirement':
+                        case 'Termination':
+                        case 'Out-Transfer':
+                            $this->handleExitStatus($user, $postingType, $postingData);
+                            break;
+                        
                         default: // Appointment, Transfer, Promotion
                             $this->handleRegularPosting($user, $postingData, $request);
                             break;
@@ -291,13 +288,11 @@ class UserController extends Controller
                 }
             }
 
-            // Handle file uploads
             if ($request->hasFile('image')) {
                 $user->addMedia($request->file('image'))
                     ->toMediaCollection('profile_pictures');
             }
 
-            // Handle roles and permissions
             if ($request->has('roles')) {
                 $user->syncRoles($request->roles);
             }
@@ -320,8 +315,6 @@ class UserController extends Controller
     private function handleAdditionalCharge(User $user, array $postingData, Request $request)
     {
         // For Additional-Charge, we create a new posting but maintain the existing one as active
-
-        // Check if exceeding sanctioned strength
         if (!$request->has('override_sanctioned_post')) {
             $sanctionedPost = SanctionedPost::where('office_id', $postingData['office_id'])
                 ->where('designation_id', $postingData['designation_id'])
@@ -344,7 +337,6 @@ class UserController extends Controller
             'is_current' => true  // This is also marked as current alongside the main posting
         ]);
         
-        // If posting order file is provided
         if ($request->hasFile('posting_order')) {
             $newPosting->addMedia($request->file('posting_order'))
                 ->toMediaCollection('posting_orders');
@@ -368,21 +360,10 @@ class UserController extends Controller
                 ]);
             }
         }
-        
-        // Log additional charge
-        activity()
-            ->performedOn($newPosting)
-            ->causedBy($request->user())
-            ->withProperties([
-                'type' => 'Additional-Charge',
-                'maintains_current_posting' => true
-            ])
-            ->log('Created additional charge posting');
     }
 
     private function handleMutualTransfer(User $user, array $postingData, Request $request)
     {
-        // Get current posting of the user
         $currentPosting = $user->currentPosting;
         
         if (!$currentPosting) {
@@ -468,6 +449,35 @@ class UserController extends Controller
         ]);
     }
 
+    private function handleExitStatus(User $user, string $statusType, array $postingData)
+    {
+        DB::transaction(function () use ($user, $postingData, $statusType) {
+            // End current posting if exists
+            if ($currentPosting = $user->currentPosting) {
+                $currentPosting->update([
+                    'is_current' => false,
+                    'end_date' => now()
+                ]);
+            }
+        
+            // Create new posting with special status
+            $posted = $user->postings()->create([
+                'office_id' => null,
+                'designation_id' => $postingData['designation_id'],
+                'type' => $statusType,
+                'start_date' => $postingData['start_date'] ?? now(),
+                'remarks' => $postingData['remarks'] ?? $statusType . ' status applied',
+                'order_number' => $postingData['order_number'] ?? null,
+                'is_current' => true
+            ]);
+        
+            if ($posted) {
+                $user->status = 'Archived';
+                $user->save();
+            }
+        });
+    }
+
     private function handleRegularPosting(User $user, array $postingData, Request $request)
     {
         // Check if vacating another officer
@@ -537,18 +547,6 @@ class UserController extends Controller
             $newPosting->addMedia($request->file('posting_order'))
                 ->toMediaCollection('posting_orders');
         }
-        
-        // Log if exceeding sanctioned strength
-        if ($request->has('excess_justification')) {
-            activity()
-                ->performedOn($newPosting)
-                ->causedBy($request->user())
-                ->withProperties([
-                    'justification' => $request->input('excess_justification'),
-                    'exceeded_sanctioned_strength' => true
-                ])
-                ->log('Created posting exceeding sanctioned strength');
-        }
     }
 
     private function generateUsername($email)
@@ -588,5 +586,33 @@ class UserController extends Controller
         }
 
         return response()->json(['error' => 'User can\'t be deleted.']);
+    }
+
+    public function employee($uuid)
+    {
+        $user = User::where('uuid', $uuid)->first();
+        $bps = [];
+        for ($i = 1; $i <= 22; $i++) {
+            $bps[] = sprintf("BPS-%02d", $i);
+        }
+
+        $posting_types = ['Appointment', 'Deputation', 'Transfer', 'Mutual', 'Additional-Charge', 'Promotion', 'Suspension', 'OSD', 'Out-Transfer', 'Retirement', 'Termination'];
+        if (!$user) {
+            return redirect()->route('admin.apps.hr.users.index')->with('error', 'The user does not exist in Database');
+        }
+
+        $data = [
+            'user' => $user->load(['profile', 'currentPosting.designation', 'currentPosting.office', 'postings.designation', 'postings.office']),
+            'roles' => $user->roles,
+            'permissions' => $user->getDirectPermissions(),
+            'allRoles' => Role::all(),
+            'allPermissions' => Permission::all(),
+            'allDesignations' => Designation::where('status', 'Active')->get(),
+            'allOffices' => Office::where('status', 'Active')->get(),
+            'bps' => $bps,
+            'posting_types' => $posting_types
+        ];
+
+        return view('modules.hr.users.profile.index', compact('data'));
     }
 }

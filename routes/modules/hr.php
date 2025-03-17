@@ -24,6 +24,7 @@ Route::prefix('hr')->as('hr.')->middleware(['can:manage human resource'])->group
         Route::get('/create', [UserController::class, 'create'])->name('create')->can('create', App\Models\User::class);
         Route::get('/current-posting', [UserController::class, 'getCurrentPosting'])->name('current-posting');
         Route::get('/edit/{user}', [UserController::class, 'edit'])->name('edit')->can('update',  'user');
+        Route::get('/profile/{uuid}', [UserController::class, 'employee'])->name('employee')->can('view', 'user');
         Route::patch('/activate/{user}', [UserController::class, 'activateUser'])->name('activate')->can('activate', 'user');
         Route::patch('/archive/{user}', [UserController::class, 'archiveUser'])->name('archive')->can('archive', 'user');
         Route::post('/', [UserController::class, 'store'])->name('store')->can('create', App\Models\User::class);

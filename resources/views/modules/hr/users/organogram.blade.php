@@ -3,13 +3,13 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/orgchart/3.1.1/css/jquery.orgchart.min.css" rel="stylesheet">
     <style>
         #chart-container {
-            height: 650px;
+            height: 600px;
             overflow: auto;
             background-color: #f8f9fa;
             border: 1px solid #ddd;
             border-radius: 5px;
             position: relative;
-            text-align: center; /* Help center the chart */
+            text-align: center;
         }
         #chart-container .symbol {
             display: none;
@@ -19,9 +19,9 @@
             background-image: none !important;
             margin: 0 auto !important; /* Center the chart horizontally */
             transform-origin: top center !important; /* Ensure scaling happens from center */
-            display: inline-block !important; /* Allow centering */
-            min-width: 50%; /* Ensure chart takes reasonable space */
-            margin-top: 20px !important;
+            display: flex !important; /* Allow centering */
+            align-items: center;
+            justify-content: center;
         }
 
         .orgchart .node {
@@ -33,7 +33,7 @@
         }
 
         .orgchart .node .title {
-            width: 180px;
+            width: 170px;
             height: auto;
             line-height: 20px;
             padding: 5px;
@@ -45,15 +45,39 @@
         }
 
         .orgchart .node .content {
-            width: 180px;
+            width: 170px;
             height: auto;
             padding: 3px;
             font-size: 0.8rem;
+            border: 3px solid #2ecc71;
+        }
+
+        .orgchart .hierarchy::before {
+            border-top: 3px solid #000000;
+        }
+
+        .orgchart .hierarchy {
+            cursor: move;
+        }
+
+        .orgchart .nodes.vertical::before {
+            background-color: #000000;
+            height: 20px;
+            width: 2px;
+            top: 2px;
+        }
+
+        .orgchart .nodes.vertical .hierarchy::after, .orgchart .nodes.vertical .hierarchy::before {
+            border-color: #000000;
+        }
+
+        .orgchart .nodes.vertical>.hierarchy:first-child::before {
+            border-color: #000000;
+            border-width: 2px 0 0 2px;
         }
 
         .orgchart .node .office-name {
-            font-weight: bold;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -91,13 +115,12 @@
             text-overflow: ellipsis;
         }
         
-        /* Styles for vacant positions */
         .orgchart .node .vacant-post {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 80px; /* Ensures consistent height with nodes that have users */
+            min-height: 80px;
         }
         
         .orgchart .node .vacancy-placeholder {
@@ -113,11 +136,6 @@
             font-weight: bold;
             color: #d35400;
             font-style: italic;
-        }
-
-        /* Improve lines: black and smooth */
-        .orgchart .lines {
-            color: #000 !important; /* Black lines */
         }
 
         .orgchart .lines:before,
@@ -138,13 +156,6 @@
         .orgchart .lines .rightLine,
         .orgchart .lines .leftLine {
             border-top: 2px solid #000 !important; /* Solid black lines */
-            width: 25px !important; /* Slightly wider spacing */
-        }
-
-        /* Condensed spacing between levels */
-        .orgchart .nodes.vertical,
-        .orgchart .lines.vertical {
-            margin-top: 25px !important; /* Increased for better spacing */
         }
 
         /* Improve spacing between siblings */
@@ -169,9 +180,12 @@
             background-color: #e67e22;
         }
 
-        /* Different styles for office types */
         .orgchart .node.type-secretariat .title {
-            border-left: 4px solid #e74c3c;
+            border: 3px solid #ffcc00;
+        }
+
+        .orgchart .node.type-secretariat .content {
+            border: 3px solid #ffcc00;
         }
 
         .orgchart .node.type-provincial .title,
@@ -216,7 +230,6 @@
             display: none;
         }
         
-        /* Office type filter buttons */
         .office-type-filter {
             margin-bottom: 15px;
         }
@@ -226,7 +239,6 @@
             color: white;
         }
         
-        /* Print-specific styles */
         @media print {
             body * {
                 visibility: hidden;
@@ -290,7 +302,7 @@
                         <div class="row g-3">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="root-office" class="form-label">Root Office</label>
+                                    <label for="root-office" class="form-label">Office</label>
                                     <select id="root-office" class="form-select">
                                         @foreach($topOffices as $office)
                                         <option value="{{ $office->id }}">{{ $office->name }}</option>
@@ -309,6 +321,7 @@
                                     </select>
                                 </div>
                             </div>
+                            
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="user-search" class="form-label">Search User</label>
@@ -348,16 +361,14 @@
         $(document).ready(function() {
             let orgChart = null;
             let zoomLevel = 1;
-            const zoomStep = 0.1;
-            let currentOfficeType = 'both'; // Default to showing both
+            const zoomStep = 0.03;
+            let currentOfficeType = 'both'; 
 
-            // Function to generate org chart
             function initOrganogram(officeId, depth, officeType) {
                 $('.chart-loading').show();
                 $('#chart-container').css('min-height', '300px');
 
                 if (orgChart) {
-                    // Remove existing chart before creating a new one
                     $('#chart-container').find('.orgchart').remove();
                 }
 
@@ -370,21 +381,17 @@
                         office_type: officeType
                     },
                     success: function(data) {
-                        // Create the org chart with centered top node
                         orgChart = $('#chart-container').orgchart({
                             'data': data,
                             'nodeContent': 'content',
                             'nodeID': 'id',
                             'createNode': function($node, data) {
-                                // Add custom classes
                                 if (data.className) {
                                     $node.addClass(data.className);
                                 }
 
-                                // Create custom node content - Office name at top, then image, then name
                                 let nodeContent = '';
 
-                                // Add head user if available, otherwise show "Post Vacant"
                                 if (data.head) {
                                     nodeContent += `<div class="user-container" data-user-id="${data.head.id}">`;
                                     nodeContent += `<img class="user-image" src="${data.head.image}" alt="${data.head.name}">`;
@@ -436,14 +443,12 @@
                 });
             }
 
-            // Function to center the chart with improved centering logic
             function centerOrgChart() {
                 const $chart = $('#chart-container .orgchart');
                 const $container = $('#chart-container');
 
                 if (!$chart.length) return;
 
-                // Reset any transformations for accurate measurements
                 $chart.css({
                     'transform': 'scale(1)',
                     'transform-origin': 'top center',
@@ -452,34 +457,8 @@
                     'right': '0',
                     'position': 'relative'
                 });
-
-                // Set initial zoom level
-                zoomLevel = 1;
-
-                // Determine appropriate initial zoom based on chart size
-                const chartWidth = $chart.width();
-                const containerWidth = $container.width() * 0.95; // 95% of container width
-
-                if (chartWidth > containerWidth) {
-                    const newZoom = Math.max(0.5, containerWidth / chartWidth);
-                    zoomOrgChart(newZoom);
-                }
-
-                // Set a timeout to ensure the chart rendering is complete
-                setTimeout(function() {
-                    // Check if any part of the chart is outside the container
-                    const chartRect = $chart[0].getBoundingClientRect();
-                    const containerRect = $container[0].getBoundingClientRect();
-                    
-                    // Center horizontally if needed
-                    if (chartRect.width < containerRect.width) {
-                        const leftOffset = (containerRect.width - chartRect.width) / 2;
-                        $chart.css('margin-left', leftOffset + 'px');
-                    }
-                }, 200);
             }
 
-            // Function to zoom the chart with improved centering
             function zoomOrgChart(newZoom) {
                 const $chart = $('#chart-container .orgchart');
                 if (!$chart.length) return;
@@ -491,26 +470,21 @@
                 });
             }
 
-            // Initialize with default office and both types
             initOrganogram($('#root-office').val(), $('#chart-depth').val(), currentOfficeType);
 
-            // Handle office type change
             $('input[name="office-type"]').on('change', function() {
                 currentOfficeType = $(this).val();
                 initOrganogram($('#root-office').val(), $('#chart-depth').val(), currentOfficeType);
             });
 
-            // Handle office change
             $('#root-office').on('change', function() {
                 initOrganogram($(this).val(), $('#chart-depth').val(), currentOfficeType);
             });
 
-            // Handle depth change
             $('#chart-depth').on('change', function() {
                 initOrganogram($('#root-office').val(), $(this).val(), currentOfficeType);
             });
 
-            // Handle user search
             $('#search-btn').on('click', function() {
                 const query = $('#user-search').val();
                 if (query.trim().length < 2) {
@@ -526,18 +500,14 @@
                     },
                     success: function(response) {
                         if (response.results.length > 0) {
-                            // Highlight user's node if found
                             const user = response.results[0];
                             const userNode = $(`.node[data-user-id="${user.id}"]`);
 
                             if (userNode.length) {
-                                // Clear any previous focus
                                 $('.orgchart .node').removeClass('focused');
 
-                                // Add focused class to this node
                                 userNode.addClass('focused');
 
-                                // Scroll to the user's node
                                 $('#chart-container').animate({
                                     scrollTop: userNode.offset().top - $('#chart-container').offset().top + $('#chart-container').scrollTop() - 100
                                 }, 500);
@@ -551,14 +521,12 @@
                 });
             });
 
-            // Handle search on enter press
             $('#user-search').on('keypress', function(e) {
                 if (e.which === 13) {
                     $('#search-btn').click();
                 }
             });
 
-            // Zoom controls
             $('#zoom-in').on('click', function() {
                 zoomOrgChart(zoomLevel + zoomStep);
             });
@@ -572,66 +540,52 @@
                 centerOrgChart();
             });
 
-            // Center chart button
             $('#center-chart').on('click', function() {
                 centerOrgChart();
             });
 
-            // Export chart functionality with improved quality
             $('#btn-export-chart').on('click', function() {
-                // Show loading indicator
                 const $exportBtn = $(this);
                 $exportBtn.html('<i class="spinner-border spinner-border-sm"></i> Exporting...');
                 $exportBtn.attr('disabled', true);
                 
-                // Wait briefly to ensure UI updates before capture
                 setTimeout(function() {
-                    const chartElem = document.querySelector('#chart-container .orgchart');
+                    const chartElem = document.querySelector('#chart-container');
                     
-                    // Scale factor for higher quality (2x)
                     html2canvas(chartElem, {
-                        scale: 2, // Higher scale for better quality
+                        scale: 2,
                         backgroundColor: '#f8f9fa',
                         logging: false,
                         useCORS: true,
                         allowTaint: true
                     }).then(function(canvas) {
-                        // Create a high-quality PNG
                         const imgData = canvas.toDataURL('image/png', 1.0);
                         const link = document.createElement('a');
                         link.download = 'organogram_' + new Date().toISOString().split('T')[0] + '.png';
                         link.href = imgData;
                         link.click();
                         
-                        // Reset button
                         $exportBtn.html('<i class="bi bi-download"></i> Export PNG');
                         $exportBtn.attr('disabled', false);
                     }).catch(function(error) {
-                        console.error('Export failed:', error);
-                        alert('Export failed. Please try again.');
                         $exportBtn.html('<i class="bi bi-download"></i> Export PNG');
                         $exportBtn.attr('disabled', false);
                     });
                 }, 300);
             });
 
-            // Print chart functionality with improved layout
             $('#btn-print-chart').on('click', function() {
-                // Temporarily adjust chart for printing
                 const $chart = $('#chart-container .orgchart');
                 const originalTransform = $chart.css('transform');
                 const originalWidth = $chart.css('width');
                 
-                // Set optimized print styles
                 $chart.css({
-                    'transform': 'scale(1)',
+                    'transform': 'scale(.5)',
                     'width': '100%'
                 });
                 
-                // Print
                 window.print();
-                
-                // Restore original styles
+
                 setTimeout(function() {
                     $chart.css({
                         'transform': originalTransform,

@@ -44,7 +44,7 @@ class UpdateUserRequest extends FormRequest
             // Posting information
             'posting.designation_id' => 'nullable|exists:designations,id',
             'posting.office_id' => 'nullable|exists:offices,id',
-            'posting.type' => 'nullable|in:Appointment,Deputation,Transfer,Mutual,Additional-Charge,Promotion,Suspension,OSD,Retirement,Termination',
+            'posting.type' => 'nullable|in:Appointment,Deputation,Transfer,Mutual,Additional-Charge,Promotion,Suspension,OSD,Out-Transfer,Retirement,Termination',
             'posting.start_date' => 'nullable|date',
             'posting.end_date' => 'nullable|date|after:posting.start_date',
             'posting.order_number' => 'nullable',

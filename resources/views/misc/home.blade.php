@@ -276,7 +276,7 @@
             @can('manage human resource')
             <a href="{{ route('admin.apps.hr.index') }}" class="app-tile accent-green">
                 <i class="bi-people" style="color: #00db87"></i>
-                <p>HR</p>
+                <p>HRMIS</p>
             </a>
             @endcan
 

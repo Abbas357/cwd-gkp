@@ -11,43 +11,34 @@ use App\Http\Controllers\Controller;
 
 class OrganogramController extends Controller
 {
-    /**
-     * Display the organogram view
-     */
     public function index()
     {
-        // Get top-level offices (no parent)
-        $topOffices = Office::whereNull('parent_id')
-            ->where('status', 'Active')
+        $topOffices = Office::where('name', 'Secretary C&W')
+            ->orWhereIn('type', ['Regional', 'Secretariat'])
+            ->where('parent_id', 2)
             ->get();
             
         return view('modules.hr.users.organogram', compact('topOffices'));
     }
     
-    /**
-     * Get hierarchy data for the organogram
-     */
     public function getData(Request $request)
     {
-        // Get the office to use as root
         $rootOfficeId = $request->input('office_id');
-        $depth = $request->input('depth', 2); // Default to 2 levels of depth
-        $officeType = $request->input('office_type', 'both'); // Default to showing both types
+        $officeType = $request->input('office_type', 'both');
+        
+        $defaultDepth = 2;
+        $depth = $request->input('depth', $defaultDepth);
         
         if ($rootOfficeId) {
             $rootOffice = Office::find($rootOfficeId);
         } else {
-            // If no specific office is requested, use the first top-level office
-            $rootOffice = Office::whereNull('parent_id')
-                ->where('status', 'Active')
-                ->first();
+            $rootOffice = Office::where('name', 'Secretary C&W')->first();
         }
         
         if (!$rootOffice) {
             return response()->json(['error' => 'No valid office found for organogram.'], 404);
         }
         
-        // Build the organogram data
         $organogramData = $this->buildOrgChartData($rootOffice, 0, $depth, $officeType);
         
         return response()->json($organogramData);
@@ -147,13 +138,10 @@ class OrganogramController extends Controller
     
     private function buildUserHierarchyData($user)
     {
-        // Get the direct supervisor
         $supervisor = $user->getDirectSupervisor();
         
-        // Get direct subordinates
         $subordinates = $user->getSubordinates()->take(6);
         
-        // Create the user node
         $userData = [
             'id' => 'user_' . $user->id,
             'name' => $user->name,
@@ -164,11 +152,9 @@ class OrganogramController extends Controller
             'className' => 'selected-user'
         ];
         
-        // If there's a supervisor, add as parent
         if ($supervisor) {
             $userData['parent'] = 'user_' . $supervisor->id;
             
-            // Create supervisor node
             $supervisorData = [
                 'id' => 'user_' . $supervisor->id,
                 'name' => $supervisor->name,
@@ -180,11 +166,9 @@ class OrganogramController extends Controller
                 'children' => [$userData]
             ];
             
-            // Return with supervisor as root
             return $supervisorData;
         }
         
-        // If there are subordinates, add as children
         if ($subordinates->isNotEmpty()) {
             $childrenData = [];
             
