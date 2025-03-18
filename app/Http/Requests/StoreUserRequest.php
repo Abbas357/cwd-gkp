@@ -17,13 +17,12 @@ class StoreUserRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:191|unique:users',
             'username' => 'nullable|string|max:191|unique:users',
-            'password' => 'required|string|min:6',
+            'password' => 'nullable|string|min:6',
             
             'profile.landline_number' => 'nullable|string|max:255',
             
             'posting.office_id' => 'required|exists:offices,id',
             'posting.designation_id' => 'required|exists:designations,id',
-            'posting.type' => 'required|in:Appointment,Transfer,Promotion',
             'posting.start_date' => 'nullable|date',
         ];
     }
@@ -37,7 +36,6 @@ class StoreUserRequest extends FormRequest
             'profile.landline_number' => 'landline number',
             'posting.office_id' => 'office',
             'posting.designation_id' => 'designation',
-            'posting.type' => 'posting type',
             'posting.start_date' => 'start date',
         ];
     }

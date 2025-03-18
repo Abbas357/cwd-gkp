@@ -24,6 +24,10 @@ Route::prefix('hr')->as('hr.')->middleware(['can:manage human resource'])->group
         Route::get('/api', [UserController::class, 'users'])->name('api')->withoutMiddleware(['can:manage human resource']);
         Route::get('/create', [UserController::class, 'create'])->name('create')->can('create', App\Models\User::class);
         Route::get('/current-posting', [UserController::class, 'getCurrentPosting'])->name('current-posting');
+
+        Route::get('/quick-create', [UserController::class, 'userQuickCreate'])->name('quick-create')->withoutMiddleware(['can:manage human resource']);
+        Route::post('/quick-store', [UserController::class, 'userQuickStore'])->name('quick-store')->withoutMiddleware(['can:manage human resource']);
+
         Route::get('/edit/{user}', [UserController::class, 'edit'])->name('edit')->can('update',  'user');
         Route::get('/profile/{uuid}', [UserController::class, 'employee'])->name('employee')->can('view', 'user');
         Route::patch('/activate/{user}', [UserController::class, 'activateUser'])->name('activate')->can('activate', 'user');
@@ -32,6 +36,7 @@ Route::prefix('hr')->as('hr.')->middleware(['can:manage human resource'])->group
         Route::get('/{user}', [UserController::class, 'show'])->name('show')->can('view', 'user');
         Route::patch('/{user}', [UserController::class, 'update'])->name('update')->can('update', 'user');
         Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy')->can('delete', 'user');
+
     });
 
     Route::prefix('sanctioned-posts')->as('sanctioned-posts.')->group(function () {

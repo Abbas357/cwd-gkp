@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Hr;
 use App\Models\User;
 use App\Models\Office;
 use App\Models\Posting;
+use App\Models\District;
 use App\Models\Designation;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -97,21 +98,14 @@ class UserController extends Controller
 
     public function create()
     {
-        $offices = Office::where('status', 'Active')->get();
-        $designations = Designation::where('status', 'Active')->get();
-        $postingTypes = [
-            'Appointment' => 'Appointment',
-            'Transfer' => 'Transfer',
-            'Promotion' => 'Promotion'
-        ];
         $data = [
-            'offices' => $offices,
-            'designations' => $designations,
-            'postingTypes' => $postingTypes,
+            'roles' => Role::all(),
+            'permissions' => Permission::all(),
+            'designations' => Designation::where('status', 'Active')->get(),
+            'offices' => Office::where('status', 'Active')->get(),
         ];
-        
+
         $html = view('modules.hr.users.partials.create', compact('data'))->render();
-        
         return response()->json([
             'success' => true,
             'data' => [
@@ -123,68 +117,60 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         DB::beginTransaction();
-        
+
         try {
-            $user = new User();
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $user->username = $request->username ?? $this->generateUsername($request->email);
-            $user->password = bcrypt($request->password);
-            $user->uuid = Str::uuid();
+            $userData = $request->only(['name', 'email', 'password']);
+
+            $userData['uuid'] = Str::uuid();
+
+            $userData['username'] = $request->username ?? strstr($request->email, '@', true);
+
+            if ($request->filled('password')) {
+                $userData['password'] = Hash::make($request->password);
+            } else {
+                $userData['password'] = Hash::make($userData['username']);
+            }
+            $userData['password_updated_at'] = now();
+
+            $user = User::create($userData);
+
+            $profileData = $request->input('profile', []);
+
+            $user->profile()->updateOrCreate(
+                ['user_id' => $user->id],
+                $profileData
+            );
+
+            if ($request->has('posting')) {
+                $postingData = $request->input('posting');
+                $postingData['type'] = 'Appointment';
+                
+                if (isset($postingData['office_id']) && isset($postingData['designation_id'])) {
+                     $this->handleRegularPosting($user, $postingData, $request);
+                }
+            }
 
             if ($request->hasFile('image')) {
                 $user->addMedia($request->file('image'))
                     ->toMediaCollection('profile_pictures');
             }
 
-            $user->save();
-            
-            $profileData = $request->input('profile', []);
-            $user->profile()->create($profileData);
-            
-            $postingData = $request->input('posting');
-            if (!empty($postingData['designation_id']) && !empty($postingData['office_id']) && !empty($postingData['type'])) {
-                $sanctionedPost = SanctionedPost::where('office_id', $postingData['office_id'])
-                    ->where('designation_id', $postingData['designation_id'])
-                    ->where('status', 'Active')
-                    ->first();
-                    
-                if (!$sanctionedPost) {
-                    return response()->json([
-                        'error' => 'This position is not sanctioned for the selected office.'
-                    ], 422);
-                }
-                
-                if ($sanctionedPost->vacancies <= 0) {
-                    return response()->json([
-                        'error' => 'No vacancy available for this position in the selected office.'
-                    ], 422);
-                }
-                
-                $posting = $user->postings()->create([
-                    'designation_id' => $postingData['designation_id'],
-                    'office_id' => $postingData['office_id'],
-                    'type' => $postingData['type'],
-                    'start_date' => $postingData['start_date'] ?? now(),
-                    'is_current' => true
-                ]);
-                
-                if ($request->hasFile('posting_order')) {
-                    $posting->addMedia($request->file('posting_order'))
-                        ->toMediaCollection('posting_orders');
-                }
+            if ($request->has('roles')) {
+                $user->syncRoles($request->roles);
             }
-            
-            DB::commit();
 
+            if ($request->has('permissions')) {
+                $user->syncPermissions($request->permissions);
+            }
+
+            DB::commit();
             Cache::forget('message_partial');
             Cache::forget('team_partial');
-            
-            return response()->json(['success' => 'User added successfully']);
-            
+
+            return response()->json(['success' => 'User created successfully']);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => 'Error creating user: ' . $e->getMessage()]);
+            return response()->json(['error' => 'Failed to create user: ' . $e->getMessage()]);
         }
     }
     
@@ -615,4 +601,133 @@ class UserController extends Controller
 
         return view('modules.hr.users.profile.index', compact('data'));
     }
+
+    public function userQuickCreate()
+    {
+        $data = [
+            'roles' => Role::all(),
+            'permissions' => Permission::all()->take(10),
+            'designations' => Designation::where('status', 'Active')->get(),
+            'offices' => Office::where('status', 'Active')->get(),
+            'districts' => District::all(),
+        ];
+
+        $html = view('modules.hr.users.partials.quick-create', compact('data'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
+    }
+
+    public function userQuickStore(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $designationId = $request->input('posting.designation_id');
+            if ($designationId === 'new' && $request->filled('new_designation')) {
+                $designation = Designation::create([
+                    'name' => $request->input('new_designation'),
+                    'bps' => $request->input('new_designation_bps'),
+                    'status' => 'Active'
+                ]);
+                $designationId = $designation->id;
+            }
+
+            $officeId = $request->input('posting.office_id');
+            if ($officeId === 'new' && $request->filled('new_office')) {
+                $office = Office::create([
+                    'name' => $request->input('new_office'),
+                    'type' => $request->input('new_office_type'),
+                    'parent_id' => $request->input('new_office_parent_id') ?: null,
+                    'district_id' => $request->input('new_district_id') ?: null,
+                    'status' => 'Active'
+                ]);
+                $officeId = $office->id;
+            }
+
+            // Create the user
+            $userData = $request->only(['name', 'email']);
+            $userData['uuid'] = Str::uuid();
+            $userData['username'] = $request->username ?? $this->generateUsername($request->email);
+            $userData['status'] = 'Active';
+
+            if ($request->filled('password')) {
+                $userData['password'] = Hash::make($request->password);
+            } else {
+                // Generate a random password if none provided
+                $password = Str::random(8);
+                $userData['password'] = Hash::make($password);
+                $plainPassword = $password; // Store for response
+            }
+            $userData['password_updated_at'] = now();
+
+            $user = User::create($userData);
+
+            // Create profile data
+            $profileData = $request->input('profile', []);
+            $user->profile()->updateOrCreate(
+                ['user_id' => $user->id],
+                $profileData
+            );
+
+            // Create posting if office and designation are provided
+            if ($designationId && $officeId) {
+                $postingData = [
+                    'office_id' => $officeId,
+                    'designation_id' => $designationId,
+                    'type' => 'Appointment',
+                    'start_date' => $request->input('posting.start_date', now()),
+                    'is_current' => true
+                ];
+                
+                // Auto-create sanctioned post if it doesn't exist
+                $sanctionedPost = SanctionedPost::firstOrCreate(
+                    [
+                        'office_id' => $officeId,
+                        'designation_id' => $designationId,
+                    ],
+                    [
+                        'total_positions' => 1,
+                        'status' => 'Active'
+                    ]
+                );
+                
+                $user->postings()->create($postingData);
+            }
+
+            DB::commit();
+            Cache::forget('message_partial');
+            Cache::forget('team_partial');
+
+            $response = [
+                'success' => 'User created successfully',
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'designation' => $designationId ? Designation::find($designationId)->name : null,
+                    'office' => $officeId ? Office::find($officeId)->name : null,
+                ]
+            ];
+
+            // Include generated password if one was created
+            if (isset($plainPassword)) {
+                $response['generated_password'] = $plainPassword;
+            }
+
+            return response()->json($response);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Failed to create user: ' . $e->getMessage()], 422);
+        }
+    }
+
 }
