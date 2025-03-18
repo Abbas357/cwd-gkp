@@ -252,7 +252,7 @@
                             @foreach($recentAllotments as $allotment)
                             <div class="timeline-item">
                                 <h6 class="mb-1">{{ $allotment->vehicle->brand }} {{ $allotment->vehicle->model }}</h6>
-                                <p class="mb-0 small">Alloted to {{ $allotment?->user?->currentPosting->office->name }}</p>
+                                <p class="mb-0 small">Alloted to {{ $allotment->user->currentPosting->office->name ?? 'N/A' }}</p>
                                 <small class="text-muted">{{ $allotment->created_at->diffForHumans() }}</small>
                             </div>
                             @endforeach

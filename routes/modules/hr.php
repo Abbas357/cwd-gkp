@@ -21,7 +21,7 @@ Route::prefix('hr')->as('hr.')->middleware(['can:manage human resource'])->group
 
     Route::prefix('users')->as('users.')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index')->can('viewAny', App\Models\User::class);
-        Route::get('/api', [UserController::class, 'users'])->name('api')->withoutMiddleware(['can:manage website']);
+        Route::get('/api', [UserController::class, 'users'])->name('api')->withoutMiddleware(['can:manage human resource']);
         Route::get('/create', [UserController::class, 'create'])->name('create')->can('create', App\Models\User::class);
         Route::get('/current-posting', [UserController::class, 'getCurrentPosting'])->name('current-posting');
         Route::get('/edit/{user}', [UserController::class, 'edit'])->name('edit')->can('update',  'user');
