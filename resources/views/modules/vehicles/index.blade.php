@@ -5,26 +5,18 @@
     <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
     <script>
         function onUserCreated(user) {
-            console.log('User created:', user);
-            
-            // Example: Add the new user to a select dropdown
-            if ($("#user_id").length) {
-                $("#user_id").append(new Option(`${user.name} - ${user.designation}`, user.id, true, true)).trigger('change');
-            }
-            
-            // Or refresh a datatable
-            if (typeof userTable !== 'undefined') {
-                userTable.ajax.reload();
-            }
+            window.location.reload();
         }
     </script>
     @endpush
     <x-slot name="header">
         <li class="breadcrumb-item active" aria-current="page">Vehicles</li>
     </x-slot>
-    <button type="button" class="btn btn-primary" onclick="openUserQuickCreateModal(onUserCreated)">
-        <i class="bi-person-plus"></i> Quick Add User
-    </button>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-light border" onclick="openUserQuickCreateModal(onUserCreated)">
+            <i class="bi-person-plus"></i> Add User
+        </button>
+    </div>
     <div class="table-responsive">
         <table id="vehicles-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
             <thead>

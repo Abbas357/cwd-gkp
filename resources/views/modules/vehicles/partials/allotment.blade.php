@@ -110,6 +110,11 @@
             @endforeach
         </select>
     </div>
+    <div class="d-flex justify-content-end mt-1">
+        <button type="button" class="btn btn-light border" onclick="openUserQuickCreateModal(onUserCreated)">
+            <i class="bi-person-plus"></i> Add User
+        </button>
+    </div>
 
 </div>
 
