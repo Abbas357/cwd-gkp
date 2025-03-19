@@ -14,7 +14,7 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 </style>
-
+ 
 <div class="row vehicle-details">
     <div class="col-md-12">
         <table class="table table-striped table-bordered" style="box-shadow: 0 0 15px #00000033">

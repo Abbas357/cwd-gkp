@@ -83,7 +83,7 @@ class TenderController extends Controller
 
     public function store(StoreTenderRequest $request)
     {
-        $name = User::find($request->user)->currentPosting->office->name;
+        $name = data_get(User::find($request->user), 'currentPosting.office.name');
         $tender = new Tender();
         $tender->title = $request->title . ' ('.$name. ')';
         $tender->slug = Str::uuid();
