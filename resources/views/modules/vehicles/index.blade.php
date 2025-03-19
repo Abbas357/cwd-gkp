@@ -5,7 +5,7 @@
     <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
     <script>
         function onUserCreated(user) {
-            window.location.reload();
+            // window.location.reload();
         }
     </script>
     @endpush
