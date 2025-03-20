@@ -438,7 +438,8 @@ class VehicleController extends Controller
     {
         return Vehicle::query()
             ->when($request->q, fn($q) => $q->where('registration_number', 'like', "%{$request->q}%")
-                ->orWhere('brand', 'like', "%{$request->q}%"))
+                ->orWhere('engine_number', 'like', "%{$request->q}%")
+                ->orWhere('chassis_number', 'like', "%{$request->q}%"))
             ->limit(10)
             ->get()
             ->map(fn($v) => ['id' => $v->id, 'text' => "{$v->brand} - {$v->model}"]);

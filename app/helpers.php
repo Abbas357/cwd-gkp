@@ -1,14 +1,22 @@
 <?php 
 
-function getProfilePic(App\Models\User $user): string
+function getProfilePic($user): string
 {
-    $url = asset($user->getFirstMediaUrl('profile_pictures', 'thumb'));
-    if (!isset(pathinfo($url)['extension']) || !in_array(strtolower(pathinfo($url)['extension']), ['jpg', 'jpeg', 'png', 'gif'])) {
+    if (!$user instanceof App\Models\User) {
         $defaultLogoPath = public_path('admin/images/no-profile.png');
         $defaultLogoData = file_get_contents($defaultLogoPath);
-        $base64 = 'data:image/png;base64,' . base64_encode($defaultLogoData);
-        return $base64;
+        return 'data:image/png;base64,' . base64_encode($defaultLogoData);
     }
+
+    $url = asset($user->getFirstMediaUrl('profile_pictures', 'thumb'));
+
+    $extension = pathinfo($url, PATHINFO_EXTENSION);
+    if (!$extension || !in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif'])) {
+        $defaultLogoPath = public_path('admin/images/no-profile.png');
+        $defaultLogoData = file_get_contents($defaultLogoPath);
+        return 'data:image/png;base64,' . base64_encode($defaultLogoData);
+    }
+
     return $url;
 }
 

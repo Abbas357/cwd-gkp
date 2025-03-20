@@ -149,6 +149,7 @@
             <thead>
                 <tr>
                     <th>Name</th>
+                    <th>Office</th>
                     <th>Allotment Type</th>
                     <th>Dates</th>
                     <th>Duration</th>
@@ -162,7 +163,7 @@
                         @if($allotment->type !== 'Pool')
                             <div class="timeline-user">
                                 <div class="timeline-user-icon">
-                                    <img src="{{ getProfilePic($allotment->user) }}" alt="{{ $allotment->user->name }}" style="width:45px; border-radius: 50px">
+                                    <img src="{{ getProfilePic($allotment->user) }}" alt="{{ $allotment->user->name }}" style="width:50px; height:45px; border-radius: 50px">
                                 </div>
                                 <div class="user-details">
                                     <span class="user-name">{{ $allotment->user->name }}</span>
@@ -172,7 +173,7 @@
                         @elseif($allotment->type === 'Pool' && !empty($allotment->user_id))
                             <div class="timeline-user">
                                 <div class="timeline-user-icon">
-                                    <img src="{{ getProfilePic($allotment->user) }}" alt="{{ $allotment->user->name }}" style="width:45px; border-radius: 50px">
+                                    <img src="{{ getProfilePic($allotment->user) }}" alt="{{ $allotment->user->name }}" style="width:50px; height:45px; border-radius: 50px">
                                 </div>
                                 <div class="user-details">
                                     <span class="user-name">Office Pool</span>
@@ -190,6 +191,9 @@
                                 </div>
                             </div>
                         @endif
+                    </td>
+                    <td>
+                        <span class="timeline-type">{{ $allotment->user->currentPosting->office->name ?? 'N/A' }}</span>
                     </td>
                     <td>
                         <span class="badge {{ match($allotment->type) {

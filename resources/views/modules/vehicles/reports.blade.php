@@ -516,7 +516,14 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="fw-medium">{{ $allotment->user->currentPosting->office->name ?? 'Pool' }}</span>
+                                        <span class="fw-medium">
+                                            @if ($allotment->user->currentPosting)
+                                                {{ $allotment->user->name . ' (' . $allotment->user->currentPosting->designation->name . ')' }}<br>
+                                                {{ 'at ' . $allotment->user->currentPosting->office->name }}
+                                            @else
+                                                Pool
+                                            @endif
+                                        </span>
                                     </td>
                                     <td>
                                         <span class="status-badge bg-{{ $allotment->vehicle->functional_status === 'Functional' ? 'success' : 'danger' }} text-white">

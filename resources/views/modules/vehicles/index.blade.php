@@ -134,7 +134,7 @@
                 , defaultOrderColumn: 16
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
-                    targets: [0, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13]
+                    targets: [0, 3, 4, 5, 7, 9, 10, 11, 12, 13]
                     , visible: false
                 }]
                 , pageLength: 25

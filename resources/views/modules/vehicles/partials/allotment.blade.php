@@ -58,6 +58,10 @@
                                             </tr>
                                             <tr>
                                                 <th>Designation</th>
+                                                <td>{{ $vehicle->allotment->user->currentPosting->designation->name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Office</th>
                                                 <td>{{ $vehicle->allotment->user->currentPosting->office->name }}</td>
                                             </tr>
                                         </tbody>
