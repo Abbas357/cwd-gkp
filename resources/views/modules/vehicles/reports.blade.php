@@ -519,7 +519,7 @@
                                         <span class="fw-medium">
                                             @if ($allotment->user->currentPosting)
                                                 {{ $allotment->user->name . ' (' . $allotment->user->currentPosting->designation->name . ')' }}<br>
-                                                {{ 'at ' . $allotment->user->currentPosting->office->name }}
+                                                {{ 'at ' . $allotment->user->currentPosting->office->name ?? '' }}
                                             @else
                                                 Pool
                                             @endif
