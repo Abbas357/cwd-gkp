@@ -1,5 +1,5 @@
 <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
-
+<link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
 <link href="{{ asset('admin/plugins/flatpickr/flatpickr.min.css') }}" rel="stylesheet">
 
 <style>
@@ -173,12 +173,79 @@
             </tr>
             
         </table>
+
+        <div class="row mt-3 mx-1">
+            @php
+            $uploads = [
+                'vehicle_front_pictures',
+                'vehicle_side_pictures',
+                'vehicle_rear_pictures',
+                'vehicle_interior_pictures',
+            ];
+            @endphp
+            <h3 class="mt-3">Attachments</h3>
+            <table class="table table-bordered" style="vertical-align: middle">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Link</th>
+                        <th class="no-print text-center">Add / Update Attachment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($uploads as $upload)
+                    <tr>
+                        <td style="max-width: 200px">{{ str_replace('_', ' ', ucwords($upload)) }}</td>
+                        <td>
+                            @if($vehicle->hasMedia($upload))
+                            <a href="{{ $vehicle->getFirstMediaUrl($upload) }}" target="_blank" title="{{ str_replace('_', ' ', ucwords($upload)) }}" class="d-flex align-items-center gap-2">
+                                View
+                            </a>
+                            @else
+                            <span>Not Uploaded</span>
+                            @endif
+                        </td>
+                        <td class="no-print text-center">
+                            <label for="{{ $upload }}" class="btn btn-sm btn-light">
+                                <span class="d-flex align-items-center">{!! $vehicle->hasMedia($upload) ? '<i class="bi-pencil-square"></i>&nbsp; Update' : '<i class="bi-plus-circle"></i>&nbsp; Add' !!}</span>
+                            </label>
+                            <input type="file" id="{{ $upload }}" name="{{ $upload }}" class="d-none file-input" data-collection="{{ $upload }}">
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
+
+        </div>
         
     </div>
 </div>
 <script src="{{ asset('admin/plugins/summernote/summernote-bs5.min.js') }}"></script>
+<script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
 <script src="{{ asset('admin/plugins/flatpickr/flatpickr.js') }}"></script>
 <script>
+
+    imageCropper({
+        fileInput: '.file-input'
+        , aspectRatio: 3 / 4
+        , onComplete: async function(file, input) {
+            var formData = new FormData();
+            formData.append('file', file);
+            formData.append('collection', input.dataset.collection);
+            formData.append('_method', "PATCH");
+
+            const url = "{{ route('admin.apps.vehicles.uploadFile', ':id') }}".replace(':id', '{{ $vehicle->id }}');
+            try {
+                const result = await fetchRequest(url, 'POST', formData);
+                if (result) {
+                    $(input).closest('.modal').modal('toggle');
+                }
+            } catch (error) {
+                console.error('Error during form submission:', error);
+            }
+        }
+    });
     
     function enableEditing(field) {
         $('#text-' + field).addClass('d-none');

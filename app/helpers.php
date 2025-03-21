@@ -76,3 +76,79 @@ function formatRouteName(string $routeName): string
         $words[count($words) - 1] = \Illuminate\Support\Str::singular($words[count($words) - 1]);
         return implode(' ', $words);
 }
+
+function formatDuration($startDate, $endDate = null) {
+    if (empty($startDate)) {
+        return 'Not Available';
+    }
+    
+    try {
+        // Convert to Carbon if not already
+        if (!($startDate instanceof \Carbon\Carbon)) {
+            $startDate = \Carbon\Carbon::parse($startDate);
+        }
+        
+        // Use current date if end date not provided
+        if (empty($endDate)) {
+            $endDate = now();
+            $isOngoing = true;
+        } else {
+            if (!($endDate instanceof \Carbon\Carbon)) {
+                $endDate = \Carbon\Carbon::parse($endDate);
+            }
+            $isOngoing = false;
+        }
+        
+        // Make sure start date is before end date
+        if ($startDate->gt($endDate)) {
+            return 'Invalid date range';
+        }
+        
+        // Calculate whole years, months, and days
+        $interval = $startDate->diff($endDate);
+        $years = (int)$interval->format('%y');
+        $months = (int)$interval->format('%m');
+        $days = (int)$interval->format('%d');
+        
+        $parts = [];
+        
+        // For 1 year or more, show years, months, and days
+        if ($years >= 1) {
+            $parts[] = $years . ' ' . ($years > 1 ? 'years' : 'year');
+            
+            if ($months > 0) {
+                $parts[] = $months . ' ' . ($months > 1 ? 'months' : 'month');
+            }
+            
+            if ($days > 0) {
+                $parts[] = $days . ' ' . ($days > 1 ? 'days' : 'day');
+            }
+        }
+        // For less than 1 year but at least 1 month, show only months and days
+        elseif ($months >= 1) {
+            $parts[] = $months . ' ' . ($months > 1 ? 'months' : 'month');
+            
+            if ($days > 0) {
+                $parts[] = $days . ' ' . ($days > 1 ? 'days' : 'day');
+            }
+        }
+        // For less than 1 month, show only days
+        elseif ($days >= 1) {
+            $parts[] = $days . ' ' . ($days > 1 ? 'days' : 'day');
+        }
+        // Handle case where difference is less than a day
+        else {
+            $parts[] = '1 day'; // Minimum duration
+        }
+        
+        $duration = implode(', ', $parts);
+        
+        if ($isOngoing) {
+            $duration .= ' (ongoing)';
+        }
+        
+        return $duration;
+    } catch (\Exception $e) {
+        return 'Calculation Error: ' . $e->getMessage();
+    }
+}

@@ -307,6 +307,17 @@ class VehicleController extends Controller
         return response()->json(['error' => 'No changes were made to the field'], 200);
     }
 
+    public function uploadFile(Request $request, Vehicle $vehicle)
+    {
+        $file = $request->file;
+        $collection = $request->collection;
+        $vehicle->addMedia($file)->toMediaCollection($collection);
+        if ($vehicle->save()) {
+            return response()->json(['success' => 'File Updated']);
+        }
+        return response()->json(['error' => 'Error Uploading File']);
+    }
+
     public function reports(Request $request)
     {
         $cat = [
