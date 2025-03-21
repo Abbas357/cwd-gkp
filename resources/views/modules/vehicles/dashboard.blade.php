@@ -120,7 +120,7 @@
                 <div class="stat-card card h-100" style="background: #ff000015; border: 1px solid #ff000020">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
-                            <div>
+                            <div>git 
                                 <h6 class="text-muted mb-2">In Pool</h6>
                                 <h5 class="mb-0">Department: {{ $departmentPool }}</h5>
                                 <h5 class="mb-0">Office Pool: {{ $officePool }}</h5>
