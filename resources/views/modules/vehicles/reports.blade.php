@@ -485,20 +485,14 @@
                                         </div>
                                     </td>
                                     <td>
-                                        @if(isset($allotment->user) && $allotment->user)
-                                            <span class="fw-medium">
-                                                @if(optional($allotment->user)->currentPosting)
-                                                    {{ optional($allotment->user)->name ?? 'User' }} 
-                                                    ({{ optional(optional($allotment->user->currentPosting)->designation)->name ?? 'Position' }})<br>
-                                                    {{ 'at ' . optional(optional($allotment->user->currentPosting)->office)->name ?? 'Department' }}
-                                                @else
-                                                    {{ optional($allotment->user)->name ?? 'User' }}<br>
-                                                    <small class="text-muted">No posting information</small>
-                                                @endif
-                                            </span>
-                                        @else
-                                            <span class="fw-medium">Pool Vehicle</span>
-                                        @endif
+                                        <span class="fw-medium">
+                                            @if ($allotment->user->currentPosting)
+                                                {{ $allotment->user->name . ' (' . $allotment->user->currentPosting->designation->name . ')' }}<br>
+                                                {{ 'at ' . $allotment->user->currentPosting->office->name }}
+                                            @else
+                                                Pool
+                                            @endif
+                                        </span>
                                     </td>
                                     <td>
                                         @php

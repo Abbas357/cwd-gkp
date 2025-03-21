@@ -109,7 +109,7 @@
             <option value=""></option>
             @foreach(App\Models\User::all() as $user)
                 <option value="{{ $user->id }}">
-                    {{ optional(optional($user->currentPosting)->office)->name ?? 'No Office' }} - {{ $user->name ?? 'Unnamed User' }}
+                    {{ $user->currentPosting?->office->name }} - {{ $user->name }}
                 </option>
             @endforeach
         </select>

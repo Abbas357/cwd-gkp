@@ -39,7 +39,7 @@
             <tr>
                 <th class="table-cell">Parent Office</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-parent_id">{{ $office->name }}</span>
+                    <span id="text-parent_id">{{ $office->parent->name }}</span>
                     <select id="input-parent_id" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('parent_id', {{ $office->id }})">
                         @foreach ($cat['offices'] as $parent)
                         <option value="{{ $parent->id }}" {{ $office->parent_id == $parent->id ? 'selected' : '' }}>
