@@ -15,30 +15,36 @@ class Database
         }
     }
 
-    public static function tableExists($table)
+    public static function applyRelationalSearch($dataTable, array $relationMappings)
     {
-        try {
-            DB::select("SHOW TABLES LIKE '$table'");
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public static function getTableSize($table)
-    {
-        try {
-            $result = DB::select("
-                SELECT 
-                    round(((data_length + index_length) / 1024 / 1024), 2) as 'size' 
-                FROM information_schema.TABLES 
-                WHERE table_schema = DATABASE()
-                AND table_name = ?
-            ", [$table]);
+        return $dataTable->filter(function ($query) use ($relationMappings) {
+            $keyword = request()->input('search.value');
             
-            return $result[0]->size ?? null;
-        } catch (\Exception $e) {
-            return null;
-        }
+            if (empty($keyword)) {
+                return;
+            }
+            
+            $query->where(function ($query) use ($keyword, $relationMappings) {
+                $table = $query->getModel()->getTable();
+                $columns = self::getColumns($table);
+                
+                foreach ($columns as $column) {
+                    if (in_array($column, ['created_at', 'updated_at', 'deleted_at', 'remember_token', 'password'])) {
+                        continue;
+                    }
+                    $query->orWhere($table.'.'.$column, 'LIKE', "%{$keyword}%");
+                }
+                
+                foreach ($relationMappings as $relationPath) {
+                    $parts = explode('.', $relationPath);
+                    $column = array_pop($parts);
+                    $relation = implode('.', $parts);
+                    
+                    $query->orWhereHas($relation, function ($q) use ($column, $keyword) {
+                        $q->where($column, 'LIKE', "%{$keyword}%");
+                    });
+                }
+            });
+        });
     }
 }

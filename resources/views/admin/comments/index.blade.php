@@ -93,7 +93,11 @@
                 , columnDefs: [{
                     targets: [0]
                     , visible: false
-                }]
+                    }, {
+                        targets: -1,
+                        className: 'action-column'
+                    }
+                ]
                 , pageLength: 25
             });
 

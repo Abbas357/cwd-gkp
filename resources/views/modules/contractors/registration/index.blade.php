@@ -138,7 +138,11 @@
                 , columnDefs: [{
                     targets: [0, 2, 3, 6, 11, 12, 13, 14, 15]
                     , visible: false
-                }]
+                    }, {
+                        targets: -1,
+                        className: 'action-column'
+                    }
+                ]
                 , pageLength: 25
             });
 

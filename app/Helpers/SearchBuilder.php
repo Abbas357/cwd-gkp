@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Helpers\Database;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Builder;
@@ -152,7 +153,7 @@ class SearchBuilder
 
     protected function getValidColumn(string $column): ?string
     {
-        if (!in_array($column, $this->allowedColumns)) {
+        if (!in_array($column, $this->allowedColumns) && !isset($this->mapColumns[$column])) {
             return null;
         }
 
@@ -211,6 +212,11 @@ class SearchBuilder
     
     protected function applyCondition(Builder $query, string $method, string $column, string $operator, array $values): void
     {
+        if (Str::contains($column, '.')) {
+            $this->applyRelationshipCondition($query, $method, $column, $operator, $values);
+            return;
+        }
+        
         switch ($operator) {
             case 'between':
                 $query->{$method . 'Between'}($column, $values);
@@ -228,5 +234,37 @@ class SearchBuilder
                 $query->{$method}($column, $operator, $values[0] ?? null);
                 break;
         }
+    }
+
+    protected function applyRelationshipCondition(Builder $query, string $method, string $path, string $operator, array $values): void
+    {
+        // Split the path into relation and column parts
+        $parts = explode('.', $path);
+        $column = array_pop($parts);
+        $relationPath = implode('.', $parts);
+        
+        // Determine the correct whereHas method
+        $whereHasMethod = $method === 'where' ? 'whereHas' : 'orWhereHas';
+        
+        // Apply the condition through the relationship
+        $query->{$whereHasMethod}($relationPath, function($relatedQuery) use ($column, $operator, $values) {
+            switch ($operator) {
+                case 'between':
+                    $relatedQuery->whereBetween($column, $values);
+                    break;
+                case 'not between':
+                    $relatedQuery->whereNotBetween($column, $values);
+                    break;
+                case 'IS NULL':
+                    $relatedQuery->whereNull($column);
+                    break;
+                case 'IS NOT NULL':
+                    $relatedQuery->whereNotNull($column);
+                    break;
+                default:
+                    $relatedQuery->where($column, $operator, $values[0] ?? null);
+                    break;
+            }
+        });
     }
 }

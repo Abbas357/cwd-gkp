@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Vehicle;
 
-use App\Http\Controllers\Controller;
-
 use App\Models\User;
+
 use App\Models\Vehicle;
 use App\Models\Category;
+use App\Helpers\Database;
 use Illuminate\Http\Request;
+use App\Helpers\SearchBuilder;
 use App\Models\VehicleAllotment;
 use Yajra\DataTables\DataTables;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreVehicleRequest;
 
 class VehicleController extends Controller
@@ -19,6 +21,11 @@ class VehicleController extends Controller
         $vehicles = Vehicle::query();
 
         if ($request->ajax()) {
+            $relationMappings = [
+                'added_by' => 'user.currentPosting.designation.name',
+                'assigned_to' => 'allotment.user.currentPosting.office.name'
+            ];
+
             $dataTable = Datatables::of($vehicles)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -40,9 +47,18 @@ class VehicleController extends Controller
                 })
                 ->rawColumns(['action', 'added_by', 'user']);
 
+            if ($request->input('search.value')) {
+                Database::applyRelationalSearch($dataTable, $relationMappings);
+            }
+
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
-                $dataTable->filter(function ($query) use ($request) {
-                    $sb = new \App\Helpers\SearchBuilder($request, $query);
+                $dataTable->filter(function ($query) use ($request, $relationMappings) {
+                    $sb = new SearchBuilder(
+                        $request, 
+                        $query,
+                        [],
+                        $relationMappings,
+                    );
                     $sb->build();
                 });
             }

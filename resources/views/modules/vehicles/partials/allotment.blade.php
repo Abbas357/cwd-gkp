@@ -44,7 +44,7 @@
                             @if($vehicle->allotment->type === 'Pool')
                                 @if(!empty($vehicle->allotment->user_id))
                                     <span class="badge bg-warning fs-6">Office Pool</span>
-                                    <span class="badge bg-warning fs-6">{{ optional(optional(optional(optional($vehicle->allotment)->user)->currentPosting)->office)->name ?? 'No Office' }}</span>
+                                    <span class="badge bg-warning fs-6">{{ $vehicle?->allotment?->user?->currentPosting?->office?->name ?? 'No Office' }}</span>
                                 @else
                                     <span class="badge bg-danger fs-6">Department Pool</span>
                                 @endif
@@ -54,15 +54,15 @@
                                         <tbody>
                                             <tr>
                                                 <th>Name</th>
-                                                <td>{{ optional(optional($vehicle->allotment)->user)->name ?? 'No Name' }}</td>
+                                                <td>{{ $vehicle?->allotment?->user?->name ?? 'No Name' }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Designation</th>
-                                                <td>{{ optional(optional(optional(optional($vehicle->allotment)->user)->currentPosting)->designation)->name ?? 'Designation Missing' }}</td>
+                                                <td>{{ $vehicle?->allotment?->user?->currentPosting?->designation?->name ?? 'Designation Missing' }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Office</th>
-                                                <td>{{ optional(optional(optional(optional($vehicle->allotment)->user)->currentPosting)->office)->name ?? 'Office Missing' }}</td>
+                                                <td>{{ $vehicle?->allotment?->user?->currentPosting?->office?->name ?? 'Office Missing' }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -109,7 +109,7 @@
             <option value=""></option>
             @foreach(App\Models\User::all() as $user)
                 <option value="{{ $user->id }}">
-                    {{ optional(optional($user->currentPosting)->office)->name ?? 'Office Not Assigned' }} - {{ $user->name ?? 'Unnamed User' }}
+                    {{ $user?->currentPosting?->office?->name ?? 'Office Not Assigned' }} - {{ $user->name }}
                 </option>
             @endforeach
         </select>

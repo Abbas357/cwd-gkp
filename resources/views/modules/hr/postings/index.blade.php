@@ -55,7 +55,11 @@
                 defaultOrderColumn: 6,
                 defaultOrderDirection: 'desc',
                 columnDefs: [
-                    { targets: [0], visible: false }
+                    { targets: [0], visible: false
+                    }, {
+                        targets: -1,
+                        className: 'action-column'
+                    }
                 ],
                 pageLength: 25,
                 customButton: {

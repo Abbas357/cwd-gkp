@@ -135,7 +135,11 @@
                 , columnDefs: [{
                     targets: [0, 2, 3, 5, 6, 8, 11, 12, 14, 15]
                     , visible: false
-                }]
+                    }, {
+                        targets: -1,
+                        className: 'action-column'
+                    }
+                ]
             });
 
             hashTabsNavigator({

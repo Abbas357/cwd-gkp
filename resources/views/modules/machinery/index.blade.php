@@ -146,7 +146,11 @@
                 , columnDefs: [{
                     targets: [0, 5, 6, 7, 9, 10, 11, 13, 14, 15, 16, 17]
                     , visible: false
-                }]
+                    }, {
+                        targets: -1,
+                        className: 'action-column'
+                    }
+                ]
                 , pageLength: 25
                 , customButton: {
                     text: `<span class="symbol-container fw-bold create-btn"><i class="bi-plus-circle"></i>&nbsp; Add Machinery</span>`

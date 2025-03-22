@@ -150,7 +150,7 @@
                 @endforeach
 
                 @if(!$hasAnyImages)
-                    <div class="text-center p-4 w-100">
+                    <div class="text-center p-4 mt-2 w-100 border">
                         <i class="bi-camera text-muted" style="font-size: 2rem;"></i>
                         <p class="text-muted">No images available</p>
                     </div>
@@ -176,25 +176,25 @@
                         @if(($allotment->type ?? '') !== 'Pool')
                             <div class="timeline-user">
                                 <div class="timeline-user-icon">
-                                    <img src="{{ optional($allotment)->user ? getProfilePic($allotment->user) : asset('site/images/default-user.png') }}" 
-                                         alt="{{ optional($allotment->user)->name ?? 'User' }}" 
+                                    <img src="{{ getProfilePic($allotment->user) }}" 
+                                         alt="{{ $allotment?->user?->name ?? 'User' }}" 
                                          style="width:50px; height:45px; border-radius: 50px">
                                 </div>
                                 <div class="user-details">
-                                    <span class="user-name">{{ optional($allotment->user)->name ?? 'Individual User' }}</span>
-                                    <span class="user-designation">{{ optional(optional(optional($allotment->user)->currentPosting)->designation)->name ?? 'Position not specified' }}</span>
+                                    <span class="user-name">{{ $allotment?->user?->name ?? 'Name missing' }}</span>
+                                    <span class="user-designation">{{ $allotment?->user?->currentPosting?->designation?->name ?? 'Designation Missing' }}</span>
                                 </div>
                             </div>
                         @elseif(($allotment->type ?? '') === 'Pool' && !empty($allotment->user_id))
                             <div class="timeline-user">
                                 <div class="timeline-user-icon">
-                                    <img src="{{ optional($allotment)->user ? getProfilePic($allotment->user) : asset('site/images/default-user.png') }}" 
-                                         alt="{{ optional($allotment->user)->name ?? 'Pool Manager' }}" 
+                                    <img src="{{ $allotment->user && getProfilePic($allotment->user) }}" 
+                                         alt="{{ $allotment->user?->name ?? 'Pool Manager' }}" 
                                          style="width:50px; height:45px; border-radius: 50px">
                                 </div>
                                 <div class="user-details">
                                     <span class="user-name">Office Pool</span>
-                                    <span class="user-designation">{{ optional(optional(optional($allotment->user)->currentPosting)->designation)->name ?? 'Pool Administrator' }}</span>
+                                    <span class="user-designation">{{ $allotment?->user?->currentPosting?->designation?->name ?? 'Designation Missing' }}</span>
                                 </div>
                             </div>
                         @else
@@ -210,7 +210,7 @@
                         @endif
                     </td>
                     <td>
-                        <span class="timeline-type">{{ optional(optional(optional($allotment->user)->currentPosting)->office)->name ?? 'Department Office' }}</span>
+                        <span class="timeline-type">{{ $allotment?->user?->currentPosting?->office?->name ?? 'Not Applicable' }}</span>
                     </td>
                     <td>
                         <span class="badge {{ match($allotment->type ?? 'Other') {

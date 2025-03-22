@@ -133,47 +133,54 @@
                 ]
                 , defaultOrderColumn: 16
                 , defaultOrderDirection: 'desc'
-                , columnDefs: [{
-                    targets: [0, 3, 4, 5, 7, 9, 10, 11, 12, 13]
-                    , visible: false
-                }]
+                , columnDefs: 
+                [
+                    {
+                        targets: [0, 3, 4, 5, 7, 9, 10, 11, 12, 13]
+                        , visible: false
+                    }, {
+                        targets: -1,
+                        className: 'action-column'
+                    }
+                ]
                 , pageLength: 25
-                , customButton: {
-                    text: `<span class="symbol-container fw-bold create-btn"><i class="bi-plus-circle"></i>&nbsp; Add Vehicle</span>`
-                    , action: function(e, dt, node, config) {
-
-                       formWizardModal({
-                            title: 'Add Vehicle',
-                            fetchUrl: "{{ route('admin.apps.vehicles.create') }}",
-                            btnSelector: '.create-btn',
-                            actionButtonName: 'Add Vehicle',
-                            modalSize: 'lg',
-                            formAction: "{{ route('admin.apps.vehicles.store') }}",
-                            wizardSteps: [
-                                {
-                                    title: "Basic Info",
-                                    fields: ["#step-1"]
-                                },
-                                {
-                                    title: "Model Info",
-                                    fields: ["#step-2"]
-                                },
-                                {
-                                    title: "Reg. info",
-                                    fields: ["#step-3"]
-                                },
-                                {
-                                    title: "Images",
-                                    fields: ["#step-4"]
+                , customButtons: [
+                    {
+                        text: `<span class="symbol-container create-btn"><i class="bi-plus-circle"></i>&nbsp; Add Vehicle</span>`
+                        , action: function(e, dt, node, config) {
+                        formWizardModal({
+                                title: 'Add Vehicle',
+                                fetchUrl: "{{ route('admin.apps.vehicles.create') }}",
+                                btnSelector: '.create-btn',
+                                actionButtonName: 'Add Vehicle',
+                                modalSize: 'lg',
+                                formAction: "{{ route('admin.apps.vehicles.store') }}",
+                                wizardSteps: [
+                                    {
+                                        title: "Basic Info",
+                                        fields: ["#step-1"]
+                                    },
+                                    {
+                                        title: "Model Info",
+                                        fields: ["#step-2"]
+                                    },
+                                    {
+                                        title: "Reg. info",
+                                        fields: ["#step-3"]
+                                    },
+                                    {
+                                        title: "Images",
+                                        fields: ["#step-4"]
+                                    }
+                                ],
+                                formSubmitted() {
+                                    table.ajax.reload();
                                 }
-                            ],
-                            formSubmitted() {
-                                table.ajax.reload();
-                            }
-                        });
+                            });
 
+                        },
                     },
-                }
+                ]
             });
 
             $("#vehicles-datatable").on('click', '.delete-btn', async function() {

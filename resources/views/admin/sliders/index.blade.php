@@ -94,7 +94,11 @@
                 , columnDefs: [{
                     targets: [0]
                     , visible: false
-                }]
+                    }, {
+                        targets: -1,
+                        className: 'action-column'
+                    }
+                ]
                 , customButton: {
                     text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Sliders</span>`
                     , action: function(e, dt, node, config) {

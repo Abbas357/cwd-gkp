@@ -8,7 +8,7 @@
 }
 
 .table>:not(caption)>*>* {
-    padding: .2rem .4rem !important;
+    padding: .1rem .4rem !important;
 }
 
 .btn-light {
@@ -365,7 +365,7 @@ div.dt-container .dt-paging .dt-paging-button.current {
 
 div.dt-container .btn-secondary {
     opacity: 0.9;
-    border: none;
+    border: 1px solid #00000022;
     background-color: #eee;
     color: #212529;
 }
@@ -396,6 +396,25 @@ div.dt-container div.dtb-popover-close {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+div.dt-container .dtsb-searchBuilder {
+    width: max-content !important;
+}
+
+div.dt-container .dtsb-searchBuilder .btn-secondary, div.dt-container .dtsb-searchBuilder .dtsb-logicContainer {
+    border: 1px solid #00000055;
+    box-shadow: 0 0 10px #00000033;
+}
+
+div.dt-container .dtsb-searchBuilder {
+    width: max-content !important;
+}
+
+div.dt-container .dropdown-menu {
+    width: max-content !important;
+    background-color: #ffffff88;
+    backdrop-filter: blur(3px);
 }
 
 div.dt-container div.dtb-popover-close:hover {

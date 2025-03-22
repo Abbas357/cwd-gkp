@@ -84,7 +84,11 @@
                 columnDefs: [{
                     targets: [0],
                     visible: false
-                }],
+                    }, {
+                        targets: -1,
+                        className: 'action-column'
+                    }
+                ],
                 pageLength: 25,
                 customButton: {
                     text: `<span class="symbol-container fw-bold create-btn"><i class="bi-plus-circle"></i>&nbsp; Add Sanctioned Post</span>`,

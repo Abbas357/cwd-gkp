@@ -94,7 +94,11 @@
                 , columnDefs: [{
                     targets: [0, 2, 5]
                     , visible: false
-                }]
+                    }, {
+                        targets: -1,
+                        className: 'action-column'
+                    }
+                ]
             });
 
             $("#standardizations").on('click', '.approve-btn', async function() {

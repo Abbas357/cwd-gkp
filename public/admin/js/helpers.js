@@ -202,6 +202,20 @@ function handleValidationErrors(errors) {
 }
 
 function initDataTable(selector, options = {}) {
+
+    const $table = $(selector);
+    if (!$table.parent().hasClass('datatable-loading-container')) {
+        $table.wrap('<div class="datatable-loading-container"></div>');
+        
+        $table.parent().append(`
+            <div class="datatable-loading-progress"></div>
+            <div class="datatable-content-dimmer"></div>
+        `);
+    }
+    
+    const $loadingProgress = $table.parent().find('.datatable-loading-progress');
+    const $contentDimmer = $table.parent().find('.datatable-content-dimmer');
+
     const exportButtons = [
         {
             extend: "copy",
@@ -210,7 +224,7 @@ function initDataTable(selector, options = {}) {
                     &nbsp; Copy
                 </span>`,
             exportOptions: {
-                columns: ":visible:not(:last-child)",
+                columns: ':visible:not(.action-column)',
             },
         },
         {
@@ -220,7 +234,7 @@ function initDataTable(selector, options = {}) {
                     &nbsp; CSV
                 </span>`,
             exportOptions: {
-                columns: ":visible:not(:last-child)",
+                columns: ':visible:not(.action-column)',
             },
         },
         {
@@ -230,7 +244,7 @@ function initDataTable(selector, options = {}) {
                     &nbsp; Excel
                 </span>`,
             exportOptions: {
-                columns: ":visible:not(:last-child)",
+                columns: ':visible:not(.action-column)',
             },
         },
         {
@@ -241,10 +255,20 @@ function initDataTable(selector, options = {}) {
                 </span>`,
             autoPrint: false,
             exportOptions: {
-                columns: ":visible:not(:last-child)",
+                columns: ':visible:not(.action-column)',
             },
         },
     ];
+
+    const customButtons = [];
+    
+    if (options.customButton) {
+        customButtons.push(options.customButton);
+    }
+    
+    if (options.customButtons && Array.isArray(options.customButtons)) {
+        customButtons.push(...options.customButtons);
+    }
 
     const defaultOptions = {
         processing: true,
@@ -336,7 +360,7 @@ function initDataTable(selector, options = {}) {
                             });
                         },
                     },
-                    ...(options.customButton ? [options.customButton] : []),
+                    ...customButtons,
                 ],
             },
             top1Start: {
@@ -356,10 +380,14 @@ function initDataTable(selector, options = {}) {
         },
         columnDefs: options.columnDefs || [],
         preDrawCallback() {
-            $(selector).addClass("card-loading");
+            $table.parent().addClass('loading');
+            $loadingProgress.addClass('active');
+            $contentDimmer.addClass('active');
         },
         drawCallback() {
-            $(selector).removeClass("card-loading");
+            $table.parent().removeClass('loading');
+            $loadingProgress.removeClass('active');
+            $contentDimmer.removeClass('active');
         },
     };
 

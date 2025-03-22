@@ -54,10 +54,9 @@
         }
         
         .table-container {
-            border: 1px solid #e9ecef;
             border-radius: var(--border-radius);
             overflow: hidden;
-            box-shadow: var(--card-shadow);
+            box-shadow: none;
             transition: var(--transition);
         }
         
@@ -105,30 +104,9 @@
             padding: 2rem;
         }
         
-        .form-label {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #495057;
-            font-size: 0.9rem;
-        }
-        
-        .form-control, .form-select {
-            padding: 0.6rem 1rem;
-            border: 1px solid #dee2e6;
-            border-radius: var(--border-radius);
-            transition: var(--transition);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-        }
-        
-        .form-control:focus, .form-select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(67, 97, 238, 0.15);
-        }
-        
         .form-check-input {
             width: 1.2em;
             height: 1.2em;
-            margin-top: 0.25em;
         }
         
         .form-check-input:checked {
@@ -225,14 +203,6 @@
     <div class="wrapper">
         <div class="card">
             <div class="card-header">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h3 class="card-title mb-0">Vehicle Reports</h3>
-                    <span class="badge bg-primary rounded-pill">
-                        {{ $allotments->count() ?? 0 }} {{ Str::plural('vehicle', $allotments->count() ?? 0) }}
-                    </span>
-                </div>
-            </div>
-            <div class="card-body p-1">
                 <div class="col-12 p-2">
                     <div class="d-flex justify-content-between align-items-center">
                         <h4 class="text-muted mb-0 fs-5">Filter Options</h4>
@@ -243,6 +213,8 @@
                     </div>
                     <hr class="mt-2">
                 </div>
+            </div>
+            <div class="card-body p-1">
 
                 <form method="GET" class="filter-section">
                     <div class="row g-2">
@@ -281,7 +253,7 @@
                                 <option value=""></option>
                                 @foreach(App\Models\User::all() as $user)
                                     <option value="{{ $user->id }}" @selected(($filters['user_id'] ?? null) == $user->id)>
-                                        {{ optional(optional($user->currentPosting)->office)->name ?? 'Office Not Assigned' }} - {{ $user->name ?? 'Unnamed User' }}
+                                        {{ $user?->currentPosting?->office?->name ?? 'Office Not Assigned' }} - {{ $user->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -472,23 +444,23 @@
                                 <tr>
                                     <td>
                                         <div class="vehicle-details">
-                                            <strong>{{ optional($allotment->vehicle)->brand ?? 'Unknown Brand' }} {{ optional($allotment->vehicle)->model ?? 'Unknown Model' }}</strong>
-                                            <small>Type: {{ optional($allotment->vehicle)->type ?? 'Unspecified' }}</small>
-                                            <small>Color: {{ optional($allotment->vehicle)->color ?? 'Unspecified' }}</small>
-                                            <small>Year: {{ optional($allotment->vehicle)->model_year ?? 'Unspecified' }}</small>
+                                            <strong>{{ $allotment?->vehicle?->brand ?? 'Unknown Brand' }} {{ $allotment?->vehicle?->model ?? 'Unknown Model' }}</strong>
+                                            <small>Type: {{ $allotment?->vehicle?->type ?? 'Unspecified' }}</small>
+                                            <small>Color: {{ $allotment?->vehicle?->color ?? 'Unspecified' }}</small>
+                                            <small>Year: {{ $allotment?->vehicle?->model_year ?? 'Unspecified' }}</small>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="vehicle-details">
-                                            <strong>{{ optional($allotment->vehicle)->registration_number ?? 'Unregistered' }}</strong>
-                                            <small>Chassis: {{ optional($allotment->vehicle)->chassis_number ?? 'Not Available' }}</small>
+                                            <strong>{{ $allotment?->vehicle?->registration_number ?? 'Unregistered' }}</strong>
+                                            <small>Chassis: {{ $allotment?->vehicle?->chassis_number ?? 'Not Available' }}</small>
                                         </div>
                                     </td>
                                     <td>
                                         <span class="fw-medium">
                                             @if ($allotment->user->currentPosting)
-                                                {{ $allotment->user->name . ' (' . $allotment->user->currentPosting->designation->name . ')' }}<br>
-                                                {{ 'at ' . $allotment->user->currentPosting->office->name }}
+                                                {{ $allotment?->user?->name . ' (' . $allotment?->user?->currentPosting?->designation?->name ?? 'No Designation' . ')' }}<br>
+                                                {{ 'at ' . $allotment?->user?->currentPosting?->office?->name ?? 'No Office' }}
                                             @else
                                                 Pool
                                             @endif
@@ -496,7 +468,7 @@
                                     </td>
                                     <td>
                                         @php
-                                            $status = optional($allotment->vehicle)->functional_status ?? 'Unknown';
+                                            $status = $allotment?->vehicle?->functional_status ?? 'Unknown';
                                             $statusClass = $status === 'Functional' ? 'success' : ($status === 'Non-Functional' ? 'danger' : 'secondary');
                                         @endphp
                                         <span class="status-badge bg-{{ $statusClass }} text-white">
@@ -508,7 +480,7 @@
                                             @php
                                                 $startDate = null;
                                                 try {
-                                                    $startDate = optional($allotment->start_date)->format('j F, Y');
+                                                    $startDate = $allotment?->start_date->format('j F, Y');
                                                 } catch (\Exception $e) {
                                                     $startDate = 'Not Specified';
                                                 }
