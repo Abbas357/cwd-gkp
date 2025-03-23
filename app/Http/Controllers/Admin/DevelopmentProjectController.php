@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-
 use App\Models\User;
+
 use App\Models\District;
+use App\Helpers\Database;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Helpers\SearchBuilder;
 use Yajra\DataTables\DataTables;
 use App\Models\DevelopmentProject;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDevelopmentProjectRequest;
 
 class DevelopmentProjectController extends Controller
@@ -23,6 +25,11 @@ class DevelopmentProjectController extends Controller
         $projects->when($status !== null, function ($query) use ($status) {
             $query->where('status', $status);
         });
+
+        $relationMappings = [
+            'chief_engineer' => 'chiefEngineer.currentPosting.office.name',
+            'uploaded_by' => 'user.currentPosting.designation.name'
+        ];
 
         if ($request->ajax()) {
 
@@ -59,13 +66,22 @@ class DevelopmentProjectController extends Controller
                 })
                 ->rawColumns(['action', 'uploaded_by']);
 
+            if ($request->input('search.value')) {
+                Database::applyRelationalSearch($dataTable, $relationMappings);
+            }
+
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
-                $dataTable->filter(function ($query) use ($request) {
-                    $sb = new \App\Helpers\SearchBuilder($request, $query);
+                $dataTable->filter(function ($query) use ($request, $relationMappings) {
+                    $sb = new SearchBuilder(
+                        $request, 
+                        $query,
+                        [],
+                        $relationMappings,
+                    );
                     $sb->build();
                 });
             }
-            
+
             return $dataTable->toJson();
         }
 

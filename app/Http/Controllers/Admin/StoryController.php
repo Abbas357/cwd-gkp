@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-
 use App\Models\Story;
+
+use App\Helpers\Database;
 use Illuminate\Http\Request;
+use App\Helpers\SearchBuilder;
 use Yajra\DataTables\DataTables;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreStoryRequest;
 
 class StoryController extends Controller
@@ -24,6 +26,10 @@ class StoryController extends Controller
                 $query->whereNull('published_at');
             }
         });
+
+        $relationMappings = [
+            'user' => 'user.currentPosting.designation.name'
+        ];
 
         if ($request->ajax()) {
             $dataTable = Datatables::of($stories)
@@ -48,9 +54,18 @@ class StoryController extends Controller
                 })
                 ->rawColumns(['action', 'image', 'user']);
 
+            if ($request->input('search.value')) {
+                Database::applyRelationalSearch($dataTable, $relationMappings);
+            }
+
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
-                $dataTable->filter(function ($query) use ($request) {
-                    $sb = new \App\Helpers\SearchBuilder($request, $query);
+                $dataTable->filter(function ($query) use ($request, $relationMappings) {
+                    $sb = new SearchBuilder(
+                        $request, 
+                        $query,
+                        [],
+                        $relationMappings,
+                    );
                     $sb->build();
                 });
             }

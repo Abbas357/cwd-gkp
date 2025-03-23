@@ -12,11 +12,6 @@
     <x-slot name="header">
         <li class="breadcrumb-item active" aria-current="page">Vehicles</li>
     </x-slot>
-    <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-light border" onclick="openUserQuickCreateModal(onUserCreated)">
-            <i class="bi-person-plus"></i> Add User
-        </button>
-    </div>
     <div class="table-responsive">
         <table id="vehicles-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
             <thead>
@@ -177,6 +172,12 @@
                                     table.ajax.reload();
                                 }
                             });
+
+                        },
+                    },
+                    {
+                        text: `<span class="symbol-container" onclick="openUserQuickCreateModal(onUserCreated)"><i class="bi-plus-circle"></i>&nbsp; Add User</span>`
+                        , action: function(e, dt, node, config) {
 
                         },
                     },

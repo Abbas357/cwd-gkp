@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Settings;
 
 use Carbon\Carbon;
 
+use App\Helpers\Database;
 use Illuminate\Http\Request;
+use App\Helpers\SearchBuilder;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use Spatie\Activitylog\Models\Activity;
@@ -18,6 +20,10 @@ class ActivityLogController extends Controller
         if (!$request->user()->isAdmin()) {
             $logs = $request->user()->logs()->getQuery();
         }
+
+        $relationMappings = [
+            'causer' => 'causer.currentPosting.designation.name',
+        ];
 
         if ($request->ajax()) {
             $dataTable = Datatables::of($logs)
@@ -50,13 +56,21 @@ class ActivityLogController extends Controller
                 })
                 ->rawColumns(['properties', 'subject', 'causer']);
 
+            if ($request->input('search.value')) {
+                Database::applyRelationalSearch($dataTable, $relationMappings);
+            }
+
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
-                $dataTable->filter(function ($query) use ($request) {
-                    $sb = new \App\Helpers\SearchBuilder($request, $query);
+                $dataTable->filter(function ($query) use ($request, $relationMappings) {
+                    $sb = new SearchBuilder(
+                        $request, 
+                        $query,
+                        [],
+                        $relationMappings,
+                    );
                     $sb->build();
                 });
             }
-
             return $dataTable->toJson();
         }
 

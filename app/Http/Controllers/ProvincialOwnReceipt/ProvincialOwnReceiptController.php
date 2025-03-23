@@ -6,7 +6,9 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\District;
+use App\Helpers\Database;
 use Illuminate\Http\Request;
+use App\Helpers\SearchBuilder;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -25,6 +27,10 @@ class ProvincialOwnReceiptController extends Controller
         $receipts->when($type !== null, function ($query) use ($type) {
             $query->where('type', $type);
         });
+
+        $relationMappings = [
+            'district' => 'district.name',
+        ];
 
         if ($request->ajax()) {
             $dataTable = Datatables::of($receipts)
@@ -49,9 +55,18 @@ class ProvincialOwnReceiptController extends Controller
                 })
                 ->rawColumns(['action']);
 
+            if ($request->input('search.value')) {
+                Database::applyRelationalSearch($dataTable, $relationMappings);
+            }
+
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
-                $dataTable->filter(function ($query) use ($request) {
-                    $sb = new \App\Helpers\SearchBuilder($request, $query);
+                $dataTable->filter(function ($query) use ($request, $relationMappings) {
+                    $sb = new SearchBuilder(
+                        $request, 
+                        $query,
+                        [],
+                        $relationMappings,
+                    );
                     $sb->build();
                 });
             }

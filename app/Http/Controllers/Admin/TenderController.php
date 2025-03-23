@@ -6,8 +6,10 @@ use App\Models\User;
 
 use App\Models\Tender;
 use App\Models\Category;
+use App\Helpers\Database;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Helpers\SearchBuilder;
 use App\Models\SiteNotification;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
@@ -25,6 +27,10 @@ class TenderController extends Controller
         $tender->when($status !== null, function ($query) use ($status) {
             $query->where('status', $status);
         });
+
+        $relationMappings = [
+            'user' => 'user.currentPosting.designation.name'
+        ];
 
         if ($request->ajax()) {
             $dataTable = Datatables::of($tender)
@@ -45,9 +51,9 @@ class TenderController extends Controller
                     return view('admin.tenders.partials.status', compact('row'))->render();
                 })
                 ->addColumn('user', function ($row) {
-                    return $row->user->currentPosting?->designation->name 
-                    ? '<a href="'.route('admin.apps.hr.users.show', $row->user->id).'" target="_blank">'.$row->user->currentPosting?->designation->name .'</a>' 
-                    : ($row->user->currentPosting?->designation->name  ?? 'N/A');
+                    return $row->user?->currentPosting?->designation?->name 
+                    ? '<a href="'.route('admin.apps.hr.users.show', $row?->user?->id).'" target="_blank">'.$row->user?->currentPosting?->designation?->name .'</a>' 
+                    : ($row->user?->currentPosting?->designation?->name  ?? 'N/A');
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');
@@ -57,9 +63,18 @@ class TenderController extends Controller
                 })
                 ->rawColumns(['action', 'status', 'user']);
 
+            if ($request->input('search.value')) {
+                Database::applyRelationalSearch($dataTable, $relationMappings);
+            }
+
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
-                $dataTable->filter(function ($query) use ($request) {
-                    $sb = new \App\Helpers\SearchBuilder($request, $query);
+                $dataTable->filter(function ($query) use ($request, $relationMappings) {
+                    $sb = new SearchBuilder(
+                        $request, 
+                        $query,
+                        [],
+                        $relationMappings,
+                    );
                     $sb->build();
                 });
             }

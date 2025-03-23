@@ -6,9 +6,11 @@ use App\Models\User;
 use App\Models\Office;
 use App\Models\Posting;
 use App\Models\District;
+use App\Helpers\Database;
 use App\Models\Designation;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Helpers\SearchBuilder;
 use App\Models\SanctionedPost;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
@@ -31,6 +33,11 @@ class UserController extends Controller
         $users->when($active !== null, function ($query) use ($active) {
             $query->where('status', $active);
         });
+
+        $relationMappings = [
+            'designation' => 'currentPosting.designation.name',
+            'office' => 'currentPosting.office.name'
+        ];
 
         if ($request->ajax()) {
             $dataTable = Datatables::of($users)
@@ -55,9 +62,18 @@ class UserController extends Controller
                 })
                 ->rawColumns(['action', 'current_posting', 'name']);
 
+            if ($request->input('search.value')) {
+                Database::applyRelationalSearch($dataTable, $relationMappings);
+            }
+
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
-                $dataTable->filter(function ($query) use ($request) {
-                    $sb = new \App\Helpers\SearchBuilder($request, $query);
+                $dataTable->filter(function ($query) use ($request, $relationMappings) {
+                    $sb = new SearchBuilder(
+                        $request, 
+                        $query,
+                        [],
+                        $relationMappings,
+                    );
                     $sb->build();
                 });
             }

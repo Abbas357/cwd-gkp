@@ -23,4 +23,16 @@ abstract class Controller
             session()->put($sessionKey, true);
         }
     }
+
+    public function toRawSql($query)
+    {
+        $sql = $query->toSql();
+        $bindings = $query->getBindings();
+        
+        $bindings = array_map(function ($binding) {
+            return is_numeric($binding) ? $binding : "'{$binding}'";
+        }, $bindings);
+        
+        return vsprintf(str_replace('?', '%s', $sql), $bindings);
+    }
 }

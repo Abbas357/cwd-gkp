@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-
 use App\Models\Category;
+
+use App\Helpers\Database;
 use App\Models\Seniority;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Helpers\SearchBuilder;
 use App\Models\SiteNotification;
 use Yajra\DataTables\DataTables;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\StoreSeniorityRequest;
 
@@ -24,6 +26,10 @@ class SeniorityController extends Controller
         $seniority->when($status !== null, function ($query) use ($status) {
             $query->where('status', $status);
         });
+
+        $relationMappings = [
+            'user' => 'user.currentPosting.designation.name'
+        ];
 
         if ($request->ajax()) {
             $dataTable = Datatables::of($seniority)
@@ -50,9 +56,18 @@ class SeniorityController extends Controller
                 })
                 ->rawColumns(['action', 'status', 'attachment', 'user']);
 
+            if ($request->input('search.value')) {
+                Database::applyRelationalSearch($dataTable, $relationMappings);
+            }
+
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
-                $dataTable->filter(function ($query) use ($request) {
-                    $sb = new \App\Helpers\SearchBuilder($request, $query);
+                $dataTable->filter(function ($query) use ($request, $relationMappings) {
+                    $sb = new SearchBuilder(
+                        $request, 
+                        $query,
+                        [],
+                        $relationMappings,
+                    );
                     $sb->build();
                 });
             }

@@ -19,6 +19,7 @@ Route::group(['prefix' => 'vehicles', 'as' => 'vehicles.', 'middleware' => ['can
     Route::patch('/update/field/{vehicle}', [VehicleController::class, 'updateField'])->name('updateField')->can('update', 'vehicle');
     Route::patch('/update/file/{vehicle}', [VehicleController::class, 'uploadFile'])->name('uploadFile')->can('update', 'Contractor');
     Route::delete('/{vehicle}', [VehicleController::class, 'destroy'])->name('destroy')->can('delete', 'vehicle');
+    Route::get('/{vehicle}/details', [VehicleController::class, 'showVehicleDetails'])->name('details');
 
     Route::prefix('allotment')->as('allotment.')->group(function () {
         Route::get('/{vehicle}', [VehicleAllotmentController::class, 'create'])->name('create');

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-
 use App\Models\Slider;
+
+use App\Helpers\Database;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Helpers\SearchBuilder;
 use Yajra\DataTables\DataTables;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\StoreSliderRequest;
 
@@ -21,7 +23,11 @@ class SliderController extends Controller
 
         $sliders->when($status !== null, function ($query) use ($status) {
             $query->where('status', $status);
-        });
+        }); 
+
+        $relationMappings = [
+            'user' => 'user.currentPosting.designation.name'
+        ];
 
         if ($request->ajax()) {
             $dataTable = Datatables::of($sliders)
@@ -48,9 +54,18 @@ class SliderController extends Controller
                 })
                 ->rawColumns(['action', 'status', 'image', 'user']);
 
+            if ($request->input('search.value')) {
+                Database::applyRelationalSearch($dataTable, $relationMappings);
+            }
+
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
-                $dataTable->filter(function ($query) use ($request) {
-                    $sb = new \App\Helpers\SearchBuilder($request, $query);
+                $dataTable->filter(function ($query) use ($request, $relationMappings) {
+                    $sb = new SearchBuilder(
+                        $request, 
+                        $query,
+                        [],
+                        $relationMappings,
+                    );
                     $sb->build();
                 });
             }

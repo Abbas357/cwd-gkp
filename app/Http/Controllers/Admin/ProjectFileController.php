@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-
 use App\Models\Project;
+
 use App\Models\Category;
+use App\Helpers\Database;
 use App\Models\ProjectFile;
 use Illuminate\Http\Request;
+use App\Helpers\SearchBuilder;
 use Yajra\DataTables\DataTables;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProjectFileRequest;
 
 class ProjectFileController extends Controller
@@ -22,6 +24,10 @@ class ProjectFileController extends Controller
         $projects->when($status !== null, function ($query) use ($status) {
             $query->where('status', $status);
         });
+
+        $relationMappings = [
+            'uploaded_by' => 'publishBy.currentPosting.designation.name'
+        ];
 
         if ($request->ajax()) {
             $dataTable = Datatables::of($projects)
@@ -51,9 +57,18 @@ class ProjectFileController extends Controller
                 })
                 ->rawColumns(['action', 'status', 'file', 'uploaded_by']);
 
+            if ($request->input('search.value')) {
+                Database::applyRelationalSearch($dataTable, $relationMappings);
+            }
+
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
-                $dataTable->filter(function ($query) use ($request) {
-                    $sb = new \App\Helpers\SearchBuilder($request, $query);
+                $dataTable->filter(function ($query) use ($request, $relationMappings) {
+                    $sb = new SearchBuilder(
+                        $request, 
+                        $query,
+                        [],
+                        $relationMappings,
+                    );
                     $sb->build();
                 });
             }

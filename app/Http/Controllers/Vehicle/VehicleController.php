@@ -19,13 +19,14 @@ class VehicleController extends Controller
     public function all(Request $request)
     {
         $vehicles = Vehicle::query();
-
+        
+        $relationMappings = [
+            'added_by' => 'user.currentPosting.designation.name',
+            'assigned_to' => 'allotment.user.currentPosting.office.name',
+            'officer_name' => 'allotment.user.name'
+        ];
+        
         if ($request->ajax()) {
-            $relationMappings = [
-                'added_by' => 'user.currentPosting.designation.name',
-                'assigned_to' => 'allotment.user.currentPosting.office.name'
-            ];
-
             $dataTable = Datatables::of($vehicles)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -37,7 +38,12 @@ class VehicleController extends Controller
                     : ($row->user->currentPosting?->designation->name  ?? 'N/A');
                 })
                 ->addColumn('assigned_to', function ($row) {
-                    return $row->allotment->user->currentPosting->office->name ?? 'Pool';
+                    return $row->allotment?->user 
+                        ? ($row->allotment->user->currentPosting?->office?->name . ' (' . $row->allotment->user->name . ')') 
+                        : 'Pool';
+                })
+                ->addColumn('officer_name', function ($row) {
+                    return $row->allotment?->user?->name ?? 'Name not available';
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');
@@ -306,6 +312,35 @@ class VehicleController extends Controller
         ]);
     }
 
+    public function showVehicleDetails(Vehicle $vehicle)
+    {
+        // Load vehicle allotments with relations
+        $allotments = $vehicle->allotments()
+            ->with(['user', 'user.currentPosting', 'user.currentPosting.designation', 'user.currentPosting.office'])
+            ->orderBy('start_date', 'desc')
+            ->get();
+            
+        // Get current allotment if exists
+        $currentAllotment = $allotments->where('is_current', true)->first();
+
+        if (!$vehicle) {
+            return response()->json([
+                'success' => false,
+                'data' => [
+                    'result' => 'Unable to load Vehicle Details',
+                ],
+            ]);
+        }
+
+        $html = view('modules.vehicles.partials.allotment-detail', compact('vehicle', 'allotments', 'currentAllotment'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
+    }
+
     public function updateField(Request $request, Vehicle $vehicle)
     {
         $request->validate([
@@ -344,7 +379,7 @@ class VehicleController extends Controller
             'fuel_type' => Category::where('type', 'fuel_type')->get(),
             'vehicle_registration_status' => Category::where('type', 'vehicle_registration_status')->get(),
             'vehicle_brand' => Category::where('type', 'vehicle_brand')->get(),
-            'allotment_status' => ['Pool', 'Permanent', 'Temparory'],
+            'allotment_status' => ['Office Pool', 'Department Pool', 'Permanent Allotted', 'Temporary Allotted'],
         ];
 
         $filters = [
@@ -357,7 +392,6 @@ class VehicleController extends Controller
             'registration_status' => null,
             'brand' => null,
             'model_year' => null,
-            'allotment_status' => null
         ];
 
         $filters = array_merge($filters, $request->only(array_keys($filters)));
@@ -373,19 +407,22 @@ class VehicleController extends Controller
         }
 
         $query = VehicleAllotment::query()
-            ->with(['vehicle', 'user'])
-            ->when(!$show_history, fn($q) => $q->whereNot('is_current', 0))
-            ->when(request('allotment_status'), function($q)  {
-                if (request('allotment_status') === 'Pool') {
-                    return $q->where('type', 'Pool');
-                } 
-                else {
-                    return $q->where('type', request('allotment_status'));
-                }
-            })
-            ->when(!request('allotment_status'), function($q) {
-                return $q->where('type', '!=', 'Pool');
-            });
+        ->with(['vehicle', 'user'])
+        ->when(!$show_history, fn($q) => $q->where('is_current', '!=', 0))
+        ->when(request('allotment_status'), function($q) {
+            $status = request('allotment_status');
+            
+            return match ($status) {
+                'Office Pool' => $q->where('type', 'Pool')->whereNotNull('user_id'),
+                'Department Pool' => $q->where('type', 'Pool')->whereNull('user_id'),
+                'Permanent Allotted' => $q->where('type', 'Permanent'),
+                'Temporary Allotted' => $q->where('type', 'Temporary'),
+                default => $q->where('type', '!=', 'Pool'), // Exclude 'Pool' for invalid statuses
+            };
+        })
+        ->when(!request('allotment_status'), function($q) {
+            return $q->where('type', '!=', 'Pool');
+        });
 
         if ($filters['user_id']) {
             if ($include_subordinates) {
@@ -400,11 +437,7 @@ class VehicleController extends Controller
 
         if ($filters['vehicle_id']) {
             $query->where('vehicle_id', $filters['vehicle_id']);
-        }
-
-        if ($filters['allotment_status']) {
-            $query->where('type', $filters['allotment_status']);
-        }    
+        }  
 
         $query->whereHas('vehicle', function ($q) use ($filters, $cat) {
             if ($filters['status']) {

@@ -89,7 +89,6 @@
         .card-header {
             background: linear-gradient(to right, #e9ecef, #f8f9fa);
             border-bottom: 1px solid #e9ecef;
-            padding: 1.25rem 1.5rem;
         }
         
         .card-title {
@@ -189,9 +188,6 @@
                 border: 1px solid #dee2e6;
             }
             
-            .card-header {
-                background: #f8f9fa !important;
-            }
         }
     </style>
     @endpush
@@ -203,7 +199,7 @@
     <div class="wrapper">
         <div class="card">
             <div class="card-header">
-                <div class="col-12 p-2">
+                <div class="col-12">
                     <div class="d-flex justify-content-between align-items-center">
                         <h4 class="text-muted mb-0 fs-5">Filter Options</h4>
                         <button type="button" id="toggleFilters" class="btn btn-sm btn-outline-secondary">
@@ -211,7 +207,7 @@
                             <span id="filterText">Hide Filters</span>
                         </button>
                     </div>
-                    <hr class="mt-2">
+                    <hr />
                 </div>
             </div>
             <div class="card-body p-1">
@@ -437,93 +433,99 @@
                                 @endif
                                 <th class="bg-light">Duration</th>
                                 <th class="bg-light no-print">Documents</th>
+                                <th class="bg-light no-print">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($allotments ?? [] as $allotment)
-                                <tr>
-                                    <td>
-                                        <div class="vehicle-details">
-                                            <strong>{{ $allotment?->vehicle?->brand ?? 'Unknown Brand' }} {{ $allotment?->vehicle?->model ?? 'Unknown Model' }}</strong>
-                                            <small>Type: {{ $allotment?->vehicle?->type ?? 'Unspecified' }}</small>
-                                            <small>Color: {{ $allotment?->vehicle?->color ?? 'Unspecified' }}</small>
-                                            <small>Year: {{ $allotment?->vehicle?->model_year ?? 'Unspecified' }}</small>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="vehicle-details">
-                                            <strong>{{ $allotment?->vehicle?->registration_number ?? 'Unregistered' }}</strong>
-                                            <small>Chassis: {{ $allotment?->vehicle?->chassis_number ?? 'Not Available' }}</small>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="fw-medium">
-                                            @if ($allotment->user->currentPosting)
-                                                {{ $allotment?->user?->name . ' (' . $allotment?->user?->currentPosting?->designation?->name ?? 'No Designation' . ')' }}<br>
-                                                {{ 'at ' . $allotment?->user?->currentPosting?->office?->name ?? 'No Office' }}
-                                            @else
-                                                Pool
-                                            @endif
-                                        </span>
-                                    </td>
-                                    <td>
-                                        @php
-                                            $status = $allotment?->vehicle?->functional_status ?? 'Unknown';
-                                            $statusClass = $status === 'Functional' ? 'success' : ($status === 'Non-Functional' ? 'danger' : 'secondary');
-                                        @endphp
-                                        <span class="status-badge bg-{{ $statusClass }} text-white">
-                                            {{ $status }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="text-muted">
-                                            @php
-                                                $startDate = null;
-                                                try {
-                                                    $startDate = $allotment?->start_date->format('j F, Y');
-                                                } catch (\Exception $e) {
-                                                    $startDate = 'Not Specified';
-                                                }
-                                            @endphp
-                                            {{ $startDate }}
-                                        </span>
-                                    </td>
-                                    @if(request('show_history', false))
-                                    <td>
-                                        <span class="text-muted">
-                                            @php
-                                                $endDate = 'Current';
-                                                try {
-                                                    if(!empty($allotment->end_date)) {
-                                                        $endDate = $allotment->end_date->format('j F, Y');
-                                                    }
-                                                } catch (\Exception $e) {
-                                                    
-                                                }
-                                            @endphp
-                                            {{ $endDate }}
-                                        </span>
-                                    </td>
-                                    @endif
-                                    <td>
-                                        <span class="text-muted">
-                                            @php
-                                                $duration = formatDuration($allotment->start_date, $allotment->end_date ?? null);
-                                            @endphp
-                                            {{ $duration }}
-                                        </span>
-                                    </td>
-                                    <td class="no-print">
-                                        @if(method_exists($allotment, 'hasMedia') && $allotment->hasMedia('vehicle_allotment_orders'))
-                                            <a href="{{ $allotment->getFirstMediaUrl('vehicle_allotment_orders') }}" 
-                                            class="btn btn-sm btn-outline-primary" target="_blank">
-                                                <i class="bi-file-earmark-text me-1"></i> View Order
-                                            </a>
+                            <tr>
+                                <td>
+                                    <div class="vehicle-details">
+                                        <strong>{{ $allotment?->vehicle?->brand ?? 'Unknown Brand' }} {{ $allotment?->vehicle?->model ?? 'Unknown Model' }}</strong>
+                                        <small>Type: {{ $allotment?->vehicle?->type ?? 'Unspecified' }}</small>
+                                        <small>Color: {{ $allotment?->vehicle?->color ?? 'Unspecified' }}</small>
+                                        <small>Year: {{ $allotment?->vehicle?->model_year ?? 'Unspecified' }}</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="vehicle-details">
+                                        <strong>{{ $allotment?->vehicle?->registration_number ?? 'Unregistered' }}</strong>
+                                        <small>Chassis: {{ $allotment?->vehicle?->chassis_number ?? 'Not Available' }}</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="fw-medium">
+                                        @if ($allotment?->user?->currentPosting)
+                                            {{ $allotment?->user?->name . ' (' . $allotment?->user?->currentPosting?->designation?->name ?? 'No Designation' . ')' }}<br>
+                                            {{ 'at ' . $allotment?->user?->currentPosting?->office?->name ?? 'No Office' }}
                                         @else
-                                            <span class="badge bg-light text-secondary">Not Available</span>
+                                            Pool
                                         @endif
-                                    </td>
-                                </tr>
+                                    </span>
+                                </td>
+                                <td>
+                                    @php
+                                        $status = $allotment?->vehicle?->functional_status ?? 'Unknown';
+                                        $statusClass = $status === 'Functional' ? 'success' : ($status === 'Non-Functional' ? 'danger' : 'secondary');
+                                    @endphp
+                                    <span class="status-badge bg-{{ $statusClass }} text-white">
+                                        {{ $status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="text-muted">
+                                        @php
+                                            $startDate = null;
+                                            try {
+                                                $startDate = $allotment?->start_date?->format('j F, Y');
+                                            } catch (\Exception $e) {
+                                                $startDate = 'Not Specified';
+                                            }
+                                        @endphp
+                                        {{ $startDate }}
+                                    </span>
+                                </td>
+                                @if(request('show_history', false))
+                                <td>
+                                    <span class="text-muted">
+                                        @php
+                                            $endDate = 'Current';
+                                            try {
+                                                if(!empty($allotment->end_date)) {
+                                                    $endDate = $allotment?->end_date?->format('j F, Y');
+                                                }
+                                            } catch (\Exception $e) {
+                                                
+                                            }
+                                        @endphp
+                                        {{ $endDate }}
+                                    </span>
+                                </td>
+                                @endif
+                                <td>
+                                    <span class="text-muted">
+                                        @php
+                                            $duration = formatDuration($allotment->start_date, $allotment->end_date ?? null);
+                                        @endphp
+                                        {{ $duration }}
+                                    </span>
+                                </td>
+                                <td class="no-print">
+                                    @if(method_exists($allotment, 'hasMedia') && $allotment->hasMedia('vehicle_allotment_orders'))
+                                        <a href="{{ $allotment->getFirstMediaUrl('vehicle_allotment_orders') }}" 
+                                        class="btn btn-sm btn-outline-primary" target="_blank">
+                                            <i class="bi-file-earmark-text me-1"></i> View Order
+                                        </a>
+                                    @else
+                                        <span class="badge bg-light text-secondary">Not Available</span>
+                                    @endif
+                                </td>
+                                <td class="no-print text-center">
+                                    <button type="button" class="btn btn-sm btn-light details-btn" data-id="{{ $allotment->vehicle_id }}">
+                                        <i class="bi-eye me-1"></i>
+                                    </button>
+                                </td>
+                            </tr>
                             @empty
                                 <tr>
                                     <td colspan="{{ request('show_history', false) ? 7 : 6 }}" class="empty-state">
@@ -563,6 +565,15 @@
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
     <script>
+
+            pushStateModal({
+                fetchUrl: "{{ route('admin.apps.vehicles.details', ':id') }}",
+                btnSelector: '.details-btn',
+                title: 'Vehicle Allotment Details',
+                modalSize: 'xl',
+                hash: false,
+            });
+
             $(document).ready(function() {
                 initFilterToggle();
                 initPagination();

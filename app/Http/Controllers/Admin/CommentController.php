@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-
 use App\Models\Comment;
+
+use App\Helpers\Database;
 use Illuminate\Http\Request;
+use App\Helpers\SearchBuilder;
 use Yajra\DataTables\DataTables;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
@@ -20,6 +22,10 @@ class CommentController extends Controller
         $comment->when($status !== null, function ($query) use ($status) {
             $query->where('status', $status);
         });
+
+        $relationMappings = [
+            'published_by' => 'publishBy.currentPosting.designation.name',
+        ];
 
         if ($request->ajax()) {
             $dataTable = Datatables::of($comment)
@@ -49,13 +55,22 @@ class CommentController extends Controller
                 })
                 ->rawColumns(['action', 'status', 'published_by', 'name', 'email']);
 
+            if ($request->input('search.value')) {
+                Database::applyRelationalSearch($dataTable, $relationMappings);
+            }
+            
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
-                $dataTable->filter(function ($query) use ($request) {
-                    $sb = new \App\Helpers\SearchBuilder($request, $query);
+                $dataTable->filter(function ($query) use ($request, $relationMappings) {
+                    $sb = new SearchBuilder(
+                        $request, 
+                        $query,
+                        [],
+                        $relationMappings,
+                    );
                     $sb->build();
                 });
             }
-
+            
             return $dataTable->toJson();
         }
 

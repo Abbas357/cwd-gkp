@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Machinery;
 
-use App\Http\Controllers\Controller;
-
 use App\Models\User;
-use App\Models\Machinery;
-use App\Models\MachineryAllocation;
+
 use App\Models\Category;
+use App\Helpers\Database;
+use App\Models\Machinery;
 use Illuminate\Http\Request;
+use App\Helpers\SearchBuilder;
 use Yajra\DataTables\DataTables;
+use App\Models\MachineryAllocation;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMachineryRequest;
 
 class MachineryController extends Controller
@@ -17,6 +19,11 @@ class MachineryController extends Controller
     public function all(Request $request)
     {
         $machines = Machinery::query();
+
+        $relationMappings = [
+            'added_by' => 'user.currentPosting.designation.name',
+            'assigned_to' => 'allocation.user.currentPosting.office.name'
+        ];
 
         if ($request->ajax()) {
             $dataTable = Datatables::of($machines)
@@ -40,9 +47,18 @@ class MachineryController extends Controller
                 })
                 ->rawColumns(['action', 'added_by', 'user']);
 
+            if ($request->input('search.value')) {
+                Database::applyRelationalSearch($dataTable, $relationMappings);
+            }
+
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
-                $dataTable->filter(function ($query) use ($request) {
-                    $sb = new \App\Helpers\SearchBuilder($request, $query);
+                $dataTable->filter(function ($query) use ($request, $relationMappings) {
+                    $sb = new SearchBuilder(
+                        $request, 
+                        $query,
+                        [],
+                        $relationMappings,
+                    );
                     $sb->build();
                 });
             }

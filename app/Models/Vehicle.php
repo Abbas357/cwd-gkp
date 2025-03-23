@@ -45,8 +45,7 @@ class Vehicle extends Model implements HasMedia
     public function allotment()
     {
         return $this->hasOne(VehicleAllotment::class)
-            ->whereNull('end_date')
-            ->latest('created_at');
+            ->where('is_current', 1);
     }
 
     public function allotments()
