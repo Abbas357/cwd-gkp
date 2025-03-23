@@ -218,277 +218,244 @@
     </button>
 </div>
 <div class="vehicle-details-container">
-        <!-- Vehicle Gallery -->
-    <div class="vehicle-gallery no-print">
-        @php
-            $galleryItems = [
-                ['collection' => 'vehicle_front_pictures', 'label' => 'Front View'],
-                ['collection' => 'vehicle_side_pictures', 'label' => 'Side View'],
-                ['collection' => 'vehicle_rear_pictures', 'label' => 'Rear View'],
-                ['collection' => 'vehicle_interior_pictures', 'label' => 'Interior View'],
-            ];
-            $hasImages = false;
-        @endphp
+    <!-- Vehicle Gallery -->
+<div class="vehicle-gallery no-print">
+    @php
+        $galleryItems = [
+            ['collection' => 'vehicle_front_pictures', 'label' => 'Front View'],
+            ['collection' => 'vehicle_side_pictures', 'label' => 'Side View'],
+            ['collection' => 'vehicle_rear_pictures', 'label' => 'Rear View'],
+            ['collection' => 'vehicle_interior_pictures', 'label' => 'Interior View'],
+        ];
+        $hasImages = false;
+    @endphp
 
-        @foreach($galleryItems as $item)
-            @if($vehicle->hasMedia($item['collection']))
-                @php $hasImages = true; @endphp
-                <div class="gallery-item">
-                    <img src="{{ $vehicle->getFirstMediaUrl($item['collection']) }}" alt="{{ $item['label'] }}">
-                    <div class="gallery-label">{{ $item['label'] }}</div>
-                </div>
-            @endif
-        @endforeach
-
-        @if(!$hasImages)
-            <div class="d-flex align-items-center justify-content-center w-100 border rounded py-4">
-                <div class="text-center">
-                    <i class="bi-camera text-muted mb-2" style="font-size: 2rem;"></i>
-                    <p class="text-muted mb-0">No images available for this vehicle</p>
-                </div>
+    @foreach($galleryItems as $item)
+        @if($vehicle?->hasMedia($item['collection']))
+            @php $hasImages = true; @endphp
+            <div class="gallery-item">
+                <img src="{{ $vehicle?->getFirstMediaUrl($item['collection']) }}" alt="{{ $item['label'] }}">
+                <div class="gallery-label">{{ $item['label'] }}</div>
             </div>
         @endif
-    </div>
+    @endforeach
 
-    <!-- Vehicle Information -->
-    <div class="info-section">
-        <div class="info-header">
-            <i class="bi-car-front fs-5"></i>
-            <h5>Vehicle Information</h5>
+    @if(!$hasImages)
+        <div class="d-flex align-items-center justify-content-center w-100 border rounded py-4">
+            <div class="text-center">
+                <i class="bi-camera text-muted mb-2" style="font-size: 2rem;"></i>
+                <p class="text-muted mb-0">No images available for this vehicle</p>
+            </div>
         </div>
-        <div class="info-content">
-            <div class="info-grid">
-                <div class="info-item">
-                    <span class="info-label">Brand & Model</span>
-                    <span class="info-value highlight">{{ $vehicle->brand ?? 'Unknown' }} {{ $vehicle->model ?? '' }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Registration Number</span>
-                    <span class="info-value">{{ $vehicle->registration_number ?? 'Not Registered' }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Type</span>
-                    <span class="info-value">{{ $vehicle->type ?? 'Not Specified' }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Model Year</span>
-                    <span class="info-value">{{ $vehicle->model_year ?? 'Unknown' }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Color</span>
-                    <span class="info-value">{{ $vehicle->color ?? 'Not Specified' }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Fuel Type</span>
-                    <span class="info-value">{{ $vehicle->fuel_type ?? 'Not Specified' }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Chassis Number</span>
-                    <span class="info-value">{{ $vehicle->chassis_number ?? 'Not Available' }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Engine Number</span>
-                    <span class="info-value">{{ $vehicle->engine_number ?? 'Not Available' }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Status</span>
-                    <span class="vehicle-status {{ strtolower($vehicle->functional_status ?? 'unknown') === 'functional' ? 'functional' : (strtolower($vehicle->functional_status ?? '') === 'non-functional' ? 'non-functional' : 'under-maintenance') }}">
-                        {{ $vehicle->functional_status ?? 'Unknown' }}
-                    </span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Registration Status</span>
-                    <span class="info-value">{{ $vehicle->registration_status ?? 'Not Available' }}</span>
-                </div>
+    @endif
+</div>
+
+<!-- Vehicle Information -->
+<div class="info-section">
+    <div class="info-header">
+        <i class="bi-car-front fs-5"></i>
+        <h5>Vehicle Information</h5>
+    </div>
+    <div class="info-content">
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">Brand & Model</span>
+                <span class="info-value highlight">{{ $vehicle?->brand ?? 'Unknown' }} {{ $vehicle?->model ?? '' }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Registration Number</span>
+                <span class="info-value">{{ $vehicle?->registration_number ?? 'Not Registered' }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Type</span>
+                <span class="info-value">{{ $vehicle?->type ?? 'Not Specified' }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Model Year</span>
+                <span class="info-value">{{ $vehicle?->model_year ?? 'Unknown' }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Color</span>
+                <span class="info-value">{{ $vehicle?->color ?? 'Not Specified' }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Fuel Type</span>
+                <span class="info-value">{{ $vehicle?->fuel_type ?? 'Not Specified' }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Chassis Number</span>
+                <span class="info-value">{{ $vehicle?->chassis_number ?? 'Not Available' }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Engine Number</span>
+                <span class="info-value">{{ $vehicle?->engine_number ?? 'Not Available' }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Status</span>
+                <span class="vehicle-status {{ strtolower($vehicle?->functional_status ?? 'unknown') === 'functional' ? 'functional' : (strtolower($vehicle?->functional_status ?? '') === 'non-functional' ? 'non-functional' : 'under-maintenance') }}">
+                    {{ $vehicle?->functional_status ?? 'Unknown' }}
+                </span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Registration Status</span>
+                <span class="info-value">{{ $vehicle?->registration_status ?? 'Not Available' }}</span>
             </div>
         </div>
     </div>
+</div>
 
-    @if($currentAllotment)
-    <div class="info-section">
-        <div class="info-header">
-            <i class="bi-person-check fs-5"></i>
-            <h5>Current Allotment</h5>
-        </div>
-        <div class="info-content">
-            <div class="info-grid">
-                @if($currentAllotment->type !== 'Pool')
-                <div class="info-item">
-                    <span class="info-label">Allotted To</span>
-                    <div class="timeline-user mt-1">
-                        <div class="user-avatar">
-                            <img src="{{ getProfilePic($currentAllotment->user) }}" alt="{{ $currentAllotment->user->name ?? 'User' }}">
-                        </div>
-                        <div class="user-info">
-                            <span class="user-name">{{ $currentAllotment->user->name ?? 'Unknown' }}</span>
-                            <span class="user-position">{{ $currentAllotment->user->currentPosting->designation->name ?? 'No Designation' }}</span>
-                        </div>
+@if($currentAllotment)
+<div class="info-section">
+    <div class="info-header">
+        <i class="bi-person-check fs-5"></i>
+        <h5>Current Allotment</h5>
+    </div>
+    <div class="info-content">
+        <div class="info-grid">
+            @if($currentAllotment?->type !== 'Pool')
+            <div class="info-item">
+                <span class="info-label">Allotted To</span>
+                <div class="timeline-user mt-1">
+                    <div class="user-avatar">
+                        <img src="{{ getProfilePic($currentAllotment?->user) }}" alt="{{ $currentAllotment?->user?->name ?? 'User' }}">
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">{{ $currentAllotment?->user?->name ?? 'Unknown' }}</span>
+                        <span class="user-position">{{ $currentAllotment?->user?->currentPosting?->designation?->name ?? 'No Designation' }}</span>
                     </div>
                 </div>
-                <div class="info-item">
-                    <span class="info-label">Office</span>
-                    <span class="info-value">{{ $currentAllotment->user->currentPosting->office->name ?? 'No Office' }}</span>
-                </div>
-                @else
-                <div class="info-item">
-                    <span class="info-label">Allotment</span>
-                    <div class="timeline-user mt-1">
-                        <div class="user-avatar">
-                            <i class="bi-building fs-5"></i>
-                        </div>
-                        <div class="user-info">
-                            <span class="user-name">Department Pool</span>
-                            <span class="user-position">{{ $currentAllotment->user ? $currentAllotment->user->currentPosting->office->name ?? 'Office' : 'General Pool' }}</span>
-                        </div>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Office</span>
+                <span class="info-value">{{ $currentAllotment?->user?->currentPosting?->office?->name ?? 'No Office' }}</span>
+            </div>
+            @else
+            <div class="info-item">
+                <span class="info-label">Allotment</span>
+                <div class="timeline-user mt-1">
+                    <div class="user-avatar">
+                        <i class="bi-building fs-5"></i>
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">Pool</span>
+                        <span class="user-position">{{ $currentAllotment?->user ? $currentAllotment?->user?->currentPosting?->office?->name ?? 'Office' : 'General Pool' }}</span>
                     </div>
                 </div>
-                @endif
-                <div class="info-item">
-                    <span class="info-label">Allotment Type</span>
-                    <span class="allotment-type {{ $currentAllotment->type === 'Permanent' ? 'allotment-permanent' : ($currentAllotment->type === 'Temporary' ? 'allotment-temporary' : 'allotment-pool') }}">
-                        {{ $currentAllotment->type }}
-                    </span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Allotment Date</span>
-                    <span class="info-value">{{ $currentAllotment->start_date ? $currentAllotment->start_date->format('j F, Y') : 'Not Available' }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Duration</span>
-                    <span class="info-value">
-                        @php
-                            $start = $currentAllotment->start_date;
-                            $now = now();
-                            $diff = $start->diff($now);
-                            
-                            if ($diff->y > 0) {
-                                echo $diff->y . ' year' . ($diff->y > 1 ? 's' : '') . 
-                                   ($diff->m > 0 ? ', ' . $diff->m . ' month' . ($diff->m > 1 ? 's' : '') : '');
-                            } elseif ($diff->m > 0) {
-                                echo $diff->m . ' month' . ($diff->m > 1 ? 's' : '') . 
-                                   ($diff->d > 0 ? ', ' . $diff->d . ' day' . ($diff->d > 1 ? 's' : '') : '');
-                            } else {
-                                echo $diff->d . ' day' . ($diff->d > 1 ? 's' : '');
-                            }
-                        @endphp
-                    </span>
-                </div>
-                @if($currentAllotment->hasMedia('vehicle_allotment_orders'))
-                <div class="info-item">
-                    <span class="info-label">Allotment Order</span>
-                    <a href="{{ $currentAllotment->getFirstMediaUrl('vehicle_allotment_orders') }}" target="_blank" class="btn btn-sm btn-outline-primary mt-1">
-                        <i class="bi-file-earmark-text me-1"></i> View Order
-                    </a>
-                </div>
-                @endif
             </div>
-        </div>
-    </div>
-    @endif
-
-    <!-- Allotment History -->
-    <div class="info-section">
-        <div class="info-header">
-            <i class="bi-clock-history fs-5"></i>
-            <h5>Allotment History</h5>
-        </div>
-        <div class="info-content">
-            <div class="table-responsive">
-                <table class="allotment-history">
-                    <thead>
-                        <tr>
-                            <th>User</th>
-                            <th>Office</th>
-                            <th>Type</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Duration</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($allotments as $allotment)
-                        <tr>
-                            <td>
-                                @if($allotment->type !== 'Pool')
-                                <div class="timeline-user">
-                                    <div class="user-avatar">
-                                        <img src="{{ getProfilePic($allotment->user) }}" alt="{{ $allotment->user->name ?? 'User' }}">
-                                    </div>
-                                    <div class="user-info">
-                                        <span class="user-name">{{ $allotment->user->name ?? 'Unknown' }}</span>
-                                        <span class="user-position">{{ $allotment->user->currentPosting->designation->name ?? 'No Designation' }}</span>
-                                    </div>
-                                </div>
-                                @else
-                                <div class="timeline-user">
-                                    <div class="user-avatar">
-                                        <i class="bi-building fs-5"></i>
-                                    </div>
-                                    <div class="user-info">
-                                        <span class="user-name">Department Pool</span>
-                                        <span class="user-position">{{ $allotment->user ? $allotment->user->currentPosting->office->name ?? 'Office' : 'General Pool' }}</span>
-                                    </div>
-                                </div>
-                                @endif
-                            </td>
-                            <td>{{ $allotment->user ? $allotment->user->currentPosting->office->name ?? 'Not Available' : 'Department' }}</td>
-                            <td>
-                                <span class="allotment-type {{ $allotment->type === 'Permanent' ? 'allotment-permanent' : ($allotment->type === 'Temporary' ? 'allotment-temporary' : 'allotment-pool') }}">
-                                    {{ $allotment->type }}
-                                </span>
-                            </td>
-                            <td>{{ $allotment->start_date ? $allotment->start_date->format('j M, Y') : 'N/A' }}</td>
-                            <td>{{ $allotment->end_date ? $allotment->end_date->format('j M, Y') : 'Current' }}</td>
-                            <td>
-                                @php
-                                    $start = $allotment->start_date;
-                                    $end = $allotment->end_date ?? now();
-                                    $diff = $start->diff($end);
-                                    
-                                    if ($diff->y > 0) {
-                                        echo $diff->y . ' year' . ($diff->y > 1 ? 's' : '') . 
-                                           ($diff->m > 0 ? ', ' . $diff->m . ' month' . ($diff->m > 1 ? 's' : '') : '');
-                                    } elseif ($diff->m > 0) {
-                                        echo $diff->m . ' month' . ($diff->m > 1 ? 's' : '') . 
-                                           ($diff->d > 0 ? ', ' . $diff->d . ' day' . ($diff->d > 1 ? 's' : '') : '');
-                                    } else {
-                                        echo $diff->d . ' day' . ($diff->d > 1 ? 's' : '');
-                                    }
-                                @endphp
-                            </td>
-                            <td>
-                                <span class="vehicle-status {{ $allotment->is_current ? 'functional' : 'non-functional' }}">
-                                    {{ $allotment->is_current ? 'Current' : 'Previous' }}
-                                </span>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="7" class="text-center py-4">
-                                <i class="bi-clock-history text-muted" style="font-size: 2rem;"></i>
-                                <p class="text-muted mt-2">No allotment history available</p>
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+            @endif
+            <div class="info-item">
+                <span class="info-label">Allotment Type</span>
+                <span class="allotment-type {{ $currentAllotment?->type === 'Permanent' ? 'allotment-permanent' : ($currentAllotment?->type === 'Temporary' ? 'allotment-temporary' : 'allotment-pool') }}">
+                    {{ $currentAllotment?->type }}
+                </span>
             </div>
+            <div class="info-item">
+                <span class="info-label">Allotment Date</span>
+                <span class="info-value">{{ $currentAllotment?->start_date ? $currentAllotment?->start_date->format('j F, Y') : 'Not Available' }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Duration</span>
+                <span class="info-value"> {{ formatDuration($currentAllotment?->start_date, now()) }}</span>
+            </div>
+            @if($currentAllotment?->hasMedia('vehicle_allotment_orders'))
+            <div class="info-item">
+                <span class="info-label">Allotment Order</span>
+                <a href="{{ $currentAllotment?->getFirstMediaUrl('vehicle_allotment_orders') }}" target="_blank" class="btn btn-sm btn-outline-primary mt-1">
+                    <i class="bi-file-earmark-text me-1"></i> View Order
+                </a>
+            </div>
+            @endif
         </div>
     </div>
+</div>
+@endif
 
-    <!-- Additional Notes & Remarks -->
-    @if(!empty($vehicle->remarks))
-    <div class="info-section">
-        <div class="info-header">
-            <i class="bi-pencil-square fs-5"></i>
-            <h5>Remarks</h5>
-        </div>
-        <div class="info-content">
-            <p>{{ $vehicle->remarks }}</p>
+<!-- Allotment History -->
+<div class="info-section">
+    <div class="info-header">
+        <i class="bi-clock-history fs-5"></i>
+        <h5>Allotment History</h5>
+    </div>
+    <div class="info-content">
+        <div class="table-responsive">
+            <table class="allotment-history">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Office</th>
+                        <th>Type</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Duration</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($allotments as $allotment)
+                    <tr>
+                        <td>
+                            @if($allotment?->type !== 'Pool')
+                            <div class="timeline-user">
+                                <div class="user-avatar">
+                                    <img src="{{ getProfilePic($allotment?->user) }}" alt="{{ $allotment?->user?->name ?? 'User' }}">
+                                </div>
+                                <div class="user-info">
+                                    <span class="user-name">{{ $allotment?->user?->name ?? 'Unknown' }}</span>
+                                    <span class="user-position">{{ $allotment?->user?->currentPosting?->designation?->name ?? 'No Designation' }}</span>
+                                </div>
+                            </div>
+                            @else
+                            <div class="timeline-user">
+                                <div class="user-avatar">
+                                    <i class="bi-building fs-5"></i>
+                                </div>
+                                <div class="user-info">
+                                    <span class="user-name">Pool</span>
+                                    <span class="user-position">{{ $allotment?->user ? $allotment?->user?->currentPosting?->office?->name ?? 'Office' : 'General Pool' }}</span>
+                                </div>
+                            </div>
+                            @endif
+                        </td>
+                        <td>{{ $allotment?->user ? $allotment?->user?->currentPosting?->office?->name ?? 'Not Available' : 'Department' }}</td>
+                        <td>
+                            <span class="allotment-type {{ $allotment?->type === 'Permanent' ? 'allotment-permanent' : ($allotment?->type === 'Temporary' ? 'allotment-temporary' : 'allotment-pool') }}">
+                                {{ $allotment?->type }}
+                            </span>
+                        </td>
+                        <td>{{ $allotment?->start_date ? $allotment?->start_date->format('j M, Y') : 'N/A' }}</td>
+                        <td>{{ $allotment?->end_date ? $allotment?->end_date->format('j M, Y') : 'Current' }}</td>
+                        <td>{{ formatDuration($allotment?->start_date, $allotment?->end_date ?? now()) }}</td>
+                        <td>
+                            <span class="vehicle-status {{ $allotment?->is_current ? 'functional' : 'non-functional' }}">
+                                {{ $allotment?->is_current ? 'Current' : 'Previous' }}
+                            </span>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="7" class="text-center py-4">
+                            <i class="bi-clock-history text-muted" style="font-size: 2rem;"></i>
+                            <p class="text-muted mt-2">No allotment history available</p>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
-    @endif
+</div>
+
+@if(!empty($vehicle?->remarks))
+<div class="info-section">
+    <div class="info-header">
+        <i class="bi-pencil-square fs-5"></i>
+        <h5>Remarks</h5>
+    </div>
+    <div class="info-content">
+        <p>{{ $vehicle?->remarks }}</p>
+    </div>
+</div>
+@endif
 </div>
 <script src="{{ asset('admin/plugins/printThis/printThis.js') }}"></script>
 
