@@ -204,17 +204,17 @@ function handleValidationErrors(errors) {
 function initDataTable(selector, options = {}) {
 
     const $table = $(selector);
-    if (!$table.parent().hasClass('datatable-loading-container')) {
+    if (!$table.hasClass('datatable-loading-container')) {
         $table.wrap('<div class="datatable-loading-container"></div>');
         
-        $table.parent().append(`
+        $table.append(`
             <div class="datatable-loading-progress"></div>
             <div class="datatable-content-dimmer"></div>
         `);
     }
     
-    const $loadingProgress = $table.parent().find('.datatable-loading-progress');
-    const $contentDimmer = $table.parent().find('.datatable-content-dimmer');
+    const $loadingProgress = $table.find('.datatable-loading-progress');
+    const $contentDimmer = $table.find('.datatable-content-dimmer');
 
     const exportButtons = [
         {
@@ -380,12 +380,12 @@ function initDataTable(selector, options = {}) {
         },
         columnDefs: options.columnDefs || [],
         preDrawCallback() {
-            $table.parent().addClass('loading');
+            $table.addClass('loading');
             $loadingProgress.addClass('active');
             $contentDimmer.addClass('active');
         },
         drawCallback() {
-            $table.parent().removeClass('loading');
+            $table.removeClass('loading');
             $loadingProgress.removeClass('active');
             $contentDimmer.removeClass('active');
         },
@@ -1549,4 +1549,57 @@ function formWizardModal({
             resolve(modalId);
         }
     });
+}
+
+function select2Ajax(selector, url, options = {}) {
+    const $select = typeof selector === 'string' ? $(selector) : selector;
+    const config = {
+        theme: "bootstrap-5",
+        placeholder: options.placeholder || "Select an option",
+        allowClear: options.allowClear !== false,
+        dropdownParent: options.dropdownParent || $select.parent(),
+        width: options.width || '100%',
+        multiple: options.multiple || false,
+        ajax: {
+            url: url,
+            dataType: 'json',
+            delay: options.delay || 250,
+            data: function(params) {
+                return {
+                    q: params.term,
+                    page: params.page || 1,
+                    ...options.params
+                };
+            },
+            processResults: function(data, params) {
+                params.page = params.page || 1;
+                return {
+                    results: data.results,
+                    pagination: {
+                        more: data.pagination.more
+                    }
+                };
+            },
+            cache: true
+        },
+        templateResult: options.templateResult || function(data) {
+            if (data.loading) return 'Loading...';
+            return data.text;
+        },
+        templateSelection: options.templateSelection || function(data) {
+            return data.text || options.placeholder || "Select an option";
+        }
+    };
+    
+    const select2Instance = $select.select2(config);
+    
+    if (options.onSelect) {
+        select2Instance.on('select2:select', options.onSelect);
+    }
+    
+    if (options.onChange) {
+        select2Instance.on('change', options.onChange);
+    }
+    
+    return select2Instance;
 }

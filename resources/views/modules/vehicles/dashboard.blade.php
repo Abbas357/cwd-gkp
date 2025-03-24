@@ -23,7 +23,7 @@
         }
         .activity-timeline {
             position: relative;
-            padding-left: 2rem;
+            padding-left: 1.68rem;
         }
         .activity-timeline::before {
             content: '';
@@ -59,6 +59,11 @@
         .bg-light {
             background-color: #f0f0f0 !important; 
         }
+        .allocation-badge {
+            font-size: 0.9rem;
+            padding: 0.35rem 0.65rem;
+            border-radius: 6px;
+        }
     </style>
     @endpush
 
@@ -69,7 +74,7 @@
     <div class="wrapper">
         <div class="row g-3 mb-4">
             <div class="col-md-3">
-                <div class="stat-card card h-100" style="background: #0000ff15; border: 1px solid #0000ff20;">
+                <div class="stat-card card h-100" style="background: #0000ff15; border: 1px solid #0000ff50;">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
@@ -85,7 +90,7 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="stat-card card h-100" style="background: #00ff0015; border: 1px solid #00ff0020;">
+                <div class="stat-card card h-100" style="background: #00ff0015; border: 1px solid #00ff0050;">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
@@ -101,7 +106,7 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="stat-card card h-100" style="background: #ffd90015; border: 1px solid #ffd90020;">
+                <div class="stat-card card h-100" style="background: #ffd90015; border: 1px solid #ffd90050;">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
@@ -117,13 +122,12 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="stat-card card h-100" style="background: #ff000015; border: 1px solid #ff000020">
+                <div class="stat-card card h-100" style="background: #ff000015; border: 1px solid #ff000050">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="text-muted mb-2">In Pool</h6>
-                                <h5 class="mb-0">Department: {{ $departmentPool }}</h5>
-                                <h5 class="mb-0">Office Pool: {{ $officePool }}</h5>
+                                <h3 class="mb-0">{{ $officePoolCount }}</h3>
                                 <small class="text-info">{{ number_format($poolPercentage, 1) }}% available</small>
                             </div>
                             <div class="stat-icon bg-info bg-opacity-10">
@@ -137,12 +141,13 @@
 
         <div class="row g-3 mb-4">
             <div class="col-md-4">
-                <div class="stat-card card h-100" style="background: #cbee2e15; border: 1px solid #cbee2e20">
+                <div class="stat-card card h-100" style="background: #cbee2e15; border: 1px solid #cbee2e50">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="text-muted mb-2">Permanent Alloted</h6>
                                 <h3 class="mb-0">{{ $permanentAlloted }}</h3>
+                                <small class="text-muted">Personal: {{ $personalAllotmentCount }} | Office: {{ $officeAllotmentCount }}</small>
                             </div>
                             <div class="stat-icon bg-warning bg-opacity-10">
                                 <i class="bi bi-pin-angle text-warning"></i>
@@ -152,7 +157,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="stat-card card h-100" style="background: #1065e415; border: 1px solid #1065e420">
+                <div class="stat-card card h-100" style="background: #1065e415; border: 1px solid #1065e450">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
@@ -167,7 +172,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="stat-card card h-100" style="background: #00b69e15; border: 1px solid #00b69e20">
+                <div class="stat-card card h-100" style="background: #00b69e15; border: 1px solid #00b69e50">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
@@ -185,19 +190,6 @@
 
         <div class="row g-3">
             <div class="col-md-8">
-                <div class="card mb-4">
-                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">Monthly Allotments</h5>
-                        <div class="btn-group btn-group-sm">
-                            <button class="btn btn-outline-secondary active">6 Months</button>
-                            <button class="btn btn-outline-secondary">1 Year</button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div id="monthlyAllotmentsChart" style="height: 300px;"></div>
-                    </div>
-                </div>
-
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="card">
@@ -240,9 +232,76 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="card mb-4">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Monthly Allotments</h5>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-secondary active">6 Months</button>
+                            <button class="btn btn-outline-secondary">1 Year</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="monthlyAllotmentsChart" style="height: 300px;"></div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">Allotment Trends</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="allotmentTrendsChart" style="height: 350px;"></div>
+                    </div>
+                </div>
+
             </div>
 
             <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">Allocation By Type</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Personal Allotments</span>
+                                <span>{{ $personalAllotmentCount }}</span>
+                            </div>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar bg-primary" style="width: {{ $totalVehicles > 0 ? ($personalAllotmentCount / $totalVehicles) * 100 : 0 }}%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Office Allotments</span>
+                                <span>{{ $officeAllotmentCount }}</span>
+                            </div>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar bg-warning" style="width: {{ $totalVehicles > 0 ? ($officeAllotmentCount / $totalVehicles) * 100 : 0 }}%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Office Pool</span>
+                                <span>{{ $officePoolCount }}</span>
+                            </div>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar bg-info" style="width: {{ $totalVehicles > 0 ? ($officePoolCount / $totalVehicles) * 100 : 0 }}%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Department Pool</span>
+                                <span>{{ $departmentPoolCount }}</span>
+                            </div>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar bg-success" style="width: {{ $totalVehicles > 0 ? ($departmentPoolCount / $totalVehicles) * 100 : 0 }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="card mb-4">
                     <div class="card-header bg-light">
                         <h5 class="card-title mb-0">Recent Activity</h5>
@@ -252,7 +311,21 @@
                             @foreach($recentAllotments as $allotment)
                             <div class="timeline-item">
                                 <h6 class="mb-1">{{ $allotment->vehicle->brand }} {{ $allotment->vehicle->model }}</h6>
-                                <p class="mb-0 small">Alloted to {{ $allotment->user->currentPosting->office->name ?? 'N/A' }}</p>
+                                <p class="mb-0 small">
+                                    @if($allotment->type === 'Pool')
+                                        @if($allotment->office_id)
+                                            <span class="badge bg-info">Office Pool: {{ $allotment->office->name ?? 'N/A' }}</span>
+                                        @else
+                                            <span class="badge bg-success">Department Pool</span>
+                                        @endif
+                                    @else
+                                        @if($allotment->user_id)
+                                            <span class="badge bg-primary">{{ $allotment->type }} to {{ $allotment->user->name }}</span>
+                                        @elseif($allotment->office_id)
+                                            <span class="badge bg-warning">{{ $allotment->type }} to {{ $allotment->office->name }}</span>
+                                        @endif
+                                    @endif
+                                </p>
                                 <small class="text-muted">{{ $allotment->created_at->diffForHumans() }}</small>
                             </div>
                             @endforeach
@@ -272,7 +345,11 @@
                                 <h6 class="mb-1">{{ $vehicle->brand }} {{ $vehicle->model }}</h6>
                                 <p class="mb-0 small text-muted">{{ $vehicle->functional_status }}</p>
                                 @if($vehicle->allotment)
-                                <small class="text-muted">Alloted to: {{ $vehicle->allotment?->user?->currentPosting->office->name }}</small>
+                                    @if($vehicle->allotment->user_id)
+                                        <small class="text-muted">Alloted to: {{ $vehicle->allotment->user->name }}</small>
+                                    @elseif($vehicle->allotment->office_id)
+                                        <small class="text-muted">Alloted to: {{ $vehicle->allotment->office->name }}</small>
+                                    @endif
                                 @endif
                             </div>
                         </div>
@@ -340,6 +417,72 @@
 
         new ApexCharts(document.querySelector("#monthlyAllotmentsChart"), monthlyOptions).render();
 
+        // Allotment Trends Chart
+        const trendData = @json($allotmentTypeTrends);
+        const trendOptions = {
+            series: [
+                {
+                    name: 'Permanent Personal',
+                    data: trendData.map(item => item.permanent_personal)
+                },
+                {
+                    name: 'Permanent Office',
+                    data: trendData.map(item => item.permanent_office)
+                },
+                {
+                    name: 'Temporary Personal',
+                    data: trendData.map(item => item.temporary_personal)
+                },
+                {
+                    name: 'Temporary Office',
+                    data: trendData.map(item => item.temporary_office)
+                },
+                {
+                    name: 'Department Pool',
+                    data: trendData.map(item => item.department_pool)
+                },
+                {
+                    name: 'Office Pool',
+                    data: trendData.map(item => item.office_pool)
+                }
+            ],
+            chart: {
+                type: 'bar',
+                height: 350,
+                stacked: true,
+                toolbar: {
+                    show: false
+                }
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                }
+            },
+            stroke: {
+                width: 1,
+                colors: ['#fff']
+            },
+            xaxis: {
+                categories: trendData.map(item => item.month)
+            },
+            yaxis: {
+                title: {
+                    text: 'Number of Vehicles'
+                },
+            },
+            fill: {
+                opacity: 1
+            },
+            legend: {
+                position: 'bottom',
+                horizontalAlign: 'center'
+            },
+            colors: ['#4e73df', '#5a5c69', '#36b9cc', '#1cc88a', '#e74a3b', '#f6c23e']
+        };
+
+        new ApexCharts(document.querySelector("#allotmentTrendsChart"), trendOptions).render();
+
         // Distribution Charts
         function createDistributionChart(elementId, data, title) {
             const options = {
@@ -394,8 +537,6 @@
         createDistributionChart("#colorChart", distributions.color, 'color');
         createDistributionChart("#fuelTypeChart", distributions.fuel_type, 'fuel_type');
         createDistributionChart("#registrationStatusChart", distributions.registration_status, 'registration_status');
-
-        new ApexCharts(document.querySelector("#modelsByBrandChart"), modelsByBrandOptions).render();
 
         // Initialize tooltips
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));

@@ -219,36 +219,36 @@
 </div>
 <div class="vehicle-details-container">
     <!-- Vehicle Gallery -->
-<div class="vehicle-gallery no-print">
-    @php
-        $galleryItems = [
-            ['collection' => 'vehicle_front_pictures', 'label' => 'Front View'],
-            ['collection' => 'vehicle_side_pictures', 'label' => 'Side View'],
-            ['collection' => 'vehicle_rear_pictures', 'label' => 'Rear View'],
-            ['collection' => 'vehicle_interior_pictures', 'label' => 'Interior View'],
-        ];
-        $hasImages = false;
-    @endphp
-
-    @foreach($galleryItems as $item)
-        @if($vehicle?->hasMedia($item['collection']))
-            @php $hasImages = true; @endphp
-            <div class="gallery-item">
-                <img src="{{ $vehicle?->getFirstMediaUrl($item['collection']) }}" alt="{{ $item['label'] }}">
-                <div class="gallery-label">{{ $item['label'] }}</div>
+    <div class="vehicle-gallery no-print">
+        @php
+            $galleryItems = [
+                ['collection' => 'vehicle_front_pictures', 'label' => 'Front View'],
+                ['collection' => 'vehicle_side_pictures', 'label' => 'Side View'],
+                ['collection' => 'vehicle_rear_pictures', 'label' => 'Rear View'],
+                ['collection' => 'vehicle_interior_pictures', 'label' => 'Interior View'],
+            ];
+            $hasImages = false;
+        @endphp
+    
+        @foreach($galleryItems as $item)
+            @if($vehicle?->hasMedia($item['collection']))
+                @php $hasImages = true; @endphp
+                <div class="gallery-item">
+                    <img src="{{ $vehicle?->getFirstMediaUrl($item['collection']) }}" alt="{{ $item['label'] }}">
+                    <div class="gallery-label">{{ $item['label'] }}</div>
+                </div>
+            @endif
+        @endforeach
+    
+        @if(!$hasImages)
+            <div class="d-flex align-items-center justify-content-center w-100 border rounded py-4">
+                <div class="text-center">
+                    <i class="bi-camera text-muted mb-2" style="font-size: 2rem;"></i>
+                    <p class="text-muted mb-0">No images available for this vehicle</p>
+                </div>
             </div>
         @endif
-    @endforeach
-
-    @if(!$hasImages)
-        <div class="d-flex align-items-center justify-content-center w-100 border rounded py-4">
-            <div class="text-center">
-                <i class="bi-camera text-muted mb-2" style="font-size: 2rem;"></i>
-                <p class="text-muted mb-0">No images available for this vehicle</p>
-            </div>
-        </div>
-    @endif
-</div>
+    </div>
 
 <!-- Vehicle Information -->
 <div class="info-section">
@@ -312,43 +312,78 @@
     </div>
     <div class="info-content">
         <div class="info-grid">
-            @if($currentAllotment?->type !== 'Pool')
-            <div class="info-item">
-                <span class="info-label">Allotted To</span>
-                <div class="timeline-user mt-1">
-                    <div class="user-avatar">
-                        <img src="{{ getProfilePic($currentAllotment?->user) }}" alt="{{ $currentAllotment?->user?->name ?? 'User' }}">
-                    </div>
-                    <div class="user-info">
-                        <span class="user-name">{{ $currentAllotment?->user?->name ?? 'Unknown' }}</span>
-                        <span class="user-position">{{ $currentAllotment?->user?->currentPosting?->designation?->name ?? 'No Designation' }}</span>
+            @if($currentAllotment?->type === 'Pool')
+                <div class="info-item">
+                    <span class="info-label">Allotment Type</span>
+                    <span class="allotment-type allotment-pool">
+                        {{ $currentAllotment?->type }} Vehicle
+                    </span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Assigned To</span>
+                    <div class="timeline-user mt-1">
+                        <div class="user-avatar">
+                            <i class="bi-building fs-5"></i>
+                        </div>
+                        <div class="user-info">
+                            @if($currentAllotment?->office_id)
+                                <span class="user-name">Office Pool</span>
+                                <span class="user-position">{{ $currentAllotment?->office?->name ?? 'Office' }}</span>
+                            @elseif($currentAllotment?->user_id)
+                                <span class="user-name">Office Pool</span>
+                                <span class="user-position">{{ $currentAllotment?->user?->currentPosting?->office?->name ?? 'Office' }}</span>
+                                <small class="text-muted">(Managed by: {{ $currentAllotment?->user?->name ?? 'Unknown' }})</small>
+                            @else
+                                <span class="user-name">Department Pool</span>
+                                <span class="user-position">General</span>
+                            @endif
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="info-item">
-                <span class="info-label">Office</span>
-                <span class="info-value">{{ $currentAllotment?->user?->currentPosting?->office?->name ?? 'No Office' }}</span>
-            </div>
-            @else
-            <div class="info-item">
-                <span class="info-label">Allotment</span>
-                <div class="timeline-user mt-1">
-                    <div class="user-avatar">
-                        <i class="bi-building fs-5"></i>
-                    </div>
-                    <div class="user-info">
-                        <span class="user-name">Pool</span>
-                        <span class="user-position">{{ $currentAllotment?->user ? $currentAllotment?->user?->currentPosting?->office?->name ?? 'Office' : 'General Pool' }}</span>
+            @elseif($currentAllotment?->user_id)
+                <div class="info-item">
+                    <span class="info-label">Allotment Type</span>
+                    <span class="allotment-type {{ $currentAllotment?->type === 'Permanent' ? 'allotment-permanent' : 'allotment-temporary' }}">
+                        {{ $currentAllotment?->type }} (Personal)
+                    </span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Allotted To</span>
+                    <div class="timeline-user mt-1">
+                        <div class="user-avatar">
+                            <img src="{{ getProfilePic($currentAllotment?->user) }}" alt="{{ $currentAllotment?->user?->name ?? 'User' }}">
+                        </div>
+                        <div class="user-info">
+                            <span class="user-name">{{ $currentAllotment?->user?->name ?? 'Unknown' }}</span>
+                            <span class="user-position">{{ $currentAllotment?->user?->currentPosting?->designation?->name ?? 'No Designation' }}</span>
+                        </div>
                     </div>
                 </div>
-            </div>
+                <div class="info-item">
+                    <span class="info-label">Office</span>
+                    <span class="info-value">{{ $currentAllotment?->user?->currentPosting?->office?->name ?? 'No Office' }}</span>
+                </div>
+            @elseif($currentAllotment?->office_id)
+                <div class="info-item">
+                    <span class="info-label">Allotment Type</span>
+                    <span class="allotment-type {{ $currentAllotment?->type === 'Permanent' ? 'allotment-permanent' : 'allotment-temporary' }}">
+                        {{ $currentAllotment?->type }} (Office)
+                    </span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Assigned To</span>
+                    <div class="timeline-user mt-1">
+                        <div class="user-avatar">
+                            <i class="bi-building fs-5"></i>
+                        </div>
+                        <div class="user-info">
+                            <span class="user-name">Office Assignment</span>
+                            <span class="user-position">{{ $currentAllotment?->office?->name ?? 'Unknown Office' }}</span>
+                        </div>
+                    </div>
+                </div>
             @endif
-            <div class="info-item">
-                <span class="info-label">Allotment Type</span>
-                <span class="allotment-type {{ $currentAllotment?->type === 'Permanent' ? 'allotment-permanent' : ($currentAllotment?->type === 'Temporary' ? 'allotment-temporary' : 'allotment-pool') }}">
-                    {{ $currentAllotment?->type }}
-                </span>
-            </div>
+            
             <div class="info-item">
                 <span class="info-label">Allotment Date</span>
                 <span class="info-value">{{ $currentAllotment?->start_date ? $currentAllotment?->start_date->format('j F, Y') : 'Not Available' }}</span>
@@ -381,8 +416,7 @@
             <table class="allotment-history">
                 <thead>
                     <tr>
-                        <th>User</th>
-                        <th>Office</th>
+                        <th>Assignment</th>
                         <th>Type</th>
                         <th>Start Date</th>
                         <th>End Date</th>
@@ -394,32 +428,59 @@
                     @forelse($allotments as $allotment)
                     <tr>
                         <td>
-                            @if($allotment?->type !== 'Pool')
-                            <div class="timeline-user">
-                                <div class="user-avatar">
-                                    <img src="{{ getProfilePic($allotment?->user) }}" alt="{{ $allotment?->user?->name ?? 'User' }}">
+                            @if($allotment?->type === 'Pool')
+                                <div class="timeline-user">
+                                    <div class="user-avatar">
+                                        <i class="bi-building fs-5"></i>
+                                    </div>
+                                    <div class="user-info">
+                                        @if($allotment?->office_id)
+                                            <span class="user-name">Office Pool</span>
+                                            <span class="user-position">{{ $allotment?->office?->name ?? 'Office' }}</span>
+                                        @elseif($allotment?->user_id)
+                                            <span class="user-name">Office Pool</span>
+                                            <span class="user-position">{{ $allotment?->user?->currentPosting?->office?->name ?? 'Office' }}</span>
+                                            <small class="text-muted">({{ $allotment?->user?->name ?? 'Unknown' }})</small>
+                                        @else
+                                            <span class="user-name">Department Pool</span>
+                                            <span class="user-position">General</span>
+                                        @endif
+                                    </div>
                                 </div>
-                                <div class="user-info">
-                                    <span class="user-name">{{ $allotment?->user?->name ?? 'Unknown' }}</span>
-                                    <span class="user-position">{{ $allotment?->user?->currentPosting?->designation?->name ?? 'No Designation' }}</span>
+                            @elseif($allotment?->user_id)
+                                <div class="timeline-user">
+                                    <div class="user-avatar">
+                                        <img src="{{ getProfilePic($allotment?->user) }}" alt="{{ $allotment?->user?->name ?? 'User' }}">
+                                    </div>
+                                    <div class="user-info">
+                                        <span class="user-name">{{ $allotment?->user?->name ?? 'Unknown' }}</span>
+                                        <span class="user-position">{{ $allotment?->user?->currentPosting?->office?->name ?? 'No Office' }}</span>
+                                    </div>
                                 </div>
-                            </div>
+                            @elseif($allotment?->office_id)
+                                <div class="timeline-user">
+                                    <div class="user-avatar">
+                                        <i class="bi-building fs-5"></i>
+                                    </div>
+                                    <div class="user-info">
+                                        <span class="user-name">Office Assignment</span>
+                                        <span class="user-position">{{ $allotment?->office?->name ?? 'Unknown Office' }}</span>
+                                    </div>
+                                </div>
                             @else
-                            <div class="timeline-user">
-                                <div class="user-avatar">
-                                    <i class="bi-building fs-5"></i>
-                                </div>
-                                <div class="user-info">
-                                    <span class="user-name">Pool</span>
-                                    <span class="user-position">{{ $allotment?->user ? $allotment?->user?->currentPosting?->office?->name ?? 'Office' : 'General Pool' }}</span>
-                                </div>
-                            </div>
+                                <span class="text-muted">No assignment details</span>
                             @endif
                         </td>
-                        <td>{{ $allotment?->user ? $allotment?->user?->currentPosting?->office?->name ?? 'Not Available' : 'Department' }}</td>
                         <td>
                             <span class="allotment-type {{ $allotment?->type === 'Permanent' ? 'allotment-permanent' : ($allotment?->type === 'Temporary' ? 'allotment-temporary' : 'allotment-pool') }}">
                                 {{ $allotment?->type }}
+                                @if($allotment?->type !== 'Pool')
+                                    @if($allotment?->user_id)
+                                        (Person)
+                                    @elseif($allotment?->office_id)
+                                        (Office)
+                                    @endif
+                                @endif
                             </span>
                         </td>
                         <td>{{ $allotment?->start_date ? $allotment?->start_date->format('j M, Y') : 'N/A' }}</td>
@@ -433,7 +494,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="text-center py-4">
+                        <td colspan="6" class="text-center py-4">
                             <i class="bi-clock-history text-muted" style="font-size: 2rem;"></i>
                             <p class="text-muted mt-2">No allotment history available</p>
                         </td>

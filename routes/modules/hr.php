@@ -36,7 +36,30 @@ Route::prefix('hr')->as('hr.')->middleware(['can:manage human resource'])->group
         Route::get('/{user}', [UserController::class, 'show'])->name('show')->can('view', 'user');
         Route::patch('/{user}', [UserController::class, 'update'])->name('update')->can('update', 'user');
         Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy')->can('delete', 'user');
+    });
 
+    Route::prefix('offices')->as('offices.')->group(function () {
+        Route::get('/', [OfficeController::class, 'index'])->name('index')->can('viewAny', App\Models\Office::class);
+        Route::get('/create', [OfficeController::class, 'create'])->name('create')->can('create', App\Models\Office::class);
+        Route::get('/district', [OfficeController::class, 'getOfficeDistrict'])->name('district');
+        Route::get('/api', [OfficeController::class, 'offices'])->name('api')->withoutMiddleware(['can:manage human resource']);
+        Route::post('/', [OfficeController::class, 'store'])->name('store')->can('create', App\Models\Office::class);
+        Route::get('/{office}', [OfficeController::class, 'show'])->name('show')->can('view', 'office');
+        Route::get('/get/{office}', [OfficeController::class, 'showDetail'])->name('detail')->can('view', 'office');
+        Route::patch('/activate/{office}', [OfficeController::class, 'activateOffice'])->name('activate')->can('activate', 'office');
+        Route::patch('/update/field/{office}', [OfficeController::class, 'updateField'])->name('updateField')->can('update', 'office');
+        Route::delete('/{office}', [OfficeController::class, 'destroy'])->name('destroy')->can('delete', 'office');
+    });
+
+    Route::prefix('designations')->as('designations.')->group(function () {
+        Route::get('/', [DesignationController::class, 'index'])->name('index')->can('viewAny', App\Models\Designation::class);
+        Route::get('/create', [DesignationController::class, 'create'])->name('create')->can('create', App\Models\Designation::class);
+        Route::post('/', [DesignationController::class, 'store'])->name('store')->can('create', App\Models\Designation::class);
+        Route::get('/{designation}', [DesignationController::class, 'show'])->name('show')->can('view', 'designation');
+        Route::get('/get/{designation}', [DesignationController::class, 'showDetail'])->name('detail')->can('view', 'designation');
+        Route::patch('/activate/{designation}', [DesignationController::class, 'activateDesignation'])->name('activate')->can('activate', 'designation');
+        Route::patch('/update/field/{designation}', [DesignationController::class, 'updateField'])->name('updateField')->can('update', 'designation');
+        Route::delete('/{designation}', [DesignationController::class, 'destroy'])->name('destroy')->can('delete', 'designation');
     });
 
     Route::prefix('sanctioned-posts')->as('sanctioned-posts.')->group(function () {
@@ -64,29 +87,6 @@ Route::prefix('hr')->as('hr.')->middleware(['can:manage human resource'])->group
         Route::get('/{posting}/edit', [PostingController::class, 'edit'])->name('edit');
         Route::put('/{posting}', [PostingController::class, 'update'])->name('update');
         Route::delete('/{posting}', [PostingController::class, 'destroy'])->name('destroy');
-    });
-
-    Route::prefix('designations')->as('designations.')->group(function () {
-        Route::get('/', [DesignationController::class, 'index'])->name('index')->can('viewAny', App\Models\Designation::class);
-        Route::get('/create', [DesignationController::class, 'create'])->name('create')->can('create', App\Models\Designation::class);
-        Route::post('/', [DesignationController::class, 'store'])->name('store')->can('create', App\Models\Designation::class);
-        Route::get('/{designation}', [DesignationController::class, 'show'])->name('show')->can('view', 'designation');
-        Route::get('/get/{designation}', [DesignationController::class, 'showDetail'])->name('detail')->can('view', 'designation');
-        Route::patch('/activate/{designation}', [DesignationController::class, 'activateDesignation'])->name('activate')->can('activate', 'designation');
-        Route::patch('/update/field/{designation}', [DesignationController::class, 'updateField'])->name('updateField')->can('update', 'designation');
-        Route::delete('/{designation}', [DesignationController::class, 'destroy'])->name('destroy')->can('delete', 'designation');
-    });
-
-    Route::prefix('offices')->as('offices.')->group(function () {
-        Route::get('/', [OfficeController::class, 'index'])->name('index')->can('viewAny', App\Models\Office::class);
-        Route::get('/create', [OfficeController::class, 'create'])->name('create')->can('create', App\Models\Office::class);
-        Route::get('/district', [OfficeController::class, 'getOfficeDistrict'])->name('district');
-        Route::post('/', [OfficeController::class, 'store'])->name('store')->can('create', App\Models\Office::class);
-        Route::get('/{office}', [OfficeController::class, 'show'])->name('show')->can('view', 'office');
-        Route::get('/get/{office}', [OfficeController::class, 'showDetail'])->name('detail')->can('view', 'office');
-        Route::patch('/activate/{office}', [OfficeController::class, 'activateOffice'])->name('activate')->can('activate', 'office');
-        Route::patch('/update/field/{office}', [OfficeController::class, 'updateField'])->name('updateField')->can('update', 'office');
-        Route::delete('/{office}', [OfficeController::class, 'destroy'])->name('destroy')->can('delete', 'office');
     });
 
     Route::prefix('organogram')->as('organogram.')->group(function () {

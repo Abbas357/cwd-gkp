@@ -180,6 +180,63 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(VehicleAllotment::class, 'user_id');
     }
 
+    public function currentVehicleAllotments()
+    {
+        return $this->hasMany(VehicleAllotment::class, 'user_id')
+            ->where('is_current', true);
+    }
+
+    public function personalVehicles()
+    {
+        return $this->hasManyThrough(
+            Vehicle::class,
+            VehicleAllotment::class,
+            'user_id',
+            'id',
+            'id',
+            'vehicle_id'
+        )->whereHas('allotment', function($query) {
+            $query->where('is_current', true)
+                ->whereNot('type', 'Pool');
+        });
+    }
+
+    public function officePoolVehicles()
+    {
+        return $this->hasManyThrough(
+            Vehicle::class,
+            VehicleAllotment::class,
+            'office_id',
+            'id',
+            'office_id',
+            'vehicle_id'
+        )->whereHas('allotment', function($query) {
+            $query->where('is_current', true)
+                ->where('type', 'Pool')
+                ->whereNull('user_id');
+        });
+    }
+
+    public function accessibleVehicles()
+    {
+        $personalVehicleIds = $this->personalVehicles()->pluck('id');
+        $officeVehicleIds = $this->officePoolVehicles()->pluck('id');
+        
+        return Vehicle::whereIn('id', $personalVehicleIds->merge($officeVehicleIds));
+    }
+
+    public function currentOfficeId()
+    {
+        return $this->hasOneThrough(
+            'office_id',
+            Posting::class,
+            'user_id',
+            'id',
+            'id',
+            'office_id'
+        )->where('is_current', true);
+    }
+
     public function isAdmin()
     {
         return $this->id === 1;
@@ -248,7 +305,6 @@ class User extends Authenticatable implements HasMedia
 
     public function getDirectSupervisor()
     {
-        // User must have a current posting and office
         if (!$this->currentPosting || !$this->currentOffice) {
             return null;
         }

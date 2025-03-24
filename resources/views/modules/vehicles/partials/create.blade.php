@@ -1,4 +1,9 @@
 <div class="row" id=step-1>
+    <div class="col-md-12 mb-3">
+        <label for="load-offices">Office Pool</label>
+        <select class="form-select form-select-md" id="load-offices" name="office">
+        </select>
+    </div>
     <div class="col-md-6 mb-3">
         <label for="type">Type</label>
         <select class="form-select" id="type" name="type" required>
@@ -152,3 +157,18 @@
         @enderror
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        select2Ajax(
+            '#load-offices',
+            '{{ route("admin.apps.hr.offices.api") }}',
+            {
+                placeholder: "Select Office",
+                dropdownParent: $('#load-offices').closest('.modal')
+            }
+        );
+
+    });
+
+</script>

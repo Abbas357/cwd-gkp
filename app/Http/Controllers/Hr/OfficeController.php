@@ -54,6 +54,30 @@ class OfficeController extends Controller
         return view('modules.hr.offices.index');
     }
 
+    public function offices(Request $request)
+    {
+        return $this->getApiResults(
+            $request, 
+            Office::class, 
+            [
+                'searchColumns' => ['name', 'type'],
+                'withRelations' => ['parent', 'district'],
+                'textFormat' => function($office) {
+                    return $office->name . 
+                        ($office->type ? ' (' . $office->type . ')' : '') .
+                        ($office->parent ? ' - ' . $office->parent->name : '') . 
+                        ($office->district ? ' [' . $office->district->name . ']' : '');
+                },
+                'searchRelations' => [
+                    'parent' => ['name'],
+                    'district' => ['name']
+                ],
+                'orderBy' => 'type',
+                'conditions' => ['status' => 'Active']
+            ]
+        );
+    }
+
     public function create()
     {
         $offices = Office::where('status', 'Active')->get();

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 
 abstract class Controller
 {
@@ -34,5 +35,69 @@ abstract class Controller
         }, $bindings);
         
         return vsprintf(str_replace('?', '%s', $sql), $bindings);
+    }
+
+    protected function getApiResults(Request $request, string $modelClass, array $config = [])
+    {
+        $defaults = [
+            'searchColumns' => ['name'],
+            'withRelations' => [],
+            'textFormat' => function($item) { return $item->name; },
+            'searchRelations' => [],
+            'perPage' => 10,
+            'conditions' => [],
+            'orderBy' => 'name',
+            'orderDirection' => 'asc'
+        ];
+
+        $config = array_merge($defaults, $config);
+        
+        $query = $modelClass::query();
+        
+        if (!empty($config['withRelations'])) {
+            $query->with($config['withRelations']);
+        }
+        
+        if ($request->q) {
+            $query->where(function($q) use ($request, $config) {
+                foreach ($config['searchColumns'] as $column) {
+                    $q->orWhere($column, 'like', "%{$request->q}%");
+                }
+                
+                foreach ($config['searchRelations'] as $relation => $columns) {
+                    $q->orWhereHas($relation, function($subQuery) use ($request, $columns) {
+                        $subQuery->where(function($sq) use ($request, $columns) {
+                            foreach ($columns as $column) {
+                                $sq->orWhere($column, 'like', "%{$request->q}%");
+                            }
+                        });
+                    });
+                }
+            });
+        }
+        
+        foreach ($config['conditions'] as $column => $value) {
+            if (is_array($value) && isset($value[0], $value[1])) {
+                $query->where($column, $value[0], $value[1]);
+            } else {
+                $query->where($column, $value);
+            }
+        }
+        
+        $query->orderBy($config['orderBy'], $config['orderDirection']);
+        
+        $results = $query->paginate($config['perPage']);
+        
+        return response()->json([
+            'results' => collect($results->items())->map(function($item) use ($config) {
+                return [
+                    'id' => $item->id,
+                    'text' => $config['textFormat']($item)
+                ];
+            }),
+            'pagination' => [
+                'more' => $results->hasMorePages()
+            ]
+        ]);
     }
 }

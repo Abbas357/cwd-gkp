@@ -185,4 +185,44 @@ class Office extends Model
         return $managedDistricts->unique('id');
     }
 
+    public function vehicleAllotments()
+    {
+        return $this->hasMany(VehicleAllotment::class, 'office_id');
+    }
+
+    public function currentVehicleAllotments()
+    {
+        return $this->hasMany(VehicleAllotment::class, 'office_id')
+            ->where('is_current', true);
+    }
+
+    public function vehicles()
+    {
+        return $this->hasManyThrough(
+            Vehicle::class,
+            VehicleAllotment::class,
+            'office_id',
+            'id',
+            'id',
+            'vehicle_id'
+        )->whereHas('allotment', function($query) {
+            $query->where('is_current', true);
+        });
+    }
+
+    public function poolVehicles()
+    {
+        return $this->hasManyThrough(
+            Vehicle::class, 
+            VehicleAllotment::class,
+            'office_id',
+            'id',
+            'id',
+            'vehicle_id'
+        )->whereHas('allotment', function($query) {
+            $query->where('is_current', true)
+                ->where('type', 'Pool');
+        });
+    }
+
 }

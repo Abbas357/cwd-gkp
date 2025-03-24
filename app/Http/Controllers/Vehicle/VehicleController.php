@@ -23,7 +23,8 @@ class VehicleController extends Controller
         $relationMappings = [
             'added_by' => 'user.currentPosting.designation.name',
             'assigned_to' => 'allotment.user.currentPosting.office.name',
-            'officer_name' => 'allotment.user.name'
+            'officer_name' => 'allotment.user.name',
+            'office_name' => 'allotment.office.name',
         ];
         
         if ($request->ajax()) {
@@ -38,12 +39,13 @@ class VehicleController extends Controller
                     : ($row->user->currentPosting?->designation->name  ?? 'N/A');
                 })
                 ->addColumn('assigned_to', function ($row) {
-                    return $row->allotment?->user 
-                        ? ($row->allotment->user->currentPosting?->office?->name . ' (' . $row->allotment->user->name . ')') 
-                        : 'Pool';
+                    return view('modules.vehicles.partials.assignment', compact('row'))->render();
                 })
                 ->addColumn('officer_name', function ($row) {
                     return $row->allotment?->user?->name ?? 'Name not available';
+                })
+                ->addColumn('office_name', function ($row) {
+                    return $row->allotment?->office?->name ?? 'Office not available';
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');
@@ -51,7 +53,7 @@ class VehicleController extends Controller
                 ->editColumn('updated_at', function ($row) {
                     return $row->updated_at->diffForHumans();
                 })
-                ->rawColumns(['action', 'added_by', 'user']);
+                ->rawColumns(['action', 'added_by', 'user', 'assigned_to', 'officer_name']);
 
             if ($request->input('search.value')) {
                 Database::applyRelationalSearch($dataTable, $relationMappings);
@@ -85,115 +87,201 @@ class VehicleController extends Controller
     }
 
     public function index(Request $request)
-    {
-        $totalVehicles = Vehicle::count();
+{
+    $totalVehicles = Vehicle::count();
 
-        $functionalVehicles = Vehicle::where('functional_status', 'Functional')->count();
-        $nonFunctionalVehicles = Vehicle::where('functional_status', 'Non-Functional')->count();
-        $condemnedVehicles = Vehicle::where('functional_status', 'Condemned')->count();
+    $functionalVehicles = Vehicle::where('functional_status', 'Functional')->count();
+    $nonFunctionalVehicles = Vehicle::where('functional_status', 'Non-Functional')->count();
+    $condemnedVehicles = Vehicle::where('functional_status', 'Condemned')->count();
 
-        $allotedVehicles = VehicleAllotment::whereNot('type', 'Pool')->where('is_current', 1)->count();
+    $allotedVehicles = VehicleAllotment::whereIn('type', ['Permanent', 'Temporary'])
+        ->where('is_current', 1)
+        ->count();
 
-        $permanentAlloted = VehicleAllotment::where('is_current', 1)
-            ->where('type', 'Permanent')
-            ->count();
+    $permanentAlloted = VehicleAllotment::where('is_current', 1)
+        ->where('type', 'Permanent')
+        ->count();
 
-        $temporaryAlloted = VehicleAllotment::where('is_current', 1)
-            ->where('type', 'Temporary')
-            ->count();
+    $temporaryAlloted = VehicleAllotment::where('is_current', 1)
+        ->where('type', 'Temporary')
+        ->count();
 
-        $departmentPool = VehicleAllotment::where('is_current', 1)
-            ->where('type', 'Pool')
-            ->count();
+    // Updated pool counts to account for office_id
+    $totalPoolVehicles = VehicleAllotment::where('is_current', 1)
+        ->where('type', 'Pool')
+        ->count();
 
-        $officePool = VehicleAllotment::where('is_current', 1)
-            ->where('type', 'Pool')
-            ->whereNotNull('user_id')
-            ->count();
+    $officePoolCount = VehicleAllotment::where('is_current', 1)
+        ->where('type', 'Pool')
+        ->where(function($q) {
+            $q->whereNotNull('office_id')
+             ->orWhereNotNull('user_id');
+        })
+        ->count();
 
-        $monthlyAllotments = VehicleAllotment::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as count')
-            ->groupBy('month')
-            ->orderBy('month')
-            ->limit(6)
-            ->get();
+    $departmentPoolCount = $totalPoolVehicles - $officePoolCount;
 
-        $distributions = [
-            'type' => $this->getDistribution('type'),
-            'color' => $this->getDistribution('color'),
-            'fuel_type' => $this->getDistribution('fuel_type'),
-            'registration_status' => $this->getDistribution('registration_status'),
-            'brand' => $this->getDistribution('brand'),
-            'model_year' => $this->getDistribution('model_year')
-        ];
+    // Count by assignment type (person vs office)
+    $personalAllotmentCount = VehicleAllotment::where('is_current', 1)
+        ->whereIn('type', ['Permanent', 'Temporary'])
+        ->whereNotNull('user_id')
+        ->whereNull('office_id')
+        ->count();
 
-        $recentAllotments = VehicleAllotment::with(['vehicle', 'user'])
-            ->latest()
-            ->take(5)
-            ->get();
+    $officeAllotmentCount = VehicleAllotment::where('is_current', 1)
+        ->whereIn('type', ['Permanent', 'Temporary'])
+        ->whereNotNull('office_id')
+        ->count();
 
-        $vehiclesNeedingAttention = Vehicle::where('functional_status', 'Non-Functional')
-            ->orWhere('functional_status', 'Condemned')
-            ->with('allotment.user')
-            ->take(5)
-            ->get();
+    $monthlyAllotments = VehicleAllotment::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as count')
+        ->groupBy('month')
+        ->orderBy('month')
+        ->limit(6)
+        ->get();
 
-        $fuelTypeStats = Vehicle::selectRaw('fuel_type, COUNT(*) as count')
-            ->whereNotNull('fuel_type')
-            ->groupBy('fuel_type')
-            ->get();
+    $distributions = [
+        'type' => $this->getDistribution('type'),
+        'color' => $this->getDistribution('color'),
+        'fuel_type' => $this->getDistribution('fuel_type'),
+        'registration_status' => $this->getDistribution('registration_status'),
+        'brand' => $this->getDistribution('brand'),
+        'model_year' => $this->getDistribution('model_year')
+    ];
 
-        $functionalPercentage = $totalVehicles > 0 ? ($functionalVehicles / $totalVehicles) * 100 : 0;
-        $allotedPercentage = $totalVehicles > 0 ? ($allotedVehicles / $totalVehicles) * 100 : 0;
-        $poolPercentage = $totalVehicles > 0 ? ($departmentPool / $totalVehicles) * 100 : 0;
+    // Allotment trends by type and assignment (person vs office)
+    $allotmentTypeTrends = VehicleAllotment::selectRaw('
+        DATE_FORMAT(created_at, "%Y-%m") as month,
+        SUM(CASE WHEN type = "Permanent" AND user_id IS NOT NULL AND office_id IS NULL THEN 1 ELSE 0 END) as permanent_personal,
+        SUM(CASE WHEN type = "Permanent" AND office_id IS NOT NULL THEN 1 ELSE 0 END) as permanent_office,
+        SUM(CASE WHEN type = "Temporary" AND user_id IS NOT NULL AND office_id IS NULL THEN 1 ELSE 0 END) as temporary_personal,
+        SUM(CASE WHEN type = "Temporary" AND office_id IS NOT NULL THEN 1 ELSE 0 END) as temporary_office,
+        SUM(CASE WHEN type = "Pool" AND office_id IS NULL AND user_id IS NULL THEN 1 ELSE 0 END) as department_pool,
+        SUM(CASE WHEN type = "Pool" AND (office_id IS NOT NULL OR user_id IS NOT NULL) THEN 1 ELSE 0 END) as office_pool
+    ')
+        ->whereYear('created_at', '>=', now()->subYear())
+        ->groupBy('month')
+        ->orderBy('month')
+        ->get();
 
-        $yearWiseRegistrations = Vehicle::selectRaw('YEAR(created_at) as year, COUNT(*) as count')
-            ->groupBy('year')
-            ->orderBy('year', 'desc')
-            ->get();
+    // Get allocation by model year
+    $modelYearAllocation = Vehicle::selectRaw('
+        model_year,
+        COUNT(*) as total,
+        SUM(CASE WHEN vehicles.id IN (SELECT vehicle_id FROM vehicle_allotments WHERE is_current = 1) THEN 1 ELSE 0 END) as allocated
+    ')
+        ->whereNotNull('model_year')
+        ->groupBy('model_year')
+        ->orderBy('model_year', 'desc')
+        ->limit(10)
+        ->get();
 
-        $brandWiseStatus = Vehicle::selectRaw('brand, functional_status, COUNT(*) as count')
-            ->whereNotNull('brand')
-            ->whereNotNull('functional_status')
-            ->groupBy('brand', 'functional_status')
-            ->get()
-            ->groupBy('brand');
+    // Count vehicles by age group
+    $currentYear = date('Y');
+    $vehicleAgeGroups = Vehicle::selectRaw('
+        CASE 
+            WHEN model_year >= ? THEN "New (0-2 years)"
+            WHEN model_year >= ? THEN "Recent (3-5 years)"
+            WHEN model_year >= ? THEN "Mature (6-10 years)"
+            ELSE "Aging (10+ years)"
+        END as age_group,
+        COUNT(*) as count
+    ', [$currentYear - 2, $currentYear - 5, $currentYear - 10])
+        ->whereNotNull('model_year')
+        ->groupBy('age_group')
+        ->get();
 
-        $allocationTrends = VehicleAllotment::selectRaw('
-            YEAR(created_at) as year, 
-            MONTH(created_at) as month,
-            type,
-            COUNT(*) as count
-        ')
-            ->whereYear('created_at', '>=', now()->subYear())
-            ->groupBy('year', 'month', 'type')
-            ->orderBy('year')
-            ->orderBy('month')
-            ->get()
-            ->groupBy('type');
+    // Top 5 brands with most vehicles
+    $topBrands = Vehicle::selectRaw('brand, COUNT(*) as count')
+        ->whereNotNull('brand')
+        ->groupBy('brand')
+        ->orderByDesc('count')
+        ->limit(5)
+        ->get();
 
-        return view('modules.vehicles.dashboard', compact(
-            'totalVehicles',
-            'functionalVehicles',
-            'condemnedVehicles',
-            'allotedVehicles',
-            'permanentAlloted',
-            'temporaryAlloted',
-            'departmentPool',
-            'officePool',
-            'monthlyAllotments',
-            'distributions',
-            'recentAllotments',
-            'vehiclesNeedingAttention',
-            'fuelTypeStats',
-            'functionalPercentage',
-            'allotedPercentage',
-            'poolPercentage',
-            'yearWiseRegistrations',
-            'brandWiseStatus',
-            'allocationTrends'
-        ));
-        
-    }
+    // Non-functional vehicles by brand
+    $nonFunctionalByBrand = Vehicle::selectRaw('brand, COUNT(*) as count')
+        ->whereIn('functional_status', ['Non-Functional', 'Condemned'])
+        ->whereNotNull('brand')
+        ->groupBy('brand')
+        ->orderByDesc('count')
+        ->limit(5)
+        ->get();
+
+    $recentAllotments = VehicleAllotment::with(['vehicle', 'user', 'office'])
+        ->latest()
+        ->take(5)
+        ->get();
+
+    $vehiclesNeedingAttention = Vehicle::where('functional_status', 'Non-Functional')
+        ->orWhere('functional_status', 'Condemned')
+        ->with(['allotment.user', 'allotment.office'])
+        ->take(5)
+        ->get();
+
+    $fuelTypeStats = Vehicle::selectRaw('fuel_type, COUNT(*) as count')
+        ->whereNotNull('fuel_type')
+        ->groupBy('fuel_type')
+        ->get();
+
+    $functionalPercentage = $totalVehicles > 0 ? ($functionalVehicles / $totalVehicles) * 100 : 0;
+    $allotedPercentage = $totalVehicles > 0 ? ($allotedVehicles / $totalVehicles) * 100 : 0;
+    $poolPercentage = $totalVehicles > 0 ? ($totalPoolVehicles / $totalVehicles) * 100 : 0;
+
+    $yearWiseRegistrations = Vehicle::selectRaw('YEAR(created_at) as year, COUNT(*) as count')
+        ->groupBy('year')
+        ->orderBy('year', 'desc')
+        ->get();
+
+    $brandWiseStatus = Vehicle::selectRaw('brand, functional_status, COUNT(*) as count')
+        ->whereNotNull('brand')
+        ->whereNotNull('functional_status')
+        ->groupBy('brand', 'functional_status')
+        ->get()
+        ->groupBy('brand');
+
+    $allocationTrends = VehicleAllotment::selectRaw('
+        YEAR(created_at) as year, 
+        MONTH(created_at) as month,
+        type,
+        COUNT(*) as count
+    ')
+        ->whereYear('created_at', '>=', now()->subYear())
+        ->groupBy('year', 'month', 'type')
+        ->orderBy('year')
+        ->orderBy('month')
+        ->get()
+        ->groupBy('type');
+
+    return view('modules.vehicles.dashboard', compact(
+        'totalVehicles',
+        'functionalVehicles',
+        'nonFunctionalVehicles',
+        'condemnedVehicles',
+        'allotedVehicles',
+        'permanentAlloted',
+        'temporaryAlloted',
+        'departmentPoolCount',
+        'officePoolCount',
+        'personalAllotmentCount',
+        'officeAllotmentCount',
+        'monthlyAllotments',
+        'distributions',
+        'allotmentTypeTrends',
+        'modelYearAllocation',
+        'vehicleAgeGroups',
+        'topBrands',
+        'nonFunctionalByBrand',
+        'recentAllotments',
+        'vehiclesNeedingAttention',
+        'fuelTypeStats',
+        'functionalPercentage',
+        'allotedPercentage',
+        'poolPercentage',
+        'yearWiseRegistrations',
+        'brandWiseStatus',
+        'allocationTrends'
+    ));
+}
 
     public function create()
     {
@@ -233,6 +321,8 @@ class VehicleController extends Controller
         $vehicle->user_id = $request->user()->id;
         $vehicle->remarks = $request->remarks;
 
+        session(['office' => $request->office]);
+
         if ($request->hasFile('front_view')) {
             $vehicle->addMedia($request->file('front_view'))
                 ->toMediaCollection('vehicle_front_pictures');
@@ -254,6 +344,7 @@ class VehicleController extends Controller
         }
 
         if ($vehicle->save()) {
+            session()->forget('office');
             return response()->json(['success' => 'Vehicle added successfully.']);
         }
 
@@ -370,129 +461,163 @@ class VehicleController extends Controller
     }
 
     public function reports(Request $request)
-    {
-        $cat = [
-            'users' => User::all(),
-            'vehicle_type' => Category::where('type', 'vehicle_type')->get(),
-            'vehicle_functional_status' => Category::where('type', 'vehicle_functional_status')->get(),
-            'vehicle_color' => Category::where('type', 'vehicle_color')->get(),
-            'fuel_type' => Category::where('type', 'fuel_type')->get(),
-            'vehicle_registration_status' => Category::where('type', 'vehicle_registration_status')->get(),
-            'vehicle_brand' => Category::where('type', 'vehicle_brand')->get(),
-            'allotment_status' => ['Office Pool', 'Department Pool', 'Permanent Allotted', 'Temporary Allotted'],
-        ];
+{
+    $cat = [
+        'users' => User::all(),
+        'vehicle_type' => Category::where('type', 'vehicle_type')->get(),
+        'vehicle_functional_status' => Category::where('type', 'vehicle_functional_status')->get(),
+        'vehicle_color' => Category::where('type', 'vehicle_color')->get(),
+        'fuel_type' => Category::where('type', 'fuel_type')->get(),
+        'vehicle_registration_status' => Category::where('type', 'vehicle_registration_status')->get(),
+        'vehicle_brand' => Category::where('type', 'vehicle_brand')->get(),
+        'allotment_status' => ['Office Pool', 'Department Pool', 'Personal Permanent', 'Personal Temporary'],
+    ];
 
-        $filters = [
-            'user_id' => null,
-            'vehicle_id' => null,
-            'type' => null,
-            'status' => null,
-            'color' => null,
-            'fuel_type' => null,
-            'registration_status' => null,
-            'brand' => null,
-            'model_year' => null,
-        ];
+    $filters = [
+        'user_id' => null,
+        'vehicle_id' => null,
+        'type' => null,
+        'status' => null,
+        'color' => null,
+        'fuel_type' => null,
+        'registration_status' => null,
+        'brand' => null,
+        'model_year' => null,
+    ];
 
-        $filters = array_merge($filters, $request->only(array_keys($filters)));
+    $filters = array_merge($filters, $request->only(array_keys($filters)));
 
-        $include_subordinates = $request->boolean('include_subordinates', false);
-        $show_history = $request->boolean('show_history', false);
-        
-        $perPage = $request->input('per_page', 10);
-        $showAll = $perPage === 'all';
-        
-        if (!$showAll && is_string($perPage)) {
-            $perPage = (int) $perPage;
-        }
+    $include_subordinates = $request->boolean('include_subordinates', false);
+    $show_history = $request->boolean('show_history', false);
+    
+    $perPage = $request->input('per_page', 10);
+    $showAll = $perPage === 'all';
+    
+    if (!$showAll && is_string($perPage)) {
+        $perPage = (int) $perPage;
+    }
 
-        $query = VehicleAllotment::query()
-        ->with(['vehicle', 'user'])
-        ->when(!$show_history, fn($q) => $q->where('is_current', '!=', 0))
+    $query = VehicleAllotment::query()
+        ->with(['vehicle', 'user', 'office'])
+        ->when(!$show_history, fn($q) => $q->where('is_current', true))
         ->when(request('allotment_status'), function($q) {
             $status = request('allotment_status');
             
             return match ($status) {
-                'Office Pool' => $q->where('type', 'Pool')->whereNotNull('user_id'),
-                'Department Pool' => $q->where('type', 'Pool')->whereNull('user_id'),
-                'Permanent Allotted' => $q->where('type', 'Permanent'),
-                'Temporary Allotted' => $q->where('type', 'Temporary'),
-                default => $q->where('type', '!=', 'Pool'), // Exclude 'Pool' for invalid statuses
+                'Office Pool' => $q->where('type', 'Pool')->whereNotNull('office_id')->whereNull('user_id'),
+                'Department Pool' => $q->where('type', 'Pool')->whereNull('office_id')->whereNull('user_id'),
+                'Personal Permanent' => $q->where('type', 'Permanent')->whereNotNull('user_id'),
+                'Personal Temporary' => $q->where('type', 'Temporary')->whereNotNull('user_id'),
+                default => $q,
             };
-        })
-        ->when(!request('allotment_status'), function($q) {
-            return $q->where('type', '!=', 'Pool');
         });
 
         if ($filters['user_id']) {
-            if ($include_subordinates) {
-                $user = User::find($filters['user_id']);
-                $subordinateIds = $user->getSubordinates()->pluck('id')->toArray();
-                $userIds = array_merge([$user->id], $subordinateIds);
-                $query->whereIn('user_id', $userIds);
-            } else {
-                $query->where('user_id', $filters['user_id']);
-            }
-        }
-
-        if ($filters['vehicle_id']) {
-            $query->where('vehicle_id', $filters['vehicle_id']);
-        }  
-
-        $query->whereHas('vehicle', function ($q) use ($filters, $cat) {
-            if ($filters['status']) {
-                $status = $cat['vehicle_functional_status']->firstWhere('id', $filters['status']);
-                $q->where('functional_status', $status->name ?? '');
-            }
-
-            if ($filters['type']) {
-                $type = $cat['vehicle_type']->firstWhere('id', $filters['type']);
-                $q->where('type', $type->name ?? '');
-            }
-
-            if ($filters['model_year']) {
-                $q->where('model_year', $filters['model_year']);
-            }
-
-            $additionalFilters = [
-                'color' => 'vehicle_color',
-                'fuel_type' => 'fuel_type',
-                'registration_status' => 'vehicle_registration_status',
-                'brand' => 'vehicle_brand'
-            ];
+            $user = User::find($filters['user_id']);
+            $userOfficeId = $user->currentPosting?->office_id;
             
-            foreach ($additionalFilters as $field => $categoryType) {
-                if ($filters[$field]) {
-                    $category = $cat[$categoryType]->firstWhere('id', $filters[$field]);
-                    $q->where($field, $category->name ?? '');
+            if ($include_subordinates) {
+                // Get all subordinate users
+                $subordinates = $user->getSubordinates();
+                $subordinateUserIds = $subordinates->pluck('id')->toArray();
+                $allUserIds = array_merge([$user->id], $subordinateUserIds);
+                
+                // Get all offices under user's control
+                $userOffice = $user->currentOffice;
+                $subordinateOfficeIds = [];
+                
+                if ($userOffice) {
+                    // Get all descendant offices
+                    $descendantOffices = $userOffice->getAllDescendants();
+                    $subordinateOfficeIds = $descendantOffices->pluck('id')->toArray();
+                    
+                    // Include user's own office
+                    if ($userOfficeId) {
+                        $subordinateOfficeIds[] = $userOfficeId;
+                    }
                 }
-            }
-        });
-
-        $totalCount = $query->count();
-        
-        if ($showAll) {
-            $allotments = $query->latest()->get();
-        } else {
-            try {
-                $allotments = $query->latest()->paginate($perPage);
-                $allotments->appends($request->except('page'));
-            } catch (\Exception $e) {
-                $perPage = 10;
-                $allotments = $query->latest()->paginate($perPage);
-                $allotments->appends($request->except('page'));
+                
+                $query->where(function($q) use ($allUserIds, $subordinateOfficeIds) {
+                    // Personal assignments to user or subordinates
+                    $q->whereIn('user_id', $allUserIds);
+                    
+                    // Office assignments to user's office or subordinate offices
+                    if (!empty($subordinateOfficeIds)) {
+                        $q->orWhereIn('office_id', $subordinateOfficeIds);
+                    }
+                });
+            } else {
+                // Only vehicles assigned to this specific user or their office
+                $query->where(function($q) use ($user, $userOfficeId) {
+                    // Direct personal assignment
+                    $q->where('user_id', $user->id);
+                    
+                    // Office assignment to user's office
+                    if ($userOfficeId) {
+                        $q->orWhere('office_id', $userOfficeId);
+                    }
+                });
             }
         }
-        
-        $paginationOptions = [
-            10 => '10 per page',
-            50 => '50 per page',
-            100 => '100 per page',
-            'all' => 'Show All'
-        ];
 
-        return view('modules.vehicles.reports', compact('cat', 'allotments', 'filters', 'totalCount', 'perPage', 'paginationOptions'));
+    if ($filters['vehicle_id']) {
+        $query->where('vehicle_id', $filters['vehicle_id']);
+    }  
+
+    $query->whereHas('vehicle', function ($q) use ($filters, $cat) {
+        if ($filters['status']) {
+            $status = $cat['vehicle_functional_status']->firstWhere('id', $filters['status']);
+            $q->where('functional_status', $status->name ?? '');
+        }
+
+        if ($filters['type']) {
+            $type = $cat['vehicle_type']->firstWhere('id', $filters['type']);
+            $q->where('type', $type->name ?? '');
+        }
+
+        if ($filters['model_year']) {
+            $q->where('model_year', $filters['model_year']);
+        }
+
+        $additionalFilters = [
+            'color' => 'vehicle_color',
+            'fuel_type' => 'fuel_type',
+            'registration_status' => 'vehicle_registration_status',
+            'brand' => 'vehicle_brand'
+        ];
+        
+        foreach ($additionalFilters as $field => $categoryType) {
+            if ($filters[$field]) {
+                $category = $cat[$categoryType]->firstWhere('id', $filters[$field]);
+                $q->where($field, $category->name ?? '');
+            }
+        }
+    });
+
+    $totalCount = $query->count();
+    
+    if ($showAll) {
+        $allotments = $query->latest()->get();
+    } else {
+        try {
+            $allotments = $query->latest()->paginate($perPage);
+            $allotments->appends($request->except('page'));
+        } catch (\Exception $e) {
+            $perPage = 10;
+            $allotments = $query->latest()->paginate($perPage);
+            $allotments->appends($request->except('page'));
+        }
     }
+    
+    $paginationOptions = [
+        10 => '10 per page',
+        50 => '50 per page',
+        100 => '100 per page',
+        'all' => 'Show All'
+    ];
+
+    return view('modules.vehicles.reports', compact('cat', 'allotments', 'filters', 'totalCount', 'perPage', 'paginationOptions'));
+}
 
     public function search(Request $request)
     {

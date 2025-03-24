@@ -42,35 +42,58 @@
                         <th>Alloted to</th>
                         <td colspan="3">
                             @if($vehicle->allotment->type === 'Pool')
-                                @if(!empty($vehicle->allotment->user_id))
+                                @if($vehicle->allotment->office_id)
                                     <span class="badge bg-warning fs-6">Office Pool</span>
-                                    <span class="badge bg-warning fs-6">{{ $vehicle?->allotment?->user?->currentPosting?->office?->name ?? 'No Office' }}</span>
+                                    <span class="badge bg-info fs-6">{{ $vehicle->allotment->office->name ?? 'No Office' }}</span>
+                                @elseif($vehicle->allotment->user_id)
+                                    {{-- Legacy data structure where pool vehicles had user_id --}}
+                                    <span class="badge bg-warning fs-6">Office Pool</span>
+                                    <span class="badge bg-info fs-6">{{ $vehicle->allotment->user->currentPosting?->office?->name ?? 'No Office' }}</span>
+                                    <div class="mt-1 small text-muted">(Managed by: {{ $vehicle->allotment->user->name }})</div>
                                 @else
                                     <span class="badge bg-danger fs-6">Department Pool</span>
                                 @endif
-                            @else
-                                @if(isset($vehicle->allotment->user))
-                                    <table class="table mb-0">
+                            @elseif($vehicle->allotment->type === 'Permanent' || $vehicle->allotment->type === 'Temporary')
+                                @if($vehicle->allotment->user_id)
+                                    <div class="d-flex justify-content-between">
+                                        <span class="badge bg-primary fs-6">{{ $vehicle->allotment->type }}</span>
+                                        <span class="badge bg-success fs-6">Personal Assignment</span>
+                                    </div>
+                                    <table class="table table-sm mt-2 mb-0 border">
                                         <tbody>
                                             <tr>
-                                                <th>Name</th>
-                                                <td>{{ $vehicle?->allotment?->user?->name ?? 'No Name' }}</td>
+                                                <th class="bg-light">Name</th>
+                                                <td>{{ $vehicle->allotment->user->name ?? 'No Name' }}</td>
                                             </tr>
                                             <tr>
-                                                <th>Designation</th>
-                                                <td>{{ $vehicle?->allotment?->user?->currentPosting?->designation?->name ?? 'Designation Missing' }}</td>
+                                                <th class="bg-light">Designation</th>
+                                                <td>{{ $vehicle->allotment->user->currentPosting?->designation?->name ?? 'Designation Missing' }}</td>
                                             </tr>
                                             <tr>
-                                                <th>Office</th>
-                                                <td>{{ $vehicle?->allotment?->user?->currentPosting?->office?->name ?? 'Office Missing' }}</td>
+                                                <th class="bg-light">Office</th>
+                                                <td>{{ $vehicle->allotment->user->currentPosting?->office?->name ?? 'Office Missing' }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                @elseif($vehicle->allotment->office_id)
+                                    <div class="d-flex justify-content-between">
+                                        <span class="badge bg-primary fs-6">{{ $vehicle->allotment->type }}</span>
+                                        <span class="badge bg-warning fs-6">Office Assignment</span>
+                                    </div>
+                                    <table class="table table-sm mt-2 mb-0 border">
+                                        <tbody>
+                                            <tr>
+                                                <th class="bg-light">Office</th>
+                                                <td>{{ $vehicle->allotment->office->name ?? 'Office Missing' }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 @else
-                                    <p>User information not available.</p>
+                                    <p>Assignment information not available.</p>
                                 @endif
+                            @else
+                                <span class="badge bg-secondary fs-6">{{ $vehicle->allotment->type ?? 'Unknown Type' }}</span>
                             @endif
-
                         </td>
                     </tr>
                 @endif
@@ -103,16 +126,13 @@
         <label for="allotment_order">Allotment Order <span class="badge bg-secondary mb-1">Optional</span></label>
         <input type="file" class="form-control" id="allotment_order" placeholder="Allotment Order" name="allotment_order">
     </div>
-    <div class="col-md-12">
-        <label class="form-label" for="load-users">Allot to User / Office</label>
-        <select name="user_id" id="load-users" class="form-select" data-placeholder="Select User / Office">
-            <option value=""></option>
-            @foreach(App\Models\User::all() as $user)
-                <option value="{{ $user->id }}">
-                    {{ $user?->currentPosting?->office?->name ?? 'Office Not Assigned' }} - {{ $user->name }}
-                </option>
-            @endforeach
-        </select>
+    <div class="col-md-12" id="user-selection" style="display: none;">
+        <label class="form-label" for="load-users">Allot to User</label>
+        <select name="user_id" id="load-users" class="form-select"></select>
+    </div>
+    <div class="col-md-12" id="office-selection" style="display: none;">
+        <label class="form-label" for="load-offices">Allot to Office</label>
+        <select name="office_id" id="load-offices" class="form-select"></select>
     </div>
     <div class="d-flex justify-content-end mt-1">
         <button type="button" class="btn btn-light border" onclick="openUserQuickCreateModal(onUserCreated)">
@@ -126,42 +146,36 @@
 <script src="{{ asset('admin/plugins/flatpickr/flatpickr.js') }}"></script>
 <script>
     $(document).ready(function () {
-        const userSelect = $('#load-users');
-        userSelect.select2({
-            theme: "bootstrap-5",
-            dropdownParent: $('#load-users').closest('.modal'),
-            placeholder: "Select User / Office",
-            allowClear: true,
-            ajax: {
-                url: '{{ route("admin.apps.hr.users.api") }}',
-                dataType: 'json',
-                delay: 250,
-                data: function(params) {
-                    return {
-                        q: params.term,
-                        page: params.page || 1
-                    };
-                },
-                processResults: function(data, params) {
-                    params.page = params.page || 1;
-                    
-                    return {
-                        results: data.results,
-                        pagination: {
-                            more: data.pagination.more
-                        }
-                    };
-                },
-                cache: true
-            },
-            templateResult: function(user) {
-                if (user.loading) {
-                    return 'Loading...';
-                }
-                return user.text;
-            },
-            templateSelection: function(user) {
-                return user.text || 'Select User / Office';
+        select2Ajax(
+            '#load-users',
+            '{{ route("admin.apps.hr.users.api") }}',
+            {
+                placeholder: "Select User",
+                dropdownParent: $('#load-users').closest('.modal')
+            }
+        );
+
+        select2Ajax(
+            '#load-offices',
+            '{{ route("admin.apps.hr.offices.api") }}',
+            {
+                placeholder: "Select Office",
+                dropdownParent: $('#load-offices').closest('.modal')
+            }
+        );
+
+        $('#type').on('change', function() {
+            const selectedType = $(this).val();
+            console.log(selectedType);
+            if (selectedType === 'Pool') {
+                $('#office-selection').show();
+                $('#user-selection').hide();
+            } else if (selectedType === 'Permanent' || selectedType === 'Temporary') {
+                $('#user-selection').show();
+                $('#office-selection').hide();
+            } else {
+                $('#user-selection').hide();
+                $('#office-selection').hide();
             }
         });
 

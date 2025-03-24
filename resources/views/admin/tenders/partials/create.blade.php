@@ -13,8 +13,8 @@
     </div>
 
     <div class="col-md-6 mb-3">
-        <label for="load-users">Office</label>
-        <select class="form-select form-select-md" data-placeholder="Select User / Office" id="load-users" name="user">
+        <label for="load-users">User / Office</label>
+        <select class="form-select form-select-md" id="load-users" name="user">
         </select>
     </div>
 
@@ -88,44 +88,14 @@
             , dateFormat: "Y-m-d H:i:S"
         });
 
-        const userSelect = $('#load-users');
-        userSelect.select2({
-            theme: "bootstrap-5"
-            , dropdownParent: $('#load-users').closest('.modal')
-            , placeholder: "Select User / Office"
-            , allowClear: true
-            , ajax: {
-                url: '{{ route("admin.apps.hr.users.api") }}'
-                , dataType: 'json'
-                , delay: 250
-                , data: function(params) {
-                    return {
-                        q: params.term
-                        , page: params.page || 1
-                    };
-                }
-                , processResults: function(data, params) {
-                    params.page = params.page || 1;
-
-                    return {
-                        results: data.results
-                        , pagination: {
-                            more: data.pagination.more
-                        }
-                    };
-                }
-                , cache: true
+        select2Ajax(
+            '#load-users',
+            '{{ route("admin.apps.hr.users.api") }}',
+            {
+                placeholder: "Select User / Office",
+                dropdownParent: $('#load-users').closest('.modal')
             }
-            , templateResult: function(user) {
-                if (user.loading) {
-                    return 'Loading...';
-                }
-                return user.text;
-            }
-            , templateSelection: function(user) {
-                return user.text || 'Select User / Office';
-            }
-        });
+        );
 
     });
 

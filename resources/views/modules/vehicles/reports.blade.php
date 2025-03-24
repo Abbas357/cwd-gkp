@@ -256,11 +256,11 @@
                         </div>
 
                         <div class="col-md-3">
-                            <label class="form-label" for="vehicle_type">
+                            <label class="form-label" for="allotment_status">
                                 Allotment Status
                             </label>
                             <select name="allotment_status" id="allotment_status" class="form-select">
-                                <option value="">Allotment Status</option>
+                                <option value="">All Allotment Types</option>
                                 @foreach($cat['allotment_status'] ?? [] as $allotment_status)
                                     <option value="{{ $allotment_status }}" @selected(request('allotment_status') == $allotment_status)>
                                         {{ $allotment_status }}
@@ -413,7 +413,7 @@
                         <div class="d-flex align-items-center">
                             <span class="me-2">Display:</span>
                             <select id="per-page-selector" class="form-select form-select-sm" style="width: auto;">
-                                @foreach($paginationOptions ?? [10 => '10 per page', 25 => '25 per page', 50 => '50 per page', 'all' => 'All'] as $value => $label)
+                                @foreach($paginationOptions ?? [10 => '10 per page', 25 => '25 per page', 50 => '50 per page', 'all' => 'Show All'] as $value => $label)
                                     <option value="{{ $value }}" @selected(($perPage ?? 10) == $value)>{{ $label }}</option>
                                 @endforeach
                             </select>
@@ -454,14 +454,36 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="fw-medium">
-                                        @if ($allotment?->user?->currentPosting)
-                                            {{ $allotment?->user?->name . ' (' . $allotment?->user?->currentPosting?->designation?->name ?? 'No Designation' . ')' }}<br>
-                                            {{ 'at ' . $allotment?->user?->currentPosting?->office?->name ?? 'No Office' }}
+                                    @php
+                                        $isPersonal = $allotment->user_id !== null;
+                                        $isOfficePool = $allotment->office_id !== null && $allotment->user_id === null && $allotment->type === 'Pool';
+                                        $isDepartmentPool = $allotment->office_id === null && $allotment->user_id === null;
+                                        $allotmentType = $allotment->type;
+                                    @endphp
+                                    
+                                    <div class="vehicle-details">
+                                        @if($isPersonal)
+                                            <div class="d-flex align-items-center mb-1">
+                                                <span class="badge bg-primary me-2">Personal {{ $allotmentType }}</span>
+                                            </div>
+                                            <strong>{{ $allotment->user->name ?? 'Unknown User' }}</strong>
+                                            <small>{{ $allotment->user->currentPosting?->designation?->name ?? 'No Designation' }}</small>
+                                            <small>at {{ $allotment->user->currentPosting?->office?->name ?? 'No Office' }}</small>
+                                        @elseif($isOfficePool)
+                                            <div class="d-flex align-items-center mb-1">
+                                                <span class="badge bg-warning text-dark me-2">Office Pool</span>
+                                            </div>
+                                            <strong>{{ $allotment->office->name ?? 'Unknown Office' }}</strong>
+                                            <small>Pool Vehicle Assignment</small>
+                                        @elseif($isDepartmentPool)
+                                            <div class="d-flex align-items-center mb-1">
+                                                <span class="badge bg-danger me-2">Department Pool</span>
+                                            </div>
+                                            <strong>Department General Pool</strong>
                                         @else
-                                            Pool
+                                            <span class="badge bg-secondary">Unknown Assignment</span>
                                         @endif
-                                    </span>
+                                    </div>
                                 </td>
                                 <td>
                                     @php
@@ -528,7 +550,7 @@
                             </tr>
                             @empty
                                 <tr>
-                                    <td colspan="{{ request('show_history', false) ? 7 : 6 }}" class="empty-state">
+                                    <td colspan="{{ request('show_history', false) ? 9 : 8 }}" class="empty-state">
                                         <p>No vehicles found matching the criteria</p>
                                         <a href="{{ route('admin.apps.vehicles.reports') }}" class="btn btn-sm btn-outline-primary mt-2">
                                             RESET FILTERS
@@ -800,18 +822,15 @@
 
             function generateSecureExcelFile(wsData) {
                 const wb = XLSX.utils.book_new();
-                
-                // Create worksheet
                 const ws = XLSX.utils.aoa_to_sheet(wsData);
                 
-                // Set column widths
                 const colWidths = [
-                    {wch: 30}, // Vehicle Details
-                    {wch: 25}, // Registration
-                    {wch: 35}, // Alloted To
-                    {wch: 15}, // Status
-                    {wch: 15}, // Allotment Date
-                    {wch: 15}  // End Date (if applicable)
+                    {wch: 30},
+                    {wch: 25},
+                    {wch: 35},
+                    {wch: 15}, 
+                    {wch: 15},
+                    {wch: 15} 
                 ];
                 
                 ws['!cols'] = colWidths;
@@ -828,28 +847,22 @@
                     };
                 }
                 
-                // Add a bit of padding after the header row
                 ws['!rows'] = [];
-                ws['!rows'][0] = { hpt: 30 }; // Header row height
+                ws['!rows'][0] = { hpt: 30 }; 
                 
-                // Add the worksheet to the workbook
                 XLSX.utils.book_append_sheet(wb, ws, 'Vehicle Report');
                 
-                // Generate filename
                 const date = new Date();
                 const dateStr = date.toISOString().split('T')[0];
                 const fileName = `Vehicle_Report_${dateStr}.xlsx`;
                 
-                // Use FileSaver.js if available for more secure downloads
                 if (typeof saveAs === 'function') {
-                    // Convert to blob and use saveAs from FileSaver.js
                     const wopts = { bookType: 'xlsx', bookSST: false, type: 'array' };
                     const wbout = XLSX.write(wb, wopts);
                     
                     const blob = new Blob([wbout], { type: 'application/octet-stream' });
                     saveAs(blob, fileName);
                 } else {
-                    // Fallback to XLSX.writeFile with Content-Disposition header
                     XLSX.writeFile(wb, fileName, {
                         type: 'base64',
                         bookType: 'xlsx',

@@ -86,30 +86,26 @@ class UserController extends Controller
 
     public function users(Request $request)
     {
-        $users = User::query()
-            ->when($request->q, fn($q) => $q->where('name', 'like', "%{$request->q}%")
-                ->orWhereHas('currentPosting.designation', function($query) use ($request) {
-                    $query->where('name', 'like', "%{$request->q}%");
-                })
-                ->orWhereHas('currentPosting.office', function($query) use ($request) {
-                    $query->where('name', 'like', "%{$request->q}%");
-                }))
-            ->with(['currentPosting.designation', 'currentPosting.office'])
-            ->paginate(10);
-
-        return response()->json([
-            'results' => collect($users->items())->map(fn($u) => [
-                'id' => $u->id,
-                'text' => $u->name . ' - ' . 
-                    ($u->currentPosting ? 
-                        $u->currentPosting->designation->name . ' at ' . 
-                        $u->currentPosting->office->name 
-                    : 'No Current Posting')
-            ]),
-            'pagination' => [
-                'more' => $users->hasMorePages()
+        return $this->getApiResults(
+            $request, 
+            User::class, 
+            [
+                'searchColumns' => ['name', 'email', 'username'],
+                'withRelations' => ['currentPosting.designation', 'currentPosting.office'],
+                'textFormat' => function($user) {
+                    return $user->name . ' - ' . 
+                        ($user->currentPosting ? 
+                            $user->currentPosting->designation->name . ' at ' . 
+                            $user->currentPosting->office->name 
+                        : 'No Current Posting');
+                },
+                'searchRelations' => [
+                    'currentPosting.designation' => ['name'],
+                    'currentPosting.office' => ['name']
+                ],
+                'orderBy' => 'id',
             ]
-        ]);
+        );
     }
 
     public function create()

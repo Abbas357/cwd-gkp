@@ -14,6 +14,7 @@ class VehicleObserver
             'start_date' => now(),
             'vehicle_id' => $vehicle->id,
             'is_current' => 1,
+            'office_id'  => session('office') ?? 106,
         ]);
     }
 }

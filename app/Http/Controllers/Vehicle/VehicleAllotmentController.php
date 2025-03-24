@@ -47,6 +47,7 @@ class VehicleAllotmentController extends Controller
         $allotment->end_date = $request->end_date ?: null;
         $allotment->vehicle_id = $request->vehicle_id;
         $allotment->user_id = $request->user_id;
+        $allotment->office_id = $request->office_id;
 
         if ($request->hasFile('allotment_order')) {
             $allotment->addMedia($request->file('allotment_order'))
