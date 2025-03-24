@@ -5,7 +5,7 @@
     <style>
         :root {
             --primary-color: #4361ee;
-            --primary-hover: #3a56d4;
+            --primary-hover: #0a2cc5;
             --secondary-color: #f8f9fa;
             --border-radius: 0.5rem;
             --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
