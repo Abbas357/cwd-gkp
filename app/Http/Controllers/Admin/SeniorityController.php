@@ -139,7 +139,7 @@ class SeniorityController extends Controller
         $seniority->save();
         return response()->json(['success' => $message], 200);
     }
-
+ 
     public function archiveSeniority(Request $request, Seniority $seniority)
     {
         if (!is_null($seniority->published_at)) {
