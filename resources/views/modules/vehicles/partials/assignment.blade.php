@@ -19,7 +19,7 @@
         <span class="badge bg-warning badge-sm text-dark">Office Pool</span>
     </div>
 @else
-    <span class="badge bg-secondary">Unknown Assignment</span>
+    <span class="badge bg-secondary">Not Assignment</span>
 @endif
 
 @if($assignmentType && !$isPersonal && !$isOfficePool)

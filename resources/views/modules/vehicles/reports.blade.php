@@ -481,7 +481,7 @@
                                             </div>
                                             <strong>Department General Pool</strong>
                                         @else
-                                            <span class="badge bg-secondary">Unknown Assignment</span>
+                                            <span class="badge bg-secondary">Not Assignment</span>
                                         @endif
                                     </div>
                                 </td>

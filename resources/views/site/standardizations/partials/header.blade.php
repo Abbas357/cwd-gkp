@@ -129,6 +129,11 @@ $profilePictureUrl = $standardization?->getFirstMediaUrl('standardization_firms_
                     <i class="bi bi-house-door"></i> &nbsp; Dashboard
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('standardizations.upload.get') ? 'active' : '' }}" href="{{ route('standardizations.upload.get') }}">
+                    <i class="bi bi-file-earmark-plus"></i> &nbsp; Upload Documents
+                </a>
+            </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle {{ request()->routeIs('standardizations.product.*') ? 'active' : '' }}" href="#" id="productDropdown" role="button">
                     <i class="bi bi-clipboard-check"></i> &nbsp; Product
@@ -145,11 +150,6 @@ $profilePictureUrl = $standardization?->getFirstMediaUrl('standardization_firms_
                         </a>
                     </li>
                 </ul>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('standardizations.upload.get') ? 'active' : '' }}" href="{{ route('standardizations.upload.get') }}">
-                    <i class="bi bi-file-earmark-plus"></i> &nbsp; Upload Documents
-                </a>
             </li>
         </ul>
         <div class="dropdown account-dropdown">

@@ -15,7 +15,7 @@
     @endpush
 
     @include('site.standardizations.partials.header')
-
+    
     <div class="container p-2">
         <div class="card mb-4">
             <div class="card-header bg-light fw-bold text-uppercase">
@@ -84,10 +84,11 @@
                             </div>
                         @endif
                     </div>
-
                 </div>
+
             </div>
         </div>
+        <x-standardization-document-status :standardization="$standardization" />
         <div class="d-flex justify-content-end">
             <a href="{{ route('standardizations.edit') }}" class="btn btn-primary">Edit Information</a>
         </div>

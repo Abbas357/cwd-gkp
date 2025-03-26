@@ -126,8 +126,8 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <h6 class="text-muted mb-2">In Pool</h6>
-                                <h3 class="mb-0">{{ $officePoolCount }}</h3>
+                                <h6 class="text-muted mb-2">Department Pool</h6>
+                                <h3 class="mb-0">{{ $departmentPoolCount }}</h3>
                                 <small class="text-info">{{ number_format($poolPercentage, 1) }}% available</small>
                             </div>
                             <div class="stat-icon bg-info bg-opacity-10">
@@ -147,7 +147,7 @@
                             <div>
                                 <h6 class="text-muted mb-2">Permanent Alloted</h6>
                                 <h3 class="mb-0">{{ $permanentAlloted }}</h3>
-                                <small class="text-muted">Personal: {{ $personalAllotmentCount }} | Office: {{ $officeAllotmentCount }}</small>
+                                <small class="text-muted">Personal: {{ $personalAllotmentCount }} | Office:</small>
                             </div>
                             <div class="stat-icon bg-warning bg-opacity-10">
                                 <i class="bi bi-pin-angle text-warning"></i>
@@ -232,29 +232,7 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="card mb-4">
-                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">Monthly Allotments</h5>
-                        <div class="btn-group btn-group-sm">
-                            <button class="btn btn-outline-secondary active">6 Months</button>
-                            <button class="btn btn-outline-secondary">1 Year</button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div id="monthlyAllotmentsChart" style="height: 300px;"></div>
-                    </div>
-                </div>
-
-                <div class="card mb-4">
-                    <div class="card-header bg-light">
-                        <h5 class="card-title mb-0">Allotment Trends</h5>
-                    </div>
-                    <div class="card-body">
-                        <div id="allotmentTrendsChart" style="height: 350px;"></div>
-                    </div>
-                </div>
-
+                
             </div>
 
             <div class="col-md-4">
@@ -270,15 +248,6 @@
                             </div>
                             <div class="progress" style="height: 10px;">
                                 <div class="progress-bar bg-primary" style="width: {{ $totalVehicles > 0 ? ($personalAllotmentCount / $totalVehicles) * 100 : 0 }}%"></div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>Office Allotments</span>
-                                <span>{{ $officeAllotmentCount }}</span>
-                            </div>
-                            <div class="progress" style="height: 10px;">
-                                <div class="progress-bar bg-warning" style="width: {{ $totalVehicles > 0 ? ($officeAllotmentCount / $totalVehicles) * 100 : 0 }}%"></div>
                             </div>
                         </div>
                         <div class="mb-3">
@@ -372,116 +341,6 @@
             ];
             return colors.slice(0, count);
         }
-
-        // Monthly Allotments Chart
-        const monthlyData = @json($monthlyAllotments);
-        const monthlyOptions = {
-            series: [{
-                name: 'Allotments',
-                data: monthlyData.map(item => item.count)
-            }],
-            chart: {
-                type: 'area',
-                height: 300,
-                toolbar: {
-                    show: false
-                }
-            },
-            dataLabels: {
-                enabled: false
-            },
-            stroke: {
-                curve: 'smooth',
-                width: 2
-            },
-            xaxis: {
-                categories: monthlyData.map(item => item.month)
-            },
-            colors: ['#4e73df'],
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    shadeIntensity: 1,
-                    opacityFrom: 0.7,
-                    opacityTo: 0.3
-                }
-            },
-            tooltip: {
-                y: {
-                    formatter: function(value) {
-                        return value + " vehicles"
-                    }
-                }
-            }
-        };
-
-        new ApexCharts(document.querySelector("#monthlyAllotmentsChart"), monthlyOptions).render();
-
-        // Allotment Trends Chart
-        const trendData = @json($allotmentTypeTrends);
-        const trendOptions = {
-            series: [
-                {
-                    name: 'Permanent Personal',
-                    data: trendData.map(item => item.permanent_personal)
-                },
-                {
-                    name: 'Permanent Office',
-                    data: trendData.map(item => item.permanent_office)
-                },
-                {
-                    name: 'Temporary Personal',
-                    data: trendData.map(item => item.temporary_personal)
-                },
-                {
-                    name: 'Temporary Office',
-                    data: trendData.map(item => item.temporary_office)
-                },
-                {
-                    name: 'Department Pool',
-                    data: trendData.map(item => item.department_pool)
-                },
-                {
-                    name: 'Office Pool',
-                    data: trendData.map(item => item.office_pool)
-                }
-            ],
-            chart: {
-                type: 'bar',
-                height: 350,
-                stacked: true,
-                toolbar: {
-                    show: false
-                }
-            },
-            plotOptions: {
-                bar: {
-                    horizontal: false,
-                }
-            },
-            stroke: {
-                width: 1,
-                colors: ['#fff']
-            },
-            xaxis: {
-                categories: trendData.map(item => item.month)
-            },
-            yaxis: {
-                title: {
-                    text: 'Number of Vehicles'
-                },
-            },
-            fill: {
-                opacity: 1
-            },
-            legend: {
-                position: 'bottom',
-                horizontalAlign: 'center'
-            },
-            colors: ['#4e73df', '#5a5c69', '#36b9cc', '#1cc88a', '#e74a3b', '#f6c23e']
-        };
-
-        new ApexCharts(document.querySelector("#allotmentTrendsChart"), trendOptions).render();
 
         // Distribution Charts
         function createDistributionChart(elementId, data, title) {

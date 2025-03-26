@@ -118,7 +118,7 @@ Route::prefix('standardizations')->as('standardizations.')->middleware('route_lo
         Route::get('/edit', [StandardizationController::class, 'edit'])->name('edit');
         Route::patch('/update', [StandardizationController::class, 'update'])->name('update');
         
-        Route::prefix('product')->as('product.')->group(function () {
+        Route::prefix('product')->as('product.')->middleware(['standardization.documents.uploaded'])->group(function () {
             Route::get('/view', [ProductController::class, 'index'])->name('index');
             Route::get('/', [ProductController::class, 'create'])->name('create');
             Route::post('/', [ProductController::class, 'store'])->name('store');

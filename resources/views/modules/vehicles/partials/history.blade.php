@@ -33,18 +33,20 @@
         gap: 12px;
     }
 
-    /* Keeping your existing styles */
     .timeline-user-icon {
-        background-color: #f1f5f9;
         width: 45px;
         height: 45px;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 50%;
+        border-radius: 50px;
         color: #64748b;
         font-size: 0.9em;
         overflow: hidden;
+    }
+
+    .timeline-user-icon img {
+        width: 100%;
     }
 
     .user-details {

@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use App\Http\Middleware\CheckMaintenanceMode;
 use App\Http\Middleware\RouteMaintenanceMode;
+use App\Http\Middleware\StandardizationDocumentsUploadedMiddleware;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
@@ -18,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->alias([
             'route_lock' => RouteMaintenanceMode::class,
+            'standardization.documents.uploaded' => StandardizationDocumentsUploadedMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

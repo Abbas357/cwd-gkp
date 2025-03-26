@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Vehicle;
 
 use App\Models\User;
-
 use App\Models\Vehicle;
 use App\Models\Category;
 use App\Helpers\Database;
@@ -87,201 +86,156 @@ class VehicleController extends Controller
     }
 
     public function index(Request $request)
-{
-    $totalVehicles = Vehicle::count();
+    {
+        $totalVehicles = Vehicle::count();
 
-    $functionalVehicles = Vehicle::where('functional_status', 'Functional')->count();
-    $nonFunctionalVehicles = Vehicle::where('functional_status', 'Non-Functional')->count();
-    $condemnedVehicles = Vehicle::where('functional_status', 'Condemned')->count();
+        $functionalVehicles = Vehicle::where('functional_status', 'Functional')->count();
+        $nonFunctionalVehicles = Vehicle::where('functional_status', 'Non-Functional')->count();
+        $condemnedVehicles = Vehicle::where('functional_status', 'Condemned')->count();
 
-    $allotedVehicles = VehicleAllotment::whereIn('type', ['Permanent', 'Temporary'])
-        ->where('is_current', 1)
-        ->count();
+        $allotedVehicles = VehicleAllotment::whereIn('type', ['Permanent', 'Temporary', 'Pool'])
+            ->where('is_current', 1)
+            ->where(function ($query) {
+                $query->whereNotNull('user_id')
+                    ->orWhereNotNull('office_id');
+            })
+            ->count();
 
-    $permanentAlloted = VehicleAllotment::where('is_current', 1)
-        ->where('type', 'Permanent')
-        ->count();
+        $permanentAlloted = VehicleAllotment::where('is_current', 1)
+            ->where('type', 'Permanent')
+            ->count();
 
-    $temporaryAlloted = VehicleAllotment::where('is_current', 1)
-        ->where('type', 'Temporary')
-        ->count();
+        $temporaryAlloted = VehicleAllotment::where('is_current', 1)
+            ->where('type', 'Temporary')
+            ->count();
 
-    // Updated pool counts to account for office_id
-    $totalPoolVehicles = VehicleAllotment::where('is_current', 1)
-        ->where('type', 'Pool')
-        ->count();
+        $totalPoolVehicles = VehicleAllotment::where('is_current', 1)
+            ->where('type', 'Pool')
+            ->count();
 
-    $officePoolCount = VehicleAllotment::where('is_current', 1)
-        ->where('type', 'Pool')
-        ->where(function($q) {
-            $q->whereNotNull('office_id')
-             ->orWhereNotNull('user_id');
-        })
-        ->count();
+        $officePoolCount = VehicleAllotment::where('is_current', 1)
+            ->where('type', 'Pool')
+            ->where(function($q) {
+                $q->whereNotNull('office_id')
+                ->orWhereNotNull('user_id');
+            })
+            ->count();
 
-    $departmentPoolCount = $totalPoolVehicles - $officePoolCount;
+        $departmentPoolCount = $totalPoolVehicles - $officePoolCount;
 
-    // Count by assignment type (person vs office)
-    $personalAllotmentCount = VehicleAllotment::where('is_current', 1)
-        ->whereIn('type', ['Permanent', 'Temporary'])
-        ->whereNotNull('user_id')
-        ->whereNull('office_id')
-        ->count();
+        $personalAllotmentCount = VehicleAllotment::where('is_current', 1)
+            ->whereIn('type', ['Permanent', 'Temporary'])
+            ->whereNotNull('user_id')
+            ->whereNull('office_id')
+            ->count();
 
-    $officeAllotmentCount = VehicleAllotment::where('is_current', 1)
-        ->whereIn('type', ['Permanent', 'Temporary'])
-        ->whereNotNull('office_id')
-        ->count();
+        $distributions = [
+            'type' => $this->getDistribution('type'),
+            'color' => $this->getDistribution('color'),
+            'fuel_type' => $this->getDistribution('fuel_type'),
+            'registration_status' => $this->getDistribution('registration_status'),
+            'brand' => $this->getDistribution('brand'),
+            'model_year' => $this->getDistribution('model_year')
+        ];
 
-    $monthlyAllotments = VehicleAllotment::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as count')
-        ->groupBy('month')
-        ->orderBy('month')
-        ->limit(6)
-        ->get();
+        $modelYearAllocation = Vehicle::selectRaw('
+            model_year,
+            COUNT(*) as total,
+            SUM(CASE WHEN vehicles.id IN (SELECT vehicle_id FROM vehicle_allotments WHERE is_current = 1) THEN 1 ELSE 0 END) as allocated
+        ')
+            ->whereNotNull('model_year')
+            ->groupBy('model_year')
+            ->orderBy('model_year', 'desc')
+            ->limit(10)
+            ->get();
 
-    $distributions = [
-        'type' => $this->getDistribution('type'),
-        'color' => $this->getDistribution('color'),
-        'fuel_type' => $this->getDistribution('fuel_type'),
-        'registration_status' => $this->getDistribution('registration_status'),
-        'brand' => $this->getDistribution('brand'),
-        'model_year' => $this->getDistribution('model_year')
-    ];
+        $currentYear = date('Y');
+        $vehicleAgeGroups = Vehicle::selectRaw('
+            CASE 
+                WHEN model_year >= ? THEN "New (0-2 years)"
+                WHEN model_year >= ? THEN "Recent (3-5 years)"
+                WHEN model_year >= ? THEN "Mature (6-10 years)"
+                ELSE "Aging (10+ years)"
+            END as age_group,
+            COUNT(*) as count
+        ', [$currentYear - 2, $currentYear - 5, $currentYear - 10])
+            ->whereNotNull('model_year')
+            ->groupBy('age_group')
+            ->get();
 
-    // Allotment trends by type and assignment (person vs office)
-    $allotmentTypeTrends = VehicleAllotment::selectRaw('
-        DATE_FORMAT(created_at, "%Y-%m") as month,
-        SUM(CASE WHEN type = "Permanent" AND user_id IS NOT NULL AND office_id IS NULL THEN 1 ELSE 0 END) as permanent_personal,
-        SUM(CASE WHEN type = "Permanent" AND office_id IS NOT NULL THEN 1 ELSE 0 END) as permanent_office,
-        SUM(CASE WHEN type = "Temporary" AND user_id IS NOT NULL AND office_id IS NULL THEN 1 ELSE 0 END) as temporary_personal,
-        SUM(CASE WHEN type = "Temporary" AND office_id IS NOT NULL THEN 1 ELSE 0 END) as temporary_office,
-        SUM(CASE WHEN type = "Pool" AND office_id IS NULL AND user_id IS NULL THEN 1 ELSE 0 END) as department_pool,
-        SUM(CASE WHEN type = "Pool" AND (office_id IS NOT NULL OR user_id IS NOT NULL) THEN 1 ELSE 0 END) as office_pool
-    ')
-        ->whereYear('created_at', '>=', now()->subYear())
-        ->groupBy('month')
-        ->orderBy('month')
-        ->get();
+        $topBrands = Vehicle::selectRaw('brand, COUNT(*) as count')
+            ->whereNotNull('brand')
+            ->groupBy('brand')
+            ->orderByDesc('count')
+            ->limit(5)
+            ->get();
 
-    // Get allocation by model year
-    $modelYearAllocation = Vehicle::selectRaw('
-        model_year,
-        COUNT(*) as total,
-        SUM(CASE WHEN vehicles.id IN (SELECT vehicle_id FROM vehicle_allotments WHERE is_current = 1) THEN 1 ELSE 0 END) as allocated
-    ')
-        ->whereNotNull('model_year')
-        ->groupBy('model_year')
-        ->orderBy('model_year', 'desc')
-        ->limit(10)
-        ->get();
+        $nonFunctionalByBrand = Vehicle::selectRaw('brand, COUNT(*) as count')
+            ->whereIn('functional_status', ['Non-Functional', 'Condemned'])
+            ->whereNotNull('brand')
+            ->groupBy('brand')
+            ->orderByDesc('count')
+            ->limit(5)
+            ->get();
 
-    // Count vehicles by age group
-    $currentYear = date('Y');
-    $vehicleAgeGroups = Vehicle::selectRaw('
-        CASE 
-            WHEN model_year >= ? THEN "New (0-2 years)"
-            WHEN model_year >= ? THEN "Recent (3-5 years)"
-            WHEN model_year >= ? THEN "Mature (6-10 years)"
-            ELSE "Aging (10+ years)"
-        END as age_group,
-        COUNT(*) as count
-    ', [$currentYear - 2, $currentYear - 5, $currentYear - 10])
-        ->whereNotNull('model_year')
-        ->groupBy('age_group')
-        ->get();
+        $recentAllotments = VehicleAllotment::with(['vehicle', 'user', 'office'])
+            ->latest()
+            ->take(5)
+            ->get();
 
-    // Top 5 brands with most vehicles
-    $topBrands = Vehicle::selectRaw('brand, COUNT(*) as count')
-        ->whereNotNull('brand')
-        ->groupBy('brand')
-        ->orderByDesc('count')
-        ->limit(5)
-        ->get();
+        $vehiclesNeedingAttention = Vehicle::where('functional_status', 'Non-Functional')
+            ->orWhere('functional_status', 'Condemned')
+            ->with(['allotment.user', 'allotment.office'])
+            ->take(5)
+            ->get();
 
-    // Non-functional vehicles by brand
-    $nonFunctionalByBrand = Vehicle::selectRaw('brand, COUNT(*) as count')
-        ->whereIn('functional_status', ['Non-Functional', 'Condemned'])
-        ->whereNotNull('brand')
-        ->groupBy('brand')
-        ->orderByDesc('count')
-        ->limit(5)
-        ->get();
+        $fuelTypeStats = Vehicle::selectRaw('fuel_type, COUNT(*) as count')
+            ->whereNotNull('fuel_type')
+            ->groupBy('fuel_type')
+            ->get();
 
-    $recentAllotments = VehicleAllotment::with(['vehicle', 'user', 'office'])
-        ->latest()
-        ->take(5)
-        ->get();
+        $functionalPercentage = $totalVehicles > 0 ? ($functionalVehicles / $totalVehicles) * 100 : 0;
+        $allotedPercentage = $totalVehicles > 0 ? ($allotedVehicles / $totalVehicles) * 100 : 0;
+        $poolPercentage = $totalVehicles > 0 ? ($totalPoolVehicles / $totalVehicles) * 100 : 0;
 
-    $vehiclesNeedingAttention = Vehicle::where('functional_status', 'Non-Functional')
-        ->orWhere('functional_status', 'Condemned')
-        ->with(['allotment.user', 'allotment.office'])
-        ->take(5)
-        ->get();
+        $yearWiseRegistrations = Vehicle::selectRaw('YEAR(created_at) as year, COUNT(*) as count')
+            ->groupBy('year')
+            ->orderBy('year', 'desc')
+            ->get();
 
-    $fuelTypeStats = Vehicle::selectRaw('fuel_type, COUNT(*) as count')
-        ->whereNotNull('fuel_type')
-        ->groupBy('fuel_type')
-        ->get();
+        $brandWiseStatus = Vehicle::selectRaw('brand, functional_status, COUNT(*) as count')
+            ->whereNotNull('brand')
+            ->whereNotNull('functional_status')
+            ->groupBy('brand', 'functional_status')
+            ->get()
+            ->groupBy('brand');
 
-    $functionalPercentage = $totalVehicles > 0 ? ($functionalVehicles / $totalVehicles) * 100 : 0;
-    $allotedPercentage = $totalVehicles > 0 ? ($allotedVehicles / $totalVehicles) * 100 : 0;
-    $poolPercentage = $totalVehicles > 0 ? ($totalPoolVehicles / $totalVehicles) * 100 : 0;
-
-    $yearWiseRegistrations = Vehicle::selectRaw('YEAR(created_at) as year, COUNT(*) as count')
-        ->groupBy('year')
-        ->orderBy('year', 'desc')
-        ->get();
-
-    $brandWiseStatus = Vehicle::selectRaw('brand, functional_status, COUNT(*) as count')
-        ->whereNotNull('brand')
-        ->whereNotNull('functional_status')
-        ->groupBy('brand', 'functional_status')
-        ->get()
-        ->groupBy('brand');
-
-    $allocationTrends = VehicleAllotment::selectRaw('
-        YEAR(created_at) as year, 
-        MONTH(created_at) as month,
-        type,
-        COUNT(*) as count
-    ')
-        ->whereYear('created_at', '>=', now()->subYear())
-        ->groupBy('year', 'month', 'type')
-        ->orderBy('year')
-        ->orderBy('month')
-        ->get()
-        ->groupBy('type');
-
-    return view('modules.vehicles.dashboard', compact(
-        'totalVehicles',
-        'functionalVehicles',
-        'nonFunctionalVehicles',
-        'condemnedVehicles',
-        'allotedVehicles',
-        'permanentAlloted',
-        'temporaryAlloted',
-        'departmentPoolCount',
-        'officePoolCount',
-        'personalAllotmentCount',
-        'officeAllotmentCount',
-        'monthlyAllotments',
-        'distributions',
-        'allotmentTypeTrends',
-        'modelYearAllocation',
-        'vehicleAgeGroups',
-        'topBrands',
-        'nonFunctionalByBrand',
-        'recentAllotments',
-        'vehiclesNeedingAttention',
-        'fuelTypeStats',
-        'functionalPercentage',
-        'allotedPercentage',
-        'poolPercentage',
-        'yearWiseRegistrations',
-        'brandWiseStatus',
-        'allocationTrends'
-    ));
-}
+        return view('modules.vehicles.dashboard', compact(
+            'totalVehicles',
+            'functionalVehicles',
+            'nonFunctionalVehicles',
+            'condemnedVehicles',
+            'allotedVehicles',
+            'permanentAlloted',
+            'temporaryAlloted',
+            'departmentPoolCount',
+            'officePoolCount',
+            'personalAllotmentCount',
+            'distributions',
+            'modelYearAllocation',
+            'vehicleAgeGroups',
+            'topBrands',
+            'nonFunctionalByBrand',
+            'recentAllotments',
+            'vehiclesNeedingAttention',
+            'fuelTypeStats',
+            'functionalPercentage',
+            'allotedPercentage',
+            'poolPercentage',
+            'yearWiseRegistrations',
+            'brandWiseStatus',
+        ));
+    }
 
     public function create()
     {
