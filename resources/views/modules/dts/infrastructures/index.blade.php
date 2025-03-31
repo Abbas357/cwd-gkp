@@ -1,21 +1,24 @@
-<x-porms-layout title="Provincial Own Recepts">
+<x-dts-layout title="Infrastructures">
     @push('style')
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header">
-        <li class="breadcrumb-item active" aria-current="page">Provincial Own Recepts</li>
+        <li class="breadcrumb-item active" aria-current="page">Infrastructures</li>
     </x-slot>
 
     <div class="table-responsive">
-        <table id="porms-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+        <table id="infrastructure-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Month</th>
-                    <th>DDO Code</th>
-                    <th>District</th>
                     <th>Type</th>
-                    <th>Amount</th>
+                    <th>Name</th>
+                    <th>Length</th>
+                    <th>District</th>
+                    <th>East Start Coordinate</th>
+                    <th>North Start Coordinate</th>
+                    <th>East End Coordinate</th>
+                    <th>North End Coordinate</th>
                     <th>Created</th>
                     <th>Updated</th>
                     <th>Actions</th>
@@ -32,19 +35,23 @@
 
     <script>
         $(document).ready(function() {
-            var table = initDataTable('#porms-datatable', {
-                ajaxUrl: "{{ route('admin.apps.porms.all') }}"
+            var table = initDataTable('#infrastructure-datatable', {
+                ajaxUrl: "{{ route('admin.apps.dts.infrastructures.index') }}"
                 , columns: [
                     {
                         data: "id"
                         , searchBuilderType: "num"
                     }
                     , {
-                        data: "month"
+                        data: "type"
                         , searchBuilderType: "date"
                     },
                     {
-                        data: 'ddo_code',
+                        data: 'name',
+                        searchBuilderType: "string"
+                    },
+                    {
+                        data: 'length',
                         searchBuilderType: "string"
                     },
                     {
@@ -52,11 +59,19 @@
                         searchBuilderType: "string"
                     },
                     {
-                        data: 'type',
+                        data: 'east_start_coordinate',
                         searchBuilderType: "string"
                     },
                     {
-                        data: 'amount',
+                        data: 'north_start_coordinate',
+                        searchBuilderType: "string"
+                    },
+                    {
+                        data: 'east_end_coordinate',
+                        searchBuilderType: "string"
+                    },
+                    {
+                        data: 'north_end_coordinate',
                         searchBuilderType: "string"
                     },
                     {
@@ -73,7 +88,7 @@
                         searchable: false
                     },
                 ]
-                , defaultOrderColumn: 7
+                , defaultOrderColumn: 8
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
                     targets: [0]
@@ -85,28 +100,24 @@
                 ]
                 , pageLength: 25
                 , customButton: {
-                    text: `<span class="symbol-container fw-bold create-btn"><i class="bi-plus-circle"></i>&nbsp; Add Receipt</span>`
+                    text: `<span class="symbol-container fw-bold create-btn"><i class="bi-plus-circle"></i>&nbsp; Add Infrastructure</span>`
                     , action: function(e, dt, node, config) {
 
                        formWizardModal({
-                            title: 'Add Receipt',
-                            fetchUrl: "{{ route('admin.apps.porms.create') }}",
+                            title: 'Add Infrastructure',
+                            fetchUrl: "{{ route('admin.apps.dts.infrastructures.create') }}",
                             btnSelector: '.create-btn',
-                            actionButtonName: 'Add Receipt',
+                            actionButtonName: 'Add Infrastructure',
                             modalSize: 'lg',
-                            formAction: "{{ route('admin.apps.porms.store') }}",
+                            formAction: "{{ route('admin.apps.dts.infrastructures.store') }}",
                             wizardSteps: [
                                 {
                                     title: "Basic Info",
                                     fields: ["#step-1"]
                                 },
                                 {
-                                    title: "Receipt Details",
+                                    title: "Infrastructure Details",
                                     fields: ["#step-2"]
-                                },
-                                {
-                                    title: "Remarks",
-                                    fields: ["#step-3"]
                                 }
                             ],
                             formSubmitted() {
@@ -118,20 +129,20 @@
                 }
             });
 
-            $("#porms-datatable").on('click', '.delete-btn', async function() {
-                const receiptId = $(this).data("id");
-                const url = "{{ route('admin.apps.porms.destroy', ':id') }}".replace(':id', receiptId);
+            $("#infrastructure-datatable").on('click', '.delete-btn', async function() {
+                const infrastructureId = $(this).data("id");
+                const url = "{{ route('admin.apps.dts.infrastructures.destroy', ':id') }}".replace(':id', infrastructureId);
 
-                const result = await confirmAction(`Do you want to delete this receipt?`);
+                const result = await confirmAction(`Do you want to delete this infrastructure?`);
                 if (result && result.isConfirmed) {
                     const success = await fetchRequest(url, 'DELETE');
                     if (success) {
-                        $("#porms-datatable").DataTable().ajax.reload();
+                        $("#infrastructure-datatable").DataTable().ajax.reload();
                     }
                 }
             });
 
-            $('#porms-datatable').colResizable({
+            $('#infrastructure-datatable').colResizable({
                 liveDrag: true
                 , resizeMode: 'overflow'
                 , postbackSafe: true
@@ -141,15 +152,18 @@
             , });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.apps.porms.detail', ':id') }}",
+                fetchUrl: "{{ route('admin.apps.dts.infrastructures.detail', ':id') }}",
                 btnSelector: '.view-btn',
-                title: 'Receipt Details',
+                title: 'infrastructure Details',
                 modalSize: 'lg',
             });
 
+            if (new URLSearchParams(window.location.search).get("create") === "true") {
+                document.querySelector(".create-btn")?.click();
+            }
             
         });
 
     </script>
     @endpush
-</x-porms-layout>
+</x-dts-layout>

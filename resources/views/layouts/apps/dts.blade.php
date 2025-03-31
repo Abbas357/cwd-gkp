@@ -6,19 +6,11 @@
 </x-header>
 
 @if ($showAside)
-<x-sidebar app-name="DTS" app-url="{{ route('admin.apps.dts.index') }}">
-    @can('view any dts')
-    <li>
-        <a href="{{ route('admin.apps.dts.index') }}">
-            <div class="parent-icon"><i class="bi-house-fill text-primary"></i></div>
-            <div class="menu-title">Home</div>
-        </a>
-    </li>
-    @endcan
+<x-sidebar app-name="DTS" app-url="{{ route('admin.apps.dts.infrastructures.index') }}">
 
     @can('view any infrastructures')
     <li>
-        <a href="{{ route('admin.apps.dts.all') }}">
+        <a href="{{ route('admin.apps.dts.infrastructures.index') }}">
             <div class="parent-icon"><i class="bi-building text-info"></i></div>
             <div class="menu-title">Infrastructures</div>
         </a>
@@ -27,21 +19,13 @@
 
     @can('view any damages')
     <li>
-        <a href="{{ route('admin.apps.dts.all') }}">
+        <a href="{{ route('admin.apps.dts.damages.index') }}">
             <div class="parent-icon"><i class="bi-exclamation-triangle text-warning"></i></div>
             <div class="menu-title">Damages</div>
         </a>
     </li>
     @endcan
 
-    @can('view dts report')
-    <li>
-        <a href="{{ route('admin.apps.dts.report') }}">
-            <div class="parent-icon"><i class="bi-flag text-success"></i></div>
-            <div class="menu-title">Report</div>
-        </a>
-    </li>
-    @endcan
 </x-sidebar>
 @endif
 

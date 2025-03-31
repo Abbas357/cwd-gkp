@@ -20,6 +20,7 @@ Route::prefix('admin')->as('admin.')->middleware(['auth'])->group(function () {
         require __DIR__ . '/modules/vehicle.php';
         require __DIR__ . '/modules/porms.php';
         require __DIR__ . '/modules/machinery.php';
+        require __DIR__ . '/modules/dts.php';
     });
     
 });

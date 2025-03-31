@@ -12,6 +12,7 @@ Route::prefix('dts')->as('dts.')->middleware(['can:manage dts'])->group(function
     Route::prefix('infrastructures')->as('infrastructures.')->group(function () {
         Route::get('/', [InfrastructureController::class, 'index'])->name('index')->can('viewAny', App\Models\Infrastructure::class);
         Route::get('/create', [InfrastructureController::class, 'create'])->name('create')->can('create', App\Models\Infrastructure::class);
+        Route::get('/api', [InfrastructureController::class, 'infrastructures'])->name('api')->withoutMiddleware(['can:manage dts']);
         Route::post('/', [InfrastructureController::class, 'store'])->name('store')->can('create', App\Models\Infrastructure::class);
         Route::get('/{infrastructure}', [InfrastructureController::class, 'show'])->name('show')->can('view', 'infrastructure');
         Route::get('/get/{infrastructure}', [InfrastructureController::class, 'showDetail'])->name('detail')->can('view', 'infrastructure');
@@ -30,4 +31,30 @@ Route::prefix('dts')->as('dts.')->middleware(['can:manage dts'])->group(function
     });
     
 });
+
+// Route::prefix('dts')->as('dts.')->group(function () {
+
+//     Route::get('/', [DamageController::class, 'index'])->name('index');
+
+//     Route::prefix('infrastructures')->as('infrastructures.')->group(function () {
+//         Route::get('/', [InfrastructureController::class, 'index'])->name('index');
+//         Route::get('/create', [InfrastructureController::class, 'create'])->name('create');
+//         Route::post('/', [InfrastructureController::class, 'store'])->name('store');
+//         Route::get('/{infrastructure}', [InfrastructureController::class, 'show'])->name('show');
+//         Route::get('/get/{infrastructure}', [InfrastructureController::class, 'showDetail'])->name('detail');
+//         Route::patch('/update/field/{infrastructure}', [InfrastructureController::class, 'updateField'])->name('updateField');
+//         Route::delete('/{infrastructure}', [InfrastructureController::class, 'destroy'])->name('destroy');
+//     });
+
+//     Route::prefix('damages')->as('damages.')->group(function () {
+//         Route::get('/', [DamageController::class, 'index'])->name('index');
+//         Route::get('/create', [DamageController::class, 'create'])->name('create');
+//         Route::post('/', [DamageController::class, 'store'])->name('store');
+//         Route::get('/{damage}', [DamageController::class, 'show'])->name('show');
+//         Route::get('/get/{damage}', [DamageController::class, 'showDetail'])->name('detail');
+//         Route::patch('/update/field/{damage}', [DamageController::class, 'updateField'])->name('updateField');
+//         Route::delete('/{damage}', [DamageController::class, 'destroy'])->name('destroy');
+//     });
+    
+// });
 

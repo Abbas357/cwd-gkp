@@ -60,6 +60,11 @@ class District extends Model
         );
     }
 
+    public function infrastructures()
+    {
+        return $this->hasMany(Infrastructure::class);
+    }
+
     public function office()
     {
         return $this->hasOne(Office::class);

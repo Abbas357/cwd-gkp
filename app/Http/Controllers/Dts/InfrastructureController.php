@@ -2,33 +2,24 @@
 
 namespace App\Http\Controllers\Dts;
 
-use App\Models\Infrastructure;
-use App\Models\District;
 use Illuminate\Http\Request;
+use App\Models\Infrastructure;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreInfrastructureRequest;
+use App\Http\Controllers\Dts\Enum\InfrastructureType;
 
 class InfrastructureController extends Controller
 {
     public function index(Request $request)
     {
-        $status = $request->query('status', null);
-
-        $office = Infrastructure::query();
-
-        $office->when($status !== null, function ($query) use ($status) {
-            $query->where('status', $status);
-        });
+        $infrastructure = Infrastructure::query();
 
         if ($request->ajax()) {
-            $dataTable = Datatables::of($office)
+            $dataTable = Datatables::of($infrastructure)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     return view('modules.dts.infrastructures.partials.buttons', compact('row'))->render();
-                })
-                ->editColumn('parent_id', function ($row) {
-                    return $row->parent ? $row->parent->name : '-';
                 })
                 ->addColumn('district', function ($row) {
                     return $row->district ? $row->district->name : '-';
@@ -53,7 +44,7 @@ class InfrastructureController extends Controller
 
         return view('modules.dts.infrastructures.index');
     }
-
+    
     public function infrastructures(Request $request)
     {
         return $this->getApiResults(
@@ -61,28 +52,33 @@ class InfrastructureController extends Controller
             Infrastructure::class, 
             [
                 'searchColumns' => ['name', 'type'],
-                'withRelations' => ['parent', 'district'],
-                'textFormat' => function($office) {
-                    return $office->name . 
-                        ($office->type ? ' (' . $office->type . ')' : '') .
-                        ($office->parent ? ' - ' . $office->parent->name : '') . 
-                        ($office->district ? ' [' . $office->district->name . ']' : '');
+                'withRelations' => ['district'],
+                'textFormat' => function($infrastructure) {
+                    return $infrastructure->name . 
+                        ($infrastructure->district ? ' [' . $infrastructure->district->name . ']' : '');
                 },
                 'searchRelations' => [
-                    'parent' => ['name'],
                     'district' => ['name']
                 ],
-                'orderBy' => 'type',
-                'conditions' => ['status' => 'Active']
+                'orderBy' => 'name',
+                'conditions' => $request->has('type') && !empty($request->type) ? ['type' => $request->type] : []
             ]
         );
     }
 
     public function create()
     {
-        $infrastructures = Infrastructure::where('status', 'Active')->get();
-        $districts = District::whereDoesntHave('office')->get();
-        $html =  view('modules.dts.infrastructures.partials.create', compact('infrastructures', 'districts'))->render();
+        $cat = [
+            'infrastructure_type' => array_map(function($case) { 
+                return $case->value; 
+            }, InfrastructureType::cases()),
+            'districts' => request()->user()->districts()->count() > 0
+            ? request()->user()->districts()
+            : \App\Models\District::all(),
+        ];
+
+
+        $html =  view('modules.dts.infrastructures.partials.create', compact('cat'))->render();
 
         return response()->json([
             'success' => true,
@@ -91,31 +87,32 @@ class InfrastructureController extends Controller
             ],
         ]);
     }
-
+ 
     public function store(StoreInfrastructureRequest $request)
     {
-        try {
-            $office = new Infrastructure();
-            $office->name = $request->name;
-            $office->type = $request->type;
-            $office->parent_id = $request->parent_id;
-            $office->district_id = $request->district_id;
-            $office->save();
-            
-            return response()->json(['success' => 'Infrastructure added successfully']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'There is an error adding the office: ' . $e->getMessage()]);
+        $inputs = [
+            'type', 'name', 'length', 'east_start_coordinate', 'north_start_coordinate', 'east_end_coordinate', 'north_end_coordinate', 'district_id'  
+        ];
+
+        $infrastructure = new Infrastructure;
+        foreach ($inputs as $input) {
+            $infrastructure->$input = $request->$input;
+        }
+        if ($infrastructure->save()) {
+            return response()->json(['success' => $infrastructure->type . ' successfully added']);
+        } else {
+            return response()->json(['error' => 'Failed to add ' . $infrastructure->type]);
         }
     }
 
-    public function show(Infrastructure $office)
+    public function show(Infrastructure $infrastructure)
     {
-        return response()->json($office->load('district'));
+        return response()->json($infrastructure);
     }
 
-    public function showDetail(Infrastructure $office)
+    public function showDetail(Infrastructure $infrastructure)
     {
-        if (!$office) {
+        if (!$infrastructure) {
             return response()->json([
                 'success' => false,
                 'data' => [
@@ -124,18 +121,13 @@ class InfrastructureController extends Controller
             ]);
         }
 
-        $availableDistricts = District::whereDoesntHave('office')
-            ->orWhere('id', $office->district_id)
-            ->get();
-
         $cat = [
-            'type' => ['Provincial', 'Regional', 'Divisional', 'District', 'Tehsil'],
-            'infrastructures' => Infrastructure::where('status', 'Active')->get(),
-            'districts' => $availableDistricts,
-            'managedDistricts' => $office->getAllManagedDistricts()
+            'infrastructure_type' => array_map(function($case) { 
+                return $case->value; 
+            }, InfrastructureType::cases()),
         ];
-
-        $html = view('modules.dts.infrastructures.partials.detail', compact('office', 'cat'))->render();
+        
+        $html = view('modules.dts.infrastructures.partials.detail', compact('infrastructure', 'cat'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -144,40 +136,27 @@ class InfrastructureController extends Controller
         ]);
     }
 
-    public function updateField(Request $request, Infrastructure $office)
+    public function updateField(Request $request, Infrastructure $infrastructure)
     {
         $request->validate([
             'field' => 'required|string',
-            'value' => 'required',
+            'value' => 'required|string',
         ]);
 
-        if ($request->field === 'district_id') {
-            if ($request->value) {
-                $districtAssigned = Infrastructure::where('district_id', $request->value)
-                    ->where('id', '!=', $office->id)
-                    ->exists();
-                
-                if ($districtAssigned) {
-                    return response()->json(['error' => 'This district is already assigned to another office'], 422);
-                }
-            }
-        }
+        $infrastructure->{$request->field} = $request->value;
 
-        $office->{$request->field} = $request->value;
-
-        if ($office->isDirty($request->field)) {
-            $office->save();
+        if ($infrastructure->isDirty($request->field)) {
+            $infrastructure->save();
             return response()->json(['success' => 'Field updated successfully'], 200);
         }
-
         return response()->json(['error' => 'No changes were made to the field'], 200);
     }
 
-    public function destroy(Infrastructure $office)
+    public function destroy(Infrastructure $infrastructure)
     {
-        if ($office->delete()) {
+        if ($infrastructure->delete()) {
             return response()->json(['success' => 'Infrastructure has been deleted successfully.']);
         }
-        return response()->json(['error' => 'Error deleting office.']);
+        return response()->json(['error' => 'Error deleting infrastructure.']);
     }
 }

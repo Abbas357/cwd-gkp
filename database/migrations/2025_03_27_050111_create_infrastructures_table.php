@@ -18,7 +18,6 @@ return new class extends Migration
             $table->decimal('east_end_coordinate', 8, 6)->nullable();
             $table->decimal('north_end_coordinate', 8, 6)->nullable();
             $table->unsignedBigInteger('district_id')->nullable();
-            $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
         });
     }

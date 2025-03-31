@@ -1,24 +1,32 @@
-<x-porms-layout title="Provincial Own Recepts">
+<x-dts-layout title="Damages">
     @push('style')
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header">
-        <li class="breadcrumb-item active" aria-current="page">Provincial Own Recepts</li>
+        <li class="breadcrumb-item active" aria-current="page">Damages</li>
     </x-slot>
 
     <div class="table-responsive">
-        <table id="porms-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+        <table id="damages-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Month</th>
-                    <th>DDO Code</th>
-                    <th>District</th>
+                    <th>Report Date</th>
+                    <th>User</th>
                     <th>Type</th>
-                    <th>Amount</th>
-                    <th>Created</th>
-                    <th>Updated</th>
-                    <th>Actions</th>
+                    <th>Name</th>
+                    <th>Damaged Length</th>
+                    <th>Damage East Start</th>
+                    <th>Damage North Start</th>
+                    <th>Damage East End</th>
+                    <th>Damage North End</th>
+                    <th>Damage Status</th>
+                    <th>Damage Nature</th>
+                    <th>Approximate Restoration Cost</th>
+                    <th>Approximate Rehabilitation Cost</th>
+                    <th>Road Status</th>
+                    <th>Remarks</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,23 +40,19 @@
 
     <script>
         $(document).ready(function() {
-            var table = initDataTable('#porms-datatable', {
-                ajaxUrl: "{{ route('admin.apps.porms.all') }}"
+            var table = initDataTable('#damages-datatable', {
+                ajaxUrl: "{{ route('admin.apps.dts.damages.index') }}"
                 , columns: [
                     {
-                        data: "id"
-                        , searchBuilderType: "num"
-                    }
-                    , {
-                        data: "month"
-                        , searchBuilderType: "date"
+                        data: "id",
+                        searchBuilderType: "num"
                     },
                     {
-                        data: 'ddo_code',
-                        searchBuilderType: "string"
+                        data: 'report_date',
+                        searchBuilderType: "date"
                     },
                     {
-                        data: 'district',
+                        data: 'user',
                         searchBuilderType: "string"
                     },
                     {
@@ -56,27 +60,63 @@
                         searchBuilderType: "string"
                     },
                     {
-                        data: 'amount',
+                        data: 'name',
                         searchBuilderType: "string"
                     },
                     {
-                        data: 'created_at',
-                        searchBuilderType: "date"
+                        data: 'damaged_length',
+                        searchBuilderType: "num"
                     },
                     {
-                        data: 'updated_at',
-                        searchBuilderType: "date"
+                        data: 'damage_east_start',
+                        searchBuilderType: "num"
+                    },
+                    {
+                        data: 'damage_north_start',
+                        searchBuilderType: "num"
+                    },
+                    {
+                        data: 'damage_east_end',
+                        searchBuilderType: "num"
+                    },
+                    {
+                        data: 'damage_north_end',
+                        searchBuilderType: "num"
+                    },
+                    {
+                        data: 'damage_status',
+                        searchBuilderType: "string"
+                    },
+                    {
+                        data: 'damage_nature',
+                        searchBuilderType: "string"
+                    },
+                    {
+                        data: 'approximate_restoration_cost',
+                        searchBuilderType: "num"
+                    },
+                    {
+                        data: 'approximate_rehabilitation_cost',
+                        searchBuilderType: "num"
+                    },
+                    {
+                        data: 'road_status',
+                        searchBuilderType: "string"
+                    },
+                    {
+                        data: 'remarks',
+                        searchBuilderType: "string"
                     },
                     {
                         data: 'action',
                         orderable: false,
                         searchable: false
-                    },
+                    }
                 ]
                 , defaultOrderColumn: 7
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
-                    targets: [0]
+                    targets: [0, 6, 7, 8, 9, 12, 13, 14, 15]
                     , visible: false
                     }, {
                         targets: -1,
@@ -85,28 +125,36 @@
                 ]
                 , pageLength: 25
                 , customButton: {
-                    text: `<span class="symbol-container fw-bold create-btn"><i class="bi-plus-circle"></i>&nbsp; Add Receipt</span>`
+                    text: `<span class="symbol-container fw-bold create-btn"><i class="bi-plus-circle"></i>&nbsp; Add Damage</span>`
                     , action: function(e, dt, node, config) {
 
                        formWizardModal({
-                            title: 'Add Receipt',
-                            fetchUrl: "{{ route('admin.apps.porms.create') }}",
+                            title: 'Add Damage',
+                            fetchUrl: "{{ route('admin.apps.dts.damages.create') }}",
                             btnSelector: '.create-btn',
-                            actionButtonName: 'Add Receipt',
+                            actionButtonName: 'Add Damage',
                             modalSize: 'lg',
-                            formAction: "{{ route('admin.apps.porms.store') }}",
+                            formAction: "{{ route('admin.apps.dts.damages.store') }}",
                             wizardSteps: [
                                 {
                                     title: "Basic Info",
                                     fields: ["#step-1"]
                                 },
                                 {
-                                    title: "Receipt Details",
+                                    title: "Damage Information",
                                     fields: ["#step-2"]
                                 },
                                 {
-                                    title: "Remarks",
+                                    title: "Damage Coordinates",
                                     fields: ["#step-3"]
+                                },
+                                {
+                                    title: "Cost and Additional Info",
+                                    fields: ["#step-4"]
+                                },
+                                {
+                                    title: "Images",
+                                    fields: ["#step-5"]
                                 }
                             ],
                             formSubmitted() {
@@ -118,20 +166,20 @@
                 }
             });
 
-            $("#porms-datatable").on('click', '.delete-btn', async function() {
-                const receiptId = $(this).data("id");
-                const url = "{{ route('admin.apps.porms.destroy', ':id') }}".replace(':id', receiptId);
+            $("#damages-datatable").on('click', '.delete-btn', async function() {
+                const damageId = $(this).data("id");
+                const url = "{{ route('admin.apps.dts.damages.destroy', ':id') }}".replace(':id', damageId);
 
-                const result = await confirmAction(`Do you want to delete this receipt?`);
+                const result = await confirmAction(`Do you want to delete this damage?`);
                 if (result && result.isConfirmed) {
                     const success = await fetchRequest(url, 'DELETE');
                     if (success) {
-                        $("#porms-datatable").DataTable().ajax.reload();
+                        $("#damages-datatable").DataTable().ajax.reload();
                     }
                 }
             });
 
-            $('#porms-datatable').colResizable({
+            $('#damages-datatable').colResizable({
                 liveDrag: true
                 , resizeMode: 'overflow'
                 , postbackSafe: true
@@ -141,9 +189,9 @@
             , });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.apps.porms.detail', ':id') }}",
+                fetchUrl: "{{ route('admin.apps.dts.damages.detail', ':id') }}",
                 btnSelector: '.view-btn',
-                title: 'Receipt Details',
+                title: 'Damage Details',
                 modalSize: 'lg',
             });
 
@@ -152,4 +200,4 @@
 
     </script>
     @endpush
-</x-porms-layout>
+</x-dts-layout>

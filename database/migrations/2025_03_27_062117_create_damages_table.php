@@ -18,12 +18,7 @@ return new class extends Migration
             $table->string('activity')->default('Monsoon');
             $table->integer('session')->default(date('Y'));
             $table->unsignedBigInteger('infrastructure_id')->nullable();
-            $table->string('total_length')->nullable();
             $table->string('damaged_length')->nullable();
-            $table->decimal('east_start_coordinate', 8, 6)->nullable();
-            $table->decimal('north_start_coordinate', 8, 6)->nullable();
-            $table->decimal('east_end_coordinate', 8, 6)->nullable();
-            $table->decimal('north_end_coordinate', 8, 6)->nullable(); 
             $table->decimal('damage_east_start', 8, 6)->nullable();
             $table->decimal('damage_north_start', 8, 6)->nullable();
             $table->decimal('damage_east_end', 8, 6)->nullable();
@@ -35,7 +30,6 @@ return new class extends Migration
             $table->enum('road_status', ['Partially restored', 'Fully restored', 'Not restored'])->default('Partially restored');
             $table->text('remarks')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedBigInteger('district_id')->nullable();
             $table->timestamps();
         });
 

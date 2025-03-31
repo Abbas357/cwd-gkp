@@ -100,4 +100,19 @@ abstract class Controller
             ]
         ]);
     }
+
+    function years()
+    {
+        $years = [];
+        for ($i = date('Y'); $i >= date('Y') - 10; $i--) {
+            $years[$i] = $i;
+        }
+        return $years;
+    }
+
+    function months()
+    {
+        return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December',];
+    }
+
 }
