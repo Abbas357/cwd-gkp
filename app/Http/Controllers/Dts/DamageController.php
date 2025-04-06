@@ -4,21 +4,27 @@ namespace App\Http\Controllers\Dts;
 
 use App\Models\Damage;
 use Illuminate\Http\Request;
-use App\Models\Infrastructure;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreDamageRequest;
-use App\Http\Controllers\Dts\Enum\RoadStatus;
-use App\Http\Controllers\Dts\Enum\DamageNature;
-use App\Http\Controllers\Dts\Enum\DamageStatus;
-use App\Http\Controllers\Dts\Enum\InfrastructureType;
 
 class DamageController extends Controller
 {
     public function index(Request $request)
     {
         $damage = Damage::query();
+
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user->isAdmin()) {
+            $userIds = $user->getSubordinates()->pluck('id')->toArray();
+            $userIds[] = Auth::id();
+
+            $damage->whereHas('posting.user', function ($query) use ($userIds) {
+                $query->whereIn('id', $userIds);
+            });
+        }
 
         if ($request->ajax()) {
             $dataTable = Datatables::of($damage)
@@ -29,8 +35,8 @@ class DamageController extends Controller
                 ->addColumn('name', function ($row) {
                     return $row->infrastructure?->name;
                 })
-                ->editColumn('user', function ($row) {
-                    return $row->user ? $row->user->currentPosting->office->name : '-';
+                ->addColumn('office', function ($row) {
+                    return $row->posting->office->name ?? '-';
                 })
                 ->editColumn('report_date', function ($row) {
                     return $row->report_date->format('j, F Y');
@@ -61,22 +67,7 @@ class DamageController extends Controller
 
     public function create()
     {
-        $cat = [
-            'infrastructure_type' => array_map(function ($case) {
-                return $case->value;
-            }, InfrastructureType::cases()),
-            'damage_status'  => array_map(function ($case) {
-                return $case->value;
-            }, DamageStatus::cases()),
-            'road_status'    => array_map(function ($case) {
-                return $case->value;
-            }, RoadStatus::cases()),
-            'damage_nature'  => array_map(function ($case) {
-                return $case->value;
-            }, DamageNature::cases()),
-        ];
-
-        $html =  view('modules.dts.damages.partials.create', compact('cat'))->render();
+        $html =  view('modules.dts.damages.partials.create')->render();
 
         return response()->json([
             'success' => true,
@@ -108,10 +99,10 @@ class DamageController extends Controller
         foreach ($inputs as $input) {
             $damage->$input = $request->$input;
         }
-        $damage->activity = $this->currentActivity();
-        $damage->session = $this->currentSession();
+        $damage->activity = setting('activity', 'dts');
+        $damage->session = setting('session', 'dts');
         $damage->damage_nature = json_encode($request->damage_nature);
-        $damage->user_id = Auth::id();
+        $damage->posting_id = Auth::user()->currentPosting->id;
 
         if ($damage->save()) {
             return response()->json(['success' => 'Damage added successfully']);
@@ -135,23 +126,8 @@ class DamageController extends Controller
                 ],
             ]);
         }
-
-        $cat = [
-            'infrastructure_type' => array_map(function ($case) {
-                return $case->value;
-            }, InfrastructureType::cases()),
-            'damage_status'  => array_map(function ($case) {
-                return $case->value;
-            }, DamageStatus::cases()),
-            'road_status'    => array_map(function ($case) {
-                return $case->value;
-            }, RoadStatus::cases()),
-            'damage_nature'  => array_map(function ($case) {
-                return $case->value;
-            }, DamageNature::cases()),
-        ];
-
-        $html = view('modules.dts.damages.partials.detail', compact('damage', 'cat'))->render();
+ 
+        $html = view('modules.dts.damages.partials.detail', compact('damage'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -159,7 +135,7 @@ class DamageController extends Controller
             ],
         ]);
     }
-
+ 
     public function updateField(Request $request, Damage $damage)
     {
         $request->validate([
@@ -182,44 +158,5 @@ class DamageController extends Controller
             return response()->json(['success' => 'Damage has been deleted successfully.']);
         }
         return response()->json(['error' => 'Error deleting damage.']);
-    }
-
-    private function currentActivity()
-    {
-        // $setting = \App\Models\Setting::first();
-        // if ($setting) {
-        //     return $setting->app_activity;
-        // }
-        return 'Monsoon';
-    }
-
-    private function currentSession()
-    {
-        // $setting = \App\Models\Setting::first();
-        // if ($setting) {
-        //     return $setting->app_session;
-        // }
-        return date('Y');
-    }
-
-    private function saveInfrastructure($request)
-    {
-        if ($request->filled('missing_infrastructure')) {
-            $infrastructure = new Infrastructure();
-            $infrastructure->type = $request->type;
-            $infrastructure->name = $request->missing_infrastructure;
-        } else {
-            $infrastructure = Infrastructure::find($request->infrastructure_id);
-            Damage::where('infrastructure_id', $infrastructure->id)->update(['total_length' => $request->total_length]);
-        }
-        $infrastructure->length = $request->total_length;
-        $infrastructure->east_start_coordinate = $request->east_start_coordinate;
-        $infrastructure->north_start_coordinate = $request->north_start_coordinate;
-        $infrastructure->east_end_coordinate = $request->east_end_coordinate;
-        $infrastructure->north_end_coordinate = $request->north_end_coordinate;
-        $infrastructure->district_id = request()->user()->district->id;
-        $infrastructure->save();
-
-        return $infrastructure;
     }
 }

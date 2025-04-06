@@ -66,10 +66,10 @@ class Posting extends Model implements HasMedia
         return $this->hasOneThrough(
             District::class,
             Office::class,
-            'id', // Foreign key on the offices table
-            'id', // Foreign key on the districts table
-            'office_id', // Local key on the postings table
-            'district_id' // Local key on the offices table
+            'id',
+            'id',
+            'office_id',
+            'district_id'
         );
     }
 
@@ -78,13 +78,11 @@ class Posting extends Model implements HasMedia
         return $this->office && $this->office->district_id !== null;
     }
 
-    // Check if posting is in a specific district
     public function isInDistrict($districtId)
     {
         return $this->office && $this->office->district_id == $districtId;
     }
 
-    // Get all users posted to the same district
     public function districtColleagues()
     {
         if (!$this->office || !$this->office->district_id) {
@@ -100,7 +98,6 @@ class Posting extends Model implements HasMedia
             ->get();
     }
 
-    // Scope to find postings in a district
     public function scopeInDistrict($query, $districtId)
     {
         return $query->whereHas('office', function($q) use ($districtId) {
@@ -108,12 +105,10 @@ class Posting extends Model implements HasMedia
         });
     }
 
-    // Get all districts this posting has influence over (direct + hierarchical)
     public function getAllDistricts()
     {
         $districts = collect();
         
-        // Check if this posting's office has a direct district
         if ($this->office && $this->office->district_id) {
             $directDistrict = District::find($this->office->district_id);
             if ($directDistrict) {
@@ -121,12 +116,9 @@ class Posting extends Model implements HasMedia
             }
         }
         
-        // Get subordinate districts
         if ($this->office) {
-            // Get all descendant offices of this posting's office
             $subordinateOffices = $this->office->getAllDescendants();
             
-            // Collect districts from all subordinate offices
             foreach ($subordinateOffices as $subordinateOffice) {
                 if ($subordinateOffice->district_id) {
                     $district = District::find($subordinateOffice->district_id);
@@ -140,7 +132,6 @@ class Posting extends Model implements HasMedia
         return $districts->unique('id');
     }
 
-    // Get all users in the districts this posting has influence over
     public function getDistrictUsers()
     {
         $districts = $this->getAllDistricts();
@@ -158,19 +149,15 @@ class Posting extends Model implements HasMedia
         })->get();
     }
 
-    // Check if posting has influence over a specific district
     public function hasInfluenceOverDistrict($districtId)
     {
         return $this->getAllDistricts()->contains('id', $districtId);
     }
 
-    // Scope to find all postings with influence over a certain district
     public function scopeWithInfluenceOverDistrict($query, $districtId)
     {
-        // First get all offices that have this district directly
         $directOfficeIds = Office::where('district_id', $districtId)->pluck('id')->toArray();
         
-        // Then get all parent offices that could have hierarchical influence
         $parentOfficeIds = collect();
         $directOffices = Office::whereIn('id', $directOfficeIds)->get();
         
@@ -179,21 +166,17 @@ class Posting extends Model implements HasMedia
             $parentOfficeIds = $parentOfficeIds->merge($ancestors->pluck('id'));
         }
         
-        // Combine both direct and hierarchical office IDs
         $allRelevantOfficeIds = array_merge($directOfficeIds, $parentOfficeIds->toArray());
         
-        // Find postings in any of these offices
         return $query->whereIn('office_id', $allRelevantOfficeIds);
     }
 
-    // Get all subordinate postings in the same or child districts
     public function getDistrictSubordinates()
     {
         if (!$this->office) {
             return collect();
         }
         
-        // Get all descendant offices
         $childOffices = $this->office->getAllDescendants();
         
         if ($childOffices->isEmpty()) {
@@ -202,7 +185,6 @@ class Posting extends Model implements HasMedia
         
         $childOfficeIds = $childOffices->pluck('id')->toArray();
         
-        // Find all postings in descendant offices
         return Posting::where('id', '!=', $this->id)
             ->where('is_current', true)
             ->whereIn('office_id', $childOfficeIds)

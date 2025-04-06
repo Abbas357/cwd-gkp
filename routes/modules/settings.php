@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\SettingController;
-use App\Http\Controllers\Settings\CategoryController;
 use App\Http\Controllers\Settings\DistrictController;
 use App\Http\Controllers\Settings\ActivityLogController;
 
@@ -21,9 +20,18 @@ Route::prefix('settings')->middleware(['can:manage settings'])->group(function (
     });
 
     Route::prefix('categories')->as('categories.')->group(function () {
-        Route::get('/', [CategoryController::class, 'index'])->name('index')->can('viewAny', App\Models\Category::class);
-        Route::post('/', [CategoryController::class, 'store'])->name('store')->can('create', App\Models\Category::class);
-        Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy')->can('delete', 'category');
+        Route::get('/', [SettingController::class, 'categories'])->name('index')->can('viewAny', App\Models\Setting::class);
+        Route::get('/create', [SettingController::class, 'createCategory'])->name('create')->can('create', App\Models\Setting::class);
+        Route::post('/', [SettingController::class, 'storeCategory'])->name('store')->can('create', App\Models\Setting::class);
+        Route::get('/{key}/{module?}', [SettingController::class, 'showCategory'])->name('show')->can('view', App\Models\Setting::class);
+        Route::get('/{key}/{module?}/edit', [SettingController::class, 'editCategory'])->name('edit')->can('update', App\Models\Setting::class);
+        Route::patch('/{key}/{module?}', [SettingController::class, 'updateCategory'])->name('update')->can('update', App\Models\Setting::class);
+        Route::delete('/{key}/{module?}', [SettingController::class, 'deleteCategory'])->name('destroy')->can('delete', App\Models\Setting::class);
+        
+        // AJAX Category Item Management
+        Route::get('/{key}/{module?}/items', [SettingController::class, 'getCategoryItems'])->name('items')->can('view', App\Models\Setting::class);
+        Route::post('/{key}/{module?}/items', [SettingController::class, 'addCategoryItem'])->name('items.add')->can('update', App\Models\Setting::class);
+        Route::delete('/{key}/{module?}/items', [SettingController::class, 'removeCategoryItem'])->name('items.remove')->can('update', App\Models\Setting::class);
     });
 
     Route::prefix('districts')->as('districts.')->group(function () {

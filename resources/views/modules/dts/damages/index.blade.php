@@ -12,9 +12,9 @@
                 <tr>
                     <th>ID</th>
                     <th>Report Date</th>
-                    <th>User</th>
                     <th>Type</th>
-                    <th>Name</th>
+                    <th>Infrastructure Name</th>
+                    <th>Office</th>
                     <th>Damaged Length</th>
                     <th>Damage East Start</th>
                     <th>Damage North Start</th>
@@ -52,15 +52,15 @@
                         searchBuilderType: "date"
                     },
                     {
-                        data: 'user',
-                        searchBuilderType: "string"
-                    },
-                    {
                         data: 'type',
                         searchBuilderType: "string"
                     },
                     {
                         data: 'name',
+                        searchBuilderType: "string"
+                    },
+                    {
+                        data: 'office',
                         searchBuilderType: "string"
                     },
                     {
@@ -116,7 +116,7 @@
                 , defaultOrderColumn: 7
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
-                    targets: [0, 6, 7, 8, 9, 12, 13, 14, 15]
+                    targets: [0, 6, 7, 8, 9, 12, 13, 14]
                     , visible: false
                     }, {
                         targets: -1,

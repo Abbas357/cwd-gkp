@@ -4,16 +4,34 @@ namespace App\Policies;
 
 use App\Models\Setting;
 use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
-class SettingPolicy{
-    
-    public function view(User $user): bool
+class SettingPolicy
+{
+    use HandlesAuthorization;
+
+    public function viewAny(User $user)
     {
-        return $user->can('view settings');  
+        return $user->hasPermissionTo('view settings');
     }
     
-    public function update(User $user): bool
+    public function view(User $user, Setting $setting = null)
     {
-        return $user->can('update settings');
+        return $user->hasPermissionTo('view settings');
+    }
+
+    public function create(User $user)
+    {
+        return $user->hasPermissionTo('manage settings');
+    }
+    
+    public function update(User $user, Setting $setting = null)
+    {
+        return $user->hasPermissionTo('manage settings');
+    }
+    
+    public function delete(User $user, Setting $setting = null)
+    {
+        return $user->hasPermissionTo('manage settings');
     }
 }

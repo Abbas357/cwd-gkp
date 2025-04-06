@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Spatie\MediaLibrary\HasMedia;
 use App\Observers\DamageObserver;
+use Spatie\MediaLibrary\HasMedia;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -44,6 +45,14 @@ class Damage extends Model implements HasMedia
         $this->addMediaCollection('after_damage_pictures');
     }
 
+    protected static function booted()
+    {
+        static::addGlobalScope('app_session_activity', function (Builder $builder) {
+            $builder->where('activity', '=', setting('activity', 'dts'))
+                    ->where('session', '=', setting('session', 'dts'));
+        });
+    }
+
     public function district()
     {
         return $this->belongsTo(District::class);
@@ -54,9 +63,9 @@ class Damage extends Model implements HasMedia
         return $this->belongsTo(Infrastructure::class);
     }
 
-    public function user()
+    public function posting()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Posting::class);
     }
 
     public function damageLogs()

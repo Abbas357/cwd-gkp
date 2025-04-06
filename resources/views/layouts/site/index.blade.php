@@ -9,7 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title }}</title>
 
-    <meta name="description" content="{{ $settings->meta_description ?? 'Official Website of Communication and Works Department Government of Khyber Pakhtunkhwa' }}">
+    <meta name="description" content="{{ setting('meta_description', 'main', 'Official Website of Communication and Works Department Government of Khyber Pakhtunkhwa') }}">
     <meta name="keywords" content="KP, KPK, Communication and Works Department, C&W Department, KP Government, infrastructure KP, road development, public works, construction KP, C&W projects, Pakistan, Khyber Pakhtunkhwa government, C&W initiatives, civil engineering KP">
     <meta name="author" content="Communication and Works Department, KPK Government">
     <meta name="robots" content="index, follow">
@@ -17,7 +17,7 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="en_US">
     <meta property="og:title" content="{{ $title }}">
-    <meta property="og:description" content="{{ $settings->meta_description ?? 'Official Website of Communication and Works Department Government of Khyber Pakhtunkhwa' }}">
+    <meta property="og:description" content="{{ setting('meta_description', 'main', 'Official Website of Communication and Works Department Government of Khyber Pakhtunkhwa') }}">
     <meta property="og:image" content="{{ $ogImage }}">
     <meta property="og:site_name" content="{{ $title }}">
     <meta name="theme-color" content="#0b7240">

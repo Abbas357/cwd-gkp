@@ -51,7 +51,7 @@
 
             <!-- Main Content -->
             <div class="col-md-9">
-                <form class="needs-validation" action="{{ route('admin.settings.update') }}" method="post" novalidate>
+                <form class="needs-validation" action="{{ route('admin.settings.update', ['module' => 'main']) }}" method="post" novalidate>
                     @csrf
                     @method('patch')
                     <div class="card">
@@ -61,45 +61,60 @@
                                 <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
                                     <h4 class="mb-4">General Settings</h4>
                                     <div class="mb-4">
-                                        <label for="site_name">Site Name</label>
-                                        <input type="text" class="form-control" id="site_name" value="{{ old('site_name', $settings->site_name) }}" name="site_name" required>
-                                        @error('site_name')
+                                        <label for="settings[site_name]">Site Name</label>
+                                        <input type="text" class="form-control" id="settings[site_name]" 
+                                            value="{{ old('settings.site_name', setting('site_name')) }}" 
+                                            name="settings[site_name][value]" required>
+                                        <input type="hidden" name="settings[site_name][type]" value="string">
+                                        <input type="hidden" name="settings[site_name][description]" value="Site name">
+                                        @error('settings.site_name.value')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
 
                                     <div class="mb-4">
-                                        <label for="description">Description</label>
-                                        <textarea name="description" id="description" class="form-control" style="height:100px" required>{{ old('description', $settings->description) }}</textarea>
-                                        @error('description')
+                                        <label for="settings[description]">Description</label>
+                                        <textarea name="settings[description][value]" id="settings[description]" 
+                                            class="form-control" style="height:100px" required>{{ old('settings.description.value', setting('description')) }}</textarea>
+                                        <input type="hidden" name="settings[description][type]" value="string">
+                                        <input type="hidden" name="settings[description][description]" value="Site description">
+                                        @error('settings.description.value')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
 
                                     <div class="mb-4">
-                                        <label for="meta_description">Meta Description</label>
-                                        <textarea name="meta_description" id="meta_description" class="form-control" style="height:100px">{{ old('meta_description', $settings->meta_description) }}</textarea>
-                                        @error('meta_description')
+                                        <label for="settings[meta_description]">Meta Description</label>
+                                        <textarea name="settings[meta_description][value]" id="settings[meta_description]" 
+                                            class="form-control" style="height:100px">{{ old('settings.meta_description.value', setting('meta_description')) }}</textarea>
+                                        <input type="hidden" name="settings[meta_description][type]" value="string">
+                                        <input type="hidden" name="settings[meta_description][description]" value="Meta description for SEO">
+                                        @error('settings.meta_description.value')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
 
                                     <div class="mb-4">
                                         <label class="mb-3">Enable Comments</label>
+                                        @php
+                                            $commentableTables = setting('commentable_tables', 'main', []);
+                                        @endphp
                                         @foreach($tables as $table)
                                             <div class="form-check form-switch mb-2">
                                                 <input class="form-check-input" 
-                                                       type="checkbox" 
-                                                       id="commentable_table_{{ $table }}" 
-                                                       name="commentable_tables[]" 
-                                                       value="{{ $table }}"
-                                                       {{ in_array($table, json_decode($settings->commentable_tables ?? '[]', true)) ? 'checked' : '' }}>
+                                                    type="checkbox" 
+                                                    id="commentable_table_{{ $table }}" 
+                                                    name="settings[commentable_tables][value][]" 
+                                                    value="{{ $table }}"
+                                                    {{ in_array($table, $commentableTables) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="commentable_table_{{ $table }}">
                                                     {{ ucfirst($table) }}
                                                 </label>
                                             </div>
                                         @endforeach
-                                        @error('commentable_tables')
+                                        <input type="hidden" name="settings[commentable_tables][type]" value="json">
+                                        <input type="hidden" name="settings[commentable_tables][description]" value="Tables that can have comments">
+                                        @error('settings.commentable_tables.value')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -110,33 +125,49 @@
                                 <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
                                     <h4 class="mb-4">Contact Information</h4>
                                     <div class="mb-4">
-                                        <label for="contact_address">Contact Address</label>
-                                        <input type="text" class="form-control" id="contact_address" value="{{ old('contact_address', $settings->contact_address) }}" name="contact_address" required>
-                                        @error('contact_address')
+                                        <label for="settings[contact_address]">Contact Address</label>
+                                        <input type="text" class="form-control" id="settings[contact_address]" 
+                                            value="{{ old('settings.contact_address.value', setting('contact_address')) }}" 
+                                            name="settings[contact_address][value]" required>
+                                        <input type="hidden" name="settings[contact_address][type]" value="string">
+                                        <input type="hidden" name="settings[contact_address][description]" value="Physical address">
+                                        @error('settings.contact_address.value')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
 
                                     <div class="mb-4">
-                                        <label for="contact_phone">Contact Phone</label>
-                                        <input type="text" class="form-control" id="contact_phone" value="{{ old('contact_phone', $settings->contact_phone) }}" name="contact_phone" required>
-                                        @error('contact_phone')
+                                        <label for="settings[contact_phone]">Contact Phone</label>
+                                        <input type="text" class="form-control" id="settings[contact_phone]" 
+                                            value="{{ old('settings.contact_phone.value', setting('contact_phone')) }}" 
+                                            name="settings[contact_phone][value]" required>
+                                        <input type="hidden" name="settings[contact_phone][type]" value="string">
+                                        <input type="hidden" name="settings[contact_phone][description]" value="Contact phone number">
+                                        @error('settings.contact_phone.value')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
 
                                     <div class="mb-4">
-                                        <label for="email">Email</label>
-                                        <input type="email" class="form-control" id="email" value="{{ old('email', $settings->email) }}" name="email" required>
-                                        @error('email')
+                                        <label for="settings[email]">Email</label>
+                                        <input type="email" class="form-control" id="settings[email]" 
+                                            value="{{ old('settings.email.value', setting('email')) }}" 
+                                            name="settings[email][value]" required>
+                                        <input type="hidden" name="settings[email][type]" value="string">
+                                        <input type="hidden" name="settings[email][description]" value="Contact email">
+                                        @error('settings.email.value')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
 
                                     <div class="mb-4">
-                                        <label for="whatsapp">WhatsApp</label>
-                                        <input type="text" class="form-control" id="whatsapp" value="{{ old('whatsapp', $settings->whatsapp) }}" name="whatsapp">
-                                        @error('whatsapp')
+                                        <label for="settings[whatsapp]">WhatsApp</label>
+                                        <input type="text" class="form-control" id="settings[whatsapp]" 
+                                            value="{{ old('settings.whatsapp.value', setting('whatsapp')) }}" 
+                                            name="settings[whatsapp][value]">
+                                        <input type="hidden" name="settings[whatsapp][type]" value="string">
+                                        <input type="hidden" name="settings[whatsapp][description]" value="WhatsApp number">
+                                        @error('settings.whatsapp.value')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -146,25 +177,37 @@
                                 <div class="tab-pane fade" id="social" role="tabpanel" aria-labelledby="social-tab">
                                     <h4 class="mb-4">Social Media</h4>
                                     <div class="mb-4">
-                                        <label for="facebook">Facebook</label>
-                                        <input type="text" class="form-control" id="facebook" value="{{ old('facebook', $settings->facebook) }}" name="facebook">
-                                        @error('facebook')
+                                        <label for="settings[facebook]">Facebook</label>
+                                        <input type="text" class="form-control" id="settings[facebook]" 
+                                            value="{{ old('settings.facebook.value', setting('facebook')) }}" 
+                                            name="settings[facebook][value]">
+                                        <input type="hidden" name="settings[facebook][type]" value="string">
+                                        <input type="hidden" name="settings[facebook][description]" value="Facebook handle">
+                                        @error('settings.facebook.value')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
 
                                     <div class="mb-4">
-                                        <label for="twitter">Twitter</label>
-                                        <input type="text" class="form-control" id="twitter" value="{{ old('twitter', $settings->twitter) }}" name="twitter">
-                                        @error('twitter')
+                                        <label for="settings[twitter]">Twitter</label>
+                                        <input type="text" class="form-control" id="settings[twitter]" 
+                                            value="{{ old('settings.twitter.value', setting('twitter')) }}" 
+                                            name="settings[twitter][value]">
+                                        <input type="hidden" name="settings[twitter][type]" value="string">
+                                        <input type="hidden" name="settings[twitter][description]" value="Twitter handle">
+                                        @error('settings.twitter.value')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
 
                                     <div class="mb-4">
-                                        <label for="youtube">YouTube</label>
-                                        <input type="text" class="form-control" id="youtube" value="{{ old('youtube', $settings->youtube) }}" name="youtube">
-                                        @error('youtube')
+                                        <label for="settings[youtube]">YouTube</label>
+                                        <input type="text" class="form-control" id="settings[youtube]" 
+                                            value="{{ old('settings.youtube.value', setting('youtube')) }}" 
+                                            name="settings[youtube][value]">
+                                        <input type="hidden" name="settings[youtube][type]" value="string">
+                                        <input type="hidden" name="settings[youtube][description]" value="YouTube channel">
+                                        @error('settings.youtube.value')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -174,12 +217,14 @@
                                 <div class="tab-pane fade" id="system" role="tabpanel" aria-labelledby="system-tab">
                                     <h4 class="mb-4">System Settings</h4>
                                     <div class="mb-4">
-                                        <label for="maintenance_mode">Maintenance Mode</label>
-                                        <select class="form-select" id="maintenance_mode" name="maintenance_mode">
-                                            <option value="0" {{ $settings->maintenance_mode === 0 ? 'selected' : '' }}>Off</option>
-                                            <option value="1" {{ $settings->maintenance_mode === 1 ? 'selected' : '' }}>On</option>
+                                        <label for="settings[maintenance_mode]">Maintenance Mode</label>
+                                        <select class="form-select" id="settings[maintenance_mode]" name="settings[maintenance_mode][value]">
+                                            <option value="0" {{ setting('maintenance_mode') == false ? 'selected' : '' }}>Off</option>
+                                            <option value="1" {{ setting('maintenance_mode') == true ? 'selected' : '' }}>On</option>
                                         </select>
-                                        @error('maintenance_mode')
+                                        <input type="hidden" name="settings[maintenance_mode][type]" value="boolean">
+                                        <input type="hidden" name="settings[maintenance_mode][description]" value="Website maintenance mode">
+                                        @error('settings.maintenance_mode.value')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -188,8 +233,8 @@
                                         <label for="cache">Cache Management</label>
                                         <select class="form-select" id="cache" name="cache">
                                             <option value="">Choose ...</option>
-                                            <option value="create" {{ $settings->cache === 0 ? 'selected' : '' }}>Create Cache</option>
-                                            <option value="clear" {{ $settings->cache === 1 ? 'selected' : '' }}>Clear Cache</option>
+                                            <option value="create">Create Cache</option>
+                                            <option value="clear">Clear Cache</option>
                                         </select>
                                         @error('cache')
                                         <div class="text-danger">{{ $message }}</div>
@@ -197,10 +242,14 @@
                                     </div>
 
                                     <div class="mb-4">
-                                        <label for="secret_key">Secret Key</label>
-                                        <input type="text" class="form-control" id="secret_key" value="{{ old('secret_key', $settings->secret_key) }}" name="secret_key">
+                                        <label for="settings[secret_key]">Secret Key</label>
+                                        <input type="text" class="form-control" id="settings[secret_key]" 
+                                            value="{{ old('settings.secret_key.value', setting('secret_key')) }}" 
+                                            name="settings[secret_key][value]">
                                         <small class="form-text text-muted">Used during maintenance</small>
-                                        @error('secret_key')
+                                        <input type="hidden" name="settings[secret_key][type]" value="string">
+                                        <input type="hidden" name="settings[secret_key][description]" value="Secret key for maintenance bypass">
+                                        @error('settings.secret_key.value')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -208,9 +257,7 @@
                                         <h5>Lock Modules</h5>
                                         <div class="route-maintenance-list">
                                             @php
-                                                $maintenanceRoutes = is_array($settings->maintenance_routes) 
-                                                    ? $settings->maintenance_routes 
-                                                    : (json_decode($settings->maintenance_routes, true) ?? []);
+                                                $maintenanceRoutes = setting('maintenance_routes', 'main', []);
                                             @endphp
                                             
                                             @foreach([
@@ -222,7 +269,7 @@
                                                     <input type="checkbox" 
                                                            class="form-check-input route-group" 
                                                            id="route_{{ $route }}"
-                                                           name="maintenance_routes[{{ $route }}]"
+                                                           name="settings[maintenance_routes][value][{{ $route }}]"
                                                            value="1"
                                                            {{ isset($maintenanceRoutes[$route]) && $maintenanceRoutes[$route] ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="route_{{ $route }}">
@@ -230,6 +277,8 @@
                                                     </label>
                                                 </div>
                                             @endforeach
+                                            <input type="hidden" name="settings[maintenance_routes][type]" value="json">
+                                            <input type="hidden" name="settings[maintenance_routes][description]" value="Routes exempt from maintenance mode">
                                         </div>
                                     </div>
                                 </div>

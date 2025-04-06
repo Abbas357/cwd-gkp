@@ -3,7 +3,7 @@
         <label for="type">Infrastructure Type</label>
         <select class="form-control" id="type" name="type" required>
             <option value="">Select Type</option>
-            @foreach($cat['infrastructure_type'] as $infrastructure_type)
+            @foreach(setting('infrastructure_type','dts') as $infrastructure_type)
             <option value="{{ $infrastructure_type }}">{{ $infrastructure_type }}</option>
             @endforeach
         </select>

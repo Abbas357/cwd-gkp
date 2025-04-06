@@ -10,21 +10,19 @@ use Illuminate\Contracts\View\View;
 class DtsLayout extends Component
 {
     public $title;
-    public $settings;
     public $showAside;
 
     public function __construct($title = null, $showAside = true)
     {
-        $this->settings = Setting::first();
         $this->title = $title 
-            ? $title .' | ' . ($this->settings->site_name ?? config('app.name'))
-            : ($this->settings->site_name ?? config('app.name'));
+        ? $title .' | ' . setting('site_name', 'main', config('app.name'))
+        : setting('site_name', 'main', config('app.name'));
         
         $this->showAside = $showAside;
     }
 
     public function render(): View
     {
-        return view('layouts.apps.dts', ['title' => $this->title, 'settings' => $this->settings, 'showAside' => $this->showAside]);
+        return view('layouts.apps.dts', ['title' => $this->title, 'showAside' => $this->showAside]);
     }
 }

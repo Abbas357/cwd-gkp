@@ -26,12 +26,21 @@
     </li>
     @endcan
 
+    @can('view dts settings')
+    <li>
+        <a href="{{ route('admin.apps.dts.settings.index') }}">
+            <div class="parent-icon"><i class="bi-gear text-danger"></i></div>
+            <div class="menu-title">Settings</div>
+        </a>
+    </li>
+    @endcan
+
 </x-sidebar>
 @endif
 
 @include('layouts.partials.admin.main')
 
-<x-footer :show-aside="$showAside" :site-name="$settings->site_name" />
+<x-footer :show-aside="$showAside" :site-name="setting('site_name', 'main', config('app.name'))" />
 
 <x-theme-switcher current-theme="LightTheme" />
 

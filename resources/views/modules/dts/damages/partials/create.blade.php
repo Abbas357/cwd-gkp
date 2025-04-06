@@ -14,7 +14,7 @@
         <label for="type">Type</label>
         <select class="form-control" id="type" name="type" required>
             <option value="">Select Type</option>
-            @foreach($cat['infrastructure_type'] as $type)
+            @foreach(setting('infrastructure_type', 'dts') as $type)
             <option value="{{ $type }}">{{ $type }}</option>
             @endforeach
         </select>
@@ -28,7 +28,7 @@
         <select class="form-select form-select-md" id="load-infrastructures" name="infrastructure_id">
         </select>
         <small class="form-text text-muted">
-            <a href="{{ route('admin.apps.dts.infrastructures.index', ['create=true']) }}" 
+            <a href="{{ route('admin.apps.dts.infrastructures.index', ['create' => 'true', 'popup' => 'true']) }}" 
                onclick="openPopup(event, this.href)">Create</a> new if not available
         </small>        
     </div>
@@ -47,7 +47,7 @@
     <div class="col-md-6 mb-3">
         <label for="damage_nature">Damage Nature</label>
         <select class="form-control h-50" id="damage_nature" name="damage_nature[]" multiple>
-            @foreach($cat['damage_nature'] as $nature)
+            @foreach(setting('damage_nature', 'dts') as $nature)
             <option value="{{ $nature }}">{{ $nature }}</option>
             @endforeach
         </select>
@@ -60,7 +60,7 @@
         <label for="damage_status">Damage Status</label>
         <select class="form-control" id="damage_status" name="damage_status" required>
             <option value="">Select Damage Status</option>
-            @foreach($cat['damage_status'] as $damage_status)
+            @foreach(setting('damage_status', 'dts') as $damage_status)
             <option value="{{ $damage_status }}">{{ $damage_status }}</option>
             @endforeach
         </select>
@@ -73,7 +73,7 @@
         <label for="road_status">Road Status</label>
         <select class="form-control" id="road_status" name="road_status" required>
             <option value="">Select Road Status</option>
-            @foreach($cat['road_status'] as $road_status)
+            @foreach(setting('road_status', 'dts') as $road_status)
             <option value="{{ $road_status }}">{{ $road_status }}</option>
             @endforeach
         </select>

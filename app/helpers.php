@@ -1,5 +1,7 @@
 <?php 
 
+use App\Models\Setting;
+
 function getProfilePic($user): string
 {
     if (!$user instanceof App\Models\User) {
@@ -151,4 +153,19 @@ function formatDuration($startDate, $endDate = null) {
     } catch (\Exception $e) {
         return 'Calculation Error: ' . $e->getMessage();
     }
+}
+
+function setting($key, $module = 'main', $default = null)
+{
+    return Setting::get($key, $module, $default);
+}
+
+function category($key, $module = 'main', $default = [])
+{
+    return Setting::getCategory($key, $module, $default);
+}
+
+function categories($module = 'main')
+{
+    return Setting::getAllCategories($module);
 }

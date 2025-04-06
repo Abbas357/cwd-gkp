@@ -122,6 +122,11 @@
                             ],
                             formSubmitted() {
                                 table.ajax.reload();
+
+                                const urlParams = new URLSearchParams(window.location.search);
+                                if (urlParams.get('popup') === 'true') {
+                                    window.close();
+                                }
                             }
                         });
 

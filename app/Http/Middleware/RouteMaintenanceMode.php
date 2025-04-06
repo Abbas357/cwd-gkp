@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 use Closure;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 
 class RouteMaintenanceMode
@@ -11,8 +12,10 @@ class RouteMaintenanceMode
     public function handle(Request $request, Closure $next): Response
     {
         $routeName = $request->route()->getName();
-        $settings = Setting::first();
-        $maintenanceRoutes = $settings->maintenance_routes ?? [];
+        
+        $maintenanceRoutes = Cache::remember('settings_main_maintenance_routes', 43200, function () {
+            return Setting::get('maintenance_routes', 'main', []);
+        });
         
         foreach ($maintenanceRoutes as $route => $isLocked) {
             if ($isLocked && str_ends_with($route, '*')) {

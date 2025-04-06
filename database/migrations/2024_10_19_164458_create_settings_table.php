@@ -10,20 +10,18 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('site_name')->default('Communication & Works Department, KP');
-            $table->string('description')->default('Official Website of Communication and Works Department, Government of Khyber Pakhtunkhwa');
-            $table->string('email')->default('cwd.gkp@gmail.com');
-            $table->boolean('maintenance_mode')->default(false);
-            $table->string('contact_phone')->default('091-9214039');
-            $table->string('contact_address')->default('Civil Secretariat, Peshawar');
-            $table->string('whatsapp')->nullable();
-            $table->string('facebook')->default('CWDKPGovt');
-            $table->string('twitter')->default('CWDKPGovt');
-            $table->string('youtube')->default('CWDKPGovt');
-            $table->text('meta_description')->nullable();
-            $table->string('secret_key')->nullable();
-            $table->longText('maintenance_routes')->nullable();
+            $table->string('module')->default('main');
+            $table->string('key');
+            $table->longText('value')->nullable();
+            $table->string('type')->default('string');
+            $table->text('description')->nullable();
+            $table->string('group')->nullable();
+            $table->integer('order')->default(0);
+            $table->boolean('is_default')->default(false);
+            $table->boolean('is_active')->default(true); 
             $table->timestamps();
+            
+            $table->index(['module', 'key', 'type']);
         });
         
     }

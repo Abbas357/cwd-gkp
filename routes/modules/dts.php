@@ -3,11 +3,18 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dts\DamageController;
 use App\Http\Controllers\Dts\InfrastructureController;
+use App\Http\Controllers\Dts\HomeController;
 
 
 Route::prefix('dts')->as('dts.')->middleware(['can:manage dts'])->group(function () {
 
     Route::get('/', [DamageController::class, 'index'])->name('index');
+
+    Route::prefix('settings')->as('settings.')->group(function () {
+        Route::get('/', [HomeController::class, 'index'])->name('index');
+        Route::post('/update', [HomeController::class, 'update'])->name('update');
+        Route::post('/init', [HomeController::class, 'init'])->name('init');
+    });
 
     Route::prefix('infrastructures')->as('infrastructures.')->group(function () {
         Route::get('/', [InfrastructureController::class, 'index'])->name('index')->can('viewAny', App\Models\Infrastructure::class);

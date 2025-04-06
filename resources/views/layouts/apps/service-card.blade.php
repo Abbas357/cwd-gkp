@@ -30,7 +30,7 @@
 
 @include('layouts.partials.admin.main')
 
-<x-footer :show-aside="$showAside" :site-name="$settings->site_name" />
+<x-footer :show-aside="$showAside" :site-name="setting('site_name', 'main', config('app.name'))" />
 
 <x-theme-switcher current-theme="LightTheme" />
 

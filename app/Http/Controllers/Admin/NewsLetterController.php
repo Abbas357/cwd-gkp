@@ -9,7 +9,6 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Mail\Newsletter\MassEmail;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 
 class NewsLetterController extends Controller

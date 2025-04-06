@@ -31,18 +31,18 @@
                     <div class="offcanvas-body">
                         <div class="mb-4 mt-2 info-box">
                             <h4>Address</h4>
-                            <i class="bi bi-geo-alt me-2"></i>{{ $settings->contact_address ?? 'Civil Secretariat, Peshawar'}}
+                            <i class="bi bi-geo-alt me-2"></i>{{ setting('contact_address', 'main', 'Civil Secretariat, Peshawar') }}
                         </div>
                         <div class="mb-4 info-box">
                             <h4>Email</h4>
                             <a href="mailto:info@cwd.gkp.pk" class="text-decoration-none text-dark">
-                                <i class="bi-envelope-fill"></i> &nbsp; {{ $settings->email ?? 'info@cwd.gkp.pk' }}
+                                <i class="bi-envelope-fill"></i> &nbsp; {{ setting('email', 'main', 'info@cwd.gkp.pk') }}
                             </a>
                         </div>
                         <div class="mb-4 info-box">
                             <h4>Contact Number</h4>
                             <a href="tel:+919210843" class="text-decoration-none text-dark">
-                                <i class="bi-telephone-fill"></i> &nbsp; {{ $settings->contact_phone ?? '091-9214039' }}
+                                <i class="bi-telephone-fill"></i> &nbsp; {{ setting('contact_phone', 'main', '091-9214039') }}
                             </a>
                         </div>
                         <div class="mb-4 info-box">
@@ -53,9 +53,9 @@
                         <div class="mb-4 info-box">
                             <h4>Follow Us</h4>
                             <div>
-                                <a href="https://facebook.com/{{ $settings->facebook ?? 'CWDKPGovt'}}"><i class="bi bi-facebook fs-4 me-2"></i></a>
-                                <a href="https://twitter.com/{{ $settings->twitter ?? 'CWDKPGovt'}}"><i class="bi bi-twitter-x fs-4 me-2"></i></a>
-                                <a href="https://youtube.com/{{ $settings->youtube ?? 'CWDKPGovt'}}"><i class="bi bi-youtube fs-4 me-2"></i> </a>
+                                <a href="https://facebook.com/{{ setting('facebook', 'main', 'CWDKPGovt') }}"><i class="bi bi-facebook fs-4 me-2"></i></a>
+                                <a href="https://twitter.com/{{ setting('twitter', 'main', 'CWDKPGovt') }}"><i class="bi bi-twitter-x fs-4 me-2"></i></a>
+                                <a href="https://youtube.com/{{ setting('youtube', 'main', 'CWDKPGovt') }}"><i class="bi bi-youtube fs-4 me-2"></i> </a>
                             </div>
                         </div>
                     </div>

@@ -7,7 +7,7 @@
             <div class="col-md-6 col-lg-6 col-xl-3">
                 <h4 class="mb-4 text-white">About Us</h4>
                 <p class="text-white">
-                    {{ $settings->description ?? 'Communication & Works Department, Government of Khyber Pakhtunkhwa.'}}
+                    {{ setting('description', 'main', 'Communication & Works Department, Government of Khyber Pakhtunkhwa.') }}
                 </p>
             </div>
             <div class="col-md-6 col-lg-6 col-xl-3">
@@ -39,16 +39,16 @@
             <div class="col-md-6 col-lg-6 col-xl-3">
                 <div class="footer-item d-flex flex-column">
                     <h4 class="mb-4 text-white">Get In Touch</h4>
-                    <a href=""><i class="bi bi-house me-2"></i>{{ $settings->contact_address ?? 'Civil Secretariat, Peshawar'}}</a>
-                    <a href=""><i class="bi bi-envelope me-2"></i>{{ $settings->email ?? 'info@cwd.gkp.pk'}}</a>
-                    <a href=""><i class="bi bi-phone me-2"></i>{{ $settings->contact_phone ?? '091-9214039'}}</a>
+                    <a href=""><i class="bi bi-house me-2"></i>{{ setting('contact_address', 'main', 'Civil Secretariat, Peshawar') }}</a>
+                    <a href=""><i class="bi bi-envelope me-2"></i>{{ setting('email', 'main', 'info@cwd.gkp.pk') }}</a>
+                    <a href=""><i class="bi bi-phone me-2"></i>{{ setting('contact_phone', 'main', '091-9214039') }}</a>
                 </div>
                 <div class="footer-item d-flex flex-column">
                     <h4 class="mb-2 text-white">Follow Us</h4>
                     <div>
-                        <a href="https://facebook.com/{{ $settings->facebook ?? 'CWDKPGovt'}}"><i class="bi bi-facebook fs-4 me-2"></i></a>
-                        <a href="https://twitter.com/{{ $settings->twitter ?? 'CWDKPGovt'}}"><i class="bi bi-twitter-x fs-4 me-2"></i></a>
-                        <a href="https://youtube.com/{{ $settings->youtube ?? 'CWDKPGovt'}}"><i class="bi bi-youtube fs-4 me-2"></i> </a>
+                        <a href="https://facebook.com/{{ setting('facebook', 'main', 'CWDKPGovt') }}"><i class="bi bi-facebook fs-4 me-2"></i></a>
+                        <a href="https://twitter.com/{{ setting('twitter', 'main', 'CWDKPGovt') }}"><i class="bi bi-twitter-x fs-4 me-2"></i></a>
+                        <a href="https://youtube.com/{{ setting('youtube', 'main', 'CWDKPGovt') }}"><i class="bi bi-youtube fs-4 me-2"></i> </a>
                     </div>
                 </div>
             </div>
@@ -62,7 +62,7 @@
     <div class="container">
         <div class="g-4 align-items-center">
             <div class="text-center mb-md-0 text-white">
-                <a class="text-white" href="https://cwd.gkp.pk">&copy; {{ $settings->site_name ?? config('app.name') }}</a>
+                <a class="text-white" href="https://cwd.gkp.pk">&copy; {{ setting('site_name', 'main', config('app.name')) }}</a>
                 <div>Developed and maintained by <a class="text-info" href="https://cwd.gkp.pk">IT Cell, C&W Department</a></div>
             </div>
         </div>

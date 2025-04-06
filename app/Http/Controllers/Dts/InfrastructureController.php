@@ -69,9 +69,6 @@ class InfrastructureController extends Controller
     public function create()
     {
         $cat = [
-            'infrastructure_type' => array_map(function($case) { 
-                return $case->value; 
-            }, InfrastructureType::cases()),
             'districts' => request()->user()->districts()->count() > 0
             ? request()->user()->districts()
             : \App\Models\District::all(),
@@ -121,13 +118,7 @@ class InfrastructureController extends Controller
             ]);
         }
 
-        $cat = [
-            'infrastructure_type' => array_map(function($case) { 
-                return $case->value; 
-            }, InfrastructureType::cases()),
-        ];
-        
-        $html = view('modules.dts.infrastructures.partials.detail', compact('infrastructure', 'cat'))->render();
+        $html = view('modules.dts.infrastructures.partials.detail', compact('infrastructure'))->render();
         return response()->json([
             'success' => true,
             'data' => [

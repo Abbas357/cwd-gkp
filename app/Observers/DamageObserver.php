@@ -26,7 +26,7 @@ class DamageObserver
                 'approximate_rehabilitation_cost' => $originalValues['approximate_rehabilitation_cost'] ?? null,
                 'road_status' => $originalValues['road_status'] ?? null,
                 'remarks' => $originalValues['remarks'] ?? null,
-                'user_id' => Auth::id(),
+                'posting_id' => Auth::user()->currentPosting->id,
             ]);
         }
     }

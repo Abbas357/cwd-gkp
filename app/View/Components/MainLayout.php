@@ -9,16 +9,13 @@ use Illuminate\View\Component;
 class MainLayout extends Component
 {
     public $title;
-    public $settings;
     public $ogImage;
 
     public function __construct($title = null, $ogImage = null)
     {
-        $this->settings = Setting::first();
-        
         $this->title = $title 
-            ? $title .' | ' . ($this->settings->site_name ?? config('app.name'))
-            : ($this->settings->site_name ?? config('app.name'));
+            ? $title .' | ' . setting('site_name', 'main', config('app.name'))
+            : setting('site_name', 'main', config('app.name'));
         
         $this->ogImage = $ogImage ?? asset('site/images/logo-square.png');
     }
@@ -27,7 +24,6 @@ class MainLayout extends Component
     {
         return view('layouts.site.index', [
             'title' => $this->title,
-            'settings' => $this->settings,
             'ogImage' => $this->ogImage
         ]);
     }
