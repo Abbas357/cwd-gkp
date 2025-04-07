@@ -8,6 +8,7 @@ use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreInfrastructureRequest;
 use App\Http\Controllers\Dts\Enum\InfrastructureType;
+use App\Models\District;
 
 class InfrastructureController extends Controller
 {
@@ -109,6 +110,8 @@ class InfrastructureController extends Controller
 
     public function showDetail(Infrastructure $infrastructure)
     {
+        $districts = District::all();
+        
         if (!$infrastructure) {
             return response()->json([
                 'success' => false,
@@ -118,7 +121,7 @@ class InfrastructureController extends Controller
             ]);
         }
 
-        $html = view('modules.dts.infrastructures.partials.detail', compact('infrastructure'))->render();
+        $html = view('modules.dts.infrastructures.partials.detail', compact('infrastructure', 'districts'))->render();
         return response()->json([
             'success' => true,
             'data' => [

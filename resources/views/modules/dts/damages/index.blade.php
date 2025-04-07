@@ -116,7 +116,7 @@
                 , defaultOrderColumn: 7
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
-                    targets: [0, 6, 7, 8, 9, 12, 13, 14]
+                    targets: [0, 6, 7, 8, 9, 12, 13, 14, 15]
                     , visible: false
                     }, {
                         targets: -1,

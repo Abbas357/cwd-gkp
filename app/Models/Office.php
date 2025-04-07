@@ -170,7 +170,7 @@ class Office extends Model
                 $managedDistricts->push($district);
             }
         }
-        
+         
         // Add districts from child offices
         $childOffices = $this->getAllDescendants();
         foreach ($childOffices as $childOffice) {

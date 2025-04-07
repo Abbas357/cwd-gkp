@@ -64,10 +64,13 @@ class SearchController extends Controller
     {
         return User::withoutGlobalScope('active')
             ->where(function ($subQuery) use ($query) {
-                $subQuery->where('name', 'LIKE', "%{$query}%")
-                    ->orWhere('designation', 'LIKE', "%{$query}%")
-                    ->orWhere('position', 'LIKE', "%{$query}%")
-                    ->orWhere('office', 'LIKE', "%{$query}%");
+                $subQuery->where('name', 'LIKE', "%{$query}%");
+            })
+            ->orWhereHas('currentPosting.designation', function ($subQuery) use ($query) {
+                $subQuery->where('name', 'LIKE', "%{$query}%");
+            })
+            ->orWhereHas('currentPosting.office', function ($subQuery) use ($query) {
+                $subQuery->where('name', 'LIKE', "%{$query}%");
             })
             ->orderByRaw("
                 CASE 
