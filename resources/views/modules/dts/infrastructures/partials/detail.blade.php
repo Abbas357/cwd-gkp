@@ -10,7 +10,7 @@
 <div class="row infrastructure-details">
     <div class="col-md-12">
         <table class="table table-bordered mt-3">
-            <!-- Basic Information -->
+
             <tr>
                 <th class="table-cell">Infrastructure Type</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
@@ -27,6 +27,7 @@
                     <button id="edit-btn-type" class="no-print btn btn-sm edit-button" onclick="enableEditing('type')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
+
             <tr>
                 <th class="table-cell">District</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
@@ -43,6 +44,7 @@
                     <button id="edit-btn-district_id" class="no-print btn btn-sm edit-button" onclick="enableEditing('district_id')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
+
             <tr>
                 <th class="table-cell">Name</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
@@ -52,6 +54,7 @@
                     <button id="edit-btn-name" class="no-print btn btn-sm edit-button" onclick="enableEditing('name')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
+
             <tr>
                 <th class="table-cell">Length</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
@@ -62,7 +65,6 @@
                 </td>
             </tr>
             
-            <!-- Coordinate Information -->
             <tr>
                 <th class="table-cell">Start Coordinate (Easting)</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
@@ -72,6 +74,7 @@
                     <button id="edit-btn-east_start_coordinate" class="no-print btn btn-sm edit-button" onclick="enableEditing('east_start_coordinate')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
+
             <tr>
                 <th class="table-cell">Start Coordinate (Northing)</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
@@ -81,6 +84,7 @@
                     <button id="edit-btn-north_start_coordinate" class="no-print btn btn-sm edit-button" onclick="enableEditing('north_start_coordinate')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
+
             <tr>
                 <th class="table-cell">End Coordinate (Easting)</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
@@ -90,6 +94,7 @@
                     <button id="edit-btn-east_end_coordinate" class="no-print btn btn-sm edit-button" onclick="enableEditing('east_end_coordinate')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
+
             <tr>
                 <th class="table-cell">End Coordinate (Northing)</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">

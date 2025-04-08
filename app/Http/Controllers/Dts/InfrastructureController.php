@@ -7,7 +7,6 @@ use App\Models\Infrastructure;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreInfrastructureRequest;
-use App\Http\Controllers\Dts\Enum\InfrastructureType;
 use App\Models\District;
 
 class InfrastructureController extends Controller
@@ -74,7 +73,6 @@ class InfrastructureController extends Controller
             ? request()->user()->districts()
             : \App\Models\District::all(),
         ];
-
 
         $html =  view('modules.dts.infrastructures.partials.create', compact('cat'))->render();
 

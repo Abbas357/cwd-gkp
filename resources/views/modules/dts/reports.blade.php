@@ -87,205 +87,152 @@
         <li class="breadcrumb-item active" aria-current="page">Provincial Own Receipts Reports</li>
     </x-slot>
 
-    <div class="wrapper">
-        <div class="card">
-            <div class="card-header bg-light">
-                <h3 class="card-title mb-0">Provincial Own Receipts Reports</h3>
+    <div class="container p-4 p-lg-5 bg-white shadow rounded">
+        <h1 class="display-6 mb-3 fw-bold border-bottom pb-2">ABSTRACT OF {{ '{{ strtoupper(request()->query("type") ?? "Road") }}' }} DAMAGES</h1>
+    
+        <div class="table-responsive">
+            <div class="text-center mb-4">
+                <a href="{{ '{{ request()->fullUrlWithQuery(["type" => "Road"]) }}' }}" class="btn btn-outline-secondary me-2 mb-2 position-relative {{ '{{ request()->query("type") == "Road" || !request()->has("type") == "Road" ? "border-2 bg-light" : "" }}' }}">
+                    Road
+                    @if ('{{ request()->query("type") == "Road" || !request()->has("type") == "Road" }}')
+                    <span class="position-absolute bottom-0 start-50 translate-middle-x">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                        </svg>
+                    </span>
+                    @endif
+                </a>
+                <a href="{{ '{{ request()->fullUrlWithQuery(["type" => "Bridge"]) }}' }}" class="btn btn-outline-primary me-2 mb-2 position-relative {{ '{{ request()->query("type") == "Bridge" ? "border-2" : "" }}' }}">
+                    Bridge
+                    @if ('{{ request()->query("type") == "Bridge" }}')
+                    <span class="position-absolute bottom-0 start-50 translate-middle-x">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                        </svg>
+                    </span>
+                    @endif
+                </a>
+                <a href="{{ '{{ request()->fullUrlWithQuery(["type" => "Culvert"]) }}' }}" class="btn btn-outline-success me-2 mb-2 position-relative {{ '{{ request()->query("type") == "Culvert" ? "border-2" : "" }}' }}">
+                    Culvert
+                    @if ('{{ request()->query("type") == "Culvert" }}')
+                    <span class="position-absolute bottom-0 start-50 translate-middle-x">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                        </svg>
+                    </span>
+                    @endif
+                </a>
             </div>
-            <div class="card-body">
-                <form method="GET" class="filter-section">
-                    <div class="row g-3">
-                        <!-- Date Range Filter -->
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Month Range</label>
-                            <div class="input-group">
-                                <input type="month" name="start_month" class="form-control" value="{{ request('start_month') }}" placeholder="From">
-                                <span class="input-group-text">to</span>
-                                <input type="month" name="end_month" class="form-control" value="{{ request('end_month') }}" placeholder="To">
-                            </div>
-                        </div>
-                        
-                        <!-- District Filter -->
-                        <div class="col-md-3">
-                            <label class="form-label fw-bold">District</label>
-                            <select name="district_id" class="form-select">
-                                <option value="">All Districts</option>
-                                @foreach($districts as $district)
-                                    <option value="{{ $district->id }}" @selected(request('district_id') == $district->id)>
-                                        {{ $district->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <!-- Type Filter -->
-                        <div class="col-md-3">
-                            <label class="form-label fw-bold">Receipt Type</label>
-                            <select name="type" class="form-select">
-                                <option value="">All Types</option>
-                                @foreach($receiptTypes as $type)
-                                    <option value="{{ $type }}" @selected(request('type') == $type)>
-                                        {{ $type }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <!-- DDO Code Filter -->
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">DDO Code</label>
-                            <select name="ddo_code" class="form-select" data-placeholder="Select DDO Code">
-                                <option value="">All DDO Codes</option>
-                                @foreach($ddoCodes as $code)
-                                    <option value="{{ $code }}" @selected(request('ddo_code') == $code)>
-                                        {{ $code }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <!-- User Filter -->
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold" for="load-users">User</label>
-                            <select name="user_id" id="load-users" class="form-select" data-placeholder="Select User">
-                                <option value=""></option>
-                                @foreach(App\Models\User::all() as $user)
-                                    <option value="{{ $user->id }}" @selected($filters['user_id'] == $user->id)>
-                                        {{ $user->currentPosting?->office->name }} - {{ $user->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        
-                        <div class="col-12">
-                            <button type="submit" class="cw-btn">
-                                <i class="bi-filter me-1"></i> Generate Report
-                            </button>
-                            <a href="{{ route('admin.apps.porms.report') }}" class="btn btn-light">
-                                <i class="bi-undo me-1"></i> Reset
-                            </a>
-                        </div>
+            
+            <form method="get" onchange="this.submit()">
+                <div class="row mt-4 mb-4 g-3">
+                    @can('view', App\Models\User::class)
+                    <div class="col-md-4">
+                        <label for="CE" class="form-label">Select Chief Engineer</label>
+                        <select class="form-select" name="CE" id="CE">
+                            @foreach('{{ $users["chiefEngineers"] }}' as $chiefEngineer)
+                            <option value="{{ '{{ $chiefEngineer->id }}' }}">{{ '{{ $chiefEngineer->title }}' }}</option>
+                            @endforeach
+                        </select>
                     </div>
-                </form>
-
-                <div class="table-container">
-                    <div class="d-flex justify-content-between align-items-center px-3 py-2 bg-light">
-                        <h5 class="mb-0">Summary: {{ $receipts->count() }} records found</h5>
-                        <button type="button" id="print-receipts" class="no-print btn btn-light">
-                            <span class="d-flex align-items-center">
-                                <i class="bi-print me-1"></i>
-                                Print
-                            </span>
-                        </button>
-                    </div>
-                    <table class="table table-hover mb-0" id="receipts-report">
-                        <thead>
-                            <tr>
-                                <th class="bg-light">Month</th>
-                                <th class="bg-light">District</th>
-                                <th class="bg-light">DDO Code</th>
-                                <th class="bg-light">Type</th>
-                                <th class="bg-light">Amount (PKR)</th>
-                                <th class="bg-light">Submitted By</th>
-                                <th class="bg-light">Remarks</th>
-                                <th class="bg-light no-print">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($receipts as $receipt)
-                                <tr>
-                                    <td>
-                                        {{ \Carbon\Carbon::parse($receipt->month)->format('F Y') }}
-                                    </td>
-                                    <td>
-                                        {{ $receipt->district->name }}
-                                    </td>
-                                    <td>
-                                        <span class="fw-medium">{{ $receipt->ddo_code }}</span>
-                                    </td>
-                                    <td>
-                                        <span class="status-badge bg-info text-white">
-                                            {{ $receipt->type }}
-                                        </span>
-                                    </td>
-                                    <td class="amount-cell">
-                                        {{ number_format($receipt->amount, 2) }}
-                                    </td>
-                                    <td>
-                                        {{ $receipt->user->name ?? 'N/A' }}
-                                    </td>
-                                    <td>
-                                        <small class="text-muted">{{ $receipt->remarks ?? 'No remarks' }}</small>
-                                    </td>
-                                    <td class="no-print">
-                                        <a href="{{ route('admin.apps.porms.show', $receipt) }}" class="btn btn-sm btn-light">
-                                            <i class="bi-eye"></
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="8" class="text-center py-4">
-                                        <div class="text-muted">
-                                            <i class="fas fa-inbox fa-2x mb-2"></i>
-                                            <p class="mb-0">No receipts found matching the criteria</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforelse
-                            @if($receipts->count() > 0)
-                                <tr class="total-row">
-                                    <td colspan="4" class="text-end">Total Amount:</td>
-                                    <td class="amount-cell">{{ number_format($receipts->sum('amount'), 2) }}</td>
-                                    <td colspan="3"></td>
-                                </tr>
-                            @endif
-                        </tbody>
-                    </table>
+                    @endcan
                 </div>
-                
-                <!-- Summary Statistics Cards -->
-                @if($receipts->count() > 0)
-                <div class="row g-3 mb-4">
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Total Receipts</h5>
-                                <h2 class="card-text text-primary">PKR {{ number_format($receipts->sum('amount'), 2) }}</h2>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">By Type</h5>
-                                <div class="mt-3">
-                                    @foreach($receiptSummaryByType as $type => $amount)
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span>{{ $type }}:</span>
-                                        <span class="fw-bold">PKR {{ number_format($amount, 2) }}</span>
-                                    </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">By District</h5>
-                                <div class="mt-3">
-                                    @foreach($receiptSummaryByDistrict as $district => $amount)
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span>{{ $district }}:</span>
-                                        <span class="fw-bold">PKR {{ number_format($amount, 2) }}</span>
-                                    </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endif
+            </form>
+    
+            <div class="d-flex justify-content-end mb-3">
+                <button type="button" id="print-report" class="btn btn-outline-secondary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer me-2" viewBox="0 0 16 16">
+                        <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                        <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
+                    </svg>
+                    Print Report
+                </button>
             </div>
+    
+            <table id="assessment-report" class="table table-bordered table-hover">
+                <caption class="fs-4 fw-semibold bg-light">{{ '{{ !empty(request()->query("CE")) ? \App\Models\User::findOrFail(request()->query("CE"))->title : "" }}' }}</caption>
+                <caption class="fs-4 fw-semibold bg-light">{{ '{{ !empty(request()->query("SE")) ? \App\Models\User::findOrFail(request()->query("SE"))->title : "" }}' }}</caption>
+                <caption class="fs-4 fw-semibold bg-light">{{ '{{ !empty(request()->query("XEN")) ? \App\Models\User::findOrFail(request()->query("XEN"))->title : "" }}' }}</caption>
+                <thead>
+                    <tr class="bg-success bg-opacity-25 text-uppercase fw-bold">
+                        <th scope="col" class="text-center align-middle" rowspan="2">S#</th>
+                        @if('{{ empty(request()->query("CE")) && auth()->user()->designation !== "CE" }}')
+                        <th scope="col" class="text-center align-middle" rowspan="2">Chief Engineer</th>
+                        @endif
+                        <th scope="col" class="text-center align-middle" rowspan="2">District</th>
+                        <th scope="colgroup" class="text-center align-middle" colspan="3">
+                            Damaged {{ '{{ request()->query("type") ?? "Road" }}' }}s {{ '{{ request()->query("type") == "Road" || !request()->has("type") ? "(KM)" : "(Meter)" }}' }}
+                        </th>
+                        <th scope="colgroup" class="text-center align-middle" colspan="3">
+                            {{ '{{ request()->query("type") ?? "Road" }}' }} Status
+                        </th>
+                        <th scope="colgroup" class="text-center align-middle" colspan="2">
+                            Approximate Cost (Millions)
+                        </th>
+                    </tr>
+                    <tr class="bg-success bg-opacity-10 text-uppercase fw-bold">
+                        <th scope="col" class="text-center align-middle">
+                            Effected {{ '{{ request()->query("type") ?? "Road" }}' }}s
+                        </th>
+                        <th scope="col" class="text-center align-middle">
+                            Total Length
+                        </th>
+                        <th scope="col" class="text-center align-middle">
+                            Damage Length
+                        </th>
+                        <th scope="col" class="text-center align-middle">
+                            Fully Restored
+                        </th>
+                        <th scope="col" class="text-center align-middle">
+                            Partially Restored
+                        </th>
+                        <th scope="col" class="text-center align-middle">
+                            Not Restored
+                        </th>
+                        <th scope="col" class="text-center align-middle">
+                            Restoration
+                        </th>
+                        <th scope="col" class="text-center align-middle">
+                            Rehabilitation
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php $serial = 1; @endphp
+                    @foreach ('{{ $districts }}' as $district)
+                    <tr class="align-middle">
+                        <td class="text-center fw-medium">{{ '{{ $serial++ }}' }}</td>
+                        @if('{{ empty(request()->query("CE")) && auth()->user()->designation !== "CE" }}')
+                        <td class="text-center fw-medium">{{ '{{ $district->chiefEngineer }}' }}</td>
+                        @endif
+                        <td class="text-center fw-medium">{{ '{{ $district->name }}' }}</td>
+                        <td class="text-center fw-medium">{{ '{{ $district->damaged_infrastructure_count }}' }}</td>
+                        <td class="text-center fw-medium">{{ '{{ $district->damaged_infrastructure_total_count }}' }}</td>
+                        <td class="text-center fw-medium">{{ '{{ $district->damaged_infrastructure_sum }}' }}</td>
+                        <td class="text-center fw-medium">{{ '{{ $district->fully_restored }}' }}</td>
+                        <td class="text-center fw-medium">{{ '{{ $district->partially_restored }}' }}</td>
+                        <td class="text-center fw-medium">{{ '{{ $district->not_restored }}' }}</td>
+                        <td class="text-center fw-medium">{{ '{{ $district->restoration }}' }}</td>
+                        <td class="text-center fw-medium">{{ '{{ $district->rehabilitation }}' }}</td>
+                    </tr>
+                    @endforeach
+                    <tr class="bg-light fw-bold">
+                        <th class="text-center" rowspan="2">Total</th>
+                        @if('{{ empty(request()->query("CE")) && auth()->user()->designation !== "CE" }}')
+                        <th class="text-center"></th>
+                        @endif
+                        <th class="text-center"></th>
+                        <th class="text-center">{{ '{{ $total["totalDamagedInfrastructureCount"] }}' }}</th>
+                        <th class="text-center">{{ '{{ $total["totalDamagedInfrastructureTotalCount"] }}' }}</th>
+                        <th class="text-center">{{ '{{ $total["totalDamagedInfrastructureSum"] }}' }}</th>
+                        <th class="text-center">{{ '{{ $total["totalFullyRestored"] }}' }}</th>
+                        <th class="text-center">{{ '{{ $total["totalPartiallyRestored"] }}' }}</th>
+                        <th class="text-center">{{ '{{ $total["totalNotRestored"] }}' }}</th>
+                        <th class="text-center">{{ '{{ $total["totalRestorationCost"] }}' }}</th>
+                        <th class="text-center">{{ '{{ $total["totalRehabilitationCost"] }}' }}</th>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     @push('script')

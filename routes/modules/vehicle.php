@@ -26,5 +26,4 @@ Route::group(['prefix' => 'vehicles', 'as' => 'vehicles.', 'middleware' => ['can
         Route::post('', [VehicleAllotmentController::class, 'store'])->name('store');
         Route::delete('/{allotment}', [VehicleAllotmentController::class, 'delete'])->name('delete');
     });
-    
 });

@@ -465,7 +465,6 @@ class User extends Authenticatable implements HasMedia
         if (!$this->currentOffice) {
             return false;
         }
-
         // Get district ID
         $districtId = $district instanceof District ? $district->id : $district;
 

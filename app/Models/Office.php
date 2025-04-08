@@ -108,7 +108,7 @@ class Office extends Model
     }
 
     public function getAllDescendants()
-    {
+    {        
         $descendants = collect();
 
         $children = $this->children;
@@ -159,8 +159,8 @@ class Office extends Model
     }
 
     // Get all districts managed by this office (including its children's districts)
-    public function getAllManagedDistricts()
-    {
+    public function getAllManagedDistricts() {
+        
         $managedDistricts = collect();
         
         // Add this office's district if it has one
@@ -170,7 +170,7 @@ class Office extends Model
                 $managedDistricts->push($district);
             }
         }
-         
+        
         // Add districts from child offices
         $childOffices = $this->getAllDescendants();
         foreach ($childOffices as $childOffice) {

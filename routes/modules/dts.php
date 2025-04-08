@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dts\DamageController;
 use App\Http\Controllers\Dts\InfrastructureController;
 use App\Http\Controllers\Dts\HomeController;
-
+use App\Http\Controllers\Dts\ReportController;
 
 Route::prefix('dts')->as('dts.')->middleware(['can:manage dts'])->group(function () {
 
@@ -30,13 +30,13 @@ Route::prefix('dts')->as('dts.')->middleware(['can:manage dts'])->group(function
     Route::prefix('damages')->as('damages.')->group(function () {
         Route::get('/', [DamageController::class, 'index'])->name('index')->can('viewAny', App\Models\Damage::class);
         Route::get('/create', [DamageController::class, 'create'])->name('create')->can('create', App\Models\Damage::class);
+        Route::get('/report', [ReportController::class, 'index'])->name('reports')->can('view', App\Models\Damage::class);
         Route::post('/', [DamageController::class, 'store'])->name('store')->can('create', App\Models\Damage::class);
         Route::get('/{damage}', [DamageController::class, 'show'])->name('show')->can('view', 'damage');
         Route::get('/get/{damage}', [DamageController::class, 'showDetail'])->name('detail')->can('view', 'damage');
         Route::patch('/update/field/{damage}', [DamageController::class, 'updateField'])->name('updateField')->can('update', 'damage');
         Route::delete('/{damage}', [DamageController::class, 'destroy'])->name('destroy')->can('delete', 'damage');
     });
-    
 });
 
 // Route::prefix('dts')->as('dts.')->group(function () {
@@ -64,4 +64,3 @@ Route::prefix('dts')->as('dts.')->middleware(['can:manage dts'])->group(function
 //     });
     
 // });
-

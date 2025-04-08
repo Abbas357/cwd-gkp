@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\User;
 use App\Models\Office;
 use App\Models\District;
-use App\Models\Hierarchy;
 use App\Models\Designation;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\Activitylog\LogOptions;
