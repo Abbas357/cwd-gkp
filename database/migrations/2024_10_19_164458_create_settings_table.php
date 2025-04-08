@@ -10,10 +10,10 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('module')->default('main');
-            $table->string('key');
+            $table->string('module', 100)->default('main');
+            $table->string('key', 100);
+            $table->string('type', 50)->default('string');
             $table->longText('value')->nullable();
-            $table->string('type')->default('string');
             $table->text('description')->nullable();
             $table->string('group')->nullable();
             $table->integer('order')->default(0);
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true); 
             $table->timestamps();
             
-            $table->index(['module', 'key', 'type']);
+            $table->index(['module', 'key', 'type'], 'settings_index');
         });
         
     }
