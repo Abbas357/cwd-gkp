@@ -31,7 +31,6 @@ class ReportController extends Controller
 
         $districts->each(function ($district) use (&$type, &$totalDamagedInfrastructureCount, &$totalDamagedInfrastructureSum, &$totalDamagedInfrastructureTotalCount, &$totalFullyRestored, &$totalPartiallyRestored, &$totalNotRestored, &$totalRestorationCost, &$totalRehabilitationCost) {
             $district->chiefEngineer = $district->office->getAncestors()->where('type', 'Regional')->first();
-            // dd($district->chiefEngineer);
 
             $infraIds = $district->infrastructures
                 ->where('type', $type)

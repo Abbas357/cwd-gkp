@@ -100,7 +100,14 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label" for="load-users">User / Office</label>
-                        <select name="user" id="load-users" class="form-select" data-placeholder="Select User / Office"></select>
+                        <select name="user_id" id="load-users" class="form-select" data-placeholder="Select User / Office">
+                            <option value="">Select Officer</option>
+                            @foreach(App\Models\User::all() as $user)
+                                <option value="{{ $user->id }}" @selected((request()->query('user_id')?? null) == $user->id)>
+                                    {{ $user?->currentOffice?->name ?? 'Office Not Assigned' }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                     
                     <div class="col-12">
