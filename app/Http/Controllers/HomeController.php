@@ -180,7 +180,6 @@ class HomeController extends Controller
     public function masterAdmin()
     {
         // dd(request()->user()->getManagedDistricts());
-        dd(\App\Models\User::find(24));
         return view('misc.home');
     }
 
