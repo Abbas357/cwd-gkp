@@ -23,15 +23,30 @@
         @enderror
     </div>
 
-    <div class="col-md-12 mb-3">
+    @if(request()->user()->districts()->count() > 1)
+        <div class="col-md-6 mb-3">
+            <label for="district_id">Districts</label>
+            <select class="form-control" id="district_id" name="district_id" required>
+                <option value="">Select District</option>
+                @foreach($cat['districts'] as $district)
+                <option value="{{ $district->id }}">{{ $district->name }}</option>
+                @endforeach
+            </select>
+            @error('district_id')
+            <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+    @endif
+    
+    <div class="col-md-{{ request()->user()->districts()->count() > 1 ? '6' : '12' }} mb-3">
         <label for="load-infrastructures">Infrastructures</label>
-        <select class="form-select form-select-md" id="load-infrastructures" name="infrastructure_id">
-        </select>
+        <select class="form-select form-select-md" id="load-infrastructures" name="infrastructure_id"></select>
         <small class="form-text text-muted">
             <a href="{{ route('admin.apps.dts.infrastructures.index', ['create' => 'true', 'popup' => 'true']) }}" 
                onclick="openPopup(event, this.href)">Create</a> new if not available
         </small>        
     </div>
+
 </div>
 
 <!-- Step 2: Damage Information -->
@@ -180,9 +195,14 @@
 <script>
 
     $('#type').on('change', function() {
-        const selectedType = $(this).val();
-        
         $('#load-infrastructures').val(null).empty();
+        
+        const selectedType = $(this).val();
+        const params = {};
+        
+        if (selectedType) {
+            params.type = selectedType;
+        }
         
         select2Ajax(
             '#load-infrastructures',
@@ -190,9 +210,7 @@
             {
                 placeholder: "Select Infrastructure",
                 dropdownParent: $('#load-infrastructures').closest('.modal'),
-                params: {
-                    type: selectedType
-                }
+                params: params
             }
         );
     });

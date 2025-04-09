@@ -47,6 +47,54 @@ class InfrastructureController extends Controller
     
     public function infrastructures(Request $request)
     {
+        $conditions = [];
+        $userDistricts = request()->user()->districts();
+        
+        if ($request->has('type') && !empty($request->type)) {
+            $conditions['type'] = $request->type;
+        }
+        
+        if ($userDistricts->count() > 0) {
+            $districtIds = $userDistricts->pluck('id')->toArray();
+            
+            $query = Infrastructure::query();
+            
+            if (!empty($conditions['type'])) {
+                $query->where('type', $conditions['type']);
+            }
+            
+            $query->whereIn('district_id', $districtIds);
+            
+            if ($request->q) {
+                $query->where(function($q) use ($request) {
+                    $q->orWhere('name', 'like', "%{$request->q}%");
+                    $q->orWhere('type', 'like', "%{$request->q}%");
+                    $q->orWhereHas('district', function($subQuery) use ($request) {
+                        $subQuery->where('name', 'like', "%{$request->q}%");
+                    });
+                });
+            }
+            
+            $query->with(['district']);
+            
+            $query->orderBy('name', 'asc');
+            
+            $results = $query->paginate(10);
+            
+            return response()->json([
+                'results' => collect($results->items())->map(function($infrastructure) {
+                    return [
+                        'id' => $infrastructure->id,
+                        'text' => $infrastructure->name . 
+                            ($infrastructure->district ? ' [' . $infrastructure->district->name . ']' : '')
+                    ];
+                }),
+                'pagination' => [
+                    'more' => $results->hasMorePages()
+                ]
+            ]);
+        }
+        
         return $this->getApiResults(
             $request, 
             Infrastructure::class, 
@@ -61,13 +109,14 @@ class InfrastructureController extends Controller
                     'district' => ['name']
                 ],
                 'orderBy' => 'name',
-                'conditions' => $request->has('type') && !empty($request->type) ? ['type' => $request->type] : []
+                'conditions' => $conditions
             ]
         );
     }
 
     public function create()
     {
+        $userDistricts = request()->user()->districts();
         $cat = [
             'districts' => request()->user()->districts()->count() > 0
             ? request()->user()->districts()
@@ -94,6 +143,18 @@ class InfrastructureController extends Controller
         foreach ($inputs as $input) {
             $infrastructure->$input = $request->$input;
         }
+        $userDistricts = request()->user()->districts();
+    
+        if ($request->filled('district_id')) {
+            $infrastructure->district_id = $request->district_id;
+        } else {
+            if ($userDistricts->count() === 1) {
+                $infrastructure->district_id = $userDistricts->first()->id;
+            } else {
+                return response()->json(['error' => 'Please select a district']);
+            }
+        }
+        
         if ($infrastructure->save()) {
             return response()->json(['success' => $infrastructure->type . ' successfully added']);
         } else {

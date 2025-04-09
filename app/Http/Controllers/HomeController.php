@@ -179,7 +179,6 @@ class HomeController extends Controller
 
     public function masterAdmin()
     {
-        // dd(request()->user()->getManagedDistricts());
         return view('misc.home');
     }
 

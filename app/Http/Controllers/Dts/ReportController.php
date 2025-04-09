@@ -29,10 +29,9 @@ class ReportController extends Controller
         $totalRestorationCost = 0;
         $totalRehabilitationCost = 0;
 
-        // Calculate values and update totals
         $districts->each(function ($district) use (&$type, &$totalDamagedInfrastructureCount, &$totalDamagedInfrastructureSum, &$totalDamagedInfrastructureTotalCount, &$totalFullyRestored, &$totalPartiallyRestored, &$totalNotRestored, &$totalRestorationCost, &$totalRehabilitationCost) {
             $district->chiefEngineer = $district->office->getAncestors()->where('type', 'Regional')->first();
-            dd($district->chiefEngineer->name);
+            // dd($district->chiefEngineer);
 
             $infraIds = $district->infrastructures
                 ->where('type', $type)
@@ -96,6 +95,6 @@ class ReportController extends Controller
             'totalRestorationCost' => $totalRestorationCost,
             'totalRehabilitationCost' => $totalRehabilitationCost,
         ];
-        return view('reports.assessment', compact('districts', 'total'));
+        return view('modules.dts.damages.report', compact('districts', 'total'));
     }
 }

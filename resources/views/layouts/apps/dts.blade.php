@@ -26,6 +26,24 @@
     </li>
     @endcan
 
+    @canany(['view damage report'])
+    <li>
+        <a href="javascript:;" class="has-arrow">
+            <div class="parent-icon"><i class="bi-flag text-primary"></i></div>
+            <div class="menu-title">Reports</div>
+        </a>
+        <ul class="p-2 menu-items">
+            @can('view damage report')
+            <li>
+                <a href="{{ route('admin.apps.dts.damages.report') }}">
+                    <i class="bi-bar-chart-line text-info"></i>Damage Report
+                </a>
+            </li>
+            @endcan
+        </ul>
+    </li>
+    @endcanany
+
     @can('view dts settings')
     <li>
         <a href="{{ route('admin.apps.dts.settings.index') }}">

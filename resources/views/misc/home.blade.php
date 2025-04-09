@@ -123,8 +123,12 @@
             border-color: #8d0fe0;
         }
 
+        .accent-black::before {
+            border-color: #000000;
+        }
+
         .accent-red::before {
-            border-color: #ff000d;
+            border-color: #ff0000;
         }
 
         .accent-blue::before {
@@ -155,8 +159,12 @@
             box-shadow: 0 15px 30px rgba(141, 15, 224, 0.2);
         }
 
+        .accent-black:hover {
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
         .accent-red:hover {
-            box-shadow: 0 15px 30px rgba(255, 0, 13, 0.2);
+            box-shadow: 0 15px 30px rgba(255, 0, 0, 0.2);
         }
 
         .accent-blue:hover {
@@ -191,8 +199,12 @@
             box-shadow: 0 15px 30px rgba(141, 15, 224, 0.4);
         }
 
+        [data-bs-theme=dark] .accent-black:hover {
+            box-shadow: 0 15px 30px rgba(0, 0, 13, 0.4);
+        }
+
         [data-bs-theme=dark] .accent-red:hover {
-            box-shadow: 0 15px 30px rgba(255, 0, 13, 0.4);
+            box-shadow: 0 15px 30px rgba(255, 0, 0, 0.4);
         }
 
         [data-bs-theme=dark] .accent-blue:hover {
@@ -281,8 +293,8 @@
             @endcan
 
             @can('manage vehicles')
-            <a href="{{ route('admin.apps.vehicles.index') }}" class="app-tile accent-red">
-                <i class="bi-bus-front" style="color: #ff000d"></i>
+            <a href="{{ route('admin.apps.vehicles.index') }}" class="app-tile accent-black">
+                <i class="bi-bus-front" style="color: #000000"></i>
                 <p>Vehicle Mgt.</p>
             </a>
             @endcan
@@ -319,6 +331,13 @@
             <a href="{{ route('admin.apps.machineries.index') }}" class="app-tile accent-brown">
                 <i class="bi-building-gear" style="color: #d5641c"></i>
                 <p>Machinery Mgt.</p>
+            </a>
+            @endcan
+
+            @can('manage dts')
+            <a href="{{ route('admin.apps.dts.infrastructures.index') }}" class="app-tile accent-red">
+                <i class="bi-cloud-drizzle" style="color: #ff0000"></i>
+                <p>Damage Tracker</p>
             </a>
             @endcan
         </div>

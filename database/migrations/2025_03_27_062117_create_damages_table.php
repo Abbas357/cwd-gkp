@@ -29,6 +29,7 @@ return new class extends Migration
             $table->decimal('approximate_rehabilitation_cost')->nullable();
             $table->enum('road_status', ['Partially restored', 'Fully restored', 'Not restored'])->default('Partially restored');
             $table->text('remarks')->nullable();
+            $table->unsignedBigInteger('district_id')->nullable();
             $table->unsignedBigInteger('posting_id')->nullable();
             $table->timestamps();
         });
@@ -46,7 +47,6 @@ return new class extends Migration
             $table->decimal('approximate_rehabilitation_cost')->nullable();
             $table->string('road_status');
             $table->text('remarks')->nullable();
-            $table->unsignedBigInteger('posting_id')->nullable();
             $table->timestamps();
         });
     }

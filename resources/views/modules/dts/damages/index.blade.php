@@ -15,6 +15,7 @@
                     <th>Type</th>
                     <th>Infrastructure Name</th>
                     <th>Office</th>
+                    <th>District</th>
                     <th>Damaged Length</th>
                     <th>Damage East Start</th>
                     <th>Damage North Start</th>
@@ -61,6 +62,10 @@
                     },
                     {
                         data: 'office',
+                        searchBuilderType: "string"
+                    },
+                    {
+                        data: 'district',
                         searchBuilderType: "string"
                     },
                     {

@@ -38,6 +38,9 @@ class DamageController extends Controller
                 ->addColumn('office', function ($row) {
                     return $row->posting->office->name ?? '-';
                 })
+                ->addColumn('district', function ($row) {
+                    return $row->district->name ?? '-';
+                })
                 ->editColumn('report_date', function ($row) {
                     return $row->report_date->format('j, F Y');
                 })
@@ -67,7 +70,13 @@ class DamageController extends Controller
 
     public function create()
     {
-        $html =  view('modules.dts.damages.partials.create')->render();
+        $cat = [
+            'districts' => request()->user()->districts()->count() > 0
+            ? request()->user()->districts()
+            : \App\Models\District::all(),
+        ];
+
+        $html =  view('modules.dts.damages.partials.create', compact('cat'))->render();
 
         return response()->json([
             'success' => true,
@@ -92,7 +101,7 @@ class DamageController extends Controller
             'approximate_restoration_cost',
             'approximate_rehabilitation_cost',
             'road_status',
-            'remarks'
+            'remarks',
         ];
 
         $damage = new Damage();
@@ -103,6 +112,18 @@ class DamageController extends Controller
         $damage->session = setting('session', 'dts');
         $damage->damage_nature = json_encode($request->damage_nature);
         $damage->posting_id = Auth::user()->currentPosting->id;
+
+        $userDistricts = request()->user()->districts();
+        
+        if ($request->filled('district_id')) {
+            $damage->district_id = $request->district_id;
+        } else {
+            if ($userDistricts->count() === 1) {
+                $damage->district_id = $userDistricts->first()->id;
+            } else {
+                return response()->json(['error' => 'Please select a district']);
+            }
+        }
 
         if ($damage->save()) {
             return response()->json(['success' => 'Damage added successfully']);
