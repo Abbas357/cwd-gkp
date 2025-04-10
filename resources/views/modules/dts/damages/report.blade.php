@@ -74,6 +74,16 @@
             background-color: #f8f9fa;
             font-weight: 600;
         }
+        .officer-cell {
+            background-color: #f8f9fa;
+        }
+        .officer-name {
+            font-weight: 600;
+        }
+        .officer-office {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
     </style>
     @endpush
     
@@ -104,7 +114,7 @@
                             <option value="">Select Officer</option>
                             @foreach(App\Models\User::all() as $user)
                                 <option value="{{ $user->id }}" @selected((request()->query('user_id')?? null) == $user->id)>
-                                    {{ $user?->currentOffice?->name ?? 'Office Not Assigned' }}
+                                    {{ $user->name }} ({{ $user?->currentDesignation?->name ?? 'No Designation' }} - {{ $user?->currentOffice?->name ?? 'Office Not Assigned' }})
                                 </option>
                             @endforeach
                         </select>
@@ -138,8 +148,8 @@
                 <thead>
                     <tr class="bg-success text-uppercase fw-bold">
                         <th scope="col" class="text-center align-middle" rowspan="2">S#</th>
-                        @if(empty(request()->query("CE")) && auth()->user()->designation !== "CE")
-                        <th scope="col" class="text-center align-middle" rowspan="2">Chief Engineer</th>
+                        @if(isset($subordinateDesignation))
+                        <th scope="col" class="text-center align-middle" rowspan="2">{{ $subordinateDesignation }}</th>
                         @endif
                         <th scope="col" class="text-center align-middle" rowspan="2">District</th>
                         <th scope="colgroup" class="text-center align-middle" colspan="3">
@@ -181,26 +191,39 @@
                 </thead>
                 <tbody>
                     @php $serial = 1; @endphp
-                    @foreach($districts as $district)
-                    <tr class="align-middle">
-                        <td class="text-center fw-medium">{{ $serial++ }}</td>
-                        @if(empty(request()->query("CE")) && auth()->user()->designation !== "CE")
-                        <td class="text-center fw-medium">{{ $district->chiefEngineer->name ?? 'N/A' }}</td>
-                        @endif
-                        <td class="text-center fw-medium">{{ $district->name }}</td>
-                        <td class="text-center fw-medium">{{ $district->damaged_infrastructure_count }}</td>
-                        <td class="text-center fw-medium">{{ $district->damaged_infrastructure_total_count }}</td>
-                        <td class="text-center fw-medium">{{ $district->damaged_infrastructure_sum }}</td>
-                        <td class="text-center fw-medium">{{ $district->fully_restored }}</td>
-                        <td class="text-center fw-medium">{{ $district->partially_restored }}</td>
-                        <td class="text-center fw-medium">{{ $district->not_restored }}</td>
-                        <td class="text-center fw-medium">{{ $district->restoration }}</td>
-                        <td class="text-center fw-medium">{{ $district->rehabilitation }}</td>
-                    </tr>
+                    @foreach($subordinatesWithDistricts as $index => $item)
+                        @php 
+                            $subordinate = $item['subordinate'];
+                            $districts = $item['districts'];
+                            $districtCount = $item['district_count'];
+                        @endphp
+                        
+                        @foreach($districts as $districtIndex => $district)
+                            <tr class="align-middle">
+                                @if($districtIndex === 0)
+                                    <td class="text-center fw-medium" rowspan="{{ $districtCount }}">{{ $serial++ }}</td>
+                                    @if(isset($subordinateDesignation))
+                                    <td class="text-center fw-medium officer-cell" rowspan="{{ $districtCount }}">
+                                        <div class="officer-name">{{ $subordinate->name }}</div>
+                                        <div class="officer-office">{{ $subordinate->currentOffice ? $subordinate->currentOffice->name : 'No Office' }}</div>
+                                    </td>
+                                    @endif
+                                @endif
+                                <td class="text-center fw-medium">{{ $district->name }}</td>
+                                <td class="text-center fw-medium">{{ $district->damaged_infrastructure_count }}</td>
+                                <td class="text-center fw-medium">{{ $district->damaged_infrastructure_total_count }}</td>
+                                <td class="text-center fw-medium">{{ $district->damaged_infrastructure_sum }}</td>
+                                <td class="text-center fw-medium">{{ $district->fully_restored }}</td>
+                                <td class="text-center fw-medium">{{ $district->partially_restored }}</td>
+                                <td class="text-center fw-medium">{{ $district->not_restored }}</td>
+                                <td class="text-center fw-medium">{{ $district->restoration }}</td>
+                                <td class="text-center fw-medium">{{ $district->rehabilitation }}</td>
+                            </tr>
+                        @endforeach
                     @endforeach
                     <tr class="bg-light fw-bold">
                         <th class="text-center" rowspan="2">Total</th>
-                        @if(empty(request()->query("CE")) && auth()->user()->designation !== "CE")
+                        @if(isset($subordinateDesignation))
                         <th class="text-center"></th>
                         @endif
                         <th class="text-center"></th>

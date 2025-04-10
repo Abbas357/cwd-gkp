@@ -379,6 +379,36 @@ class User extends Authenticatable implements HasMedia
         })->get();
     }
 
+    public function getDirectSubordinates()
+    {
+        // User must have a current posting and office
+        if (!$this->currentPosting || !$this->currentOffice) {
+            return collect();
+        }
+
+        $office = $this->currentOffice;
+        $directSubordinates = collect();
+        
+        // Filter child offices to only include those with managed districts
+        $childOfficesWithDistricts = $office->children->filter(function($childOffice) {
+            // dd($childOffice->getAllManagedDistricts());
+            return $childOffice->getAllManagedDistricts()->isNotEmpty();
+        });
+        
+        // Get IDs of these filtered child offices
+        $childOfficeIds = $childOfficesWithDistricts->pluck('id')->toArray();
+        
+        // Get users in direct child offices that have districts
+        $usersInChildOffices = User::whereHas('currentPosting', function ($query) use ($childOfficeIds) {
+            $query->whereIn('office_id', $childOfficeIds)
+                ->where('is_current', true);
+        })->get();
+        
+        $directSubordinates = $directSubordinates->merge($usersInChildOffices);
+        
+        return $directSubordinates->unique('id');
+    }
+
     public function getEntireTeam()
     {
         // First get direct subordinates

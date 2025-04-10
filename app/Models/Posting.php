@@ -60,6 +60,11 @@ class Posting extends Model implements HasMedia
         return $this->belongsTo(Designation::class);
     }
 
+    public function damages()
+    {
+        return $this->hasMany(Damage::class);
+    }
+
     public function district()
     {
         return $this->hasOneThrough(
