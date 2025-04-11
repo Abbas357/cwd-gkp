@@ -72,4 +72,49 @@ class Damage extends Model implements HasMedia
     {
         return $this->hasMany(DamageLog::class, 'damage_id')->orderByDesc('created_at');
     }
+
+    public function user()
+    {
+        return $this->hasOneThrough(
+            User::class,
+            Posting::class,
+            'id', // Foreign key on Posting table
+            'id', // Foreign key on User table
+            'posting_id', // Local key on Damage table
+            'user_id' // Local key on Posting table
+        );
+    }
+
+    public function office()
+    {
+        return $this->hasOneThrough(
+            Office::class,
+            Posting::class,
+            'id', // Foreign key on Posting table
+            'id', // Foreign key on Office table
+            'posting_id', // Local key on Damage table
+            'office_id' // Local key on Posting table
+        );
+    }
+
+    public function scopeByOfficer($query, $userId)
+    {
+        return $query->whereHas('posting', function($q) use ($userId) {
+            $q->where('user_id', $userId);
+        });
+    }
+
+    public function scopeByOffice($query, $officeId)
+    {
+        return $query->whereHas('posting', function($q) use ($officeId) {
+            $q->where('office_id', $officeId);
+        });
+    }
+
+    public function scopeByInfrastructureType($query, $type)
+    {
+        return $query->whereHas('infrastructure', function($q) use ($type) {
+            $q->where('type', $type);
+        });
+    }
 }

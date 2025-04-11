@@ -84,6 +84,20 @@
             font-size: 0.85rem;
             color: #6c757d;
         }
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .report-title {
+            display: flex;
+            flex-direction: column;
+        }
+        .report-metadata {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
     </style>
     @endpush
     
@@ -92,61 +106,71 @@
     </x-slot>
     
     <div class="container py-2 px-1 rounded">
-        <h3 class="fw-bold border-bottom pb-2">ABSTRACT OF {{ strtoupper(request()->query("type") ?? "Road") }} DAMAGES</h3>
+        <div class="report-header">
+            <div class="report-title">
+                <h3 class="fw-bold border-bottom pb-2">
+                    DAMAGE ASSESSMENT REPORT
+                </h3>
+                <div class="report-metadata">
+                    <div><strong>Report Date:</strong> {{ now()->format('F d, Y') }}</div>
+                    <div><strong>Officer:</strong> {{ $selectedUser->name }} ({{ $selectedUser->currentDesignation->name ?? 'No Designation' }})</div>
+                    <div><strong>Office:</strong> {{ $selectedUser->currentOffice->name ?? 'No Office Assigned' }}</div>
+                </div>
+            </div>
+        </div>
     
-        <div class="table-responsive">
-            
-            <form method="get">
-                <div class="row">
-                    <div class="col-md-6">
-                        <label class="form-label" id="type">Select Type</label>
-                        <select name="type" id="type" class="form-control" placeholder="Select Type">
-                            @foreach(setting('infrastructure_type', 'dts') as $infrastructure_type)
-                                <option value="{{ $infrastructure_type }}" {{ request()->query('type') == $infrastructure_type ? 'selected' : '' }}>
-                                    {{ $infrastructure_type }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label" for="load-users">User / Office</label>
-                        <select name="user_id" id="load-users" class="form-select" data-placeholder="Select User / Office">
-                            <option value="">Select Officer</option>
-                            @foreach(App\Models\User::all() as $user)
-                                <option value="{{ $user->id }}" @selected((request()->query('user_id')?? null) == $user->id)>
-                                    {{ $user->name }} ({{ $user?->currentDesignation?->name ?? 'No Designation' }} - {{ $user?->currentOffice?->name ?? 'Office Not Assigned' }})
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    
-                    <div class="col-12">
-                        <hr class="">
-                        <div class="action-buttons">
-                            <button type="submit" class="cw-btn">
-                                <i class="bi-filter me-2"></i> GENERATE REPORT
-                            </button>
-                            <a href="{{ route('admin.apps.dts.damages.report') }}" class="btn btn-sm px-3 border fs-6 py-1 btn-light">
-                                <i class="bi-arrow-counterclockwise me-2"></i> RESET FILTERS
-                            </a>
-                        </div>
+        <div class="row mb-4 no-print">
+            <div class="col-md-12">
+                <div class="card filter-section">
+                    <div class="card-body">
+                        <form method="get" class="row">
+                            <div class="col-md-5">
+                                <label class="form-label" for="type">Infrastructure Type</label>
+                                <select name="type" id="type" class="form-control" placeholder="Select Type">
+                                    @foreach(setting('infrastructure_type', 'dts', ['Road', 'Bridge', 'Culvert']) as $infrastructure_type)
+                                        <option value="{{ $infrastructure_type }}" {{ request()->query('type') == $infrastructure_type ? 'selected' : '' }}>
+                                            {{ $infrastructure_type }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label" for="load-users">Reporting Officer</label>
+                                <select name="user_id" id="load-users" class="form-select" data-placeholder="Select Officer">
+                                    <option value="">Select Officer</option>
+                                    @foreach(App\Models\User::all() as $user)
+                                        <option value="{{ $user->id }}" @selected((request()->query('user_id')?? null) == $user->id)>
+                                            {{ $user->name }} ({{ $user->currentDesignation?->name ?? 'No Designation' }} - {{ $user->currentOffice?->name ?? 'Office Not Assigned' }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <div class="action-buttons">
+                                    <button type="submit" class="cw-btn">
+                                        <i class="bi-filter me-2"></i> GENERATE
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </form>
-
-            <div class="d-flex justify-content-end mb-3">
-                <button type="button" id="print-report" class="btn btn-outline-secondary">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer me-2" viewBox="0 0 16 16">
-                        <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
-                        <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
-                    </svg>
-                    Print Report
-                </button>
             </div>
+        </div>
+
+        <div class="d-flex justify-content-end mb-3 no-print">
+            <a href="{{ route('admin.apps.dts.damages.report') }}" class="btn btn-sm px-3 border fs-6 py-1 btn-light me-2">
+                <i class="bi-arrow-counterclockwise me-1"></i> RESET
+            </a>
+            <button type="button" id="print-report" class="btn btn-primary">
+                <i class="bi-printer me-1"></i> PRINT REPORT
+            </button>
+        </div>
     
+        <div class="table-responsive">
             <table id="assessment-report" class="table table-bordered">
                 <thead>
-                    <tr class="bg-success text-uppercase fw-bold">
+                    <tr class="bg-success text-white text-uppercase fw-bold">
                         <th scope="col" class="text-center align-middle" rowspan="2">S#</th>
                         @if(isset($subordinateDesignation))
                         <th scope="col" class="text-center align-middle" rowspan="2">{{ $subordinateDesignation }}</th>
@@ -162,7 +186,7 @@
                             Approximate Cost (Millions)
                         </th>
                     </tr>
-                    <tr class="bg-success bg-opacity-10 text-uppercase fw-bold">
+                    <tr class="bg-success bg-opacity-75 text-white text-uppercase fw-bold">
                         <th scope="col" class="text-center align-middle">
                             Effected {{ request()->query("type") ?? "Road" }}s
                         </th>
@@ -199,7 +223,7 @@
                         @endphp
                         
                         @foreach($districts as $districtIndex => $district)
-                            <tr class="align-middle">
+                            <tr class="align-middle {{ $districtIndex % 2 == 0 ? 'bg-light' : '' }}">
                                 @if($districtIndex === 0)
                                     <td class="text-center fw-medium" rowspan="{{ $districtCount }}">{{ $serial++ }}</td>
                                     @if(isset($subordinateDesignation))
@@ -211,62 +235,86 @@
                                 @endif
                                 <td class="text-center fw-medium">{{ $district->name }}</td>
                                 <td class="text-center fw-medium">{{ $district->damaged_infrastructure_count }}</td>
-                                <td class="text-center fw-medium">{{ $district->damaged_infrastructure_total_count }}</td>
-                                <td class="text-center fw-medium">{{ $district->damaged_infrastructure_sum }}</td>
+                                <td class="text-center fw-medium">{{ number_format($district->damaged_infrastructure_total_count, 2) }}</td>
+                                <td class="text-center fw-medium">{{ number_format($district->damaged_infrastructure_sum, 2) }}</td>
                                 <td class="text-center fw-medium">{{ $district->fully_restored }}</td>
                                 <td class="text-center fw-medium">{{ $district->partially_restored }}</td>
                                 <td class="text-center fw-medium">{{ $district->not_restored }}</td>
-                                <td class="text-center fw-medium">{{ $district->restoration }}</td>
-                                <td class="text-center fw-medium">{{ $district->rehabilitation }}</td>
+                                <td class="text-center fw-medium">{{ number_format($district->restoration, 2) }}</td>
+                                <td class="text-center fw-medium">{{ number_format($district->rehabilitation, 2) }}</td>
                             </tr>
                         @endforeach
                     @endforeach
+                    
+                    @if(count($subordinatesWithDistricts) > 0)
                     <tr class="bg-light fw-bold">
-                        <th class="text-center" rowspan="2">Total</th>
+                        <th class="text-center">Total</th>
                         @if(isset($subordinateDesignation))
                         <th class="text-center"></th>
                         @endif
                         <th class="text-center"></th>
                         <th class="text-center">{{ $total["totalDamagedInfrastructureCount"] }}</th>
-                        <th class="text-center">{{ $total["totalDamagedInfrastructureTotalCount"] }}</th>
-                        <th class="text-center">{{ $total["totalDamagedInfrastructureSum"] }}</th>
+                        <th class="text-center">{{ number_format($total["totalDamagedInfrastructureTotalCount"], 2) }}</th>
+                        <th class="text-center">{{ number_format($total["totalDamagedInfrastructureSum"], 2) }}</th>
                         <th class="text-center">{{ $total["totalFullyRestored"] }}</th>
                         <th class="text-center">{{ $total["totalPartiallyRestored"] }}</th>
                         <th class="text-center">{{ $total["totalNotRestored"] }}</th>
-                        <th class="text-center">{{ $total["totalRestorationCost"] }}</th>
-                        <th class="text-center">{{ $total["totalRehabilitationCost"] }}</th>
+                        <th class="text-center">{{ number_format($total["totalRestorationCost"], 2) }}</th>
+                        <th class="text-center">{{ number_format($total["totalRehabilitationCost"], 2) }}</th>
                     </tr>
+                    @endif
                 </tbody>
             </table>
+            
+            @if(count($subordinatesWithDistricts) == 0)
+            <div class="alert alert-info text-center">
+                <i class="bi-info-circle me-2"></i>
+                No damages found for the selected criteria. Try changing your filters or select a different officer.
+            </div>
+            @endif
+        </div>
+        
+        <div class="mt-5 pt-5">
+            <div class="row">
+                <div class="col-md-6">
+                    <div style="border-top: 1px solid #000; width: 250px; margin-left: 20px;">
+                        <p class="text-center mb-0">{{ $selectedUser->name }}</p>
+                        <p class="text-center text-muted small">{{ $selectedUser->currentDesignation->name ?? 'Reporting Officer' }}</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    
     @push('script')
     <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/printThis/printThis.js') }}"></script>
     <script>
         $(document).ready(function() {
-            
-        select2Ajax(
-            '#load-users',
-            '{{ route("admin.apps.hr.users.api") }}',
-            {
-                placeholder: "Select User / Office",
-                dropdownParent: $('#load-users').closest('body')
-            }
-        );
-
-        $('#print-report').on('click', () => {
-            $("#assessment-report").printThis({
-                pageTitle: "Infrastructure Damages Report",
-                beforePrint() {
-                    document.querySelector('.page-loader').classList.remove('hidden');
-                },
-                afterPrint() {
-                    document.querySelector('.page-loader').classList.add('hidden');
+            // Initialize Select2 for user dropdown
+            select2Ajax(
+                '#load-users',
+                '{{ route("admin.apps.hr.users.api") }}',
+                {
+                    placeholder: "Select Officer",
+                    dropdownParent: $('#load-users').closest('body')
                 }
+            );
+
+            // Print report functionality
+            $('#print-report').on('click', () => {
+                $("#assessment-report").printThis({
+                    pageTitle: "Infrastructure Damages Report",
+                    header: "<h4 class='text-center mb-3'>Infrastructure Damages Report</h4>",
+                    beforePrint() {
+                        document.querySelector('.page-loader').classList.remove('hidden');
+                    },
+                    afterPrint() {
+                        document.querySelector('.page-loader').classList.add('hidden');
+                    }
+                });
             });
         });
-    });
     </script>
     @endpush
 </x-dts-layout>

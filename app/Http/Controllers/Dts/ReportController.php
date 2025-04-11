@@ -4,19 +4,25 @@ namespace App\Http\Controllers\Dts;
 
 use App\Models\User;
 use App\Models\Damage;
+use App\Models\District;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class ReportController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $type = request()->get('type') ?? 'Road';
-        $userId = request()->get('user_id') ?? 4;
+        // Get filter parameters from request
+        $type = $request->get('type') ?? 'Road';
+        $userId = $request->get('user_id') ?? 4;
         
+        // Find the selected user
         $selectedUser = User::findOrFail($userId);
         
+        // Get direct subordinates of the selected user
         $directSubordinates = $selectedUser->getDirectSubordinates();
         
+        // Initialize totals for report
         $totalDamagedInfrastructureCount = 0;
         $totalDamagedInfrastructureSum = 0;
         $totalDamagedInfrastructureTotalCount = 0;
@@ -28,63 +34,73 @@ class ReportController extends Controller
         
         $subordinatesWithDistricts = collect();
 
+        // Process each subordinate
         foreach ($directSubordinates as $subordinate) {
+            // Get the current posting ID of the subordinate
+            $subordinatePostingId = $subordinate->currentPosting?->id;
+            
+            if (!$subordinatePostingId) {
+                continue; // Skip if subordinate has no current posting
+            }
             
             // Get districts managed by this subordinate
             $subordinateDistricts = $subordinate->districts();
             
             if ($subordinateDistricts->isEmpty()) {
-                continue;
+                continue; // Skip if subordinate manages no districts
             }
             
             $districts = collect();
             
+            // Process each district
             foreach ($subordinateDistricts as $district) {
+                // Get infrastructure IDs for this district and type
                 $infraIds = $district->infrastructures
                     ->where('type', $type)
                     ->pluck('id')
                     ->toArray();
                 
                 if (empty($infraIds)) {
-                    continue;
+                    continue; // Skip if no matching infrastructure
                 }
                 
-                // Calculate statistics for the district
-                $district->damaged_infrastructure_count = Damage::whereIn('infrastructure_id', $infraIds)
-                    ->distinct('infrastructure_id')
+                $subordinateTeam = $subordinate->getSubordinates();
+                
+                // Include the subordinate's own posting ID in the team posting IDs
+                $teamPostingIds = $subordinateTeam->pluck('currentPosting.id')->filter()->toArray();
+                $teamPostingIds[] = $subordinatePostingId;
+                
+                // Filter damages by infrastructure ID AND any posting ID in the subordinate's command chain
+                $damageQuery = Damage::whereIn('infrastructure_id', $infraIds)
+                    ->whereIn('posting_id', $teamPostingIds);
+                // Count unique infrastructures with damages for this posting
+                $district->damaged_infrastructure_count = $damageQuery->distinct('infrastructure_id')
                     ->count('infrastructure_id');
                     
-                // Skip districts with no damages
+                // Skip districts with no damages for this subordinate
                 if ($district->damaged_infrastructure_count == 0) {
                     continue;
                 }
-    
-                $district->damaged_infrastructure_total_count = $district->infrastructures->where('type', $type)
-                    ->whereIn('id', Damage::whereIn('infrastructure_id', $infraIds)->pluck('infrastructure_id')
-                    ->unique()
-                    ->toArray())
+                
+                // Get damaged infrastructure IDs specific to this subordinate
+                $damagedInfraIds = $damageQuery->pluck('infrastructure_id')->unique()->toArray();
+                
+                // Calculate total length of affected infrastructure
+                $district->damaged_infrastructure_total_count = $district->infrastructures
+                    ->where('type', $type)
+                    ->whereIn('id', $damagedInfraIds)
                     ->sum('length');
-    
-                $district->damaged_infrastructure_sum = Damage::whereIn('infrastructure_id', $infraIds)
-                    ->sum('damaged_length');
-    
-                $district->fully_restored = Damage::whereIn('infrastructure_id', $infraIds)
-                    ->where('road_status', 'Fully restored')
-                    ->count();
-    
-                $district->partially_restored = Damage::whereIn('infrastructure_id', $infraIds)
-                    ->where('road_status', 'Partially restored')
-                    ->count();
-    
-                $district->not_restored = Damage::whereIn('infrastructure_id', $infraIds)
-                    ->where('road_status', 'Not restored')
-                    ->count();
-    
-                $district->restoration = Damage::whereIn('infrastructure_id', $infraIds)
-                    ->sum('approximate_restoration_cost');
-    
-                $district->rehabilitation = Damage::whereIn('infrastructure_id', $infraIds)
-                    ->sum('approximate_rehabilitation_cost');
+                
+                // Calculate total damage length
+                $district->damaged_infrastructure_sum = $damageQuery->clone()->sum('damaged_length');
+                // Count damages by road status
+                $district->fully_restored = $damageQuery->clone()->where('road_status', 'Fully restored')->count();
+                $district->partially_restored = $damageQuery->clone()->where('road_status', 'Partially restored')->count();
+                $district->not_restored = $damageQuery->clone()->where('road_status', 'Not restored')->count();
+
+                // Calculate costs
+                $district->restoration = $damageQuery->clone()->sum('approximate_restoration_cost');
+                $district->rehabilitation = $damageQuery->clone()->sum('approximate_rehabilitation_cost');
                 
                 // Add district to the collection
                 $districts->push($district);
@@ -100,6 +116,7 @@ class ReportController extends Controller
                 $totalRehabilitationCost += $district->rehabilitation;
             }
             
+            // Add subordinate with their districts to the collection if they have any
             if ($districts->isNotEmpty()) {
                 $subordinatesWithDistricts->push([
                     'subordinate' => $subordinate,
@@ -109,6 +126,7 @@ class ReportController extends Controller
             }
         }
         
+        // Prepare total summary
         $total = [
             'totalDamagedInfrastructureCount' => $totalDamagedInfrastructureCount,
             'totalDamagedInfrastructureSum' => $totalDamagedInfrastructureSum,
@@ -120,11 +138,17 @@ class ReportController extends Controller
             'totalRehabilitationCost' => $totalRehabilitationCost,
         ];
         
+        // Determine subordinate designation for display
         $subordinateDesignation = "Officer";
         if ($directSubordinates->isNotEmpty() && $directSubordinates->first()->currentDesignation) {
             $subordinateDesignation = $directSubordinates->first()->currentDesignation->name;
         }
         
-        return view('modules.dts.damages.report', compact('subordinatesWithDistricts', 'total', 'subordinateDesignation', 'selectedUser'));
+        return view('modules.dts.damages.report', compact(
+            'subordinatesWithDistricts', 
+            'total', 
+            'subordinateDesignation', 
+            'selectedUser'
+        ));
     }
 }
