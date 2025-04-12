@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Dts;
+namespace App\Http\Controllers\Dtms;
 
 use Illuminate\Http\Request;
 use App\Models\Infrastructure;
@@ -19,7 +19,7 @@ class InfrastructureController extends Controller
             $dataTable = Datatables::of($infrastructure)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    return view('modules.dts.infrastructures.partials.buttons', compact('row'))->render();
+                    return view('modules.dtms.infrastructures.partials.buttons', compact('row'))->render();
                 })
                 ->addColumn('district', function ($row) {
                     return $row->district ? $row->district->name : '-';
@@ -42,7 +42,7 @@ class InfrastructureController extends Controller
             return $dataTable->toJson();
         }
 
-        return view('modules.dts.infrastructures.index');
+        return view('modules.dtms.infrastructures.index');
     }
     
     public function infrastructures(Request $request)
@@ -123,7 +123,7 @@ class InfrastructureController extends Controller
             : \App\Models\District::all(),
         ];
 
-        $html =  view('modules.dts.infrastructures.partials.create', compact('cat'))->render();
+        $html =  view('modules.dtms.infrastructures.partials.create', compact('cat'))->render();
 
         return response()->json([
             'success' => true,
@@ -180,7 +180,7 @@ class InfrastructureController extends Controller
             ]);
         }
 
-        $html = view('modules.dts.infrastructures.partials.detail', compact('infrastructure', 'districts'))->render();
+        $html = view('modules.dtms.infrastructures.partials.detail', compact('infrastructure', 'districts'))->render();
         return response()->json([
             'success' => true,
             'data' => [

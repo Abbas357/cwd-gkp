@@ -335,7 +335,7 @@
             @endcan
 
             @can('manage dts')
-            <a href="{{ route('admin.apps.dts.infrastructures.index') }}" class="app-tile accent-red">
+            <a href="{{ route('admin.apps.dtms.dashboard') }}" class="app-tile accent-red">
                 <i class="bi-cloud-drizzle" style="color: #ff0000"></i>
                 <p>Damage Tracker</p>
             </a>

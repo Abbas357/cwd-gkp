@@ -682,6 +682,63 @@ html[data-bs-theme="dark"] div.dt-container div.dtb-popover-close {
     transition: box-shadow 0.2s;
 }
 
+.cw-btn.primary {
+    background-color: #3b5998;
+}
+
+.cw-btn.success {
+    background-color: #4caf50;
+}
+
+.cw-btn.success:hover::before {
+    opacity: 0.1;
+}
+
+.cw-btn.danger {
+    background-color: #f44336;
+}
+
+.cw-btn.danger:hover::before {
+    opacity: 0.1;
+}
+
+.cw-btn.warning {
+    background-color: #ff9800;
+}
+
+.cw-btn.warning:hover::before {
+    opacity: 0.1;
+}
+
+.cw-btn.info {
+    background-color: #03a9f4;
+}
+
+.cw-btn.info:hover::before {
+    opacity: 0.1;
+}
+
+.cw-btn.light {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.cw-btn.light:hover::before {
+    opacity: 0.1;
+}
+
+.cw-btn.dark {
+    background-color: #212121;
+}
+
+.cw-btn.dark:hover::before {
+    opacity: 0.1;
+}
+
+.cw-btn.purple {
+    background-color: #673ab7;
+}
+
 .cw-btn::-moz-focus-inner {
     border: none;
 }

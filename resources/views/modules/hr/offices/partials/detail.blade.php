@@ -25,7 +25,7 @@
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-type">{{ $office->type }}</span>
                     <select id="input-type" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('type', {{ $office->id }})">
-                        @foreach ($cat['type'] as $type)
+                        @foreach ($cat['officeTypes'] as $type)
                         <option value="{{ $type }}" {{ $office->type == $type ? 'selected' : '' }}>
                             {{ $type }}
                         </option>

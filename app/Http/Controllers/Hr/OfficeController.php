@@ -82,7 +82,8 @@ class OfficeController extends Controller
     {
         $offices = Office::where('status', 'Active')->get();
         $districts = District::whereDoesntHave('office')->get();
-        $html =  view('modules.hr.offices.partials.create', compact('offices', 'districts'))->render();
+        $officeTypes = ['Secretariat', 'Provincial', 'Regional', 'Authority', 'Project', 'Divisional', 'District', 'Tehsil'];
+        $html =  view('modules.hr.offices.partials.create', compact('offices', 'districts', 'officeTypes'))->render();
 
         return response()->json([
             'success' => true,
@@ -127,12 +128,12 @@ class OfficeController extends Controller
         $availableDistricts = District::whereDoesntHave('office')
             ->orWhere('id', $office->district_id)
             ->get();
-
         $cat = [
             'type' => ['Provincial', 'Regional', 'Divisional', 'District', 'Tehsil'],
             'offices' => Office::where('status', 'Active')->get(),
             'districts' => $availableDistricts,
-            'managedDistricts' => $office->getAllManagedDistricts()
+            'managedDistricts' => $office->getAllManagedDistricts(),
+            'officeTypes' => ['Secretariat', 'Provincial', 'Regional', 'Authority', 'Project', 'Divisional', 'District', 'Tehsil'],
         ];
 
         $html = view('modules.hr.offices.partials.detail', compact('office', 'cat'))->render();

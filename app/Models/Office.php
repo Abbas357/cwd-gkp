@@ -159,8 +159,11 @@ class Office extends Model
     }
 
     // Get all districts managed by this office (including its children's districts)
-    public function getAllManagedDistricts() {
-        
+    public function getAllManagedDistricts() {    
+        if ($this->type === 'Authority') {
+            return District::all();
+        }
+
         $managedDistricts = collect();
         
         // Add this office's district if it has one

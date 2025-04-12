@@ -1,4 +1,4 @@
-<x-dts-layout title="Damages">
+<x-dtms-layout title="Damages">
     @push('style')
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
     @endpush
@@ -42,7 +42,7 @@
     <script>
         $(document).ready(function() {
             var table = initDataTable('#damages-datatable', {
-                ajaxUrl: "{{ route('admin.apps.dts.damages.index') }}"
+                ajaxUrl: "{{ route('admin.apps.dtms.damages.index') }}"
                 , columns: [
                     {
                         data: "id",
@@ -135,11 +135,11 @@
 
                        formWizardModal({
                             title: 'Add Damage',
-                            fetchUrl: "{{ route('admin.apps.dts.damages.create') }}",
+                            fetchUrl: "{{ route('admin.apps.dtms.damages.create') }}",
                             btnSelector: '.create-btn',
                             actionButtonName: 'Add Damage',
                             modalSize: 'lg',
-                            formAction: "{{ route('admin.apps.dts.damages.store') }}",
+                            formAction: "{{ route('admin.apps.dtms.damages.store') }}",
                             wizardSteps: [
                                 {
                                     title: "Basic Info",
@@ -173,7 +173,7 @@
 
             $("#damages-datatable").on('click', '.delete-btn', async function() {
                 const damageId = $(this).data("id");
-                const url = "{{ route('admin.apps.dts.damages.destroy', ':id') }}".replace(':id', damageId);
+                const url = "{{ route('admin.apps.dtms.damages.destroy', ':id') }}".replace(':id', damageId);
 
                 const result = await confirmAction(`Do you want to delete this damage?`);
                 if (result && result.isConfirmed) {
@@ -194,7 +194,7 @@
             , });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.apps.dts.damages.detail', ':id') }}",
+                fetchUrl: "{{ route('admin.apps.dtms.damages.detail', ':id') }}",
                 btnSelector: '.view-btn',
                 title: 'Damage Details',
                 modalSize: 'lg',
@@ -205,4 +205,4 @@
 
     </script>
     @endpush
-</x-dts-layout>
+</x-dtms-layout>

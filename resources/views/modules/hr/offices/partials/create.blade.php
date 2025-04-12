@@ -12,7 +12,7 @@
         <label for="type">Office Type</label>
         <select class="form-select" id="type" name="type">
             <option value="">Select Type</option>
-            @foreach(['Secretariat', 'Provincial', 'Regional', 'Divisional', 'District', 'Tehsil'] as $type)
+            @foreach($officeTypes as $type)
                 <option value="{{ $type }}">{{ $type }}</option>
             @endforeach
         </select>

@@ -7,7 +7,7 @@ use App\Models\Setting;
 use Illuminate\View\Component;
 use Illuminate\Contracts\View\View;
 
-class DtsLayout extends Component
+class DtmsLayout extends Component
 {
     public $title;
     public $showAside;
@@ -23,6 +23,6 @@ class DtsLayout extends Component
 
     public function render(): View
     {
-        return view('layouts.apps.dts', ['title' => $this->title, 'showAside' => $this->showAside]);
+        return view('layouts.apps.dtms', ['title' => $this->title, 'showAside' => $this->showAside]);
     }
 }

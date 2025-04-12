@@ -1,7 +1,6 @@
 <x-porms-layout title="Provincial Own Receipts Dashboard">
     @push('style')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.42.0/apexcharts.min.css">
+    <link href="{{ asset('admin/plugins/apexchart/apexcharts.min.css') }}" rel="stylesheet">
     <style>
         .stat-card {
             transition: all 0.3s ease;
@@ -186,7 +185,7 @@
     </div>
 
     @push('script')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.42.0/apexcharts.min.js"></script>
+    <script src="{{ asset('admin/plugins/apexchart/apexcharts.min.js') }}"></script>
     <script>
         // Helper function to get color array
         function getColors(count) {

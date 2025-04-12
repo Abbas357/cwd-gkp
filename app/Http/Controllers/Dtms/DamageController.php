@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Dts;
+namespace App\Http\Controllers\Dtms;
 
 use App\Models\Damage;
 use Illuminate\Http\Request;
@@ -30,7 +30,7 @@ class DamageController extends Controller
             $dataTable = Datatables::of($damage)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    return view('modules.dts.damages.partials.buttons', compact('row'))->render();
+                    return view('modules.dtms.damages.partials.buttons', compact('row'))->render();
                 })
                 ->addColumn('name', function ($row) {
                     return $row->infrastructure?->name;
@@ -65,7 +65,7 @@ class DamageController extends Controller
             return $dataTable->toJson();
         }
 
-        return view('modules.dts.damages.index');
+        return view('modules.dtms.damages.index');
     }
 
     public function create()
@@ -76,7 +76,7 @@ class DamageController extends Controller
             : \App\Models\District::all(),
         ];
 
-        $html =  view('modules.dts.damages.partials.create', compact('cat'))->render();
+        $html =  view('modules.dtms.damages.partials.create', compact('cat'))->render();
 
         return response()->json([
             'success' => true,
@@ -108,8 +108,8 @@ class DamageController extends Controller
         foreach ($inputs as $input) {
             $damage->$input = $request->$input;
         }
-        $damage->activity = setting('activity', 'dts');
-        $damage->session = setting('session', 'dts');
+        $damage->activity = setting('activity', 'dtms');
+        $damage->session = setting('session', 'dtms');
         $damage->damage_nature = json_encode($request->damage_nature);
         $damage->posting_id = Auth::user()->currentPosting->id;
 
@@ -148,7 +148,7 @@ class DamageController extends Controller
             ]);
         }
  
-        $html = view('modules.dts.damages.partials.detail', compact('damage'))->render();
+        $html = view('modules.dtms.damages.partials.detail', compact('damage'))->render();
         return response()->json([
             'success' => true,
             'data' => [

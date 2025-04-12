@@ -26,7 +26,7 @@
                     <span id="text-type">{{ $damage->type }}</span>
                     <select id="input-type" class="d-none form-control" onchange="updateField('type', {{ $damage->id }})">
                         <option value="">Select Type</option>
-                        @foreach(setting('infrastructure_type', 'dts') as $type)
+                        @foreach(setting('infrastructure_type', 'dtms') as $type)
                         <option value="{{ $type }}" {{ $damage->type == $type ? 'selected' : '' }}>
                             {{ $type }}
                         </option>
@@ -63,7 +63,7 @@
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-damage_nature">{{ implode(', ', json_decode($damage->damage_nature) ?? []) }}</span>
                     <select id="input-damage_nature" class="d-none form-control select2-multiple" multiple onchange="updateField('damage_nature', {{ $damage->id }})">
-                        @foreach(setting('damage_nature', 'dts') as $nature)
+                        @foreach(setting('damage_nature', 'dtms') as $nature)
                         <option value="{{ $nature }}" {{ in_array($nature, json_decode($damage->damage_nature) ?? []) ? 'selected' : '' }}>
                             {{ $nature }}
                         </option>
@@ -79,7 +79,7 @@
                     <span id="text-damage_status">{{ $damage->damage_status }}</span>
                     <select id="input-damage_status" class="d-none form-control" onchange="updateField('damage_status', {{ $damage->id }})">
                         <option value="">Select Damage Status</option>
-                        @foreach(setting('damage_status', 'dts') as $damage_status)
+                        @foreach(setting('damage_status', 'dtms') as $damage_status)
                         <option value="{{ $damage_status }}" {{ $damage->damage_status == $damage_status ? 'selected' : '' }}>
                             {{ $damage_status }}
                         </option>
@@ -95,7 +95,7 @@
                     <span id="text-road_status">{{ $damage->road_status }}</span>
                     <select id="input-road_status" class="d-none form-control" onchange="updateField('road_status', {{ $damage->id }})">
                         <option value="">Select Road Status</option>
-                        @foreach(setting('road_status', 'dts') as $road_status)
+                        @foreach(setting('road_status', 'dtms') as $road_status)
                         <option value="{{ $road_status }}" {{ $damage->road_status == $road_status ? 'selected' : '' }}>
                             {{ $road_status }}
                         </option>
@@ -201,7 +201,7 @@
         if (field === 'infrastructure_id') {
             select2Ajax(
                 '#input-infrastructure_id',
-                '{{ route("admin.apps.dts.infrastructures.api") }}',
+                '{{ route("admin.app.dtms.infrastructures.api") }}',
                 {
                     placeholder: "Select Infrastructure",
                     params: {
@@ -232,7 +232,7 @@
             newValue = $('#input-' + field).val();
         }
 
-        const url = "{{ route('admin.apps.dts.damages.updateField', ':id') }}".replace(':id', id);
+        const url = "{{ route('admin.apps.dtms.damages.updateField', ':id') }}".replace(':id', id);
         const data = {
             field: field,
             value: newValue

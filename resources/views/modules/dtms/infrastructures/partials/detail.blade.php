@@ -17,7 +17,7 @@
                     <span id="text-type">{{ $infrastructure->type }}</span>
                     <select id="input-type" class="d-none form-control" onchange="updateField('type', {{ $infrastructure->id }})">
                         <option value="">Select Type</option>
-                        @foreach(setting('infrastructure_type', 'dts') as $infrastructure_type)
+                        @foreach(setting('infrastructure_type', 'dtms') as $infrastructure_type)
                         <option value="{{ $infrastructure_type }}" {{ $infrastructure->type == $infrastructure_type ? 'selected' : '' }}>
                             {{ $infrastructure_type }}
                         </option>
@@ -123,7 +123,7 @@
     async function updateField(field, id) {
         const newValue = $('#input-' + field).val();
 
-        const url = "{{ route('admin.apps.dts.infrastructures.updateField', ':id') }}".replace(':id', id);
+        const url = "{{ route('admin.apps.dtms.infrastructures.updateField', ':id') }}".replace(':id', id);
         const data = {
             field: field,
             value: newValue

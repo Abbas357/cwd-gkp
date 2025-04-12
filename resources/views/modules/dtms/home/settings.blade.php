@@ -1,4 +1,4 @@
-<x-dts-layout title="Damage Tracking System Settings">
+<x-dtms-layout title="Damage Tracking System Settings">
     @push('style')
         <style>
             .nav-tabs .settings-tab {
@@ -117,7 +117,7 @@
         </style>
     @endpush
     <x-slot name="header">
-        <li class="breadcrumb-item"><a href="{{ route('admin.apps.dts.index') }}">Damage Tracking System</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.apps.dtms.dashboard') }}">Damage Tracking System</a></li>
         <li class="breadcrumb-item active" aria-current="page">Settings</li>
     </x-slot>
 
@@ -151,7 +151,7 @@
                 </div>
                 <div class="card mt-3">
                     <div class="card-body">
-                        <form action="{{ route('admin.apps.dts.settings.init') }}" method="POST" onsubmit="return confirm('This will reset all settings to default values. Continue?');">
+                        <form action="{{ route('admin.apps.dtms.settings.init') }}" method="POST" onsubmit="return confirm('This will reset all settings to default values. Continue?');">
                             @csrf
                             <button type="submit" class="btn btn-warning w-100">
                                 <i class="bi bi-arrow-clockwise me-1"></i> Reset to Defaults
@@ -163,7 +163,7 @@
 
             <!-- Main Content - Tab Contents -->
             <div class="col-md-9">
-                <form id="settingsForm" action="{{ route('admin.apps.dts.settings.update') }}" method="POST" class="needs-validation" novalidate>
+                <form id="settingsForm" action="{{ route('admin.apps.dtms.settings.update') }}" method="POST" class="needs-validation" novalidate>
                     @csrf
                     <div class="tab-content">
                         <!-- General Settings -->
@@ -178,7 +178,7 @@
                                         <select class="form-select @error('activity') is-invalid @enderror" name="settings[activity][value]" placeholder="Activity" required>
                                             <option value="">All Activities</option>
                                             @foreach($activityTypes as $type)
-                                                <option value="{{ $type }}" @selected(setting('activity', 'dts') == $type)>
+                                                <option value="{{ $type }}" @selected(setting('activity', 'dtms') == $type)>
                                                     {{ $type }}
                                                 </option>
                                             @endforeach
@@ -193,7 +193,7 @@
                                         <select class="form-select @error('session') is-invalid @enderror" name="settings[session][value]" placeholder="Session" required>
                                             <option value="">All Years</option>
                                             @foreach($years as $year)
-                                                <option value="{{ $year }}" @selected(setting('session', 'dts') == $year)>
+                                                <option value="{{ $year }}" @selected(setting('session', 'dtms') == $year)>
                                                     {{ $year }}
                                                 </option>
                                             @endforeach
@@ -229,7 +229,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach(category('road_status', 'dts', []) as $index => $item)
+                                                        @foreach(category('road_status', 'dtms', []) as $index => $item)
                                                             <tr>
                                                                 <td>
                                                                     <input type="text" class="form-control" 
@@ -285,7 +285,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach(category('infrastructure_type', 'dts', []) as $index => $item)
+                                                        @foreach(category('infrastructure_type', 'dtms', []) as $index => $item)
                                                             <tr>
                                                                 <td>
                                                                     <input type="text" class="form-control" 
@@ -341,7 +341,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach(category('damage_status', 'dts', []) as $index => $item)
+                                                        @foreach(category('damage_status', 'dtms', []) as $index => $item)
                                                             <tr>
                                                                 <td>
                                                                     <input type="text" class="form-control" 
@@ -397,7 +397,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach(category('damage_nature', 'dts', []) as $index => $item)
+                                                        @foreach(category('damage_nature', 'dtms', []) as $index => $item)
                                                             <tr>
                                                                 <td>
                                                                     <input type="text" class="form-control" 
@@ -538,4 +538,4 @@
         });
     </script>
     @endpush
-</x-dts-layout>
+</x-dtms-layout>

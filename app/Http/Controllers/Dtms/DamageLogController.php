@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Dts;
+namespace App\Http\Controllers\Dtms;
 
 use App\Models\DamageLog;
 use App\Http\Controllers\Controller;
