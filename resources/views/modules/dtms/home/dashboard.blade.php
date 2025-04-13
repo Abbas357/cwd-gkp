@@ -237,16 +237,6 @@
         <div class="row g-3">
             <div class="col-md-8">
                 <div class="row g-3">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-header bg-light">
-                                <h5 class="card-title mb-0">{{ $type }} Damage Reports by Month ({{ setting('session', 'dtms') }})</h5>
-                            </div>
-                            <div class="card-body">
-                                <div id="monthlyDamageChart" style="height: 300px;"></div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header bg-light">
@@ -264,6 +254,16 @@
                             </div>
                             <div class="card-body">
                                 <div id="restorationStatusChart" style="height: 250px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">{{ $type }} Damage Reports by Month ({{ setting('session', 'dtms') }})</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="monthlyDamageChart" style="height: 300px;"></div>
                             </div>
                         </div>
                     </div>

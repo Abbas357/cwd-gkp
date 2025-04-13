@@ -201,7 +201,7 @@
         if (field === 'infrastructure_id') {
             select2Ajax(
                 '#input-infrastructure_id',
-                '{{ route("admin.app.dtms.infrastructures.api") }}',
+                '{{ route("admin.apps.dtms.infrastructures.api") }}',
                 {
                     placeholder: "Select Infrastructure",
                     params: {

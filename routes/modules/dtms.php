@@ -41,7 +41,6 @@ Route::prefix('dtms')->as('dtms.')->middleware(['can:manage dtms'])->group(funct
         Route::get('/', [ReportController::class, 'index'])->name('index')->can('view', App\Models\Damage::class);
         Route::get('/officer-wise', [ReportController::class, 'officerReport'])->name('officer-wise');
         Route::get('/district-wise', [ReportController::class, 'districtDamagesReport'])->name('district-wise'); 
-        Route::get('/highly-damaged', [ReportController::class, 'highCostDistrictsReport'])->name('highly-damaged'); 
         Route::get('/active-officers', [ReportController::class, 'activeOfficersReport'])->name('active-officers'); 
     });
 

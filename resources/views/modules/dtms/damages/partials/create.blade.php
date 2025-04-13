@@ -206,7 +206,7 @@
         
         select2Ajax(
             '#load-infrastructures',
-            '{{ route("admin.app.dtms.infrastructures.api") }}',
+            '{{ route("admin.apps.dtms.infrastructures.api") }}',
             {
                 placeholder: "Select Infrastructure",
                 dropdownParent: $('#load-infrastructures').closest('.modal'),
@@ -217,7 +217,7 @@
 
     select2Ajax(
         '#load-infrastructures',
-        '{{ route("admin.app.dtms.infrastructures.api") }}',
+        '{{ route("admin.apps.dtms.infrastructures.api") }}',
         {
             placeholder: "Select Infrastructure",
             dropdownParent: $('#load-infrastructures').closest('.modal')

@@ -54,10 +54,8 @@ class ReportController extends Controller
                 }
                 
                 $subordinateTeam = $subordinate->getSubordinates();
-                
                 $teamPostingIds = $subordinateTeam->pluck('currentPosting.id')->filter()->toArray();
                 $teamPostingIds[] = $subordinatePostingId;
-                
                 $damageQuery = Damage::whereIn('infrastructure_id', $infraIds)
                     ->whereIn('posting_id', $teamPostingIds);
                 
@@ -69,18 +67,15 @@ class ReportController extends Controller
                 }
                 
                 $damagedInfraIds = $damageQuery->clone()->pluck('infrastructure_id')->unique()->toArray();
-                
                 $district->damaged_infrastructure_total_count = $district->infrastructures
                     ->where('type', $type)
                     ->whereIn('id', $damagedInfraIds)
                     ->sum('length');
                 
                 $district->damaged_infrastructure_sum = $damageQuery->clone()->sum('damaged_length');
-                
                 $district->fully_restored = $damageQuery->clone()->where('road_status', 'Fully restored')->count();
                 $district->partially_restored = $damageQuery->clone()->where('road_status', 'Partially restored')->count();
                 $district->not_restored = $damageQuery->clone()->where('road_status', 'Not restored')->count();
-
                 $district->restoration = $damageQuery->clone()->sum('approximate_restoration_cost');
                 $district->rehabilitation = $damageQuery->clone()->sum('approximate_rehabilitation_cost');
                 
@@ -132,36 +127,28 @@ class ReportController extends Controller
     public function officerReport(Request $request)
     {
         $type = $request->get('type') ?? 'Road';
-        
         $officers = User::whereHas('postings', function($query) {
             $query->where('is_current', true)
                 ->whereNotNull('office_id');
         })->with(['currentPosting', 'currentOffice', 'currentDesignation'])
         ->get();
-        
         $officerStats = collect();
         
         foreach ($officers as $officer) {
             $postingId = $officer->currentPosting?->id;
-            
             if (!$postingId) {
                 continue;
             }            
-            
             $damageQuery = Damage::where('posting_id', $postingId);
-            
             if ($type !== 'All') {
                 $damageQuery->whereHas('infrastructure', function($query) use ($type) {
                     $query->where('type', $type);
                 });
             }
-            
             $damages = $damageQuery->get();
-            
             if ($damages->isEmpty()) {
                 continue;
             }            
-            
             $stats = [
                 'officer' => $officer,
                 'damage_count' => $damages->count(),
@@ -174,12 +161,9 @@ class ReportController extends Controller
                 'total_cost' => $damages->sum('approximate_restoration_cost') + $damages->sum('approximate_rehabilitation_cost'),
                 'last_reported' => $damages->max('created_at'),
             ];
-            
             $officerStats->push($stats);
         }
-        
         $officerStats = $officerStats->sortByDesc('damage_count')->values();
-        
         $total = [
             'total_damage_count' => $officerStats->sum('damage_count'),
             'total_infrastructure_count' => $officerStats->sum('distinct_infrastructure_count'),
@@ -190,7 +174,6 @@ class ReportController extends Controller
             'total_rehabilitation_cost' => $officerStats->sum('rehabilitation_cost'),
             'total_cost' => $officerStats->sum('total_cost'),
         ];
-        
         return view('modules.dtms.reports.officer-wise', compact('officerStats', 'total', 'type'));
     }
 
@@ -198,21 +181,16 @@ class ReportController extends Controller
     public function districtDamagesReport(Request $request)
     {
         $type = $request->get('type') ?? 'Road';        
-        
         $districts = District::with('infrastructures')->get();
-        
         $districtStats = collect();
         
         foreach ($districts as $district) {
-            
             $infrastructures = $district->infrastructures()
                 ->when($type !== 'All', function($query) use ($type) {
                     return $query->where('type', $type);
                 })
                 ->get();
-                
             $infrastructureIds = $infrastructures->pluck('id')->toArray();
-            
             $damageQuery = Damage::whereIn('infrastructure_id', $infrastructureIds);
             $damages = $damageQuery->get();
             
@@ -229,12 +207,9 @@ class ReportController extends Controller
                 'rehabilitation_cost' => $damages->sum('approximate_rehabilitation_cost'),
                 'total_cost' => $damages->sum('approximate_restoration_cost') + $damages->sum('approximate_rehabilitation_cost'),
             ];
-            
             $districtStats->push($stats);
         }
-        
         $districtStats = $districtStats->sortByDesc('damage_count')->values();
-        
         $total = [
             'total_infrastructure_count' => $districtStats->sum('infrastructure_count'),
             'total_damaged_infrastructure_count' => $districtStats->sum('damaged_infrastructure_count'),
@@ -247,105 +222,33 @@ class ReportController extends Controller
             'total_rehabilitation_cost' => $districtStats->sum('rehabilitation_cost'),
             'total_cost' => $districtStats->sum('total_cost'),
         ];
-        
         return view('modules.dtms.reports.district-wise', compact('districtStats', 'total', 'type'));
-    }
-
-    
-    public function highCostDistrictsReport(Request $request)
-    {
-        $type = $request->get('type') ?? 'Road';
-        $costType = $request->get('cost_type') ?? 'total'; 
-        $districts = District::with('infrastructures')->get();
-        $districtStats = collect();
-        
-        foreach ($districts as $district) {
-            $infrastructures = $district->infrastructures()
-                ->when($type !== 'All', function($query) use ($type) {
-                    return $query->where('type', $type);
-                })
-                ->get();
-            $infrastructureIds = $infrastructures->pluck('id')->toArray();
-            $damageQuery = Damage::whereIn('infrastructure_id', $infrastructureIds);
-            $damages = $damageQuery->get();
-            if ($damages->isEmpty()) {
-                
-                $stats = [
-                    'district' => $district,
-                    'damage_count' => 0,
-                    'restoration_cost' => 0,
-                    'rehabilitation_cost' => 0,
-                    'total_cost' => 0,
-                ];
-                $districtStats->push($stats);
-                continue;
-            }            
-            
-            $stats = [
-                'district' => $district,
-                'damage_count' => $damages->count(),
-                'restoration_cost' => $damages->sum('approximate_restoration_cost'),
-                'rehabilitation_cost' => $damages->sum('approximate_rehabilitation_cost'),
-                'total_cost' => $damages->sum('approximate_restoration_cost') + $damages->sum('approximate_rehabilitation_cost'),
-            ];
-            
-            $districtStats->push($stats);
-        }
-        
-        switch ($costType) {
-            case 'restoration':
-                $districtStats = $districtStats->sortByDesc('restoration_cost')->values();
-                break;
-            case 'rehabilitation':
-                $districtStats = $districtStats->sortByDesc('rehabilitation_cost')->values();
-                break;
-            case 'total':
-            default:
-                $districtStats = $districtStats->sortByDesc('total_cost')->values();
-                break;
-        }
-        
-        $total = [
-            'total_damage_count' => $districtStats->sum('damage_count'),
-            'total_restoration_cost' => $districtStats->sum('restoration_cost'),
-            'total_rehabilitation_cost' => $districtStats->sum('rehabilitation_cost'),
-            'total_cost' => $districtStats->sum('total_cost'),
-        ];
-        
-        return view('modules.dtms.reports.highly-damaged', compact('districtStats', 'total', 'type', 'costType'));
     }
 
     public function activeOfficersReport(Request $request)
     {
         $type = $request->get('type') ?? 'Road';
         $period = $request->get('period') ?? 30; 
-        
         $startDate = now()->subDays($period);
-        
         $officers = User::whereHas('postings', function($query) {
             $query->where('is_current', true)
                 ->whereNotNull('office_id');
         })->with(['currentPosting', 'currentOffice', 'currentDesignation'])
         ->get();
-        
         $officerStats = collect();
-        
         foreach ($officers as $officer) {
             $postingId = $officer->currentPosting?->id;
             
             if (!$postingId) {
                 continue;
             }            
-            
             $damageQuery = Damage::where('posting_id', $postingId)
                 ->where('created_at', '>=', $startDate);
-            
             if ($type !== 'All') {
                 $damageQuery->whereHas('infrastructure', function($query) use ($type) {
                     $query->where('type', $type);
                 });
             }
-            
             $recentDamages = $damageQuery->get();    
             $allDamageQuery = Damage::where('posting_id', $postingId);
             
@@ -354,9 +257,7 @@ class ReportController extends Controller
                     $query->where('type', $type);
                 });
             }
-            
             $allDamages = $allDamageQuery->get();
-            
             $stats = [
                 'officer' => $officer,
                 'recent_damage_count' => $recentDamages->count(),
@@ -367,12 +268,10 @@ class ReportController extends Controller
                 'recent_rehabilitation_cost' => $recentDamages->sum('approximate_rehabilitation_cost'),
                 'recent_total_cost' => $recentDamages->sum('approximate_restoration_cost') + $recentDamages->sum('approximate_rehabilitation_cost'),
             ];
-            
             $officerStats->push($stats);
         }
         
         $officerStats = $officerStats->sortByDesc('recent_damage_count')->values();
-        
         $total = [
             'total_recent_damage_count' => $officerStats->sum('recent_damage_count'),
             'total_all_damage_count' => $officerStats->sum('all_damage_count'),

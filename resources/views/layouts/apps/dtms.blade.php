@@ -59,11 +59,6 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.apps.dtms.reports.highly-damaged') }}">
-                    <i class="bi-exclamation-triangle-fill text-danger"></i> Hightly Damaged
-                </a>
-            </li>
-            <li>
                 <a href="{{ route('admin.apps.dtms.reports.active-officers') }}">
                     <i class="bi-person-check-fill text-info"></i> Active Officers
                 </a>

@@ -269,8 +269,8 @@
                         <td class="text-center fw-medium" rowspan="{{ $districtCount }}">{{ $serial++ }}</td>
                         @if(isset($subordinateDesignation))
                         <td class="text-center fw-medium officer-cell" rowspan="{{ $districtCount }}">
-                            <div class="officer-name">{{ $subordinate->name }}</div>
                             <div class="officer-office">{{ $subordinate?->currentOffice?->name ?? 'No Office' }}</div>
+                            <div class="officer-name">({{ $subordinate->name }})</div>
                         </td>
                         @endif
                         @endif

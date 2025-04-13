@@ -138,7 +138,7 @@ class HomeController extends Controller
                 $damageCounts[] = 0;
             }
         }
-        return view('modules.dtms.dashboard', compact(
+        return view('modules.dtms.home.dashboard', compact(
             'type',
             'totalInfrastructure',
             'totalDamages',

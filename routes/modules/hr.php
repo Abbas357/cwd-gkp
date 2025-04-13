@@ -96,17 +96,29 @@ Route::prefix('hr')->as('hr.')->middleware(['can:manage human resource'])->group
     });
 
     Route::prefix('roles')->as('roles.')->group(function () {
+        // Existing routes
         Route::get('/', [RoleController::class, 'index'])->name('index')->can('viewAny', Spatie\Permission\Models\Role::class);
         Route::post('/', [RoleController::class, 'store'])->name('store')->can('create', Spatie\Permission\Models\Role::class);
         Route::delete('/{role}', [RoleController::class, 'destroy'])->name('destroy')->can('delete', 'role');
         Route::get('/{role}/permissions', [RoleController::class, 'getPermissions'])->name('getPermissions')->can('update', Spatie\Permission\Models\Role::class);
         Route::patch('/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('updatePermissions')->can('update', Spatie\Permission\Models\Role::class);
+        
+        // New routes for user role management
+        Route::get('/{userId}/data', [RoleController::class, 'getUserData'])->name('getUserData');
+        Route::post('/users/{userId}/roles/{roleId}', [RoleController::class, 'assignRoleToUser'])->name('assignRoleToUser');
+        Route::delete('/users/{userId}/roles/{roleId}', [RoleController::class, 'removeRoleFromUser'])->name('removeRoleFromUser');
+        Route::post('/users/{userId}/permissions/{permissionId}', [RoleController::class, 'assignPermissionToUser'])->name('assignPermissionToUser');
+        Route::delete('/users/{userId}/permissions/{permissionId}', [RoleController::class, 'removePermissionFromUser'])->name('removePermissionFromUser');
+        Route::get('/filter-users', [RoleController::class, 'filterUsers'])->name('filterUsers');
+        Route::post('/bulk-assign-roles', [RoleController::class, 'bulkAssignRoles'])->name('bulkAssignRoles');
+        Route::post('/bulk-assign-permissions', [RoleController::class, 'bulkAssignPermissions'])->name('bulkAssignPermissions');
     });
 
     Route::prefix('permissions')->as('permissions.')->group(function () {
         Route::get('/', [PermissionController::class, 'index'])->name('index')->can('viewAny', Spatie\Permission\Models\Permission::class);
         Route::post('/', [PermissionController::class, 'store'])->name('store')->can('create', Spatie\Permission\Models\Permission::class);
         Route::delete('/{permission}', [PermissionController::class, 'destroy'])->name('destroy')->can('delete', 'permission');
+        Route::post('/sync', [PermissionController::class, 'sync'])->name('sync')->can('sync', 'permission');
     });
 
     Route::prefix('reports')->as('reports.')->group(function () {
