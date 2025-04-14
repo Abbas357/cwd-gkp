@@ -1,4 +1,4 @@
-<x-dtms-layout title="DTMS Dashboard">
+<x-dmis-layout title="dmis Dashboard">
     @push('style')
     <link href="{{ asset('admin/plugins/apexchart/apexcharts.min.css') }}" rel="stylesheet">
     <style>
@@ -100,11 +100,11 @@
     <div class="wrapper">
         <!-- Filter Section -->
         <div class="filter-section">
-            <form method="get" action="{{ route('admin.apps.dtms.dashboard') }}" class="row g-3 align-items-end">
+            <form method="get" action="{{ route('admin.apps.dmis.dashboard') }}" class="row g-3 align-items-end">
                 <div class="col-md-10">
                     <label for="type" class="form-label">Infrastructure Type</label>
                     <select name="type" id="type" class="form-select">
-                        @foreach(setting('infrastructure_type', 'dtms', ['Road', 'Bridge', 'Culvert']) as $infraType)
+                        @foreach(setting('infrastructure_type', 'dmis', ['Road', 'Bridge', 'Culvert']) as $infraType)
                             <option value="{{ $infraType }}" {{ $type == $infraType ? 'selected' : '' }}>{{ $infraType }}</option>
                         @endforeach
                     </select>
@@ -260,7 +260,7 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header bg-light">
-                                <h5 class="card-title mb-0">{{ $type }} Damage Reports by Month ({{ setting('session', 'dtms') }})</h5>
+                                <h5 class="card-title mb-0">{{ $type }} Damage Reports by Month ({{ setting('session', 'dmis') }})</h5>
                             </div>
                             <div class="card-body">
                                 <div id="monthlyDamageChart" style="height: 300px;"></div>
@@ -334,7 +334,7 @@
                 <div class="card mb-4">
                     <div class="card-header bg-light d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">Recent Activity</h5>
-                        <a href="{{ route('admin.apps.dtms.damages.index') }}" class="btn btn-sm btn-outline-primary">View All</a>
+                        <a href="{{ route('admin.apps.dmis.damages.index') }}" class="btn btn-sm btn-outline-primary">View All</a>
                     </div>
                     <div class="card-body scrollable-card">
                         <div class="activity-timeline">
@@ -657,4 +657,4 @@
         });
     </script>
     @endpush
-</x-dtms-layout>
+</x-dmis-layout>

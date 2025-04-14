@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Dtms\DamageController;
-use App\Http\Controllers\Dtms\InfrastructureController;
-use App\Http\Controllers\Dtms\HomeController;
-use App\Http\Controllers\Dtms\ReportController;
+use App\Http\Controllers\dmis\DamageController;
+use App\Http\Controllers\dmis\InfrastructureController;
+use App\Http\Controllers\dmis\HomeController;
+use App\Http\Controllers\dmis\ReportController;
 
-Route::prefix('dtms')->as('dtms.')->middleware(['can:manage dtms'])->group(function () {
+Route::prefix('dmis')->as('dmis.')->middleware(['can:manage dmis'])->group(function () {
 
     Route::get('/', [HomeController::class, 'dashboard'])->name('dashboard');
 

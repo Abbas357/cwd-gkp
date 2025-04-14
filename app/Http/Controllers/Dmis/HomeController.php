@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Dtms;
+namespace App\Http\Controllers\dmis;
 
 use App\Models\Damage;
 use App\Models\Setting;
@@ -12,7 +12,7 @@ use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
-    protected $module = 'dtms';
+    protected $module = 'dmis';
 
     public function dashboard(Request $request)
     {
@@ -138,7 +138,7 @@ class HomeController extends Controller
                 $damageCounts[] = 0;
             }
         }
-        return view('modules.dtms.home.dashboard', compact(
+        return view('modules.dmis.home.dashboard', compact(
             'type',
             'totalInfrastructure',
             'totalDamages',
@@ -171,7 +171,7 @@ class HomeController extends Controller
             'Avalanche',
         ];
 
-        return view('modules.dtms.home.settings', compact('activityTypes', 'years'));
+        return view('modules.dmis.home.settings', compact('activityTypes', 'years'));
     }
 
     public function update(Request $request)
@@ -208,8 +208,8 @@ class HomeController extends Controller
             }
         }
 
-        return redirect()->route('admin.apps.dtms.settings.index')
-            ->with('success', 'DTMS settings updated successfully.');
+        return redirect()->route('admin.apps.dmis.settings.index')
+            ->with('success', 'dmis settings updated successfully.');
     }
 
     public function init()
@@ -236,7 +236,7 @@ class HomeController extends Controller
             'Accumulation of boulders', 'Piles', 'activityway', 'Drain', 'PCC Berms'
         ],
         $this->module, 'category', 'Types of Damage Nature');
-        return redirect()->route('admin.apps.dtms.settings.index')
+        return redirect()->route('admin.apps.dmis.settings.index')
             ->with('success', 'Damage Tracking System module initd with default settings and categories.');
     }
 

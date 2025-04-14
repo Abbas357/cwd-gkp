@@ -1,4 +1,4 @@
-<x-dtms-layout title="Infrastructures">
+<x-dmis-layout title="Infrastructures">
     @push('style')
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
     @endpush
@@ -36,7 +36,7 @@
     <script>
         $(document).ready(function() {
             var table = initDataTable('#infrastructure-datatable', {
-                ajaxUrl: "{{ route('admin.apps.dtms.infrastructures.index') }}"
+                ajaxUrl: "{{ route('admin.apps.dmis.infrastructures.index') }}"
                 , columns: [
                     {
                         data: "id"
@@ -105,11 +105,11 @@
 
                        formWizardModal({
                             title: 'Add Infrastructure',
-                            fetchUrl: "{{ route('admin.apps.dtms.infrastructures.create') }}",
+                            fetchUrl: "{{ route('admin.apps.dmis.infrastructures.create') }}",
                             btnSelector: '.create-btn',
                             actionButtonName: 'Add Infrastructure',
                             modalSize: 'lg',
-                            formAction: "{{ route('admin.apps.dtms.infrastructures.store') }}",
+                            formAction: "{{ route('admin.apps.dmis.infrastructures.store') }}",
                             wizardSteps: [
                                 {
                                     title: "Basic Info",
@@ -136,7 +136,7 @@
 
             $("#infrastructure-datatable").on('click', '.delete-btn', async function() {
                 const infrastructureId = $(this).data("id");
-                const url = "{{ route('admin.apps.dtms.infrastructures.destroy', ':id') }}".replace(':id', infrastructureId);
+                const url = "{{ route('admin.apps.dmis.infrastructures.destroy', ':id') }}".replace(':id', infrastructureId);
 
                 const result = await confirmAction(`Do you want to delete this infrastructure?`);
                 if (result && result.isConfirmed) {
@@ -157,7 +157,7 @@
             , });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.apps.dtms.infrastructures.detail', ':id') }}",
+                fetchUrl: "{{ route('admin.apps.dmis.infrastructures.detail', ':id') }}",
                 btnSelector: '.view-btn',
                 title: 'infrastructure Details',
                 modalSize: 'lg',
@@ -171,4 +171,4 @@
 
     </script>
     @endpush
-</x-dtms-layout>
+</x-dmis-layout>

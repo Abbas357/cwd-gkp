@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Dtms;
+namespace App\Http\Controllers\dmis;
 
 use App\Models\User;
 use App\Models\Damage;
@@ -116,7 +116,7 @@ class ReportController extends Controller
             $subordinateDesignation = $directSubordinates->first()->currentDesignation->name;
         }
         
-        return view('modules.dtms.reports.main', compact(
+        return view('modules.dmis.reports.main', compact(
             'subordinatesWithDistricts', 
             'total', 
             'subordinateDesignation', 
@@ -174,7 +174,7 @@ class ReportController extends Controller
             'total_rehabilitation_cost' => $officerStats->sum('rehabilitation_cost'),
             'total_cost' => $officerStats->sum('total_cost'),
         ];
-        return view('modules.dtms.reports.officer-wise', compact('officerStats', 'total', 'type'));
+        return view('modules.dmis.reports.officer-wise', compact('officerStats', 'total', 'type'));
     }
 
     
@@ -222,7 +222,7 @@ class ReportController extends Controller
             'total_rehabilitation_cost' => $districtStats->sum('rehabilitation_cost'),
             'total_cost' => $districtStats->sum('total_cost'),
         ];
-        return view('modules.dtms.reports.district-wise', compact('districtStats', 'total', 'type'));
+        return view('modules.dmis.reports.district-wise', compact('districtStats', 'total', 'type'));
     }
 
     public function activeOfficersReport(Request $request)
@@ -280,6 +280,6 @@ class ReportController extends Controller
             'total_recent_cost' => $officerStats->sum('recent_total_cost'),
         ];
         
-        return view('modules.dtms.reports.active-officers', compact('officerStats', 'total', 'type', 'period'));
+        return view('modules.dmis.reports.active-officers', compact('officerStats', 'total', 'type', 'period'));
     }
 }

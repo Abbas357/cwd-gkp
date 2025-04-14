@@ -14,7 +14,7 @@
         <label for="type">Type</label>
         <select class="form-control" id="type" name="type" required>
             <option value="">Select Type</option>
-            @foreach(setting('infrastructure_type', 'dtms') as $type)
+            @foreach(setting('infrastructure_type', 'dmis') as $type)
             <option value="{{ $type }}">{{ $type }}</option>
             @endforeach
         </select>
@@ -42,7 +42,7 @@
         <label for="load-infrastructures">Infrastructures</label>
         <select class="form-select form-select-md" id="load-infrastructures" name="infrastructure_id"></select>
         <small class="form-text text-muted">
-            <a href="{{ route('admin.apps.dtms.infrastructures.index', ['create' => 'true', 'popup' => 'true']) }}" 
+            <a href="{{ route('admin.apps.dmis.infrastructures.index', ['create' => 'true', 'popup' => 'true']) }}" 
                onclick="openPopup(event, this.href)">Create</a> new if not available
         </small>        
     </div>
@@ -62,7 +62,7 @@
     <div class="col-md-6 mb-3">
         <label for="damage_nature">Damage Nature</label>
         <select class="form-control h-50" id="damage_nature" name="damage_nature[]" multiple>
-            @foreach(setting('damage_nature', 'dtms') as $nature)
+            @foreach(setting('damage_nature', 'dmis') as $nature)
             <option value="{{ $nature }}">{{ $nature }}</option>
             @endforeach
         </select>
@@ -75,7 +75,7 @@
         <label for="damage_status">Damage Status</label>
         <select class="form-control" id="damage_status" name="damage_status" required>
             <option value="">Select Damage Status</option>
-            @foreach(setting('damage_status', 'dtms') as $damage_status)
+            @foreach(setting('damage_status', 'dmis') as $damage_status)
             <option value="{{ $damage_status }}">{{ $damage_status }}</option>
             @endforeach
         </select>
@@ -88,7 +88,7 @@
         <label for="road_status">Road Status</label>
         <select class="form-control" id="road_status" name="road_status" required>
             <option value="">Select Road Status</option>
-            @foreach(setting('road_status', 'dtms') as $road_status)
+            @foreach(setting('road_status', 'dmis') as $road_status)
             <option value="{{ $road_status }}">{{ $road_status }}</option>
             @endforeach
         </select>
@@ -206,7 +206,7 @@
         
         select2Ajax(
             '#load-infrastructures',
-            '{{ route("admin.apps.dtms.infrastructures.api") }}',
+            '{{ route("admin.apps.dmis.infrastructures.api") }}',
             {
                 placeholder: "Select Infrastructure",
                 dropdownParent: $('#load-infrastructures').closest('.modal'),
@@ -217,7 +217,7 @@
 
     select2Ajax(
         '#load-infrastructures',
-        '{{ route("admin.apps.dtms.infrastructures.api") }}',
+        '{{ route("admin.apps.dmis.infrastructures.api") }}',
         {
             placeholder: "Select Infrastructure",
             dropdownParent: $('#load-infrastructures').closest('.modal')

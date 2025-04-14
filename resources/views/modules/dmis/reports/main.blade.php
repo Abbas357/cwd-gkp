@@ -1,4 +1,4 @@
-<x-dtms-layout title="Damages Report">
+<x-dmis-layout title="Damages Report">
     @push('style')
     <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
@@ -168,7 +168,7 @@
                     <div class="col-md-6">
                         <label class="form-label" for="type">Infrastructure Type</label>
                         <select name="type" id="type" class="form-control" placeholder="Select Type">
-                            @foreach(setting('infrastructure_type', 'dtms', ['Road', 'Bridge', 'Culvert']) as $infrastructure_type)
+                            @foreach(setting('infrastructure_type', 'dmis', ['Road', 'Bridge', 'Culvert']) as $infrastructure_type)
                             <option value="{{ $infrastructure_type }}" {{ request()->query('type') == $infrastructure_type ? 'selected' : '' }}>
                                 {{ $infrastructure_type }}
                             </option>
@@ -191,7 +191,7 @@
                             <button type="submit" class="cw-btn success">
                                 <i class="bi-filter me-2"></i> GENERATE REPORT
                             </button>
-                            <a href="{{ route('admin.apps.dtms.reports.index') }}" class="cw-btn light ms-3">
+                            <a href="{{ route('admin.apps.dmis.reports.index') }}" class="cw-btn light ms-3">
                                 <i class="bi-arrow-counterclockwise me-1"></i> RESET
                             </a>
                         </div>
@@ -344,4 +344,4 @@
 
     </script>
     @endpush
-</x-dtms-layout>
+</x-dmis-layout>

@@ -48,8 +48,8 @@ class Damage extends Model implements HasMedia
     protected static function booted()
     {
         static::addGlobalScope('app_session_activity', function (Builder $builder) {
-            $builder->where('activity', '=', setting('activity', 'dtms'))
-                    ->where('session', '=', setting('session', 'dtms'));
+            $builder->where('activity', '=', setting('activity', 'dmis'))
+                    ->where('session', '=', setting('session', 'dmis'));
         });
     }
 
