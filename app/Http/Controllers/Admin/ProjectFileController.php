@@ -39,7 +39,12 @@ class ProjectFileController extends Controller
                     return view('admin.project_files.partials.status', compact('row'))->render();
                 })
                 ->addColumn('file', function ($row) {
-                    return '<a target="_blank" href="' . $row->getFirstMediaUrl('project_files') . '" class="btn btn-light bi bi-file-earmark fs-4"></span>';
+                    if ($row->hasMedia('project_files')) {
+                        return '<a target="_blank" href="' . $row->getFirstMediaUrl('project_files') . '" class="btn btn-light bi bi-file-earmark fs-4"></a>';
+                    } elseif ($row->file_link) {
+                        return '<a target="_blank" href="' . $row->file_link . '" class="btn btn-light bi bi-link-45deg fs-4"></a>';
+                    }
+                    return '';
                 })
                 ->addColumn('uploaded_by', function ($row) {
                     return $row->publishBy?->currentPosting?->designation->name 

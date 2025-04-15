@@ -11,9 +11,8 @@
     <div class="col-md-12">
 
         <table class="table table-bordered mt-3">
-            <!-- File Name -->
             <tr>
-                <th class="table-cell"> Title</th>
+                <th class="table-cell">Name</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-name">{{ $project->name }}</span>
                     <input type="text" id="input-name" value="{{ $project->name }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('name', {{ $project->id }})" />
@@ -21,9 +20,9 @@
                     <button id="edit-btn-name" class="no-print btn btn-sm edit-button" onclick="enableEditing('name')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
-            
+
             <tr>
-                <th class="table-cell">Content</th>
+                <th class="table-cell">Introduction</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-introduction">{!! $project->introduction !!}</span>
                     @if (!in_array($project->status, ['published', 'archived']))
@@ -35,6 +34,57 @@
                     @endif
                 </td>
             </tr>
+
+            <tr>
+                <th class="table-cell">Location</th>
+                <td class="d-flex justify-content-between align-items-center gap-2">
+                    <span id="text-location">{{ $project->location }}</span>
+                    <input type="text" id="input-location" value="{{ $project->location }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('location', {{ $project->id }})" />
+                    <button id="save-btn-location" class="btn btn-sm btn-light d-none" onclick="updateField('location', {{ $project->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="edit-btn-location" class="no-print btn btn-sm edit-button" onclick="enableEditing('location')"><i class="bi-pencil fs-6"></i></button>
+                </td>
+            </tr>
+
+            <tr>
+                <th class="table-cell">Budget</th>
+                <td class="d-flex justify-content-between align-items-center gap-2">
+                    <span id="text-budget">{{ $project->budget }}</span>
+                    <input type="text" id="input-budget" value="{{ $project->budget }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('budget', {{ $project->id }})" />
+                    <button id="save-btn-budget" class="btn btn-sm btn-light d-none" onclick="updateField('budget', {{ $project->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="edit-btn-budget" class="no-print btn btn-sm edit-button" onclick="enableEditing('budget')"><i class="bi-pencil fs-6"></i></button>
+                </td>
+            </tr>
+
+            <tr>
+                <th class="table-cell">Funding Source</th>
+                <td class="d-flex justify-content-between align-items-center gap-2">
+                    <span id="text-funding_source">{{ $project->funding_source }}</span>
+                    <input type="text" id="input-funding_source" value="{{ $project->funding_source }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('funding_source', {{ $project->id }})" />
+                    <button id="save-btn-funding_source" class="btn btn-sm btn-light d-none" onclick="updateField('funding_source', {{ $project->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="edit-btn-funding_source" class="no-print btn btn-sm edit-button" onclick="enableEditing('funding_source')"><i class="bi-pencil fs-6"></i></button>
+                </td>
+            </tr>
+
+            <tr>
+                <th class="table-cell">Start Date</th>
+                <td class="d-flex justify-content-between align-items-center gap-2">
+                    <span id="text-start_date">{{ $project->start_date }}</span>
+                    <input type="text" id="input-start_date" value="{{ $project->start_date }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('start_date', {{ $project->id }})" />
+                    <button id="save-btn-start_date" class="btn btn-sm btn-light d-none" onclick="updateField('start_date', {{ $project->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="edit-btn-start_date" class="no-print btn btn-sm edit-button" onclick="enableEditing('start_date')"><i class="bi-pencil fs-6"></i></button>
+                </td>
+            </tr>
+
+            <tr>
+                <th class="table-cell">End Date</th>
+                <td class="d-flex justify-content-between align-items-center gap-2">
+                    <span id="text-end_date">{{ $project->end_date }}</span>
+                    <input type="text" id="input-end_date" value="{{ $project->end_date }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('end_date', {{ $project->id }})" />
+                    <button id="save-btn-end_date" class="btn btn-sm btn-light d-none" onclick="updateField('end_date', {{ $project->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="edit-btn-end_date" class="no-print btn btn-sm edit-button" onclick="enableEditing('end_date')"><i class="bi-pencil fs-6"></i></button>
+                </td>
+            </tr>
+            
         </table>
     </div>
 </div>

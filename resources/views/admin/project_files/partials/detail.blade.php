@@ -56,7 +56,8 @@
                     @endif
                 </td>
             </tr>
-
+            
+            @if ($project_file->hasMedia('project_files'))
             <tr>
                 <th class="table-cell">File</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
@@ -77,6 +78,19 @@
                     @endif
                 </td>
             </tr>
+            @else 
+            <tr>
+                <th class="table-cell">File Link</th>
+                <td class="d-flex justify-content-between align-items-center gap-2">
+                    <span id="text-file_link">{{ $project_file->file_link }}</span>
+                    @if (!in_array($project_file->status, ['published', 'archived']))
+                    <input type="text" id="input-file_link" value="{{ $project_file->file_link }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('file_link', {{ $project_file->id }})" />
+                    <button id="save-btn-file_link" class="btn btn-sm btn-light d-none" onclick="updateField('file_link', {{ $project_file->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="edit-btn-file_link" class="no-print btn btn-sm edit-button" onclick="enableEditing('file_link')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
+                </td>
+            </tr>
+            @endif
         </table>
     </div>
 </div>
