@@ -38,7 +38,7 @@
 
     </style>
     <x-slot name="breadcrumbTitle">
-        Detail of {{ $user['name'] . ' (' . $user['position']}})
+        Detail of {{ $user['name'] . ' (' . $user['office']}})
     </x-slot>
 
     <x-slot name="breadcrumbItems">
@@ -52,7 +52,7 @@
             <div class="text-center">
                 <img src="{{ $user['media']['profile_pictures'] }}" class="modal-img" alt="{{ $user['name'] }}">
                 <h4 class="mt-2">{{ $user['name'] }}</h4>
-                <p>{{ $user['title'] }}</p>
+                <p>{{ $user['office'] }}</p>
             </div>
             <div class="text-center">
                 <a href="https://facebook.com/{{ $user['facebook'] ?? '#' }}"><i class="bi bi-facebook fs-1 me-2" style="color: #3b5998"></i></a>
@@ -61,6 +61,7 @@
             </div>
             <hr>
             <div class="row">
+                <h1 class="fs-3 py-2 bg-light">Basic Information</h1>
                 <div class="col-md-6">
                     <div class="info-row">
                         <span class="info-label">Designation:</span>
@@ -115,11 +116,16 @@
                         </span>
                     </div>
                     @endif
-
                 </div>
             </div>
-
         </div>
+
+        @if($user['job_description'])
+        <div class="row mt-3">
+            <h1 class="fs-3 py-2 bg-light">Job Description</h1>
+            {!! $user['job_description'] !!}
+        </div>
+        @endif
 
         <div class="row mt-3">
             <h1 class="fs-3 py-2 bg-light">Previous</h1>

@@ -156,8 +156,7 @@ class UserController extends Controller
             'facebook' => $profile->facebook ?? '-',
             'twitter' => $profile->twitter ?? '-',
             'designation' => $currentPosting ? $currentPosting->designation->name ?? '-' : '-',
-            'position' => $currentPosting ? $currentPosting->designation->name ?? '-' : '-', 
-            'title' => $currentPosting ? $currentPosting->designation->name ?? '-' : '-', 
+            'office' => $currentPosting ? $currentPosting->office->name ?? '-' : '-', 
             'posting_type' => $currentPosting ? $currentPosting->type ?? '-' : '-',
             'posting_date' => $currentPosting && $currentPosting->start_date ? $currentPosting->start_date->format('j, F Y') : '-',
             'exit_type' => $user->postings->where('is_current', false)->where('type', 'Retirement')->first() ? 'Retirement' : ($user->postings->where('is_current', false)->where('type', 'Termination')->first() ? 'Termination' : '-'),
@@ -172,6 +171,7 @@ class UserController extends Controller
             ],
             'previous' => $currentPosting ? $this->showPositions($currentPosting->designation->name) : [],
             'views_count' => $profile->views_count ?? 0,
+            'job_description' => $user->currentOffice->job_description,
         ];
 
         $this->incrementViews($user->profile, 'views_count', 'user_profile');

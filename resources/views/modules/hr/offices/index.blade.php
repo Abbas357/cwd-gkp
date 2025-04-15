@@ -68,7 +68,7 @@
                             btnSelector: '.create-btn',
                             title: 'Add Office',
                             actionButtonName: 'Add Office',
-                            modalSize: 'md',
+                            modalSize: 'lg',
                             includeForm: true,
                             formAction: "{{ route('admin.apps.hr.offices.store') }}",
                             hash: false,
@@ -124,7 +124,7 @@
                 fetchUrl: "{{ route('admin.apps.hr.offices.detail', ':id') }}",
                 btnSelector: '.view-btn',
                 title: 'Office Detail',
-                modalSize: 'md',
+                modalSize: 'lg',
             });
 
         });

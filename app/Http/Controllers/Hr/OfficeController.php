@@ -101,6 +101,7 @@ class OfficeController extends Controller
             $office->type = $request->type;
             $office->parent_id = $request->parent_id;
             $office->district_id = $request->district_id;
+            $office->job_description = $request->job_description;
             $office->save();
             
             return response()->json(['success' => 'Office added successfully']);

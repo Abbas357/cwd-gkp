@@ -1,5 +1,4 @@
-<link href="{{ asset('admin/plugins/flatpickr/flatpickr.min.css') }}" rel="stylesheet">
-
+<link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
 <style>
     .table-cell {
         padding: 0.1rem 0.5rem;
@@ -39,11 +38,11 @@
             <tr>
                 <th class="table-cell">Parent Office</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-parent_id">{{ $office->parent->name }}</span>
+                    <span id="text-parent_id">{{ $office->parent?->name }}</span>
                     <select id="input-parent_id" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('parent_id', {{ $office->id }})">
                         @foreach ($cat['offices'] as $parent)
                         <option value="{{ $parent->id }}" {{ $office->parent_id == $parent->id ? 'selected' : '' }}>
-                            {{ $parent->name }}
+                            {{ $parent?->name }}
                         </option>
                         @endforeach
                     </select>
@@ -95,17 +94,39 @@
                 </td>
             </tr>
 
+            <tr>
+                <th class="table-cell">Job Description</th>
+                <td class="d-flex justify-content-between align-items-center gap-2">
+                    <span id="text-job_description">{!! $office->job_description !!}</span>
+                    <div class="mb-3 w-100">
+                        <textarea name="job_description" id="input-job_description" class="form-control d-none" style="height:150px">{{ old('job_description', $office->job_description) }}</textarea>
+                    </div>
+                    <button id="save-btn-job_description" class="btn btn-sm btn-light d-none" onclick="updateField('job_description', {{ $office->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="edit-btn-job_description" class="no-print btn btn-sm edit-button" onclick="enableEditing('job_description')"><i class="bi-pencil fs-6"></i></button>
+                </td>
+            </tr>
+
         </table>
     </div>
 </div>
 <script src="{{ asset('admin/plugins/summernote/summernote-bs5.min.js') }}"></script>
-<script src="{{ asset('admin/plugins/flatpickr/flatpickr.js') }}"></script>
 <script>
     function enableEditing(field) {
         $('#text-' + field).addClass('d-none');
         $('#input-' + field).removeClass('d-none');
         $('#save-btn-' + field).removeClass('d-none');
         $('#edit-btn-' + field).addClass('d-none');
+
+        if (field === 'job_description') {
+            var textarea = $('#input-' + field);
+            if (textarea.data('summernote-initialized')) {
+                textarea.summernote('destroy'); 
+            }
+            textarea.summernote({
+                height: 300
+            });
+            textarea.data('summernote-initialized', true);
+        }
     }
 
     async function updateField(field, id) {
@@ -117,6 +138,13 @@
         };
         const success = await fetchRequest(url, 'PATCH', data);
         if (success) {
+            if (field === 'job_description') {
+                $('#text-' + field).html(newValue);
+                $('#input-' + field).summernote('destroy');
+                $('#input-' + field).data('summernote-initialized', false);
+            } else {
+                $('#text-' + field).text(newValue);
+            }
             $('#text-' + field).text(newValue);
             $('#input-' + field).addClass('d-none');
             $('#save-btn-' + field).addClass('d-none');

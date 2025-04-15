@@ -17,7 +17,7 @@ return new class extends Migration
             $table->enum('type', ['Secretariat', 'Provincial', 'Regional', 'Divisional', 'District', 'Tehsil'])->nullable();
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->unsignedBigInteger('district_id')->nullable();
-            $table->enum('status', ['Active', 'Inactive', 'Archived'])->default('Active');
+            $table->longText('job_description')->nullable();
             $table->timestamps();
         });
 
