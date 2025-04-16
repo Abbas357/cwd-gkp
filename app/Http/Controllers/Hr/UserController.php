@@ -111,8 +111,6 @@ class UserController extends Controller
     public function create()
     {
         $data = [
-            'roles' => Role::all(),
-            'permissions' => Permission::all(),
             'designations' => Designation::where('status', 'Active')->get(),
             'offices' => Office::where('status', 'Active')->get(),
         ];
@@ -132,9 +130,7 @@ class UserController extends Controller
 
         try {
             $userData = $request->only(['name', 'email', 'password']);
-
             $userData['uuid'] = Str::uuid();
-
             $userData['username'] = $request->username ?? strstr($request->email, '@', true);
 
             if ($request->filled('password')) {
@@ -145,7 +141,6 @@ class UserController extends Controller
             $userData['password_updated_at'] = now();
 
             $user = User::create($userData);
-
             $profileData = $request->input('profile', []);
 
             $user->profile()->updateOrCreate(
@@ -165,14 +160,6 @@ class UserController extends Controller
             if ($request->hasFile('image')) {
                 $user->addMedia($request->file('image'))
                     ->toMediaCollection('profile_pictures');
-            }
-
-            if ($request->has('roles')) {
-                $user->syncRoles($request->roles);
-            }
-
-            if ($request->has('permissions')) {
-                $user->syncPermissions($request->permissions);
             }
 
             DB::commit();
@@ -210,10 +197,6 @@ class UserController extends Controller
 
         $data = [
             'user' => $user->load(['profile', 'currentPosting.designation', 'currentPosting.office']),
-            'roles' => $user->roles,
-            'permissions' => $user->getDirectPermissions(),
-            'allRoles' => Role::all(),
-            'allPermissions' => Permission::all(),
             'allDesignations' => Designation::where('status', 'Active')->get(),
             'allOffices' => Office::where('status', 'Active')->get(),
             'bps' => $bps,
@@ -289,14 +272,6 @@ class UserController extends Controller
             if ($request->hasFile('image')) {
                 $user->addMedia($request->file('image'))
                     ->toMediaCollection('profile_pictures');
-            }
-
-            if ($request->has('roles')) {
-                $user->syncRoles($request->roles);
-            }
-
-            if ($request->has('permissions')) {
-                $user->syncPermissions($request->permissions);
             }
 
             DB::commit();

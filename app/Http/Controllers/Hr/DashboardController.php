@@ -122,21 +122,4 @@ class DashboardController extends Controller
             'childOffices' => $childOffices
         ]);
     }
-    
-    public function getUserReportingRelationships(Request $request)
-    {
-        $userId = $request->input('user_id');
-        $user = User::findOrFail($userId);
-        
-        $supervisors = $user->getPotentialSupervisors();
-        $directSupervisor = $user->getDirectSupervisor();
-        $subordinates = $user->getSubordinates();
-        
-        return response()->json([
-            'user' => $user->load(['currentDesignation', 'currentOffice']),
-            'supervisors' => $supervisors->each->load(['currentDesignation', 'currentOffice']),
-            'directSupervisor' => $directSupervisor ? $directSupervisor->load(['currentDesignation', 'currentOffice']) : null,
-            'subordinates' => $subordinates->each->load(['currentDesignation', 'currentOffice'])
-        ]);
-    }
 }

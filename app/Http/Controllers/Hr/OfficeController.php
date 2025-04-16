@@ -196,34 +196,4 @@ class OfficeController extends Controller
         }
         return response()->json(['error' => 'Error deleting office.']);
     }
-
-    public function getOfficeDistrict(Request $request)
-    {
-        $officeId = $request->query('office_id');
-        
-        if (!$officeId) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Office ID is required'
-            ], 400);
-        }
-        
-        $office = Office::find($officeId);
-        
-        if (!$office) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Office not found'
-            ], 404);
-        }
-        
-        $district = $office->district;
-        $managedDistricts = $office->getAllManagedDistricts();
-        
-        return response()->json([
-            'success' => true,
-            'district' => $district,
-            'managed_districts' => $managedDistricts,
-        ]);
-    }
 }

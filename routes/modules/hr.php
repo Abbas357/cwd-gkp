@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Hr\AclController;
 use App\Http\Controllers\Hr\RoleController;
 use App\Http\Controllers\Hr\UserController;
 use App\Http\Controllers\Hr\OfficeController;
@@ -17,7 +18,6 @@ Route::prefix('hr')->as('hr.')->middleware(['can:manage human resource'])->group
     Route::get('/', [DashboardController::class, 'index'])->name('index');
     Route::get('/org-chart', [DashboardController::class, 'ogChart'])->name('org-chart');
     Route::get('/office-hierarchy', [DashboardController::class, 'getOfficeHierarchy'])->name('office-hierarchy');
-    Route::get('/user-relationships', [DashboardController::class, 'getUserReportingRelationships'])->name('user-relationships');
 
     Route::prefix('users')->as('users.')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index')->can('viewAny', App\Models\User::class);
@@ -41,7 +41,6 @@ Route::prefix('hr')->as('hr.')->middleware(['can:manage human resource'])->group
     Route::prefix('offices')->as('offices.')->group(function () {
         Route::get('/', [OfficeController::class, 'index'])->name('index')->can('viewAny', App\Models\Office::class);
         Route::get('/create', [OfficeController::class, 'create'])->name('create')->can('create', App\Models\Office::class);
-        Route::get('/district', [OfficeController::class, 'getOfficeDistrict'])->name('district');
         Route::get('/api', [OfficeController::class, 'offices'])->name('api')->withoutMiddleware(['can:manage human resource']);
         Route::post('/', [OfficeController::class, 'store'])->name('store')->can('create', App\Models\Office::class);
         Route::get('/{office}', [OfficeController::class, 'show'])->name('show')->can('view', 'office');
@@ -95,31 +94,35 @@ Route::prefix('hr')->as('hr.')->middleware(['can:manage human resource'])->group
         Route::get('/user-hierarchy', [OrganogramController::class, 'getUserHierarchy'])->name('user-hierarchy');
     });
 
-    Route::prefix('roles')->as('roles.')->group(function () {
-        // Existing routes
-        Route::get('/', [RoleController::class, 'index'])->name('index')->can('viewAny', Spatie\Permission\Models\Role::class);
-        Route::post('/', [RoleController::class, 'store'])->name('store')->can('create', Spatie\Permission\Models\Role::class);
-        Route::delete('/{role}', [RoleController::class, 'destroy'])->name('destroy')->can('delete', 'role');
-        Route::get('/{role}/permissions', [RoleController::class, 'getPermissions'])->name('getPermissions')->can('update', Spatie\Permission\Models\Role::class);
-        Route::patch('/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('updatePermissions')->can('update', Spatie\Permission\Models\Role::class);
-        
-        // New routes for user role management
-        Route::get('/{userId}/data', [RoleController::class, 'getUserData'])->name('getUserData');
-        Route::post('/users/{userId}/roles/{roleId}', [RoleController::class, 'assignRoleToUser'])->name('assignRoleToUser');
-        Route::delete('/users/{userId}/roles/{roleId}', [RoleController::class, 'removeRoleFromUser'])->name('removeRoleFromUser');
-        Route::post('/users/{userId}/permissions/{permissionId}', [RoleController::class, 'assignPermissionToUser'])->name('assignPermissionToUser');
-        Route::delete('/users/{userId}/permissions/{permissionId}', [RoleController::class, 'removePermissionFromUser'])->name('removePermissionFromUser');
-        Route::get('/filter-users', [RoleController::class, 'filterUsers'])->name('filterUsers');
-        Route::post('/bulk-assign-roles', [RoleController::class, 'bulkAssignRoles'])->name('bulkAssignRoles');
-        Route::post('/bulk-assign-permissions', [RoleController::class, 'bulkAssignPermissions'])->name('bulkAssignPermissions');
-        Route::get('/search-users', [RoleController::class, 'searchUsers'])->name('searchUsers');
-    });
+    Route::prefix('acl')->as('acl.')->group(function () {
 
-    Route::prefix('permissions')->as('permissions.')->group(function () {
-        Route::get('/', [PermissionController::class, 'index'])->name('index')->can('viewAny', Spatie\Permission\Models\Permission::class);
-        Route::post('/', [PermissionController::class, 'store'])->name('store')->can('create', Spatie\Permission\Models\Permission::class);
-        Route::delete('/{permission}', [PermissionController::class, 'destroy'])->name('destroy')->can('delete', 'permission');
-        Route::post('/sync', [PermissionController::class, 'sync'])->name('sync')->can('sync', 'permission');
+        Route::prefix('permissions')->as('permissions.')->group(function () {
+            Route::get('/', [PermissionController::class, 'index'])->name('index')->can('viewAny', Spatie\Permission\Models\Permission::class);
+            Route::post('/', [PermissionController::class, 'store'])->name('store')->can('create', Spatie\Permission\Models\Permission::class);
+            Route::delete('/{permission}', [PermissionController::class, 'destroy'])->name('destroy')->can('delete', 'permission');
+            Route::post('/sync', [PermissionController::class, 'sync'])->name('sync')->can('sync', 'permission');
+        });
+
+        Route::prefix('roles')->as('roles.')->group(function () {
+            Route::get('/', [RoleController::class, 'index'])->name('index')->can('viewAny', Spatie\Permission\Models\Role::class);
+            Route::post('/', [RoleController::class, 'store'])->name('store')->can('create', Spatie\Permission\Models\Role::class);
+            Route::delete('/{role}', [RoleController::class, 'destroy'])->name('destroy')->can('delete', 'role');
+            Route::get('/{role}/permissions', [RoleController::class, 'getPermissions'])->name('getPermissions')->can('update', Spatie\Permission\Models\Role::class);
+            Route::patch('/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('updatePermissions')->can('update', Spatie\Permission\Models\Role::class);
+        });
+
+        Route::prefix('users')->as('users.')->group(function () {
+            Route::get('/{userId}/data', [AclController::class, 'getUserData'])->name('getUserData');
+            Route::post('/users/{userId}/roles/{roleId}', [AclController::class, 'assignRoleToUser'])->name('assignRoleToUser');
+            Route::delete('/users/{userId}/roles/{roleId}', [AclController::class, 'removeRoleFromUser'])->name('removeRoleFromUser');
+            Route::post('/users/{userId}/permissions/{permissionId}', [AclController::class, 'assignPermissionToUser'])->name('assignPermissionToUser');
+            Route::delete('/users/{userId}/permissions/{permissionId}', [AclController::class, 'removePermissionFromUser'])->name('removePermissionFromUser');
+            Route::get('/filter-users', [AclController::class, 'filterUsers'])->name('filterUsers');
+            Route::post('/bulk-assign-roles', [AclController::class, 'bulkAssignRoles'])->name('bulkAssignRoles');
+            Route::post('/bulk-assign-permissions', [AclController::class, 'bulkAssignPermissions'])->name('bulkAssignPermissions');
+            Route::get('/search-users', [AclController::class, 'searchUsers'])->name('searchUsers');
+        });
+        
     });
 
     Route::prefix('reports')->as('reports.')->group(function () {

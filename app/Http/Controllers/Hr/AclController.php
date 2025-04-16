@@ -11,7 +11,7 @@ use App\Http\Controllers\Controller;
 use Spatie\Permission\Models\Permission;
 use App\Http\Requests\StoreRoleRequest;
 
-class RoleController extends Controller
+class AclController extends Controller
 {
     public function index()
     {

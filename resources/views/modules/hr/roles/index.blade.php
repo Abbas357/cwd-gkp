@@ -25,6 +25,7 @@
         }
 
         @keyframes shake {
+
             0%,
             100% {
                 transform: translateX(0);
@@ -569,7 +570,6 @@
     @push('script')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Cache DOM elements
             const usersList = document.getElementById('users-list');
             const userSearch = document.getElementById('user-search');
             const userItems = document.querySelectorAll('.user-item');
@@ -588,16 +588,14 @@
             const permissionSearch = document.getElementById('permission-search');
             const permissionsContainer = document.getElementById('permissions-container');
 
-            // Initialize roles and permissions data
             const roles = @json($roles);
 
-            // Group permissions by category/module
             const allPermissions = @json($permissions);
             const permissionGroups = {};
 
             allPermissions.forEach(permission => {
                 const nameParts = permission.name.split(' ');
-                const category = nameParts[nameParts.length - 1]; // Last word as category
+                const category = nameParts[nameParts.length - 1];
 
                 if (!permissionGroups[category]) {
                     permissionGroups[category] = [];
@@ -606,58 +604,32 @@
                 permissionGroups[category].push(permission);
             });
 
-            // User search
-            // Replace the existing user search event listener with this:
-            userSearch.addEventListener('keyup', debounce(function() {
+            userSearch.addEventListener('keyup', debounce(async function() {
                 const searchValue = this.value.trim().toLowerCase();
                 const officeId = document.getElementById('office-filter').value;
                 const designationId = document.getElementById('designation-filter').value;
-                
+
                 if (searchValue.length === 0 && !officeId && !designationId) {
                     usersList.innerHTML = '<div class="text-center py-3 text-muted">Start typing to search users</div>';
                     return;
                 }
-                
-                // Show loading state
                 usersList.innerHTML = '<div class="text-center py-3"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
-                
-                // Fetch users via AJAX
-                fetch(`/admin/apps/hr/roles/search-users?search=${encodeURIComponent(searchValue)}&office_id=${officeId}&designation_id=${designationId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            updateUsersList(data.data.users);
-                        } else {
-                            usersList.innerHTML = '<div class="text-center py-3 text-danger">Failed to load users</div>';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        usersList.innerHTML = '<div class="text-center py-3 text-danger">Error loading users</div>';
-                    });
+                const data = await fetchRequest(`/admin/apps/hr/roles/search-users?search=${encodeURIComponent(searchValue)}&office_id=${officeId}&designation_id=${designationId}`);
+                if (data) {
+                    updateUsersList(data.users);
+                } else {
+                    usersList.innerHTML = '<div class="text-center py-3 text-danger">Failed to load users</div>';
+                }
             }, 300));
 
-            // Add this debounce function to prevent too many requests
-            function debounce(func, wait) {
-                let timeout;
-                return function() {
-                    const context = this, args = arguments;
-                    clearTimeout(timeout);
-                    timeout = setTimeout(() => {
-                        func.apply(context, args);
-                    }, wait);
-                };
-            }
-
-            // Helper function to update users list
             function updateUsersList(users) {
                 if (users.length === 0) {
                     usersList.innerHTML = '<div class="text-center py-3 text-muted">No users found</div>';
                     return;
                 }
-                
+
                 usersList.innerHTML = '';
-                
+
                 users.forEach(user => {
                     const userItem = document.createElement('div');
                     userItem.className = 'list-group-item list-group-item-action d-flex align-items-center user-item p-2';
@@ -680,11 +652,9 @@
                             </div>
                         </div>
                     `;
-
                     usersList.appendChild(userItem);
                 });
-                
-                // Reattach event listeners
+
                 document.querySelectorAll('.user-item').forEach(item => {
                     item.addEventListener('click', function(e) {
                         if (e.target.type === 'checkbox') return;
@@ -704,10 +674,8 @@
                 });
             }
 
-            // Handle user selection
             userItems.forEach(item => {
                 item.addEventListener('click', function(e) {
-                    // Don't trigger if clicking the checkbox
                     if (e.target.type === 'checkbox') return;
 
                     const userId = this.dataset.userId;
@@ -715,15 +683,11 @@
                 });
             });
 
-            // Handle bulk selection
             selectAllUsers.addEventListener('change', function() {
                 const isChecked = this.checked;
-                
-                // Only select currently visible checkboxes
                 document.querySelectorAll('#users-list .user-checkbox').forEach(checkbox => {
                     checkbox.checked = isChecked;
                 });
-                
                 updateBulkActions();
             });
 
@@ -731,7 +695,6 @@
                 checkbox.addEventListener('change', function() {
                     updateBulkActions();
 
-                    // Update "select all" checkbox state
                     const allChecked = Array.from(userCheckboxes).every(cb => cb.checked);
                     const someChecked = Array.from(userCheckboxes).some(cb => cb.checked);
 
@@ -740,15 +703,11 @@
                 });
             });
 
-            // Handle bulk actions visibility
-            // Replace the updateBulkActions function with this:
             function updateBulkActions() {
                 const selectedUsers = Array.from(document.querySelectorAll('.user-checkbox:checked'));
-                
                 if (selectedUsers.length > 0) {
                     bulkActions.style.display = '';
-                    
-                    // Update selected users count and lists in modals
+
                     document.getElementById('selected-users-count').textContent = selectedUsers.length;
                     document.getElementById('selected-users-count-perms').textContent = selectedUsers.length;
 
@@ -756,7 +715,6 @@
                     document.getElementById('bulk-user-ids').value = JSON.stringify(userIds);
                     document.getElementById('bulk-user-ids-perms').value = JSON.stringify(userIds);
 
-                    // Populate selected users list
                     const usersList = document.getElementById('selected-users-list');
                     const usersListPerms = document.getElementById('selected-users-list-perms');
 
@@ -783,85 +741,60 @@
                 }
             }
 
-            // Load user roles and permissions
-            function loadUserRolesAndPermissions(userId) {
-                // Show loading state
+            async function loadUserRolesAndPermissions(userId) {
                 userInfoPlaceholder.style.display = 'none';
                 noUserSelected.style.display = 'none';
                 rolesPermissionsContent.style.display = 'none';
-
-                // Highlight selected user
                 userItems.forEach(item => {
                     item.classList.remove('active', 'bg-light');
                 });
-
                 const selectedUserItem = document.querySelector(`.user-item[data-user-id="${userId}"]`);
                 if (selectedUserItem) {
                     selectedUserItem.classList.add('active', 'bg-light');
                 }
+                const data = await fetchRequest(`/admin/apps/hr/roles/${userId}/data`);
+                if (data) {
+                    const user = data.user;
+                    const userRoles = data.roles;
+                    const userPermissions = data.permissions;
 
-                // Fetch user data
-                fetch(`/admin/apps/hr/roles/${userId}/data`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            const user = data.data.user;
-                            const userRoles = data.data.roles;
-                            const userPermissions = data.data.permissions;
+                    userAvatar.src = user.avatar || '{{ asset("admin/images/default-avatar.jpg") }}';
+                    userName.textContent = user.name;
+                    userDetails.textContent = `${user.designation || 'No designation'} • ${user.office || 'No office'}`;
 
-                            // Update user info
-                            userAvatar.src = user.avatar || '{{ asset("admin/images/default-avatar.jpg") }}';
-                            userName.textContent = user.name;
-                            userDetails.textContent = `${user.designation || 'No designation'} • ${user.office || 'No office'}`;
+                    populateRoles(roles, userRoles);
+                    populatePermissions(permissionGroups, userPermissions);
 
-                            // Populate roles
-                            populateRoles(roles, userRoles);
-
-                            // Populate permissions
-                            populatePermissions(permissionGroups, userPermissions);
-
-                            // Show content
-                            userInfo.style.display = '';
-                            rolesPermissionsContent.style.display = '';
-                        } else {
-                            console.error('Failed to load user data');
-                            noUserSelected.style.display = '';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        noUserSelected.style.display = '';
-                    });
+                    userInfo.style.display = '';
+                    rolesPermissionsContent.style.display = '';
+                } else {
+                    noUserSelected.style.display = '';
+                }
             }
 
-            // Populate roles list
             function populateRoles(allRoles, userRoles) {
                 rolesList.innerHTML = '';
-
                 allRoles.forEach(role => {
                     const hasRole = userRoles.some(r => r.id === role.id);
-
                     const roleCard = document.createElement('div');
                     roleCard.className = 'col-md-6';
                     roleCard.innerHTML = `
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <div class="form-check form-switch d-flex justify-content-between align-items-center">
-                                <label class="form-check-label" for="role-${role.id}">
-                                    ${role.name}
-                                </label>
-                                <input class="form-check-input role-toggle" type="checkbox" 
-                                       data-role-id="${role.id}" id="role-${role.id}" 
-                                       ${hasRole ? 'checked' : ''}>
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="form-check form-switch d-flex justify-content-between align-items-center">
+                                    <label class="form-check-label" for="role-${role.id}">
+                                        ${role.name}
+                                    </label>
+                                    <input class="form-check-input role-toggle" type="checkbox" 
+                                        data-role-id="${role.id}" id="role-${role.id}" 
+                                        ${hasRole ? 'checked' : ''}>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
-
+                    `;
                     rolesList.appendChild(roleCard);
                 });
 
-                // Add role toggle event listeners
                 document.querySelectorAll('.role-toggle').forEach(toggle => {
                     toggle.addEventListener('change', function() {
                         const roleId = this.dataset.roleId;
@@ -872,13 +805,10 @@
                     });
                 });
 
-                // Role search
                 roleSearch.addEventListener('keyup', function() {
                     const searchValue = this.value.toLowerCase();
-
                     document.querySelectorAll('#roles-list .card').forEach(card => {
                         const roleName = card.querySelector('label').textContent.toLowerCase();
-
                         if (roleName.includes(searchValue)) {
                             card.closest('.col-md-6').style.display = '';
                         } else {
@@ -888,10 +818,8 @@
                 });
             }
 
-            // Populate permissions list
             function populatePermissions(groups, userPermissions) {
                 permissionsContainer.innerHTML = '';
-
                 Object.keys(groups).sort().forEach(category => {
                     const categoryGroup = document.createElement('div');
                     categoryGroup.className = 'permission-category mb-3';
@@ -899,28 +827,25 @@
                     const categoryHeader = document.createElement('h6');
                     categoryHeader.className = 'mb-2 border-bottom pb-1';
                     categoryHeader.textContent = category.charAt(0).toUpperCase() + category.slice(1);
-
                     categoryGroup.appendChild(categoryHeader);
 
                     const permissionsGrid = document.createElement('div');
                     permissionsGrid.className = 'row g-2';
-
                     groups[category].forEach(permission => {
                         const hasPermission = userPermissions.some(p => p.id === permission.id);
 
                         const permissionCol = document.createElement('div');
                         permissionCol.className = 'col-md-6';
                         permissionCol.innerHTML = `
-                        <div class="form-check form-switch">
-                            <input class="form-check-input permission-toggle" type="checkbox" 
-                                   data-permission-id="${permission.id}" id="perm-${permission.id}" 
-                                   ${hasPermission ? 'checked' : ''}>
-                            <label class="form-check-label" for="perm-${permission.id}">
-                                ${permission.name}
-                            </label>
-                        </div>
-                    `;
-
+                            <div class="form-check form-switch">
+                                <input class="form-check-input permission-toggle" type="checkbox" 
+                                    data-permission-id="${permission.id}" id="perm-${permission.id}" 
+                                    ${hasPermission ? 'checked' : ''}>
+                                <label class="form-check-label" for="perm-${permission.id}">
+                                    ${permission.name}
+                                </label>
+                            </div>
+                        `;
                         permissionsGrid.appendChild(permissionCol);
                     });
 
@@ -928,7 +853,6 @@
                     permissionsContainer.appendChild(categoryGroup);
                 });
 
-                // Add permission toggle event listeners
                 document.querySelectorAll('.permission-toggle').forEach(toggle => {
                     toggle.addEventListener('change', function() {
                         const permissionId = this.dataset.permissionId;
@@ -939,7 +863,6 @@
                     });
                 });
 
-                // Permission search
                 permissionSearch.addEventListener('keyup', function() {
                     const searchValue = this.value.toLowerCase();
 
@@ -965,93 +888,36 @@
                 });
             }
 
-            // Update user role
-            function updateUserRole(userId, roleId, hasRole) {
+            async function updateUserRole(userId, roleId, hasRole) {
                 const url = `/admin/apps/hr/roles/users/${userId}/roles/${roleId}`;
                 const method = hasRole ? 'POST' : 'DELETE';
-
-                fetch(url, {
-                        method: method
-                        , headers: {
-                            'Content-Type': 'application/json'
-                            , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Show success notification
-                            showNotification(data.message, 'success');
-                        } else {
-                            console.error('Failed to update role:', data.message);
-                            showNotification(data.message || 'Failed to update role', 'error');
-
-                            // Revert toggle state
-                            const toggle = document.querySelector(`.role-toggle[data-role-id="${roleId}"]`);
-                            toggle.checked = !hasRole;
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        showNotification('Error updating role', 'error');
-
-                        // Revert toggle state
-                        const toggle = document.querySelector(`.role-toggle[data-role-id="${roleId}"]`);
-                        toggle.checked = !hasRole;
-                    });
+                const result = await fetchRequest(url, method);
+                if (!result) {
+                    const toggle = document.querySelector(`.role-toggle[data-role-id="${roleId}"]`);
+                    toggle.checked = !hasRole;
+                }
             }
 
-            // Update user permission
-            function updateUserPermission(userId, permissionId, hasPermission) {
+            async function updateUserPermission(userId, permissionId, hasPermission) {
                 const url = `/admin/apps/hr/roles/users/${userId}/permissions/${permissionId}`;
                 const method = hasPermission ? 'POST' : 'DELETE';
-
-                fetch(url, {
-                        method: method
-                        , headers: {
-                            'Content-Type': 'application/json'
-                            , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Show success notification
-                            showNotification(data.message, 'success');
-                        } else {
-                            console.error('Failed to update permission:', data.message);
-                            showNotification(data.message || 'Failed to update permission', 'error');
-
-                            // Revert toggle state
-                            const toggle = document.querySelector(`.permission-toggle[data-permission-id="${permissionId}"]`);
-                            toggle.checked = !hasPermission;
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        showNotification('Error updating permission', 'error');
-
-                        // Revert toggle state
-                        const toggle = document.querySelector(`.permission-toggle[data-permission-id="${permissionId}"]`);
-                        toggle.checked = !hasPermission;
-                    });
+                const result = await fetchRequest(url, method);
+                if (!result) {
+                    const toggle = document.querySelector(`.permission-toggle[data-permission-id="${permissionId}"]`);
+                    toggle.checked = !hasPermission;
+                }
             }
 
-            // Populate permissions for new role modal
             function populateNewRolePermissions() {
                 const container = document.getElementById('new-role-permissions-container');
                 container.innerHTML = '';
-
                 Object.keys(permissionGroups).sort().forEach(category => {
                     const categoryGroup = document.createElement('div');
                     categoryGroup.className = 'permission-category mb-3';
-
                     const categoryHeader = document.createElement('h6');
                     categoryHeader.className = 'mb-2 border-bottom pb-1';
                     categoryHeader.textContent = category.charAt(0).toUpperCase() + category.slice(1);
-
                     categoryGroup.appendChild(categoryHeader);
-
                     const permissionsGrid = document.createElement('div');
                     permissionsGrid.className = 'row g-2';
 
@@ -1059,19 +925,17 @@
                         const permissionCol = document.createElement('div');
                         permissionCol.className = 'col-md-6';
                         permissionCol.innerHTML = `
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" 
-                                   name="permissions[]" value="${permission.id}" 
-                                   id="new-perm-${permission.id}">
-                            <label class="form-check-label" for="new-perm-${permission.id}">
-                                ${permission.name}
-                            </label>
-                        </div>
-                    `;
-
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" 
+                                    name="permissions[]" value="${permission.id}" 
+                                    id="new-perm-${permission.id}">
+                                <label class="form-check-label" for="new-perm-${permission.id}">
+                                    ${permission.name}
+                                </label>
+                            </div>
+                        `;
                         permissionsGrid.appendChild(permissionCol);
                     });
-
                     categoryGroup.appendChild(permissionsGrid);
                     container.appendChild(categoryGroup);
                 });
@@ -1079,16 +943,13 @@
                 // Permission search for new role modal
                 document.getElementById('new-role-permission-search').addEventListener('keyup', function() {
                     const searchValue = this.value.toLowerCase();
-
                     document.querySelectorAll('#new-role-permissions-container .permission-category').forEach(category => {
                         const categoryName = category.querySelector('h6').textContent.toLowerCase();
                         const permissionItems = category.querySelectorAll('.form-check');
-
                         let hasVisibleItems = false;
 
                         permissionItems.forEach(item => {
                             const permissionName = item.querySelector('label').textContent.toLowerCase();
-
                             if (permissionName.includes(searchValue) || categoryName.includes(searchValue)) {
                                 item.closest('.col-md-6').style.display = '';
                                 hasVisibleItems = true;
@@ -1096,17 +957,14 @@
                                 item.closest('.col-md-6').style.display = 'none';
                             }
                         });
-
                         category.style.display = hasVisibleItems ? '' : 'none';
                     });
                 });
             }
 
-            // Populate bulk roles
             function populateBulkRoles() {
                 const container = document.getElementById('bulk-roles-list');
                 container.innerHTML = '';
-
                 roles.forEach(role => {
                     const roleCol = document.createElement('div');
                     roleCol.className = 'col-md-6';
@@ -1120,17 +978,13 @@
                         </label>
                     </div>
                 `;
-
                     container.appendChild(roleCol);
                 });
 
-                // Role search for bulk assign modal
                 document.getElementById('bulk-roles-search').addEventListener('keyup', function() {
                     const searchValue = this.value.toLowerCase();
-
                     document.querySelectorAll('#bulk-roles-list .form-check').forEach(item => {
                         const roleName = item.querySelector('label').textContent.toLowerCase();
-
                         if (roleName.includes(searchValue)) {
                             item.closest('.col-md-6').style.display = '';
                         } else {
@@ -1140,21 +994,16 @@
                 });
             }
 
-            // Populate bulk permissions
             function populateBulkPermissions() {
                 const container = document.getElementById('bulk-permissions-container');
                 container.innerHTML = '';
-
                 Object.keys(permissionGroups).sort().forEach(category => {
                     const categoryGroup = document.createElement('div');
                     categoryGroup.className = 'permission-category mb-3';
-
                     const categoryHeader = document.createElement('h6');
                     categoryHeader.className = 'mb-2 border-bottom pb-1';
                     categoryHeader.textContent = category.charAt(0).toUpperCase() + category.slice(1);
-
                     categoryGroup.appendChild(categoryHeader);
-
                     const permissionsGrid = document.createElement('div');
                     permissionsGrid.className = 'row g-2';
 
@@ -1171,7 +1020,6 @@
                             </label>
                         </div>
                     `;
-
                         permissionsGrid.appendChild(permissionCol);
                     });
 
@@ -1179,19 +1027,14 @@
                     container.appendChild(categoryGroup);
                 });
 
-                // Permission search for bulk assign modal
                 document.getElementById('bulk-permissions-search').addEventListener('keyup', function() {
                     const searchValue = this.value.toLowerCase();
-
                     document.querySelectorAll('#bulk-permissions-container .permission-category').forEach(category => {
                         const categoryName = category.querySelector('h6').textContent.toLowerCase();
                         const permissionItems = category.querySelectorAll('.form-check');
-
                         let hasVisibleItems = false;
-
                         permissionItems.forEach(item => {
                             const permissionName = item.querySelector('label').textContent.toLowerCase();
-
                             if (permissionName.includes(searchValue) || categoryName.includes(searchValue)) {
                                 item.closest('.col-md-6').style.display = '';
                                 hasVisibleItems = true;
@@ -1199,83 +1042,61 @@
                                 item.closest('.col-md-6').style.display = 'none';
                             }
                         });
-
                         category.style.display = hasVisibleItems ? '' : 'none';
                     });
                 });
-            }            
+            }
 
-            // Filter users
-            document.getElementById('filter-btn').addEventListener('click', function() {
+            document.getElementById('filter-btn').addEventListener('click', async function() {
                 const officeId = document.getElementById('office-filter').value;
                 const designationId = document.getElementById('designation-filter').value;
-
-                fetch(`/admin/apps/hr/roles/filter-users?office_id=${officeId}&designation_id=${designationId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Update users list
-                            usersList.innerHTML = '';
-
-                            data.data.users.forEach(user => {
-                                const userItem = document.createElement('div');
-                                userItem.className = 'list-group-item list-group-item-action d-flex align-items-center user-item p-2';
-                                userItem.dataset.userId = user.id;
-
-                                userItem.innerHTML = `
-                                <div class="form-check me-2">
-                                    <input class="form-check-input user-checkbox" type="checkbox" value="${user.id}" id="user-${user.id}">
-                                </div>
-                                <div class="d-flex align-items-center flex-grow-1">
-                                    <img src="${user.avatar || '{{ asset("admin/images/default-avatar.jpg") }}'}" 
-                                         class="rounded-circle me-2" width="32" height="32">
-                                    <div>
-                                        <h6 class="mb-0">${user.name}</h6>
-                                        <small class="text-muted">
-                                            ${user.designation || 'No designation'} 
-                                            <span class="text-secondary">&bull;</span> 
-                                            ${user.office || 'No office'}
-                                        </small>
-                                    </div>
-                                </div>
-                            `;
-
-                                usersList.appendChild(userItem);
-                            });
-
-                            // Reattach event listeners
-                            document.querySelectorAll('.user-item').forEach(item => {
-                                item.addEventListener('click', function(e) {
-                                    if (e.target.type === 'checkbox') return;
-
-                                    const userId = this.dataset.userId;
-                                    loadUserRolesAndPermissions(userId);
-                                });
-                            });
-
-                            document.querySelectorAll('.user-checkbox').forEach(checkbox => {
-                                checkbox.addEventListener('change', function() {
-                                    updateBulkActions();
-
-                                    const allChecked = Array.from(document.querySelectorAll('.user-checkbox')).every(cb => cb.checked);
-                                    const someChecked = Array.from(document.querySelectorAll('.user-checkbox')).some(cb => cb.checked);
-
-                                    selectAllUsers.checked = allChecked;
-                                    selectAllUsers.indeterminate = someChecked && !allChecked;
-                                });
-                            });
-                        } else {
-                            console.error('Failed to filter users');
-                            showNotification('Failed to filter users', 'error');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        showNotification('Error filtering users', 'error');
+                const data = await fetchRequest(`/admin/apps/hr/roles/filter-users?office_id=${officeId}&designation_id=${designationId}`);
+                if (data) {
+                    usersList.innerHTML = '';
+                    data.users.forEach(user => {
+                        const userItem = document.createElement('div');
+                        userItem.className = 'list-group-item list-group-item-action d-flex align-items-center user-item p-2';
+                        userItem.dataset.userId = user.id;
+                        userItem.innerHTML = `
+                        <div class="form-check me-2">
+                            <input class="form-check-input user-checkbox" type="checkbox" value="${user.id}" id="user-${user.id}">
+                        </div>
+                        <div class="d-flex align-items-center flex-grow-1">
+                            <img src="${user.avatar || '{{ asset("admin/images/default-avatar.jpg") }}'}" 
+                                class="rounded-circle me-2" width="32" height="32">
+                            <div>
+                                <h6 class="mb-0">${user.name}</h6>
+                                <small class="text-muted">
+                                    ${user.designation || 'No designation'} 
+                                    <span class="text-secondary">&bull;</span> 
+                                    ${user.office || 'No office'}
+                                </small>
+                            </div>
+                        </div>
+                        `;
+                        usersList.appendChild(userItem);
                     });
+
+                    document.querySelectorAll('.user-item').forEach(item => {
+                        item.addEventListener('click', function(e) {
+                            if (e.target.type === 'checkbox') return;
+                            const userId = this.dataset.userId;
+                            loadUserRolesAndPermissions(userId);
+                        });
+                    });
+
+                    document.querySelectorAll('.user-checkbox').forEach(checkbox => {
+                        checkbox.addEventListener('change', function() {
+                            updateBulkActions();
+                            const allChecked = Array.from(document.querySelectorAll('.user-checkbox')).every(cb => cb.checked);
+                            const someChecked = Array.from(document.querySelectorAll('.user-checkbox')).some(cb => cb.checked);
+                            selectAllUsers.checked = allChecked;
+                            selectAllUsers.indeterminate = someChecked && !allChecked;
+                        });
+                    });
+                }
             });
 
-            // Initialize components when modal is shown
             document.getElementById('newRoleModal').addEventListener('show.bs.modal', function() {
                 populateNewRolePermissions();
             });
@@ -1288,13 +1109,9 @@
                 populateBulkPermissions();
             });
 
-            // Handle form submissions
-            document.getElementById('create-role-form').addEventListener('submit', function(e) {
+            document.getElementById('create-role-form').addEventListener('submit', async function(e) {
                 e.preventDefault();
-
                 const formData = new FormData(this);
-                
-                // Convert form data to JSON
                 const jsonData = {};
                 formData.forEach((value, key) => {
                     if (key === 'permissions[]') {
@@ -1304,115 +1121,45 @@
                         jsonData[key] = value;
                     }
                 });
-
-                fetch(this.action, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify(jsonData)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        bootstrap.Modal.getInstance(document.getElementById('newRoleModal')).hide();
-                        showNotification(data.message, 'success');
-                        
-                        // Refresh roles list
-                        if (document.querySelector('.user-item.active')) {
-                            const userId = document.querySelector('.user-item.active').dataset.userId;
-                            loadUserRolesAndPermissions(userId);
-                        }
-                        
-                        // Add the new role to the roles array
-                        roles.push(data.role);
-                    } else {
-                        console.error('Failed to create role:', data.message);
-                        showNotification(data.message || 'Failed to create role', 'error');
+                const result = await fetchRequest(this.action, 'POST', jsonData);
+                if (result) {
+                    bootstrap.Modal.getInstance(document.getElementById('newRoleModal')).hide();
+                    if (document.querySelector('.user-item.active')) {
+                        const userId = document.querySelector('.user-item.active').dataset.userId;
+                        loadUserRolesAndPermissions(userId);
                     }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showNotification('Error creating role', 'error');
-                });
+                    roles.push(result.role);
+                }
             });
 
-            document.getElementById('bulk-assign-roles-form').addEventListener('submit', function(e) {
+            document.getElementById('bulk-assign-roles-form').addEventListener('submit', async function(e) {
                 e.preventDefault();
-
                 const formData = new FormData(this);
+                const result = await fetchRequest(this.action, 'POST', formData);
+                if (result) {
+                    bootstrap.Modal.getInstance(document.getElementById('bulkAssignRolesModal')).hide();
 
-                fetch(this.action, {
-                        method: 'POST'
-                        , body: formData
-                        , headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Close modal
-                            bootstrap.Modal.getInstance(document.getElementById('bulkAssignRolesModal')).hide();
-
-                            // Show success notification
-                            showNotification(data.message, 'success');
-
-                            // If a user is currently selected, reload their roles
-                            const activeUser = document.querySelector('.user-item.active');
-                            if (activeUser) {
-                                loadUserRolesAndPermissions(activeUser.dataset.userId);
-                            }
-                        } else {
-                            console.error('Failed to assign roles:', data.message);
-                            showNotification(data.message || 'Failed to assign roles', 'error');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        showNotification('Error assigning roles', 'error');
-                    });
+                    const activeUser = document.querySelector('.user-item.active');
+                    if (activeUser) {
+                        loadUserRolesAndPermissions(activeUser.dataset.userId);
+                    }
+                }
             });
 
-            document.getElementById('bulk-assign-permissions-form').addEventListener('submit', function(e) {
+            document.getElementById('bulk-assign-permissions-form').addEventListener('submit', async function(e) {
                 e.preventDefault();
-
                 const formData = new FormData(this);
-
-                fetch(this.action, {
-                        method: 'POST'
-                        , body: formData
-                        , headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Close modal
-                            bootstrap.Modal.getInstance(document.getElementById('bulkAssignPermissionsModal')).hide();
-
-                            // Show success notification
-                            showNotification(data.message, 'success');
-
-                            // If a user is currently selected, reload their permissions
-                            const activeUser = document.querySelector('.user-item.active');
-                            if (activeUser) {
-                                loadUserRolesAndPermissions(activeUser.dataset.userId);
-                            }
-                        } else {
-                            console.error('Failed to assign permissions:', data.message);
-                            showNotification(data.message || 'Failed to assign permissions', 'error');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        showNotification('Error assigning permissions', 'error');
-                    });
+                const result = await fetchRequest(this.action, 'POST', formData);
+                if (result) {
+                    bootstrap.Modal.getInstance(document.getElementById('bulkAssignPermissionsModal')).hide();
+                    const activeUser = document.querySelector('.user-item.active');
+                    if (activeUser) {
+                        loadUserRolesAndPermissions(activeUser.dataset.userId);
+                    }
+                }
             });
         });
 
     </script>
     @endpush
-    </x-hr-layout>
+</x-hr-layout>
