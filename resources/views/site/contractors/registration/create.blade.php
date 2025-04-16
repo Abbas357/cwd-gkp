@@ -257,7 +257,7 @@
                 }
             }
 
-            function showMessage(message, type) {
+            function shoInputwMessage(message, type) {
                 const alertElement = $('#pec-validation-message');
                 const messageElement = $('#pec-message-text');
 
@@ -302,14 +302,14 @@
                     .then(response => response.json())
                     .then(data => {
                         loaderElement.hide();
-                        showMessage(data.message, data.type);
+                        shoInputwMessage(data.message, data.type);
                         formState.isValid = data.unique;
                         submitButton.prop('disabled', !data.unique);
                     })
                     .catch(error => {
                         loaderElement.hide();
                         console.error('Error:', error);
-                        showMessage('An error occurred while validating PEC number.', 'error');
+                        shoInputwMessage('An error occurred while validating PEC number.', 'error');
                         submitButton.prop('disabled', true);
                     });
             }
@@ -329,7 +329,7 @@
             $('.registration-form').on('submit', function(e) {
                 if (!formState.isValid) {
                     e.preventDefault();
-                    showMessage('Please resolve PEC validation issues before submitting.', 'error');
+                    shoInputwMessage('Please resolve PEC validation issues before submitting.', 'error');
                 }
             });
 

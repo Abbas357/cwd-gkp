@@ -255,7 +255,7 @@ $(document).ready(function() {
                             </a>
                         </div>
                     `;
-                    showMessage('Files Updated');
+                    showNotification('Files Updated');
 
                     const buttonContainer = $(input).closest('td').find('.mt-2');
                     if (buttonContainer.length) {

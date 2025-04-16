@@ -3,7 +3,7 @@
         @if (session('success'))
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                showMessage("{{ session('success') }}");
+                showNotification("{{ session('success') }}");
             });
 
         </script>
@@ -12,7 +12,7 @@
         @if (session('danger'))
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                showMessage("{{ session('danger') }}", 'error');
+                showNotification("{{ session('danger') }}", 'error');
             });
 
         </script>

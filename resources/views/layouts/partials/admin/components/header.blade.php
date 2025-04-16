@@ -26,16 +26,16 @@
             </div>
             <div class="search-bar" style="max-width: 500px; flex-grow: 1">
                 <div class="position-relative">
-                    <input class="form-control rounded-3 px-5 search-control shadow-sm d-lg-block d-none" type="text" placeholder="Search">
-                    <span class="bi-search position-absolute d-lg-block d-none ms-3 translate-middle-y start-0 top-50"></span>
-                    <span class="bi-x-circle position-absolute me-3 translate-middle-y end-0 top-50 search-close"></span>
-                    <div class="search-popup p-1 border">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0 d-lg-block d-none"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control border-0 bg-light admin-search search-control d-lg-block d-none" placeholder="Search...">
+                    </div>
+                    <div class="search-popup">
                         <div class="card overflow-hidden">
                             <div class="card-header d-lg-none">
-                                <div class="position-relative">
-                                    <input class="form-control rounded-3 px-5 mobile-search-control" type="text" placeholder="Search">
-                                    <span class="bi-search position-absolute ms-3 translate-middle-y start-0 top-50"></span>
-                                    <span class="bi-x-circle position-absolute me-3 translate-middle-y end-0 top-50 mobile-search-close"></span>
+                                <div class="input-group position-relative">
+                                    <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control border-0 bg-light admin-search mobile-search-control" placeholder="Search...">
                                 </div>
                             </div>
                             <div class="card-body search-content">

@@ -86,11 +86,11 @@ function openUserQuickCreateModal(callback) {
                     
                     // Show success message with password if generated
                     if (response.generated_password) {
-                        showMessage(`${response.success}. The password is: ${response.generated_password}`, 'success', {
+                        showNotification(`${response.success}. The password is: ${response.generated_password}`, 'success', {
                             timer: 8000
                         });
                     } else {
-                        showMessage(response.success);
+                        showNotification(response.success);
                     }
                     
                     // Execute callback if provided
@@ -98,7 +98,7 @@ function openUserQuickCreateModal(callback) {
                         callback(response.user);
                     }
                 } else {
-                    showMessage(response.error, 'error');
+                    showNotification(response.error, 'error');
                     submitBtn.prop('disabled', false).text('Create User');
                 }
             },
@@ -110,7 +110,7 @@ function openUserQuickCreateModal(callback) {
                     errorMessage = Object.values(xhr.responseJSON.errors).flat().join('<br>');
                 }
                 
-                showMessage(errorMessage, 'error');
+                showNotification(errorMessage, 'error');
                 submitBtn.prop('disabled', false).text('Create User');
             }
         });

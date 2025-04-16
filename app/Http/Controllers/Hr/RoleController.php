@@ -13,17 +13,12 @@ use App\Http\Requests\StoreRoleRequest;
 
 class RoleController extends Controller
 {
-    /**
-     * Display a listing of the roles.
-     *
-     * @return \Illuminate\View\View
-     */
     public function index()
     {
         $roles = Role::with('permissions')->get();
         $permissions = Permission::all();
         $users = User::with(['roles', 'permissions', 'currentPosting', 'currentPosting.designation', 'currentPosting.office'])
-            ->paginate(10);
+            ->offset(2)->limit(5)->get();
         $offices = Office::orderBy('name')->get();
         $designations = Designation::orderBy('name')->get();
 
@@ -36,12 +31,63 @@ class RoleController extends Controller
         ));
     }
 
-    /**
-     * Store a newly created role.
-     *
-     * @param  \App\Http\Requests\StoreRoleRequest  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
+    public function searchUsers(Request $request)
+    {
+        $query = User::with(['currentPosting', 'currentPosting.designation', 'currentPosting.office']);
+        
+        if ($request->filled('search')) {
+            $searchTerm = '%'.$request->search.'%';
+            
+            $query->where(function($q) use ($searchTerm, $request) {
+                $q->where('name', 'like', $searchTerm)
+                  ->orWhere('email', 'like', $searchTerm);
+                
+                if (!$request->filled('office_id')) {
+                    $q->orWhereHas('currentPosting.office', function($officeQuery) use ($searchTerm) {
+                        $officeQuery->where('name', 'like', $searchTerm);
+                    });
+                }
+                
+                if (!$request->filled('designation_id')) {
+                    $q->orWhereHas('currentPosting.designation', function($designationQuery) use ($searchTerm) {
+                        $designationQuery->where('name', 'like', $searchTerm);
+                    });
+                }
+            });
+        }
+        
+        if ($request->filled('office_id')) {
+            $query->whereHas('currentPosting', function($q) use ($request) {
+                $q->where('office_id', $request->office_id);
+            });
+        }
+        
+        if ($request->filled('designation_id')) {
+            $query->whereHas('currentPosting', function($q) use ($request) {
+                $q->where('designation_id', $request->designation_id);
+            });
+        }
+        
+        $users = $query->get();
+        
+        $formattedUsers = $users->map(function($user) {
+            return [
+                'id' => $user->id,
+                'name' => $user->name,
+                'avatar' => $user->getFirstMediaUrl('profile_pictures', 'thumb') ?: null,
+                'designation' => $user->currentPosting->designation->name ?? null,
+                'office' => $user->currentPosting->office->name ?? null,
+            ];
+        });
+        
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'users' => $formattedUsers
+            ]
+        ]);
+    }
+
     public function store(StoreRoleRequest $request)
     {
         $role = Role::create(['name' => $request->name]);
@@ -57,12 +103,6 @@ class RoleController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified role.
-     *
-     * @param  \Spatie\Permission\Models\Role  $role
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function destroy(Role $role)
     {
         $role->delete();
@@ -73,12 +113,6 @@ class RoleController extends Controller
         ]);
     }
 
-    /**
-     * Get user roles and permissions.
-     *
-     * @param  int  $userId
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function getUserData($userId)
     {
         $user = User::with(['roles', 'permissions', 'currentPosting', 'currentPosting.designation', 'currentPosting.office'])
@@ -100,12 +134,6 @@ class RoleController extends Controller
         ]);
     }
 
-    /**
-     * Get all permissions for a role.
-     *
-     * @param  \Spatie\Permission\Models\Role  $role
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function getPermissions(Role $role)
     {
         return response()->json([
@@ -118,13 +146,6 @@ class RoleController extends Controller
         ]);
     }
 
-    /**
-     * Update the permissions for a role.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Spatie\Permission\Models\Role  $role
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function updatePermissions(Request $request, Role $role)
     {
         $validated = $request->validate([
@@ -139,14 +160,6 @@ class RoleController extends Controller
         ]);
     }
 
-    /**
-     * Assign a role to a user.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $userId
-     * @param  int  $roleId
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function assignRoleToUser($userId, $roleId)
     {
         $user = User::findOrFail($userId);
@@ -160,13 +173,6 @@ class RoleController extends Controller
         ]);
     }
 
-    /**
-     * Remove a role from a user.
-     *
-     * @param  int  $userId
-     * @param  int  $roleId
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function removeRoleFromUser($userId, $roleId)
     {
         $user = User::findOrFail($userId);
@@ -180,13 +186,6 @@ class RoleController extends Controller
         ]);
     }
 
-    /**
-     * Assign a direct permission to a user.
-     *
-     * @param  int  $userId
-     * @param  int  $permissionId
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function assignPermissionToUser($userId, $permissionId)
     {
         $user = User::findOrFail($userId);
@@ -200,13 +199,6 @@ class RoleController extends Controller
         ]);
     }
 
-    /**
-     * Remove a direct permission from a user.
-     *
-     * @param  int  $userId
-     * @param  int  $permissionId
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function removePermissionFromUser($userId, $permissionId)
     {
         $user = User::findOrFail($userId);
@@ -220,12 +212,6 @@ class RoleController extends Controller
         ]);
     }
 
-    /**
-     * Filter users by office and designation.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function filterUsers(Request $request)
     {
         $query = User::with(['currentPosting', 'currentPosting.designation', 'currentPosting.office']);
@@ -262,12 +248,6 @@ class RoleController extends Controller
         ]);
     }
 
-    /**
-     * Bulk assign roles to users.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function bulkAssignRoles(Request $request)
     {
         $validated = $request->validate([
@@ -297,12 +277,6 @@ class RoleController extends Controller
         ]);
     }
 
-    /**
-     * Bulk assign permissions to users.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function bulkAssignPermissions(Request $request)
     {
         $validated = $request->validate([

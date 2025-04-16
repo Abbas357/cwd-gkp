@@ -112,6 +112,7 @@ Route::prefix('hr')->as('hr.')->middleware(['can:manage human resource'])->group
         Route::get('/filter-users', [RoleController::class, 'filterUsers'])->name('filterUsers');
         Route::post('/bulk-assign-roles', [RoleController::class, 'bulkAssignRoles'])->name('bulkAssignRoles');
         Route::post('/bulk-assign-permissions', [RoleController::class, 'bulkAssignPermissions'])->name('bulkAssignPermissions');
+        Route::get('/search-users', [RoleController::class, 'searchUsers'])->name('searchUsers');
     });
 
     Route::prefix('permissions')->as('permissions.')->group(function () {

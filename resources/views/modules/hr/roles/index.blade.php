@@ -254,6 +254,12 @@
             border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
 
+        .spinner-border {
+            width: 1.5rem;
+            height: 1.5rem;
+            border-width: 0.2em;
+        }
+
     </style>
     @endpush
     <div class="container-fluid">
@@ -341,9 +347,6 @@
                                 </div>
                             </div>
                             @endforeach
-                        </div>
-                        <div class="d-flex justify-content-center py-2">
-                            {{ $users->links() }}
                         </div>
                     </div>
                 </div>
@@ -604,20 +607,102 @@
             });
 
             // User search
-            userSearch.addEventListener('keyup', function() {
-                const searchValue = this.value.toLowerCase();
+            // Replace the existing user search event listener with this:
+            userSearch.addEventListener('keyup', debounce(function() {
+                const searchValue = this.value.trim().toLowerCase();
+                const officeId = document.getElementById('office-filter').value;
+                const designationId = document.getElementById('designation-filter').value;
+                
+                if (searchValue.length === 0 && !officeId && !designationId) {
+                    usersList.innerHTML = '<div class="text-center py-3 text-muted">Start typing to search users</div>';
+                    return;
+                }
+                
+                // Show loading state
+                usersList.innerHTML = '<div class="text-center py-3"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+                
+                // Fetch users via AJAX
+                fetch(`/admin/apps/hr/roles/search-users?search=${encodeURIComponent(searchValue)}&office_id=${officeId}&designation_id=${designationId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            updateUsersList(data.data.users);
+                        } else {
+                            usersList.innerHTML = '<div class="text-center py-3 text-danger">Failed to load users</div>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        usersList.innerHTML = '<div class="text-center py-3 text-danger">Error loading users</div>';
+                    });
+            }, 300));
 
-                userItems.forEach(item => {
-                    const userName = item.querySelector('h6').textContent.toLowerCase();
-                    const userDetails = item.querySelector('small').textContent.toLowerCase();
+            // Add this debounce function to prevent too many requests
+            function debounce(func, wait) {
+                let timeout;
+                return function() {
+                    const context = this, args = arguments;
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        func.apply(context, args);
+                    }, wait);
+                };
+            }
 
-                    if (userName.includes(searchValue) || userDetails.includes(searchValue)) {
-                        item.style.display = '';
-                    } else {
-                        item.style.display = 'none';
-                    }
+            // Helper function to update users list
+            function updateUsersList(users) {
+                if (users.length === 0) {
+                    usersList.innerHTML = '<div class="text-center py-3 text-muted">No users found</div>';
+                    return;
+                }
+                
+                usersList.innerHTML = '';
+                
+                users.forEach(user => {
+                    const userItem = document.createElement('div');
+                    userItem.className = 'list-group-item list-group-item-action d-flex align-items-center user-item p-2';
+                    userItem.dataset.userId = user.id;
+
+                    userItem.innerHTML = `
+                        <div class="form-check me-2">
+                            <input class="form-check-input user-checkbox" type="checkbox" value="${user.id}" id="user-${user.id}">
+                        </div>
+                        <div class="d-flex align-items-center flex-grow-1">
+                            <img src="${user.avatar || '{{ asset("admin/images/default-avatar.jpg") }}'}" 
+                                class="rounded-circle me-2" width="32" height="32">
+                            <div>
+                                <h6 class="mb-0">${user.name}</h6>
+                                <small class="text-muted">
+                                    ${user.designation || 'No designation'} 
+                                    <span class="text-secondary">&bull;</span> 
+                                    ${user.office || 'No office'}
+                                </small>
+                            </div>
+                        </div>
+                    `;
+
+                    usersList.appendChild(userItem);
                 });
-            });
+                
+                // Reattach event listeners
+                document.querySelectorAll('.user-item').forEach(item => {
+                    item.addEventListener('click', function(e) {
+                        if (e.target.type === 'checkbox') return;
+                        const userId = this.dataset.userId;
+                        loadUserRolesAndPermissions(userId);
+                    });
+                });
+
+                document.querySelectorAll('.user-checkbox').forEach(checkbox => {
+                    checkbox.addEventListener('change', function() {
+                        updateBulkActions();
+                        const allChecked = Array.from(document.querySelectorAll('.user-checkbox')).every(cb => cb.checked);
+                        const someChecked = Array.from(document.querySelectorAll('.user-checkbox')).some(cb => cb.checked);
+                        selectAllUsers.checked = allChecked;
+                        selectAllUsers.indeterminate = someChecked && !allChecked;
+                    });
+                });
+            }
 
             // Handle user selection
             userItems.forEach(item => {
@@ -633,11 +718,12 @@
             // Handle bulk selection
             selectAllUsers.addEventListener('change', function() {
                 const isChecked = this.checked;
-
-                userCheckboxes.forEach(checkbox => {
+                
+                // Only select currently visible checkboxes
+                document.querySelectorAll('#users-list .user-checkbox').forEach(checkbox => {
                     checkbox.checked = isChecked;
                 });
-
+                
                 updateBulkActions();
             });
 
@@ -655,12 +741,13 @@
             });
 
             // Handle bulk actions visibility
+            // Replace the updateBulkActions function with this:
             function updateBulkActions() {
-                const selectedUsers = Array.from(userCheckboxes).filter(cb => cb.checked);
-
+                const selectedUsers = Array.from(document.querySelectorAll('.user-checkbox:checked'));
+                
                 if (selectedUsers.length > 0) {
                     bulkActions.style.display = '';
-
+                    
                     // Update selected users count and lists in modals
                     document.getElementById('selected-users-count').textContent = selectedUsers.length;
                     document.getElementById('selected-users-count-perms').textContent = selectedUsers.length;
@@ -689,10 +776,8 @@
                     });
                 } else {
                     bulkActions.style.display = 'none';
-
                     document.getElementById('selected-users-count').textContent = '0';
                     document.getElementById('selected-users-count-perms').textContent = '0';
-
                     document.getElementById('selected-users-list').innerHTML = '<em class="text-muted">No users selected</em>';
                     document.getElementById('selected-users-list-perms').innerHTML = '<em class="text-muted">No users selected</em>';
                 }
@@ -759,8 +844,8 @@
                     const roleCard = document.createElement('div');
                     roleCard.className = 'col-md-6';
                     roleCard.innerHTML = `
-                    <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body p-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
                             <div class="form-check form-switch d-flex justify-content-between align-items-center">
                                 <label class="form-check-label" for="role-${role.id}">
                                     ${role.name}
@@ -1118,21 +1203,7 @@
                         category.style.display = hasVisibleItems ? '' : 'none';
                     });
                 });
-            }
-
-            // Show notification
-            function showNotification(message, type = 'success') {
-                Swal.fire({
-                    icon: type
-                    , title: type === 'success' ? 'Success' : 'Error'
-                    , text: message
-                    , toast: true
-                    , position: 'top-end'
-                    , showConfirmButton: false
-                    , timer: 3000
-                    , timerProgressBar: true
-                });
-            }
+            }            
 
             // Filter users
             document.getElementById('filter-btn').addEventListener('click', function() {
@@ -1222,36 +1293,49 @@
                 e.preventDefault();
 
                 const formData = new FormData(this);
+                
+                // Convert form data to JSON
+                const jsonData = {};
+                formData.forEach((value, key) => {
+                    if (key === 'permissions[]') {
+                        if (!jsonData.permissions) jsonData.permissions = [];
+                        jsonData.permissions.push(value);
+                    } else {
+                        jsonData[key] = value;
+                    }
+                });
 
                 fetch(this.action, {
-                        method: 'POST'
-                        , body: formData
-                        , headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify(jsonData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        bootstrap.Modal.getInstance(document.getElementById('newRoleModal')).hide();
+                        showNotification(data.message, 'success');
+                        
+                        // Refresh roles list
+                        if (document.querySelector('.user-item.active')) {
+                            const userId = document.querySelector('.user-item.active').dataset.userId;
+                            loadUserRolesAndPermissions(userId);
                         }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Close modal
-                            bootstrap.Modal.getInstance(document.getElementById('newRoleModal')).hide();
-
-                            // Show success notification
-                            showNotification(data.message, 'success');
-
-                            // Refresh the page to update roles list
-                            setTimeout(() => {
-                                window.location.reload();
-                            }, 1000);
-                        } else {
-                            console.error('Failed to create role:', data.message);
-                            showNotification(data.message || 'Failed to create role', 'error');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        showNotification('Error creating role', 'error');
-                    });
+                        
+                        // Add the new role to the roles array
+                        roles.push(data.role);
+                    } else {
+                        console.error('Failed to create role:', data.message);
+                        showNotification(data.message || 'Failed to create role', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showNotification('Error creating role', 'error');
+                });
             });
 
             document.getElementById('bulk-assign-roles-form').addEventListener('submit', function(e) {

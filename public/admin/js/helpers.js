@@ -1,11 +1,13 @@
-function showMessage(message, type = "success", options = {}) {
+function showNotification(message, type = 'success', options = {}) {
     Swal.fire({
-        position: "top-end",
-        icon: type,
-        title: message,
-        showConfirmButton: options.showConfirmButton || false,
-        timer: options.timer || 3000,
-        ...options,
+        icon: type
+        , title: type === 'success' ? 'Success' : 'Error'
+        , text: message
+        , toast: true
+        , position: 'top-end'
+        , showConfirmButton: options.showConfirmButton || false
+        , timer: options.timer || 3000
+        , timerProgressBar: true
     });
 }
 
@@ -50,7 +52,6 @@ async function confirmWithInput({
 
     return await Swal.fire(options);
 }
-
 
 async function fetchRequest(
     url,
@@ -98,18 +99,18 @@ async function fetchRequest(
             if (method === "GET") {
                 return result.data;
             } else {
-                showMessage(result.success || successMessage);
+                showNotification(result.success || successMessage);
                 return true;
             }
         } else {
-            showMessage(
+            showNotification(
                 result.error || errorMessage || "An unexpected error occurred",
                 "error"
             );
             return false;
         }
     } catch (error) {
-        showMessage(
+        showNotification(
             errorMessage || "There was an error processing your request",
             "error"
         );
