@@ -88,6 +88,64 @@ class PermissionController extends Controller
     protected function getPredefinedPermissions()
     {
         return [
+            // Downloads
+            'view any download',
+            'create download',
+            'view download',
+            'detail download',
+            'update file download',
+            'update field download',
+            'publish download',
+            'archive download',
+            'delete download',
+
+            // Events
+            'view any event',
+            'view event',
+            'create event',
+            'detail event',
+            'update field event',
+            'delete event',
+            'publish event',
+            'archive event',
+            'comment event',
+
+            // Events
+            'view any gallery',
+            'view gallery',
+            'create gallery',
+            'detail gallery',
+            'update field gallery',
+            'update file gallery',
+            'delete gallery',
+            'publish gallery',
+            'archive gallery',
+            'comment gallery',
+
+            // News
+            'view any news',
+            'view news',
+            'create news',
+            'detail news',
+            'update field news',
+            'update file news',
+            'delete news',
+            'publish news',
+            'archive news',
+            'comment news',
+
+            // Achievement
+            'view any achievement',
+            'view achievement',
+            'create achievement',
+            'update achievement',
+            'delete achievement',
+            'publish achievement',
+            'archive achievement',
+
+            // Activity Logs
+            'view activity',
+
             // User permissions
             'view any user',
             'view user',
@@ -160,21 +218,6 @@ class PermissionController extends Controller
             
             // Website modules
             'manage website',
-            'view any news',
-            'view news',
-            'create news',
-            'update news',
-            'delete news',
-            'publish news',
-            'archive news',
-            
-            'view any event',
-            'view event',
-            'create event',
-            'update event',
-            'delete event',
-            'publish event',
-            'archive event',
             
             'view any tender',
             'view tender',
@@ -183,14 +226,6 @@ class PermissionController extends Controller
             'delete tender',
             'publish tender',
             'archive tender',
-            
-            'view any gallery',
-            'view gallery',
-            'create gallery',
-            'update gallery',
-            'delete gallery',
-            'publish gallery',
-            'archive gallery',
             
             'view any slider',
             'view slider',
@@ -214,14 +249,6 @@ class PermissionController extends Controller
             'delete page',
             'activate page',
             
-            'create download',
-            'view any download',
-            'view download',
-            'update download',
-            'delete download',
-            'publish download',
-            'archive download',
-            
             'view any card',
             
             'view any project',
@@ -243,14 +270,6 @@ class PermissionController extends Controller
             'view any scheme',
             'view scheme',
             'sync scheme',
-            
-            'view any achievement',
-            'view achievement',
-            'create achievement',
-            'update achievement',
-            'delete achievement',
-            'publish achievement',
-            'archive achievement',
             
             'update comment',
             'view any newsletter',
@@ -346,9 +365,6 @@ class PermissionController extends Controller
             'create category',
             'update category',
             'delete category',
-            
-            // Activity Logs
-            'view activity',
         ];
     }
 }

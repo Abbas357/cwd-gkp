@@ -22,9 +22,19 @@ class NewsPolicy
         return $user->can('create news');
     }
 
-    public function update(User $user, News $news): bool
+    public function detail(User $user, News $news): bool
     {
-        return $user->id === $news->user_id || $user->can('update news');
+        return $user->id === $news->user_id || $user->can('detail news');
+    }
+
+    public function uploadField(User $user, News $news): bool
+    {
+        return $user->id === $news->user_id || $user->can('update field news');
+    }
+
+    public function uploadFile(User $user, News $news): bool
+    {
+        return $user->id === $news->user_id || $user->can('update file news');
     }
 
     public function delete(User $user, News $news): bool
@@ -40,5 +50,10 @@ class NewsPolicy
     public function archive(User $user, News $news): bool
     {
         return $user->id === $news->user_id || $user->can('archive news');
+    }
+
+    public function comment(User $user, News $news): bool
+    {
+        return $user->id === $news->user_id || $user->can('comment news');
     }
 }

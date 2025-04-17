@@ -22,9 +22,19 @@ class EventPolicy
         return $user->can('create event');
     }
 
-    public function update(User $user, Event $event): bool
+    public function detail(User $user, Event $event): bool
     {
-        return$user->id === $event->user_id ||  $user->can('update event');
+        return $user->id === $event->user_id || $user->can('detail event');
+    }
+
+    public function uploadField(User $user, Event $event): bool
+    {
+        return $user->id === $event->user_id || $user->can('update field event');
+    }
+
+    public function delete(User $user, Event $event): bool
+    {
+        return $user->id === $event->user_id || $user->can('delete event');
     }
 
     public function publish(User $user, Event $event): bool
@@ -37,8 +47,8 @@ class EventPolicy
         return $user->id === $event->user_id || $user->can('archive event');
     }
 
-    public function delete(User $user, Event $event): bool
+    public function comment(User $user, Event $event): bool
     {
-        return $user->id === $event->user_id || $user->can('delete event');
+        return $user->id === $event->user_id || $user->can('comment event');
     }
 }

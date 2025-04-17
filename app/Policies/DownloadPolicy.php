@@ -22,9 +22,19 @@ class DownloadPolicy
         return $user->can('create download');
     }
 
-    public function update(User $user, Download $download): bool
+    public function detail(User $user, Download $download): bool
     {
-        return $user->id === $download->user_id || $user->can('update download');
+        return $user->id === $download->user_id || $user->can('detail download');
+    }
+
+    public function uploadField(User $user, Download $download): bool
+    {
+        return $user->id === $download->user_id || $user->can('update field download');
+    }
+
+    public function uploadFile(User $user, Download $download): bool
+    {
+        return $user->id === $download->user_id || $user->can('update file download');
     }
 
     public function delete(User $user, Download $download): bool
