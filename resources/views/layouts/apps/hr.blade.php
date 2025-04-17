@@ -70,7 +70,7 @@
     </li>
     @endcan
 
-    @canany(['view any office', 'view any designation', 'view any role', 'view any permission'])
+    @canany(['view any office', 'view any designation'])
     <li>
         <a href="javascript:;" class="has-arrow">
             <div class="parent-icon"><i class="bi-gear-fill text-primary"></i></div>
@@ -89,16 +89,32 @@
                 <a href="{{ route('admin.apps.hr.designations.index') }}"><i class="bi-award text-info"></i>Designations</a>
             </li>
             @endcan
+        </ul>        
+    </li>
+    @endcanany
 
+    @canany(['view any role', 'view any permission', 'view any role users'])
+    <li>
+        <a href="javascript:;" class="has-arrow">
+            <div class="parent-icon"><i class="bi-shield-lock text-primary"></i></div>
+            <div class="menu-title">ACL</div>
+        </a>
+        <ul class="p-2 menu-items">
             @can('view any role')
             <li>
-                <a href="{{ route('admin.apps.hr.roles.index') }}"><i class="bi-person-badge text-success"></i>Roles</a>
+                <a href="{{ route('admin.apps.hr.acl.roles.index') }}"><i class="bi-person-badge text-success"></i>Roles</a>
             </li>
             @endcan
 
             @can('view any permission')
             <li>
-                <a href="{{ route('admin.apps.hr.permissions.index') }}"><i class="bi-key text-success"></i>Permissions</a>
+                <a href="{{ route('admin.apps.hr.acl.permissions.index') }}"><i class="bi-key text-success"></i>Permissions</a>
+            </li>
+            @endcan
+
+            @can('view any role users')
+            <li>
+                <a href="{{ route('admin.apps.hr.acl.users.index') }}"><i class="bi-person text-success"></i>Users</a>
             </li>
             @endcan
         </ul>        

@@ -20,7 +20,7 @@ class PermissionController extends Controller
         
         $totalPermissions = $permissions->count();
         
-        return view('modules.hr.permissions.index', compact('groupedPermissions', 'totalPermissions'));
+        return view('modules.hr.acl.permissions', compact('groupedPermissions', 'totalPermissions'));
     }
 
     public function store(Request $request)
@@ -31,16 +31,14 @@ class PermissionController extends Controller
 
         $permission = Permission::create(['name' => $request->name]);
         
-        return redirect()->route('admin.apps.hr.permissions.index')
-            ->with('success', 'Permission created successfully.');
+        return redirect()->back()->with('success', 'Permission created successfully.');
     }
 
     public function destroy(Permission $permission)
     {
         $permission->delete();
         
-        return redirect()->route('admin.apps.hr.permissions.index')
-            ->with('success', 'Permission deleted successfully.');
+        return redirect()->back()->with('success', 'Permission deleted successfully.');
     }
 
     public function sync()
@@ -78,14 +76,12 @@ class PermissionController extends Controller
             
             DB::commit();
             
-            return redirect()->route('admin.apps.hr.permissions.index')
-                ->with('success', 'All permissions have been reset to defaults.');
+            return redirect()->back()->with('success', 'All permissions have been reset to defaults.');
                 
         } catch (\Exception $e) {
             DB::rollBack();
             
-            return redirect()->route('admin.apps.hr.permissions.index')
-                ->with('error', 'Error resetting permissions: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error resetting permissions: ' . $e->getMessage());
         }
     }
     

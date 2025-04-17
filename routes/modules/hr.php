@@ -95,6 +95,18 @@ Route::prefix('hr')->as('hr.')->middleware(['can:manage human resource'])->group
     });
 
     Route::prefix('acl')->as('acl.')->group(function () {
+        Route::prefix('users')->as('users.')->group(function () {
+            Route::get('/', [AclController::class, 'index'])->name('index')->can('viewAny', Spatie\Permission\Models\Role::class);
+            Route::get('/{userId}/data', [AclController::class, 'getUserData'])->name('getUserData');
+            Route::post('/{userId}/roles/{roleId}', [AclController::class, 'assignRoleToUser'])->name('assignRoleToUser');
+            Route::delete('/{userId}/roles/{roleId}', [AclController::class, 'removeRoleFromUser'])->name('removeRoleFromUser');
+            Route::post('/{userId}/permissions/{permissionId}', [AclController::class, 'assignPermissionToUser'])->name('assignPermissionToUser');
+            Route::delete('/{userId}/permissions/{permissionId}', [AclController::class, 'removePermissionFromUser'])->name('removePermissionFromUser');
+            Route::get('/filter', [AclController::class, 'filterUsers'])->name('filter');
+            Route::post('/bulk-assign-roles', [AclController::class, 'bulkAssignRoles'])->name('bulkAssignRoles');
+            Route::post('/bulk-assign-permissions', [AclController::class, 'bulkAssignPermissions'])->name('bulkAssignPermissions');
+            Route::get('/search', [AclController::class, 'searchUsers'])->name('search');
+        });
 
         Route::prefix('permissions')->as('permissions.')->group(function () {
             Route::get('/', [PermissionController::class, 'index'])->name('index')->can('viewAny', Spatie\Permission\Models\Permission::class);
@@ -107,22 +119,14 @@ Route::prefix('hr')->as('hr.')->middleware(['can:manage human resource'])->group
             Route::get('/', [RoleController::class, 'index'])->name('index')->can('viewAny', Spatie\Permission\Models\Role::class);
             Route::post('/', [RoleController::class, 'store'])->name('store')->can('create', Spatie\Permission\Models\Role::class);
             Route::delete('/{role}', [RoleController::class, 'destroy'])->name('destroy')->can('delete', 'role');
+            
             Route::get('/{role}/permissions', [RoleController::class, 'getPermissions'])->name('getPermissions')->can('update', Spatie\Permission\Models\Role::class);
             Route::patch('/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('updatePermissions')->can('update', Spatie\Permission\Models\Role::class);
+            
+            Route::post('/{role}/permission', [RoleController::class, 'updateSinglePermission'])->name('updateSinglePermission')->can('update', Spatie\Permission\Models\Role::class);
+            Route::post('/{role}/permissions/bulk', [RoleController::class, 'bulkUpdatePermissions'])->name('bulkUpdatePermissions')->can('update', Spatie\Permission\Models\Role::class);
         });
 
-        Route::prefix('users')->as('users.')->group(function () {
-            Route::get('/{userId}/data', [AclController::class, 'getUserData'])->name('getUserData');
-            Route::post('/users/{userId}/roles/{roleId}', [AclController::class, 'assignRoleToUser'])->name('assignRoleToUser');
-            Route::delete('/users/{userId}/roles/{roleId}', [AclController::class, 'removeRoleFromUser'])->name('removeRoleFromUser');
-            Route::post('/users/{userId}/permissions/{permissionId}', [AclController::class, 'assignPermissionToUser'])->name('assignPermissionToUser');
-            Route::delete('/users/{userId}/permissions/{permissionId}', [AclController::class, 'removePermissionFromUser'])->name('removePermissionFromUser');
-            Route::get('/filter-users', [AclController::class, 'filterUsers'])->name('filterUsers');
-            Route::post('/bulk-assign-roles', [AclController::class, 'bulkAssignRoles'])->name('bulkAssignRoles');
-            Route::post('/bulk-assign-permissions', [AclController::class, 'bulkAssignPermissions'])->name('bulkAssignPermissions');
-            Route::get('/search-users', [AclController::class, 'searchUsers'])->name('searchUsers');
-        });
-        
     });
 
     Route::prefix('reports')->as('reports.')->group(function () {

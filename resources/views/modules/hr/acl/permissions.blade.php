@@ -1,6 +1,6 @@
 <x-hr-layout title="Permissions Management">
     <x-slot name="header">
-        <li class="breadcrumb-item"><a href="{{ route('admin.apps.hr.index') }}">HR</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.apps.hr.acl.roles.index') }}">HR</a></li>
         <li class="breadcrumb-item active" aria-current="page">Permissions</li>
     </x-slot>
 
@@ -193,7 +193,7 @@
                                         @foreach($permissions as $permission)
                                             <div class="permission-item">
                                                 <div class="permission-name">{{ $permission->name }}</div>
-                                                <form action="{{ route('admin.apps.hr.permissions.destroy', $permission) }}" method="POST" class="d-inline-block delete-permission-form">
+                                                <form action="{{ route('admin.apps.hr.acl.permissions.destroy', $permission) }}" method="POST" class="d-inline-block delete-permission-form">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="permission-action btn-delete-permission">
@@ -226,7 +226,7 @@
                     <h5 class="modal-title" id="addPermissionModalLabel">Add New Permission</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('admin.apps.hr.permissions.store') }}" method="POST">
+                <form action="{{ route('admin.apps.hr.acl.permissions.store') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="mb-3">
@@ -263,7 +263,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <form action="{{ route('admin.apps.hr.permissions.sync') }}" method="POST">
+                    <form action="{{ route('admin.apps.hr.acl.permissions.sync') }}" method="POST">
                         @csrf
                         <button type="submit" class="btn btn-danger">Reset Permissions</button>
                     </form>

@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Spatie\Permission\Models\Permission;
-use App\Http\Requests\StoreRoleRequest;
 
 class AclController extends Controller
 {
@@ -22,7 +21,7 @@ class AclController extends Controller
         $offices = Office::orderBy('name')->get();
         $designations = Designation::orderBy('name')->get();
 
-        return view('modules.hr.roles.index', compact(
+        return view('modules.hr.acl.users', compact(
             'roles',
             'permissions',
             'users',
@@ -88,31 +87,6 @@ class AclController extends Controller
         ]);
     }
 
-    public function store(StoreRoleRequest $request)
-    {
-        $role = Role::create(['name' => $request->name]);
-        
-        if ($request->has('permissions')) {
-            $role->syncPermissions($request->permissions);
-        }
-        
-        return response()->json([
-            'success' => true,
-            'message' => 'Role created successfully',
-            'role' => $role
-        ]);
-    }
-
-    public function destroy(Role $role)
-    {
-        $role->delete();
-        
-        return response()->json([
-            'success' => true,
-            'message' => 'Role deleted successfully'
-        ]);
-    }
-
     public function getUserData($userId)
     {
         $user = User::with(['roles', 'permissions', 'currentPosting', 'currentPosting.designation', 'currentPosting.office'])
@@ -131,32 +105,6 @@ class AclController extends Controller
                 'roles' => $user->roles,
                 'permissions' => $user->permissions
             ]
-        ]);
-    }
-
-    public function getPermissions(Role $role)
-    {
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'role' => $role->name,
-                'permissions' => $role->permissions,
-                'allPermissions' => Permission::all(),
-            ],
-        ]);
-    }
-
-    public function updatePermissions(Request $request, Role $role)
-    {
-        $validated = $request->validate([
-            'permissions' => 'array'
-        ]);
-        
-        $role->syncPermissions($validated['permissions'] ?? []);
-        
-        return response()->json([
-            'success' => true,
-            'message' => 'Role permissions updated successfully'
         ]);
     }
 
@@ -193,18 +141,6 @@ class AclController extends Controller
         
         return response()->json([
             'success' => "Permission '{$permission->name}' assigned to user successfully"
-        ]);
-    }
-
-    public function removePermissionFromUser($userId, $permissionId)
-    {
-        $user = User::findOrFail($userId);
-        $permission = Permission::findOrFail($permissionId);
-        
-        $user->revokePermissionTo($permission);
-        
-        return response()->json([
-            'success' => "Permission '{$permission->name}' removed from user successfully"
         ]);
     }
 

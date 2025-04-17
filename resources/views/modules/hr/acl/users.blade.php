@@ -269,9 +269,10 @@
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-white d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">Role Management</h5>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newRoleModal">
-                            <i class="bi bi-plus-circle me-1"></i> New Role
-                        </button>
+                        <div>
+                            <a class="btn btn-light" href="{{ route('admin.apps.hr.acl.roles.index') }}">Roles</a>
+                            <a class="btn btn-light" href="{{ route('admin.apps.hr.acl.permissions.index') }}">Permissions</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -427,51 +428,11 @@
         </div>
     </div>
 
-    <!-- New Role Modal -->
-    <div class="modal fade" id="newRoleModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form id="create-role-form" action="{{ route('admin.apps.hr.roles.store') }}" method="POST">
-                    @csrf
-                    <div class="modal-header">
-                        <h5 class="modal-title">Create New Role</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="role-name" class="form-label">Role Name</label>
-                            <input type="text" class="form-control" id="role-name" name="name" required>
-                            <div class="form-text">Role name should be descriptive (e.g., "Content Editor", "HR Manager")</div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Select Permissions</label>
-                            <div class="input-group mb-3">
-                                <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
-                                <input type="text" id="new-role-permission-search" class="form-control border-0 bg-light" placeholder="Search permissions...">
-                            </div>
-                            <div class="card border-light">
-                                <div class="card-body p-2" style="max-height: 300px; overflow-y: auto;">
-                                    <div id="new-role-permissions-container">
-                                        <!-- Permission checkboxes will be loaded here -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Create Role</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <!-- Bulk Assign Roles Modal -->
     <div class="modal fade" id="bulkAssignRolesModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form id="bulk-assign-roles-form" action="{{ route('admin.apps.hr.roles.bulkAssignRoles') }}" method="POST">
+                <form id="bulk-assign-roles-form" action="{{ route('admin.apps.hr.acl.users.bulkAssignRoles') }}" method="POST">
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title">Bulk Assign Roles</h5>
@@ -521,7 +482,7 @@
     <div class="modal fade" id="bulkAssignPermissionsModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form id="bulk-assign-permissions-form" action="{{ route('admin.apps.hr.roles.bulkAssignPermissions') }}" method="POST">
+                <form id="bulk-assign-permissions-form" action="{{ route('admin.apps.hr.acl.users.bulkAssignPermissions') }}" method="POST">
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title">Bulk Assign Direct Permissions</h5>
@@ -614,7 +575,8 @@
                     return;
                 }
                 usersList.innerHTML = '<div class="text-center py-3"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
-                const data = await fetchRequest(`/admin/apps/hr/roles/search-users?search=${encodeURIComponent(searchValue)}&office_id=${officeId}&designation_id=${designationId}`);
+                const url = `{{ route('admin.apps.hr.acl.users.search') }}?search=${encodeURIComponent(searchValue)}&office_id=${officeId}&designation_id=${designationId}`;
+                const data = await fetchRequest(url);
                 if (data) {
                     updateUsersList(data.users);
                 } else {
@@ -752,7 +714,9 @@
                 if (selectedUserItem) {
                     selectedUserItem.classList.add('active', 'bg-light');
                 }
-                const data = await fetchRequest(`/admin/apps/hr/roles/${userId}/data`);
+
+                const url = "{{ route('admin.apps.hr.acl.users.getUserData', ':userId') }}".replace(':userId', userId);
+                const data = await fetchRequest(url);
                 if (data) {
                     const user = data.user;
                     const userRoles = data.roles;
@@ -889,7 +853,7 @@
             }
 
             async function updateUserRole(userId, roleId, hasRole) {
-                const url = `/admin/apps/hr/roles/users/${userId}/roles/${roleId}`;
+                const url = "{{ route('admin.apps.hr.acl.users.assignRoleToUser', [':userId', ':roleId']) }}".replace(':userId', userId).replace(':roleId', roleId);
                 const method = hasRole ? 'POST' : 'DELETE';
                 const result = await fetchRequest(url, method);
                 if (!result) {
@@ -899,67 +863,13 @@
             }
 
             async function updateUserPermission(userId, permissionId, hasPermission) {
-                const url = `/admin/apps/hr/roles/users/${userId}/permissions/${permissionId}`;
+                const url = "{{ route('admin.apps.hr.acl.users.assignPermissionToUser', [':userId', ':permissionId']) }}".replace(':userId', userId).replace(':permissionId', permissionId);
                 const method = hasPermission ? 'POST' : 'DELETE';
                 const result = await fetchRequest(url, method);
                 if (!result) {
                     const toggle = document.querySelector(`.permission-toggle[data-permission-id="${permissionId}"]`);
                     toggle.checked = !hasPermission;
                 }
-            }
-
-            function populateNewRolePermissions() {
-                const container = document.getElementById('new-role-permissions-container');
-                container.innerHTML = '';
-                Object.keys(permissionGroups).sort().forEach(category => {
-                    const categoryGroup = document.createElement('div');
-                    categoryGroup.className = 'permission-category mb-3';
-                    const categoryHeader = document.createElement('h6');
-                    categoryHeader.className = 'mb-2 border-bottom pb-1';
-                    categoryHeader.textContent = category.charAt(0).toUpperCase() + category.slice(1);
-                    categoryGroup.appendChild(categoryHeader);
-                    const permissionsGrid = document.createElement('div');
-                    permissionsGrid.className = 'row g-2';
-
-                    permissionGroups[category].forEach(permission => {
-                        const permissionCol = document.createElement('div');
-                        permissionCol.className = 'col-md-6';
-                        permissionCol.innerHTML = `
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" 
-                                    name="permissions[]" value="${permission.id}" 
-                                    id="new-perm-${permission.id}">
-                                <label class="form-check-label" for="new-perm-${permission.id}">
-                                    ${permission.name}
-                                </label>
-                            </div>
-                        `;
-                        permissionsGrid.appendChild(permissionCol);
-                    });
-                    categoryGroup.appendChild(permissionsGrid);
-                    container.appendChild(categoryGroup);
-                });
-
-                // Permission search for new role modal
-                document.getElementById('new-role-permission-search').addEventListener('keyup', function() {
-                    const searchValue = this.value.toLowerCase();
-                    document.querySelectorAll('#new-role-permissions-container .permission-category').forEach(category => {
-                        const categoryName = category.querySelector('h6').textContent.toLowerCase();
-                        const permissionItems = category.querySelectorAll('.form-check');
-                        let hasVisibleItems = false;
-
-                        permissionItems.forEach(item => {
-                            const permissionName = item.querySelector('label').textContent.toLowerCase();
-                            if (permissionName.includes(searchValue) || categoryName.includes(searchValue)) {
-                                item.closest('.col-md-6').style.display = '';
-                                hasVisibleItems = true;
-                            } else {
-                                item.closest('.col-md-6').style.display = 'none';
-                            }
-                        });
-                        category.style.display = hasVisibleItems ? '' : 'none';
-                    });
-                });
             }
 
             function populateBulkRoles() {
@@ -1050,7 +960,8 @@
             document.getElementById('filter-btn').addEventListener('click', async function() {
                 const officeId = document.getElementById('office-filter').value;
                 const designationId = document.getElementById('designation-filter').value;
-                const data = await fetchRequest(`/admin/apps/hr/roles/filter-users?office_id=${officeId}&designation_id=${designationId}`);
+                const url = `{{ route('admin.apps.hr.acl.users.filter') }}?office_id=${officeId}&designation_id=${designationId}`;
+                const data = await fetchRequest(url);
                 if (data) {
                     usersList.innerHTML = '';
                     data.users.forEach(user => {
@@ -1097,39 +1008,12 @@
                 }
             });
 
-            document.getElementById('newRoleModal').addEventListener('show.bs.modal', function() {
-                populateNewRolePermissions();
-            });
-
             document.getElementById('bulkAssignRolesModal').addEventListener('show.bs.modal', function() {
                 populateBulkRoles();
             });
 
             document.getElementById('bulkAssignPermissionsModal').addEventListener('show.bs.modal', function() {
                 populateBulkPermissions();
-            });
-
-            document.getElementById('create-role-form').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                const formData = new FormData(this);
-                const jsonData = {};
-                formData.forEach((value, key) => {
-                    if (key === 'permissions[]') {
-                        if (!jsonData.permissions) jsonData.permissions = [];
-                        jsonData.permissions.push(value);
-                    } else {
-                        jsonData[key] = value;
-                    }
-                });
-                const result = await fetchRequest(this.action, 'POST', jsonData);
-                if (result) {
-                    bootstrap.Modal.getInstance(document.getElementById('newRoleModal')).hide();
-                    if (document.querySelector('.user-item.active')) {
-                        const userId = document.querySelector('.user-item.active').dataset.userId;
-                        loadUserRolesAndPermissions(userId);
-                    }
-                    roles.push(result.role);
-                }
             });
 
             document.getElementById('bulk-assign-roles-form').addEventListener('submit', async function(e) {
