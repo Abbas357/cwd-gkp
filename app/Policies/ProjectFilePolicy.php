@@ -9,36 +9,46 @@ class ProjectFilePolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->can('view any project file');
+        return $user->can('view any project-file');
     }
 
-    public function view(User $user, ProjectFile $projectFile): bool
+    public function view(User $user, ProjectFile $project_file): bool
     {
-        return $user->can('view project file');
+        return $user->id === $project_file->published_by || $user->can('view project-file');
     }
 
     public function create(User $user): bool
     {
-        return $user->can('create project file');
+        return $user->can('create project-file');
     }
 
-    public function update(User $user, ProjectFile $projectFile): bool
+    public function detail(User $user, ProjectFile $project_file): bool
     {
-        return $user->can('update project file');
+        return $user->id === $project_file->published_by || $user->can('view detail project-file');
     }
 
-    public function delete(User $user, ProjectFile $projectFile): bool
+    public function uploadField(User $user, ProjectFile $project_file): bool
     {
-        return $user->can('delete project file');
+        return $user->id === $project_file->published_by || $user->can('update field project-file');
     }
 
-    public function publish(User $user, ProjectFile $projectFile): bool
+    public function uploadFile(User $user, ProjectFile $project_file): bool
     {
-        return $user->can('publish project file');
+        return $user->id === $project_file->published_by || $user->can('upload file project-file');
     }
 
-    public function archive(User $user, ProjectFile $projectFile): bool
+    public function delete(User $user, ProjectFile $project_file): bool
     {
-        return $user->can('archive project file');
+        return $user->id === $project_file->published_by || $user->can('delete project-file');
+    }
+
+    public function publish(User $user, ProjectFile $project_file): bool
+    {
+        return $user->id === $project_file->published_by || $user->can('publish project-file');
+    }
+
+    public function archive(User $user, ProjectFile $project_file): bool
+    {
+        return $user->id === $project_file->published_by || $user->can('archive project-file');
     }
 }

@@ -12,9 +12,9 @@ class SchemePolicy
         return $user->can('view any scheme');
     }
 
-    public function view(User $user, Scheme $scheme): bool
+    public function detail(User $user, Scheme $scheme): bool
     {
-        return $user->can('view scheme');
+        return $user->can('view detail scheme');
     }
 
     public function sync(User $user): bool

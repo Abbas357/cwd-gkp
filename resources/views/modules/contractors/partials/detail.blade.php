@@ -24,85 +24,85 @@
                 <th class="table-cell">Status</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-status" class="badge 
-                        {{ $Contractor->status == 'active' ? 'bg-success' : '' }}
-                        {{ $Contractor->status == 'blacklisted' ? 'bg-danger' : '' }}
-                        {{ $Contractor->status == 'suspended' ? 'bg-warning' : '' }}
-                        {{ $Contractor->status == 'dormant' ? 'bg-secondary' : '' }}">
-                        {{ $Contractor->status }}
+                        {{ $contractor->status == 'active' ? 'bg-success' : '' }}
+                        {{ $contractor->status == 'blacklisted' ? 'bg-danger' : '' }}
+                        {{ $contractor->status == 'suspended' ? 'bg-warning' : '' }}
+                        {{ $contractor->status == 'dormant' ? 'bg-secondary' : '' }}">
+                        {{ $contractor->status }}
                     </span>
-                    <select id="input-status" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('status', {{ $Contractor->id }})">
+                    <select id="input-status" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('status', {{ $contractor->id }})">
                         @foreach($cat['status'] as $status)
-                        <option value="{{ $status }}" {{ $Contractor->status == $status ? 'selected' : '' }}>{{ $status }}</option>
+                        <option value="{{ $status }}" {{ $contractor->status == $status ? 'selected' : '' }}>{{ $status }}</option>
                         @endforeach
                     </select>
-                    <button id="save-btn-status" class="btn btn-sm btn-light d-none" onclick="updateField('status', {{ $Contractor->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="save-btn-status" class="btn btn-sm btn-light d-none" onclick="updateField('status', {{ $contractor->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('status')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
             <tr>
                 <th class="table-cell">Name</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
-                    <span id="text-name">{{ $Contractor->name }}</span>
-                    <input type="text" id="input-name" value="{{ $Contractor->name }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('name', {{ $Contractor->id }})" />
-                    <button id="save-btn-name" class="btn btn-sm btn-light d-none" onclick="updateField('name', {{ $Contractor->id }})"><i class="bi-send-fill"></i></button>
+                    <span id="text-name">{{ $contractor->name }}</span>
+                    <input type="text" id="input-name" value="{{ $contractor->name }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('name', {{ $contractor->id }})" />
+                    <button id="save-btn-name" class="btn btn-sm btn-light d-none" onclick="updateField('name', {{ $contractor->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('name')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
             <tr>
                 <th class="table-cell">CNIC Number</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
-                    <span id="text-cnic">{{ $Contractor->cnic }}</span>
-                    <input type="text" id="input-cnic" value="{{ $Contractor->cnic }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('cnic', {{ $Contractor->id }})" />
-                    <button id="save-btn-cnic" class="btn btn-sm btn-light d-none" onclick="updateField('cnic', {{ $Contractor->id }})"><i class="bi-send-fill"></i></button>
+                    <span id="text-cnic">{{ $contractor->cnic }}</span>
+                    <input type="text" id="input-cnic" value="{{ $contractor->cnic }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('cnic', {{ $contractor->id }})" />
+                    <button id="save-btn-cnic" class="btn btn-sm btn-light d-none" onclick="updateField('cnic', {{ $contractor->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('cnic')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
             <tr>
                 <th class="table-cell">Email</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
-                    <span id="text-email">{{ $Contractor->email }}</span>
-                    <input type="text" id="input-email" value="{{ $Contractor->email }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('email', {{ $Contractor->id }})" />
-                    <button id="save-btn-email" class="btn btn-sm btn-light d-none" onclick="updateField('email', {{ $Contractor->id }})"><i class="bi-send-fill"></i></button>
+                    <span id="text-email">{{ $contractor->email }}</span>
+                    <input type="text" id="input-email" value="{{ $contractor->email }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('email', {{ $contractor->id }})" />
+                    <button id="save-btn-email" class="btn btn-sm btn-light d-none" onclick="updateField('email', {{ $contractor->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('email')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
             <tr>
                 <th class="table-cell">Mobile Number</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
-                    <span id="text-mobile_number">{{ $Contractor->mobile_number }}</span>
-                    <input type="text" id="input-mobile_number" value="{{ $Contractor->mobile_number }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('mobile_number', {{ $Contractor->id }})" />
-                    <button id="save-btn-mobile_number" class="btn btn-sm btn-light d-none" onclick="updateField('mobile_number', {{ $Contractor->id }})"><i class="bi-send-fill"></i></button>
+                    <span id="text-mobile_number">{{ $contractor->mobile_number }}</span>
+                    <input type="text" id="input-mobile_number" value="{{ $contractor->mobile_number }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('mobile_number', {{ $contractor->id }})" />
+                    <button id="save-btn-mobile_number" class="btn btn-sm btn-light d-none" onclick="updateField('mobile_number', {{ $contractor->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('mobile_number')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
             <tr>
                 <th class="table-cell">Address</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
-                    <span id="text-address">{{ $Contractor->address }}</span>
-                    <input type="text" id="input-address" value="{{ $Contractor->address }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('address', {{ $Contractor->id }})" />
-                    <button id="save-btn-address" class="btn btn-sm btn-light d-none" onclick="updateField('address', {{ $Contractor->id }})"><i class="bi-send-fill"></i></button>
+                    <span id="text-address">{{ $contractor->address }}</span>
+                    <input type="text" id="input-address" value="{{ $contractor->address }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('address', {{ $contractor->id }})" />
+                    <button id="save-btn-address" class="btn btn-sm btn-light d-none" onclick="updateField('address', {{ $contractor->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('address')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
             <tr>
                 <th class="table-cell">District</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
-                    <span id="text-district">{{ $Contractor->district }}</span>
-                    <select id="input-district" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('district', {{ $Contractor->id }})">
+                    <span id="text-district">{{ $contractor->district }}</span>
+                    <select id="input-district" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('district', {{ $contractor->id }})">
                         @foreach($cat['districts'] as $district)
-                        <option value="{{ $district->name }}" {{ $Contractor->district == $district->name ? 'selected' : '' }}>{{ $district->name }}</option>
+                        <option value="{{ $district->name }}" {{ $contractor->district == $district->name ? 'selected' : '' }}>{{ $district->name }}</option>
                         @endforeach
                     </select>
-                    <button id="save-btn-district" class="btn btn-sm btn-light d-none" onclick="updateField('district', {{ $Contractor->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="save-btn-district" class="btn btn-sm btn-light d-none" onclick="updateField('district', {{ $contractor->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('district')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
             <tr>
                 <th class="table-cell">Firm Name</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
-                    <span id="text-firm_name">{{ $Contractor->firm_name }}</span>
-                    <input type="text" id="input-firm_name" value="{{ $Contractor->firm_name }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('firm_name', {{ $Contractor->id }})" />
-                    <button id="save-btn-firm_name" class="btn btn-sm btn-light d-none" onclick="updateField('firm_name', {{ $Contractor->id }})"><i class="bi-send-fill"></i></button>
+                    <span id="text-firm_name">{{ $contractor->firm_name }}</span>
+                    <input type="text" id="input-firm_name" value="{{ $contractor->firm_name }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('firm_name', {{ $contractor->id }})" />
+                    <button id="save-btn-firm_name" class="btn btn-sm btn-light d-none" onclick="updateField('firm_name', {{ $contractor->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('firm_name')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
@@ -110,8 +110,8 @@
                 <th class="table-cell">Password</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-password">*********</span>
-                    <input type="text" id="input-password" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('password', {{ $Contractor->id }})" />
-                    <button id="save-btn-password" class="btn btn-sm btn-light d-none" onclick="updateField('password', {{ $Contractor->id }})"><i class="bi-send-fill"></i></button>
+                    <input type="text" id="input-password" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('password', {{ $contractor->id }})" />
+                    <button id="save-btn-password" class="btn btn-sm btn-light d-none" onclick="updateField('password', {{ $contractor->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('password')"><i class="bi-pencil fs-6"></i></button>
                 </td>
             </tr>
@@ -139,18 +139,18 @@
                     <tr>
                         <td style="max-width: 200px">{{ str_replace('_', ' ', ucwords($upload)) }}</td>
                         <td>
-                            @if($Contractor->hasMedia($upload))
-                            <a href="{{ $Contractor->getFirstMediaUrl($upload) }}" target="_blank" title="{{ str_replace('_', ' ', ucwords($upload)) }}" class="d-flex align-items-center gap-2">
+                            @if($contractor->hasMedia($upload))
+                            <a href="{{ $contractor->getFirstMediaUrl($upload) }}" target="_blank" title="{{ str_replace('_', ' ', ucwords($upload)) }}" class="d-flex align-items-center gap-2">
                                 View
                             </a>
                             @else
                             <span>Not Uploaded</span>
                             @endif
                         </td>
-                        @if (!in_array($Contractor->status, ['deferred_three', 'approved']))
+                        @if (!in_array($contractor->status, ['deferred_three', 'approved']))
                         <td class="no-print text-center">
                             <label for="{{ $upload }}" class="btn btn-sm btn-light">
-                                <span class="d-flex align-items-center">{!! $Contractor->hasMedia($upload) ? '<i class="bi-pencil-square"></i>&nbsp; Update' : '<i class="bi-plus-circle"></i>&nbsp; Add' !!}</span>
+                                <span class="d-flex align-items-center">{!! $contractor->hasMedia($upload) ? '<i class="bi-pencil-square"></i>&nbsp; Update' : '<i class="bi-plus-circle"></i>&nbsp; Add' !!}</span>
                             </label>
                             <input type="file" id="{{ $upload }}" name="{{ $upload }}" class="d-none file-input" data-collection="{{ $upload }}">
                         </td>
@@ -180,7 +180,7 @@
                 formData.append('collection', input.dataset.collection);
                 formData.append('_method', "PATCH");
 
-                const url = "{{ route('admin.apps.contractors.uploadFile', ':id') }}".replace(':id', '{{ $Contractor->id }}');
+                const url = "{{ route('admin.apps.contractors.uploadFile', ':id') }}".replace(':id', '{{ $contractor->id }}');
                 try {
                     const result = await fetchRequest(url, 'POST', formData);
                     if (result) {
@@ -203,7 +203,7 @@
 
     $('#print-registration').on('click', () => {
         $(".contractors-details").printThis({
-            pageTitle: "Details of {{ $Contractor->firm_name }}"
+            pageTitle: "Details of {{ $contractor->firm_name }}"
         });
     });
 

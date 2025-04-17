@@ -136,35 +136,35 @@ class DevelopmentProjectController extends Controller
         return response()->json(['error' => 'There is an error adding DevelopmentProject'], 500);
     }
 
-    public function show(DevelopmentProject $DevelopmentProject)
+    public function show(DevelopmentProject $development_project)
     {
-        return response()->json($DevelopmentProject);
+        return response()->json($development_project);
     }
 
-    public function publishDevelopmentProject(Request $request, DevelopmentProject $DevelopmentProject)
+    public function publishDevelopmentProject(Request $request, DevelopmentProject $development_project)
     {
-        if ($DevelopmentProject->status === 'Draft') {
-            $DevelopmentProject->status = $request->progress_percentage == 100 ? 'Completed' : 'In-Progress';
+        if ($development_project->status === 'Draft') {
+            $development_project->status = $request->progress_percentage == 100 ? 'Completed' : 'In-Progress';
             $message = 'Project has been published successfully.';
         } else {
-            $DevelopmentProject->status = 'Draft';
+            $development_project->status = 'Draft';
             $message = 'Project has been unpublished.';
         }
-        $DevelopmentProject->save();
+        $development_project->save();
         return response()->json(['success' => $message], 200);
     }
 
-    public function archiveDevelopmentProject(Request $request, DevelopmentProject $DevelopmentProject)
+    public function archiveDevelopmentProject(Request $request, DevelopmentProject $development_project)
     {
-        if ($DevelopmentProject->status != 'Draft') {
-            $DevelopmentProject->status = 'Archived';
-            $DevelopmentProject->save(); 
+        if ($development_project->status != 'Draft') {
+            $development_project->status = 'Archived';
+            $development_project->save(); 
             return response()->json(['success' => 'Project has been archived successfully.'], 200);
         }
         return response()->json(['success' => 'Project cannot be archived.'], 403);
     }
 
-    public function showDetail(DevelopmentProject $DevelopmentProject)
+    public function showDetail(DevelopmentProject $development_project)
     {
         $cat = [
             'districts' => District::all(),
@@ -173,7 +173,7 @@ class DevelopmentProjectController extends Controller
             'status' => ['In-Progess', 'On-Hold', 'Completed'],
         ];
 
-        $html = view('admin.development_projects.partials.detail', compact('DevelopmentProject', 'cat'))->render();
+        $html = view('admin.development_projects.partials.detail', compact('development_project', 'cat'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -182,38 +182,38 @@ class DevelopmentProjectController extends Controller
         ]);
     }
 
-    public function updateField(Request $request, DevelopmentProject $DevelopmentProject)
+    public function updateField(Request $request, DevelopmentProject $development_project)
     {
         $request->validate([
             'field' => 'required|string',
             'value' => 'required|string',
         ]);
 
-        $DevelopmentProject->{$request->field} = $request->value;
+        $development_project->{$request->field} = $request->value;
 
-        if ($DevelopmentProject->isDirty($request->field)) {
-            $DevelopmentProject->save();
+        if ($development_project->isDirty($request->field)) {
+            $development_project->save();
             return response()->json(['success' => 'Field updated successfully'], 200);
         }
 
         return response()->json(['error' => 'No changes were made to the field'], 200);
     }
 
-    public function destroy(DevelopmentProject $DevelopmentProject)
+    public function destroy(DevelopmentProject $development_project)
     {
-        if ($DevelopmentProject->delete()) {
+        if ($development_project->delete()) {
             return response()->json(['success' => 'DevelopmentProject has been deleted successfully.']);
         }
         return response()->json(['error' => 'Only draft projects can be deleted.']);
     }
 
-    public function updateComments(Request $request, DevelopmentProject $DevelopmentProject)
+    public function updateComments(Request $request, DevelopmentProject $development_project)
     {
         $validated = $request->validate([
             'comments_allowed' => 'required|boolean',
         ]);
 
-        $DevelopmentProject->update($validated);
+        $development_project->update($validated);
 
         return response()->json([
             'success' => 'Comments visibility updated',

@@ -26,8 +26,8 @@
                                class="form-check-input" 
                                id="commentsSwitch" 
                                role="switch"
-                               {{ $DevelopmentProject->comments_allowed ? 'checked' : '' }}
-                               data-url="{{ route('admin.development_projects.comments', $DevelopmentProject->id) }}">
+                               {{ $development_project->comments_allowed ? 'checked' : '' }}
+                               data-url="{{ route('admin.development_projects.comments', $development_project->id) }}">
                     </div>
                 </td>
             </tr>
@@ -36,10 +36,10 @@
             <tr>
                 <th class="table-cell">Name</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-name">{{ $DevelopmentProject->name }}</span>
-                    @if ($DevelopmentProject->status !== ['Completed'])
-                    <input type="text" id="input-name" value="{{ $DevelopmentProject->name }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('name', {{ $DevelopmentProject->id }})" />
-                    <button id="save-btn-name" class="btn btn-sm btn-light d-none" onclick="updateField('name', {{ $DevelopmentProject->id }})"><i class="bi-send-fill"></i></button>
+                    <span id="text-name">{{ $development_project->name }}</span>
+                    @if ($development_project->status !== ['Completed'])
+                    <input type="text" id="input-name" value="{{ $development_project->name }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('name', {{ $development_project->id }})" />
+                    <button id="save-btn-name" class="btn btn-sm btn-light d-none" onclick="updateField('name', {{ $development_project->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-name" class="no-print btn btn-sm edit-button" onclick="enableEditing('name')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
@@ -48,10 +48,10 @@
             <tr>
                 <th class="table-cell">Commnsecement Date</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-commencement_date">{{ $DevelopmentProject->commencement_date }}</span>
-                    @if ($DevelopmentProject->status !== ['Completed'])
-                    <input type="date" id="input-commencement_date" value="{{ $DevelopmentProject->commencement_date }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('commencement_date', {{ $DevelopmentProject->id }})" />
-                    <button id="save-btn-commencement_date" class="btn btn-sm btn-light d-none" onclick="updateField('commencement_date', {{ $DevelopmentProject->id }})"><i class="bi-send-fill"></i></button>
+                    <span id="text-commencement_date">{{ $development_project->commencement_date }}</span>
+                    @if ($development_project->status !== ['Completed'])
+                    <input type="date" id="input-commencement_date" value="{{ $development_project->commencement_date }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('commencement_date', {{ $development_project->id }})" />
+                    <button id="save-btn-commencement_date" class="btn btn-sm btn-light d-none" onclick="updateField('commencement_date', {{ $development_project->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-commencement_date" class="no-print btn btn-sm edit-button" onclick="enableEditing('commencement_date')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
@@ -60,12 +60,12 @@
             <tr>
                 <th class="table-cell">Introduction</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-introduction">{!! $DevelopmentProject->introduction !!}</span>
-                    @if ($DevelopmentProject->status !== ['Completed'])
+                    <span id="text-introduction">{!! $development_project->introduction !!}</span>
+                    @if ($development_project->status !== ['Completed'])
                     <div class="mb-3 w-100">
-                        <textarea name="introduction" id="input-introduction" class="form-control d-none" style="height:150px">{!! old('introduction', $DevelopmentProject->introduction) !!}</textarea>
+                        <textarea name="introduction" id="input-introduction" class="form-control d-none" style="height:150px">{!! old('introduction', $development_project->introduction) !!}</textarea>
                     </div>
-                    <button id="save-btn-introduction" class="btn btn-sm btn-light d-none" onclick="updateField('introduction', {{ $DevelopmentProject->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="save-btn-introduction" class="btn btn-sm btn-light d-none" onclick="updateField('introduction', {{ $development_project->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-introduction" class="no-print btn btn-sm edit-button" onclick="enableEditing('introduction')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
@@ -74,10 +74,10 @@
             <tr>
                 <th class="table-cell">Total Cost</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-total_cost">{{ $DevelopmentProject->total_cost }}</span>
-                    @if ($DevelopmentProject->status !== ['Completed'])
-                    <input type="text" id="input-total_cost" value="{{ $DevelopmentProject->total_cost }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('total_cost', {{ $DevelopmentProject->id }})" />
-                    <button id="save-btn-total_cost" class="btn btn-sm btn-light d-none" onclick="updateField('total_cost', {{ $DevelopmentProject->id }})"><i class="bi-send-fill"></i></button>
+                    <span id="text-total_cost">{{ $development_project->total_cost }}</span>
+                    @if ($development_project->status !== ['Completed'])
+                    <input type="text" id="input-total_cost" value="{{ $development_project->total_cost }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('total_cost', {{ $development_project->id }})" />
+                    <button id="save-btn-total_cost" class="btn btn-sm btn-light d-none" onclick="updateField('total_cost', {{ $development_project->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-total_cost" class="no-print btn btn-sm edit-button" onclick="enableEditing('total_cost')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
@@ -86,16 +86,16 @@
             <tr>
                 <th class="table-cell">District</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-district_id">{{ $DevelopmentProject->district->name }}</span>
-                    @if ($DevelopmentProject->status !== ['Completed'])
-                    <select id="input-district_id" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('district_id', {{ $DevelopmentProject->id }})">
+                    <span id="text-district_id">{{ $development_project->district->name }}</span>
+                    @if ($development_project->status !== ['Completed'])
+                    <select id="input-district_id" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('district_id', {{ $development_project->id }})">
                         @foreach ($cat['districts'] as $district)
-                        <option value="{{ $district->id }}" {{ $DevelopmentProject->district_id == $district->id ? 'selected' : '' }}>
+                        <option value="{{ $district->id }}" {{ $development_project->district_id == $district->id ? 'selected' : '' }}>
                             {{ $district->name }}
                         </option>
                         @endforeach
                     </select>
-                    <button id="save-btn-district_id" class="btn btn-sm btn-light d-none" onclick="updateField('district_id', {{ $DevelopmentProject->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="save-btn-district_id" class="btn btn-sm btn-light d-none" onclick="updateField('district_id', {{ $development_project->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-district_id" class="no-print btn btn-sm edit-button" onclick="enableEditing('district_id')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
@@ -104,16 +104,16 @@
             <tr>
                 <th class="table-cell">Chief Engineer</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-ce_id">{{ $DevelopmentProject->chiefEngineer?->name }}</span>
-                    @if ($DevelopmentProject->status !== ['Completed'])
-                    <select id="input-ce_id" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('ce_id', {{ $DevelopmentProject->id }})">
+                    <span id="text-ce_id">{{ $development_project->chiefEngineer?->name }}</span>
+                    @if ($development_project->status !== ['Completed'])
+                    <select id="input-ce_id" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('ce_id', {{ $development_project->id }})">
                         @foreach ($cat['chiefEngineers'] as $chief)
-                        <option value="{{ $chief->id }}" {{ $DevelopmentProject->ce_id == $chief->id ? 'selected' : '' }}>
+                        <option value="{{ $chief->id }}" {{ $development_project->ce_id == $chief->id ? 'selected' : '' }}>
                             {{ $chief->name }}
                         </option>
                         @endforeach
                     </select>
-                    <button id="save-btn-ce_id" class="btn btn-sm btn-light d-none" onclick="updateField('ce_id', {{ $DevelopmentProject->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="save-btn-ce_id" class="btn btn-sm btn-light d-none" onclick="updateField('ce_id', {{ $development_project->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-ce_id" class="no-print btn btn-sm edit-button" onclick="enableEditing('ce_id')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
@@ -122,10 +122,10 @@
             <tr>
                 <th class="table-cell">Progress Percentage</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-progress_percentage">{{ $DevelopmentProject->progress_percentage }}</span>
-                    @if ($DevelopmentProject->status !== ['Completed'])
-                    <input type="range" id="input-progress_percentage" value="{{ $DevelopmentProject->progress_percentage }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('progress_percentage', {{ $DevelopmentProject->id }})" />
-                    <button id="save-btn-progress_percentage" class="btn btn-sm btn-light d-none" onclick="updateField('progress_percentage', {{ $DevelopmentProject->id }})"><i class="bi-send-fill"></i></button>
+                    <span id="text-progress_percentage">{{ $development_project->progress_percentage }}</span>
+                    @if ($development_project->status !== ['Completed'])
+                    <input type="range" id="input-progress_percentage" value="{{ $development_project->progress_percentage }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('progress_percentage', {{ $development_project->id }})" />
+                    <button id="save-btn-progress_percentage" class="btn btn-sm btn-light d-none" onclick="updateField('progress_percentage', {{ $development_project->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-progress_percentage" class="no-print btn btn-sm edit-button" onclick="enableEditing('progress_percentage')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
@@ -134,14 +134,14 @@
             <tr>
                 <th class="table-cell">Status</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
-                    <span id="text-status">{{ $DevelopmentProject->status }}</span>
-                    @if (!in_array($DevelopmentProject->status, ['Completed']))
-                        <select id="input-status" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('status', {{ $DevelopmentProject->id }})">
+                    <span id="text-status">{{ $development_project->status }}</span>
+                    @if (!in_array($development_project->status, ['Completed']))
+                        <select id="input-status" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('status', {{ $development_project->id }})">
                             @foreach($cat['status'] as $status)
-                            <option value="{{ $status }}" {{ $DevelopmentProject->status == $status ? 'selected' : '' }}>{{ $status }}</option>
+                            <option value="{{ $status }}" {{ $development_project->status == $status ? 'selected' : '' }}>{{ $status }}</option>
                             @endforeach
                         </select>
-                        <button id="save-btn-status" class="btn btn-sm btn-light d-none" onclick="updateField('status', {{ $DevelopmentProject->id }})"><i class="bi-send-fill"></i></button>
+                        <button id="save-btn-status" class="btn btn-sm btn-light d-none" onclick="updateField('status', {{ $development_project->id }})"><i class="bi-send-fill"></i></button>
                         <button class="no-print btn btn-sm edit-button" onclick="enableEditing('status')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
@@ -166,8 +166,8 @@
                             <input type="file" class="form-control" id="attachment" name="attachment">
                             <img id="previewAttachment" src="#" alt="Attachment Preview" style="display:none; margin-top: 10px; max-height: 100px;">
                         </div>
-                        <input type="hidden" name="commentable_type" value="{{ get_class($DevelopmentProject) }}">
-                        <input type="hidden" name="commentable_id" value="{{ $DevelopmentProject->id }}">
+                        <input type="hidden" name="commentable_type" value="{{ get_class($development_project) }}">
+                        <input type="hidden" name="commentable_id" value="{{ $development_project->id }}">
                     </div>
                     <button type="submit" class="btn btn-primary">Add Comment</button>
                 </div>

@@ -24,7 +24,7 @@ class EventPolicy
 
     public function detail(User $user, Event $event): bool
     {
-        return $user->id === $event->user_id || $user->can('detail event');
+        return $user->id === $event->user_id || $user->can('view detail event');
     }
 
     public function uploadField(User $user, Event $event): bool
@@ -49,6 +49,6 @@ class EventPolicy
 
     public function comment(User $user, Event $event): bool
     {
-        return $user->id === $event->user_id || $user->can('comment event');
+        return $user->id === $event->user_id || $user->can('post comment event');
     }
 }

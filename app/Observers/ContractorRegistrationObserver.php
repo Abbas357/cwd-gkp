@@ -14,13 +14,13 @@ use App\Mail\Contractor\DeferredSecondMail;
 
 class ContractorRegistrationObserver
 {
-    public function updated(ContractorRegistration $ContractorRegistration): void
+    public function updated(ContractorRegistration $contractor_registration): void
     {
-        if ($ContractorRegistration->wasChanged('status')) {
-            if ($ContractorRegistration->status === 'approved') {
-                $this->handleApproval($ContractorRegistration);
-            } elseif (in_array($ContractorRegistration->status, ['deffered_once', 'deffered_twice', 'deffered_thrice'])) {
-                $this->handleDeferral($ContractorRegistration);
+        if ($contractor_registration->wasChanged('status')) {
+            if ($contractor_registration->status === 'approved') {
+                $this->handleApproval($contractor_registration);
+            } elseif (in_array($contractor_registration->status, ['deffered_once', 'deffered_twice', 'deffered_thrice'])) {
+                $this->handleDeferral($contractor_registration);
             }
         }
     }
@@ -33,40 +33,40 @@ class ContractorRegistrationObserver
         }
     }
 
-    protected function handleApproval(ContractorRegistration $ContractorRegistration): void
+    protected function handleApproval(ContractorRegistration $contractor_registration): void
     {
-        $ContractorRegistration->cards()->update([
+        $contractor_registration->cards()->update([
             'status' => 'expired',
             'expiry_date' => now(),
         ]);
 
-        if ($ContractorRegistration->contractor->email) {
-            Mail::to($ContractorRegistration->contractor->email)->queue(new ApprovedMail($ContractorRegistration));
+        if ($contractor_registration->contractor->email) {
+            Mail::to($contractor_registration->contractor->email)->queue(new ApprovedMail($contractor_registration));
         }
 
         Card::create([
             'uuid' => Str::uuid(),
-            'cardable_type' => get_class($ContractorRegistration),
-            'cardable_id' => $ContractorRegistration->id,
+            'cardable_type' => get_class($contractor_registration),
+            'cardable_id' => $contractor_registration->id,
             'issue_date' => now(),
             'expiry_date' => now()->addYear(),
             'status' => 'active',
         ]);
     }
 
-    protected function handleDeferral(ContractorRegistration $ContractorRegistration): void
+    protected function handleDeferral(ContractorRegistration $contractor_registration): void
     {
-        $mailClass = match ($ContractorRegistration->status) {
+        $mailClass = match ($contractor_registration->status) {
             'deffered_once' => DeferredFirstMail::class,
             'deffered_twice' => DeferredSecondMail::class,
             'deffered_thrice' => DeferredThirdMail::class,
             default => null,
         };
 
-        $contractorEmail = $ContractorRegistration->contractor->email;
+        $contractorEmail = $contractor_registration->contractor->email;
         if ($mailClass && $contractorEmail) {
             if ($contractorEmail) {
-                Mail::to($contractorEmail)->queue(new $mailClass($ContractorRegistration, $ContractorRegistration->remarks));
+                Mail::to($contractorEmail)->queue(new $mailClass($contractor_registration, $contractor_registration->remarks));
             }
         }
     }

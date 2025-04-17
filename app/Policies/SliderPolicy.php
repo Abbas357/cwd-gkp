@@ -9,65 +9,51 @@ class SliderPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->can('view sliders');
+        return $user->can('view any slider');
     }
 
     public function view(User $user, Slider $slider): bool
     {
-        return $user->id === $slider->user_id
-            || $user->can('view sliders');
-    }
-
-    public function detail(User $user, Slider $slider): bool
-    {
-        return $user->id === $slider->user_id
-            || $user->can('view sliders');
+        return $user->id === $slider->user_id || $user->can('view slider');
     }
 
     public function create(User $user): bool
     {
-        return $user->can('create sliders');
+        return $user->can('create slider');
     }
 
-    public function update(User $user, Slider $slider): bool
+    public function detail(User $user, Slider $slider): bool
     {
-        return $user->id === $slider->user_id
-            || $user->can('edit sliders');
+        return $user->id === $slider->user_id || $user->can('view detail slider');
     }
 
-    public function updateField(User $user, Slider $slider): bool
+    public function uploadField(User $user, Slider $slider): bool
     {
-        return $user->id === $slider->user_id
-            || $user->can('update slider field');
+        return $user->id === $slider->user_id || $user->can('update field slider');
     }
 
     public function uploadFile(User $user, Slider $slider): bool
     {
-        return $user->id === $slider->user_id
-            || $user->can('edit sliders');
+        return $user->id === $slider->user_id || $user->can('upload file slider');
     }
 
     public function delete(User $user, Slider $slider): bool
     {
-        return $user->id === $slider->user_id
-            || $user->can('delete sliders');
+        return $user->id === $slider->user_id || $user->can('delete slider');
     }
 
     public function publish(User $user, Slider $slider): bool
     {
-        return $user->id === $slider->user_id
-            || $user->can('publish sliders');
+        return $user->id === $slider->user_id || $user->can('publish slider');
     }
 
     public function archive(User $user, Slider $slider): bool
     {
-        return $user->id === $slider->user_id
-            || $user->can('archive sliders');
+        return $user->id === $slider->user_id || $user->can('archive slider');
     }
 
-    public function comments(User $user, Slider $slider): bool
+    public function comment(User $user, Slider $slider): bool
     {
-        return $user->id === $slider->user_id
-            || $user->can('comments sliders');
+        return $user->id === $slider->user_id || $user->can('post comment slider');
     }
 }

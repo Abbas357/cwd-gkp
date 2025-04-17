@@ -11,8 +11,8 @@ class NewsLetterPolicy
         return $user->can('view any newsletter');
     }
 
-    public function sendMassEmail(User $user): bool
+    public function massEmail(User $user): bool
     {
-        return $user->can('send mass email');
+        return $user->can('mass email newsletter');
     }
 }

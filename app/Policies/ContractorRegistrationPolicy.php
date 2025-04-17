@@ -19,7 +19,7 @@ class ContractorRegistrationPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, ContractorRegistration $contractorRegistration): bool
+    public function view(User $user, ContractorRegistration $contractor_registration): bool
     {
         //
     }
@@ -35,7 +35,7 @@ class ContractorRegistrationPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, ContractorRegistration $contractorRegistration): bool
+    public function update(User $user, ContractorRegistration $contractor_registration): bool
     {
         //
     }
@@ -43,7 +43,7 @@ class ContractorRegistrationPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, ContractorRegistration $contractorRegistration): bool
+    public function delete(User $user, ContractorRegistration $contractor_registration): bool
     {
         //
     }
@@ -51,7 +51,7 @@ class ContractorRegistrationPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, ContractorRegistration $contractorRegistration): bool
+    public function restore(User $user, ContractorRegistration $contractor_registration): bool
     {
         //
     }
@@ -59,7 +59,7 @@ class ContractorRegistrationPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, ContractorRegistration $contractorRegistration): bool
+    public function forceDelete(User $user, ContractorRegistration $contractor_registration): bool
     {
         //
     }

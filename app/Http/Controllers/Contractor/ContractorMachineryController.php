@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\Contractor;
 
-use App\Http\Controllers\Controller;
-
 use App\Models\Contractor;
+
 use Illuminate\Http\Request;
 use App\Models\ContractorMachinery;
+use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ContractorMachineryController extends Controller
 {
-    public function detail(Contractor $Contractor)
+    use AuthorizesRequests;
+    
+    public function detail(Contractor $contractor)
     {
-        $machinery = $Contractor->machinery()->get();
+        $machinery = $contractor->machinery()->get();
+        $this->authorize('detail', $machinery);
 
         if (!$machinery) {
             return response()->json([
@@ -34,6 +38,7 @@ class ContractorMachineryController extends Controller
     public function update(Request $request, $id)
     {
         $machine = ContractorMachinery::findOrFail($id);
+        $this->authorize('updateField', $machine);
 
         $validatedData = $request->validate([
             'field' => 'required|string',
@@ -60,6 +65,7 @@ class ContractorMachineryController extends Controller
     public function upload(Request $request, $id)
     {
         $machine = ContractorMachinery::findOrFail($id);
+        $this->authorize('uploadFile', $machine);
 
         $request->validate([
             'file' => 'required|file|max:10240',
@@ -87,6 +93,8 @@ class ContractorMachineryController extends Controller
     public function destroy($id)
     {
         $machine = ContractorMachinery::findOrFail($id);
+        $this->authorize('delete', $machine);
+        
         if($machine->delete()) {
             return response()->json(['success' => 'Machinery deleted successfully'], 200);
         }

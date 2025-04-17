@@ -22,9 +22,19 @@ class ProjectPolicy
         return $user->can('create project');
     }
 
-    public function update(User $user, Project $project): bool
+    public function detail(User $user, Project $project): bool
     {
-        return $user->can('update project');
+        return $user->can('detail project');
+    }
+
+    public function uploadField(User $user, Project $project): bool
+    {
+        return $user->can('update field project');
+    }
+
+    public function uploadFile(User $user, Project $project): bool
+    {
+        return $user->can('upload file project');
     }
 
     public function delete(User $user, Project $project): bool

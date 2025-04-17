@@ -75,52 +75,52 @@ class ContractorRegistrationController extends Controller
         return view('modules.contractors.registration.index');
     }
 
-    public function defer(Request $request, ContractorRegistration $ContractorRegistration)
+    public function defer(Request $request, ContractorRegistration $contractor_registration)
     {
-        $ContractorRegistration->remarks = $request->remarks;
-        if ($ContractorRegistration->status == "new") {
-            $ContractorRegistration->status = "deffered_once";
-        } elseif ($ContractorRegistration->status == "deffered_once") {
-            $ContractorRegistration->status = "deffered_twice";
-        } elseif ($ContractorRegistration->status == "deffered_twice") {
-            $ContractorRegistration->status = "deffered_thrice";
+        $contractor_registration->remarks = $request->remarks;
+        if ($contractor_registration->status == "new") {
+            $contractor_registration->status = "deffered_once";
+        } elseif ($contractor_registration->status == "deffered_once") {
+            $contractor_registration->status = "deffered_twice";
+        } elseif ($contractor_registration->status == "deffered_twice") {
+            $contractor_registration->status = "deffered_thrice";
         }
-        if($ContractorRegistration->save()) {
+        if($contractor_registration->save()) {
             return response()->json(['success' => 'Contractor has been deferred successfully.']);
         }
         return response()->json(['error' => 'Contractor can\'t be deferred further or has already been approved.']);
     }
 
-    public function approve(Request $request, ContractorRegistration $ContractorRegistration)
+    public function approve(Request $request, ContractorRegistration $contractor_registration)
     {
-        if (!in_array($ContractorRegistration->status, ["deffered_thrice", 'approved'])) {
-            $ContractorRegistration->status = 'approved';
-            $ContractorRegistration->save();
+        if (!in_array($contractor_registration->status, ["deffered_thrice", 'approved'])) {
+            $contractor_registration->status = 'approved';
+            $contractor_registration->save();
             return response()->json(['success' => 'Contractor has been approved successfully.']);
         }
         return response()->json(['error' => 'Contractor can\'t be approved.']);
     }
 
-    public function renew(ContractorRegistration $ContractorRegistration)
+    public function renew(ContractorRegistration $contractor_registration)
     {
         $currentDate = Carbon::now();
-        $latestCard = $ContractorRegistration->getLatestCard();
+        $latestCard = $contractor_registration->getLatestCard();
 
         if (!$latestCard) {
             return response()->json(['error' => 'No active card found for renewal.']);
         }
         
-        $ContractorRegistration->cards()->where('status', 'active')->update(['status' => 'expired']);
+        $contractor_registration->cards()->where('status', 'active')->update(['status' => 'expired']);
 
         if ($currentDate->greaterThanOrEqualTo($latestCard->expiry_date)) {
-            $ContractorRegistration->cards()->create([
+            $contractor_registration->cards()->create([
                 'uuid' => \Illuminate\Support\Str::uuid(),
                 'issue_date' => $currentDate,
                 'expiry_date' => $currentDate->addYear(),
                 'status' => 'active',
             ]);
             
-            Mail::to($ContractorRegistration->contractor->email)->queue(new RenewedMail($ContractorRegistration));
+            Mail::to($contractor_registration->contractor->email)->queue(new RenewedMail($contractor_registration));
 
             return response()->json(['success' => 'Contractor card has been renewed successfully.']);
         } else {
@@ -128,24 +128,24 @@ class ContractorRegistrationController extends Controller
         }
     }
 
-    public function show(ContractorRegistration $ContractorRegistration)
+    public function show(ContractorRegistration $contractor_registration)
     {
         return response()->json([
             'success' => true,
             'data' => [
-                'result' => $ContractorRegistration,
+                'result' => $contractor_registration,
             ],
         ]);
     }
 
-    public function showDetail(ContractorRegistration $ContractorRegistration)
+    public function showDetail(ContractorRegistration $contractor_registration)
     {
         $cat = [
             'contractor_category' => Category::where('type', 'contractor_category')->get(),
             'provincial_entities' => Category::where('type', 'provincial_entity')->get(),
         ];
 
-        if (!$ContractorRegistration) {
+        if (!$contractor_registration) {
             return response()->json([
                 'success' => false,
                 'data' => [
@@ -153,7 +153,7 @@ class ContractorRegistrationController extends Controller
                 ],
             ]);
         }
-        $html = view('modules.contractors.registration.partials.detail', compact('ContractorRegistration', 'cat'))->render();
+        $html = view('modules.contractors.registration.partials.detail', compact('contractor_registration', 'cat'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -162,9 +162,9 @@ class ContractorRegistrationController extends Controller
         ]);
     }
 
-    public function showCard(ContractorRegistration $ContractorRegistration)
+    public function showCard(ContractorRegistration $contractor_registration)
     {
-        if ($ContractorRegistration->status !== 'approved') {
+        if ($contractor_registration->status !== 'approved') {
             return response()->json([
                 'success' => false,
                 'data' => [
@@ -172,7 +172,7 @@ class ContractorRegistrationController extends Controller
                 ],
             ]);
         }
-        $data = route('contractors.approved', ['uuid' => $ContractorRegistration->uuid]);
+        $data = route('contractors.approved', ['uuid' => $contractor_registration->uuid]);
         $qrCode = Builder::create()
             ->writer(new PngWriter())
             ->data($data)
@@ -192,14 +192,14 @@ class ContractorRegistrationController extends Controller
         ]);
     }
 
-    public function updateField(Request $request, ContractorRegistration $ContractorRegistration)
+    public function updateField(Request $request, ContractorRegistration $contractor_registration)
     {
         $request->validate([
             'field' => 'required|string',
             'value' => 'required',
         ]);
 
-        if (($request->has('reg_no') || $request->has('expiry_date') || $request->has('issue_date')) && in_array($ContractorRegistration->status, ['deffered_thrice', 'approved'])) {
+        if (($request->has('reg_no') || $request->has('expiry_date') || $request->has('issue_date')) && in_array($contractor_registration->status, ['deffered_thrice', 'approved'])) {
             return response()->json(['error' => 'Approved or Rejected Contractors cannot be updated']);
         }
         if ($request->field === 'pec_number') {
@@ -208,23 +208,23 @@ class ContractorRegistrationController extends Controller
             }
         }
 
-        $ContractorRegistration->{$request->field} = $request->field === 'pre_enlistment'
+        $contractor_registration->{$request->field} = $request->field === 'pre_enlistment'
             ? json_encode($request->value)
             : $request->value;
-        $ContractorRegistration->save();
+        $contractor_registration->save();
 
         return response()->json(['success' => 'Field saved']);
     }
 
-    public function uploadFile(Request $request, ContractorRegistration $ContractorRegistration)
+    public function uploadFile(Request $request, ContractorRegistration $contractor_registration)
     {
-        if ($request->hasFile('contractor_pictures') && in_array($ContractorRegistration->status, ['deffered_thrice', 'approved'])) {
+        if ($request->hasFile('contractor_pictures') && in_array($contractor_registration->status, ['deffered_thrice', 'approved'])) {
             return response()->json(['error' => 'Approved or Rejected Contractors cannot be updated']);
         }
         $file = $request->file;
         $collection = $request->collection;
-        $ContractorRegistration->addMedia($file)->toMediaCollection($collection);
-        if ($ContractorRegistration->save()) {
+        $contractor_registration->addMedia($file)->toMediaCollection($collection);
+        if ($contractor_registration->save()) {
             return response()->json(['success' => 'File Updated']);
         }
         return response()->json(['error' => 'Error Uploading File']);

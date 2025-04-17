@@ -88,13 +88,15 @@ class PermissionController extends Controller
     protected function getPredefinedPermissions()
     {
         return [
+
+            // Admin Permissions Start
             // Downloads
             'view any download',
             'create download',
             'view download',
-            'detail download',
-            'update file download',
+            'view detail download',
             'update field download',
+            'upload file download',
             'publish download',
             'archive download',
             'delete download',
@@ -103,48 +105,187 @@ class PermissionController extends Controller
             'view any event',
             'view event',
             'create event',
-            'detail event',
+            'view detail event',
             'update field event',
-            'delete event',
             'publish event',
             'archive event',
-            'comment event',
+            'post comment event',
+            'delete event',
 
             // Events
             'view any gallery',
             'view gallery',
             'create gallery',
-            'detail gallery',
+            'view detail gallery',
             'update field gallery',
-            'update file gallery',
-            'delete gallery',
+            'upload file gallery',
             'publish gallery',
             'archive gallery',
-            'comment gallery',
+            'post comment gallery',
+            'delete gallery',
 
             // News
             'view any news',
             'view news',
             'create news',
-            'detail news',
+            'view detail news',
             'update field news',
-            'update file news',
-            'delete news',
+            'upload file news',
             'publish news',
             'archive news',
-            'comment news',
+            'post comment news',
+            'delete news',
+
+            // Seniority
+            'view any seniority',
+            'view seniority',
+            'create seniority',
+            'view detail seniority',
+            'update field seniority',
+            'upload file seniority',
+            'publish seniority',
+            'archive seniority',
+            'post comment seniority',
+            'delete seniority',
+
+            // DevelopmentProject
+            'view any development-project',
+            'view development-project',
+            'create development-project',
+            'view detail development-project',
+            'update field development-project',
+            'publish development-project',
+            'archive development-project',
+            'post comment development-project',
+            'delete development-project',
+
+            // Project
+            'view any project',
+            'view project',
+            'create project',
+            'view detail project',
+            'update field project',
+            'upload file project',
+            'delete project',
+
+            // ProjectFile
+            'view any project-file',
+            'view project-file',
+            'create project-file',
+            'view detail project-file',
+            'update field project-file',
+            'upload file project-file',
+            'publish project-file',
+            'archive project-file',
+            'delete project-file',
+
+            // Slider
+            'view any slider',
+            'view slider',
+            'create slider',
+            'view detail slider',
+            'update field slider',
+            'upload file slider',
+            'publish slider',
+            'archive slider',
+            'post comment slider',
+            'delete slider',
 
             // Achievement
             'view any achievement',
             'view achievement',
             'create achievement',
-            'update achievement',
-            'delete achievement',
+            'view detail achievement',
+            'update field achievement',
+            'upload file achievement',
             'publish achievement',
             'archive achievement',
+            'delete achievement',
+
+            // Page
+            'view any page',
+            'view page',
+            'create page',
+            'view detail page',
+            'update field page',
+            'upload file page',
+            'activate page',
+            'delete page',
+
+            // Story
+            'view any story',
+            'view story',
+            'create story',
+            'publish story',
+            'delete story',
+
+            // Tender
+            'view any tender',
+            'view tender',
+            'create tender',
+            'view detail tender',
+            'update field tender',
+            'publish tender',
+            'archive tender',
+            'delete tender',
+            'post comment tender',
+
+            // Scheme
+            'view any scheme',
+            'view detail scheme',
+            'sync schemes',
+
+            // Comment
+            'view any comment',
+            'view comment',
+            'response comment',
+            'view detail comment',
+            'publish comment',
+            'archive comment',
+            'delete comment',
+
+            // Newsletter
+            'view any newsletter',
+            'mass email newsletter',
+
+            // Public Contact
+            'view any public-contact',
+            'view detail public-contact',
+            'relief grant public-contact',
+            'relief not grant public-contact',
+            'drop public-contact',
 
             // Activity Logs
             'view activity',
+            //Admin Permissions End
+
+            // Contractor Permissions Start
+            
+            // Contractor Permissions End
+
+            // Dmis Permissions Start
+            // Dmis Permissions End
+
+            // Hr Permissions Start
+            // Hr Permissions End
+
+            // Machinery Permissions Start
+            // Machinery Permissions End
+
+            // Porms Permissions Start
+            // Porms Permissions End
+
+            // ServiceCard Permissions Start
+            // ServiceCard Permissions End
+
+            // Settings Permissions Start
+            // Settings Permissions End
+
+            // Standardization Permissions Start
+            // Standardization Permissions End
+
+            // Vehicle Permissions Start
+            // Vehicle Permissions End
 
             // User permissions
             'view any user',
@@ -218,69 +359,6 @@ class PermissionController extends Controller
             
             // Website modules
             'manage website',
-            
-            'view any tender',
-            'view tender',
-            'create tender',
-            'update tender',
-            'delete tender',
-            'publish tender',
-            'archive tender',
-            
-            'view any slider',
-            'view slider',
-            'create slider',
-            'update slider',
-            'delete slider',
-            'publish slider',
-            'archive slider',
-            
-            'view any story',
-            'view story',
-            'create story',
-            'update story',
-            'delete story',
-            'publish story',
-            
-            'view any page',
-            'view page',
-            'create page',
-            'update page',
-            'delete page',
-            'activate page',
-            
-            'view any card',
-            
-            'view any project',
-            'view project',
-            'create project',
-            'update project',
-            'delete project',
-            
-            'view project file',
-            
-            'view any development project',
-            'view development project',
-            'create development project',
-            'update development project',
-            'delete development project',
-            'publish development project',
-            'archive development project',
-            
-            'view any scheme',
-            'view scheme',
-            'sync scheme',
-            
-            'update comment',
-            'view any newsletter',
-            'view newsletter',
-            'sendMassEmail newsletter',
-            
-            'view any public contact',
-            'view public contact',
-            'reliefGrant public contact',
-            'reliefNotGrant public contact',
-            'drop public contact',
             
             // Vehicle Management
             'manage vehicles',

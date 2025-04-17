@@ -1,4 +1,4 @@
-<x-main-layout title="The contractor is {{ $ContractorRegistration->status === 'approved' ? 'Approved' : 'Not Approved' }}">
+<x-main-layout title="The contractor is {{ $contractor_registration->status === 'approved' ? 'Approved' : 'Not Approved' }}">
     <div class="container mt-2">
         <x-slot name="breadcrumbTitle">
             Contractor Details
@@ -22,11 +22,11 @@
 
                 <!-- Profile Image Section -->
                 <div class="text-center mb-4">
-                    <img src="{{ $ContractorRegistration->contractor->getFirstMediaUrl('contractor_pictures') }}" 
+                    <img src="{{ $contractor_registration->contractor->getFirstMediaUrl('contractor_pictures') }}" 
                          class="rounded-circle mb-3" 
                          alt="Contractor Profile"
                          style="width: 200px; height: 200px; object-fit: cover; border: 3px solid #dee2e6;">
-                    <h3>{{ $ContractorRegistration->contractor->firm_name }}</h3>
+                    <h3>{{ $contractor_registration->contractor->firm_name }}</h3>
                 </div>
 
                 <!-- Basic Information -->
@@ -38,45 +38,45 @@
                         <table class="table table-bordered">
                             <tr>
                                 <th width="200">Status</th>
-                                <td>{!! $ContractorRegistration->status === 'approved' ? '<span class="badge fs-6 bg-success">Approved</span>' : '<span class="badge fs-6 bg-danger">Not Approved</span>' !!}</td>
+                                <td>{!! $contractor_registration->status === 'approved' ? '<span class="badge fs-6 bg-success">Approved</span>' : '<span class="badge fs-6 bg-danger">Not Approved</span>' !!}</td>
                             </tr>
                             
-                            @if($ContractorRegistration->status === 'approved')
+                            @if($contractor_registration->status === 'approved')
                             <tr>
                                 <th>Issue Date</th>
-                                <td>{{ $ContractorRegistration->updated_at->format('d-M-Y') }} ({{ $ContractorRegistration->updated_at->diffForHumans() }})</td>
+                                <td>{{ $contractor_registration->updated_at->format('d-M-Y') }} ({{ $contractor_registration->updated_at->diffForHumans() }})</td>
                             </tr>
                             <tr>
                                 <th>Expiration Date</th>
-                                <td>{{ $ContractorRegistration->updated_at ->copy()->modify('+3 years')->format('d-M-Y') }} ({{ $ContractorRegistration->updated_at->copy()->modify('+3 years')->diffForHumans() }})</td>
+                                <td>{{ $contractor_registration->updated_at ->copy()->modify('+3 years')->format('d-M-Y') }} ({{ $contractor_registration->updated_at->copy()->modify('+3 years')->diffForHumans() }})</td>
                             </tr>
                             <tr>
                                 <th>Name</th>
-                                <td>{{ $ContractorRegistration->contractor->name }}</td>
+                                <td>{{ $contractor_registration->contractor->name }}</td>
                             </tr>
                             <tr>
                                 <th>Firm Name</th>
-                                <td>{{ $ContractorRegistration->contractor->firm_name }}</td>
+                                <td>{{ $contractor_registration->contractor->firm_name }}</td>
                             </tr>
                             <tr>
                                 <th>Email</th>
-                                <td>{{ $ContractorRegistration->contractor->email }}</td>
+                                <td>{{ $contractor_registration->contractor->email }}</td>
                             </tr>
                             <tr>
                                 <th>Mobile Number</th>
-                                <td>{{ $ContractorRegistration->contractor->mobile_number }}</td>
+                                <td>{{ $contractor_registration->contractor->mobile_number }}</td>
                             </tr>
                             <tr>
                                 <th>CNIC</th>
-                                <td>{{ $ContractorRegistration->contractor->cnic }}</td>
+                                <td>{{ $contractor_registration->contractor->cnic }}</td>
                             </tr>
                             <tr>
                                 <th>District</th>
-                                <td>{{ $ContractorRegistration->contractor->district }}</td>
+                                <td>{{ $contractor_registration->contractor->district }}</td>
                             </tr>
                             <tr>
                                 <th>Address</th>
-                                <td>{{ $ContractorRegistration->contractor->address }}</td>
+                                <td>{{ $contractor_registration->contractor->address }}</td>
                             </tr>
                             @endif
                         </table>
@@ -90,32 +90,32 @@
                     </div>
                     <div class="card-body">
                         <table class="table table-bordered">                           
-                            @if($ContractorRegistration->status === 'approved')
+                            @if($contractor_registration->status === 'approved')
                             <tr>
                                 <th>PEC Number</th>
-                                <td>{{ $ContractorRegistration->pec_number }}</td>
+                                <td>{{ $contractor_registration->pec_number }}</td>
                             </tr>
                             <tr>
                                 <th>Category Applied</th>
-                                <td>{{ $ContractorRegistration->category_applied }}</td>
+                                <td>{{ $contractor_registration->category_applied }}</td>
                             </tr>
                             <tr>
                                 <th>PEC Category</th>
-                                <td>{{ $ContractorRegistration->pec_category }}</td>
+                                <td>{{ $contractor_registration->pec_category }}</td>
                             </tr>
                             <tr>
                                 <th>FBR NTN</th>
-                                <td>{{ $ContractorRegistration->fbr_ntn }}</td>
+                                <td>{{ $contractor_registration->fbr_ntn }}</td>
                             </tr>
                             <tr>
                                 <th>KPRA Registration No</th>
-                                <td>{{ $ContractorRegistration->kpra_reg_no }}</td>
+                                <td>{{ $contractor_registration->kpra_reg_no }}</td>
                             </tr>
                             <tr>
                                 <th>Pre Enlistments</th>
                                 <td>
                                 @php
-                                    $preEnlistments = json_decode($ContractorRegistration->pre_enlistment, true);
+                                    $preEnlistments = json_decode($contractor_registration->pre_enlistment, true);
                                 @endphp
                                 @if(is_array($preEnlistments))
                                     <ul class="list-group">
@@ -129,19 +129,19 @@
                             </tr>
                             <tr>
                                 <th>Limited Company</th>
-                                <td>{{ $ContractorRegistration->is_limited }}</td>
+                                <td>{{ $contractor_registration->is_limited }}</td>
                             </tr>
                             <tr>
                                 <th>Documents</th>
                                 <td>
                                     <ul class="list-group">
-                                        <li class="list-group-item"><a href="{{ $ContractorRegistration->contractor->getFirstMediaUrl('contractor_cnic_front') }}">CNIC (Front)</a></li>
-                                        <li class="list-group-item"><a href="{{ $ContractorRegistration->contractor->getFirstMediaUrl('contractor_cnic_back') }}">CNIC (Back)</a></li>
-                                        <li class="list-group-item"><a href="{{ $ContractorRegistration->getFirstMediaUrl('fbr_attachments') }}">FBR Registration</a></li>
-                                        <li class="list-group-item"><a href="{{ $ContractorRegistration->getFirstMediaUrl('kpra_attachments') }}">KPRA Certificate </a></li>
-                                        <li class="list-group-item"><a href="{{ $ContractorRegistration->getFirstMediaUrl('pec_attachments') }}">PEC Certificate</a></li>
-                                        <li class="list-group-item"><a href="{{ $ContractorRegistration->getFirstMediaUrl('form_h_attachments') }}">Form H</a></li>
-                                        <li class="list-group-item"><a href="{{ $ContractorRegistration->getFirstMediaUrl('pre_enlistment_attachments') }}">Pre Enlistments</a></li>
+                                        <li class="list-group-item"><a href="{{ $contractor_registration->contractor->getFirstMediaUrl('contractor_cnic_front') }}">CNIC (Front)</a></li>
+                                        <li class="list-group-item"><a href="{{ $contractor_registration->contractor->getFirstMediaUrl('contractor_cnic_back') }}">CNIC (Back)</a></li>
+                                        <li class="list-group-item"><a href="{{ $contractor_registration->getFirstMediaUrl('fbr_attachments') }}">FBR Registration</a></li>
+                                        <li class="list-group-item"><a href="{{ $contractor_registration->getFirstMediaUrl('kpra_attachments') }}">KPRA Certificate </a></li>
+                                        <li class="list-group-item"><a href="{{ $contractor_registration->getFirstMediaUrl('pec_attachments') }}">PEC Certificate</a></li>
+                                        <li class="list-group-item"><a href="{{ $contractor_registration->getFirstMediaUrl('form_h_attachments') }}">Form H</a></li>
+                                        <li class="list-group-item"><a href="{{ $contractor_registration->getFirstMediaUrl('pre_enlistment_attachments') }}">Pre Enlistments</a></li>
                                     </ul>
                                 </td>
                             </tr>
@@ -169,7 +169,7 @@
                                 </thead>
                                 <tbody>
                                     @php
-                                        $humanResources = $ContractorRegistration->contractor->humanResources->where('status', 'approved');
+                                        $humanResources = $contractor_registration->contractor->humanResources->where('status', 'approved');
                                     @endphp
                                     @foreach($humanResources as $hr)
                                     <tr>
@@ -214,7 +214,7 @@
                                 </thead>
                                 <tbody>
                                     @php
-                                        $machinery = $ContractorRegistration->contractor->machinery->where('status', 'approved');
+                                        $machinery = $contractor_registration->contractor->machinery->where('status', 'approved');
                                     @endphp
                                     @foreach($machinery as $machine)
                                     <tr>
@@ -272,7 +272,7 @@
                                 </thead>
                                 <tbody>
                                     @php
-                                        $workExperiences = $ContractorRegistration->contractor->workExperiences->where('status', 'approved');
+                                        $workExperiences = $contractor_registration->contractor->workExperiences->where('status', 'approved');
                                     @endphp
                                     @foreach($workExperiences as $experience)
                                     <tr>
@@ -312,7 +312,7 @@
         <script>
             $('#print-contractor').on('click', () => {
                 $(".contractor-details").printThis({
-                    pageTitle: "Profile of {{ $ContractorRegistration->contractor->firm_name }}"
+                    pageTitle: "Profile of {{ $contractor_registration->contractor->firm_name }}"
                 });
             });
         </script>

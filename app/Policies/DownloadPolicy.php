@@ -24,7 +24,7 @@ class DownloadPolicy
 
     public function detail(User $user, Download $download): bool
     {
-        return $user->id === $download->user_id || $user->can('detail download');
+        return $user->id === $download->user_id || $user->can('view detail download');
     }
 
     public function uploadField(User $user, Download $download): bool
@@ -34,7 +34,7 @@ class DownloadPolicy
 
     public function uploadFile(User $user, Download $download): bool
     {
-        return $user->id === $download->user_id || $user->can('update file download');
+        return $user->id === $download->user_id || $user->can('upload file download');
     }
 
     public function delete(User $user, Download $download): bool

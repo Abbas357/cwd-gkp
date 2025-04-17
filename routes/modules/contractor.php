@@ -9,26 +9,26 @@ use App\Http\Controllers\Contractor\ContractorWorkExperienceController;
 
 Route::prefix('contractors')->as('contractors.')->middleware(['can:manage contractors'])->group(function () {
     Route::get('/', [ContractorController::class, 'index'])->name('index')->can('viewAny', App\Models\Contractor::class);
-    Route::get('/{Contractor}/detail', [ContractorController::class, 'detail'])->name('detail')->can('view', 'Contractor');
-    Route::patch('/update/field/{Contractor}', [ContractorController::class, 'updateField'])->name('updateField')->can('update', 'Contractor');
-    Route::patch('/update/file/{Contractor}', [ContractorController::class, 'uploadFile'])->name('uploadFile')->can('update', 'Contractor');
+    Route::get('/{contractor}/detail', [ContractorController::class, 'detail'])->name('detail')->can('detail', 'contractor');
+    Route::patch('/update/field/{contractor}', [ContractorController::class, 'updateField'])->name('updateField')->can('updateField', 'contractor');
+    Route::patch('/update/file/{contractor}', [ContractorController::class, 'uploadFile'])->name('uploadFile')->can('uploadFile', 'contractor');
 
     Route::prefix('hr')->as('hr.')->group(function () {
-        Route::get('/{Contractor}', [ContractorHumanResourceController::class, 'detail'])->name('detail')->can('view', 'Contractor');
+        Route::get('/{contractor}', [ContractorHumanResourceController::class, 'detail'])->name('detail');
         Route::post('/{id}/update', [ContractorHumanResourceController::class, 'update'])->name('update');
         Route::patch('/{id}/upload', [ContractorHumanResourceController::class, 'upload'])->name('upload');
         Route::delete('{id}', [ContractorHumanResourceController::class, 'destroy'])->name('destroy');
     });
 
     Route::prefix('machinery')->as('machinery.')->group(function () {
-        Route::get('/{Contractor}', [ContractorMachineryController::class, 'detail'])->name('detail')->can('view', 'Contractor');
+        Route::get('/{contractor}', [ContractorMachineryController::class, 'detail'])->name('detail');
         Route::post('/{id}/update', [ContractorMachineryController::class, 'update'])->name('update');
         Route::patch('/{id}/upload', [ContractorMachineryController::class, 'upload'])->name('upload');
         Route::delete('{id}', [ContractorMachineryController::class, 'destroy'])->name('destroy');
     });
 
     Route::prefix('experience')->as('experience.')->group(function () {
-        Route::get('/{Contractor}', [ContractorWorkExperienceController::class, 'detail'])->name('detail')->can('view', 'Contractor');
+        Route::get('/{contractor}', [ContractorWorkExperienceController::class, 'detail'])->name('detail');
         Route::post('/{id}/update', [ContractorWorkExperienceController::class, 'update'])->name('update');
         Route::patch('/{id}/upload', [ContractorWorkExperienceController::class, 'upload'])->name('upload');
         Route::delete('{id}', [ContractorWorkExperienceController::class, 'destroy'])->name('destroy');
@@ -36,13 +36,13 @@ Route::prefix('contractors')->as('contractors.')->middleware(['can:manage contra
 
     Route::prefix('registration')->as('registration.')->group(function () {
         Route::get('/', [ContractorRegistrationController::class, 'index'])->name('index')->can('viewAny', App\Models\ContractorRegistration::class);
-        Route::patch('/defer/{ContractorRegistration}', [ContractorRegistrationController::class, 'defer'])->name('defer')->can('defer', 'Contractor');
-        Route::patch('/approve/{ContractorRegistration}', [ContractorRegistrationController::class, 'approve'])->name('approve')->can('approve', 'Contractor');
-        Route::get('/{ContractorRegistration}', [ContractorRegistrationController::class, 'show'])->name('show')->can('view', 'Contractor');
-        Route::get('/get/{ContractorRegistration}', [ContractorRegistrationController::class, 'showDetail'])->name('showDetail')->can('view', 'Contractor');
-        Route::get('/card/{ContractorRegistration}', [ContractorRegistrationController::class, 'showCard'])->name('showCard')->can('card', 'Contractor');
-        Route::patch('/renew/{ContractorRegistration}', [ContractorRegistrationController::class, 'renew'])->name('renew')->can('renew', 'Contractor');
-        Route::patch('/update/field/{ContractorRegistration}', [ContractorRegistrationController::class, 'updateField'])->name('updateField')->can('update', 'Contractor');
-        Route::patch('/update/file/{ContractorRegistration}', [ContractorRegistrationController::class, 'uploadFile'])->name('uploadFile')->can('update', 'Contractor');
+        Route::patch('/defer/{contractor_registration}', [ContractorRegistrationController::class, 'defer'])->name('defer')->can('defer', 'contractor_registration');
+        Route::patch('/approve/{contractor_registration}', [ContractorRegistrationController::class, 'approve'])->name('approve')->can('approve', 'contractor_registration');
+        Route::get('/{contractor_registration}', [ContractorRegistrationController::class, 'show'])->name('show')->can('view', 'contractor_registration');
+        Route::get('/get/{contractor_registration}', [ContractorRegistrationController::class, 'showDetail'])->name('showDetail')->can('detail', 'contractor_registration');
+        Route::get('/card/{contractor_registration}', [ContractorRegistrationController::class, 'showCard'])->name('showCard')->can('viewCard', 'contractor_registration');
+        Route::patch('/renew/{contractor_registration}', [ContractorRegistrationController::class, 'renew'])->name('renew')->can('renew', 'contractor_registration');
+        Route::patch('/update/field/{contractor_registration}', [ContractorRegistrationController::class, 'updateField'])->name('updateField')->can('updateField', 'contractor_registration');
+        Route::patch('/update/file/{contractor_registration}', [ContractorRegistrationController::class, 'uploadFile'])->name('uploadFile')->can('uploadFile', 'contractor_registration');
     });
 });

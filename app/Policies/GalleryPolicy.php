@@ -24,7 +24,7 @@ class GalleryPolicy
 
     public function detail(User $user, Gallery $gallery): bool
     {
-        return $user->id === $gallery->user_id || $user->can('detail gallery');
+        return $user->id === $gallery->user_id || $user->can('view detail gallery');
     }
 
     public function uploadField(User $user, Gallery $gallery): bool
@@ -54,6 +54,6 @@ class GalleryPolicy
 
     public function comment(User $user, Gallery $gallery): bool
     {
-        return $user->id === $gallery->user_id || $user->can('comment gallery');
+        return $user->id === $gallery->user_id || $user->can('post comment gallery');
     }
 }

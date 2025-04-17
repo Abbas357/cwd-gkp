@@ -1,8 +1,5 @@
 <?php
-
 namespace App\Http\Controllers\ServiceCard;
-
-use App\Http\Controllers\Controller;
 
 use Carbon\Carbon;
 use App\Models\Category;
@@ -11,6 +8,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
+use App\Http\Controllers\Controller;
 use Endroid\QrCode\Writer\SvgWriter;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ServiceCard\RenewedMail;

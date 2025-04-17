@@ -24,7 +24,7 @@ class NewsPolicy
 
     public function detail(User $user, News $news): bool
     {
-        return $user->id === $news->user_id || $user->can('detail news');
+        return $user->id === $news->user_id || $user->can('view detail news');
     }
 
     public function uploadField(User $user, News $news): bool
@@ -54,6 +54,6 @@ class NewsPolicy
 
     public function comment(User $user, News $news): bool
     {
-        return $user->id === $news->user_id || $user->can('comment news');
+        return $user->id === $news->user_id || $user->can('post comment news');
     }
 }

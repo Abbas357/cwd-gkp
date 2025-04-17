@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\Contractor;
 
-use App\Http\Controllers\Controller;
-
 use App\Models\Contractor;
+
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\ContractorWorkExperience;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ContractorWorkExperienceController extends Controller
 {
-    public function detail(Contractor $Contractor)
+    use AuthorizesRequests;
+
+    public function detail(Contractor $contractor)
     {
-        $experiences = $Contractor->workExperiences()->get();
+        $experiences = $contractor->workExperiences()->get();
+        $this->authorize('detail', $experiences);
 
         if (!$experiences) {
             return response()->json([
@@ -34,6 +38,7 @@ class ContractorWorkExperienceController extends Controller
     public function update(Request $request, $id)
     {
         $experience = ContractorWorkExperience::findOrFail($id);
+        $this->authorize('updateField', $experience);
 
         $validatedData = $request->validate([
             'field' => 'required|string',
@@ -60,6 +65,7 @@ class ContractorWorkExperienceController extends Controller
     public function upload(Request $request, $id)
     {
         $experience = ContractorWorkExperience::findOrFail($id);
+        $this->authorize('uploadFile', $experience);
         
         $request->validate([
             'file' => 'required|file|max:10240',
@@ -83,6 +89,8 @@ class ContractorWorkExperienceController extends Controller
     public function destroy($id)
     {
         $experience = ContractorWorkExperience::findOrFail($id);
+        $this->authorize('delete', $experience);
+        
         if($experience->delete()) {
             return response()->json(['success' => 'Experience deleted successfully'], 200);
         }

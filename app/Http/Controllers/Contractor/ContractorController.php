@@ -15,14 +15,14 @@ class ContractorController extends Controller
     {
         $status = $request->query('status', null);
 
-        $Contractors = Contractor::query();
+        $contractors = Contractor::query();
 
-        $Contractors->when($status !== null, function ($query) use ($status) {
+        $contractors->when($status !== null, function ($query) use ($status) {
             $query->where('status', $status);
         });
 
         if ($request->ajax()) {
-            $dataTable = Datatables::of($Contractors)
+            $dataTable = Datatables::of($contractors)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     return view('modules.contractors.partials.buttons', compact('row'))->render();
@@ -51,14 +51,14 @@ class ContractorController extends Controller
         return view('modules.contractors.index');
     }
 
-    public function detail(Contractor $Contractor)
+    public function detail(Contractor $contractor)
     {
         $cat = [
             'districts' => District::all(),
             'status' => ['active', 'blacklisted', 'suspended', 'dormant'],
         ];
 
-        if (!$Contractor) {
+        if (!$contractor) {
             return response()->json([
                 'success' => false,
                 'data' => [
@@ -75,14 +75,14 @@ class ContractorController extends Controller
         ]);
     }
 
-    public function machinery(Contractor $Contractor)
+    public function machinery(Contractor $contractor)
     {
         $cat = [
             'districts' => District::all(),
             'status' => ['active', 'blacklisted', 'suspended', 'dormant'],
         ];
 
-        if (!$Contractor) {
+        if (!$contractor) {
             return response()->json([
                 'success' => false,
                 'data' => [
@@ -99,14 +99,14 @@ class ContractorController extends Controller
         ]);
     }
 
-    public function experience(Contractor $Contractor)
+    public function experience(Contractor $contractor)
     {
         $cat = [
             'districts' => District::all(),
             'status' => ['active', 'blacklisted', 'suspended', 'dormant'],
         ];
 
-        if (!$Contractor) {
+        if (!$contractor) {
             return response()->json([
                 'success' => false,
                 'data' => [
@@ -123,29 +123,29 @@ class ContractorController extends Controller
         ]);
     }
 
-    public function updateField(Request $request, Contractor $Contractor)
+    public function updateField(Request $request, Contractor $contractor)
     {
         $request->validate([
             'field' => 'required|string',
             'value' => 'required',
         ]);
 
-        $Contractor->{$request->field} = $request->value;
+        $contractor->{$request->field} = $request->value;
 
-        if ($Contractor->isDirty($request->field)) {
-            $Contractor->save();
+        if ($contractor->isDirty($request->field)) {
+            $contractor->save();
             return response()->json(['success' => 'Field updated successfully'], 200);
         }
 
         return response()->json(['error' => 'No changes were made to the field'], 200);
     }
 
-    public function uploadFile(Request $request, Contractor $Contractor)
+    public function uploadFile(Request $request, Contractor $contractor)
     {
         $file = $request->file;
         $collection = $request->collection;
-        $Contractor->addMedia($file)->toMediaCollection($collection);
-        if ($Contractor->save()) {
+        $contractor->addMedia($file)->toMediaCollection($collection);
+        if ($contractor->save()) {
             return response()->json(['success' => 'File Updated']);
         }
         return response()->json(['error' => 'Error Uploading File']);

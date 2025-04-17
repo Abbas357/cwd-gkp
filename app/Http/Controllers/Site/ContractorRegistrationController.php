@@ -237,7 +237,7 @@ class ContractorRegistrationController extends Controller
 
     public function approvedContractors(Request $request, $uuid)
     {
-        $ContractorRegistration = ContractorRegistration::where('uuid', $uuid)->first();
+        $contractor_registration = ContractorRegistration::where('uuid', $uuid)->first();
         return view('site.contractors.approved', compact('ContractorRegistration'));
     }
 

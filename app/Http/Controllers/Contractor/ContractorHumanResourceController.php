@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\Contractor;
 
-use App\Http\Controllers\Controller;
-
 use App\Models\Contractor;
+
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\ContractorHumanResource;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ContractorHumanResourceController extends Controller
 {
-    public function detail(Contractor $Contractor)
+    use AuthorizesRequests;
+
+    public function detail(Contractor $contractor)
     {
-        $hr = $Contractor->humanResources()->get();
+        $hr = $contractor->humanResources()->get();
+        $this->authorize('detail', $hr);
 
         if (!$hr) {
             return response()->json([
@@ -34,6 +38,7 @@ class ContractorHumanResourceController extends Controller
     public function update(Request $request, $id)
     {
         $resource = ContractorHumanResource::findOrFail($id);
+        $this->authorize('updateField', $resource);
 
         $validatedData = $request->validate([
             'field' => 'required|string',
@@ -60,6 +65,7 @@ class ContractorHumanResourceController extends Controller
     public function upload(Request $request, $id)
     {
         $resource = ContractorHumanResource::findOrFail($id);
+        $this->authorize('uploadFile', $resource);
         
         $request->validate([
             'file' => 'required|file|max:10240',
@@ -83,6 +89,7 @@ class ContractorHumanResourceController extends Controller
     public function destroy($id)
     {
         $hr = ContractorHumanResource::findOrFail($id);
+        $this->authorize('delete', $hr);
         if($hr->delete()) {
             return response()->json(['success' => 'HR User deleted successfully'], 200);
         }

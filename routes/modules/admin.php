@@ -15,7 +15,6 @@ use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\DownloadController;
 use App\Http\Controllers\Admin\SeniorityController;
 use App\Http\Controllers\Admin\NewsLetterController;
-use App\Http\Controllers\Admin\CardController;
 use App\Http\Controllers\Admin\AchievementController;
 use App\Http\Controllers\Admin\ProjectFileController;
 use App\Http\Controllers\Admin\PublicContactController;
@@ -96,13 +95,13 @@ Route::prefix('site')->middleware(['can:manage website'])->group(function () {
         Route::get('/', [DevelopmentProjectController::class, 'index'])->name('index')->can('viewAny', App\Models\DevelopmentProject::class);
         Route::get('/create', [DevelopmentProjectController::class, 'create'])->name('create')->can('create', App\Models\DevelopmentProject::class);
         Route::post('/', [DevelopmentProjectController::class, 'store'])->name('store')->can('create', App\Models\DevelopmentProject::class);
-        Route::get('/{DevelopmentProject}', [DevelopmentProjectController::class, 'show'])->name('show')->can('view', 'DevelopmentProject');
-        Route::get('/get/{DevelopmentProject}', [DevelopmentProjectController::class, 'showDetail'])->name('detail')->can('detail', 'DevelopmentProject');
-        Route::patch('/publish/{DevelopmentProject}', [DevelopmentProjectController::class, 'publishDevelopmentProject'])->name('publish')->can('publish', 'DevelopmentProject');
-        Route::patch('/archive/{DevelopmentProject}', [DevelopmentProjectController::class, 'archiveDevelopmentProject'])->name('archive')->can('archive', 'DevelopmentProject');
-        Route::patch('/update/field/{DevelopmentProject}', [DevelopmentProjectController::class, 'updateField'])->name('updateField')->can('updateField', 'DevelopmentProject');
-        Route::delete('/{DevelopmentProject}', [DevelopmentProjectController::class, 'destroy'])->name('destroy')->can('delete', 'DevelopmentProject');
-        Route::patch('/{DevelopmentProject}/comments', [DevelopmentProjectController::class, 'updateComments'])->name('comments')->can('comment', 'DevelopmentProject');
+        Route::get('/{development_project}', [DevelopmentProjectController::class, 'show'])->name('show')->can('view', 'development_project');
+        Route::get('/get/{development_project}', [DevelopmentProjectController::class, 'showDetail'])->name('detail')->can('detail', 'development_project');
+        Route::patch('/publish/{development_project}', [DevelopmentProjectController::class, 'publishDevelopmentProject'])->name('publish')->can('publish', 'development_project');
+        Route::patch('/archive/{development_project}', [DevelopmentProjectController::class, 'archiveDevelopmentProject'])->name('archive')->can('archive', 'development_project');
+        Route::patch('/update/field/{development_project}', [DevelopmentProjectController::class, 'updateField'])->name('updateField')->can('updateField', 'development_project');
+        Route::delete('/{development_project}', [DevelopmentProjectController::class, 'destroy'])->name('destroy')->can('delete', 'development_project');
+        Route::patch('/{development_project}/comments', [DevelopmentProjectController::class, 'updateComments'])->name('comments')->can('comment', 'development_project');
     });
 
     Route::prefix('projects')->as('projects.')->group(function () {
@@ -210,8 +209,8 @@ Route::prefix('site')->middleware(['can:manage website'])->group(function () {
 
     Route::prefix('newsletter')->as('newsletter.')->group(function () {
         Route::get('/', [NewsLetterController::class, 'index'])->name('index')->can('viewAny', App\Models\NewsLetter::class);
-        Route::get('/mass-email', [NewsLetterController::class, 'createMassEmail'])->name('create_mass_email')->can('mass-email', App\Models\NewsLetter::class);
-        Route::post('/mass-email', [NewsLetterController::class, 'sendMassEmail'])->name('send_mass_email')->can('mass-email', App\Models\NewsLetter::class);
+        Route::get('/mass-email', [NewsLetterController::class, 'createMassEmail'])->name('create_mass_email')->can('massEmail', App\Models\NewsLetter::class);
+        Route::post('/mass-email', [NewsLetterController::class, 'sendMassEmail'])->name('send_mass_email')->can('massEmail', App\Models\NewsLetter::class);
     });
 
     Route::prefix('public_contact')->as('public_contact.')->group(function () {
@@ -220,9 +219,5 @@ Route::prefix('site')->middleware(['can:manage website'])->group(function () {
         Route::patch('/relief-grant/{PublicContact}', [PublicContactController::class, 'reliefGrant'])->name('grant')->can('reliefGrant', 'PublicContact');
         Route::patch('/relief-not-grant/{PublicContact}', [PublicContactController::class, 'reliefNotGrant'])->name('notgrant')->can('reliefNotGrant', 'PublicContact');
         Route::patch('/drop/{PublicContact}', [PublicContactController::class, 'drop'])->name('drop')->can('drop', 'PublicContact');
-    });
-
-    Route::prefix('cards')->as('cards.')->group(function () {
-        Route::get('/', [CardController::class, 'index'])->name('index')->can('viewAny', App\Models\Card::class);
     });
 });
