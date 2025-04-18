@@ -16,8 +16,6 @@ class ContractorHumanResourceController extends Controller
     public function detail(Contractor $contractor)
     {
         $hr = $contractor->humanResources()->get();
-        $this->authorize('detail', $hr);
-
         if (!$hr) {
             return response()->json([
                 'success' => false,
@@ -38,8 +36,6 @@ class ContractorHumanResourceController extends Controller
     public function update(Request $request, $id)
     {
         $resource = ContractorHumanResource::findOrFail($id);
-        $this->authorize('updateField', $resource);
-
         $validatedData = $request->validate([
             'field' => 'required|string',
             'value' => 'required'
@@ -65,8 +61,6 @@ class ContractorHumanResourceController extends Controller
     public function upload(Request $request, $id)
     {
         $resource = ContractorHumanResource::findOrFail($id);
-        $this->authorize('uploadFile', $resource);
-        
         $request->validate([
             'file' => 'required|file|max:10240',
         ]);
@@ -89,7 +83,6 @@ class ContractorHumanResourceController extends Controller
     public function destroy($id)
     {
         $hr = ContractorHumanResource::findOrFail($id);
-        $this->authorize('delete', $hr);
         if($hr->delete()) {
             return response()->json(['success' => 'HR User deleted successfully'], 200);
         }

@@ -8,59 +8,48 @@ use Illuminate\Auth\Access\Response;
 
 class ContractorRegistrationPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
     public function viewAny(User $user): bool
     {
-        //
+        return $user->can('view any contractor-registration');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
     public function view(User $user, ContractorRegistration $contractor_registration): bool
     {
-        //
+        return $user->can('view contractor-registration');
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
+    public function defer(User $user, ContractorRegistration $contractor_registration): bool
     {
-        //
+        return $user->can('defer contractor-registration');
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, ContractorRegistration $contractor_registration): bool
+    public function approve(User $user, ContractorRegistration $contractor_registration): bool
     {
-        //
+        return $user->can('approve contractor-registration');
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, ContractorRegistration $contractor_registration): bool
+    public function detail(User $user, ContractorRegistration $contractor_registration): bool
     {
-        //
+        return $user->can('view detail contractor-registration');
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, ContractorRegistration $contractor_registration): bool
+    public function viewCard(User $user, ContractorRegistration $contractor_registration): bool
     {
-        //
+        return $user->can('view card contractor-registration');
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, ContractorRegistration $contractor_registration): bool
+    public function renew(User $user, ContractorRegistration $contractor_registration): bool
     {
-        //
+        return $user->can('renew contractor-registration');
+    }
+
+    public function updateField(User $user, ContractorRegistration $contractor_registration): bool
+    {
+        return $user->can('update field contractor-registration');
+    }
+
+    public function uploadFile(User $user, ContractorRegistration $contractor_registration): bool
+    {
+        return $user->can('upload file contractor-registration');
     }
 }

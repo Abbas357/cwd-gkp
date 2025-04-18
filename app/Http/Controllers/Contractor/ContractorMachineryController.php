@@ -7,17 +7,12 @@ use App\Models\Contractor;
 use Illuminate\Http\Request;
 use App\Models\ContractorMachinery;
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ContractorMachineryController extends Controller
-{
-    use AuthorizesRequests;
-    
+{    
     public function detail(Contractor $contractor)
     {
         $machinery = $contractor->machinery()->get();
-        $this->authorize('detail', $machinery);
-
         if (!$machinery) {
             return response()->json([
                 'success' => false,
@@ -38,8 +33,6 @@ class ContractorMachineryController extends Controller
     public function update(Request $request, $id)
     {
         $machine = ContractorMachinery::findOrFail($id);
-        $this->authorize('updateField', $machine);
-
         $validatedData = $request->validate([
             'field' => 'required|string',
             'value' => 'required'
@@ -65,8 +58,6 @@ class ContractorMachineryController extends Controller
     public function upload(Request $request, $id)
     {
         $machine = ContractorMachinery::findOrFail($id);
-        $this->authorize('uploadFile', $machine);
-
         $request->validate([
             'file' => 'required|file|max:10240',
             'collection' => 'string',
@@ -92,9 +83,7 @@ class ContractorMachineryController extends Controller
 
     public function destroy($id)
     {
-        $machine = ContractorMachinery::findOrFail($id);
-        $this->authorize('delete', $machine);
-        
+        $machine = ContractorMachinery::findOrFail($id);        
         if($machine->delete()) {
             return response()->json(['success' => 'Machinery deleted successfully'], 200);
         }

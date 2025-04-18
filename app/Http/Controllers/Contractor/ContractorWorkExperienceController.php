@@ -16,8 +16,6 @@ class ContractorWorkExperienceController extends Controller
     public function detail(Contractor $contractor)
     {
         $experiences = $contractor->workExperiences()->get();
-        $this->authorize('detail', $experiences);
-
         if (!$experiences) {
             return response()->json([
                 'success' => false,
@@ -38,8 +36,6 @@ class ContractorWorkExperienceController extends Controller
     public function update(Request $request, $id)
     {
         $experience = ContractorWorkExperience::findOrFail($id);
-        $this->authorize('updateField', $experience);
-
         $validatedData = $request->validate([
             'field' => 'required|string',
             'value' => 'required'
@@ -64,9 +60,7 @@ class ContractorWorkExperienceController extends Controller
 
     public function upload(Request $request, $id)
     {
-        $experience = ContractorWorkExperience::findOrFail($id);
-        $this->authorize('uploadFile', $experience);
-        
+        $experience = ContractorWorkExperience::findOrFail($id);        
         $request->validate([
             'file' => 'required|file|max:10240',
         ]);
@@ -89,8 +83,6 @@ class ContractorWorkExperienceController extends Controller
     public function destroy($id)
     {
         $experience = ContractorWorkExperience::findOrFail($id);
-        $this->authorize('delete', $experience);
-        
         if($experience->delete()) {
             return response()->json(['success' => 'Experience deleted successfully'], 200);
         }

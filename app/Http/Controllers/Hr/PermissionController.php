@@ -88,8 +88,8 @@ class PermissionController extends Controller
     protected function getPredefinedPermissions()
     {
         return [
+            /* ----------- Admin Permissions Start -----------*/
 
-            // Admin Permissions Start
             // Downloads
             'view any download',
             'create download',
@@ -257,35 +257,44 @@ class PermissionController extends Controller
 
             // Activity Logs
             'view activity',
-            //Admin Permissions End
 
-            // Contractor Permissions Start
+            /* ----------- Admin Permissions End -----------*/
+
+            /* ----------- Contractor Permissions Start -----------*/
             
-            // Contractor Permissions End
+            /* ----------- Contractor Permissions End -----------*/
 
-            // Dmis Permissions Start
-            // Dmis Permissions End
+            /* ----------- Dmis Permissions Start -----------*/
 
-            // Hr Permissions Start
-            // Hr Permissions End
+            /* ----------- Dmis Permissions End -----------*/
 
-            // Machinery Permissions Start
-            // Machinery Permissions End
+            /* ----------- Hr Permissions Start -----------*/
 
-            // Porms Permissions Start
-            // Porms Permissions End
+            /* ----------- Hr Permissions End -----------*/
 
-            // ServiceCard Permissions Start
-            // ServiceCard Permissions End
+            /* ----------- Machinery Permissions Start -----------*/
 
-            // Settings Permissions Start
-            // Settings Permissions End
+            /* ----------- Machinery Permissions End -----------*/
 
-            // Standardization Permissions Start
-            // Standardization Permissions End
+            /* ----------- Porms Permissions Start -----------*/
 
-            // Vehicle Permissions Start
-            // Vehicle Permissions End
+            /* ----------- Porms Permissions End -----------*/
+
+            /* ----------- ServiceCard Permissions Start -----------*/
+            
+            /* ----------- ServiceCard Permissions End -----------*/
+
+            /* ----------- Settings Permissions Start -----------*/
+
+            /* ----------- Settings Permissions End -----------*/
+
+            /* ----------- Standardization Permissions Start -----------*/
+
+            /* ----------- Standardization Permissions End -----------*/
+
+            /* ----------- Vehicle Permissions Start -----------*/
+            
+            /* ----------- Vehicle Permissions End -----------*/
 
             // User permissions
             'view any user',

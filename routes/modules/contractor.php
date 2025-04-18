@@ -14,24 +14,24 @@ Route::prefix('contractors')->as('contractors.')->middleware(['can:manage contra
     Route::patch('/update/file/{contractor}', [ContractorController::class, 'uploadFile'])->name('uploadFile')->can('uploadFile', 'contractor');
 
     Route::prefix('hr')->as('hr.')->group(function () {
-        Route::get('/{contractor}', [ContractorHumanResourceController::class, 'detail'])->name('detail');
-        Route::post('/{id}/update', [ContractorHumanResourceController::class, 'update'])->name('update');
-        Route::patch('/{id}/upload', [ContractorHumanResourceController::class, 'upload'])->name('upload');
-        Route::delete('{id}', [ContractorHumanResourceController::class, 'destroy'])->name('destroy');
+        Route::get('/{contractor}', [ContractorHumanResourceController::class, 'detail'])->name('detail')->can('viewAny', App\Models\ContractorHumanResource::class);
+        Route::post('/{id}/update', [ContractorHumanResourceController::class, 'update'])->name('update')->can('update', App\Models\ContractorHumanResource::class);
+        Route::patch('/{id}/upload', [ContractorHumanResourceController::class, 'upload'])->name('upload')->can('upload', App\Models\ContractorHumanResource::class);
+        Route::delete('{id}', [ContractorHumanResourceController::class, 'destroy'])->name('destroy')->can('delete', App\Models\ContractorHumanResource::class);
     });
 
     Route::prefix('machinery')->as('machinery.')->group(function () {
-        Route::get('/{contractor}', [ContractorMachineryController::class, 'detail'])->name('detail');
-        Route::post('/{id}/update', [ContractorMachineryController::class, 'update'])->name('update');
-        Route::patch('/{id}/upload', [ContractorMachineryController::class, 'upload'])->name('upload');
-        Route::delete('{id}', [ContractorMachineryController::class, 'destroy'])->name('destroy');
-    });
+        Route::get('/{contractor}', [ContractorMachineryController::class, 'detail'])->name('detail')->can('viewAny', App\Models\ContractorMachinery::class);
+        Route::post('/{id}/update', [ContractorMachineryController::class, 'update'])->name('update')->can('update', App\Models\ContractorMachinery::class);
+        Route::patch('/{id}/upload', [ContractorMachineryController::class, 'upload'])->name('upload')->can('upload', App\Models\ContractorMachinery::class);
+        Route::delete('{id}', [ContractorMachineryController::class, 'destroy'])->name('destroy')->can('delete', App\Models\ContractorMachinery::class);
+    })->can('viewAny', App\Models\ContractorHumanResource::class);
 
     Route::prefix('experience')->as('experience.')->group(function () {
-        Route::get('/{contractor}', [ContractorWorkExperienceController::class, 'detail'])->name('detail');
-        Route::post('/{id}/update', [ContractorWorkExperienceController::class, 'update'])->name('update');
-        Route::patch('/{id}/upload', [ContractorWorkExperienceController::class, 'upload'])->name('upload');
-        Route::delete('{id}', [ContractorWorkExperienceController::class, 'destroy'])->name('destroy');
+        Route::get('/{contractor}', [ContractorWorkExperienceController::class, 'detail'])->name('detail')->can('viewAny', App\Models\ContractorWorkExperience::class);
+        Route::post('/{id}/update', [ContractorWorkExperienceController::class, 'update'])->name('update')->can('update', App\Models\ContractorWorkExperience::class);
+        Route::patch('/{id}/upload', [ContractorWorkExperienceController::class, 'upload'])->name('upload')->can('upload', App\Models\ContractorWorkExperience::class);
+        Route::delete('{id}', [ContractorWorkExperienceController::class, 'destroy'])->name('destroy')->can('delete', App\Models\ContractorWorkExperience::class);
     });
 
     Route::prefix('registration')->as('registration.')->group(function () {
