@@ -7,7 +7,7 @@ use App\Http\Controllers\Contractor\ContractorRegistrationController;
 use App\Http\Controllers\Contractor\ContractorHumanResourceController;
 use App\Http\Controllers\Contractor\ContractorWorkExperienceController;
 
-Route::prefix('contractors')->as('contractors.')->middleware(['can:manage contractors'])->group(function () {
+Route::prefix('contractors')->as('contractors.')->group(function () {
     Route::get('/', [ContractorController::class, 'index'])->name('index')->can('viewAny', App\Models\Contractor::class);
     Route::get('/{contractor}/detail', [ContractorController::class, 'detail'])->name('detail')->can('detail', 'contractor');
     Route::patch('/update/field/{contractor}', [ContractorController::class, 'updateField'])->name('updateField')->can('updateField', 'contractor');
@@ -25,7 +25,7 @@ Route::prefix('contractors')->as('contractors.')->middleware(['can:manage contra
         Route::post('/{id}/update', [ContractorMachineryController::class, 'update'])->name('update')->can('update', App\Models\ContractorMachinery::class);
         Route::patch('/{id}/upload', [ContractorMachineryController::class, 'upload'])->name('upload')->can('upload', App\Models\ContractorMachinery::class);
         Route::delete('{id}', [ContractorMachineryController::class, 'destroy'])->name('destroy')->can('delete', App\Models\ContractorMachinery::class);
-    })->can('viewAny', App\Models\ContractorHumanResource::class);
+    });
 
     Route::prefix('experience')->as('experience.')->group(function () {
         Route::get('/{contractor}', [ContractorWorkExperienceController::class, 'detail'])->name('detail')->can('viewAny', App\Models\ContractorWorkExperience::class);

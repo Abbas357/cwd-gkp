@@ -7,43 +7,58 @@ use App\Models\User;
 
 class ServiceCardPolicy
 {
-    public function viewAny(User $user): bool
+    public function viewAny(User $user)
     {
-        return $user->can('view any service card');
+        return $user->can('view any service-ard');
     }
 
-    public function view(User $user, ServiceCard $serviceCard): bool
+    public function create(User $user, ServiceCard $serviceCard)
     {
-        return $user->id === $serviceCard->user_id || $user->can('view service card');
+        return $user->can('create service-card');
     }
 
-    public function create(User $user): bool
+    public function view(User $user, ServiceCard $serviceCard)
     {
-        return $user->can('create service card');
+        return $user->can('view service-card');
     }
 
-    public function update(User $user, ServiceCard $serviceCard): bool
+    public function detail(User $user, ServiceCard $serviceCard)
     {
-        return $user->id === $serviceCard->user_id || $user->can('update service card');
+        return $user->can('view detail service-card');
     }
 
-    public function delete(User $user, ServiceCard $serviceCard): bool
+    public function viewCard(User $user, ServiceCard $serviceCard)
     {
-        return $user->id === $serviceCard->user_id || $user->can('delete service card');
+        return $user->can('view card service-card');
     }
 
-    public function verify(User $user, ServiceCard $serviceCard): bool
+    public function verify(User $user, ServiceCard $serviceCard)
     {
-        return $user->id === $serviceCard->user_id || $user->can('verify service card');
+        return $user->can('verify service-card');
     }
 
-    public function reject(User $user, ServiceCard $serviceCard): bool
+    public function reject(User $user, ServiceCard $serviceCard)
     {
-        return $user->id === $serviceCard->user_id || $user->can('reject service card');
+        return $user->can('reject service-card');
     }
 
-    public function renew(User $user, ServiceCard $serviceCard): bool
+    public function restore(User $user, ServiceCard $serviceCard)
     {
-        return $user->id === $serviceCard->user_id || $user->can('renew service card');
+        return $user->can('restore service-card');
+    }
+
+    public function renew(User $user, ServiceCard $serviceCard)
+    {
+        return $user->can('renew service-card');
+    }
+
+    public function updateField(User $user, ServiceCard $serviceCard)
+    {
+        return $user->can('update field service-card');
+    }
+
+    public function uploadFile(User $user, ServiceCard $serviceCard)
+    {
+        return $user->can('upload file service-card');
     }
 }

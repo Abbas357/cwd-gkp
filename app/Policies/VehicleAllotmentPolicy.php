@@ -8,28 +8,13 @@ use Illuminate\Auth\Access\Response;
 
 class VehicleAllotmentPolicy
 {
-    public function viewAny(User $user): bool
+    public function viewAny(User $user)
     {
-        return $user->hasPermissionTo('view vehicle allotments');
+        return $user->can('view any vehicle-allotment');
     }
 
-    public function view(User $user, VehicleAllotment $vehicleAllotment): bool
+    public function create(User $user)
     {
-        return $user->id === $vehicleAllotment->vehicle->user_id || $user->hasPermissionTo('view vehicle allotment');
-    }
-
-    public function create(User $user): bool
-    {
-        return $user->hasPermissionTo('create vehicle allotment');
-    }
-
-    public function update(User $user, VehicleAllotment $vehicleAllotment): bool
-    {
-        return $user->id === $vehicleAllotment->vehicle->user_id || $user->hasPermissionTo('update vehicle allotment');
-    }
-
-    public function delete(User $user, VehicleAllotment $vehicleAllotment): bool
-    {
-        return $user->id === $vehicleAllotment->vehicle->user_id || $user->hasPermissionTo('delete vehicle allotment');
+        return $user->can('create vehicle-allotment');
     }
 }

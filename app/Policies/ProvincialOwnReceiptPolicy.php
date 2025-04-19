@@ -8,59 +8,43 @@ use Illuminate\Auth\Access\Response;
 
 class ProvincialOwnReceiptPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
+    public function viewAny(User $user)
     {
-        //
+        return $user->can('view any provincial-own-receipt');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, ProvincialOwnReceipt $provincialOwnReceipt): bool
+    public function view(User $user, ProvincialOwnReceipt $provincialOwnReceipt)
     {
-        //
+        return $user->can('view provincial-own-receipt');
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
+    public function create(User $user)
     {
-        //
+        return $user->can('create provincial-own-receipt');
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, ProvincialOwnReceipt $provincialOwnReceipt): bool
+    public function detail(User $user, ProvincialOwnReceipt $provincialOwnReceipt)
     {
-        //
+        return $user->can('view detail provincial-own-receipt');
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, ProvincialOwnReceipt $provincialOwnReceipt): bool
+    public function updateField(User $user, ProvincialOwnReceipt $provincialOwnReceipt)
     {
-        //
+        return $user->can('update field provincial-own-receipt');
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, ProvincialOwnReceipt $provincialOwnReceipt): bool
+    public function uploadFile(User $user, ProvincialOwnReceipt $provincialOwnReceipt)
     {
-        //
+        return $user->can('upload file provincial-own-receipt');
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, ProvincialOwnReceipt $provincialOwnReceipt): bool
+    public function delete(User $user, ProvincialOwnReceipt $provincialOwnReceipt)
     {
-        //
+        return $user->can('delete provincial-own-receipt');
+    }
+
+    public function viewReports(User $user)
+    {
+        return $user->can('view reports provincial-own-receipt');
     }
 }

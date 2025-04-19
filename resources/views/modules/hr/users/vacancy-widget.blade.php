@@ -92,10 +92,6 @@
         </div>
         
         <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0">My Team</h5>
-                <a href="{{ route('admin.apps.hr.org-chart') }}" class="btn btn-sm btn-primary">View Full Organization</a>
-            </div>
             <div class="card-body">
                 @if($currentUser->currentPosting)
                     <div class="row mb-4">

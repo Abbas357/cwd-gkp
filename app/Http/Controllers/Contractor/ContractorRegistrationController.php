@@ -183,7 +183,7 @@ class ContractorRegistrationController extends Controller
 
         $qrCodeUri = $qrCode->getDataUri();
 
-        $html = view('modules.contractors.registration.partials.card', compact('ContractorRegistration', 'qrCodeUri'))->render();
+        $html = view('modules.contractors.registration.partials.card', compact('contractor_registration', 'qrCodeUri'))->render();
         return response()->json([
             'success' => true,
             'data' => [

@@ -8,59 +8,33 @@ use Illuminate\Auth\Access\Response;
 
 class InfrastructurePolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
     public function viewAny(User $user): bool
     {
-        //
+        return $user->can('view any infrastructure');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, Infrastructure $infrastructure): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can create models.
-     */
     public function create(User $user): bool
     {
-        //
+        return $user->can('create infrastructure');
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, Infrastructure $infrastructure): bool
+    public function view(User $user, Infrastructure $infrastructure): bool
     {
-        //
+        return $user->can('view infrastructure');
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
+    public function detail(User $user, Infrastructure $infrastructure): bool
+    {
+        return $user->can('view detail infrastructure');
+    }
+
+    public function updateField(User $user, Infrastructure $infrastructure): bool
+    {
+        return $user->can('update field infrastructure');
+    }
+
     public function delete(User $user, Infrastructure $infrastructure): bool
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Infrastructure $infrastructure): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Infrastructure $infrastructure): bool
-    {
-        //
+        return $user->can('delete infrastructure');
     }
 }

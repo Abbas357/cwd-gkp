@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Models\Office;
 use App\Models\Posting;
 use App\Models\Designation;
-use Illuminate\Http\Request;
 use App\Models\SanctionedPost;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -22,12 +21,10 @@ class DashboardController extends Controller
         $entireTeam = $currentUser->getEntireTeam();
         $directSupervisor = $currentUser->getDirectSupervisor();
 
-        // Get extended team (team members who aren't direct reports)
         $extendedTeam = $entireTeam->filter(function($member) use ($directSubordinates) {
             return !$directSubordinates->contains('id', $member->id);
         });
 
-        // Calculate sanctioned post statistics
         $sanctionedPostsData = SanctionedPost::where('status', 'Active')
             ->selectRaw('SUM(total_positions) as total_positions')
             ->first();
@@ -82,44 +79,5 @@ class DashboardController extends Controller
             'extendedTeam',
             'directSupervisor'
         ));
-    }
-    
-    public function ogChart(Request $request)
-    {
-        // Get top-level offices (no parent)
-        $topOffices = Office::whereNull('parent_id')
-            ->where('status', 'Active')
-            ->get();
-            
-        return view('modules.hr.users.org-chart', compact('topOffices'));
-    }
-    
-    public function getOfficeHierarchy(Request $request)
-    {
-        $officeId = $request->input('office_id');
-        $office = Office::findOrFail($officeId);
-        
-        // Get users in this office
-        $users = User::whereHas('currentPosting', function($query) use ($officeId) {
-            $query->where('office_id', $officeId)
-                  ->where('is_current', true);
-        })
-        ->with(['currentDesignation', 'currentOffice'])
-        ->get()
-        ->sortBy(function($user) {
-            // Sort by designation BPS (higher first)
-            return $user->currentDesignation ? -intval($user->currentDesignation->bps) : 0;
-        });
-        
-        // Get child offices
-        $childOffices = Office::where('parent_id', $officeId)
-            ->where('status', 'Active')
-            ->get();
-            
-        return response()->json([
-            'office' => $office,
-            'users' => $users,
-            'childOffices' => $childOffices
-        ]);
     }
 }

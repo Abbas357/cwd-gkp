@@ -89,7 +89,6 @@ class PermissionController extends Controller
     {
         return [
             /* ----------- Admin Permissions Start -----------*/
-
             // Downloads
             'view any download',
             'create download',
@@ -254,204 +253,224 @@ class PermissionController extends Controller
             'relief grant public-contact',
             'relief not grant public-contact',
             'drop public-contact',
-
-            // Activity Logs
-            'view activity',
-
             /* ----------- Admin Permissions End -----------*/
 
             /* ----------- Contractor Permissions Start -----------*/
-            
-            /* ----------- Contractor Permissions End -----------*/
+            // Contractor
+            'view any contractor',
+            'view detail contractor',
+            'update field contractor',
+            'upload file contractor',
+
+            // Contractor Human Resource
+            'view any contaractor-human-resource',
+            'update contractor-human-resource',
+            'upload contractor-human-resource',
+            'delete contractor-human-resource',
+
+            // Contractor Machinery
+            'view any contaractor-machinery',
+            'update contractor-machinery',
+            'upload contractor-machinery',
+            'delete contractor-machinery',
+
+            // Contractor Work Experience
+            'view any contaractor-work-experience',
+            'update contractor-work-experience',
+            'upload contractor-work-experience',
+            'delete contractor-work-experience',
+
+            // Contractor Registration
+            'view any contractor-registration',
+            'defer contractor-registration',
+            'approve contractor-registration',
+            'view contractor-registration',
+            'view detail contractor-registration',
+            'view card contractor-registration',
+            'renew contractor-registration',
+            'update field contractor-registration',
+            'upload file contractor-registration',
+            /* ----------- Contractor Permissions End -------------*/
 
             /* ----------- Dmis Permissions Start -----------*/
+            // Damage
+            'view any damage',
+            'create damage',
+            'view damage',
+            'view detail damage',
+            'update field damage',
+            'delete damage',
+            'view main report damage',
+            'view officer report damage',
+            'view district-wise report damage',
+            'view active-officer report damage',
+            
+            // Infrastructure
+            'view any infrastructure',
+            'create infrastructure',
+            'view infrastructure',
+            'view detail infrastructure',
+            'update field infrastructure',
+            'delete infrastructure',
 
-            /* ----------- Dmis Permissions End -----------*/
+            // Damage Log
+            'view any damage-log',
+
+            // Settings
+            'view settings damage', 
+            'update settings damage', 
+            'init settings damage', 
+            /* ------------ Dmis Permissions End ------------*/
 
             /* ----------- Hr Permissions Start -----------*/
-
-            /* ----------- Hr Permissions End -----------*/
-
-            /* ----------- Machinery Permissions Start -----------*/
-
-            /* ----------- Machinery Permissions End -----------*/
-
-            /* ----------- Porms Permissions Start -----------*/
-
-            /* ----------- Porms Permissions End -----------*/
-
-            /* ----------- ServiceCard Permissions Start -----------*/
-            
-            /* ----------- ServiceCard Permissions End -----------*/
-
-            /* ----------- Settings Permissions Start -----------*/
-
-            /* ----------- Settings Permissions End -----------*/
-
-            /* ----------- Standardization Permissions Start -----------*/
-
-            /* ----------- Standardization Permissions End -----------*/
-
-            /* ----------- Vehicle Permissions Start -----------*/
-            
-            /* ----------- Vehicle Permissions End -----------*/
-
-            // User permissions
+            // User
             'view any user',
-            'view user',
             'create user',
+            'view current posting user',
             'update user',
+            'view employee user',
+            'view user',
             'delete user',
-            'activate user',
-            'archive user',
-            'edit profile',
-            
-            // Office permissions
+            'view vacancy report user',
+            'view employee directory report user',
+            'view office strength report user',
+            'view posting history report user',
+            'view service length report user',
+            'view retirement forecast report user',
+            'view office staff report user',
+
+            // Office
             'view any office',
-            'view office',
             'create office',
-            'update office',
-            'delete office',
+            'view office',
+            'view detail office',
             'activate office',
-            
-            // Designation permissions
+            'update field office',
+            'delete office',
+            'view organogram office',
+
+            // Designation
             'view any designation',
-            'view designation',
             'create designation',
-            'update designation',
-            'delete designation',
+            'view designation',
+            'view detail designation',
             'activate designation',
-            
-            // Sanctioned posts permissions
-            'view any sanction post',
-            'view sanction post',
-            'create sanction post',
-            'update sanction post',
-            'delete sanction post',
-            
-            // Posting permissions
+            'update field designation',
+            'delete designation',
+
+            // Sanction Post
+            'view any sanctioned-post',
+            'create sanctioned-post',
+            'view sanctioned-post',
+            'update sanctioned-post',
+            'delete sanctioned-post',
+            'iew available positions sanctioned-post',
+            'check exists sanctioned-post',
+
+            // Posting
             'view any posting',
-            'view posting',
             'create posting',
+            'view posting',
             'update posting',
             'delete posting',
             'end posting',
+            'check sanctioned posting',
+            'check occupancy posting',
+            'view current officers posting',
             
-            // Role permissions
+            // Role
             'view any role',
-            'view role',
             'create role',
-            'update role',
             'delete role',
-            
-            // Permission permissions
+            'assign role',
+            'assign permission role',
+            'update permission role',
+
+            // Permission
             'view any permission',
-            'view permission',
             'create permission',
-            'update permission',
             'delete permission',
             'sync permission',
-            
-            // HR Reports
-            'view vacancy report',
-            'view employee directory',
-            'view office strength',
-            'view posting history',
-            'view service length',
-            'view retirement forecast',
-            'view office staff',
-            
-            // HR Dashboard and organization
-            'view hr dashboard',
-            'view organization chart',
-            'view organogram',
-            
-            // Website modules
-            'manage website',
-            
-            // Vehicle Management
-            'manage vehicles',
-            'view any vehicle',
-            'view vehicle',
-            'create vehicle',
-            'update vehicle',
-            'delete vehicle',
-            'view vehicle report',
-            
-            // Machinery Management
-            'manage machinery',
+            /* -----=------ Hr Permissions End ------------*/
+
+            /* ----------- Machinery Permissions Start -----------*/
+            // Machinery
             'view any machinery',
             'view machinery',
             'create machinery',
-            'update machinery',
+            'view detail machinery',
+            'view history machinery',
+            'update field machinery',
+            'upload file machinery',
             'delete machinery',
-            'view machinery report',
-            
-            // Contractor Management
-            'manage contractors',
-            'view any contractor',
-            'view contractor',
-            'create contractor',
-            'update contractor',
-            'delete contractor',
-            'view contractor report',
-            
-            // Service Card Management
-            'manage service cards',
-            'view any service card',
-            'view service card',
-            'create service card',
-            'update service card',
-            'delete service card',
-            'view service card report',
-            
-            // Standardization Management
-            'manage standardizations',
+            'view reports machinery',
+
+            // Machinery Allocation
+            'create machinery-allocation',
+            /* ----------- Machinery Permissions End -------------*/
+
+            /* ----------- Porms Permissions Start -----------*/
+            // Provincial Own Receipt
+            'view any provincial-own-receipt',
+            'view provincial-own-receipt',
+            'create provincial-own-receipt',
+            'view detail provincial-own-receipt',
+            'update field provincial-own-receipt',
+            'upload file provincial-own-receipt',
+            'delete provincial-own-receipt',
+            'view reports provincial-own-receipt',
+            /* ----------- Porms Permissions End -------------*/
+
+            /* ----------- ServiceCard Permissions Start -----------*/
+            'view any service-card',
+            'create service-card',
+            'view service-card',
+            'view detail service-card',
+            'view card service-card',
+            'verify service-card',
+            'reject service-card',
+            'restore service-card',
+            'renew service-card',
+            'update field service-card',
+            'upload file service-card',
+            'delete service-card',
+            /* ----------- ServiceCard Permissions End -------------*/
+
+            /* ----------- Settings Permissions Start -----------*/
+            'update core settings ',
+            'manage main category settings',
+            'manage district settings',
+            'view activity settings',
+            /* ----------- Settings Permissions End -------------*/
+
+            /* ----------- Standardization Permissions Start -----------*/
+            // Standardization
             'view any standardization',
             'view standardization',
-            'create standardization',
-            'update standardization',
-            'delete standardization',
-            'view standardization report',
-            
-            // PORMS Management
-            'manage porms',
-            'view any porms',
-            'view porms',
-            'create porms',
-            'update porms',
-            'delete porms',
-            'view porms report',
-            
-            // DTS Management
-            'manage dts',
-            'view any infrastructures',
-            'view infrastructures',
-            'create infrastructures',
-            'update infrastructures',
-            'delete infrastructures',
-            
-            'view any damages',
-            'view damages',
-            'create damages',
-            'update damages',
-            'delete damages',
-            
-            'view dts settings',
-            
-            // Settings Management
-            'view settings',
-            'update settings',
-            'view any district',
-            'view district',
-            'create district',
-            'update district',
-            'delete district',
-            'view any category',
-            'view category',
-            'create category',
-            'update category',
-            'delete category',
+            'approve standardization',
+            'reject standardization',
+            'view detail standardization',
+            'view card standardization',
+            'renew standardization',
+            'update field standardization',
+            'upload file standardization',
+            /* ----------- Standardization Permissions End -------------*/
+
+            /* ----------- Vehicle Permissions Start -----------*/
+            // Vehicle
+            'view any vehicle',
+            'view vehicle',
+            'create vehicle',
+            'view detail vehicle',
+            'view history vehicle',
+            'update field vehicle',
+            'upload file vehicle',
+            'delete vehicle',
+            'view reports vehicle',
+
+            // Vehicle Allotment
+            'create vehicle-allotment'
+            /* ----------- Vehicle Permissions End -------------*/
         ];
     }
 }

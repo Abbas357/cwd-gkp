@@ -27,30 +27,14 @@
     </li>
     @endcan
 
-    @canany(['view organization chart', 'view organogram'])
+    @can('view organogram')
     <li>
-        <a href="javascript:;" class="has-arrow">
-            <div class="parent-icon"><i class="bi-bar-chart-line text-primary"></i></div>
-            <div class="menu-title">Stats</div>
+        <a href="{{ route('admin.apps.hr.organogram.index') }}">
+            <div class="parent-icon"><i class="bi-diagram-3 text-danger"></i></div>
+            <div class="menu-title">Organogram</div>
         </a>
-        <ul class="p-2 menu-items">
-            @can('view organization chart')
-            <li>
-                <a href="{{ route('admin.apps.hr.org-chart') }}">
-                    <i class="bi-diagram-3 text-info"></i>Organization Chart
-                </a>
-            </li>
-            @endcan
-            @can('view organogram')
-            <li>
-                <a href="{{ route('admin.apps.hr.organogram.index') }}">
-                    <i class="bi-diagram-3 text-primary"></i>Organogram
-                </a>
-            </li>
-            @endcan
-        </ul>
     </li>
-    @endcanany
+    @endcan
 
     @can('view any sanction post')
     <li>

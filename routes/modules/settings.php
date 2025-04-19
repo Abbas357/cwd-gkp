@@ -7,37 +7,36 @@ use App\Http\Controllers\Settings\SettingController;
 use App\Http\Controllers\Settings\DistrictController;
 use App\Http\Controllers\Settings\ActivityLogController;
 
-Route::prefix('settings')->middleware(['can:manage settings'])->group(function () {
+Route::prefix('settings')->group(function () {
     
-    Route::prefix('profile')->as('profile.')->group(function () {
+    Route::prefix('profile')->as('profile.')->middleware('can:update,' . App\Models\User::class)->group(function () {
         Route::get('/', [ProfileController::class, 'edit'])->name('edit');
         Route::patch('/', [ProfileController::class, 'update'])->name('update');
     });
 
-    Route::prefix('core')->as('settings.')->group(function () {
-        Route::get('/', [SettingController::class, 'index'])->name('index')->can('view', App\Models\Setting::class);
-        Route::patch('/', [SettingController::class, 'update'])->name('update')->can('update', App\Models\Setting::class);
+    Route::prefix('core')->as('settings.')->middleware('can:updateCore,' . App\Models\Setting::class)->group(function () {
+        Route::get('/', [SettingController::class, 'index'])->name('index');
+        Route::patch('/', [SettingController::class, 'update'])->name('update');
     });
 
-    Route::prefix('categories')->as('categories.')->group(function () {
-        Route::get('/', [SettingController::class, 'categories'])->name('index')->can('viewAny', App\Models\Setting::class);
-        Route::get('/create', [SettingController::class, 'createCategory'])->name('create')->can('create', App\Models\Setting::class);
-        Route::post('/', [SettingController::class, 'storeCategory'])->name('store')->can('create', App\Models\Setting::class);
-        Route::get('/{key}/{module?}', [SettingController::class, 'showCategory'])->name('show')->can('view', App\Models\Setting::class);
-        Route::get('/{key}/{module?}/edit', [SettingController::class, 'editCategory'])->name('edit')->can('update', App\Models\Setting::class);
-        Route::patch('/{key}/{module?}', [SettingController::class, 'updateCategory'])->name('update')->can('update', App\Models\Setting::class);
-        Route::delete('/{key}/{module?}', [SettingController::class, 'deleteCategory'])->name('destroy')->can('delete', App\Models\Setting::class);
+    Route::prefix('categories')->as('categories.')->middleware('can:manageMainCategory,' . App\Models\Setting::class)->group(function () {
+        Route::get('/', [SettingController::class, 'categories'])->name('index');
+        Route::get('/create', [SettingController::class, 'createCategory'])->name('create');
+        Route::post('/', [SettingController::class, 'storeCategory'])->name('store');
+        Route::get('/{key}/{module?}', [SettingController::class, 'showCategory'])->name('show');
+        Route::get('/{key}/{module?}/edit', [SettingController::class, 'editCategory'])->name('edit');
+        Route::patch('/{key}/{module?}', [SettingController::class, 'updateCategory'])->name('update');
+        Route::delete('/{key}/{module?}', [SettingController::class, 'deleteCategory'])->name('destroy');
         
-        // AJAX Category Item Management
-        Route::get('/{key}/{module?}/items', [SettingController::class, 'getCategoryItems'])->name('items')->can('view', App\Models\Setting::class);
-        Route::post('/{key}/{module?}/items', [SettingController::class, 'addCategoryItem'])->name('items.add')->can('update', App\Models\Setting::class);
-        Route::delete('/{key}/{module?}/items', [SettingController::class, 'removeCategoryItem'])->name('items.remove')->can('update', App\Models\Setting::class);
+        Route::get('/{key}/{module?}/items', [SettingController::class, 'getCategoryItems'])->name('items');
+        Route::post('/{key}/{module?}/items', [SettingController::class, 'addCategoryItem'])->name('items.add');
+        Route::delete('/{key}/{module?}/items', [SettingController::class, 'removeCategoryItem'])->name('items.remove');
     });
 
-    Route::prefix('districts')->as('districts.')->group(function () {
-        Route::get('/', [DistrictController::class, 'index'])->name('index')->can('viewAny', App\Models\District::class);
-        Route::post('/', [DistrictController::class, 'store'])->name('store')->can('create', App\Models\District::class);
-        Route::delete('/{district}', [DistrictController::class, 'destroy'])->name('destroy')->can('delete', App\Models\District::class);
+    Route::prefix('districts')->as('districts.')->middleware('can:manageDistricts,' . App\Models\Setting::class)->group(function () {
+        Route::get('/', [DistrictController::class, 'index'])->name('index');
+        Route::post('/', [DistrictController::class, 'store'])->name('store');
+        Route::delete('/{district}', [DistrictController::class, 'destroy']);
     });
 
     Route::prefix('search')->as('search.')->group(function () {
@@ -45,8 +44,8 @@ Route::prefix('settings')->middleware(['can:manage settings'])->group(function (
         Route::post('/clear', [HomeController::class, 'clearRecentSearches'])->name('clear');
     });
 
-    Route::prefix('activity')->as('activity.')->group(function () {
-        Route::get('/', [ActivityLogController::class, 'index'])->name('index')->can('view', Spatie\Activitylog\Models\Activity::class);
+    Route::prefix('activity')->as('activity.')->middleware('can:viewActivity,' . App\Models\Setting::class)->group(function () {
+        Route::get('/', [ActivityLogController::class, 'index'])->name('index');
         Route::get('/notifications', [ActivityLogController::class, 'getNotifications'])->name('notifications');
     });
     

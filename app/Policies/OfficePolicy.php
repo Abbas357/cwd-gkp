@@ -8,59 +8,43 @@ use Illuminate\Auth\Access\Response;
 
 class OfficePolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
     public function viewAny(User $user): bool
     {
-        //
+        return $user->can('view any office');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, Office $office): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can create models.
-     */
     public function create(User $user): bool
     {
-        //
+        return $user->can('create office');
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, Office $office): bool
+    public function view(User $user, Office $office): bool
     {
-        //
+        return $user->can('view office');
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
+    public function detail(User $user, Office $office): bool
+    {
+        return $user->can('view detail office');
+    }
+
+    public function activate(User $user, Office $office): bool
+    {
+        return $user->can('activate office');
+    }
+
+    public function updateField(User $user, Office $office): bool
+    {
+        return $user->can('update field office');
+    }
+
     public function delete(User $user, Office $office): bool
     {
-        //
+        return $user->can('delete office');
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Office $office): bool
+    public function viewOrganogram(User $user): bool
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Office $office): bool
-    {
-        //
+        return $user->can('view organogram office');
     }
 }

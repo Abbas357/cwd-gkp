@@ -10,32 +10,22 @@ class PermissionPolicy
 {
     use HandlesAuthorization;
 
-    public function viewAny(User $user)
+    public function viewAny(User $user): bool
     {
         return $user->can('view any permission');
     }
 
-    public function view(User $user, Permission $permission)
-    {
-        return $user->can('view permission');
-    }
-
-    public function create(User $user)
+    public function create(User $user): bool
     {
         return $user->can('create permission');
     }
 
-    public function update(User $user, Permission $permission)
-    {
-        return $user->can('update permission');
-    }
-
-    public function delete(User $user, Permission $permission)
+    public function delete(User $user, Permission $permission): bool
     {
         return $user->can('delete permission');
     }
 
-    public function sync(User $user)
+    public function sync(User $user): bool
     {
         return $user->can('sync permission');
     }

@@ -29,7 +29,7 @@
                             <option value="main">Main Site</option>
                             <option value="hr">HR-MIS</option>
                             <option value="vehicle">Vehicle Mgt.</option>
-                            <option value="dts">Decision Tracking System</option>
+                            <option value="dmis">Damage Management & Information System</option>
                         </select>
                         <div class="form-text">Where this settings belongs to</div>
                         @error('module')

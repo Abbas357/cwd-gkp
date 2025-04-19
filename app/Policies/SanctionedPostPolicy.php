@@ -8,59 +8,38 @@ use Illuminate\Auth\Access\Response;
 
 class SanctionedPostPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
     public function viewAny(User $user): bool
     {
-        //
+        return $user->can('view any sanctioned-post');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, SanctionedPost $sanctionedPost): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can create models.
-     */
     public function create(User $user): bool
     {
-        //
+        return $user->can('create sanctioned-post');
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
+    public function view(User $user, SanctionedPost $sanctionedPost): bool
+    {
+        return $user->can('view sanctioned-post');
+    }
+
     public function update(User $user, SanctionedPost $sanctionedPost): bool
     {
-        //
+        return $user->can('update sanctioned-post');
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
     public function delete(User $user, SanctionedPost $sanctionedPost): bool
     {
-        //
+        return $user->can('delete sanctioned-post');
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, SanctionedPost $sanctionedPost): bool
+    public function viewAvailablePositions(User $user): bool
     {
-        //
+        return $user->can('view available positions sanctioned-post');
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, SanctionedPost $sanctionedPost): bool
+    public function checkExists(User $user): bool
     {
-        //
+        return $user->can('check exists sanctioned-post');
     }
 }

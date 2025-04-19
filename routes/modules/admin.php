@@ -22,7 +22,7 @@ use App\Http\Controllers\Admin\DevelopmentProjectController;
 
 Route::get('/site', [HomeController::class, 'websiteAdmin'])->name('home');
 
-Route::prefix('site')->middleware(['can:manage website'])->group(function () {
+Route::prefix('site')->group(function () {
     Route::prefix('downloads')->as('downloads.')->group(function () {
         Route::get('/', [DownloadController::class, 'index'])->name('index')->can('viewAny', App\Models\Download::class);
         Route::get('/create', [DownloadController::class, 'create'])->name('create')->can('create', App\Models\Download::class);

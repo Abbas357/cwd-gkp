@@ -8,59 +8,53 @@ use Illuminate\Auth\Access\Response;
 
 class DamagePolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
     public function viewAny(User $user): bool
     {
-        //
+        return $user->can('view any damage');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, Damage $damage): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can create models.
-     */
     public function create(User $user): bool
     {
-        //
+        return $user->can('create damage');
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, Damage $damage): bool
+    public function view(User $user, Damage $damage): bool
     {
-        //
+        return $user->can('view damage');
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
+    public function detail(User $user, Damage $damage): bool
+    {
+        return $user->can('view detail damage');
+    }
+
+    public function updateField(User $user, Damage $damage): bool
+    {
+        return $user->can('update field damage');
+    }
+
     public function delete(User $user, Damage $damage): bool
     {
-        //
+        return $user->can('delete damage');
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Damage $damage): bool
+    public function viewMainReport(User $user): bool
     {
-        //
+        return $user->can('view main report damage');
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Damage $damage): bool
+    public function viewOfficerWiseReport(User $user): bool
     {
-        //
+        return $user->can('view officer-wise report damage');
+    }
+
+    public function viewDistrictWiseReport(User $user): bool
+    {
+        return $user->can('view district-wise report damage');
+    }
+
+    public function viewActiveOfficerReport(User $user): bool
+    {
+        return $user->can('view active-officer report damage');
     }
 }

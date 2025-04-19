@@ -10,38 +10,18 @@ class ContractorPolicy
         return $user->can('view any contractor');
     }
     
-    public function view(User $user, Contractor $contractor): bool
+    public function detail(User $user, Contractor $contractor): bool
     {
-        return $user->can('view contractor');
+        return $user->can('view detail contractor');
     }
     
-    public function update(User $user, Contractor $contractor): bool
+    public function updateField(User $user, Contractor $contractor): bool
     {
-        return $user->can('update contractor');
+        return $user->can('update field contractor');
     }
     
-    public function defer(User $user, Contractor $contractor): bool
+    public function uploadFile(User $user, Contractor $contractor): bool
     {
-        return $user->can('defer contractor');
-    }
-    
-    public function approve(User $user, Contractor $contractor): bool
-    {
-        return $user->can('approve contractor');
-    }
-    
-    public function card(User $user, Contractor $contractor): bool
-    {
-        return $user->can('generate contractor card');
-    }
-    
-    public function renew(User $user, Contractor $contractor): bool
-    {
-        return $user->can('renew contractor card');
-    }
-    
-    public function delete(User $user, Contractor $contractor): bool
-    {
-        return $user->can('delete contractor');
+        return $user->can('upload file contractor');
     }
 }
