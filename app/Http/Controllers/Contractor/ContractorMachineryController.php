@@ -44,13 +44,11 @@ class ContractorMachineryController extends Controller
             $machine->save();
 
             return response()->json([
-                'success' => true,
-                'message' => 'Machinery updated successfully'
+                'success' => 'Machinery updated successfully'
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'success' => false,
-                'message' => 'Failed to update machinery'
+                'success' => 'Failed to update machinery'
             ], 500);
         }
     }
@@ -68,15 +66,13 @@ class ContractorMachineryController extends Controller
                 ->toMediaCollection($request->collection);
 
             return response()->json([
-                'success' => true,
-                'message' => 'File uploaded successfully',
+                'success' => 'File uploaded successfully',
                 'fileUrl' => $media->getUrl(),
                 'fileId' => $media->id
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'success' => false,
-                'message' => 'Failed to upload file: ' . $e->getMessage()
+                'success' => 'Failed to upload file: ' . $e->getMessage()
             ], 500);
         }
     }

@@ -10,43 +10,75 @@
                 <th>Project Status</th>
                 <th>Status</th>
                 <th>Documents</th>
+                @can('delete', App\Models\ContractorWorkExperience::class)
                 <th>Action</th>
+                @endcan
             </tr>
         </thead>
         <tbody>
             @forelse($experiences as $experience)
             <tr data-id="{{ $experience->id }}">
                 <td>
-                    <span class="editable" data-field="adp_number" data-value="{{ $experience->adp_number }}">{{ $experience->adp_number }}</span>
+                    @can('update', App\Models\ContractorWorkExperience::class)
+                        <span class="editable" data-field="adp_number" data-value="{{ $experience->adp_number }}">{{ $experience->adp_number }}</span>
+                    @else
+                        {{ $experience->adp_number }}
+                    @endcan
                 </td>
                 <td>
-                    <span class="editable" data-field="project_name" data-value="{{ $experience->project_name }}">{{ $experience->project_name }}</span>
+                    @can('update', App\Models\ContractorWorkExperience::class)
+                        <span class="editable" data-field="project_name" data-value="{{ $experience->project_name }}">{{ $experience->project_name }}</span>
+                    @else
+                        {{ $experience->project_name }}
+                    @endcan
                 </td>
                 <td>
-                    <span class="editable number" data-field="project_cost" data-value="{{ $experience->project_cost }}">{{ number_format($experience->project_cost, 2) }}</span>
+                    @can('update', App\Models\ContractorWorkExperience::class)
+                        <span class="editable number" data-field="project_cost" data-value="{{ $experience->project_cost }}">{{ number_format($experience->project_cost, 2) }}</span>
+                    @else
+                        {{ number_format($experience->project_cost, 2) }}
+                    @endcan
                 </td>
                 <td>
-                    <span class="editable date" data-field="commencement_date" data-value="{{ $experience->commencement_date }}">{{ $experience->commencement_date }}</span>
+                    @can('update', App\Models\ContractorWorkExperience::class)
+                        <span class="editable date" data-field="commencement_date" data-value="{{ $experience->commencement_date }}">{{ $experience->commencement_date }}</span>
+                    @else
+                        {{ $experience->commencement_date }}
+                    @endcan
                 </td>
                 <td>
-                    <span class="editable date" data-field="completion_date" data-value="{{ $experience->completion_date }}">{{ $experience->completion_date }}</span>
+                    @can('update', App\Models\ContractorWorkExperience::class)
+                        <span class="editable date" data-field="completion_date" data-value="{{ $experience->completion_date }}">{{ $experience->completion_date }}</span>
+                    @else
+                        {{ $experience->completion_date }}
+                    @endcan
                 </td>
                 <td>
-                    <select class="form-control project-status-select" data-field="project_status">
-                        <option value="completed" {{ $experience->project_status === 'completed' ? 'selected' : '' }}>Completed</option>
-                        <option value="ongoing" {{ $experience->project_status === 'ongoing' ? 'selected' : '' }}>Ongoing</option>
-                    </select>
+                    @can('update', App\Models\ContractorWorkExperience::class)
+                        <select class="form-control project-status-select" data-field="project_status">
+                            <option value="completed" {{ $experience->project_status === 'completed' ? 'selected' : '' }}>Completed</option>
+                            <option value="ongoing" {{ $experience->project_status === 'ongoing' ? 'selected' : '' }}>Ongoing</option>
+                        </select>
+                    @else
+                        {{ ucfirst($experience->project_status) }}
+                    @endcan
                 </td>
                 <td>
-                    <select class="form-control status-select" data-field="status">
-                        <option value="draft" {{ $experience->status === 'draft' ? 'selected' : '' }}>Draft</option>
-                        <option value="rejected" {{ $experience->status === 'rejected' ? 'selected' : '' }}>Rejected</option>
-                        <option value="approved" {{ $experience->status === 'approved' ? 'selected' : '' }}>Approved</option>
-                    </select>
+                    @can('update', App\Models\ContractorWorkExperience::class)
+                        <select class="form-control status-select" data-field="status">
+                            <option value="draft" {{ $experience->status === 'draft' ? 'selected' : '' }}>Draft</option>
+                            <option value="rejected" {{ $experience->status === 'rejected' ? 'selected' : '' }}>Rejected</option>
+                            <option value="approved" {{ $experience->status === 'approved' ? 'selected' : '' }}>Approved</option>
+                        </select>
+                    @else
+                        {{ ucfirst($experience->status) }}
+                    @endcan
                 </td>
                 <td class="d-flex justify-content-center">
-                    <input type="file" class="file-input p-0" data-id="{{ $experience->id }}" style="display: none;">
-                    <button class="btn upload-btn"><i class="bi-pencil-square"></i></button>
+                    @can('upload', App\Models\ContractorWorkExperience::class)
+                        <input type="file" class="file-input p-0" data-id="{{ $experience->id }}" style="display: none;">
+                        <button class="btn upload-btn"><i class="bi-pencil-square"></i></button>
+                    @endcan
 
                     @if($experience->getFirstMedia('contractor_work_orders'))
                     <div class="mt-2 files">
@@ -56,6 +88,7 @@
                     </div>
                     @endif
                 </td>
+                @can('delete', App\Models\ContractorWorkExperience::class)
                 <td>
                     <form class="delete-experience-form" data-experience-id="{{ $experience->id }}" style="display:inline;">
                         @csrf
@@ -65,10 +98,11 @@
                         </button>
                     </form>
                 </td>
+                @endcan
             </tr>
             @empty
             <tr>
-                <td colspan="8" class="text-center">No records found</td>
+                <td colspan="{{ Auth::user()->can('delete', App\Models\ContractorWorkExperience::class) ? '9' : '8' }}" class="text-center">No records found</td>
             </tr>
             @endforelse
         </tbody>
@@ -76,19 +110,13 @@
 </div>
 
 <style>
+    @can('update', App\Models\ContractorWorkExperience::class)
     .editable {
         padding: 5px;
         border-radius: 3px;
         cursor: pointer;
         min-height: 20px;
         display: block;
-    }
-
-    .table-work-experience th,
-    .table-work-experience td {
-        vertical-align: middle;
-        white-space: nowrap;
-        min-width: 10rem;
     }
 
     .editable:hover {
@@ -100,10 +128,19 @@
         border: 1px solid #ced4da;
         padding: 0px;
     }
+    @endcan
+
+    .table-work-experience th,
+    .table-work-experience td {
+        vertical-align: middle;
+        white-space: nowrap;
+        min-width: 10rem;
+    }
 </style>
 
 <script>
 $(document).ready(function() {
+    @can('update', App\Models\ContractorWorkExperience::class)
     $('.editable').on('click', function() {
         const span = $(this);
         const field = span.data('field');
@@ -155,6 +192,7 @@ $(document).ready(function() {
                 },
                 success: function(response) {
                     if (response.success) {
+                        showNotification(response.success);
                         if (span.hasClass('number')) {
                             span.html(Number(newValue).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
                         } else {
@@ -201,7 +239,9 @@ $(document).ready(function() {
             }
         });
     });
+    @endcan
 
+    @can('upload', App\Models\ContractorWorkExperience::class)
     $('.upload-btn').on('click', function() {
         $(this).siblings('.file-input').click();
     });
@@ -250,7 +290,9 @@ $(document).ready(function() {
             }
         });
     });
+    @endcan
 
+    @can('delete', App\Models\ContractorWorkExperience::class)
     $(".table-experience").on('click', '.delete-experience-btn', async function() {
         const form = $(this).closest('.delete-experience-form');
         const experienceId = form.data('experience-id');
@@ -268,7 +310,7 @@ $(document).ready(function() {
                     if ($('.table-experience tbody tr').length === 0) {
                         $('.table-experience tbody').append(`
                             <tr>
-                                <td colspan="9" class="text-center">No records found</td>
+                                <td colspan="{{ Auth::user()->can('delete', App\Models\ContractorWorkExperience::class) ? '9' : '8' }}" class="text-center">No records found</td>
                             </tr>
                         `);
                     }
@@ -276,6 +318,6 @@ $(document).ready(function() {
             }
         }
     });
-
+    @endcan
 });
 </script>

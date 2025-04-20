@@ -6,6 +6,10 @@
 
 </style>
 <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
+@php
+    $canUpdate = auth()->user()->can('updateField', $contractor);
+    $canUpload = auth()->user()->can('uploadFile', $contractor);
+@endphp
 <div class="row contractors-details">
     <div class="col-md-12">
 
@@ -30,6 +34,7 @@
                         {{ $contractor->status == 'dormant' ? 'bg-secondary' : '' }}">
                         {{ $contractor->status }}
                     </span>
+                    @if($canUpdate)
                     <select id="input-status" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('status', {{ $contractor->id }})">
                         @foreach($cat['status'] as $status)
                         <option value="{{ $status }}" {{ $contractor->status == $status ? 'selected' : '' }}>{{ $status }}</option>
@@ -37,57 +42,69 @@
                     </select>
                     <button id="save-btn-status" class="btn btn-sm btn-light d-none" onclick="updateField('status', {{ $contractor->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('status')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
             <tr>
                 <th class="table-cell">Name</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-name">{{ $contractor->name }}</span>
+                    @if($canUpdate)
                     <input type="text" id="input-name" value="{{ $contractor->name }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('name', {{ $contractor->id }})" />
                     <button id="save-btn-name" class="btn btn-sm btn-light d-none" onclick="updateField('name', {{ $contractor->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('name')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
             <tr>
                 <th class="table-cell">CNIC Number</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-cnic">{{ $contractor->cnic }}</span>
+                    @if($canUpdate)
                     <input type="text" id="input-cnic" value="{{ $contractor->cnic }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('cnic', {{ $contractor->id }})" />
                     <button id="save-btn-cnic" class="btn btn-sm btn-light d-none" onclick="updateField('cnic', {{ $contractor->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('cnic')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
             <tr>
                 <th class="table-cell">Email</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-email">{{ $contractor->email }}</span>
+                    @if($canUpdate)
                     <input type="text" id="input-email" value="{{ $contractor->email }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('email', {{ $contractor->id }})" />
                     <button id="save-btn-email" class="btn btn-sm btn-light d-none" onclick="updateField('email', {{ $contractor->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('email')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
             <tr>
                 <th class="table-cell">Mobile Number</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-mobile_number">{{ $contractor->mobile_number }}</span>
+                    @if($canUpdate)
                     <input type="text" id="input-mobile_number" value="{{ $contractor->mobile_number }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('mobile_number', {{ $contractor->id }})" />
                     <button id="save-btn-mobile_number" class="btn btn-sm btn-light d-none" onclick="updateField('mobile_number', {{ $contractor->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('mobile_number')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
             <tr>
                 <th class="table-cell">Address</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-address">{{ $contractor->address }}</span>
+                    @if($canUpdate)
                     <input type="text" id="input-address" value="{{ $contractor->address }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('address', {{ $contractor->id }})" />
                     <button id="save-btn-address" class="btn btn-sm btn-light d-none" onclick="updateField('address', {{ $contractor->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('address')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
             <tr>
                 <th class="table-cell">District</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-district">{{ $contractor->district }}</span>
+                    @if($canUpdate)
                     <select id="input-district" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('district', {{ $contractor->id }})">
                         @foreach($cat['districts'] as $district)
                         <option value="{{ $district->name }}" {{ $contractor->district == $district->name ? 'selected' : '' }}>{{ $district->name }}</option>
@@ -95,24 +112,29 @@
                     </select>
                     <button id="save-btn-district" class="btn btn-sm btn-light d-none" onclick="updateField('district', {{ $contractor->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('district')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
             <tr>
                 <th class="table-cell">Firm Name</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-firm_name">{{ $contractor->firm_name }}</span>
+                    @if($canUpdate)
                     <input type="text" id="input-firm_name" value="{{ $contractor->firm_name }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('firm_name', {{ $contractor->id }})" />
                     <button id="save-btn-firm_name" class="btn btn-sm btn-light d-none" onclick="updateField('firm_name', {{ $contractor->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('firm_name')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
             <tr>
                 <th class="table-cell">Password</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-password">*********</span>
+                    @if($canUpdate)
                     <input type="text" id="input-password" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('password', {{ $contractor->id }})" />
                     <button id="save-btn-password" class="btn btn-sm btn-light d-none" onclick="updateField('password', {{ $contractor->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('password')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
         </table>
@@ -147,7 +169,7 @@
                             <span>Not Uploaded</span>
                             @endif
                         </td>
-                        @if (!in_array($contractor->status, ['deferred_three', 'approved']))
+                        @if ($canUpload && !in_array($contractor->status, ['deferred_three', 'approved']))
                         <td class="no-print text-center">
                             <label for="{{ $upload }}" class="btn btn-sm btn-light">
                                 <span class="d-flex align-items-center">{!! $contractor->hasMedia($upload) ? '<i class="bi-pencil-square"></i>&nbsp; Update' : '<i class="bi-plus-circle"></i>&nbsp; Add' !!}</span>

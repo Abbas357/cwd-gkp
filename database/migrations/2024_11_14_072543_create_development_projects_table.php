@@ -21,7 +21,6 @@ return new class extends Migration
             $table->foreignId('district_id')->constrained('districts');
             $table->string('work_location')->nullable();
             $table->foreignId('ce_id')->constrained('users')->nullable();
-            $table->foreignId('se_id')->constrained('users')->nullable();
             $table->foreignId('user_id')->constrained('users')->nullable();
             $table->string('progress_percentage')->nullable();
             $table->enum('status', ['Draft', 'In-Progress', 'On-Hold', 'Completed'])->default('In-Progress');    

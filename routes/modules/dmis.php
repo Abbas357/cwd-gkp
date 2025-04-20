@@ -22,7 +22,7 @@ Route::prefix('dmis')->as('dmis.')->group(function () {
         Route::get('/api', [InfrastructureController::class, 'infrastructures'])->name('api');
         Route::post('/', [InfrastructureController::class, 'store'])->name('store')->can('create', App\Models\Infrastructure::class);
         Route::get('/{infrastructure}', [InfrastructureController::class, 'show'])->name('show')->can('view', 'infrastructure');
-        Route::get('/get/{infrastructure}', [InfrastructureController::class, 'showDetail'])->name('detail')->can('detail', 'infrastructure');
+        Route::get('/get/{infrastructure}', [InfrastructureController::class, 'showDetail'])->name('detail')->can('view', 'infrastructure');
         Route::patch('/update/field/{infrastructure}', [InfrastructureController::class, 'updateField'])->name('updateField')->can('updateField', 'infrastructure');
         Route::delete('/{infrastructure}', [InfrastructureController::class, 'destroy'])->name('destroy')->can('delete', 'infrastructure');
     });
@@ -32,7 +32,7 @@ Route::prefix('dmis')->as('dmis.')->group(function () {
         Route::get('/create', [DamageController::class, 'create'])->name('create')->can('create', App\Models\Damage::class);
         Route::post('/', [DamageController::class, 'store'])->name('store')->can('create', App\Models\Damage::class);
         Route::get('/{damage}', [DamageController::class, 'show'])->name('show')->can('view', 'damage');
-        Route::get('/get/{damage}', [DamageController::class, 'showDetail'])->name('detail')->can('detail', 'damage');
+        Route::get('/get/{damage}', [DamageController::class, 'showDetail'])->name('detail')->can('view', 'damage');
         Route::patch('/update/field/{damage}', [DamageController::class, 'updateField'])->name('updateField')->can('updateField', 'damage');
         Route::delete('/{damage}', [DamageController::class, 'destroy'])->name('destroy')->can('delete', 'damage');
     });

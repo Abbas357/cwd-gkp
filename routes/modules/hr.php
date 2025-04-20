@@ -42,7 +42,7 @@ Route::prefix('hr')->as('hr.')->group(function () {
         Route::get('/api', [OfficeController::class, 'offices'])->name('api');
         Route::post('/', [OfficeController::class, 'store'])->name('store')->can('create', App\Models\Office::class);
         Route::get('/{office}', [OfficeController::class, 'show'])->name('show')->can('view', 'office');
-        Route::get('/get/{office}', [OfficeController::class, 'showDetail'])->name('detail')->can('detail', 'office');
+        Route::get('/get/{office}', [OfficeController::class, 'showDetail'])->name('detail')->can('view', 'office');
         Route::patch('/activate/{office}', [OfficeController::class, 'activateOffice'])->name('activate')->can('activate', 'office');
         Route::patch('/update/field/{office}', [OfficeController::class, 'updateField'])->name('updateField')->can('updateField', 'office');
         Route::delete('/{office}', [OfficeController::class, 'destroy'])->name('destroy')->can('delete', 'office');
@@ -53,7 +53,7 @@ Route::prefix('hr')->as('hr.')->group(function () {
         Route::get('/create', [DesignationController::class, 'create'])->name('create')->can('create', App\Models\Designation::class);
         Route::post('/', [DesignationController::class, 'store'])->name('store')->can('create', App\Models\Designation::class);
         Route::get('/{designation}', [DesignationController::class, 'show'])->name('show')->can('view', 'designation');
-        Route::get('/get/{designation}', [DesignationController::class, 'showDetail'])->name('detail')->can('detail', 'designation');
+        Route::get('/get/{designation}', [DesignationController::class, 'showDetail'])->name('detail')->can('view', 'designation');
         Route::patch('/activate/{designation}', [DesignationController::class, 'activateDesignation'])->name('activate')->can('activate', 'designation');
         Route::patch('/update/field/{designation}', [DesignationController::class, 'updateField'])->name('updateField')->can('updateField', 'designation');
         Route::delete('/{designation}', [DesignationController::class, 'destroy'])->name('destroy')->can('delete', 'designation');

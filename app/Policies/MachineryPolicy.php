@@ -23,11 +23,6 @@ class MachineryPolicy
         return $user->can('create machinery');
     }
 
-    public function detail(User $user, Machinery $machinery)
-    {
-        return $user->can('view detail machinery');
-    }
-
     public function viewHistory(User $user, Machinery $machinery)
     {
         return $user->can('view fistory machinery');

@@ -9,7 +9,7 @@ use App\Http\Controllers\Contractor\ContractorWorkExperienceController;
 
 Route::prefix('contractors')->as('contractors.')->group(function () {
     Route::get('/', [ContractorController::class, 'index'])->name('index')->can('viewAny', App\Models\Contractor::class);
-    Route::get('/{contractor}/detail', [ContractorController::class, 'detail'])->name('detail')->can('detail', 'contractor');
+    Route::get('/{contractor}/detail', [ContractorController::class, 'detail'])->name('detail')->can('view', 'contractor');
     Route::patch('/update/field/{contractor}', [ContractorController::class, 'updateField'])->name('updateField')->can('updateField', 'contractor');
     Route::patch('/update/file/{contractor}', [ContractorController::class, 'uploadFile'])->name('uploadFile')->can('uploadFile', 'contractor');
 

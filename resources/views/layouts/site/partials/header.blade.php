@@ -181,9 +181,6 @@
                                             <a href="{{ route('development_projects.index', ['status' => 'In-Progress']) }}" data-tier-id="1" role="menuitem" class="cw-menuItem" tabindex="0">IN PROGRESS</a>
                                         </li>
                                         <li role="none" data-tier-id="1">
-                                            <a href="{{ route('development_projects.index', ['status' => 'On-Hold']) }}" data-tier-id="1" role="menuitem" class="cw-menuItem" tabindex="0">ON HOLD</a>
-                                        </li>
-                                        <li role="none" data-tier-id="1">
                                             <a href="{{ route('development_projects.index', ['status' => 'Completed']) }}" data-tier-id="1" role="menuitem" class="cw-menuItem" tabindex="0">COMPLETED</a>
                                         </li>
                                         <li role="none" data-tier-id="1">

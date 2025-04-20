@@ -22,11 +22,6 @@ class ServiceCardPolicy
         return $user->can('view service-card');
     }
 
-    public function detail(User $user, ServiceCard $serviceCard)
-    {
-        return $user->can('view detail service-card');
-    }
-
     public function viewCard(User $user, ServiceCard $serviceCard)
     {
         return $user->can('view card service-card');

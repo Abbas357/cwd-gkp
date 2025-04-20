@@ -3,7 +3,6 @@
         padding: 0.1rem 0.5rem;
         vertical-align: middle;
     }
-
 </style>
 <div class="row downloads-details">
     <div class="col-md-12">

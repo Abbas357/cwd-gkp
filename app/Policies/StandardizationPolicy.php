@@ -26,12 +26,7 @@ class StandardizationPolicy
     {
         return $user->can('reject standardization');
     }
-
-    public function detail(User $user, Standardization $standardization)
-    {
-        return $user->can('view detail standardization');
-    }
-
+    
     public function viewCard(User $user, Standardization $standardization)
     {
         return $user->can('view card standardization');

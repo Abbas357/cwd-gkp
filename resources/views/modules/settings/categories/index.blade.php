@@ -21,7 +21,9 @@
                                 <th>Module</th>
                                 <th>Items</th>
                                 <th>Description</th>
+                                @can('manageMainCategory', App\Models\Setting::class)
                                 <th>Actions</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -35,8 +37,10 @@
                                     <td>{{ $category->module }}</td>
                                     <td>{{ $itemCount }} items</td>
                                     <td>{{ $category->description }}</td>
+                                    @can('manageMainCategory', App\Models\Setting::class)
                                     <td>
                                         <div class="btn-group" role="group">
+
                                             <a href="{{ route('admin.categories.show', [$category->key, $category->module]) }}" 
                                                 class="btn btn-sm btn-info" title="View">
                                                 <i class="bi bi-eye"></i>
@@ -55,6 +59,7 @@
                                             </form>
                                         </div>
                                     </td>
+                                    @endcan
                                 </tr>
                             @empty
                                 <tr>

@@ -23,11 +23,6 @@ class InfrastructurePolicy
         return $user->can('view infrastructure');
     }
 
-    public function detail(User $user, Infrastructure $infrastructure): bool
-    {
-        return $user->can('view detail infrastructure');
-    }
-
     public function updateField(User $user, Infrastructure $infrastructure): bool
     {
         return $user->can('update field infrastructure');

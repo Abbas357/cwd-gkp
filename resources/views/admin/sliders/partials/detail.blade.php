@@ -3,10 +3,13 @@
         padding: 0.1rem 0.5rem;
         vertical-align: middle;
     }
-
 </style>
 <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
 <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
+@php
+    $canUpdate = auth()->user()->can('updateField', $slider);
+    $canUpload = auth()->user()->can('uploadFile', $slider);
+@endphp
 <div class="row downloads-details">
     <div class="col-md-12">
 
@@ -21,6 +24,7 @@
                     <div class="form-check form-switch">
                         <input type="checkbox" 
                                class="form-check-input" 
+                               {{ !$canUpdate && 'disabled' }}
                                id="commentsSwitch" 
                                role="switch"
                                {{ $slider->comments_allowed ? 'checked' : '' }}
@@ -34,7 +38,7 @@
                 <th class="table-cell"> Title</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-title">{{ $slider->title }}</span>
-                    @if (!in_array($slider->status, ['published', 'archived']))
+                    @if ($canUpdate && !in_array($slider->status, ['published', 'archived']))
                     <input type="text" id="input-title" value="{{ $slider->title }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('title', {{ $slider->id }})" />
                     <button id="save-btn-title" class="btn btn-sm btn-light d-none" onclick="updateField('title', {{ $slider->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-title" class="no-print btn btn-sm edit-button" onclick="enableEditing('title')"><i class="bi-pencil fs-6"></i></button>
@@ -47,7 +51,7 @@
                 <th class="table-cell">Order</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-order">{{ $slider->order }}</span>
-                    @if (!in_array($slider->status, ['published', 'archived']))
+                    @if ($canUpdate && !in_array($slider->status, ['published', 'archived']))
                     <select id="input-order" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('order', {{ $slider->id }})">
                         <option value="1" {{ $slider->order == 1 ? 'selected' : '' }}>1</option>
                         <option value="2" {{ $slider->order == 2 ? 'selected' : '' }}>2</option>
@@ -69,7 +73,7 @@
                 <th class="table-cell">Short Description</th>
                 <td class="d-flex justify-summary-between align-items-center gap-2">
                     <span id="text-summary">{!! $slider->summary !!}</span>
-                    @if (!in_array($slider->status, ['published', 'archived']))
+                    @if ($canUpdate && !in_array($slider->status, ['published', 'archived']))
                     <div class="mb-3 w-100">
                         <textarea name="summary" id="input-summary" class="form-control d-none" style="height:150px">{!! old('summary', $slider->summary) !!}</textarea>
                     </div>
@@ -83,7 +87,7 @@
                 <th class="table-cell">Content</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-description">{!! $slider->description !!}</span>
-                    @if (!in_array($slider->status, ['published', 'archived']))
+                    @if ($canUpdate && !in_array($slider->status, ['published', 'archived']))
                     <div class="mb-3 w-100">
                         <textarea name="description" id="input-description" class="form-control d-none" style="height:150px">{!! old('description', $slider->description) !!}</textarea>
                     </div>
@@ -109,7 +113,7 @@
                     <span>Not Uploaded</span>
                     @endif
 
-                    @if (!in_array($slider->status, ['published', 'archived']))
+                    @if ($canUpload && !in_array($slider->status, ['published', 'archived']))
                     <div class="no-print">
                         <label for="image" class="btn btn-sm btn-light">
                             <span class="d-flex align-items-center">
@@ -125,6 +129,7 @@
 
         </table>
 
+        @can('comment', \App\Models\Slider::class)
         <form class="needs-validation" action="{{ route('admin.comments.postResponse') }}" method="post" enctype="multipart/form-data" novalidate>
             @csrf
             <div class="card mb-4">
@@ -149,7 +154,7 @@
                 </div>
             </div>
         </form>
-
+        @endcan
     </div>
 </div>
 <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>

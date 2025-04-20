@@ -22,12 +22,7 @@ class ProjectFilePolicy
         return $user->can('create project-file');
     }
 
-    public function detail(User $user, ProjectFile $project_file): bool
-    {
-        return $user->id === $project_file->published_by || $user->can('view detail project-file');
-    }
-
-    public function uploadField(User $user, ProjectFile $project_file): bool
+    public function updateField(User $user, ProjectFile $project_file): bool
     {
         return $user->id === $project_file->published_by || $user->can('update field project-file');
     }

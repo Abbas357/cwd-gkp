@@ -22,12 +22,7 @@ class DevelopmentProjectPolicy
         return $user->can('create development-project');
     }
 
-    public function detail(User $user, DevelopmentProject $development_project): bool
-    {
-        return $user->id === $development_project->user_id || $user->can('view detail development-project');
-    }
-
-    public function uploadField(User $user, DevelopmentProject $development_project): bool
+    public function updateField(User $user, DevelopmentProject $development_project): bool
     {
         return $user->id === $development_project->user_id || $user->can('update field development-project');
     }
@@ -47,8 +42,8 @@ class DevelopmentProjectPolicy
         return $user->id === $development_project->user_id || $user->can('archive development-project');
     }
 
-    public function comment(User $user, DevelopmentProject $development_project): bool
+    public function comment(User $user): bool
     {
-        return $user->id === $development_project->user_id || $user->can('post comment development-project');
+        return $user->can('post comment development-project');
     }
 }

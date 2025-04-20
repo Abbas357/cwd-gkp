@@ -23,11 +23,6 @@ class ProvincialOwnReceiptPolicy
         return $user->can('create provincial-own-receipt');
     }
 
-    public function detail(User $user, ProvincialOwnReceipt $provincialOwnReceipt)
-    {
-        return $user->can('view detail provincial-own-receipt');
-    }
-
     public function updateField(User $user, ProvincialOwnReceipt $provincialOwnReceipt)
     {
         return $user->can('update field provincial-own-receipt');

@@ -15,9 +15,6 @@
                 <a id="inprogress-tab" class="nav-link" data-bs-toggle="tab" href="#inprogress">In-Progress</a>
             </li>
             <li class="nav-item">
-                <a id="onhold-tab" class="nav-link" data-bs-toggle="tab" href="#onhold">On-Hold</a>
-            </li>
-            <li class="nav-item">
                 <a id="completed-tab" class="nav-link" data-bs-toggle="tab" href="#completed">Completed</a>
             </li>
             <li class="nav-item">
@@ -164,7 +161,6 @@
                 , tabToHashMap: {
                     "#draft-tab": '#draft'
                     , "#inprogress-tab": '#inprogress'
-                    , "#onhold-tab": '#onhold'
                     , "#completed-tab": '#completed'
                     , "#archived-tab": '#archived'
                 , }
@@ -174,9 +170,6 @@
                     }
                     , '#inprogress': {
                         status: 'In-Progress'
-                    }
-                    , '#onhold': {
-                        status: 'On-Hold'
                     }
                     , '#completed': {
                         status: 'Completed'

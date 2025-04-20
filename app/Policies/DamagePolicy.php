@@ -23,11 +23,6 @@ class DamagePolicy
         return $user->can('view damage');
     }
 
-    public function detail(User $user, Damage $damage): bool
-    {
-        return $user->can('view detail damage');
-    }
-
     public function updateField(User $user, Damage $damage): bool
     {
         return $user->can('update field damage');

@@ -21,13 +21,8 @@ class EventPolicy
     {
         return $user->can('create event');
     }
-
-    public function detail(User $user, Event $event): bool
-    {
-        return $user->id === $event->user_id || $user->can('view detail event');
-    }
-
-    public function uploadField(User $user, Event $event): bool
+    
+    public function updateField(User $user, Event $event): bool
     {
         return $user->id === $event->user_id || $user->can('update field event');
     }
@@ -47,8 +42,8 @@ class EventPolicy
         return $user->id === $event->user_id || $user->can('archive event');
     }
 
-    public function comment(User $user, Event $event): bool
+    public function comment(User $user): bool
     {
-        return $user->id === $event->user_id || $user->can('post comment event');
+        return $user->can('post comment event');
     }
 }

@@ -1,6 +1,5 @@
 @php
     $status = $row->status;
-    $publishedAt = $row->published_at;
     
     $badgeClass = match ($status) {
         'draft' => 'text-bg-primary',
@@ -11,8 +10,8 @@
 @endphp
 
 <span class="badge {{ $badgeClass }}">{{ $status }}</span>
-@if (!is_null($publishedAt))
-    <span class="badge text-bg-info">{{ $publishedAt->format('j, F Y') }}</span>
+@if (!is_null($row->published_at))
+    <span class="badge text-bg-info">{{ $row->published_at->format('j, F Y') }}</span>
 @else
 <span class="badge text-bg-danger">New</span>
 @endif  

@@ -5,6 +5,10 @@
     }
 </style>
 <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
+@php
+    $canUpdate = auth()->user()->can('updateField', $Standardization);
+    $canUpload = auth()->user()->can('uploadFile', $Standardization);
+@endphp
 <div class="row standardization-details">
     <div class="col-md-12">
         <div class="d-flex justify-content-between align-items-center">
@@ -22,7 +26,7 @@
                 <th class="table-cell">Firm Name</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-firm_name">{{ $Standardization->firm_name }}</span>
-                    @if (!in_array($Standardization->status, ['approved', 'rejected']))
+                    @if ($canUpdate && !in_array($Standardization->status, ['approved', 'rejected']))
                     <input type="text" id="input-firm_name" value="{{ $Standardization->firm_name }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('firm_name', {{ $Standardization->id }})" />
                     <button id="save-btn-firm_name" class="btn btn-sm btn-light d-none" onclick="updateField('firm_name', {{ $Standardization->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('firm_name')"><i class="bi-pencil fs-6"></i></button>
@@ -33,7 +37,7 @@
                 <th class="table-cell">Address</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-address">{{ $Standardization->address }}</span>
-                    @if (!in_array($Standardization->status, ['approved', 'rejected']))
+                    @if ($canUpdate && !in_array($Standardization->status, ['approved', 'rejected']))
                     <input type="text" id="input-address" value="{{ $Standardization->address }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('address', {{ $Standardization->id }})" />
                     <button id="save-btn-address" class="btn btn-sm btn-light d-none" onclick="updateField('address', {{ $Standardization->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('address')"><i class="bi-pencil fs-6"></i></button>
@@ -44,7 +48,7 @@
                 <th class="table-cell">Mobile Number</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-mobile_number">{{ $Standardization->mobile_number }}</span>
-                    @if (!in_array($Standardization->status, ['approved', 'rejected']))
+                    @if ($canUpdate && !in_array($Standardization->status, ['approved', 'rejected']))
                     <input type="text" id="input-mobile_number" value="{{ $Standardization->mobile_number }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('mobile_number', {{ $Standardization->id }})" />
                     <button id="save-btn-mobile_number" class="btn btn-sm btn-light d-none" onclick="updateField('mobile_number', {{ $Standardization->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('mobile_number')"><i class="bi-pencil fs-6"></i></button>
@@ -55,7 +59,7 @@
                 <th class="table-cell">Phone Number</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-phone_number">{{ $Standardization->phone_number }}</span>
-                    @if (!in_array($Standardization->status, ['approved', 'rejected']))
+                    @if ($canUpdate && !in_array($Standardization->status, ['approved', 'rejected']))
                     <input type="text" id="input-phone_number" value="{{ $Standardization->phone_number }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('phone_number', {{ $Standardization->id }})" />
                     <button id="save-btn-phone_number" class="btn btn-sm btn-light d-none" onclick="updateField('phone_number', {{ $Standardization->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('phone_number')"><i class="bi-pencil fs-6"></i></button>
@@ -66,7 +70,7 @@
                 <th class="table-cell">Email</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-email">{{ $Standardization->email }}</span>
-                    @if (!in_array($Standardization->status, ['approved', 'rejected']))
+                    @if ($canUpdate && !in_array($Standardization->status, ['approved', 'rejected']))
                     <input type="text" id="input-email" value="{{ $Standardization->email }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('email', {{ $Standardization->id }})" />
                     <button id="save-btn-email" class="btn btn-sm btn-light d-none" onclick="updateField('email', {{ $Standardization->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('email')"><i class="bi-pencil fs-6"></i></button>
@@ -77,7 +81,7 @@
                 <th class="table-cell">Expiry Date</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-expiry_date">{{ $Standardization->expiry_date }}</span>
-                    @if ($Standardization->status === 'approved')
+                    @if ($canUpdate && $Standardization->status === 'approved')
                     <input type="date" id="input-expiry_date" value="{{ $Standardization->expiry_date }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('expiry_date', {{ $Standardization->id }})" />
                     <button id="save-btn-expiry_date" class="btn btn-sm btn-light d-none" onclick="updateField('expiry_date', {{ $Standardization->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('expiry_date')"><i class="bi-pencil fs-6"></i></button>
@@ -88,7 +92,7 @@
                 <th class="table-cell">Issue Date</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
                     <span id="text-issue_date">{{ $Standardization->issue_date }}</span>
-                    @if ($Standardization->status === 'approved')
+                    @if ($canUpdate && $Standardization->status === 'approved')
                     <input type="date" id="input-issue_date" value="{{ $Standardization->issue_date }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('issue_date', {{ $Standardization->id }})" />
                     <button id="save-btn-issue_date" class="btn btn-sm btn-light d-none" onclick="updateField('issue_date', {{ $Standardization->id }})"><i class="bi-send-fill"></i></button>
                     <button class="no-print btn btn-sm edit-button" onclick="enableEditing('issue_date')"><i class="bi-pencil fs-6"></i></button>
@@ -116,7 +120,7 @@
                     <tr>
                         <th>Name</th>
                         <th>Link</th>
-                        @if (!in_array($Standardization->status, ['approved', 'rejected']))
+                        @if ($canUpdate && !in_array($Standardization->status, ['approved', 'rejected']))
                         <th class="no-print text-center">Add / Update Attachment</th>
                         @endif
                     </tr>
@@ -133,7 +137,7 @@
                             <span>Not Uploaded</span>
                             @endif
                         </td>
-                        @if ($Standardization->status === 'approved')
+                        @if ($canUpdate && $Standardization->status === 'approved')
                         <td class="no-print text-center">
                             <label for="firm_pictures" class="btn btn-sm btn-light">
                                 <span class="d-flex align-items-center">{!! $Standardization->hasMedia('standardization_firms_pictures') ? '<i class="bi-pencil-square"></i>&nbsp; Update' : '<i class="bi-plus-circle"></i>&nbsp; Add' !!}</span>
@@ -154,7 +158,7 @@
                             <span>Not Uploaded</span>
                             @endif
                         </td>
-                        @if (!in_array($Standardization->status, ['approved', 'rejected']))
+                        @if ($canUpdate && !in_array($Standardization->status, ['approved', 'rejected']))
                         <td class="no-print text-center">
                             <label for="{{ $upload }}" class="btn btn-sm btn-light">
                                 <span class="d-flex align-items-center">{!! $Standardization->hasMedia($upload) ? '<i class="bi-pencil-square"></i>&nbsp; Update' : '<i class="bi-plus-circle"></i>&nbsp; Add' !!}</span>

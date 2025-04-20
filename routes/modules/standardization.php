@@ -9,7 +9,7 @@ Route::prefix('standardizations')->as('standardizations.')->group(function () {
     Route::patch('/approve/{standardization}', [StandardizationController::class, 'approve'])->name('approve')->can('approve', 'standardization');
     Route::patch('/reject/{standardization}', [StandardizationController::class, 'reject'])->name('reject')->can('reject', 'standardization');
     Route::get('/{standardization}', [StandardizationController::class, 'show'])->name('show')->can('view', 'standardization');
-    Route::get('/get/{standardization}', [StandardizationController::class, 'showDetail'])->name('detail')->can('detail', 'standardization');
+    Route::get('/get/{standardization}', [StandardizationController::class, 'showDetail'])->name('detail')->can('view', 'standardization');
     Route::get('/card/{standardization}', [StandardizationController::class, 'showCard'])->name('card')->can('viewCard', 'standardization');
     Route::patch('/renew/{standardization}', [StandardizationController::class, 'renew'])->name('renew')->can('renew', 'standardization');
     Route::patch('/update/field/{standardization}', [StandardizationController::class, 'updateField'])->name('updateField')->can('updateField', 'standardization');

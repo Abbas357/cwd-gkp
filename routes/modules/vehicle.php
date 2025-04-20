@@ -14,7 +14,7 @@ Route::group(['prefix' => 'vehicles', 'as' => 'vehicles.'], function () {
     Route::get('/search', [VehicleController::class, 'search'])->name('search')->can('viewAny', Vehicle::class);
     Route::post('/', [VehicleController::class, 'store'])->name('store')->can('create', Vehicle::class);
     Route::get('/{vehicle}', [VehicleController::class, 'show'])->name('show')->can('view', 'vehicle');
-    Route::get('/get/{vehicle}', [VehicleController::class, 'showDetail'])->name('detail')->can('detail', 'vehicle');
+    Route::get('/get/{vehicle}', [VehicleController::class, 'showDetail'])->name('detail')->can('view', 'vehicle');
     Route::get('/history/{vehicle}', [VehicleController::class, 'vehicleHistory'])->name('history')->can('viewHistory', 'vehicle');
     Route::patch('/update/field/{vehicle}', [VehicleController::class, 'updateField'])->name('updateField')->can('updateField', 'vehicle');
     Route::patch('/update/file/{vehicle}', [VehicleController::class, 'uploadFile'])->name('uploadFile')->can('uploadFile', 'vehicle');

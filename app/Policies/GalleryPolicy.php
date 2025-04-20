@@ -22,12 +22,7 @@ class GalleryPolicy
         return $user->can('create gallery');
     }
 
-    public function detail(User $user, Gallery $gallery): bool
-    {
-        return $user->id === $gallery->user_id || $user->can('view detail gallery');
-    }
-
-    public function uploadField(User $user, Gallery $gallery): bool
+    public function updateField(User $user, Gallery $gallery): bool
     {
         return $user->id === $gallery->user_id || $user->can('update field gallery');
     }
@@ -52,8 +47,8 @@ class GalleryPolicy
         return $user->id === $gallery->user_id || $user->can('archive gallery');
     }
 
-    public function comment(User $user, Gallery $gallery): bool
+    public function comment(User $user): bool
     {
-        return $user->id === $gallery->user_id || $user->can('post comment gallery');
+        return $user->can('post comment gallery');
     }
 }

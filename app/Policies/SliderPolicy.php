@@ -22,12 +22,7 @@ class SliderPolicy
         return $user->can('create slider');
     }
 
-    public function detail(User $user, Slider $slider): bool
-    {
-        return $user->id === $slider->user_id || $user->can('view detail slider');
-    }
-
-    public function uploadField(User $user, Slider $slider): bool
+    public function updateField(User $user, Slider $slider): bool
     {
         return $user->id === $slider->user_id || $user->can('update field slider');
     }
@@ -52,8 +47,8 @@ class SliderPolicy
         return $user->id === $slider->user_id || $user->can('archive slider');
     }
 
-    public function comment(User $user, Slider $slider): bool
+    public function comment(User $user): bool
     {
-        return $user->id === $slider->user_id || $user->can('post comment slider');
+        return $user->can('post comment slider');
     }
 }

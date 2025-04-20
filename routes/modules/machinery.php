@@ -12,7 +12,7 @@ Route::group(['prefix' => 'machineries', 'as' => 'machineries.'], function () {
     Route::get('/search', [MachineryController::class, 'search'])->name('search')->can('viewAny', App\Models\Machinery::class);
     Route::post('/', [MachineryController::class, 'store'])->name('store')->can('create', App\Models\Machinery::class);
     Route::get('/{Machinery}', [MachineryController::class, 'show'])->name('show')->can('view', 'Machinery');
-    Route::get('/get/{Machinery}', [MachineryController::class, 'showDetail'])->name('detail')->can('detail', 'Machinery');
+    Route::get('/get/{Machinery}', [MachineryController::class, 'showDetail'])->name('detail')->can('view', 'Machinery');
     Route::get('/history/{vehicle}', [MachineryController::class, 'machineryHistory'])->name('history')->can('viewHistory', 'Machinery');
     Route::patch('/update/field/{Machinery}', [MachineryController::class, 'updateField'])->name('updateField')->can('updateField', 'Machinery');
     Route::patch('/upload/file/{Machinery}', [MachineryController::class, 'uploadFile'])->name('uploadFile')->can('uploadFile', 'Machinery');

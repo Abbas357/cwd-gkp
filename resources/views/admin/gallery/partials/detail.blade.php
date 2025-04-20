@@ -3,9 +3,12 @@
         padding: 0.1rem 0.5rem;
         vertical-align: middle;
     }
-
 </style>
 <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
+@php
+    $canUpdate = auth()->user()->can('updateField', $gallery);
+    $canUpload = auth()->user()->can('uploadFile', $gallery);
+@endphp
 <div class="row downloads-details">
     <div class="col-md-12">
 
@@ -20,6 +23,7 @@
                     <div class="form-check form-switch">
                         <input type="checkbox" 
                                class="form-check-input" 
+                               {{ !$canUpdate && 'disabled' }}
                                id="commentsSwitch" 
                                role="switch"
                                {{ $gallery->comments_allowed ? 'checked' : '' }}
@@ -33,7 +37,7 @@
                 <th class="table-cell"> Title</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-title">{{ $gallery->title }}</span>
-                    @if (!in_array($gallery->status, ['published', 'archived']))
+                    @if ($canUpdate && !in_array($gallery->status, ['published', 'archived']))
                     <input type="text" id="input-title" value="{{ $gallery->title }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('title', {{ $gallery->id }})" />
                     <button id="save-btn-title" class="btn btn-sm btn-light d-none" onclick="updateField('title', {{ $gallery->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-title" class="no-print btn btn-sm edit-button" onclick="enableEditing('title')"><i class="bi-pencil fs-6"></i></button>
@@ -46,7 +50,7 @@
                 <th class="table-cell">Gallery Type</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-type">{{ $gallery->type }}</span>
-                    @if (!in_array($gallery->status, ['published', 'archived']))
+                    @if ($canUpdate && !in_array($gallery->status, ['published', 'archived']))
                     <select id="input-type" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('type', {{ $gallery->id }})">
                         @foreach ($cat['gallery_type'] as $type)
                         <option value="{{ $type->name }}" {{ $gallery->type == $type->name ? 'selected' : '' }}>
@@ -65,7 +69,7 @@
                 <th class="table-cell">Description</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-description">{{ $gallery->description }}</span>
-                    @if (!in_array($gallery->status, ['published', 'archived']))
+                    @if ($canUpdate && !in_array($gallery->status, ['published', 'archived']))
                     <div class="mb-3 w-100">
                         <textarea name="description" id="input-description" class="form-control d-none" style="height:150px">{{ old('description', $gallery->description) }}</textarea>
                     </div>
@@ -87,7 +91,7 @@
                     <span>Not Uploaded</span>
                     @endif
 
-                    @if (!in_array($gallery->status, ['published', 'archived']))
+                    @if ($canUpload && !in_array($gallery->status, ['published', 'archived']))
                     <div class="no-print">
                         <label for="file" class="btn btn-sm btn-light">
                             <span class="d-flex align-items-center">
@@ -103,6 +107,7 @@
 
         </table>
 
+        @can('comment', \App\Models\Gallery::class)
         <form class="needs-validation" action="{{ route('admin.comments.postResponse') }}" method="post" enctype="multipart/form-data" novalidate>
             @csrf
             <div class="card mb-4">
@@ -127,7 +132,7 @@
                 </div>
             </div>
         </form>
-
+        @endcan
     </div>
 </div>
 <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>

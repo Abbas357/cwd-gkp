@@ -133,12 +133,16 @@
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h4 class="card-title">Permissions Management</h4>
                             <div class="d-flex gap-2">
+                                @can('create', Spatie\Permission\Models\Permission::class)
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPermissionModal">
                                     <i class="bi bi-plus-circle me-1"></i> Add Permission
                                 </button>
+                                @endcan
+                                @can('sync', Spatie\Permission\Models\Permission::class)
                                 <button type="button" class="btn btn-warning sync-btn" data-bs-toggle="modal" data-bs-target="#syncPermissionsModal">
                                     <i class="bi bi-arrow-repeat me-1"></i> Sync to Default
                                 </button>
+                                @endcan
                             </div>
                         </div>
                         
@@ -193,6 +197,7 @@
                                         @foreach($permissions as $permission)
                                             <div class="permission-item">
                                                 <div class="permission-name">{{ $permission->name }}</div>
+                                                @can('delete', $permission)
                                                 <form action="{{ route('admin.apps.hr.acl.permissions.destroy', $permission) }}" method="POST" class="d-inline-block delete-permission-form">
                                                     @csrf
                                                     @method('DELETE')
@@ -200,6 +205,7 @@
                                                         <i class="bi bi-trash"></i>
                                                     </button>
                                                 </form>
+                                                @endcan
                                             </div>
                                         @endforeach
                                     </div>
@@ -218,7 +224,7 @@
         </div>
     </div>
 
-    <!-- Add Permission Modal -->
+    @can('sync', Spatie\Permission\Models\Permission::class)
     <div class="modal fade" id="addPermissionModal" tabindex="-1" aria-labelledby="addPermissionModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -245,8 +251,8 @@
             </div>
         </div>
     </div>
-
-    <!-- Sync Permissions Modal -->
+    @endcan
+    @can('sync', Spatie\Permission\Models\Permission::class)
     <div class="modal fade" id="syncPermissionsModal" tabindex="-1" aria-labelledby="syncPermissionsModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -271,6 +277,7 @@
             </div>
         </div>
     </div>
+    @endcan
 
     @push('script')
     <script>

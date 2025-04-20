@@ -22,11 +22,6 @@ class VehiclePolicy
         return $user->can('create vehicle');
     }
 
-    public function detail(User $user, Vehicle $vehicle)
-    {
-        return $user->id === $vehicle->user_id || $user->can('view detail vehicle');
-    }
-
     public function viewHistory(User $user, Vehicle $vehicle)
     {
         return $user->can('view history vehicle');

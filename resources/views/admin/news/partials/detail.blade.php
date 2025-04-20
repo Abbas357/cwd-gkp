@@ -3,10 +3,13 @@
         padding: 0.1rem 0.5rem;
         vertical-align: middle;
     }
-
 </style>
 <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
 <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
+@php
+    $canUpdate = auth()->user()->can('updateField', $news);
+    $canUpload = auth()->user()->can('uploadFile', $news);
+@endphp
 <div class="row downloads-details">
     <div class="col-md-12">
         <table class="table table-bordered mt-3">
@@ -20,6 +23,7 @@
                     <div class="form-check form-switch">
                         <input type="checkbox" 
                                class="form-check-input" 
+                               {{ !$canUpdate && 'disabled' }}
                                id="commentsSwitch" 
                                role="switch"
                                {{ $news->comments_allowed ? 'checked' : '' }}
@@ -33,7 +37,7 @@
                 <th class="table-cell"> Title</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-title">{{ $news->title }}</span>
-                    @if (!in_array($news->status, ['published', 'archived']))
+                    @if ($canUpdate && !in_array($news->status, ['published', 'archived']))
                     <input type="text" id="input-title" value="{{ $news->title }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('title', {{ $news->id }})" />
                     <button id="save-btn-title" class="btn btn-sm btn-light d-none" onclick="updateField('title', {{ $news->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-title" class="no-print btn btn-sm edit-button" onclick="enableEditing('title')"><i class="bi-pencil fs-6"></i></button>
@@ -46,7 +50,7 @@
                 <th class="table-cell">Category</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-category">{{ $news->category }}</span>
-                    @if (!in_array($news->status, ['published', 'archived']))
+                    @if ($canUpdate && !in_array($news->status, ['published', 'archived']))
                     <select id="input-category" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('category', {{ $news->id }})">
                         @foreach ($cat['news_category'] as $category)
                         <option value="{{ $category->name }}" {{ $news->category == $category->name ? 'selected' : '' }}>
@@ -64,7 +68,7 @@
                 <th class="table-cell">Short Description</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-summary">{!! $news->summary !!}</span>
-                    @if (!in_array($news->status, ['published', 'archived']))
+                    @if ($canUpdate && !in_array($news->status, ['published', 'archived']))
                     <div class="mb-3 w-100">
                         <textarea name="summary" id="input-summary" class="form-control d-none" style="height:150px">{!! old('summary', $news->summary) !!}</textarea>
                     </div>
@@ -78,7 +82,7 @@
                 <th class="table-cell">Content</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-content">{!! $news->content !!}</span>
-                    @if (!in_array($news->status, ['published', 'archived']))
+                    @if ($canUpdate && !in_array($news->status, ['published', 'archived']))
                     <div class="mb-3 w-100">
                         <textarea name="content" id="input-content" class="form-control d-none" style="height:150px">{!! old('content', $news->content) !!}</textarea>
                     </div>
@@ -104,7 +108,7 @@
                     <span>Not Uploaded</span>
                     @endif
 
-                    @if (!in_array($news->status, ['published', 'archived']))
+                    @if ($canUpload && !in_array($news->status, ['published', 'archived']))
                     <div class="no-print">
                         <label for="attachment" class="btn btn-sm btn-light">
                             <span class="d-flex align-items-center">
@@ -119,7 +123,7 @@
             </tr>
 
         </table>
-
+        @can('comment', \App\Models\News::class)
         <form class="needs-validation" action="{{ route('admin.comments.postResponse') }}" method="post" enctype="multipart/form-data" novalidate>
             @csrf
             <div class="card mb-4">
@@ -144,7 +148,7 @@
                 </div>
             </div>
         </form>
-
+        @endcan
     </div>
 </div>
 <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>

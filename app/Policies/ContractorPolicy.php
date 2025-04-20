@@ -10,9 +10,9 @@ class ContractorPolicy
         return $user->can('view any contractor');
     }
     
-    public function detail(User $user, Contractor $contractor): bool
+    public function view(User $user, Contractor $contractor): bool
     {
-        return $user->can('view detail contractor');
+        return $user->can('view contractor');
     }
     
     public function updateField(User $user, Contractor $contractor): bool

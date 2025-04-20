@@ -7,6 +7,10 @@
 </style>
 <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
 <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
+@php
+    $canUpdate = auth()->user()->can('updateField', $page);
+    $canUpload = auth()->user()->can('uploadFile', $page);
+@endphp
 <div class="row downloads-details">
     <div class="col-md-12">
 
@@ -16,7 +20,7 @@
                 <th class="table-cell"> Title</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-title">{{ $page->title }}</span>
-                    @if ($page->is_active === 0)
+                    @if ($canUpdate && $page->is_active === 0)
                     <input type="text" id="input-title" value="{{ $page->title }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('title', {{ $page->id }})" />
                     <button id="save-btn-title" class="btn btn-sm btn-light d-none" onclick="updateField('title', {{ $page->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-title" class="no-print btn btn-sm edit-button" onclick="enableEditing('title')"><i class="bi-pencil fs-6"></i></button>
@@ -29,7 +33,7 @@
                 <th class="table-cell">Page Type</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-page_type">{{ $page->page_type }}</span>
-                    @if ($page->is_active === 0)
+                    @if ($canUpdate && $page->is_active === 0)
                     <select id="input-page_type" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('page_type', {{ $page->id }})">
                         @foreach ($cat['page_type'] as $page_type)
                         <option value="{{ $page_type->name }}" {{ $page->page_type == $page_type->name ? 'selected' : '' }}>
@@ -47,7 +51,7 @@
                 <th class="table-cell">Description</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-content">{!! $page->content !!}</span> <!-- Render HTML content properly -->
-                    @if ($page->is_active === 0)
+                    @if ($canUpdate && $page->is_active === 0)
                     <div class="mb-3 w-100">
                         <textarea name="content" id="input-content" class="form-control d-none" style="height:150px">{{ old('content', $page->content) }}</textarea>
                     </div>
@@ -72,7 +76,7 @@
                     <span>Not Uploaded</span>
                     @endif
 
-                    @if ($page->is_active === 0)
+                    @if ($canUpload && $page->is_active === 0)
                     <div class="no-print">
                         <label for="attachment" class="btn btn-sm btn-light">
                             <span class="d-flex align-items-center">

@@ -3,9 +3,12 @@
         padding: 0.1rem 0.5rem;
         vertical-align: middle;
     }
-
 </style>
 <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
+@php
+    $canUpdate = auth()->user()->can('updateField', $seniority);
+    $canUpload = auth()->user()->can('uploadFile', $seniority);
+@endphp
 <div class="row seniority-details">
     <div class="col-md-12">
 
@@ -20,6 +23,7 @@
                     <div class="form-check form-switch">
                         <input type="checkbox" 
                                class="form-check-input" 
+                               {{ !$canUpdate && 'disabled' }}
                                id="commentsSwitch" 
                                role="switch"
                                {{ $seniority->comments_allowed ? 'checked' : '' }}
@@ -32,7 +36,7 @@
                 <th class="table-cell">Title</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-title">{{ $seniority->title }}</span>
-                    @if (!in_array($seniority->status, ['published', 'archived']))
+                    @if ($canUpdate && !in_array($seniority->status, ['published', 'archived']))
                     <input type="text" id="input-title" value="{{ $seniority->title }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('title', {{ $seniority->id }})" />
                     <button id="save-btn-title" class="btn btn-sm btn-light d-none" onclick="updateField('title', {{ $seniority->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-title" class="no-print btn btn-sm edit-button" onclick="enableEditing('title')"><i class="bi-pencil fs-6"></i></button>
@@ -45,7 +49,7 @@
                 <th class="table-cell">BPS</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-bps">{{ $seniority->bps }}</span>
-                    @if (!in_array($seniority->status, ['published', 'archived']))
+                    @if ($canUpdate && !in_array($seniority->status, ['published', 'archived']))
                     <select id="input-bps" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('bps', {{ $seniority->id }})">
                         @foreach ($cat['bps'] as $bps)
                         <option value="{{ $bps }}" {{ $seniority->bps == $bps ? 'selected' : '' }}>
@@ -64,7 +68,7 @@
                 <th class="table-cell">Designation</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-designation">{{ $seniority->designation }}</span>
-                    @if (!in_array($seniority->status, ['published', 'archived']))
+                    @if ($canUpdate && !in_array($seniority->status, ['published', 'archived']))
                     <select id="input-designation" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('designation', {{ $seniority->id }})">
                         @foreach ($cat['designations'] as $designation)
                         <option value="{{ $designation->name }}" {{ $seniority->designation == $designation->name ? 'selected' : '' }}>
@@ -86,7 +90,7 @@
                     <a href="{{ $seniority->getFirstMediaUrl('seniorities') }}" target="_blank" title="File" class="d-flex align-items-center gap-2">
                         View
                     </a>
-                    @if (!in_array($seniority->status, ['published', 'archived']))
+                    @if ($canUpload && !in_array($seniority->status, ['published', 'archived']))
                     <div class="no-print">
                         <label for="attachment" class="btn btn-sm btn-light">
                             <span class="d-flex align-items-center">{!! $seniority->hasMedia('seniorities') ? '<i class="bi-pencil-square"></i>&nbsp; Update' : '<i class="bi-plus-circle"></i>&nbsp; Add' !!}</span>
@@ -100,7 +104,7 @@
                 </td>
             </tr>
         </table>
-
+        @can('comment', \App\Models\Seniority::class)
         <form class="needs-validation" action="{{ route('admin.comments.postResponse') }}" method="post" enctype="multipart/form-data" novalidate>
             @csrf
             <div class="card mb-4">
@@ -125,7 +129,7 @@
                 </div>
             </div>
         </form>
-
+        @endcan
     </div>
 </div>
 <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
@@ -135,13 +139,7 @@
         const url = this.dataset.url;
         const newValue = this.checked ? 1 : 0;
         
-        const success = await fetchRequest(
-            url,
-            'PATCH',
-            { comments_allowed: newValue },
-            'Comments visibility updated',
-            'Failed to update'
-        );
+        const success = await fetchRequest(url, 'PATCH', { comments_allowed: newValue }, 'Comments visibility updated', 'Failed to update');
 
         if (!success) {
             this.checked = !this.checked;

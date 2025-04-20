@@ -22,12 +22,7 @@ class DesignationPolicy
     {
         return $user->can('view designation');
     }
-
-    public function detail(User $user, Designation $designation): bool
-    {
-        return $user->can('view detail designation');
-    }
-
+    
     public function activate(User $user, Designation $designation): bool
     {
         return $user->can('activate designation');

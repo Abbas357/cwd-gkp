@@ -16,11 +16,6 @@ class CommentPolicy
     {
         return $user->can('view comment');
     }
-        
-    public function detail(User $user, Comment $comment): bool
-    {
-        return $user->can('view detail comment');
-    }
     
     public function response(User $user, Comment $comment): bool
     {

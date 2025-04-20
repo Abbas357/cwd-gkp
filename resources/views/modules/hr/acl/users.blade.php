@@ -270,8 +270,12 @@
                     <div class="card-header bg-white d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">Role Management</h5>
                         <div>
+                            @can('viewAny', Spatie\Permission\Models\Role::class)
                             <a class="btn btn-light" href="{{ route('admin.apps.hr.acl.roles.index') }}">Roles</a>
+                            @endcan
+                            @can('viewAny', Spatie\Permission\Models\Permission::class)
                             <a class="btn btn-light" href="{{ route('admin.apps.hr.acl.permissions.index') }}">Permissions</a>
+                            @endcan
                         </div>
                     </div>
                 </div>
@@ -313,6 +317,7 @@
                         </div>
                     </div>
                     <div class="card-body p-0">
+                        @canany(['assignRole', 'assignPermission'], Spatie\Permission\Models\Role::class)
                         <div class="d-flex p-2 align-items-center">
                             <div class="form-check me-2">
                                 <input class="form-check-input" type="checkbox" id="select-all-users">
@@ -325,11 +330,16 @@
                                     Bulk Actions
                                 </button>
                                 <ul class="dropdown-menu">
+                                    @can('assignRole', Spatie\Permission\Models\Role::class)
                                     <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#bulkAssignRolesModal">Assign Roles</a></li>
+                                    @endcan
+                                    @can('assignPermission', Spatie\Permission\Models\Permission::class)
                                     <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#bulkAssignPermissionsModal">Assign Permissions</a></li>
+                                    @endcan
                                 </ul>
                             </div>
                         </div>
+                        @can('viewAny', App\Models\User::class)
                         <div class="list-group list-group-flush" id="users-list" style="max-height: 600px; overflow-y: auto;">
                             @foreach($users as $user)
                             <div class="list-group-item list-group-item-action d-flex align-items-center user-item p-2" data-user-id="{{ $user->id }}">
@@ -350,9 +360,11 @@
                             </div>
                             @endforeach
                         </div>
+                        @endcan
                     </div>
                 </div>
             </div>
+            @endcan
 
             <!-- Right Panel - Roles & Permissions -->
             <div class="col-md-7">
@@ -405,9 +417,11 @@
                                         <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
                                         <input type="text" id="role-search" class="form-control border-0 bg-light" placeholder="Search roles...">
                                     </div>
+                                    @can('viewAny', Spatie\Permission\Models\Role::class)
                                     <div id="roles-list" class="row g-3">
                                         <!-- Roles will be populated dynamically -->
                                     </div>
+                                    @endcan
                                 </div>
 
                                 <!-- Direct Permissions Tab -->
@@ -416,9 +430,11 @@
                                         <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
                                         <input type="text" id="permission-search" class="form-control border-0 bg-light" placeholder="Search permissions...">
                                     </div>
+                                    @can('viewAny', Spatie\Permission\Models\Permission::class)
                                     <div id="permissions-container">
                                         <!-- Permission categories will be dynamically populated -->
                                     </div>
+                                    @endcan
                                 </div>
                             </div>
                         </div>
@@ -428,6 +444,7 @@
         </div>
     </div>
 
+    @can('assignRole', Spatie\Permission\Models\Role::class)
     <!-- Bulk Assign Roles Modal -->
     <div class="modal fade" id="bulkAssignRolesModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
@@ -477,7 +494,8 @@
             </div>
         </div>
     </div>
-
+    @endcan
+    @can('assignPermission', Spatie\Permission\Models\Permission::class)
     <!-- Bulk Assign Permissions Modal -->
     <div class="modal fade" id="bulkAssignPermissionsModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
@@ -527,6 +545,7 @@
             </div>
         </div>
     </div>
+    @endcan
 
     @push('script')
     <script>

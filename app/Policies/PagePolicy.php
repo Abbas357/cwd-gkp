@@ -21,12 +21,7 @@ class PagePolicy
     {
         return $user->can('create page');
     }
-
-    public function detail(User $user): bool
-    {
-        return $user->can('view detail page');
-    }
-
+    
     public function updateField(User $user, Page $page): bool
     {
         return $user->can('update field page');

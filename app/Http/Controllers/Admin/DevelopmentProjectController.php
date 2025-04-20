@@ -92,8 +92,9 @@ class DevelopmentProjectController extends Controller
     {
         $cat = [
             'districts' => District::all(),
-            'chiefEngineers' => User::where('designation', 'Chief Engineer')->get(),
-            'superintendentEngineers' => User::where('designation', 'Superintendent Engineer')->get(),
+            'chiefEngineers' => User::whereHas('currentPosting.designation', function($query) {
+                $query->where('name', 'Chief Engineer');
+            })->get(),
         ];
         
         $html = view('admin.development_projects.partials.create', compact('cat'))->render();
@@ -145,6 +146,7 @@ class DevelopmentProjectController extends Controller
     {
         if ($development_project->status === 'Draft') {
             $development_project->status = $request->progress_percentage == 100 ? 'Completed' : 'In-Progress';
+            $development_project->published_at = now();
             $message = 'Project has been published successfully.';
         } else {
             $development_project->status = 'Draft';
@@ -168,8 +170,9 @@ class DevelopmentProjectController extends Controller
     {
         $cat = [
             'districts' => District::all(),
-            'chiefEngineers' => User::where('designation', 'Chief Engineer')->get(),
-            'superintendentEngineers' => User::where('designation', 'Superintendent Engineer')->get(),
+            'chiefEngineers' => User::whereHas('currentPosting.designation', function($query) {
+                $query->where('name', 'Chief Engineer');
+            })->get(),
             'status' => ['In-Progess', 'On-Hold', 'Completed'],
         ];
 

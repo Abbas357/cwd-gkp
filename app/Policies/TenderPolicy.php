@@ -22,12 +22,7 @@ class TenderPolicy {
         return $user->can('create tender');
     }
 
-    public function detail(User $user, Tender $tender): bool
-    {
-        return $user->id === $tender->user_id || $user->can('view detail tender');
-    }
-
-    public function uploadField(User $user, Tender $tender): bool
+    public function updateField(User $user, Tender $tender): bool
     {
         return $user->id === $tender->user_id || $user->can('update field tender');
     }
@@ -47,8 +42,8 @@ class TenderPolicy {
         return $user->id === $tender->user_id || $user->can('archive tender');
     }
 
-    public function comment(User $user, Tender $tender): bool
+    public function comment(User $user): bool
     {
-        return $user->id === $tender->user_id || $user->can('can comment tender');
+        return $user->can('can comment tender');
     }
 }

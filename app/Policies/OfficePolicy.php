@@ -23,11 +23,6 @@ class OfficePolicy
         return $user->can('view office');
     }
 
-    public function detail(User $user, Office $office): bool
-    {
-        return $user->can('view detail office');
-    }
-
     public function activate(User $user, Office $office): bool
     {
         return $user->can('activate office');

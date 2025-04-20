@@ -196,10 +196,12 @@
                 ]
                 , pageLength: 25
                 , customButton: {
+                    @can('sync', \App\Models\Scheme::class)
                     text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Sync Schemes</span>`
                     , action: function(e, dt, node, config) {
                         window.location.href = "{{ route('admin.schemes.sync') }}";
                     }
+                    @endcan
                 , }
             });
 

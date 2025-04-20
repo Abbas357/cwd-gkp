@@ -5,7 +5,9 @@
         vertical-align: middle;
     }
 </style>
-
+@php
+    $canUpdate = auth()->user()->can('updateField', $office);
+@endphp
 <div class="row offices-details">
     <div class="col-md-12">
         <table class="table table-bordered mt-3">            
@@ -13,9 +15,11 @@
                 <th class="table-cell">Name</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-name">{{ $office->name }}</span>
+                    @if ($canUpdate)
                     <input type="text" id="input-name" value="{{ $office->name }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('name', {{ $office->id }})" />
                     <button id="save-btn-name" class="btn btn-sm btn-light d-none" onclick="updateField('name', {{ $office->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-name" class="no-print btn btn-sm edit-button" onclick="enableEditing('name')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
 
@@ -23,6 +27,7 @@
                 <th class="table-cell">Type</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-type">{{ $office->type }}</span>
+                    @if ($canUpdate)
                     <select id="input-type" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('type', {{ $office->id }})">
                         @foreach ($cat['officeTypes'] as $type)
                         <option value="{{ $type }}" {{ $office->type == $type ? 'selected' : '' }}>
@@ -32,6 +37,7 @@
                     </select>
                     <button id="save-btn-type" class="btn btn-sm btn-light d-none" onclick="updateField('type', {{ $office->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-type" class="no-print btn btn-sm edit-button" onclick="enableEditing('type')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
 
@@ -39,6 +45,7 @@
                 <th class="table-cell">Parent Office</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-parent_id">{{ $office->parent?->name }}</span>
+                    @if ($canUpdate)
                     <select id="input-parent_id" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('parent_id', {{ $office->id }})">
                         @foreach ($cat['offices'] as $parent)
                         <option value="{{ $parent->id }}" {{ $office->parent_id == $parent->id ? 'selected' : '' }}>
@@ -48,6 +55,7 @@
                     </select>
                     <button id="save-btn-parent_id" class="btn btn-sm btn-light d-none" onclick="updateField('parent_id', {{ $office->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-parent_id" class="no-print btn btn-sm edit-button" onclick="enableEditing('parent_id')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
 
@@ -82,6 +90,7 @@
                             @endif
                         </div>
                     </span>
+                    @if ($canUpdate)
                     <select id="input-district_id" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('district_id', {{ $office->id }})">
                         @foreach ($cat['districts'] as $district)
                         <option value="{{ $district->id }}" {{ $office->district_id == $district->id ? 'selected' : '' }}>
@@ -91,6 +100,7 @@
                     </select>
                     <button id="save-btn-district_id" class="btn btn-sm btn-light d-none" onclick="updateField('district_id', {{ $office->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-district_id" class="no-print btn btn-sm edit-button" onclick="enableEditing('district_id')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
 
@@ -98,11 +108,13 @@
                 <th class="table-cell">Job Description</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-job_description">{!! $office->job_description !!}</span>
+                    @if ($canUpdate)
                     <div class="mb-3 w-100">
                         <textarea name="job_description" id="input-job_description" class="form-control d-none" style="height:150px">{{ old('job_description', $office->job_description) }}</textarea>
                     </div>
                     <button id="save-btn-job_description" class="btn btn-sm btn-light d-none" onclick="updateField('job_description', {{ $office->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-job_description" class="no-print btn btn-sm edit-button" onclick="enableEditing('job_description')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
 

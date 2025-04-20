@@ -12,9 +12,9 @@ class PublicContactPolicy
         return $user->can('view any public-contact');
     }
 
-    public function detail(User $user, PublicContact $publicContact): bool
+    public function view(User $user, PublicContact $publicContact): bool
     {
-        return $user->can('view detail public-contact');
+        return $user->can('view public-contact');
     }
 
     public function reliefGrant(User $user, PublicContact $publicContact): bool

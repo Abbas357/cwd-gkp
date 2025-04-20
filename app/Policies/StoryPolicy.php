@@ -23,14 +23,12 @@ class StoryPolicy
     }
 
     public function update(User $user, Story $story): bool
-    {
-        
-        return $user->id === $story->user_id || $user->can('update story');
+    {    
+       return $user->id === $story->user_id || $user->can('update story');
     }
 
     public function delete(User $user, Story $story): bool
-    {
-        
+    {   
         return $user->id === $story->user_id || $user->can('delete story');
     }
 

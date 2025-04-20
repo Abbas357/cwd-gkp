@@ -7,6 +7,9 @@
         vertical-align: middle;
     }
 </style>
+@php
+    $canUpdate = auth()->user()->can('updateField', $tender);
+@endphp
 <div class="row infrastructure-details">
     <div class="col-md-12">
         <table class="table table-bordered mt-3">
@@ -15,6 +18,7 @@
                 <th class="table-cell">Infrastructure Type</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-type">{{ $infrastructure->type }}</span>
+                    @if($canUpdate)
                     <select id="input-type" class="d-none form-control" onchange="updateField('type', {{ $infrastructure->id }})">
                         <option value="">Select Type</option>
                         @foreach(setting('infrastructure_type', 'dmis') as $infrastructure_type)
@@ -25,6 +29,7 @@
                     </select>
                     <button id="save-btn-type" class="btn btn-sm btn-light d-none" onclick="updateField('type', {{ $infrastructure->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-type" class="no-print btn btn-sm edit-button" onclick="enableEditing('type')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
 
@@ -32,6 +37,7 @@
                 <th class="table-cell">District</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-district_id">{{ $infrastructure->district->name ?? 'N/A' }}</span>
+                    @if($canUpdate)
                     <select id="input-district_id" class="d-none form-control" onchange="updateField('district_id', {{ $infrastructure->id }})">
                         <option value="">Select District</option>
                         @foreach($districts as $district)
@@ -42,6 +48,7 @@
                     </select>
                     <button id="save-btn-district_id" class="btn btn-sm btn-light d-none" onclick="updateField('district_id', {{ $infrastructure->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-district_id" class="no-print btn btn-sm edit-button" onclick="enableEditing('district_id')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
 
@@ -49,9 +56,11 @@
                 <th class="table-cell">Name</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-name">{{ $infrastructure->name }}</span>
+                    @if($canUpdate)
                     <input type="text" id="input-name" value="{{ $infrastructure->name }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('name', {{ $infrastructure->id }})" />
                     <button id="save-btn-name" class="btn btn-sm btn-light d-none" onclick="updateField('name', {{ $infrastructure->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-name" class="no-print btn btn-sm edit-button" onclick="enableEditing('name')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
 
@@ -59,9 +68,11 @@
                 <th class="table-cell">Length</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-length">{{ $infrastructure->length }}</span>
+                    @if($canUpdate)
                     <input type="number" id="input-length" value="{{ $infrastructure->length }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('length', {{ $infrastructure->id }})" />
                     <button id="save-btn-length" class="btn btn-sm btn-light d-none" onclick="updateField('length', {{ $infrastructure->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-length" class="no-print btn btn-sm edit-button" onclick="enableEditing('length')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
             
@@ -69,9 +80,11 @@
                 <th class="table-cell">Start Coordinate (Easting)</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-east_start_coordinate">{{ $infrastructure->east_start_coordinate }}</span>
+                    @if($canUpdate)
                     <input type="text" id="input-east_start_coordinate" value="{{ $infrastructure->east_start_coordinate }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('east_start_coordinate', {{ $infrastructure->id }})" />
                     <button id="save-btn-east_start_coordinate" class="btn btn-sm btn-light d-none" onclick="updateField('east_start_coordinate', {{ $infrastructure->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-east_start_coordinate" class="no-print btn btn-sm edit-button" onclick="enableEditing('east_start_coordinate')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
 
@@ -79,9 +92,11 @@
                 <th class="table-cell">Start Coordinate (Northing)</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-north_start_coordinate">{{ $infrastructure->north_start_coordinate }}</span>
+                    @if($canUpdate)
                     <input type="text" id="input-north_start_coordinate" value="{{ $infrastructure->north_start_coordinate }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('north_start_coordinate', {{ $infrastructure->id }})" />
                     <button id="save-btn-north_start_coordinate" class="btn btn-sm btn-light d-none" onclick="updateField('north_start_coordinate', {{ $infrastructure->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-north_start_coordinate" class="no-print btn btn-sm edit-button" onclick="enableEditing('north_start_coordinate')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
 
@@ -89,9 +104,11 @@
                 <th class="table-cell">End Coordinate (Easting)</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-east_end_coordinate">{{ $infrastructure->east_end_coordinate }}</span>
+                    @if($canUpdate)
                     <input type="text" id="input-east_end_coordinate" value="{{ $infrastructure->east_end_coordinate }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('east_end_coordinate', {{ $infrastructure->id }})" />
                     <button id="save-btn-east_end_coordinate" class="btn btn-sm btn-light d-none" onclick="updateField('east_end_coordinate', {{ $infrastructure->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-east_end_coordinate" class="no-print btn btn-sm edit-button" onclick="enableEditing('east_end_coordinate')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
 
@@ -99,9 +116,11 @@
                 <th class="table-cell">End Coordinate (Northing)</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-north_end_coordinate">{{ $infrastructure->north_end_coordinate }}</span>
+                    @if($canUpdate)
                     <input type="text" id="input-north_end_coordinate" value="{{ $infrastructure->north_end_coordinate }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('north_end_coordinate', {{ $infrastructure->id }})" />
                     <button id="save-btn-north_end_coordinate" class="btn btn-sm btn-light d-none" onclick="updateField('north_end_coordinate', {{ $infrastructure->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-north_end_coordinate" class="no-print btn btn-sm edit-button" onclick="enableEditing('north_end_coordinate')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
                 </td>
             </tr>
         </table>

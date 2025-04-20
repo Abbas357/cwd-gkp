@@ -47,13 +47,11 @@ class ContractorHumanResourceController extends Controller
             $resource->save();
 
             return response()->json([
-                'success' => true,
-                'message' => 'Resource updated successfully'
+                'success' => 'Resource updated successfully'
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'success' => false,
-                'message' => 'Failed to update resource'
+                'success' => 'Failed to update resource'
             ], 500);
         }
     }
@@ -68,14 +66,12 @@ class ContractorHumanResourceController extends Controller
         try {
             $media = $resource->addMedia($request->file('file'))->toMediaCollection('contractor_hr_resumes');
             return response()->json([
-                'success' => true,
-                'message' => 'File uploaded successfully',
+                'success' => 'File uploaded successfully',
                 'fileUrl' => $media->getUrl()
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'success' => false,
-                'message' => 'Failed to upload file'
+                'success' => 'Failed to upload file'
             ], 500);
         }
     }

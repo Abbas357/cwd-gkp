@@ -22,12 +22,7 @@ class AchievementPolicy
         return $user->can('create achievement');
     }
 
-    public function detail(User $user, Achievement $achievement): bool
-    {
-        return $user->id === $achievement->user_id || $user->can('view detail achievement');
-    }
-
-    public function uploadField(User $user, Achievement $achievement): bool
+    public function updateField(User $user, Achievement $achievement): bool
     {
         return $user->id === $achievement->user_id || $user->can('update field achievement');
     }

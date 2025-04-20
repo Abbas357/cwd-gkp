@@ -6,7 +6,7 @@
     <div class="wrapper">
         <div class="card shadow-sm">
             <div class="card-body">
-
+                @can('create', Spatie\Permission\Models\Role::class)
                 <form class="needs-validation" action="{{ route('admin.apps.hr.acl.roles.store') }}" method="post" novalidate>
                     @csrf
                     <div class="quick-add mb-4">
@@ -20,6 +20,7 @@
                         @enderror
                     </div>
                 </form>
+                @endcan
 
                 <div class="row">
                     <div class="col-md-4 border-end">
@@ -32,7 +33,7 @@
                             </span>
                             <input type="text" class="form-control" id="search-roles" placeholder="Search roles...">
                         </div>
-                        
+                        @can('viewAny', Spatie\Permission\Models\Role::class)
                         <div class="role-list list-group" id="roles-container">
                             @foreach ($roles as $role)
                                 <div class="list-group-item list-group-item-action role-item d-flex justify-content-between align-items-center" 
@@ -42,14 +43,16 @@
                                         <span class="badge bg-primary rounded-pill ms-2">{{ $role->permissions->count() }}</span>
                                     </div>
                                     <div class="role-actions">
+                                        @can('delete', Spatie\Permission\Models\Role::class)
                                         <button class="btn btn-sm btn-outline-danger delete-role-btn" data-role-id="{{ $role->id }}">
                                             <i class="bi bi-trash"></i>
                                         </button>
+                                        @endcan
                                     </div>
                                 </div>
                             @endforeach
                         </div>
-                        
+                        @endcan
                     </div>
                     
                     <div class="col-md-8">
@@ -82,10 +85,11 @@
                                 </div>
                                 <p class="mt-2">Loading permissions...</p>
                             </div>
-                            
+                            @can('viewAny', Spatie\Permission\Models\Permission::class)
                             <div class="permissions-list mb-3 d-none" id="permissions-list">
                                 <!-- Permissions will be loaded dynamically -->
                             </div>
+                            @endcan
                         </div>
                     </div>
                 </div>
@@ -153,7 +157,8 @@
 
                 if (selectedRoleId) {
                     $('#permission-saving-indicator').removeClass('d-none');
-                    const result = await fetchRequest(`{{ url('admin/apps/hr/acl/roles') }}/${selectedRoleId}/permission`, 'POST', { permission: permissionName, action: isChecked ? 'add' : 'remove'}, isChecked ? 'Permission added' : 'Permission removed',);
+                    const url = "{{ route('admin.apps.hr.acl.roles.updateSinglePermission', ':role') }}".replace(':role', selectedRoleId);
+                    const result = await fetchRequest(url, 'POST', { permission: permissionName, action: isChecked ? 'add' : 'remove'}, isChecked ? 'Permission added' : 'Permission removed',);
                     
                     if (result) {
                         updatePermissionCountBadge(selectedRoleId);
@@ -172,7 +177,8 @@
                 
                 const confirmation = await confirmAction(`Do you want to delete the role "${roleName}"?`);
                 if (confirmation.isConfirmed) {
-                    const result = await fetchRequest(`{{ url('admin/apps/hr/acl/roles') }}/${roleId}`, 'DELETE');
+                    const url = "{{ route('admin.apps.hr.acl.roles.destroy', ':role') }}".replace(':role', roleId);
+                    const result = await fetchRequest(url, 'DELETE');
                     if (result) {
                         $(`.role-item[data-role-id="${roleId}"]`).remove();
                         if (selectedRoleId === roleId) {
@@ -201,8 +207,8 @@
                 const url = new URL(window.location);
                 url.searchParams.set('role', roleId);
                 window.history.pushState({}, '', url);
-                
-                const data = await fetchRequest(`{{ url('admin/apps/hr/acl/roles') }}/${roleId}/permissions`);
+                const permissionsUrl = "{{ route('admin.apps.hr.acl.roles.getPermissions', ':role') }}".replace(':role', roleId);
+                const data = await fetchRequest(permissionsUrl);
                 
                 if (data) {
                     const role = data.role;

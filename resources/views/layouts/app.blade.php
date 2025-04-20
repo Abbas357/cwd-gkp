@@ -90,9 +90,6 @@
             @can('create download')
             <li><a href="{{ route('admin.downloads.index') }}"><i class="bi-cloud-arrow-down"></i>Downloads</a></li>
             @endcan
-            @can('view any card')
-            <li><a href="{{ route('admin.cards.index') }}"><i class="bi-credit-card"></i>Cards</a></li>
-            @endcan
         </ul>
     </li>
     @endcanany

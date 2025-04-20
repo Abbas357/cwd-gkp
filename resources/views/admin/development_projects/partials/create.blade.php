@@ -34,7 +34,7 @@
         @enderror
     </div>
 
-    <div class="col-md-4 mb-3">
+    <div class="col-md-6 mb-3">
         <label for="district">District</label>
         <select class="form-select form-select-md" id="district" name="district_id">
             <option value="">Select Option</option>
@@ -47,7 +47,7 @@
         @enderror
     </div>
 
-    <div class="col-md-4 mb-3">
+    <div class="col-md-6 mb-3">
         <label for="chiefEnginner">Chief Engineer</label>
         <select class="form-select form-select-md" id="chiefEnginner" name="chiefEnginner">
             <option value="">Select Option</option>
@@ -56,19 +56,6 @@
             @endforeach
         </select>
         @error('chiefEnginner')
-        <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-
-    <div class="col-md-4 mb-3">
-        <label for="superintendentEngineer">Superintendent Engineer</label>
-        <select class="form-select form-select-md" id="superintendentEngineer" name="superintendentEngineer">
-            <option value="">Select Option</option>
-            @foreach ($cat['superintendentEngineers'] as $superintendentEngineer)
-            <option value="{{ $superintendentEngineer->id }}">{{ $superintendentEngineer->name }} - {{ $superintendentEngineer->currentPosting->office->name }}</option>
-            @endforeach
-        </select>
-        @error('superintendentEngineer')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>

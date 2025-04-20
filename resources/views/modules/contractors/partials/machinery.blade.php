@@ -9,35 +9,59 @@
                 <th>Status</th>
                 <th>Machinery Documents</th>
                 <th>Machinery Pictures</th>
+                @can('delete', App\Models\ContractorMachinery::class)
                 <th>Action</th>
+                @endcan
             </tr>
         </thead>
         <tbody>
             @forelse($machinery as $machine)
             <tr data-id="{{ $machine->id }}">
                 <td>
-                    <span class="editable" data-field="name" data-value="{{ $machine->name }}">{{ $machine->name }}</span>
+                    @can('update', App\Models\ContractorMachinery::class)
+                        <span class="editable" data-field="name" data-value="{{ $machine->name }}">{{ $machine->name }}</span>
+                    @else
+                        {{ $machine->name }}
+                    @endcan
                 </td>
                 <td>
-                    <span class="editable" data-field="number" data-value="{{ $machine->number }}">{{ $machine->number }}</span>
+                    @can('update', App\Models\ContractorMachinery::class)
+                        <span class="editable" data-field="number" data-value="{{ $machine->number }}">{{ $machine->number }}</span>
+                    @else
+                        {{ $machine->number }}
+                    @endcan
                 </td>
                 <td>
-                    <span class="editable" data-field="model" data-value="{{ $machine->model }}">{{ $machine->model }}</span>
+                    @can('update', App\Models\ContractorMachinery::class)
+                        <span class="editable" data-field="model" data-value="{{ $machine->model }}">{{ $machine->model }}</span>
+                    @else
+                        {{ $machine->model }}
+                    @endcan
                 </td>
                 <td>
-                    <span class="editable" data-field="registration" data-value="{{ $machine->registration }}">{{ $machine->registration }}</span>
+                    @can('update', App\Models\ContractorMachinery::class)
+                        <span class="editable" data-field="registration" data-value="{{ $machine->registration }}">{{ $machine->registration }}</span>
+                    @else
+                        {{ $machine->registration }}
+                    @endcan
                 </td>
                 <td>
-                    <select class="form-control status-select" data-field="status">
-                        <option value="draft" {{ $machine->status === 'draft' ? 'selected' : '' }}>Draft</option>
-                        <option value="rejected" {{ $machine->status === 'rejected' ? 'selected' : '' }}>Rejected</option>
-                        <option value="approved" {{ $machine->status === 'approved' ? 'selected' : '' }}>Approved</option>
-                    </select>
+                    @can('update', App\Models\ContractorMachinery::class)
+                        <select class="form-control status-select" data-field="status">
+                            <option value="draft" {{ $machine->status === 'draft' ? 'selected' : '' }}>Draft</option>
+                            <option value="rejected" {{ $machine->status === 'rejected' ? 'selected' : '' }}>Rejected</option>
+                            <option value="approved" {{ $machine->status === 'approved' ? 'selected' : '' }}>Approved</option>
+                        </select>
+                    @else
+                        {{ ucfirst($machine->status) }}
+                    @endcan
                 </td>
                 <td>
                     <div class="d-flex justify-content-center">
-                        <input type="file" class="file-input p-0" data-collection="contractor_machinery_docs" data-id="{{ $machine->id }}" style="display: none;">
-                        <button class="btn upload-btn"><i class="bi-pencil-square"></i></button>
+                        @can('upload', App\Models\ContractorMachinery::class)
+                            <input type="file" class="file-input p-0" data-collection="contractor_machinery_docs" data-id="{{ $machine->id }}" style="display: none;">
+                            <button class="btn upload-btn"><i class="bi-pencil-square"></i></button>
+                        @endcan
                 
                         @if($machine->getMedia('contractor_machinery_docs'))
                             @foreach($machine->getMedia('contractor_machinery_docs') as $index => $doc)
@@ -52,8 +76,10 @@
                 </td>
                 <td>
                     <div class="d-flex justify-content-center">
-                        <input type="file" class="file-input p-0" data-collection="contractor_machinery_pics" data-id="{{ $machine->id }}" style="display: none;">
-                        <button class="btn upload-btn"><i class="bi-pencil-square"></i></button>
+                        @can('upload', App\Models\ContractorMachinery::class)
+                            <input type="file" class="file-input p-0" data-collection="contractor_machinery_pics" data-id="{{ $machine->id }}" style="display: none;">
+                            <button class="btn upload-btn"><i class="bi-pencil-square"></i></button>
+                        @endcan
                         
                         @if($machine->getMedia('contractor_machinery_pics'))
                             @foreach($machine->getMedia('contractor_machinery_pics') as $index => $pic)
@@ -66,6 +92,7 @@
                         @endif
                     </div>
                 </td>
+                @can('delete', App\Models\ContractorMachinery::class)
                 <td>
                     <form class="delete-machine-form" data-machine-id="{{ $machine->id }}" style="display:inline;">
                         @csrf
@@ -75,10 +102,11 @@
                         </button>
                     </form>
                 </td>
+                @endcan
             </tr>
             @empty
             <tr>
-                <td colspan="6" class="text-center">No records found</td>
+                <td colspan="{{ Auth::user()->can('delete', App\Models\ContractorMachinery::class) ? '8' : '7' }}" class="text-center">No records found</td>
             </tr>
             @endforelse
         </tbody>
@@ -86,19 +114,13 @@
 </div>
 
 <style>
+    @can('update', App\Models\ContractorMachinery::class)
     .editable {
         padding: 5px;
         border-radius: 3px;
         cursor: pointer;
         min-height: 20px;
         display: block;
-    }
-
-    .table-machinery th,
-    .table-machinery td {
-        vertical-align: middle;
-        white-space: nowrap;
-        min-width: 10rem;
     }
 
     .editable:hover {
@@ -110,10 +132,19 @@
         border: 1px solid #ced4da;
         padding: 0px;
     }
+    @endcan
+
+    .table-machinery th,
+    .table-machinery td {
+        vertical-align: middle;
+        white-space: nowrap;
+        min-width: 10rem;
+    }
 </style>
 
 <script>
 $(document).ready(function() {
+    @can('update', App\Models\ContractorMachinery::class)
     $('.editable').on('click', function() {
         const span = $(this);
         const field = span.data('field');
@@ -149,6 +180,7 @@ $(document).ready(function() {
                 },
                 success: function(response) {
                     if (response.success) {
+                        showNotification(response.success);
                         span.html(newValue);
                         span.data('value', newValue);
                     } else {
@@ -191,7 +223,9 @@ $(document).ready(function() {
             }
         });
     });
+    @endcan
 
+    @can('upload', App\Models\ContractorMachinery::class)
     $('.upload-btn').on('click', function() {
         $(this).siblings('.file-input').click();
     });
@@ -239,34 +273,35 @@ $(document).ready(function() {
                 } else {
                     console.error('Failed to upload file');
                 }
-
             }
         });
     });
+    @endcan
 
+    @can('delete', App\Models\ContractorMachinery::class)
     $(".table-machinery").on('click', '.delete-machine-btn', async function() {
-            const form = $(this).closest('.delete-machine-form');
-            const machineId = form.data('machine-id');
-            const row = form.closest('tr');
-            const url = `{{ route('admin.apps.contractors.machinery.destroy', ':machineId') }}`.replace(':machineId', machineId);
-            const result = await confirmAction(`Do you want to delete this machinery?`);
-            if (result && result.isConfirmed) {
-                const success = await fetchRequest(url, 'DELETE');
-                if (success) {
-                    row.fadeOut(300, function() {
-                        $(this).remove();
-                        
-                        if ($('.table-machinery tbody tr').length === 0) {
-                            $('.table-machinery tbody').append(`
-                                <tr>
-                                    <td colspan="9" class="text-center">No records found</td>
-                                </tr>
-                            `);
-                        }
-                    });
-                }
+        const form = $(this).closest('.delete-machine-form');
+        const machineId = form.data('machine-id');
+        const row = form.closest('tr');
+        const url = `{{ route('admin.apps.contractors.machinery.destroy', ':machineId') }}`.replace(':machineId', machineId);
+        const result = await confirmAction(`Do you want to delete this machinery?`);
+        if (result && result.isConfirmed) {
+            const success = await fetchRequest(url, 'DELETE');
+            if (success) {
+                row.fadeOut(300, function() {
+                    $(this).remove();
+                    
+                    if ($('.table-machinery tbody tr').length === 0) {
+                        $('.table-machinery tbody').append(`
+                            <tr>
+                                <td colspan="{{ Auth::user()->can('delete', App\Models\ContractorMachinery::class) ? '8' : '7' }}" class="text-center">No records found</td>
+                            </tr>
+                        `);
+                    }
+                });
             }
-        });
-
+        }
+    });
+    @endcan
 });
 </script>

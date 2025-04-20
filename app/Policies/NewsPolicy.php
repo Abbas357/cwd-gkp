@@ -22,12 +22,7 @@ class NewsPolicy
         return $user->can('create news');
     }
 
-    public function detail(User $user, News $news): bool
-    {
-        return $user->id === $news->user_id || $user->can('view detail news');
-    }
-
-    public function uploadField(User $user, News $news): bool
+    public function updateField(User $user, News $news): bool
     {
         return $user->id === $news->user_id || $user->can('update field news');
     }
@@ -52,8 +47,8 @@ class NewsPolicy
         return $user->id === $news->user_id || $user->can('archive news');
     }
 
-    public function comment(User $user, News $news): bool
+    public function comment(User $user): bool
     {
-        return $user->id === $news->user_id || $user->can('post comment news');
+        return $user->can('post comment news');
     }
 }
