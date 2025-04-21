@@ -17,7 +17,7 @@ use App\Http\Controllers\Hr\SanctionedPostController;
 
 Route::prefix('hr')->as('hr.')->group(function () {
 
-    Route::get('/', [DashboardController::class, 'index'])->name('index')->can('viewAny', App\Models\User::class);
+    Route::get('/', [DashboardController::class, 'index'])->name('index');
 
     Route::prefix('users')->as('users.')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index')->can('viewAny', App\Models\User::class);

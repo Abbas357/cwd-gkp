@@ -277,69 +277,140 @@
             <p>Access all your applications in one place</p>
         </div>
         <input type="text" id="searchBar" placeholder="Search applications..." oninput="filterApps()">
+        @php
+            $user = auth()->user();
+        @endphp
         <div class="app-grid" id="appGrid">
-            @can('manage website')
+            @if(
+                $user->can('viewAny', App\Models\News::class) ||
+                $user->can('viewAny', App\Models\Event::class) ||
+                $user->can('viewAny', App\Models\Tender::class) ||
+                $user->can('viewAny', App\Models\Seniority::class) ||
+                $user->can('viewAny', App\Models\Gallery::class) ||
+                $user->can('viewAny', App\Models\Slider::class) ||
+                $user->can('viewAny', App\Models\Story::class) ||
+                $user->can('viewAny', App\Models\Page::class) ||
+                $user->can('viewAny', App\Models\Download::class) ||
+                $user->can('viewAny', App\Models\Project::class) ||
+                $user->can('viewAny', App\Models\ProjectFile::class) ||
+                $user->can('viewAny', App\Models\DevelopmentProject::class) ||
+                $user->can('viewAny', App\Models\Scheme::class) ||
+                $user->can('viewAny', App\Models\Achievement::class) ||
+                $user->can('viewAny', App\Models\Comment::class) ||
+                $user->can('viewAny', App\Models\PublicContact::class) ||
+                $user->can('viewAny', App\Models\NewsLetter::class) ||
+                $user->can('massEmail', App\Models\NewsLetter::class)
+            )
             <a href="{{ route('admin.home') }}" class="app-tile accent-purple">
                 <i class="bi-globe" style="color: #8d0fe0"></i>
                 <p>Website</p>
             </a>
-            @endcan
+            @endif
 
-            @can('manage human resource')
+            @if(
+                $user->can('viewAny', App\Models\User::class) ||
+                $user->can('viewAny', App\Models\Office::class) ||
+                $user->can('viewAny', App\Models\Designation::class) ||
+                $user->can('viewAny', App\Models\SanctionedPost::class) ||
+                $user->can('viewAny', App\Models\Posting::class) ||
+                $user->can('viewAny', App\Models\Role::class) ||
+                $user->can('assignRole', App\Models\Role::class) ||
+                $user->can('assignPermission', App\Models\Role::class) ||
+                $user->can('viewAny', App\Models\Permission::class) ||
+                $user->can('viewVacancyReport', App\Models\User::class) ||
+                $user->can('viewEmployeeDirectoryReport', App\Models\User::class) ||
+                $user->can('viewOfficeStrengthReport', App\Models\User::class) ||
+                $user->can('viewPostingHistoryReport', App\Models\User::class) ||
+                $user->can('viewServiceLengthReport', App\Models\User::class) ||
+                $user->can('viewRetirementForecastReport', App\Models\User::class) ||
+                $user->can('viewOfficeStaffReport', App\Models\User::class) ||
+                $user->can('viewOrganogram', App\Models\office::class)
+            )
             <a href="{{ route('admin.apps.hr.index') }}" class="app-tile accent-green">
                 <i class="bi-people" style="color: #00db87"></i>
                 <p>HRMIS</p>
             </a>
-            @endcan
+            @endif
 
-            @can('manage vehicles')
+            @if(
+                $user->can('viewAny', App\Models\Vehicle::class) ||
+                $user->can('viewReports', App\Models\Vehicle::class)
+            )
             <a href="{{ route('admin.apps.vehicles.index') }}" class="app-tile accent-black">
                 <i class="bi-bus-front" style="color: #000000"></i>
                 <p>Vehicle Mgt.</p>
             </a>
-            @endcan
+            @endif
 
-            @can('manage standardizations')
+            @if(
+                $user->can('viewAny', App\Models\Contractor::class) ||
+                $user->can('viewAny', App\Models\ContractorRegistration::class) ||
+                $user->can('viewAny', App\Models\ContractorHumanResource::class) ||
+                $user->can('viewAny', App\Models\ContractorMachinery::class) ||
+                $user->can('viewAny', App\Models\ContractorWorkExperience::class)
+            )
             <a href="{{ route('admin.apps.standardizations.index') }}" class="app-tile accent-blue">
                 <i class="bi-patch-check-fill" style="color: #1DA1F2"></i>
                 <p>Standardization</p>
             </a>
-            @endcan
+            @endif
 
-            @can('manage contractors')
+            @if(
+                $user->can('viewAny', App\Models\Contractor::class) ||
+                $user->can('viewAny', App\Models\ContractorRegistration::class) ||
+                $user->can('viewAny', App\Models\ContractorHumanResource::class) ||
+                $user->can('viewAny', App\Models\ContractorMachinery::class) ||
+                $user->can('viewAny', App\Models\ContractorWorkExperience::class)
+            )
             <a href="{{ route('admin.apps.contractors.index') }}" class="app-tile accent-teal">
                 <i class="bi-person-vcard" style="color: #1cc7d0"></i>
                 <p>Contractors</p>
             </a>
-            @endcan
+            @endif
 
-            @can('manage service cards')
+            @if(
+                $user->can('viewAny', App\Models\ServiceCard::class) ||
+                $user->can('create', App\Models\ServiceCard::class)
+            )
             <a href="{{ route('admin.apps.service_cards.index') }}" class="app-tile accent-orange">
                 <i class="bi-credit-card" style="color: #f47721"></i>
                 <p>Service Card</p>
             </a>
-            @endcan
+            @endif
 
-            @can('manage porms')
+            @if(
+                $user->can('viewAny', App\Models\ProvincialOwnReceipt::class) ||
+                $user->can('viewReports', App\Models\ProvincialOwnReceipt::class)
+            )
             <a href="{{ route('admin.apps.porms.index') }}" class="app-tile accent-yellow">
                 <i class="bi-coin" style="color: #ffe600"></i>
                 <p>PORMS</p>
             </a>
-            @endcan
+            @endif
 
-            @can('manage machinery')
+            @if(
+                $user->can('viewAny', App\Models\Machinery::class) ||
+                $user->can('viewReports', App\Models\Machinery::class)
+            )
             <a href="{{ route('admin.apps.machineries.index') }}" class="app-tile accent-brown">
                 <i class="bi-building-gear" style="color: #d5641c"></i>
                 <p>Machinery Mgt.</p>
             </a>
-            @endcan
+            @endif
 
-            @can('manage dts')
+            @if(
+                $user->can('viewAny', App\Models\Damage::class) ||
+                $user->can('viewAny', App\Models\Infrastructure::class) ||
+                $user->can('viewMainReport', App\Models\Damage::class) ||
+                $user->can('viewOfficerWiseReport', App\Models\Damage::class) ||
+                $user->can('viewDistrictWiseReport', App\Models\Damage::class) ||
+                $user->can('viewActiveOfficerReport', App\Models\Damage::class)
+            )
             <a href="{{ route('admin.apps.dmis.dashboard') }}" class="app-tile accent-red">
                 <i class="bi-cloud-drizzle" style="color: #ff0000"></i>
                 <p>Damage Mgt.</p>
             </a>
-            @endcan
+            @endif
         </div>
     </div>
     <audio id="hoverSound" src="{{ asset('admin/click.wav') }}" preload="auto"></audio>

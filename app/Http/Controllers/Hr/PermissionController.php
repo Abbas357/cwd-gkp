@@ -40,50 +40,6 @@ class PermissionController extends Controller
         
         return redirect()->back()->with('success', 'Permission deleted successfully.');
     }
-
-    public function sync()
-    {
-        try {
-            DB::beginTransaction();
-            
-            $tableNames = config('permission.table_names');
-            
-            DB::statement('SET FOREIGN_KEY_CHECKS=0');
-            
-            DB::table($tableNames['role_has_permissions'])->truncate();
-            
-            DB::table($tableNames['model_has_permissions'])->truncate();
-            
-            DB::table($tableNames['permissions'])->truncate();
-            
-            DB::statement('SET FOREIGN_KEY_CHECKS=1');
-            
-            $predefinedPermissions = $this->getPredefinedPermissions();
-            $permissions = [];
-            
-            foreach ($predefinedPermissions as $permission) {
-                $permissions[] = [
-                    'name' => $permission,
-                    'guard_name' => 'web',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-            }
-            
-            DB::table($tableNames['permissions'])->insert($permissions);
-            
-            app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
-            
-            DB::commit();
-            
-            return redirect()->back()->with('success', 'All permissions have been reset to defaults.');
-                
-        } catch (\Exception $e) {
-            DB::rollBack();
-            
-            return redirect()->back()->with('error', 'Error resetting permissions: ' . $e->getMessage());
-        }
-    }
     
     protected function getPredefinedPermissions()
     {
@@ -372,7 +328,6 @@ class PermissionController extends Controller
             'view any permission',
             'create permission',
             'delete permission',
-            'sync permission',
             /* -----=------ Hr Permissions End ------------*/
 
             /* ----------- Machinery Permissions Start -----------*/

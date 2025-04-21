@@ -9,7 +9,7 @@ use App\Http\Controllers\Settings\ActivityLogController;
 
 Route::prefix('settings')->group(function () {
     
-    Route::prefix('profile')->as('profile.')->middleware('can:update,' . App\Models\User::class)->group(function () {
+    Route::prefix('profile')->as('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'edit'])->name('edit');
         Route::patch('/', [ProfileController::class, 'update'])->name('update');
     });

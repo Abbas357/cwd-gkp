@@ -24,9 +24,4 @@ class PermissionPolicy
     {
         return $user->can('delete permission');
     }
-
-    public function sync(User $user): bool
-    {
-        return $user->can('sync permission');
-    }
 }

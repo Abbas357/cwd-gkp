@@ -7,8 +7,7 @@
 
 @if ($showAside)
 <x-sidebar app-name="dmis" app-url="{{ route('admin.apps.dmis.dashboard') }}">
-
-    @can('view any damage')
+    @can('viewAny', App\Models\Damage::class)
     <li>
         <a href="{{ route('admin.apps.dmis.dashboard') }}">
             <div class="parent-icon"><i class="bi-house text-primary"></i></div>
@@ -17,7 +16,7 @@
     </li>
     @endcan
 
-    @can('view any infrastructures')
+    @can('viewAny', App\Models\Infrastructure::class)
     <li>
         <a href="{{ route('admin.apps.dmis.infrastructures.index') }}">
             <div class="parent-icon"><i class="bi-building text-info"></i></div>
@@ -26,7 +25,7 @@
     </li>
     @endcan
 
-    @can('view any damages')
+    @can('viewAny', App\Models\Damage::class)
     <li>
         <a href="{{ route('admin.apps.dmis.damages.index') }}">
             <div class="parent-icon"><i class="bi-exclamation-triangle text-warning"></i></div>
@@ -35,29 +34,35 @@
     </li>
     @endcan
 
-    @canany(['view damage report'])
+    @canany(['viewMainReport', 'viewOfficerWiseReport', 'viewDistrictWiseReport', 'viewActiveOfficerReport'], App\Models\Damage::class)
     <li>
         <a href="javascript:;" class="has-arrow">
             <div class="parent-icon"><i class="bi-flag text-primary"></i></div>
             <div class="menu-title">Reports</div>
         </a>
         <ul class="p-2 menu-items">
-            @can('view damage report')
+            @can('viewMainReport', App\Models\Damage::class)
             <li>
                 <a href="{{ route('admin.apps.dmis.reports.index') }}">
                     <i class="bi-graph-up text-primary"></i> Main Report
                 </a>
             </li>
+            @endcan
+            @can('viewOfficerWiseReport', App\Models\Damage::class)
             <li>
                 <a href="{{ route('admin.apps.dmis.reports.officer-wise') }}">
                     <i class="bi-person-lines-fill text-success"></i> Officers Wise
                 </a>
             </li>
+            @endcan
+            @can('viewDistrictWiseReport', App\Models\Damage::class)
             <li>
                 <a href="{{ route('admin.apps.dmis.reports.district-wise') }}">
                     <i class="bi-geo-alt-fill text-warning"></i> District Wise
                 </a>
             </li>
+            @endcan
+            @can('viewActiveOfficerReport', App\Models\Damage::class)
             <li>
                 <a href="{{ route('admin.apps.dmis.reports.active-officers') }}">
                     <i class="bi-person-check-fill text-info"></i> Active Officers
@@ -68,14 +73,14 @@
     </li>
     @endcanany
 
-    @can('view dmis settings')
+    @canany(['viewDmisSettings', 'updateDmisSettings', 'initDmisSettings'], App\Models\Setting::class)
     <li>
         <a href="{{ route('admin.apps.dmis.settings.index') }}">
             <div class="parent-icon"><i class="bi-gear text-danger"></i></div>
             <div class="menu-title">Settings</div>
         </a>
     </li>
-    @endcan
+    @endcanany
 
 </x-sidebar>
 @endif

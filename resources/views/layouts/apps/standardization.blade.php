@@ -8,7 +8,7 @@
 
 @if ($showAside)
 <x-sidebar app-name="STANDARDIZATION" app-url="{{ route('admin.apps.standardizations.index') }}">
-    @can('view any standardization')
+    @can('viewAny', App\Models\Standardization::class)
     <li>
         <a href="{{ route('admin.apps.standardizations.index') }}">
             <div class="parent-icon"><i class="bi-patch-check-fill text-success"></i></div>
@@ -17,9 +17,9 @@
     </li>
     @endcan
 
-    @can('view any standardization')
+    @can('viewAny', App\Models\Standardization::class)
     <li>
-        <a href="{{ route('standardizations.login.get') }}">
+        <a href="{{ route('admin.apps.standardizations.index') }}#reports">
             <div class="parent-icon"><i class="bi-flag text-warning"></i></div>
             <div class="menu-title">Reports</div>
         </a>

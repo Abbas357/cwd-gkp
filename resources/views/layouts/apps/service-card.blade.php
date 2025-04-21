@@ -8,7 +8,7 @@
 
 @if ($showAside)
 <x-sidebar app-name="SERVICE CARD" app-url="{{ route('admin.apps.service_cards.index') }}">
-    @can('view any service card')
+    @can('viewAny', App\Models\ServiceCard::class)
     <li>
         <a href="{{ route('admin.apps.service_cards.index') }}">
             <div class="parent-icon"><i class="bi-credit-card text-success"></i></div>
@@ -17,9 +17,9 @@
     </li>
     @endcan
 
-    @can('view service card report')
+    @can('viewAny', App\Models\ServiceCard::class)
     <li>
-        <a href="{{ route('service_cards.create') }}">
+        <a href="{{ route('admin.apps.service_cards.index') }}#reports">
             <div class="parent-icon"><i class="bi-flag text-info"></i></div>
             <div class="menu-title">Reports</div>
         </a>

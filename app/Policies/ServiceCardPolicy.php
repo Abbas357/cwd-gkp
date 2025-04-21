@@ -12,7 +12,7 @@ class ServiceCardPolicy
         return $user->can('view any service-ard');
     }
 
-    public function create(User $user, ServiceCard $serviceCard)
+    public function create(User $user)
     {
         return $user->can('create service-card');
     }

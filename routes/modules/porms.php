@@ -4,7 +4,7 @@ use App\Http\Controllers\ProvincialOwnReceipt\ProvincialOwnReceiptController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'porms', 'as' => 'porms.'], function () {
-    Route::get('/', [ProvincialOwnReceiptController::class, 'index'])->name('index')->can('vviewAnyiew', App\Models\ProvincialOwnReceipt::class);
+    Route::get('/', [ProvincialOwnReceiptController::class, 'index'])->name('index');
     Route::get('/all', [ProvincialOwnReceiptController::class, 'all'])->name('all')->can('viewAny', App\Models\ProvincialOwnReceipt::class);
     Route::get('/create', [ProvincialOwnReceiptController::class, 'create'])->name('create')->can('create', App\Models\ProvincialOwnReceipt::class);
     Route::get('/report', [ProvincialOwnReceiptController::class, 'report'])->name('report')->can('viewReports', App\Models\ProvincialOwnReceipt::class);

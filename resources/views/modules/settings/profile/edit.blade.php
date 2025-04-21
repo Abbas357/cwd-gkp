@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-settings-layout>
     @push('style')
     <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
     @endpush
@@ -31,4 +31,4 @@
         });
     </script>
     @endpush
-</x-app-layout>
+</x-settings-layout>

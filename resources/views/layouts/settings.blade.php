@@ -7,8 +7,7 @@
 
 @if ($showAside)
 <x-sidebar app-name="SETTINGS">
-
-    @can('view settings')
+    @can('updateCore', App\Models\Setting::class)
     <li>
         <a href="{{ route('admin.settings.index') }}">
             <div class="parant-icon">
@@ -19,7 +18,7 @@
     </li>
     @endcan
 
-    @can('view any category')
+    @can('manageMainCategory', App\Models\Setting::class)
     <li>
         <a href="{{ route('admin.categories.index') }}">
             <div class="parant-icon">
@@ -30,7 +29,7 @@
     </li>
     @endcan
 
-    @can('view any district')
+    @can('manageDistricts', App\Models\Setting::class)
     <li>
         <a href="{{ route('admin.districts.index') }}">
             <div class="parant-icon">
@@ -41,7 +40,7 @@
     </li>
     @endcan
 
-    @can('view any district')
+    @can('viewActivity', App\Models\Setting::class)
     <li>
         <a href="{{ route('admin.activity.index') }}">
             <div class="parant-icon">

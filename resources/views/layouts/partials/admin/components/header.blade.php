@@ -66,69 +66,153 @@
                 </a>
                 <div class="border dropdown-menu dropdown-menu-end custom-app-dropdown-menu shadow-lg">
                     <h6 class="dropdown-header text-center mb-2">Apps</h6>
+                    @php
+                        $user = auth()->user();
+                    @endphp
                     <div class="custom-app-grid">
-                        @can('manage website')
+                        @if(
+                            $user->can('viewAny', App\Models\News::class) ||
+                            $user->can('viewAny', App\Models\Event::class) ||
+                            $user->can('viewAny', App\Models\Tender::class) ||
+                            $user->can('viewAny', App\Models\Seniority::class) ||
+                            $user->can('viewAny', App\Models\Gallery::class) ||
+                            $user->can('viewAny', App\Models\Slider::class) ||
+                            $user->can('viewAny', App\Models\Story::class) ||
+                            $user->can('viewAny', App\Models\Page::class) ||
+                            $user->can('viewAny', App\Models\Download::class) ||
+                            $user->can('viewAny', App\Models\Project::class) ||
+                            $user->can('viewAny', App\Models\ProjectFile::class) ||
+                            $user->can('viewAny', App\Models\DevelopmentProject::class) ||
+                            $user->can('viewAny', App\Models\Scheme::class) ||
+                            $user->can('viewAny', App\Models\Achievement::class) ||
+                            $user->can('viewAny', App\Models\Comment::class) ||
+                            $user->can('viewAny', App\Models\PublicContact::class) ||
+                            $user->can('viewAny', App\Models\NewsLetter::class) ||
+                            $user->can('massEmail', App\Models\NewsLetter::class)
+                        )
                         <a href="{{ route('admin.home') }}" class="custom-app-tile custom-purple-theme">
                             <div class="custom-app-icon-container">
                                 <i class="bi-globe custom-app-icon"></i>
                             </div>
                             <p class="custom-app-name">Website</p>
                         </a>
-                        @endcan
-                        @can('manage human resource')
+                        @endif
+
+                        @if(
+                            $user->can('viewAny', App\Models\User::class) ||
+                            $user->can('viewAny', App\Models\Office::class) ||
+                            $user->can('viewAny', App\Models\Designation::class) ||
+                            $user->can('viewAny', App\Models\SanctionedPost::class) ||
+                            $user->can('viewAny', App\Models\Posting::class) ||
+                            $user->can('viewAny', App\Models\Role::class) ||
+                            $user->can('assignRole', App\Models\Role::class) ||
+                            $user->can('assignPermission', App\Models\Role::class) ||
+                            $user->can('viewAny', App\Models\Permission::class) ||
+                            $user->can('viewVacancyReport', App\Models\User::class) ||
+                            $user->can('viewEmployeeDirectoryReport', App\Models\User::class) ||
+                            $user->can('viewOfficeStrengthReport', App\Models\User::class) ||
+                            $user->can('viewPostingHistoryReport', App\Models\User::class) ||
+                            $user->can('viewServiceLengthReport', App\Models\User::class) ||
+                            $user->can('viewRetirementForecastReport', App\Models\User::class) ||
+                            $user->can('viewOfficeStaffReport', App\Models\User::class) ||
+                            $user->can('viewOrganogram', App\Models\office::class)
+                        )
                         <a href="{{ route('admin.apps.vehicles.index') }}" class="custom-app-tile custom-red-theme">
                             <div class="custom-app-icon-container">
                                 <i class="bi-people custom-app-icon"></i>
                             </div>
                             <p class="custom-app-name">HRMIS</p>
                         </a>
-                        @endcan
-                        @can('manage vehicles')
+                        @endif
+
+                        @if(
+                            $user->can('viewAny', App\Models\Vehicle::class) ||
+                            $user->can('viewReports', App\Models\Vehicle::class)
+                        )
                         <a href="{{ route('admin.apps.vehicles.index') }}" class="custom-app-tile custom-red-theme">
                             <div class="custom-app-icon-container">
                                 <i class="bi-bus-front custom-app-icon"></i>
                             </div>
                             <p class="custom-app-name">Vehicle Mgt.</p>
                         </a>
-                        @endcan
-                        @can('manage standardizations')
+                        @endif
+
+                        @if(
+                            $user->can('viewAny', App\Models\Standardization::class) ||
+                            $user->can('viewAny', App\Models\Product::class)
+                        )
                         <a href="{{ route('admin.apps.standardizations.index') }}" class="custom-app-tile custom-green-theme">
                             <div class="custom-app-icon-container">
                                 <i class="bi-patch-check-fill custom-app-icon"></i>
                             </div>
                             <p class="custom-app-name">Standard</p>
                         </a>
-                        @endcan
-                        @can('manage contractors')
+                        @endif
+                        
+                        @if(
+                            $user->can('viewAny', App\Models\Contractor::class) ||
+                            $user->can('viewAny', App\Models\ContractorRegistration::class) ||
+                            $user->can('viewAny', App\Models\ContractorHumanResource::class) ||
+                            $user->can('viewAny', App\Models\ContractorMachinery::class) ||
+                            $user->can('viewAny', App\Models\ContractorWorkExperience::class)
+                        )
                         <a href="{{ route('admin.apps.contractors.index') }}" class="custom-app-tile custom-teal-theme">
                             <div class="custom-app-icon-container">
                                 <i class="bi-person-vcard custom-app-icon"></i>
                             </div>
                             <p class="custom-app-name">Contractors</p>
                         </a>
-                        @endcan
-                        @can('manage service cards')
+                        @endif
+                        
+                        @if(
+                            $user->can('viewAny', App\Models\ProvincialOwnReceipt::class) ||
+                            $user->can('viewReports', App\Models\ProvincialOwnReceipt::class)
+                        )
                         <a href="{{ route('admin.apps.service_cards.index') }}" class="custom-app-tile custom-orange-theme">
                             <div class="custom-app-icon-container">
                                 <i class="bi-credit-card custom-app-icon"></i>
                             </div>
                             <p class="custom-app-name">Service Card</p>
                         </a>
-                        @endcan
-                        @can('manage porms')
+                        @endif
+
+                        @if(
+                            $user->can('viewAny', App\Models\ProvincialOwnReceipt::class) ||
+                            $user->can('viewReports', App\Models\ProvincialOwnReceipt::class)
+                        )
                         <a href="{{ route('admin.apps.porms.index') }}" class="custom-app-tile custom-orange-theme">
                             <div class="custom-app-icon-container">
                                 <i class="bi-coin custom-app-icon"></i>
                             </div>
                             <p class="custom-app-name">PORMS</p>
                         </a>
-                        @endcan
-                        @can('manage machinery')
+                        @endif
+
+                        @if(
+                            $user->can('viewAny', App\Models\Machinery::class) ||
+                            $user->can('viewReports', App\Models\Machinery::class)
+                        )
                         <a href="{{ route('admin.apps.machineries.index') }}" class="custom-app-tile custom-orange-theme">
                             <div class="custom-app-icon-container">
                                 <i class="bi-building-gear custom-app-icon"></i>
                             </div>
                             <p class="custom-app-name">Machinery Mgt.</p>
+                        </a>
+                        @endcan
+
+                        @if(
+                            $user->can('viewAny', App\Models\Damage::class) ||
+                            $user->can('viewAny', App\Models\Infrastructure::class) ||
+                            $user->can('viewMainReport', App\Models\Damage::class) ||
+                            $user->can('viewOfficerWiseReport', App\Models\Damage::class) ||
+                            $user->can('viewDistrictWiseReport', App\Models\Damage::class) ||
+                            $user->can('viewActiveOfficerReport', App\Models\Damage::class)
+                        )
+                        <a href="{{ route('admin.apps.dmis.dashboard') }}" class="custom-app-tile custom-orange-theme">
+                            <div class="custom-app-icon-container">
+                                <i class="bi-building-gear custom-app-icon"></i>
+                            </div>
+                            <p class="custom-app-name">Damage Mgt.</p>
                         </a>
                         @endcan
                     </div>
@@ -175,31 +259,31 @@
                     </a>
                     <hr class="dropdown-divider">
                     <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.profile.edit') }}"><i class="bi-person-circle"></i>Profile</a>
-                    @can('view activity')
+                    @can('viewActivity', App\Models\Setting::class)
                     <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.activity.index') }}"><i class="bi-clock-history"></i>Activity Log</a>
                     @endcan
-                    @canany(['view settings', 'view any district', 'view any category'])
+                    @canany(['updateCore', 'manageMainCategory', 'manageDistricts'], App\Models\Setting::class)
                     <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="#" onclick="event.preventDefault(); event.stopPropagation(); document.getElementById('collapseMenuItems').classList.toggle('show');">
                         <i class="bi-arrow-down-circle-fill"></i>Settings
                     </a>
                     <div class="collapse px-3" id="collapseMenuItems">
-                        @can('view settings')
+                        @can('updateCore', App\Models\Setting::class)
                         <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.settings.index') }}" onclick="event.stopPropagation();">
                             <i class="bi-gear-fill"></i>Core Settings
                         </a>
                         @endcan
-                        @can('view any district')
+                        @can('manageMainCategory', App\Models\Setting::class)
                         <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.districts.index') }}" onclick="event.stopPropagation();">
                             <i class="bi-geo-alt"></i>Districts
                         </a>
                         @endcan
-                        @can('view any category')
+                        @can('manageDistricts', App\Models\Setting::class)
                         <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.categories.index') }}" onclick="event.stopPropagation();">
                             <i class="bi-list-nested"></i>Categories
                         </a>
                         @endcan
                     </div>
-                    @endcan
+                    @endcanany
                     <hr class="dropdown-divider">
                     <form method="POST" action="{{ route('logout') }}" disabled>
                         @csrf

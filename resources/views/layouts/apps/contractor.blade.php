@@ -7,7 +7,7 @@
 
 @if ($showAside)
 <x-sidebar app-name="CONTRACTOR" app-url="{{ route('admin.apps.contractors.index') }}">
-    @can('view any contractor')
+    @can('viewAny', App\Models\Contractor::class)
     <li>
         <a href="{{ route('admin.apps.contractors.index') }}">
             <div class="parent-icon">
@@ -19,7 +19,7 @@
         </a>
     </li>
     @endcan
-    @can('view any contractor')
+    @can('viewAny', App\Models\ContractorRegistration::class)
     <li>
         <a href="{{ route('admin.apps.contractors.registration.index') }}">
             <div class="parent-icon">

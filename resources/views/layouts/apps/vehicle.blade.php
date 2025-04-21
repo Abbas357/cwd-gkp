@@ -8,7 +8,7 @@
 
 @if ($showAside)
 <x-sidebar app-name="VEHICLE MGT." app-url="{{ route('admin.apps.vehicles.index') }}">
-    @can('view any vehicle')
+    @can('viewAny', App\Models\Vehicle::class)
     <li>
         <a href="{{ route('admin.apps.vehicles.index') }}">
             <div class="parent-icon"><i class="bi-bus-front text-info"></i></div>
@@ -17,7 +17,7 @@
     </li>
     @endcan
 
-    @can('view any vehicle')
+    @can('viewAny', App\Models\Vehicle::class)
     <li>
         <a href="{{ route('admin.apps.vehicles.all') }}">
             <div class="parent-icon"><i class="bi-speedometer text-success"></i></div>
@@ -26,7 +26,7 @@
     </li>
     @endcan
 
-    @can('view any vehicle')
+    @can('viewReports', App\Models\Vehicle::class)
     <li>
         <a href="{{ route('admin.apps.vehicles.reports') }}">
             <div class="parent-icon"><i class="bi-flag text-info"></i></div>

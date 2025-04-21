@@ -7,7 +7,7 @@
 
 @if ($showAside)
 <x-sidebar app-name="PORMS" app-url="{{ route('admin.apps.porms.index') }}">
-    @can('view any porms')
+    @can('viewAny', App\Models\ProvincialOwnReceipt::class)
     <li>
         <a href="{{ route('admin.apps.porms.index') }}">
             <div class="parent-icon"><i class="bi-person-vcard text-primary"></i></div>
@@ -16,7 +16,7 @@
     </li>
     @endcan
 
-    @can('view any porms')
+    @can('viewAny', App\Models\ProvincialOwnReceipt::class)
     <li>
         <a href="{{ route('admin.apps.porms.all') }}">
             <div class="parent-icon"><i class="bi-coin text-info"></i></div>
@@ -25,7 +25,7 @@
     </li>
     @endcan
 
-    @can('view porms report')
+    @can('viewReports', App\Models\ProvincialOwnReceipt::class)
     <li>
         <a href="{{ route('admin.apps.porms.report') }}">
             <div class="parent-icon"><i class="bi-flag text-success"></i></div>

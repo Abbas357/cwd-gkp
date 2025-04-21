@@ -5,7 +5,7 @@ use App\Http\Controllers\Machinery\MachineryController;
 use App\Http\Controllers\Machinery\MachineryAllocationController;
 
 Route::group(['prefix' => 'machineries', 'as' => 'machineries.'], function () {
-    Route::get('/', [MachineryController::class, 'index'])->name('index')->can('viewAny', App\Models\Machinery::class);
+    Route::get('/', [MachineryController::class, 'index'])->name('index');
     Route::get('/all', [MachineryController::class, 'all'])->name('all')->can('viewAny', App\Models\Machinery::class);
     Route::get('/create', [MachineryController::class, 'create'])->name('create')->can('create', App\Models\Machinery::class);
     Route::get('/report', [MachineryController::class, 'reports'])->name('reports')->can('viewReports', App\Models\Machinery::class);

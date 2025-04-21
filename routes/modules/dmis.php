@@ -8,7 +8,7 @@ use App\Http\Controllers\dmis\ReportController;
 
 Route::prefix('dmis')->as('dmis.')->group(function () {
 
-    Route::get('/', [HomeController::class, 'dashboard'])->name('dashboard')->can('viewAny', App\Models\Damage::class);
+    Route::get('/', [HomeController::class, 'dashboard'])->name('dashboard');
 
     Route::prefix('settings')->as('settings.')->group(function () {
         Route::get('/', [HomeController::class, 'settings'])->name('index')->can('viewDmisSettings', App\Models\Setting::class);

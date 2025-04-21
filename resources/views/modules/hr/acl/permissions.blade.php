@@ -67,36 +67,6 @@
             color: #1f2937;
         }
         
-        .sync-container {
-            position: relative;
-            margin-bottom: 20px;
-        }
-        
-        .sync-btn {
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s;
-        }
-        
-        .sync-btn:hover {
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        
-        .sync-btn::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: all 0.6s;
-        }
-        
-        .sync-btn:hover::after {
-            left: 100%;
-        }
-        
         .add-permission-form {
             background: #ffffff;
             padding: 20px;
@@ -136,11 +106,6 @@
                                 @can('create', Spatie\Permission\Models\Permission::class)
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPermissionModal">
                                     <i class="bi bi-plus-circle me-1"></i> Add Permission
-                                </button>
-                                @endcan
-                                @can('sync', Spatie\Permission\Models\Permission::class)
-                                <button type="button" class="btn btn-warning sync-btn" data-bs-toggle="modal" data-bs-target="#syncPermissionsModal">
-                                    <i class="bi bi-arrow-repeat me-1"></i> Sync to Default
                                 </button>
                                 @endcan
                             </div>
@@ -214,7 +179,7 @@
                                 <div class="empty-permissions">
                                     <i class="bi bi-shield-slash fs-1 d-block mb-3"></i>
                                     <h5>No permissions found</h5>
-                                    <p>Start by adding a new permission or sync to defaults.</p>
+                                    <p>Start by adding a new permission.</p>
                                 </div>
                             @endforelse
                         </div>
@@ -224,7 +189,7 @@
         </div>
     </div>
 
-    @can('sync', Spatie\Permission\Models\Permission::class)
+    @can('create', Spatie\Permission\Models\Permission::class)
     <div class="modal fade" id="addPermissionModal" tabindex="-1" aria-labelledby="addPermissionModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -248,32 +213,6 @@
                         <button type="submit" class="btn btn-primary">Create Permission</button>
                     </div>
                 </form>
-            </div>
-        </div>
-    </div>
-    @endcan
-    @can('sync', Spatie\Permission\Models\Permission::class)
-    <div class="modal fade" id="syncPermissionsModal" tabindex="-1" aria-labelledby="syncPermissionsModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="syncPermissionsModalLabel">Reset to Default Permissions</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-warning">
-                        <i class="bi bi-exclamation-triangle me-2"></i>
-                        <strong>Warning!</strong> This action will remove all existing permissions and replace them with the default set. This cannot be undone.
-                    </div>
-                    <p>Are you sure you want to reset all permissions to default?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <form action="{{ route('admin.apps.hr.acl.permissions.sync') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-danger">Reset Permissions</button>
-                    </form>
-                </div>
             </div>
         </div>
     </div>
