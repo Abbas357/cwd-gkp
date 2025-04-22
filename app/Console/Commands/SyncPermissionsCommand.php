@@ -56,12 +56,10 @@ class SyncPermissionsCommand extends Command
             $this->info('Inserting ' . count($permissions) . ' permissions...');
             DB::table($tableNames['permissions'])->insert($permissions);
             
-            // Create default roles if not permissions-only mode
             if (!$this->option('permissions-only')) {
                 $this->info('Creating default roles with permissions...');
                 $this->createDefaultRoles();
                 
-                // Assign roles to users based on designation
                 if (!$this->option('no-user-roles')) {
                     $this->info('Assigning roles to users based on designation...');
                     $this->assignRolesToUsersByDesignation();
@@ -83,15 +81,31 @@ class SyncPermissionsCommand extends Command
     protected function createDefaultRoles()
     {
         $roles = [
+            'Admin' => $this->getAdminPermissions(),
             'Secretary' => $this->getSecretaryPermissions(),
             'Chief Engineer' => $this->getChiefEngineerPermissions(),
             'Superintending Engineer' => $this->getSuperintendingEngineerPermissions(),
             'Executive Engineer' => $this->getExecutiveEngineerPermissions(),
-            'Director IT' => $this->getDirectorITPermissions(),
-            'Assistant Director IT' => $this->getAssistantDirectorITPermissions(),
+            'Director (IT)' => $this->getDirectorITPermissions(),
             'News Manager' => $this->getNewsManagerPermissions(),
+            'Events Manager' => $this->getEventsManagerPermissions(),
+            'Gallery Manager' => $this->getGalleryManagerPermissions(),
+            'Slider Manager' => $this->getSliderManagerPermissions(),
+            'Download Manager' => $this->getDownloadManagerPermissions(),
+            'Achievement Manager' => $this->getAchievementManagerPermissions(),
+            'Page Manager' => $this->getPageManagerPermissions(),
+            'Seniority Manager' => $this->getSeniorityManagerPermissions(),
             'Tender Manager' => $this->getTenderManagerPermissions(),
-            'Admin' => $this->getAdminPermissions()
+            'Project Manager' => $this->getProjectManagerPermissions(),
+            'Service Card Manager' => $this->getServiceCardManagerPermissions(),
+            'Public Relations Manager' => $this->getPublicRelationsManagerPermissions(),
+            'HR Manager' => $this->getHrManagerPermissions(),
+            'Contractor Manager' => $this->getContractorManagerPermissions(),
+            'Standardization Manager' => $this->getStandardizationManagerPermissions(),
+            'Vehicle Manager' => $this->getVehicleManagerPermissions(),
+            'Damages Manager' => $this->getDamagesManagerPermissions(),
+            'Machinery Manager' => $this->getMachineryManagerPermissions(),
+            'Porms Manager' => $this->getPormsManagerPermissions(),
         ];
 
         foreach ($roles as $roleName => $permissions) {
@@ -111,12 +125,36 @@ class SyncPermissionsCommand extends Command
             'Chief Engineer' => 'Chief Engineer',
             'Superintending Engineer' => 'Superintending Engineer',
             'Executive Engineer' => 'Executive Engineer',
-            'Director IT' => 'Director IT',
-            'Assistant Director IT' => 'Assistant Director IT',
-            'News Manager' => 'News Manager',
-            'Tender Manager' => 'Tender Manager'
-            // Add more mappings as needed
+            'Director (IT)' => 'Director (IT)',
         ];
+
+        $basicRole = [
+            'view any service-card',
+            'create service-card',
+            'view service-card',
+            'view card service-card',
+            'view any story',
+            'view story',
+            'create story'
+        ];
+        
+        $storyManagerRole = Role::where('name', 'Basic Access')->first();
+        if (!$storyManagerRole) {
+            $storyManagerRole = Role::create(['name' => 'Basic Access', 'guard_name' => 'web']);
+            $storyManagerRole->givePermissionTo($basicRole);
+            $this->info("Created 'Basic Access' role with basic permissions.");
+        }
+        
+        $allUsers = User::all();
+        $this->info("Assigning 'Basic Access' role to all users...");
+        
+        $storyManagerAssignCount = 0;
+        foreach ($allUsers as $user) {
+            $user->assignRole($storyManagerRole);
+            $storyManagerAssignCount++;
+        }
+        
+        $this->info("Assigned 'Story Manager' role to {$storyManagerAssignCount} user(s).");
 
         $assignedCount = 0;
         
@@ -149,199 +187,121 @@ class SyncPermissionsCommand extends Command
 
     protected function getSecretaryPermissions()
     {
-        // Permissions specific to the Secretary role
         return [
-            'view any event',
-            'view event',
-            'view any news',
-            'view news',
-            'view any project',
-            'view project',
-            'view any download',
-            'view download',
-            'view any gallery',
-            'view gallery',
-            // Add more permissions as needed
+            'view main report damage',
+            'view officer report damage',
+            'view district-wise report damage',
+            'view active-officer report damage',
+
+            'view any service-card',
+            'create service-card',
+            'view service-card',
+            'view card service-card',
+
+            'view vacancy report user',
+            'view employee directory report user',
+            'view office strength report user',
+            'view posting history report user',
+            'view service length report user',
+            'view retirement forecast report user',
+            'view office staff report user',
+
+            'view reports vehicle',
+
+            'view reports machinery',
+
+            'view reports provincial-own-receipt',
         ];
     }
 
     protected function getChiefEngineerPermissions()
     {
-        // Permissions specific to the Chief Engineer role
         return [
-            'view any project',
-            'view project',
-            'create project',
-            'update field project',
-            'upload file project',
-            'view any development-project',
-            'view development-project',
-            'view any tender',
-            'view tender',
-            'view any damage',
-            'view damage',
             'view main report damage',
             'view officer report damage',
-            'view district-wise report damage',
-            'view any machinery',
-            'view machinery',
-            'view reports machinery',
-            'view any vehicle',
-            'view vehicle',
-            'view reports vehicle',
-            'view any user',
-            'view employee user',
-            'view user',
-            'view employee directory report user',
-            'view office strength report user',
-            'view posting history report user',
-            'view retirement forecast report user',
-            'view office staff report user',
+
+            'view any tender',
+            'view tender',
+            'create tender',
+
+            'view any news',
+            'view news',
+            'create news',
         ];
     }
 
     protected function getSuperintendingEngineerPermissions()
     {
-        // Permissions specific to the Superintending Engineer role
         return [
-            'view any project',
-            'view project',
-            'update field project',
-            'upload file project',
-            'view any development-project',
-            'view development-project',
+            'view main report damage',
+
             'view any tender',
             'view tender',
-            'view any damage',
-            'view damage',
-            'view officer report damage',
-            'view district-wise report damage',
-            'view any machinery',
-            'view machinery',
-            'view reports machinery',
-            'view any vehicle',
-            'view vehicle',
-            'view any user',
-            'view employee user',
-            'view user',
-            'view employee directory report user',
-            'view office staff report user',
+            'create tender',
+
+            'view any news',
+            'view news',
+            'create news',
         ];
     }
 
     protected function getExecutiveEngineerPermissions()
     {
-        // Permissions specific to the Executive Engineer role
         return [
-            'view any project',
-            'view project',
-            'update field project',
-            'view any development-project',
-            'view development-project',
             'view any tender',
             'view tender',
-            'view any damage',
-            'view damage',
-            'create damage',
-            'update field damage',
-            'view any machinery',
-            'view machinery',
-            'view any vehicle',
-            'view vehicle',
-            'view any user',
-            'view employee user',
-            'view user',
+            'create tender',
+
+            'view any news',
+            'view news',
+            'create news',
         ];
     }
 
     protected function getDirectorITPermissions()
     {
-        // Permissions specific to the Director IT role
         return [
-            'view any download',
-            'create download',
-            'view download',
-            'update field download',
-            'upload file download',
-            'publish download',
-            'view any event',
-            'view event',
-            'create event',
-            'update field event',
-            'publish event',
-            'view any gallery',
-            'view gallery',
-            'create gallery',
-            'update field gallery',
-            'upload file gallery',
-            'publish gallery',
-            'view any news',
-            'view news',
-            'create news',
-            'update field news',
-            'upload file news',
-            'publish news',
-            'view any slider',
-            'view slider',
-            'create slider',
-            'update field slider',
-            'upload file slider',
-            'publish slider',
-            'view any page',
-            'view page',
-            'create page',
-            'update field page',
-            'upload file page',
-            'activate page',
-            'view any story',
-            'view story',
-            'create story',
-            'publish story',
-            'view any comment',
-            'view comment',
-            'response comment',
-            'publish comment',
+            'view main report damage',
+            'view officer report damage',
+            'view district-wise report damage',
+            'view active-officer report damage',
+
+            'view vacancy report user',
+            'view employee directory report user',
+            'view office strength report user',
+            'view posting history report user',
+            'view service length report user',
+            'view retirement forecast report user',
+            'view office staff report user',
+
+            'view reports vehicle',
+
+            'view reports machinery',
+
+            'view reports provincial-own-receipt',
+
+            'view any scheme',
+            'view scheme',
+            'sync schemes',
         ];
     }
 
-    protected function getAssistantDirectorITPermissions()
+    protected function getServiceCardManagerPermissions()
     {
-        // Permissions specific to the Assistant Director IT role
         return [
-            'view any download',
-            'view download',
-            'update field download',
-            'upload file download',
-            'view any event',
-            'view event',
-            'update field event',
-            'view any gallery',
-            'view gallery',
-            'update field gallery',
-            'upload file gallery',
-            'view any news',
-            'view news',
-            'update field news',
-            'upload file news',
-            'view any slider',
-            'view slider',
-            'update field slider',
-            'upload file slider',
-            'view any page',
-            'view page',
-            'update field page',
-            'upload file page',
-            'view any story',
-            'view story',
-            'view any comment',
-            'view comment',
-            'response comment',
+            'view any service-card',
+            'create service-card',
+            'view service-card',
+            'view card service-card',
+            'verify service-card',
+            'reject service-card',
+            'restore service-card',
+            'renew service-card',
         ];
     }
 
     protected function getNewsManagerPermissions()
     {
-        // Permissions specific to the News Manager role
         return [
             'view any news',
             'view news',
@@ -351,25 +311,339 @@ class SyncPermissionsCommand extends Command
             'publish news',
             'archive news',
             'post comment news',
+        ];
+    }
+
+    protected function getEventsManagerPermissions()
+    {
+        return [
             'view any event',
             'view event',
             'create event',
             'update field event',
             'publish event',
             'archive event',
-            'post comment event',
+        ];
+    }
+
+    protected function getGalleryManagerPermissions()
+    {
+        return [
+            'view any gallery',
+            'view gallery',
+            'create gallery',
+            'update field gallery',
+            'upload file gallery',
+            'publish gallery',
+            'archive gallery',
+        ];
+    }
+
+    protected function getSliderManagerPermissions()
+    {
+        return [
             'view any slider',
             'view slider',
             'create slider',
             'update field slider',
             'upload file slider',
             'publish slider',
+            'archive slider',
+        ];
+    }
+
+    protected function getDownloadManagerPermissions()
+    {
+        return [
+            'view any download',
+            'view download',
+            'create download',
+            'update field download',
+            'upload file download',
+            'publish download',
+            'archive download',
+        ];
+    }
+
+    protected function getAchievementManagerPermissions()
+    {
+        return [
+            'view any achievement',
+            'view achievement',
+            'create achievement',
+            'update field achievement',
+            'upload file achievement',
+            'publish achievement',
+            'archive achievement',
+        ];
+    }
+
+    protected function getPageManagerPermissions()
+    {
+        return [
+            'view any page',
+            'view page',
+            'create page',
+            'update field page',
+            'upload file page',
+            'activate page',
+        ];
+    }
+
+    protected function getSeniorityManagerPermissions()
+    {
+        return [
+            'view any seniority',
+            'view seniority',
+            'create seniority',
+            'update field seniority',
+            'upload file seniority',
+            'publish seniority',
+            'archive seniority',
+        ];
+    }
+
+    protected function getPublicRelationsManagerPermissions()
+    {
+        return [
+            // Comment
+            'view any comment',
+            'view comment',
+            'response comment',
+            'publish comment',
+            'archive comment',
+
+            // Newsletter
+            'view any newsletter',
+            'mass email newsletter',
+
+            // Public Contact
+            'view any public-contact',
+            'view public-contact',
+            'relief grant public-contact',
+            'relief not grant public-contact',
+            'drop public-contact',
+        ];
+    }
+
+    protected function getStandardizationManagerPermissions()
+    {
+        return [
+            'view any standardization',
+            'view standardization',
+            'approve standardization',
+            'reject standardization',
+            'view card standardization',
+            'renew standardization',
+            'update field standardization',
+            'upload file standardization',
+        ];
+    }
+
+    protected function getContractorManagerPermissions()
+    {
+        return [
+            'view any contractor',
+            'view contractor',
+            'update field contractor',
+            'upload file contractor',
+
+            // Contractor Human Resource
+            'view any contaractor-human-resource',
+            'update contractor-human-resource',
+            'upload contractor-human-resource',
+
+            // Contractor Machinery
+            'view any contaractor-machinery',
+            'update contractor-machinery',
+            'upload contractor-machinery',
+
+            // Contractor Work Experience
+            'view any contaractor-work-experience',
+            'update contractor-work-experience',
+            'upload contractor-work-experience',
+
+            // Contractor Registration
+            'view any contractor-registration',
+            'defer contractor-registration',
+            'approve contractor-registration',
+            'view contractor-registration',
+            'view card contractor-registration',
+            'renew contractor-registration',
+            'update field contractor-registration',
+            'upload file contractor-registration',
+        ];
+    }
+
+    protected function getVehicleManagerPermissions()
+    {
+        return [
+            'view any vehicle',
+            'view vehicle',
+            'create vehicle',
+            'view history vehicle',
+            'update field vehicle',
+            'upload file vehicle',
+            'view reports vehicle',
+
+            'create vehicle-allotment'
+        ];
+    }
+
+    protected function getDamagesManagerPermissions()
+    {
+        return [
+            'view any damage',
+            'create damage',
+            'view damage',
+            'update field damage',
+            'view main report damage',
+            'view officer report damage',
+            'view district-wise report damage',
+            'view active-officer report damage',
+            
+            // Infrastructure
+            'view any infrastructure',
+            'create infrastructure',
+            'view infrastructure',
+            'update field infrastructure',
+
+            // Damage Log
+            'view any damage-log',
+
+            // Settings
+            'view settings damage', 
+            'update settings damage', 
+            'init settings damage', 
+        ];
+    }
+
+    protected function getMachineryManagerPermissions()
+    {
+        return [
+            'view any machinery',
+            'view machinery',
+            'create machinery',
+            'view history machinery',
+            'update field machinery',
+            'upload file machinery',
+            'view reports machinery',
+
+            'create machinery-allocation',
+        ];
+    }
+
+    protected function getPormsManagerPermissions()
+    {
+        return [
+            'view any provincial-own-receipt',
+            'view provincial-own-receipt',
+            'create provincial-own-receipt',
+            'update field provincial-own-receipt',
+            'upload file provincial-own-receipt',
+            'view reports provincial-own-receipt',
+        ];
+    }
+
+    protected function getProjectManagerPermissions()
+    {
+        return [
+            'view any development-project',
+            'view development-project',
+            'create development-project',
+            'update field development-project',
+            'publish development-project',
+            'archive development-project',
+            'post comment development-project',
+
+            // Project
+            'view any project',
+            'view project',
+            'create project',
+            'update field project',
+            'upload file project',
+
+            // ProjectFile
+            'view any project-file',
+            'view project-file',
+            'create project-file',
+            'update field project-file',
+            'upload file project-file',
+            'publish project-file',
+            'archive project-file',
+
+            // Scheme
+            'view any scheme',
+            'view scheme',
+            'sync schemes',
+        ];
+    }
+
+    protected function getHrManagerPermissions()
+    {
+        return [
+            'view any user',
+            'create user',
+            'view current posting user',
+            'update user',
+            'view employee user',
+            'view user',
+            'view vacancy report user',
+            'view employee directory report user',
+            'view office strength report user',
+            'view posting history report user',
+            'view service length report user',
+            'view retirement forecast report user',
+            'view office staff report user',
+
+            // Office
+            'view any office',
+            'create office',
+            'view office',
+            'activate office',
+            'update field office',
+            'view organogram office',
+
+            // Designation
+            'view any designation',
+            'create designation',
+            'view designation',
+            'activate designation',
+            'update field designation',
+
+            // Sanction Post
+            'view any sanctioned-post',
+            'create sanctioned-post',
+            'view sanctioned-post',
+            'update sanctioned-post',
+            'view available positions sanctioned-post',
+            'check exists sanctioned-post',
+
+            // Posting
+            'view any posting',
+            'create posting',
+            'view posting',
+            'update posting',
+            'end posting',
+            'check sanctioned posting',
+            'check occupancy posting',
+            'view current officers posting',
+            
+            // Role
+            'view any role',
+            'create role',
+            'assign role',
+            'assign permission role',
+            'update permission role',
+
+            // Permission
+            'view any permission',
+            'create permission',
         ];
     }
 
     protected function getTenderManagerPermissions()
     {
-        // Permissions specific to the Tender Manager role
         return [
             'view any tender',
             'view tender',
@@ -377,16 +651,17 @@ class SyncPermissionsCommand extends Command
             'update field tender',
             'publish tender',
             'archive tender',
-            'delete tender',
-            'post comment tender',
-            // Add more permissions as needed
         ];
     }
 
     protected function getAdminPermissions()
     {
-        // For the Admin role, we'll give all permissions
-        return Permission::all()->pluck('name')->toArray();
+        return Permission::all()
+            ->filter(function($permission) {
+                return !str_contains($permission->name, 'delete');
+            })
+            ->pluck('name')
+            ->toArray();
     }
     
     protected function getPredefinedPermissions()
@@ -650,7 +925,7 @@ class SyncPermissionsCommand extends Command
             'view sanctioned-post',
             'update sanctioned-post',
             'delete sanctioned-post',
-            'iew available positions sanctioned-post',
+            'view available positions sanctioned-post',
             'check exists sanctioned-post',
 
             // Posting

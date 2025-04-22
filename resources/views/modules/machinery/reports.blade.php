@@ -109,7 +109,7 @@
                                 <option value=""></option>
                                 @foreach(App\Models\User::all() as $user)
                                     <option value="{{ $user->id }}" @selected($filters['user_id'] == $user->id)>
-                                        {{ $user->currentPosting?->office->name }} - {{ $user->name }}
+                                        {{ $user->currentPosting?->office?->name }} - {{ $user?->name }}
                                     </option>
                                 @endforeach
                             </select>
