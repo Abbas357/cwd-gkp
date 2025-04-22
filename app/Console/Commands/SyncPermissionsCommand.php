@@ -185,6 +185,16 @@ class SyncPermissionsCommand extends Command
         $this->info("Total: {$assignedCount} role assignments completed.");
     }
 
+    protected function getAdminPermissions()
+    {
+        return Permission::all()
+            ->filter(function($permission) {
+                return !str_contains($permission->name, 'delete');
+            })
+            ->pluck('name')
+            ->toArray();
+    }
+
     protected function getSecretaryPermissions()
     {
         return [
@@ -652,16 +662,6 @@ class SyncPermissionsCommand extends Command
             'publish tender',
             'archive tender',
         ];
-    }
-
-    protected function getAdminPermissions()
-    {
-        return Permission::all()
-            ->filter(function($permission) {
-                return !str_contains($permission->name, 'delete');
-            })
-            ->pluck('name')
-            ->toArray();
     }
     
     protected function getPredefinedPermissions()

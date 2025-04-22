@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\dmis\DamageController;
-use App\Http\Controllers\dmis\InfrastructureController;
-use App\Http\Controllers\dmis\HomeController;
-use App\Http\Controllers\dmis\ReportController;
+use App\Http\Controllers\Dmis\DamageController;
+use App\Http\Controllers\Dmis\InfrastructureController;
+use App\Http\Controllers\Dmis\HomeController;
+use App\Http\Controllers\Dmis\ReportController;
 
 Route::prefix('dmis')->as('dmis.')->group(function () {
 
