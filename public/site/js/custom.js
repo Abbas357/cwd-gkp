@@ -932,13 +932,18 @@ function pushStateModal({
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">${announcement.title}</h5>
+                                            <h5 class="modal-title"><i class="bi bi-megaphone fs-3 me-3 text-warning"></i> ${announcement.title}</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <a href="/pages/Announcement">
-                                                <img src="${announcement.image}" style="width:100%" />
-                                            </a>
+                                            <div class="announcement-item p-1 border border-warning rounded">
+                                                <div>
+                                                    <h6>${announcement.description}</h6>
+                                                    <a href="/pages/Announcement" class="d-block">
+                                                        <img src="${announcement.image}" class="img-fluid rounded mt-1" />
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

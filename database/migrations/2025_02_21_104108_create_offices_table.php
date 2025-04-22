@@ -15,9 +15,17 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->enum('type', ['Secretariat', 'Provincial', 'Regional', 'Divisional', 'District', 'Tehsil'])->nullable();
+            $table->string('email')->nullable();
+            $table->longText('landline_number')->nullable();
+            $table->longText('extension')->nullable();
+            $table->longText('job_description')->nullable();
+            $table->decimal('latitude')->nullable();
+            $table->decimal('longitude')->nullable();
+            $table->string('facebook')->nullable();
+            $table->string('twitter')->nullable();
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->unsignedBigInteger('district_id')->nullable();
-            $table->longText('job_description')->nullable();
+            $table->unsignedBigInteger('tehsil_id')->nullable();
             $table->timestamps();
         });
 

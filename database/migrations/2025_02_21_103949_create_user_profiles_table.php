@@ -15,10 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('cnic')->nullable();
             $table->string('mobile_number')->nullable();
-            $table->string('landline_number')->nullable();
             $table->string('whatsapp')->nullable();
-            $table->string('facebook')->nullable();
-            $table->string('twitter')->nullable();
             $table->text('message')->nullable();
             $table->string('featured_on')->nullable();
             $table->unsignedBigInteger('views_count')->default(0);

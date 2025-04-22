@@ -247,6 +247,18 @@ class HomeController extends Controller
         $search = $request->input('search', '');
         $type = $request->input('type', '');
 
+        $announcement = Page::where('page_type', 'Announcement')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $announcementData = $announcement ? [
+            'id' => $announcement->id,
+            'title' => $announcement->title,
+            'description' => $announcement->content,
+            'image' => $announcement->getFirstMediaUrl('page_attachments')
+                ?: asset('admin/images/no-image.jpg'),
+        ] : null;
+
         $query = SiteNotification::latest();
 
         if (!empty($type)) {
@@ -290,6 +302,7 @@ class HomeController extends Controller
             'notifications' => $notifications,
             'nextPage' => $hasMore ? $page + 1 : null,
             'hasMore' => $hasMore,
+            'announcement' => $announcementData,
         ]);
     }
 
