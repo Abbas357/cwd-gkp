@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('featured_on')->nullable();
             $table->unsignedBigInteger('views_count')->default(0);
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->timestamps();
+            $table->timestamps(); 
         });
     }
 

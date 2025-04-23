@@ -36,8 +36,6 @@
                                 <thead class="table-dark">
                                     <tr>
                                         <th>S#</th>
-                                        <th>Name</th>
-                                        <th>Designation</th>
                                         <th>Office</th>
                                         <th>Landline Number</th>
                                         <th>Social Media</th>
@@ -47,12 +45,11 @@
                                     @foreach ($contacts as $contact)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $contact->name }}</td>
-                                        <td>{{ $contact->designation }}</td>
                                         <td>{{ $contact->office }}</td>
                                         <td>{{ $contact->landline_number ?? "N/A" }}</td>
                                         <td>
                                             <div>
+                                                <a href="mailto://{{ $contact->email }}"><i class="bi bi-facebook fs-4 me-2" style="color: #3b5998"></i></a>
                                                 <a href="https://facebook.com/{{ $contact->facebook ?? '#'}}"><i class="bi bi-facebook fs-4 me-2" style="color: #3b5998"></i></a>
                                                 <a href="https://twitter.com/{{ $contact->twitter ?? '#'}}"><i class="bi bi-twitter fs-4 me-2" style="color: #1da1f2"></i></a>
                                                 <a href="https://wa.me/{{ $contact->whatsapp ?? '#'}}"><i class="bi bi-whatsapp fs-4 me-2" style="color: #25d366"></i> </a>
@@ -72,8 +69,6 @@
                                 <thead class="table-dark">
                                     <tr>
                                         <th>S#</th>
-                                        <th>Name</th>
-                                        <th>Position</th>
                                         <th>Landline Number</th>
                                         <th>Social Media</th>
                                     </tr>
@@ -81,7 +76,6 @@
                                 <tbody>
                                     <tr>
                                         <td>1</td>
-                                        <td>Zahid Mehsood</td>
                                         <td>Deputy Secretary (Admn)</td>
                                         <td> 091-9211192</td>
                                         <td>

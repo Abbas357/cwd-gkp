@@ -219,12 +219,12 @@
                                 </li>
                             </ul>
                         </li>
-                        <li role="none" class="cw-top-menu child-nav" data-tier-id="2">
+                        <li role="none" class="cw-top-menu child-nav" data-tier-id="21">
                             <button role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>SERVICES</span>
                             </button>
 
-                            <ul class="sub-nav" aria-label="Support" role="menu" data-tier-id="2" aria-orientation="vertical">
+                            <ul class="sub-nav" aria-label="Support" role="menu" data-tier-id="21" aria-orientation="vertical">
                                 <li role="none" class="cw-back-list-item">
                                     <button role="menuitem" class="cw-back-button" tabindex="0">
                                         <span class="cw-menu-chevron left chevron-right"></span>
@@ -234,14 +234,14 @@
                                 <li role="menuitem" class="cw-hide-mob-links cw-plateTitle">
                                     SERVICES
                                 </li>
-                                <li role="none" data-tier-id="0">
-                                    <a href="{{ route('pages.show', 'E-Standardization') }}" data-tier-id="0" role="menuitem" class="cw-menuItem" href="#" tabindex="0">E-Standardization</a>
+                                <li role="none" data-tier-id="21">
+                                    <a href="{{ route('pages.show', 'E-Standardization') }}" data-tier-id="21" role="menuitem" class="cw-menuItem" href="#" tabindex="0">E-Standardization</a>
                                 </li>
-                                <li role="none" data-tier-id="0">
-                                    <a href="{{ route('pages.show', 'E-Registration') }}" data-tier-id="0" role="menuitem" class="cw-menuItem" href="#" tabindex="0">E-Registration</a>
+                                <li role="none" data-tier-id="21">
+                                    <a href="{{ route('pages.show', 'E-Registration') }}" data-tier-id="21" role="menuitem" class="cw-menuItem" href="#" tabindex="0">E-Registration</a>
                                 </li>
-                                <li role="none" data-tier-id="0">
-                                    <a href="{{ route('pages.show', 'NOC for Pumps') }}" data-tier-id="0" role="menuitem" class="cw-menuItem" href="#" tabindex="0">NOC FOR PUMPS</a>
+                                <li role="none" data-tier-id="21">
+                                    <a href="{{ route('pages.show', 'NOC for Pumps') }}" data-tier-id="21" role="menuitem" class="cw-menuItem" href="#" tabindex="0">NOC FOR PUMPS</a>
                                 </li>
                             </ul>
                         </li>

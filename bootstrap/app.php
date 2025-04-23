@@ -3,9 +3,10 @@
 use Illuminate\Foundation\Application;
 use App\Http\Middleware\CheckMaintenanceMode;
 use App\Http\Middleware\RouteMaintenanceMode;
-use App\Http\Middleware\StandardizationDocumentsUploadedMiddleware;
+use App\Http\Middleware\RedirectIfAuthenticated;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\StandardizationDocumentsUploadedMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -18,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
             CheckMaintenanceMode::class,
         ]);
         $middleware->alias([
+            'guest' => RedirectIfAuthenticated::class,
             'route_lock' => RouteMaintenanceMode::class,
             'standardization.documents.uploaded' => StandardizationDocumentsUploadedMiddleware::class,
         ]);
