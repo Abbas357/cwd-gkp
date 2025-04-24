@@ -7,10 +7,6 @@
         <label for="email">Email</label>
         <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required>
     </div>
-    <div class="col-md-6 mb-2">
-        <label for="landline_number">Landline Number</label>
-        <input type="text" class="form-control" id="landline_number" name="profile[landline_number]" value="{{ old('profile.landline_number') }}">
-    </div>
 </div>
 
 <div class="row" id="step-2">
@@ -23,7 +19,7 @@
                 {{ $office->name }}
             </option>
             @endforeach
-        </select>
+        </select> 
     </div>
     <div class="col-md-6 mb-2">
         <label for="designation_id">Designation</label>

@@ -633,6 +633,7 @@ class UserController extends Controller
                 $office = Office::create([
                     'name' => $request->input('new_office'),
                     'type' => $request->input('new_office_type'),
+                    'contact_number' => $request->input('new_office_contact_number'),
                     'parent_id' => $request->input('new_office_parent_id') ?: null,
                     'district_id' => $request->input('new_district_id') ?: null,
                     'status' => 'Active'
@@ -649,23 +650,20 @@ class UserController extends Controller
             if ($request->filled('password')) {
                 $userData['password'] = Hash::make($request->password);
             } else {
-                // Generate a random password if none provided
                 $password = Str::random(8);
                 $userData['password'] = Hash::make($password);
-                $plainPassword = $password; // Store for response
+                $plainPassword = $password;
             }
             $userData['password_updated_at'] = now();
 
             $user = User::create($userData);
 
-            // Create profile data
             $profileData = $request->input('profile', []);
             $user->profile()->updateOrCreate(
                 ['user_id' => $user->id],
                 $profileData
             );
 
-            // Create posting if office and designation are provided
             if ($designationId && $officeId) {
                 $postingData = [
                     'office_id' => $officeId,
@@ -675,7 +673,6 @@ class UserController extends Controller
                     'is_current' => true
                 ];
                 
-                // Auto-create sanctioned post if it doesn't exist
                 $sanctionedPost = SanctionedPost::firstOrCreate(
                     [
                         'office_id' => $officeId,
@@ -705,7 +702,6 @@ class UserController extends Controller
                 ]
             ];
 
-            // Include generated password if one was created
             if (isset($plainPassword)) {
                 $response['generated_password'] = $plainPassword;
             }

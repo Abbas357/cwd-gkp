@@ -11,10 +11,6 @@
         <label for="password">Password</label>
         <input type="password" class="form-control" id="password" name="password" placeholder="Leave empty for auto-generation">
     </div>
-    <div class="col-md-6 mb-3">
-        <label for="profile[landline_number]">Landline Number</label>
-        <input type="text" class="form-control" id="landline_number" name="profile[landline_number]">
-    </div>
 
     <div class="col-md-6 mb-3">
         <label for="posting[office_id]">Office</label>
@@ -51,6 +47,10 @@
                         <option value="{{ $office->id }}">{{ $office->name }}</option>
                     @endforeach
                 </select>
+            </div>
+            <div class="mb-3">
+                <label for="new_office_contact_number">Office Contact Number</label>
+                <input type="text" class="form-control" id="new_office_contact_number" name="new_office_contact_number" placeholder="Enter office contact number">
             </div>
             <div class="mb-3">
                 <label for="new_district_id">District</label>

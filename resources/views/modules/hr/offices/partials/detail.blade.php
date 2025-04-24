@@ -42,6 +42,18 @@
             </tr>
 
             <tr>
+                <th class="table-cell">Contact Number</th>
+                <td class="d-flex justify-content-between align-items-center gap-2">
+                    <span id="text-contact_number">{{ $office->contact_number }}</span>
+                    @if ($canUpdate)
+                    <input type="text" id="input-contact_number" value="{{ $office->contact_number }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('contact_number', {{ $office->id }})" />
+                    <button id="save-btn-contact_number" class="btn btn-sm btn-light d-none" onclick="updateField('contact_number', {{ $office->id }})"><i class="bi-send-fill"></i></button>
+                    <button id="edit-btn-contact_number" class="no-print btn btn-sm edit-button" onclick="enableEditing('contact_number')"><i class="bi-pencil fs-6"></i></button>
+                    @endif
+                </td>
+            </tr>
+
+            <tr>
                 <th class="table-cell">Parent Office</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-parent_id">{{ $office->parent?->name }}</span>

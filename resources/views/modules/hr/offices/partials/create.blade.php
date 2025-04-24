@@ -24,7 +24,7 @@
         @enderror
     </div>
 
-    <div class="col-md-6 mb-3">
+    <div class="col-md-4 mb-3">
         <label for="parent_id">Parent Office</label>
         <select class="form-select" id="parent_id" name="parent_id">
             <option value="">Select Parent Office (if any)</option>
@@ -34,7 +34,15 @@
         </select>
     </div>
     
-    <div class="col-md-6 mb-3">
+    <div class="col-md-4 mb-3">
+        <label for="contact_number">Contact Number</label>
+        <input type="text" class="form-control" id="contact_number" value="{{ old('contact_number') }}" placeholder="Contact Number" name="contact_number" required>
+        @error('contact_number')
+        <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
+
+    <div class="col-md-4 mb-3">
         <label for="district_id">District</label>
         <select class="form-select" id="district_id" name="district_id">
             <option value="">Select District</option>

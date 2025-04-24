@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'abbaskhan357@gmail.com',
             'password' => bcrypt('password'),
             'mobile_number' => '0313-0535333',
-            'landline_number' => '0944-880250',
+            'contact_number' => '0944-880250',
             'designation' => 'Assistant Director IT',
             'cnic' => '15701-2490811-7',
             'office' => 'IT',

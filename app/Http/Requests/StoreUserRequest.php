@@ -19,7 +19,7 @@ class StoreUserRequest extends FormRequest
             'username' => 'nullable|string|max:191|unique:users',
             'password' => 'nullable|string|min:6',
             
-            'profile.landline_number' => 'nullable|string|max:255',
+            'profile.contact_number' => 'nullable|string|max:255',
             
             'posting.office_id' => 'required|exists:offices,id',
             'posting.designation_id' => 'required|exists:designations,id',
@@ -33,7 +33,7 @@ class StoreUserRequest extends FormRequest
             'name' => 'name',
             'email' => 'email address',
             'password' => 'password',
-            'profile.landline_number' => 'landline number',
+            'profile.contact_number' => 'landline number',
             'posting.office_id' => 'office',
             'posting.designation_id' => 'designation',
             'posting.start_date' => 'start date',

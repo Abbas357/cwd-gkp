@@ -28,7 +28,7 @@ class UserFactory extends Factory
             'username' => fake()->username,
             'email' => fake()->unique()->safeEmail,
             'mobile_number' => fake()->phoneNumber,
-            'landline_number' => fake()->phoneNumber,
+            'contact_number' => fake()->phoneNumber,
             'designation' => fake()->jobTitle,
             'cnic' => fake()->numerify('#####-#######-#'),
             'office' => fake()->company,

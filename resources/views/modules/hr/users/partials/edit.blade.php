@@ -82,10 +82,6 @@
                 <input type="text" class="form-control" id="mobile_number" name="profile[mobile_number]" value="{{ old('profile.mobile_number', $data['user']->profile->mobile_number ?? '') }}">
             </div>
             <div class="col-md-6 mb-2">
-                <label for="landline_number">Landline Number</label>
-                <input type="text" class="form-control" id="landline_number" name="profile[landline_number]" value="{{ old('profile.landline_number', $data['user']->profile->landline_number ?? '') }}">
-            </div>
-            <div class="col-md-6 mb-2">
                 <label for="whatsapp">WhatsApp</label>
                 <input type="text" class="form-control" id="whatsapp" name="profile[whatsapp]" value="{{ old('profile.whatsapp', $data['user']->profile->whatsapp ?? '') }}">
             </div>

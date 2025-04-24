@@ -77,7 +77,7 @@
                     </div>
                     <div class="info-row">
                         <span class="info-label">Landline Number:</span>
-                        <span class="info-value">{{ $user['landline_number'] }}</span>
+                        <span class="info-value">{{ $user['contact_number'] }}</span>
                     </div>
                 </div>
                 <div class="col-md-6">

@@ -1,12 +1,6 @@
-/**
- * Open a modal to quickly create a user
- * @param {Function} callback - Function to execute when user is created successfully
- */
 function openUserQuickCreateModal(callback) {
-    // Create a unique ID for the modal
     const modalId = 'userQuickCreateModal-' + Math.random().toString(36).substring(2, 9);
     
-    // Create the modal HTML
     const modalHTML = `
         <div class="modal fade" id="${modalId}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-md modal-dialog-centered">
@@ -34,14 +28,11 @@ function openUserQuickCreateModal(callback) {
         </div>
     `;
     
-    // Append modal to body
     $('body').append(modalHTML);
     
-    // Show the modal
     const modal = new bootstrap.Modal(document.getElementById(modalId));
     modal.show();
     
-    // Load the form content
     $.ajax({
         url: '/admin/apps/hr/users/quick-create',
         type: 'GET',
@@ -50,7 +41,6 @@ function openUserQuickCreateModal(callback) {
                 $(`#${modalId} .loading-spinner`).hide();
                 $(`#${modalId} .form-content`).html(response.data.result);
                 
-                // Initialize Select2 properly (after content is loaded)
                 initializeFormComponents(modalId);
             } else {
                 $(`#${modalId} .loading-spinner`).hide();
@@ -63,7 +53,6 @@ function openUserQuickCreateModal(callback) {
         }
     });
     
-    // Handle form submission
     $(`#quickCreateUserForm-${modalId}`).on('submit', function(e) {
         e.preventDefault();
         
@@ -84,7 +73,6 @@ function openUserQuickCreateModal(callback) {
                 if (response.success) {
                     modal.hide();
                     
-                    // Show success message with password if generated
                     if (response.generated_password) {
                         showNotification(`${response.success}. The password is: ${response.generated_password}`, 'success', {
                             timer: 8000
@@ -93,7 +81,6 @@ function openUserQuickCreateModal(callback) {
                         showNotification(response.success);
                     }
                     
-                    // Execute callback if provided
                     if (typeof callback === 'function') {
                         callback(response.user);
                     }
@@ -116,25 +103,19 @@ function openUserQuickCreateModal(callback) {
         });
     });
     
-    // Remove modal from DOM when hidden
     $(`#${modalId}`).on('hidden.bs.modal', function() {
         $(this).remove();
     });
 }
 
-/**
- * Initialize all form components
- * @param {string} modalId - The ID of the modal
- */
+
 function initializeFormComponents(modalId) {
     const modalElement = $(`#${modalId}`);
     
-    // Initialize Select2 for all select elements in the modal
     modalElement.find('select').each(function() {
         const selectElement = $(this);
         const parentElement = modalElement.find('.modal-content');
         
-        // Initialize Select2
         selectElement.select2({
             theme: "bootstrap-5",
             placeholder: selectElement.attr('placeholder') || "Select an option",
@@ -142,7 +123,6 @@ function initializeFormComponents(modalId) {
             dropdownParent: parentElement
         });
         
-        // Add change handlers for dynamic fields
         const id = selectElement.attr('id');
         
         if (id === 'office_id') {
@@ -172,7 +152,6 @@ function initializeFormComponents(modalId) {
         }
     });
     
-    // Initialize image cropper if present
     if (modalElement.find('#image').length) {
         imageCropper({
             fileInput: modalElement.find('#image'),

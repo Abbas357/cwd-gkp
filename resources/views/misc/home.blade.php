@@ -328,7 +328,7 @@
             )
             <a href="{{ route('admin.apps.hr.index') }}" class="app-tile accent-green">
                 <i class="bi-people" style="color: #00db87"></i>
-                <p>HRMIS</p>
+                <p>User Mgt.</p>
             </a>
             @endif
 

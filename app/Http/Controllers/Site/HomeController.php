@@ -223,7 +223,7 @@ class HomeController extends Controller
                         'twitter' => $profile ? $profile->twitter : '#',
                         'whatsapp' => $profile ? $profile->whatsapp : '#',
                         'mobile_number' => $profile ? $profile->mobile_number : '#',
-                        'landline_number' => $profile ? $profile->landline_number : '#',
+                        'contact_number' => $user->currentOffice->contact_number ?? '#',
                         'image' => $user->getFirstMediaUrl('profile_pictures', 'small')
                             ?: asset('admin/images/default-avatar.jpg')
                     ];

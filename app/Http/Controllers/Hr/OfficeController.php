@@ -99,6 +99,7 @@ class OfficeController extends Controller
             $office = new Office();
             $office->name = $request->name;
             $office->type = $request->type;
+            $office->contact_number = $request->contact_number;
             $office->parent_id = $request->parent_id;
             $office->district_id = $request->district_id;
             $office->job_description = $request->job_description;

@@ -9,8 +9,8 @@
     <script src="{{ asset('admin/plugins/simplebar/js/simplebar.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/sweetalert2@11.js') }}"></script>
 
-    <script src="{{ asset('admin/js/helpers.min.js') }}?cw=34"></script>
-    <script src="{{ asset('admin/js/custom.min.js') }}?cw=34"></script>
+    <script src="{{ asset('admin/js/helpers.min.js') }}?cw=35"></script>
+    <script src="{{ asset('admin/js/custom.min.js') }}?cw=35"></script>
     @stack('script')
     <script>
         window.onload = function() {

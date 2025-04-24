@@ -297,7 +297,7 @@
                                     </div>
                                     <div class="info-item">
                                         <div class="info-label">Landline Number</div>
-                                        <div class="info-value">{{ $data['user']->profile->landline_number ?? 'Not provided' }}</div>
+                                        <div class="info-value">{{ $data['user']->profile->contact_number ?? 'Not provided' }}</div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">

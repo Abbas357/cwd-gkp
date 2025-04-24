@@ -33,7 +33,7 @@ class UpdateUserRequest extends FormRequest
             // Profile information
             'profile.cnic' => 'nullable|min:13',
             'profile.mobile_number' => 'nullable|min:11',
-            'profile.landline_number' => 'nullable|min:9',
+            'profile.contact_number' => 'nullable|min:9',
             'profile.whatsapp' => 'nullable',
             'profile.facebook' => 'nullable',
             'profile.twitter' => 'nullable',
@@ -72,7 +72,7 @@ class UpdateUserRequest extends FormRequest
             'username.min' => 'Username must be at least 5 characters',
             'username.unique' => 'This username is already taken',
             'profile.mobile_number.min' => 'Mobile number must be at least 11 digits',
-            'profile.landline_number.min' => 'Landline number must be at least 9 digits',
+            'profile.contact_number.min' => 'Landline number must be at least 9 digits',
             'profile.cnic.min' => 'CNIC must be at least 13 characters',
             'posting.designation_id.exists' => 'Selected designation is invalid',
             'posting.office_id.exists' => 'Selected office is invalid',
