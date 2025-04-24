@@ -1,11 +1,11 @@
 <div class="row" id="step-1">
     <div class="col-md-6 mb-2">
         <label for="name">Name</label>
-        <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
+        <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="{{ old('name') }}" required>
     </div>
     <div class="col-md-6 mb-2">
         <label for="email">Email</label>
-        <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required>
+        <input type="email" class="form-control" id="email" name="email" placeholder="Email Address" value="{{ old('email') }}" required>
     </div>
 </div>
 
@@ -36,34 +36,6 @@
     <div class="col-md-6 mb-2">
         <label for="start_date">Start Date</label>
         <input type="date" class="form-control" id="start_date" name="posting[start_date]" value="{{ old('posting.start_date', now()->format('Y-m-d')) }}">
-    </div>
-</div>
-
-<div id="step-3">
-    <h5 class="mb-2">Roles Assignment</h5>
-    <div class="mb-2">
-        <input type="text" id="roleSearch" class="form-control" placeholder="Search for a role..." />
-    </div>
-    <div id="roles" class="inline-block-items">
-        @foreach($data['roles'] as $role)
-        <div class="form-check form-switch role-item">
-            <input class="form-check-input" type="checkbox" name="roles[]" value="{{ $role->name }}" role="switch" id="role{{ $role->id }}" {{ in_array($role->name, old('roles', [])) ? 'checked' : '' }}>
-            <label class="form-check-label" for="role{{ $role->id }}">{{ $role->name }}</label>
-        </div>
-        @endforeach
-    </div>
-
-    <h5 class="mb-2">Direct Permissions (Use direct permission as a last resort)</h5>
-    <div class="mb-2">
-        <input type="text" id="permissionSearch" class="form-control" placeholder="Search for a permission..." />
-    </div>
-    <div id="permissions" class="inline-block-items">
-        @foreach($data['permissions'] as $permission)
-        <div class="form-check form-switch permission-item">
-            <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $permission->name }}" role="switch" id="permission{{ $permission->id }}" {{ in_array($permission->name, old('permissions', [])) ? 'checked' : '' }}>
-            <label class="form-check-label" for="permission{{ $permission->id }}">{{ $permission->name }}</label>
-        </div>
-        @endforeach
     </div>
 </div>
 
@@ -102,26 +74,6 @@
         , closeOnSelect: true
         , dropdownParent: $('#office_id').closest('.modal')
     , });
-
-    document.getElementById('roleSearch').addEventListener('keyup', function() {
-        let searchQuery = this.value.toLowerCase();
-        let roleItems = document.querySelectorAll('.role-item');
-
-        roleItems.forEach(function(item) {
-            let label = item.querySelector('label').innerText.toLowerCase();
-            item.style.display = label.includes(searchQuery) ? '' : 'none';
-        });
-    });
-
-    document.getElementById('permissionSearch').addEventListener('keyup', function() {
-        let searchQuery = this.value.toLowerCase();
-        let permissionItems = document.querySelectorAll('.permission-item');
-
-        permissionItems.forEach(function(item) {
-            let label = item.querySelector('label').innerText.toLowerCase();
-            item.style.display = label.includes(searchQuery) ? '' : 'none';
-        });
-    });
 
     function createSanctionedPost() {
         const officeId = $('#office_id').val();
@@ -174,7 +126,6 @@
                             Sanctioned post created successfully.
                         </div>
                     `);
-                    // Re-check vacancies after creation
                     setTimeout(checkVacancies, 1000);
                 } else {
                     $('#vacancy-info').html(`
@@ -198,23 +149,19 @@
         });
     }
 
-    // Function to check sanctioned post vacancies - simplified for new user
     function checkVacancies() {
         const officeId = $('#office_id').val();
         const designationId = $('#designation_id').val();
         const postingType = $('#posting_type').val();
         
-        // Clear any previous messages
         $('#vacancy-info').html('');
         
-        // Return early if not enough data
         if (!officeId || !designationId) {
             return;
         }
         
         $('#vacancy-info').html('<span class="text-info">Checking vacancy...</span>');
         
-        // For regular postings (Appointment, Transfer, Promotion)
         $.ajax({
             url: "{{ route('admin.apps.hr.sanctioned-posts.check-exists') }}",
             type: "GET",
@@ -239,7 +186,6 @@
                         `);
                     }
                 } else {
-                    // The sanctioned post doesn't exist at all
                     $('#vacancy-info').html(`
                         <span class="text-danger">This position is not sanctioned for the selected office.</span>
                         <button type="button" class="btn btn-sm btn-outline-primary mt-2" 
@@ -255,7 +201,6 @@
         });
     }
 
-    // Check vacancies when office or designation changes
     $('#office_id, #designation_id').change(function() {
         checkVacancies();
     });

@@ -114,10 +114,6 @@
                                     fields: ["#step-2"]
                                 },
                                 {
-                                    title: "Roles",
-                                    fields: ["#step-3"]
-                                },
-                                {
                                     title: "Images",
                                     fields: ["#step-4"]
                                 }
