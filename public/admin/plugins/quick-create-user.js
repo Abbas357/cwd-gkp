@@ -108,7 +108,6 @@ function openUserQuickCreateModal(callback) {
     });
 }
 
-
 function initializeFormComponents(modalId) {
     const modalElement = $(`#${modalId}`);
     

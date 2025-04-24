@@ -1,17 +1,8 @@
-<div class="row">
-    <div class="col-md-6 mb-3">
+<div class="row p-3">
+    <div class="col-md-12 mb-3">
         <label for="name">Name</label>
         <input type="text" class="form-control" id="name" name="name" required>
     </div>
-    <div class="col-md-6 mb-3">
-        <label for="email">Email</label>
-        <input type="email" class="form-control" id="email" name="email" required>
-    </div>
-    <div class="col-md-6 mb-3">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" name="password" placeholder="Leave empty for auto-generation">
-    </div>
-
     <div class="col-md-6 mb-3">
         <label for="posting[office_id]">Office</label>
         <select class="form-select" id="office_id" name="posting[office_id]">
@@ -97,10 +88,5 @@
                 </select>
             </div>
         </div>
-    </div>
-    
-    <div class="col-md-6 mb-3">
-        <label for="posting[start_date]">Posting Date</label>
-        <input type="date" class="form-control" id="start_date" name="posting[start_date]" value="{{ date('Y-m-d') }}">
     </div>
 </div>

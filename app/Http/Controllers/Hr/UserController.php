@@ -610,11 +610,6 @@ class UserController extends Controller
 
     public function userQuickStore(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-        ]);
-
         DB::beginTransaction();
 
         try {
@@ -641,21 +636,14 @@ class UserController extends Controller
                 $officeId = $office->id;
             }
 
-            // Create the user
-            $userData = $request->only(['name', 'email']);
+            $userData['name'] = $request->name;
+            $userData['email'] = strtolower(preg_replace('/\s+/', '', $request->name)) . rand(10000, 99999) . '@cwd.gkp.pk'; 
             $userData['uuid'] = Str::uuid();
             $userData['username'] = $request->username ?? $this->generateUsername($request->email);
-            $userData['status'] = 'Active';
-
-            if ($request->filled('password')) {
-                $userData['password'] = Hash::make($request->password);
-            } else {
-                $password = Str::random(8);
-                $userData['password'] = Hash::make($password);
-                $plainPassword = $password;
-            }
+            $userData['password'] = Hash::make(Str::random(8));
             $userData['password_updated_at'] = now();
-
+            $userData['status'] = 'Active';
+            
             $user = User::create($userData);
 
             $profileData = $request->input('profile', []);
@@ -669,7 +657,7 @@ class UserController extends Controller
                     'office_id' => $officeId,
                     'designation_id' => $designationId,
                     'type' => 'Appointment',
-                    'start_date' => $request->input('posting.start_date', now()),
+                    'start_date' => now(),
                     'is_current' => true
                 ];
                 
@@ -701,10 +689,6 @@ class UserController extends Controller
                     'office' => $officeId ? Office::find($officeId)->name : null,
                 ]
             ];
-
-            if (isset($plainPassword)) {
-                $response['generated_password'] = $plainPassword;
-            }
 
             return response()->json($response);
         } catch (\Exception $e) {
