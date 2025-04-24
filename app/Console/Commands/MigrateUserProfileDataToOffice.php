@@ -7,43 +7,24 @@ use App\Models\Office;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Schema\Blueprint;
 
 class MigrateUserProfileDataToOffice extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'migrate:profile-data-to-office';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Migrate office-related data from user_profiles to offices table';
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
     public function handle()
     {
         $this->info('Starting migration of user profile data to office table...');
 
-        // Ensure the required columns exist in the offices table
         $this->ensureOfficeColumnsExist();
 
-        // Fields to migrate
         $fieldsToMigrate = [
-            'landline_number',
-            'facebook',
-            'twitter'
+            'contact_number',
         ];
 
-        // Get all active users with profile data
         $users = User::with(['profile', 'currentOffice'])
             ->whereHas('profile')
             ->whereHas('currentOffice')
@@ -53,29 +34,22 @@ class MigrateUserProfileDataToOffice extends Command
 
         $officeDataMap = [];
 
-        // Process each user and collect data for their respective offices
         foreach ($users as $user) {
             $officeId = $user->currentOffice->id;
-            
-            // Skip if we don't have profile or current office
+
             if (!$user->profile || !$officeId) {
                 continue;
             }
 
-            // For each field to migrate
             foreach ($fieldsToMigrate as $field) {
-                // Skip if the user profile doesn't have this field or it's empty
                 if (!isset($user->profile->$field) || empty($user->profile->$field)) {
                     continue;
                 }
 
-                // Initialize the office map entry if it doesn't exist
                 if (!isset($officeDataMap[$officeId])) {
                     $officeDataMap[$officeId] = [];
                 }
 
-                // Only add data to the map if it's not already set
-                // (This preserves the first user's data in case multiple users have data for the same office)
                 if (!isset($officeDataMap[$officeId][$field])) {
                     $officeDataMap[$officeId][$field] = $user->profile->$field;
                 }
@@ -84,7 +58,6 @@ class MigrateUserProfileDataToOffice extends Command
 
         $this->info('Collected data for ' . count($officeDataMap) . ' offices.');
 
-        // Update each office with the collected data
         $updatedOffices = 0;
         foreach ($officeDataMap as $officeId => $data) {
             $office = Office::find($officeId);
@@ -92,7 +65,6 @@ class MigrateUserProfileDataToOffice extends Command
                 continue;
             }
 
-            // Only update fields that aren't already populated
             $updateData = [];
             foreach ($data as $field => $value) {
                 if (empty($office->$field)) {
@@ -107,32 +79,37 @@ class MigrateUserProfileDataToOffice extends Command
         }
 
         $this->info("Successfully updated $updatedOffices offices with user profile data.");
-        
+
         return Command::SUCCESS;
     }
 
-    /**
-     * Ensure that the offices table has the required columns
-     */
     private function ensureOfficeColumnsExist()
     {
         $requiredColumns = [
-            'landline_number',
-            'facebook',
-            'twitter'
+            'contact_number',
         ];
 
         $this->info('Checking if required columns exist in offices table...');
-        
-        $schema = Schema::getColumnListing('offices');
-        $missingColumns = array_diff($requiredColumns, $schema);
-        
+
+        try {
+            $columns = Schema::getColumnListing('offices');
+        } catch (\Exception $e) {
+            if (stripos($e->getMessage(), 'generation_expression') !== false) {
+                $this->warn('Detected older MySQL version without generation_expression support. Falling back to SHOW COLUMNS.');
+                $columns = collect(DB::select('SHOW COLUMNS FROM `offices`'))->pluck('Field')->toArray();
+            } else {
+                throw $e;
+            }
+        }
+
+        $missingColumns = array_diff($requiredColumns, $columns);
+
         if (!empty($missingColumns)) {
             $this->warn('The following columns are missing from the offices table:');
             $this->line(implode(', ', $missingColumns));
-            
+
             if ($this->confirm('Would you like to create these columns now?')) {
-                Schema::table('offices', function ($table) use ($missingColumns) {
+                Schema::table('offices', function (Blueprint $table) use ($missingColumns) {
                     foreach ($missingColumns as $column) {
                         $table->string($column)->nullable();
                     }

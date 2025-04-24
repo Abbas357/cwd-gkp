@@ -37,7 +37,7 @@
                                     <tr>
                                         <th>S#</th>
                                         <th>Office</th>
-                                        <th>Landline Number</th>
+                                        <th>Contact Number</th>
                                         <th>Social Media</th>
                                     </tr>
                                 </thead>
@@ -46,10 +46,9 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $contact->office }}</td>
-                                        <td>{{ $contact->landline_number ?? "N/A" }}</td>
+                                        <td>{{ $contact->contact_number ?? "N/A" }}</td>
                                         <td>
                                             <div>
-                                                <a href="mailto://{{ $contact->email }}"><i class="bi bi-facebook fs-4 me-2" style="color: #3b5998"></i></a>
                                                 <a href="https://facebook.com/{{ $contact->facebook ?? '#'}}"><i class="bi bi-facebook fs-4 me-2" style="color: #3b5998"></i></a>
                                                 <a href="https://twitter.com/{{ $contact->twitter ?? '#'}}"><i class="bi bi-twitter fs-4 me-2" style="color: #1da1f2"></i></a>
                                                 <a href="https://wa.me/{{ $contact->whatsapp ?? '#'}}"><i class="bi bi-whatsapp fs-4 me-2" style="color: #25d366"></i> </a>
@@ -69,7 +68,8 @@
                                 <thead class="table-dark">
                                     <tr>
                                         <th>S#</th>
-                                        <th>Landline Number</th>
+                                        <th>Office</th>
+                                        <th>Contact Number</th>
                                         <th>Social Media</th>
                                     </tr>
                                 </thead>
@@ -77,7 +77,7 @@
                                     <tr>
                                         <td>1</td>
                                         <td>Deputy Secretary (Admn)</td>
-                                        <td> 091-9211192</td>
+                                        <td>091-9211192</td>
                                         <td>
                                             <div>
                                                 <a href="https://facebook.com/#"><i class="bi bi-facebook fs-4 me-2" style="color: #3b5998"></i></a>

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->enum('type', ['Secretariat', 'Provincial', 'Regional', 'Divisional', 'District', 'Tehsil'])->nullable();
-            $table->longText('landline_number')->nullable();
+            $table->longText('contact_number')->nullable();
             $table->longText('extension')->nullable();
             $table->longText('job_description')->nullable();
             $table->decimal('latitude')->nullable();

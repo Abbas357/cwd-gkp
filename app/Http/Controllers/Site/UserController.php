@@ -103,9 +103,9 @@ class UserController extends Controller
                 'office' => $office->name ?? 'N/A',
                 'bps' => $item['designation']->bps ?? null,
                 'mobile_number' => $user->profile ? $user->profile->mobile_number : null,
-                'landline_number' => $office->landline_number ?? null,
-                'facebook' => $office->facebook ?? null,
-                'twitter' => $office->twitter ?? null,
+                'contact_number' => $office->contact_number ?? null,
+                'facebook' => $user->facebook ?? null,
+                'twitter' => $user->twitter ?? null,
                 'email' => $user->email ?? null,
                 'whatsapp' => $user->profile ? $user->profile->whatsapp : null,
             ];
@@ -179,7 +179,7 @@ class UserController extends Controller
             'uuid' => $user->uuid ?? '-',
             'email' => $user->email ?? '-',
             'mobile_number' => $profile->mobile_number ?? '-',
-            'landline_number' => $profile->landline_number ?? '-',
+            'contact_number' => $profile->contact_number ?? '-',
             'whatsapp' => $profile->whatsapp ?? '-',
             'facebook' => $profile->facebook ?? '-',
             'twitter' => $profile->twitter ?? '-',
@@ -263,7 +263,7 @@ class UserController extends Controller
                         'twitter' => $user->profile ? $user->profile->twitter ?? '#' : '#',
                         'whatsapp' => $user->profile ? $user->profile->whatsapp ?? '#' : '#',
                         'mobile_number' => $user->profile ? $user->profile->mobile_number ?? '#' : '#',
-                        'landline_number' => $user->profile ? $user->profile->landline_number ?? '#' : '#',
+                        'contact_number' => $user->profile ? $user->profile->contact_number ?? '#' : '#',
                         'image' => $user->getFirstMediaUrl('profile_pictures', 'small')
                             ?: asset('admin/images/default-avatar.jpg'),
                     ];
