@@ -176,6 +176,7 @@
                                     <th>Office</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -186,6 +187,14 @@
                                     <td>{{ optional($posting->office)->name }}</td>
                                     <td>{{ $posting->start_date->format('d M, Y') }}</td>
                                     <td>{{ $posting->end_date ? $posting->end_date->format('d M, Y') : 'Current' }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-danger delete-posting" 
+                                            data-posting-id="{{ $posting->id }}" 
+                                            data-bs-toggle="tooltip" 
+                                            title="Delete this posting record">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -231,6 +240,58 @@
 
     $('#cnic').mask('00000-0000000-0', {
         placeholder: "_____-_______-_"
+    });
+
+    $('.delete-posting').on('click', function() {
+        const postingId = $(this).data('posting-id');
+        
+        if (confirm('Are you sure you want to delete this posting record? This action cannot be undone.')) {
+            // Show loading state
+            $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+            $(this).prop('disabled', true);
+
+            const url = "{{ route('admin.apps.hr.postings.destroy', ':posting') }}".replace(':posting', postingId);
+            $.ajax({
+                url: url,
+                type: "DELETE",
+                data: {
+                    posting_id: postingId,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Remove the row from the table
+                        $(`button[data-posting-id="${postingId}"]`).closest('tr').fadeOut(300, function() {
+                            $(this).remove();
+                            
+                            // If no postings left, show the "no posting history" message
+                            if ($('.delete-posting').length === 0) {
+                                $('.table').replaceWith('<span class="text-muted">No posting history available</span>');
+                            }
+                        });
+                        
+                        // Show success notification
+                        toastr.success(response.success);
+                    } else {
+                        // Show error and reset button
+                        toastr.error(response.error || 'Failed to delete posting');
+                        $(`button[data-posting-id="${postingId}"]`).html('<i class="bi bi-trash"></i>');
+                        $(`button[data-posting-id="${postingId}"]`).prop('disabled', false);
+                    }
+                },
+                error: function(xhr) {
+                    // Show error and reset button
+                    let errorMessage = 'Failed to delete posting';
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        errorMessage = xhr.responseJSON.error;
+                    }
+                    
+                    toastr.error(errorMessage);
+                    $(`button[data-posting-id="${postingId}"]`).html('<i class="bi bi-trash"></i>');
+                    $(`button[data-posting-id="${postingId}"]`).prop('disabled', false);
+                }
+            });
+        }
     });
 
     function createSanctionedPost() {

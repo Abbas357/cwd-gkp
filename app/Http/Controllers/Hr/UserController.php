@@ -239,32 +239,37 @@ class UserController extends Controller
             if ($request->has('posting')) {
                 $postingData = $request->input('posting');
                 $postingType = $postingData['type'] ?? null;
-                
+
+
                 if ($postingType && isset($postingData['office_id']) && isset($postingData['designation_id'])) {
+                    $currentPosting = $user->currentPosting;
+                    $postingChanged = $this->hasPostingChanged($currentPosting, $postingData);
                     
-                    switch ($postingType) {
-                        case 'Mutual':
-                            $this->handleMutualTransfer($user, $postingData, $request);
-                            break;
+                    if($postingChanged) {
+                        switch ($postingType) {
+                            case 'Mutual':
+                                $this->handleMutualTransfer($user, $postingData, $request);
+                                break;
+                                
+                            case 'Suspension':
+                            case 'OSD':
+                                $this->handleSpecialStatus($user, $postingType, $postingData);
+                                break;
+    
+                            case 'Additional-Charge':
+                                $this->handleAdditionalCharge($user, $postingData, $request);
+                                break;
+    
+                            case 'Retirement':
+                            case 'Termination':
+                            case 'Out-Transfer':
+                                $this->handleExitStatus($user, $postingType, $postingData);
+                                break;
                             
-                        case 'Suspension':
-                        case 'OSD':
-                            $this->handleSpecialStatus($user, $postingType, $postingData);
-                            break;
-
-                        case 'Additional-Charge':
-                            $this->handleAdditionalCharge($user, $postingData, $request);
-                            break;
-
-                        case 'Retirement':
-                        case 'Termination':
-                        case 'Out-Transfer':
-                            $this->handleExitStatus($user, $postingType, $postingData);
-                            break;
-                        
-                        default: // Appointment, Transfer, Promotion
-                            $this->handleRegularPosting($user, $postingData, $request);
-                            break;
+                            default: // Appointment, Transfer, Promotion
+                                $this->handleRegularPosting($user, $postingData, $request);
+                                break;
+                        }
                     }
                 }
             }
@@ -284,6 +289,31 @@ class UserController extends Controller
             return response()->json(['error' => 'Failed to update user: ' . $e->getMessage()]);
         }
     }
+
+    private function hasPostingChanged($currentPosting, array $newPostingData)
+    {
+        // If there's no current posting but we're creating one, that's a change
+        if (!$currentPosting) {
+            return true;
+        }
+        
+        // Check if office, designation or type has changed
+        if ($currentPosting->office_id != $newPostingData['office_id'] ||
+            $currentPosting->designation_id != $newPostingData['designation_id'] ||
+            $currentPosting->type != $newPostingData['type']) {
+            return true;
+        }
+        
+        // If the order number is being changed, consider it a posting change
+        if (isset($newPostingData['order_number']) && 
+            $currentPosting->order_number != $newPostingData['order_number']) {
+            return true;
+        }
+        
+        // No significant changes detected
+        return false;
+    }
+
 
     private function handleAdditionalCharge(User $user, array $postingData, Request $request)
     {

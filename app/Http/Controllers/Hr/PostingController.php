@@ -12,6 +12,7 @@ use App\Models\SanctionedPost;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\StorePostingRequest;
 
 class PostingController extends Controller
@@ -163,17 +164,37 @@ class PostingController extends Controller
 
     public function destroy(Posting $posting)
     {
-        DB::beginTransaction();
-        
-        try {            
+        try {
+            DB::beginTransaction();
+                        
+            if ($posting->is_current) {
+                // Find the most recent previous posting for this user
+                $previousPosting = Posting::where('user_id', $posting->user_id)
+                    ->where('id', '!=', $posting->id)
+                    ->where('is_current', false)
+                    ->orderByDesc('end_date')
+                    ->first();
+                    
+                // If there's a previous posting, make it current
+                if ($previousPosting) {
+                    $previousPosting->update([
+                        'is_current' => true,
+                        'end_date' => null
+                    ]);
+                }
+            }
+            
             $posting->delete();
             
             DB::commit();
             
-            return response()->json(['success' => true]);
+            Cache::forget('message_partial');
+            Cache::forget('team_partial');
+            
+            return response()->json(['success' => 'Posting record deleted successfully']);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+            return response()->json(['error' => 'Failed to delete posting: ' . $e->getMessage()], 500);
         }
     }
 
