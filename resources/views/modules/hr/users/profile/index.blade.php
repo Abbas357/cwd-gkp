@@ -217,16 +217,6 @@
                         <i class="bi bi-briefcase me-1"></i> Service History
                     </button>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="roles-permissions-tab" data-bs-toggle="tab" data-bs-target="#roles-permissions" type="button" role="tab" aria-selected="false">
-                        <i class="bi bi-shield me-1"></i> Roles & Permissions
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="reporting-tab" data-bs-toggle="tab" data-bs-target="#reporting" type="button" role="tab" aria-selected="false">
-                        <i class="bi bi-diagram-3 me-1"></i> Reporting
-                    </button>
-                </li>
             </ul>
         </div>
 
@@ -398,161 +388,6 @@
                     </div>
                 </div>
 
-                <!-- Roles & Permissions Tab -->
-                <div class="tab-pane fade" id="roles-permissions" role="tabpanel" aria-labelledby="roles-permissions-tab">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card info-card">
-                                <div class="card-header">
-                                    <span>Roles</span>
-                                </div>
-                                <div class="card-body">
-                                    @if($data['roles']->count() > 0)
-                                        <div class="d-flex flex-wrap gap-2">
-                                            @foreach($data['roles'] as $role)
-                                                <span class="badge bg-primary">{{ $role->name }}</span>
-                                            @endforeach
-                                        </div>
-                                    @else
-                                        <p class="text-muted">No roles assigned</p>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card info-card">
-                                <div class="card-header">
-                                    <span>Direct Permissions</span>
-                                </div>
-                                <div class="card-body">
-                                    @if($data['permissions']->count() > 0)
-                                        <div class="d-flex flex-wrap gap-2">
-                                            @foreach($data['permissions'] as $permission)
-                                                <span class="badge bg-info">{{ $permission->name }}</span>
-                                            @endforeach
-                                        </div>
-                                    @else
-                                        <p class="text-muted">No direct permissions assigned</p>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Reporting Tab -->
-                <div class="tab-pane fade" id="reporting" role="tabpanel" aria-labelledby="reporting-tab">
-                    <div class="row">
-                        <div class="col-md-6 mb-4">
-                            <div class="card info-card">
-                                <div class="card-header">
-                                    <span>Current Position</span>
-                                </div>
-                                <div class="card-body">
-                                    @if($data['user']->currentPosting)
-                                        <div class="d-flex align-items-center">
-                                            <div>
-                                                <p class="mb-1"><strong>Designation:</strong>
-                                                    {{ optional($data['user']->currentDesignation)->name ?? 'Not Assigned' }}
-                                                </p>
-                                                <p class="mb-1"><strong>Office:</strong>
-                                                    {{ optional($data['user']->currentOffice)->name ?? 'Not Assigned' }}
-                                                </p>
-                                                <p class="mb-0"><strong>Since:</strong>
-                                                    {{ $data['user']->currentPosting->start_date->format('d M, Y') }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    @else
-                                        <p class="mb-0 text-muted">No active posting assigned.</p>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 mb-4">
-                            <div class="card info-card">
-                                <div class="card-header">
-                                    <span>District Information</span>
-                                </div>
-                                <div class="card-body" id="district-info-container">
-                                    @if($data['user']->currentOffice)
-                                        @php
-                                            $directDistrict = $data['user']->currentOffice->district ?? null;
-                                            $managedDistricts = $data['user']->currentOffice->getAllManagedDistricts() ?? collect([]);
-                                        @endphp
-                                        
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <h6 class="mb-2">Direct District Assignment</h6>
-                                                @if($directDistrict)
-                                                    <span class="badge bg-primary">{{ $directDistrict->name }}</span>
-                                                @else
-                                                    <span class="text-muted">No direct district assignment</span>
-                                                @endif
-                                            </div>
-                                            
-                                            <div class="col-md-6">
-                                                <h6 class="mb-2">Managed Districts</h6>
-                                                @if($managedDistricts->count() > 0)
-                                                    @foreach($managedDistricts as $district)
-                                                        <span class="badge bg-secondary mb-1">{{ $district->name }}</span>
-                                                    @endforeach
-                                                @else
-                                                    <span class="text-muted">No managed districts</span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="form-text mt-3">
-                                            <small class="text-muted">
-                                                <i class="bi bi-info-circle me-1"></i>
-                                                District assignments are based on the office hierarchy. Higher-level office users manage districts of their subordinate offices.
-                                            </small>
-                                        </div>
-                                    @else
-                                        <div class="text-center text-muted">
-                                            <i class="bi bi-building-x mb-2" style="font-size: 2rem;"></i>
-                                            <p>No office assignment. District information will be available once an office is assigned.</p>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 mb-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h6 class="mb-0">Reports To</h6>
-                                </div>
-                                <div class="card-body" id="supervisor-container">
-                                    <div class="text-center py-3">
-                                        <div class="spinner-border text-primary" role="status">
-                                            <span class="visually-hidden">Loading...</span>
-                                        </div>
-                                        <p class="mt-2 mb-0">Loading supervisor information...</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 mb-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h6 class="mb-0">Subordinates</h6>
-                                </div>
-                                <div class="card-body" id="subordinates-container">
-                                    <div class="text-center py-3">
-                                        <div class="spinner-border text-primary" role="status">
-                                            <span class="visually-hidden">Loading...</span>
-                                        </div>
-                                        <p class="mt-2 mb-0">Loading subordinate information...</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -595,83 +430,6 @@
                 formAction: "{{ route('admin.apps.hr.postings.update', ':id') }}",
                 formType: 'edit'
             });
-
-            // Load reporting relationships when the reporting tab is shown
-            $('button[data-bs-target="#reporting"]').on('shown.bs.tab', function(e) {
-                loadReportingRelationships();
-            });
-
-            function loadReportingRelationships() {
-                $.ajax({
-                    url: "{{ route('admin.apps.hr.user-relationships') }}",
-                    type: "GET",
-                    data: {
-                        user_id: "{{ $data['user']->id }}"
-                    },
-                    success: function(response) {
-                        let supervisorHtml = '';
-                        if (response.directSupervisor) {
-                            supervisorHtml = `
-                            <div class="d-flex align-items-center">
-                                <img src="${getUserAvatar(response.directSupervisor)}" class="rounded-circle me-3" style="width: 50px; height: 50px;">
-                                <div>
-                                    <h6 class="mb-1">${response.directSupervisor.name}</h6>
-                                    <p class="mb-1 small">${response.directSupervisor.current_designation ? response.directSupervisor.current_designation.name : 'No Designation'}</p>
-                                    <p class="mb-0 small text-muted">${response.directSupervisor.current_office ? response.directSupervisor.current_office.name : 'No Office'}</p>
-                                </div>
-                            </div>
-                        `;
-                        } else if (response.supervisors && response.supervisors.length > 0) {
-                            supervisorHtml = '<div class="list-group">';
-                            $.each(response.supervisors, function(index, supervisor) {
-                                supervisorHtml += `
-                                <div class="list-group-item">
-                                    <div class="d-flex align-items-center">
-                                        <img src="${getUserAvatar(supervisor)}" class="rounded-circle me-3" style="width: 40px; height: 40px;">
-                                        <div>
-                                            <h6 class="mb-1">${supervisor.name}</h6>
-                                            <p class="mb-1 small">${supervisor.current_designation ? supervisor.current_designation.name : 'No Designation'}</p>
-                                            <p class="mb-0 small text-muted">${supervisor.current_office ? supervisor.current_office.name : 'No Office'}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                            });
-                            supervisorHtml += '</div>';
-                        } else {
-                            supervisorHtml = '<div class="alert alert-info">No direct supervisor found. This may be a top-level position.</div>';
-                        }
-                        $('#supervisor-container').html(supervisorHtml);
-
-                        let subordinatesHtml = '';
-                        if (response.subordinates && response.subordinates.length > 0) {
-                            subordinatesHtml = '<div class="list-group">';
-                            $.each(response.subordinates, function(index, subordinate) {
-                                subordinatesHtml += `
-                                <div class="list-group-item">
-                                    <div class="d-flex align-items-center">
-                                        <img src="${getUserAvatar(subordinate)}" class="rounded-circle me-3" style="width: 40px; height: 40px;">
-                                        <div>
-                                            <h6 class="mb-1">${subordinate.name}</h6>
-                                            <p class="mb-1 small">${subordinate.current_designation ? subordinate.current_designation.name : 'No Designation'}</p>
-                                            <p class="mb-0 small text-muted">${subordinate.current_office ? subordinate.current_office.name : 'No Office'}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                            });
-                            subordinatesHtml += '</div>';
-                        } else {
-                            subordinatesHtml = '<div class="alert alert-info">No subordinates found for this user.</div>';
-                        }
-                        $('#subordinates-container').html(subordinatesHtml);
-                    },
-                    error: function() {
-                        $('#supervisor-container').html('<div class="alert alert-danger">Error loading supervisor information.</div>');
-                        $('#subordinates-container').html('<div class="alert alert-danger">Error loading subordinate information.</div>');
-                    }
-                });
-            }
 
             function getUserAvatar(user) {
                 return "{{ asset('admin/images/no-profile.png') }}";
@@ -953,97 +711,35 @@
                         alert('Please provide justification for exceeding sanctioned strength');
                     }
                 }
-            }
-
             function switchToRegularTransfer() {
                 $('#posting_type').val('Transfer').trigger('change');
                 checkVacancies();
             }
 
-            function fetchDistrictInformation() {
-                const officeId = $('#office_id').val();
-                const userId = '{{ $data['user']->id }}';
-                $.ajax({
-                    url: "{{ route('admin.apps.hr.offices.district') }}",
-                    type: "GET",
-                    data: { office_id: officeId },
-                    success: function(response) {
-                        if (response.success) {
-                            let html = '<div class="row">';
-                            
-                            // Direct district
-                            html += '<div class="col-md-6">';
-                            html += '<h6 class="mb-2">Direct District Assignment</h6>';
-                            if (response.district) {
-                                html += '<span class="badge bg-primary">' + response.district.name + '</span>';
-                            } else {
-                                html += '<span class="text-muted">No direct district assignment</span>';
-                            }
-                            html += '</div>';
-                            
-                            // Managed districts
-                            html += '<div class="col-md-6">';
-                            html += '<h6 class="mb-2">Managed Districts</h6>';
-                            if (response.managed_districts && response.managed_districts.length > 0) {
-                                response.managed_districts.forEach(function(district) {
-                                    html += '<span class="badge bg-secondary mb-1 me-1">' + district.name + '</span>';
-                                });
-                            } else {
-                                html += '<span class="text-muted">No managed districts</span>';
-                            }
-                            html += '</div>';
-                            
-                            html += '</div>';
-                            
-                            // Add info text
-                            html += '<div class="form-text mt-3">' +
-                                    '<small class="text-muted">' +
-                                    '<i class="bi bi-info-circle me-1"></i>' +
-                                    'District assignments are based on the office hierarchy. Higher-level office users manage districts of their subordinate offices.' +
-                                    '</small>' +
-                                    '</div>';
-                            
-                            $('#district-info-container').html(html);
-                        }
-                    },
-                    error: function() {
-                        $('#district-info-container').html(
-                            '<div class="alert alert-danger">Error loading district information</div>'
-                        );
-                    }
-                });
-            }
-
-            // Function to check sanctioned post vacancies
             function checkVacancies() {
                 const officeId = $('#office_id').val();
                 const designationId = $('#designation_id').val();
                 const postingType = $('#posting_type').val();
                 const userId = '{{ $data['user']->id }}';
                 
-                // Clear any previous messages
                 $('#vacancy-info').html('');
                 
-                // Return early if not enough data
                 if (!officeId || !designationId || !postingType) {
                     return;
                 }
                 
                 $('#vacancy-info').html('<span class="text-info">Checking vacancy...</span>');
                 
-                // Special handling for different posting types
                 if (postingType === 'Mutual') {
                     checkMutualTransferEligibility(userId, officeId, designationId);
                     return;
                 }
                 
                 if (['Retirement', 'Suspension', 'OSD'].includes(postingType)) {
-                    // For these types, we're just changing the officer's status
                     $('#vacancy-info').html(`<span class="text-info">User will be marked as ${postingType.toLowerCase()}. Current position will be vacated.</span>`);
                     return;
                 }
                 
-                // For regular postings (Appointment, Transfer, Promotion)
                 $.ajax({
                     url: "{{ route('admin.apps.hr.sanctioned-posts.available-positions') }}",
                     type: "GET",
@@ -1053,9 +749,7 @@
                     },
                     dataType: 'json',
                     success: function(response) {
-                        // If the response is empty, check if a sanctioned post exists at all
                         if (!response || response.length === 0) {
-                            // Check if the sanctioned post exists without filtering
                             $.ajax({
                                 url: "{{ route('admin.apps.hr.sanctioned-posts.check-exists') }}",
                                 type: "GET",
@@ -1066,7 +760,6 @@
                                 dataType: 'json',
                                 success: function(checkResponse) {
                                     if (checkResponse.exists) {
-                                        // The post exists but is full
                                         $('#vacancy-info').html(`
                                             <span class="text-danger">No vacancy available. (${checkResponse.filled}/${checkResponse.total} positions filled)</span>
                                             <button type="button" class="btn btn-sm btn-outline-warning mt-2" 
@@ -1075,7 +768,6 @@
                                             </button>
                                         `);
                                     } else {
-                                        // The sanctioned post doesn't exist at all
                                         $('#vacancy-info').html(`
                                             <span class="text-danger">This position is not sanctioned for the selected office.</span>
                                             <button type="button" class="btn btn-sm btn-outline-primary mt-2" 
@@ -1092,7 +784,6 @@
                             return;
                         }
                         
-                        // Try to find the position by ID (convert both to strings for comparison)
                         let position = response.find(p => String(p.id) === String(designationId));
                         
                         if (position) {
@@ -1108,7 +799,6 @@
                                 $('#vacancy-info').html(`<span class="text-success">Vacancy available. (${position.filled}/${position.total} positions filled)</span>`);
                             }
                         } else {
-                            // Position wasn't found in the response
                             $('#vacancy-info').html(`
                                 <span class="text-danger">This position is not sanctioned for the selected office.</span>
                                 <button type="button" class="btn btn-sm btn-outline-primary mt-2" 
@@ -1124,22 +814,16 @@
                 });
             }
 
-            // Attach event handlers when creating or editing postings
             $(document).on('shown.bs.modal', function (e) {
                 const modal = $(e.target);
                 
-                // Check if this is a posting-related modal
                 if (modal.find('#posting_type, #office_id, #designation_id').length > 0) {
-                    // Check vacancies when office or designation changes
                     modal.find('#office_id, #designation_id, #posting_type').change(function() {
                         checkVacancies();
-                        fetchDistrictInformation();
                     });
 
-                    // Initial check if values are already set
                     if (modal.find('#office_id').val() && modal.find('#designation_id').val()) {
                         checkVacancies();
-                        fetchDistrictInformation();
                     }
                 }
             });
