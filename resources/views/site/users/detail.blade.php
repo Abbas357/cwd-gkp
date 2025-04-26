@@ -236,8 +236,8 @@
                             <div class="card front user-card shadow-sm rounded border-1 overflow-hidden border">
                                 <img src="{{ getProfilePic($posting->user) }}" class="card-img-top img-fluid" style="object-fit: contain;height:230px; border-radius: 50px" alt="{{ $posting?->user?->name ?? 'No Image' }}">
                                 <div class="card-body text-center p-2">
+                                    <h5 class="card-title text-dark mb-2" style="white-space: nowrap; overflow: hidden; font-size: max(1rem, min(3vw, 0.9rem));">{{ $posting?->user?->name ?? "N/A"  }}</h5>
                                     @isset($posting->user->currentOffice->name)
-                                    <h5 class="card-title text-dark mb-2" style="white-space: nowrap; overflow: hidden; font-size: max(0.6rem, min(3vw, 0.9rem));">{{ $posting?->user?->name ?? "N/A"  }}</h5>
                                     <h5 class="card-title font-weight-bold text-primary mb-2" style="white-space: nowrap; overflow: hidden; font-size: max(1rem, min(5vw, 1rem));"><span style="color: black">Currently </span> {{ $posting->user->currentOffice->name }}</h5>
                                     @endisset
                                     <div>
