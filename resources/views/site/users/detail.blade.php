@@ -199,10 +199,10 @@
                         <tbody>
                             @foreach ($user['history'] as $posting)
                                 <tr>
-                                    <td>{{ $posting->office->name ?? 'N/A' }}</td>
-                                    <td>{{ $posting->designation->name ?? 'N/A' }}</td>
-                                    <td>{{ $posting->start_date ? $posting->start_date->format('d M Y') : 'N/A' }}</td>
-                                    <td>{{ $posting->end_date ? $posting->end_date->format('d M Y') : 'Ongoing' }}</td>
+                                    <td>{{ $posting->office?->name ?? 'N/A' }}</td>
+                                    <td>{{ $posting->designation?->name ?? 'N/A' }}</td>
+                                    <td>{{ $posting->start_date?->format('d M Y') ?? 'N/A' }}</td>
+                                    <td>{{ $posting->end_date?->format('d M Y') ?? 'Ongoing' }}</td>
                                     <td>
                                         {{ formatDuration($posting->start_date, $posting->end_date) }}
                                     </td>
@@ -228,31 +228,28 @@
                         <div class="card-flip">
                             <!-- Front of Card -->
                             <div class="card front user-card shadow-sm rounded border-1 overflow-hidden border">
-                                <img src="{{ $posting->user->getFirstMediaUrl('profile_pictures') }}" class="card-img-top img-fluid" style="object-fit: contain;height:230px; border-radius: 50px" alt="{{ $posting->user->name }}">
+                                <img src="{{ getProfilePic($posting->user) }}" class="card-img-top img-fluid" style="object-fit: contain;height:230px; border-radius: 50px" alt="{{ $posting?->user?->name ?? 'No Image' }}">
                                 <div class="card-body text-center p-2">
-                                    <h5 class="card-title font-weight-bold text-primary mb-2" style="white-space: nowrap; overflow: hidden; font-size: max(1rem, min(5vw, 1rem));">{{ $posting->user->currentOffice->name }}</h5>
-                                    <h5 class="card-title text-dark mb-2" style="white-space: nowrap; overflow: hidden; font-size: max(0.6rem, min(3vw, 0.9rem));">{{ $posting->user->name }}</h5>
+                                    <h5 class="card-title font-weight-bold text-primary mb-2" style="white-space: nowrap; overflow: hidden; font-size: max(1rem, min(5vw, 1rem));">{{ $posting->user?->currentOffice?->name ?? "No Office" }}</h5>
+                                    <h5 class="card-title text-dark mb-2" style="white-space: nowrap; overflow: hidden; font-size: max(0.6rem, min(3vw, 0.9rem));">{{ $posting?->user?->name ?? "N/A"  }}</h5>
                                     <div>
                                         <span class="badge text-bg-light" style="white-space: normal; word-wrap: break-word; word-break: break-word;">
-                                            <span> {{ $posting->start_date->format('d M Y') ?? '...' }} <i class="bi-arrow-right fs-6"></i> {{ $posting->end_date->format('d M Y') ?? '...' }} </span>
+                                            <span> {{ $posting->start_date?->format('d M Y') ?? '...' }} <i class="bi-arrow-right fs-6"></i> {{ $posting?->end_date?->format('d M Y') ?? '...' }} </span>
                                         </span>
                                     </div>
                                 </div>
                             </div>
                             
-                            <!-- Back of Card with Background Image -->
                             <div class="card back user-card shadow rounded border-1 overflow-hidden border">
-                                <!-- Background image (flipped and transparent) -->
-                                <div class="back-bg" style="background-image: url('{{ $posting->user->getFirstMediaUrl('profile_pictures') }}');"></div>
+                                <div class="back-bg" style="background-image: url('{{ getProfilePic($posting->user) }}');"></div>
                                 
-                                <!-- Back content -->
                                 <div class="card-body d-flex flex-column justify-content-center p-3 back-content">
                                     <h5 class="card-title font-weight-bold text-primary mb-3">User Details</h5>
-                                    <p class="mb-2"><strong>Name:</strong> {{ $posting->user->name }}</p>
-                                    <p class="mb-2"><strong>Office:</strong> {{ $posting->user->currentOffice->name }}</p>
-                                    <p class="mb-2"><strong>Designation:</strong> {{ $posting->user->currentDesignation->name }}</p>
-                                    <p class="mb-2"><strong>Posting Date:</strong> {{ $posting->start_date->format('d M Y') }}</p>
-                                    <p class="mb-2"><strong>Leaving Date:</strong> {{ $posting->end_date->format('d M Y') }}</p>
+                                    <p class="mb-2"><strong>Name:</strong> {{ $posting?->user?->name ?? "N/A" }}</p>
+                                    <p class="mb-2"><strong>Office:</strong> {{ $posting?->user?->currentOffice?->name ?? "No Office" }}</p>
+                                    <p class="mb-2"><strong>Designation:</strong> {{ $posting?->user?->currentDesignation?->name ?? "No Desigantion" }}</p>
+                                    <p class="mb-2"><strong>Posting Date:</strong> {{ $posting?->start_date?->format('d M Y') ?? "..." }}</p>
+                                    <p class="mb-2"><strong>Leaving Date:</strong> {{ $posting?->end_date?->format('d M Y') ?? "..." }}</p>
                                     <p class="mb-2"><strong>Duration:</strong> {{ formatDuration($posting->start_date, $posting->end_date) }}</p>
                                     <a class="cw-btn bg-light text-dark mt-auto mx-auto" href="{{ route('positions.details', ['uuid' => $posting->user->uuid ]) }}">
                                         <i class="bi-eye"></i> Full Detail
