@@ -195,7 +195,7 @@ class UserController extends Controller
             'history' => $user->postings()->orderBy('end_date')->get() ?? [],
             'previous' => $currentPosting->office->formerPostings ?? [],
             'views_count' => $profile->views_count ?? 0,
-            'job_description' => $user->currentOffice->job_description,
+            'job_description' => $user->currentOffice?->job_description,
         ];
 
         $this->incrementViews($user->profile, 'views_count', 'user_profile');
