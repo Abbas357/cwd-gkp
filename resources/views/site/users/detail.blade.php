@@ -88,11 +88,17 @@
         .back-content {
             position: relative;
             z-index: 1;
-            background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
+            background-color: rgba(255, 255, 255, 0.5);
         }
     </style>
     <x-slot name="breadcrumbTitle">
-        Detail of {{ $user['name'] . ' (' . $user['office']}})
+    Detail of {{ $user['name'] }}
+    {{ (
+        $office = trim($user['office'] ?? '')
+    ) && $office !== '-' 
+        ? ' (' . $office . ')' 
+        : ''
+    }}
     </x-slot>
 
     <x-slot name="breadcrumbItems">
@@ -130,7 +136,7 @@
                         <span class="info-value">{{ $user['mobile_number'] }}</span>
                     </div>
                     <div class="info-row">
-                        <span class="info-label">Landline Number:</span>
+                        <span class="info-label">Office Number:</span>
                         <span class="info-value">{{ $user['contact_number'] }}</span>
                     </div>
                 </div>
@@ -230,8 +236,10 @@
                             <div class="card front user-card shadow-sm rounded border-1 overflow-hidden border">
                                 <img src="{{ getProfilePic($posting->user) }}" class="card-img-top img-fluid" style="object-fit: contain;height:230px; border-radius: 50px" alt="{{ $posting?->user?->name ?? 'No Image' }}">
                                 <div class="card-body text-center p-2">
-                                    <h5 class="card-title font-weight-bold text-primary mb-2" style="white-space: nowrap; overflow: hidden; font-size: max(1rem, min(5vw, 1rem));">{{ $posting->user?->currentOffice?->name ?? "No Office" }}</h5>
+                                    @isset($posting->user->currentOffice->name)
                                     <h5 class="card-title text-dark mb-2" style="white-space: nowrap; overflow: hidden; font-size: max(0.6rem, min(3vw, 0.9rem));">{{ $posting?->user?->name ?? "N/A"  }}</h5>
+                                    <h5 class="card-title font-weight-bold text-primary mb-2" style="white-space: nowrap; overflow: hidden; font-size: max(1rem, min(5vw, 1rem));"><span style="color: black">Currently </span> {{ $posting->user->currentOffice->name }}</h5>
+                                    @endisset
                                     <div>
                                         <span class="badge text-bg-light" style="white-space: normal; word-wrap: break-word; word-break: break-word;">
                                             <span> {{ $posting->start_date?->format('d M Y') ?? '...' }} <i class="bi-arrow-right fs-6"></i> {{ $posting?->end_date?->format('d M Y') ?? '...' }} </span>
@@ -246,10 +254,14 @@
                                 <div class="card-body d-flex flex-column justify-content-center p-3 back-content">
                                     <h5 class="card-title font-weight-bold text-primary mb-3">User Details</h5>
                                     <p class="mb-2"><strong>Name:</strong> {{ $posting?->user?->name ?? "N/A" }}</p>
-                                    <p class="mb-2"><strong>Office:</strong> {{ $posting?->user?->currentOffice?->name ?? "No Office" }}</p>
-                                    <p class="mb-2"><strong>Designation:</strong> {{ $posting?->user?->currentDesignation?->name ?? "No Desigantion" }}</p>
+                                    @isset($posting->user->currentOffice->name)
+                                        <p class="mb-2"><strong>Present Posting:</strong> {{ $posting->user->currentOffice->name }}</p>
+                                    @endisset
+                                    @isset($posting->user->currentDesignation->name)
+                                        <p class="mb-2"><strong>Designation:</strong> {{ $posting->user->currentDesignation->name }}</p>
+                                    @endisset
                                     <p class="mb-2"><strong>Posting Date:</strong> {{ $posting?->start_date?->format('d M Y') ?? "..." }}</p>
-                                    <p class="mb-2"><strong>Leaving Date:</strong> {{ $posting?->end_date?->format('d M Y') ?? "..." }}</p>
+                                    <p class="mb-2"><strong>Relieving Date:</strong> {{ $posting?->end_date?->format('d M Y') ?? "..." }}</p>
                                     <p class="mb-2"><strong>Duration:</strong> {{ formatDuration($posting->start_date, $posting->end_date) }}</p>
                                     <a class="cw-btn bg-light text-dark mt-auto mx-auto" href="{{ route('positions.details', ['uuid' => $posting->user->uuid ]) }}">
                                         <i class="bi-eye"></i> Full Detail
