@@ -35,7 +35,61 @@
         a i:hover {
             filter: contrast(130%) brightness(130%) drop-shadow(7px 7px 3px #ccc)
         }
-
+        .card-container {
+            perspective: 1000px;
+            height: 100%;
+        }
+        
+        .card-flip {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            min-height: 320px;
+        }
+        
+        .card-container:hover .card-flip {
+            transform: rotateY(180deg) scale(1.05);
+        }
+        
+        .front, .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+        
+        .front {
+            z-index: 2;
+        }
+        
+        .back {
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .back-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15; 
+            transform: scaleX(-1);
+            filter: blur(1px);
+        }
+        
+        .back-content {
+            position: relative;
+            z-index: 1;
+            background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
+        }
     </style>
     <x-slot name="breadcrumbTitle">
         Detail of {{ $user['name'] . ' (' . $user['office']}})
@@ -128,29 +182,87 @@
         @endif
 
         <div class="row mt-3">
-            <h1 class="fs-3 py-2 bg-light">Previous</h1>
-            @foreach ($user['previous'] as $user)
-            <div class="col-sm-12 col-md-4 col-lg-3 col-xl-2 mb-3">
-                <div class="card user-card shadow-sm rounded border-0 overflow-hidden">
-                    <img src="{{ $user['profile_pictures'] }}" class="card-img-top img-fluid" style="object-fit: cover;height:200px" alt="{{ $user['name'] }}">
-                    <div class="card-body text-center p-2">
-                        <h5 class="card-title font-weight-bold text-primary mb-2">{{ $user['name'] }}</h5>
-                        <div>
-                            <span class="badge text-bg-light" style="white-space: normal; word-wrap: break-word; word-break: break-word;">
-                                @if($user['status'] == 'Active')
-                                Since {{ $user['from'] ?? 'unknown' }}
-                                @else
-                                From <span class="d-block">{{ $user['from'] ?? '...' }}</span> to <span class="d-block">{{ $user['to'] ?? '...' }}</span>
-                                @endif
-                            </span>
-                        </div>
-                        
-                        <a class="cw-btn" href="{{ route('positions.details', ['uuid' => $user['uuid'] ]) }}" ><i class="bi-eye"></i> View Detail</a>
-                    </div>
+            <h1 class="fs-3 py-2 bg-light">Posting History</h1>
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Office</th>
+                                <th>Designation</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($user['history'] as $posting)
+                                <tr>
+                                    <td>{{ $posting->office->name ?? 'N/A' }}</td>
+                                    <td>{{ $posting->designation->name ?? 'N/A' }}</td>
+                                    <td>{{ $posting->start_date ? $posting->start_date->format('d M Y') : 'N/A' }}</td>
+                                    <td>{{ $posting->end_date ? $posting->end_date->format('d M Y') : 'Ongoing' }}</td>
+                                    <td>
+                                        {{ formatDuration($posting->start_date, $posting->end_date) }}
+                                    </td>
+                                    <td>
+                                        @if($posting->is_current)
+                                            <span class="badge bg-success">Current</span>
+                                        @else
+                                            <span class="badge bg-secondary">Past</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
+        </div>
+        <div class="row mt-3">
+            <h1 class="fs-3 py-2 bg-light">Former Postings</h1>
+            @foreach ($user['previous'] as $posting)
+                <div class="col-sm-12 col-md-4 col-lg-3 mb-3">
+                    <div class="card-container">
+                        <div class="card-flip">
+                            <!-- Front of Card -->
+                            <div class="card front user-card shadow-sm rounded border-1 overflow-hidden border">
+                                <img src="{{ $posting->user->getFirstMediaUrl('profile_pictures') }}" class="card-img-top img-fluid" style="object-fit: contain;height:230px; border-radius: 50px" alt="{{ $posting->user->name }}">
+                                <div class="card-body text-center p-2">
+                                    <h5 class="card-title font-weight-bold text-primary mb-2" style="white-space: nowrap; overflow: hidden; font-size: max(1rem, min(5vw, 1rem));">{{ $posting->user->currentOffice->name }}</h5>
+                                    <h5 class="card-title text-dark mb-2" style="white-space: nowrap; overflow: hidden; font-size: max(0.6rem, min(3vw, 0.9rem));">{{ $posting->user->name }}</h5>
+                                    <div>
+                                        <span class="badge text-bg-light" style="white-space: normal; word-wrap: break-word; word-break: break-word;">
+                                            <span> {{ $posting->start_date->format('d M Y') ?? '...' }} <i class="bi-arrow-right fs-6"></i> {{ $posting->end_date->format('d M Y') ?? '...' }} </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Back of Card with Background Image -->
+                            <div class="card back user-card shadow rounded border-1 overflow-hidden border">
+                                <!-- Background image (flipped and transparent) -->
+                                <div class="back-bg" style="background-image: url('{{ $posting->user->getFirstMediaUrl('profile_pictures') }}');"></div>
+                                
+                                <!-- Back content -->
+                                <div class="card-body d-flex flex-column justify-content-center p-3 back-content">
+                                    <h5 class="card-title font-weight-bold text-primary mb-3">User Details</h5>
+                                    <p class="mb-2"><strong>Name:</strong> {{ $posting->user->name }}</p>
+                                    <p class="mb-2"><strong>Office:</strong> {{ $posting->user->currentOffice->name }}</p>
+                                    <p class="mb-2"><strong>Designation:</strong> {{ $posting->user->currentDesignation->name }}</p>
+                                    <p class="mb-2"><strong>Posting Date:</strong> {{ $posting->start_date->format('d M Y') }}</p>
+                                    <p class="mb-2"><strong>Leaving Date:</strong> {{ $posting->end_date->format('d M Y') }}</p>
+                                    <p class="mb-2"><strong>Duration:</strong> {{ formatDuration($posting->start_date, $posting->end_date) }}</p>
+                                    <a class="cw-btn bg-light text-dark mt-auto mx-auto" href="{{ route('positions.details', ['uuid' => $posting->user->uuid ]) }}">
+                                        <i class="bi-eye"></i> Full Detail
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             @endforeach
-
         </div>
 
     </div>

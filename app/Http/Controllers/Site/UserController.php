@@ -10,112 +10,107 @@ use App\Http\Controllers\Controller;
 class UserController extends Controller
 {
     public function contacts()
-{
-    $offices = Office::whereIn('name', [
-        'Minister C&W', 'Secretary C&W', 'Chief Engineer North', 'Chief Engineer Mega Projects', 
-        'Chief Engineer East', 'Chief Engineer Centre', 'Chief Engineer South-I', 'Chief Engineer South-II', 
-        'Chief Engineer Maintenance', 'Chief Engineer CDO', 'Chief Engineer Foregn Aids', 'Managing Director PKHA'
-    ])
-    ->with(['currentPostings.user', 'currentPostings.designation', 'currentPostings.user.profile'])
-    ->get();
-    
-    $contactsByOffice = $offices->sortByDesc(function ($office) {
-        // Find the top user in this office by BPS
-        $topUser = $office->currentPostings()
-            ->with('designation')
-            ->whereHas('user', function($query) {
-                $query->featuredOnContact();
-            })
-            ->whereHas('designation')
-            ->get()
-            ->sortByDesc(function($posting) {
-                $bps = $posting->designation->bps;
-                return is_numeric($bps) ? $bps : 0;
-            })
-            ->first();
-            
-        return $topUser && $topUser->designation ? 
-            (is_numeric($topUser->designation->bps) ? $topUser->designation->bps : 0) : 0;
-    })->mapWithKeys(function ($office) {
-        $officeIds = [$office->id];
+    {
+        $offices = Office::whereIn('name', [
+            'Minister C&W', 'Secretary C&W', 'Chief Engineer North', 'Chief Engineer Mega Projects', 
+            'Chief Engineer East', 'Chief Engineer Centre', 'Chief Engineer South-I', 'Chief Engineer South-II', 
+            'Chief Engineer Maintenance', 'Chief Engineer CDO', 'Chief Engineer Foregn Aids', 'Managing Director PKHA'
+        ])
+        ->with(['currentPostings.user', 'currentPostings.designation', 'currentPostings.user.profile'])
+        ->get();
         
-        // Include descendant offices if not Secretary C&W
-        if ($office->name !== 'Secretary C&W') {
-            $descendantOffices = $office->getAllDescendants();
-            if ($descendantOffices->isNotEmpty()) {
-                $officeIds = array_merge($officeIds, $descendantOffices->pluck('id')->toArray());
-            }
-        } elseif ($office->name === 'Secretary C&W') {
-            // For Secretary C&W, use Secretariat type offices
-            $secretariatOffices = Office::where('type', 'Secretariat')->pluck('id')->toArray();
-            $officeIds = $secretariatOffices;
-        }
-        
-        // Get all relevant offices with their current postings
-        $relevantOffices = Office::whereIn('id', $officeIds)
-            ->with(['currentPostings.user' => function($query) {
-                $query->whereHas('profile', function($q) {
-                    $q->where('featured_on', 'LIKE', '%"Contact"%');
-                })->with('profile');
-            }, 'currentPostings.designation'])
-            ->get();
-            
-        $contactsData = collect();
-        
-        foreach ($relevantOffices as $relOffice) {
-            // Get featured users in this office
-            $featuredUsers = $relOffice->currentPostings
-                ->filter(function($posting) {
-                    return $posting->user && $posting->user->profile && 
-                        strpos($posting->user->profile->featured_on ?? '', '"Contact"') !== false;
+        $contactsByOffice = $offices->sortByDesc(function ($office) {
+            $topUser = $office->currentPostings()
+                ->with('designation')
+                ->whereHas('user', function($query) {
+                    $query->featuredOnContact();
                 })
-                ->map(function($posting) use ($relOffice) {
-                    $user = $posting->user;
-                    $bpsValue = 0;
-                    
-                    if ($posting->designation) {
-                        $bpsRaw = $posting->designation->bps;
-                        if (preg_match('/(\d+)/', $bpsRaw, $matches)) {
-                            $bpsValue = (int)$matches[1];
-                        }
-                    }
-                    
-                    return [
-                        'user' => $user,
-                        'office' => $relOffice,
-                        'designation' => $posting->designation,
-                        'bps_value' => $bpsValue
-                    ];
-                });
+                ->whereHas('designation')
+                ->get()
+                ->sortByDesc(function($posting) {
+                    $bps = $posting->designation->bps;
+                    return is_numeric($bps) ? $bps : 0;
+                })
+                ->first();
                 
-            $contactsData = $contactsData->merge($featuredUsers);
-        }
-        
-        // Sort by BPS descending
-        $sortedContacts = $contactsData->sortByDesc('bps_value');
-        
-        // Format the contact information
-        $contacts = $sortedContacts->map(function ($item) {
-            $user = $item['user'];
-            $office = $item['office'];
+            return $topUser && $topUser->designation ? 
+                (is_numeric($topUser->designation->bps) ? $topUser->designation->bps : 0) : 0;
+        })->mapWithKeys(function ($office) {
+            $officeIds = [$office->id];
             
-            return (object) [
-                'office' => $office->name ?? 'N/A',
-                'bps' => $item['designation']->bps ?? null,
-                'mobile_number' => $user->profile ? $user->profile->mobile_number : null,
-                'contact_number' => $office->contact_number ?? null,
-                'facebook' => $user->facebook ?? null,
-                'twitter' => $user->twitter ?? null,
-                'email' => $user->email ?? null,
-                'whatsapp' => $user->profile ? $user->profile->whatsapp : null,
-            ];
+            // Include descendant offices if not Secretary C&W
+            if ($office->name !== 'Secretary C&W') {
+                $descendantOffices = $office->getAllDescendants();
+                if ($descendantOffices->isNotEmpty()) {
+                    $officeIds = array_merge($officeIds, $descendantOffices->pluck('id')->toArray());
+                }
+            } elseif ($office->name === 'Secretary C&W') {
+                // For Secretary C&W, use Secretariat type offices
+                $secretariatOffices = Office::where('type', 'Secretariat')->pluck('id')->toArray();
+                $officeIds = $secretariatOffices;
+            }
+            
+            $relevantOffices = Office::whereIn('id', $officeIds)
+                ->with(['currentPostings.user' => function($query) {
+                    $query->whereHas('profile', function($q) {
+                        $q->where('featured_on', 'LIKE', '%"Contact"%');
+                    })->with('profile');
+                }, 'currentPostings.designation'])
+                ->get();
+                
+            $contactsData = collect();
+            
+            foreach ($relevantOffices as $relOffice) {
+                $featuredUsers = $relOffice->currentPostings
+                    ->filter(function($posting) {
+                        return $posting->user && $posting->user->profile && 
+                            strpos($posting->user->profile->featured_on ?? '', '"Contact"') !== false;
+                    })
+                    ->map(function($posting) use ($relOffice) {
+                        $user = $posting->user;
+                        $bpsValue = 0;
+                        
+                        if ($posting->designation) {
+                            $bpsRaw = $posting->designation->bps;
+                            if (preg_match('/(\d+)/', $bpsRaw, $matches)) {
+                                $bpsValue = (int)$matches[1];
+                            }
+                        }
+                        
+                        return [
+                            'user' => $user,
+                            'office' => $relOffice,
+                            'designation' => $posting->designation,
+                            'bps_value' => $bpsValue
+                        ];
+                    });
+                    
+                $contactsData = $contactsData->merge($featuredUsers);
+            }
+            
+            $sortedContacts = $contactsData->sortByDesc('bps_value');
+            
+            $contacts = $sortedContacts->map(function ($item) {
+                $user = $item['user'];
+                $office = $item['office'];
+                
+                return (object) [
+                    'office' => $office->name ?? 'N/A',
+                    'bps' => $item['designation']->bps ?? null,
+                    'mobile_number' => $user->profile ? $user->profile->mobile_number : null,
+                    'contact_number' => $office->contact_number ?? null,
+                    'facebook' => $user->facebook ?? null,
+                    'twitter' => $user->twitter ?? null,
+                    'email' => $user->email ?? null,
+                    'whatsapp' => $user->profile ? $user->profile->whatsapp : null,
+                ];
+            });
+
+            return [$office->name => $contacts];
         });
 
-        return [$office->name => $contacts];
-    });
-
-    return view('site.users.contacts', compact('contactsByOffice'));
-}
+        return view('site.users.contacts', compact('contactsByOffice'));
+    }
 
     private function showPositions($position)
     {
@@ -197,7 +192,8 @@ class UserController extends Controller
                     $currentPosting->getFirstMediaUrl('posting_orders') : '',
                 'exit_orders' => $user->postings->where('is_current', false)->sortByDesc('end_date')->first()?->getFirstMediaUrl('exit_orders') ?? '',
             ],
-            'previous' => $currentPosting ? $this->showPositions($currentPosting->designation->name) : [],
+            'history' => $user->postings()->orderBy('end_date')->get() ?? [],
+            'previous' => $currentPosting->office->formerPostings ?? [],
             'views_count' => $profile->views_count ?? 0,
             'job_description' => $user->currentOffice->job_description,
         ];

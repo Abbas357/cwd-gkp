@@ -89,6 +89,27 @@ class Office extends Model
         )->where('postings.is_current', true);
     }
 
+    public function formerUsers()
+    {
+        return $this->hasManyThrough(
+            User::class,
+            Posting::class,
+            'office_id',
+            'id',
+            'id',
+            'user_id'
+        )->where('postings.is_current', false)
+        ->orderByDesc('postings.end_date');
+    }
+
+    public function formerPostings()
+    {
+        return $this->hasMany(Posting::class, 'office_id')
+            ->where('is_current', false)
+            ->with(['user', 'designation'])
+            ->orderByDesc('end_date');
+    }
+
     public function getAncestors()
     {
         $ancestors = collect();

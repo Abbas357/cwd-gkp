@@ -47,4 +47,17 @@ class Designation extends Model
             'user_id'
         )->where('postings.is_current', true);
     }
+
+    public function formerUsers()
+    {
+        return $this->hasManyThrough(
+            User::class,
+            Posting::class,
+            'designation_id',
+            'id',
+            'id',
+            'user_id'
+        )->where('postings.is_current', false)
+        ->orderByDesc('postings.end_date');
+    }
 }
