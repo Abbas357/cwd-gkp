@@ -78,7 +78,15 @@
                 <a href="{{ route('admin.apps.hr.designations.index') }}"><i class="bi-award text-info"></i>Designations</a>
             </li>
             @endcan
-        </ul>        
+
+            @canany(['viewHrSettings', 'updateHrSettings', 'initHrSettings'], App\Models\Setting::class)
+            <li>
+                <a href="{{ route('admin.apps.hr.settings.index') }}">
+                    <i class="bi-gear text-danger"></i>Settings
+                </a>
+            </li>
+            @endcanany
+        </ul>
     </li>
     @endif
 

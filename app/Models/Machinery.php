@@ -45,8 +45,7 @@ class Machinery extends Model  implements HasMedia
     public function allocation()
     {
         return $this->hasOne(MachineryAllocation::class)
-            ->whereNull('end_date')
-            ->latest('created_at');
+            ->where('is_current', true);
     }
 
     public function allocations()

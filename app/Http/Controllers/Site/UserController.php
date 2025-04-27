@@ -193,7 +193,7 @@ class UserController extends Controller
                 'exit_orders' => $user->postings->where('is_current', false)->sortByDesc('end_date')->first()?->getFirstMediaUrl('exit_orders') ?? '',
             ],
             'history' => $user->postings()->orderBy('end_date')->get() ?? [],
-            'previous' => $currentPosting->office->formerPostings ?? [],
+            'previous' => $currentPosting->office->formerPostings($currentPosting->designation->id)->get() ?? [],
             'views_count' => $profile->views_count ?? 0,
             'job_description' => $user->currentOffice?->job_description,
         ];

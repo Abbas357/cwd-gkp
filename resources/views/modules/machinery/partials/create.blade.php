@@ -4,7 +4,7 @@
         <select class="form-select" id="type" name="type" required>
             <option value="">Choose...</option>
             @foreach ($cat['machinery_type'] as $type)
-            <option value="{{ $type->name }}">{{ $type->name }}</option>
+            <option value="{{ $type }}">{{ $type }}</option>
             @endforeach
         </select>
         @error('type')
@@ -17,7 +17,7 @@
         <select class="form-select" id="operational_status" name="operational_status" required>
             <option value="">Choose...</option>
             @foreach ($cat['machinery_operational_status'] as $status)
-            <option value="{{ $status->name }}">{{ $status->name }}</option>
+            <option value="{{ $status }}">{{ $status }}</option>
             @endforeach
         </select>
         @error('operational_status')
@@ -29,7 +29,7 @@
         <select class="form-select" id="power_source" name="power_source" required>
             <option value="">Choose...</option>
             @foreach ($cat['machinery_power_source'] as $power_source)
-            <option value="{{ $power_source->name }}">{{ $power_source->name }}</option>
+            <option value="{{ $power_source }}">{{ $power_source }}</option>
             @endforeach
         </select>
         @error('power_source')
@@ -41,7 +41,7 @@
         <select class="form-select" id="manufacturer" name="manufacturer" required>
             <option value="">Choose...</option>
             @foreach ($cat['machinery_manufacturer'] as $manufacturer)
-            <option value="{{ $manufacturer->name }}">{{ $manufacturer->name }}</option>
+            <option value="{{ $manufacturer }}">{{ $manufacturer }}</option>
             @endforeach
         </select>
         @error('manufacturer')
@@ -74,33 +74,6 @@
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
-    
-    <div class="col-md-6 mb-3">
-        <label for="power_rating">Power Rating</label>
-        <div class="input-group">
-            <input type="text" class="form-control" id="power_rating" name="power_rating">
-            <span class="input-group-text">HP/kW</span>
-        </div>
-        @error('power_rating')
-        <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-
-    <div class="col-md-6 mb-3">
-        <label for="operating_hours">Operating Hours</label>
-        <input type="number" class="form-control" id="operating_hours" name="operating_hours" min="0">
-        @error('operating_hours')
-        <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-    
-    <div class="col-md-6 mb-3">
-        <label for="asset_tag">Asset Tag</label>
-        <input type="text" class="form-control" id="asset_tag" name="asset_tag">
-        @error('asset_tag')
-        <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
 </div>
 
 <div class="row" id="step-3">
@@ -109,7 +82,7 @@
         <select class="form-select" id="location" name="location">
             <option value="">Choose...</option>
             @foreach ($cat['machinery_location'] as $location)
-            <option value="{{ $location->name }}">{{ $location->name }}</option>
+            <option value="{{ $location }}">{{ $location }}</option>
             @endforeach
         </select>
         @error('location')
@@ -121,7 +94,7 @@
         <select class="form-select" id="certification_status" name="certification_status">
             <option value="">Choose...</option>
             @foreach ($cat['machinery_certification_status'] as $status)
-            <option value="{{ $status->name }}">{{ $status->name }}</option>
+            <option value="{{ $status }}">{{ $status }}</option>
             @endforeach
         </select>
         @error('certification_status')
@@ -132,23 +105,6 @@
         <label for="last_maintenance_date">Last Maintenance Date</label>
         <input type="date" class="form-control" id="last_maintenance_date" name="last_maintenance_date">
         @error('last_maintenance_date')
-        <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="col-md-4 mb-3">
-        <label for="next_maintenance_date">Next Maintenance Date</label>
-        <input type="date" class="form-control" id="next_maintenance_date" name="next_maintenance_date">
-        @error('next_maintenance_date')
-        <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="col-md-4 mb-3">
-        <label for="hourly_cost">Hourly Cost</label>
-        <div class="input-group">
-            <span class="input-group-text">$</span>
-            <input type="number" class="form-control" id="hourly_cost" name="hourly_cost" step="0.01" min="0">
-        </div>
-        @error('hourly_cost')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>

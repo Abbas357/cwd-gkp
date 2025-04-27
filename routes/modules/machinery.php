@@ -1,25 +1,32 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Machinery\HomeController;
 use App\Http\Controllers\Machinery\MachineryController;
 use App\Http\Controllers\Machinery\MachineryAllocationController;
 
 Route::group(['prefix' => 'machineries', 'as' => 'machineries.'], function () {
-    Route::get('/', [MachineryController::class, 'index'])->name('index');
+    Route::prefix('settings')->as('settings.')->group(function () {
+        Route::get('/', [HomeController::class, 'settings'])->name('index')->can('viewMachinerySettings', App\Models\Setting::class);
+        Route::post('/update', [HomeController::class, 'update'])->name('update')->can('updateMachinerySettings', App\Models\Setting::class);
+        Route::post('/init', [HomeController::class, 'init'])->name('init')->can('initMachinerySettings', App\Models\Setting::class);
+    });
+
+    Route::get('/', [HomeController::class, 'index'])->name('index');
     Route::get('/all', [MachineryController::class, 'all'])->name('all')->can('viewAny', App\Models\Machinery::class);
     Route::get('/create', [MachineryController::class, 'create'])->name('create')->can('create', App\Models\Machinery::class);
-    Route::get('/report', [MachineryController::class, 'reports'])->name('reports')->can('viewReports', App\Models\Machinery::class);
+    Route::get('/report', [HomeController::class, 'reports'])->name('reports')->can('viewReports', App\Models\Machinery::class);
     Route::get('/search', [MachineryController::class, 'search'])->name('search')->can('viewAny', App\Models\Machinery::class);
     Route::post('/', [MachineryController::class, 'store'])->name('store')->can('create', App\Models\Machinery::class);
-    Route::get('/{Machinery}', [MachineryController::class, 'show'])->name('show')->can('view', 'Machinery');
-    Route::get('/get/{Machinery}', [MachineryController::class, 'showDetail'])->name('detail')->can('view', 'Machinery');
-    Route::get('/history/{vehicle}', [MachineryController::class, 'machineryHistory'])->name('history')->can('viewHistory', 'Machinery');
-    Route::patch('/update/field/{Machinery}', [MachineryController::class, 'updateField'])->name('updateField')->can('updateField', 'Machinery');
-    Route::patch('/upload/file/{Machinery}', [MachineryController::class, 'uploadFile'])->name('uploadFile')->can('uploadFile', 'Machinery');
-    Route::delete('/{Machinery}', [MachineryController::class, 'destroy'])->name('destroy')->can('delete', 'Machinery');
+    Route::get('/{machinery}', [MachineryController::class, 'show'])->name('show')->can('view', 'machinery');
+    Route::get('/get/{machinery}', [MachineryController::class, 'showDetail'])->name('detail')->can('view', 'machinery');
+    Route::get('/history/{machinery}', [MachineryController::class, 'machineryHistory'])->name('history')->can('viewHistory', 'machinery');
+    Route::patch('/update/field/{machinery}', [MachineryController::class, 'updateField'])->name('updateField')->can('updateField', 'machinery');
+    Route::patch('/upload/file/{machinery}', [MachineryController::class, 'uploadFile'])->name('uploadFile')->can('uploadFile', 'machinery');
+    Route::delete('/{machinery}', [MachineryController::class, 'destroy'])->name('destroy')->can('delete', 'machinery');
 
     Route::prefix('allocation')->as('allocation.')->group(function () {
-        Route::get('/{Machinery}', [MachineryAllocationController::class, 'create'])->name('create')->can('create', App\Models\MachineryAllocation::class);
+        Route::get('/{machinery}', [MachineryAllocationController::class, 'create'])->name('create')->can('create', App\Models\MachineryAllocation::class);
         Route::post('/', [MachineryAllocationController::class, 'store'])->name('store')->can('create', App\Models\MachineryAllocation::class);
     });
 });

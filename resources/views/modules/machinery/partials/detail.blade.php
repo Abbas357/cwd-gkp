@@ -19,8 +19,8 @@
                     @if ($canUpdate)
                     <select id="input-type" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('type', {{ $machinery->id }})">
                         @foreach ($cat['machinery_type'] as $type)
-                        <option value="{{ $type->name }}" {{ $machinery->type == $type->name ? 'selected' : '' }}>
-                            {{ $type->name }}
+                        <option value="{{ $type }}" {{ $machinery->type == $type ? 'selected' : '' }}>
+                            {{ $type }}
                         </option>
                         @endforeach
                     </select>
@@ -37,8 +37,8 @@
                     @if ($canUpdate)
                     <select id="input-operational_status" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('operational_status', {{ $machinery->id }})">
                         @foreach ($cat['machinery_operational_status'] as $operational_status)
-                        <option value="{{ $operational_status->name }}" {{ $machinery->operational_status == $operational_status->name ? 'selected' : '' }}>
-                            {{ $operational_status->name }}
+                        <option value="{{ $operational_status }}" {{ $machinery->operational_status == $operational_status ? 'selected' : '' }}>
+                            {{ $operational_status }}
                         </option>
                         @endforeach
                     </select>
@@ -55,8 +55,8 @@
                     @if ($canUpdate)
                     <select id="input-manufacturer" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('manufacturer', {{ $machinery->id }})">
                         @foreach ($cat['machinery_manufacturer'] as $manufacturer)
-                        <option value="{{ $manufacturer->name }}" {{ $machinery->manufacturer == $manufacturer->name ? 'selected' : '' }}>
-                            {{ $manufacturer->name }}
+                        <option value="{{ $manufacturer }}" {{ $machinery->manufacturer == $manufacturer ? 'selected' : '' }}>
+                            {{ $manufacturer }}
                         </option>
                         @endforeach
                     </select>
@@ -97,25 +97,13 @@
                     @if ($canUpdate)
                     <select id="input-power_source" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('power_source', {{ $machinery->id }})">
                         @foreach ($cat['machinery_power_source'] as $power_source)
-                        <option value="{{ $power_source->name }}" {{ $machinery->power_source == $power_source->name ? 'selected' : '' }}>
-                            {{ $power_source->name }}
+                        <option value="{{ $power_source }}" {{ $machinery->power_source == $power_source ? 'selected' : '' }}>
+                            {{ $power_source }}
                         </option>
                         @endforeach
                     </select>
                     <button id="save-btn-power_source" class="btn btn-sm btn-light d-none" onclick="updateField('power_source', {{ $machinery->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-power_source" class="no-print btn btn-sm edit-button" onclick="enableEditing('power_source')"><i class="bi-pencil fs-6"></i></button>
-                    @endif
-                </td>
-            </tr>
-
-            <tr>
-                <th class="table-cell">Power Rating</th>
-                <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-power_rating">{{ $machinery->power_rating }}</span>
-                    @if ($canUpdate)
-                    <input type="text" id="input-power_rating" value="{{ $machinery->power_rating }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('power_rating', {{ $machinery->id }})" />
-                    <button id="save-btn-power_rating" class="btn btn-sm btn-light d-none" onclick="updateField('power_rating', {{ $machinery->id }})"><i class="bi-send-fill"></i></button>
-                    <button id="edit-btn-power_rating" class="no-print btn btn-sm edit-button" onclick="enableEditing('power_rating')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
             </tr>
@@ -133,18 +121,6 @@
             </tr>
 
             <tr>
-                <th class="table-cell">Operating Hours</th>
-                <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-operating_hours">{{ $machinery->operating_hours }}</span>
-                    @if ($canUpdate)
-                    <input type="number" id="input-operating_hours" value="{{ $machinery->operating_hours }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('operating_hours', {{ $machinery->id }})" />
-                    <button id="save-btn-operating_hours" class="btn btn-sm btn-light d-none" onclick="updateField('operating_hours', {{ $machinery->id }})"><i class="bi-send-fill"></i></button>
-                    <button id="edit-btn-operating_hours" class="no-print btn btn-sm edit-button" onclick="enableEditing('operating_hours')"><i class="bi-pencil fs-6"></i></button>
-                    @endif
-                </td>
-            </tr>
-
-            <tr>
                 <th class="table-cell">Last Maintenance Date</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-last_maintenance_date">{{ $machinery->last_maintenance_date }}</span>
@@ -152,18 +128,6 @@
                     <input type="text" id="input-last_maintenance_date" value="{{ $machinery->last_maintenance_date }}" class="d-none form-control datepicker" onkeypress="if (event.key === 'Enter') updateField('last_maintenance_date', {{ $machinery->id }})" />
                     <button id="save-btn-last_maintenance_date" class="btn btn-sm btn-light d-none" onclick="updateField('last_maintenance_date', {{ $machinery->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-last_maintenance_date" class="no-print btn btn-sm edit-button" onclick="enableEditing('last_maintenance_date')"><i class="bi-pencil fs-6"></i></button>
-                    @endif
-                </td>
-            </tr>
-
-            <tr>
-                <th class="table-cell">Next Maintenance Date</th>
-                <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-next_maintenance_date">{{ $machinery->next_maintenance_date }}</span>
-                    @if ($canUpdate)
-                    <input type="text" id="input-next_maintenance_date" value="{{ $machinery->next_maintenance_date }}" class="d-none form-control datepicker" onkeypress="if (event.key === 'Enter') updateField('next_maintenance_date', {{ $machinery->id }})" />
-                    <button id="save-btn-next_maintenance_date" class="btn btn-sm btn-light d-none" onclick="updateField('next_maintenance_date', {{ $machinery->id }})"><i class="bi-send-fill"></i></button>
-                    <button id="edit-btn-next_maintenance_date" class="no-print btn btn-sm edit-button" onclick="enableEditing('next_maintenance_date')"><i class="bi-pencil fs-6"></i></button>
                     @endif
                 </td>
             </tr>
@@ -181,38 +145,14 @@
             </tr>
 
             <tr>
-                <th class="table-cell">Hourly Cost</th>
-                <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-hourly_cost">{{ $machinery->hourly_cost }}</span>
-                    @if ($canUpdate)
-                    <input type="number" step="0.01" id="input-hourly_cost" value="{{ $machinery->hourly_cost }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('hourly_cost', {{ $machinery->id }})" />
-                    <button id="save-btn-hourly_cost" class="btn btn-sm btn-light d-none" onclick="updateField('hourly_cost', {{ $machinery->id }})"><i class="bi-send-fill"></i></button>
-                    <button id="edit-btn-hourly_cost" class="no-print btn btn-sm edit-button" onclick="enableEditing('hourly_cost')"><i class="bi-pencil fs-6"></i></button>
-                    @endif
-                </td>
-            </tr>
-
-            <tr>
-                <th class="table-cell">Asset Tag</th>
-                <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-asset_tag">{{ $machinery->asset_tag }}</span>
-                    @if ($canUpdate)
-                    <input type="text" id="input-asset_tag" value="{{ $machinery->asset_tag }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('asset_tag', {{ $machinery->id }})" />
-                    <button id="save-btn-asset_tag" class="btn btn-sm btn-light d-none" onclick="updateField('asset_tag', {{ $machinery->id }})"><i class="bi-send-fill"></i></button>
-                    <button id="edit-btn-asset_tag" class="no-print btn btn-sm edit-button" onclick="enableEditing('asset_tag')"><i class="bi-pencil fs-6"></i></button>
-                    @endif
-                </td>
-            </tr>
-
-            <tr>
                 <th class="table-cell">Certification Status</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-certification_status">{{ $machinery->certification_status }}</span>
                     @if ($canUpdate)
                     <select id="input-certification_status" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('certification_status', {{ $machinery->id }})">
                         @foreach ($cat['machinery_certification_status'] as $certification_status)
-                        <option value="{{ $certification_status->name }}" {{ $machinery->certification_status == $certification_status->name ? 'selected' : '' }}>
-                            {{ $certification_status->name }}
+                        <option value="{{ $certification_status }}" {{ $machinery->certification_status == $certification_status ? 'selected' : '' }}>
+                            {{ $certification_status }}
                         </option>
                         @endforeach
                     </select>

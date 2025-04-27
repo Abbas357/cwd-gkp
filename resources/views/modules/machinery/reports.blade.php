@@ -104,12 +104,12 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-bold" for="load-users">User / Office</label>
-                            <select name="user_id" id="load-users" class="form-select" data-placeholder="Select User / Office">
+                            <label class="form-label fw-bold" for="load-offices">Office</label>
+                            <select name="office_id" id="load-offices" class="form-select" data-placeholder="Select Office">
                                 <option value=""></option>
-                                @foreach(App\Models\User::all() as $user)
-                                    <option value="{{ $user->id }}" @selected($filters['user_id'] == $user->id)>
-                                        {{ $user->currentPosting?->office?->name }} - {{ $user?->name }}
+                                @foreach(App\Models\Office::all() as $office)
+                                    <option value="{{ $office->id }}" @selected($filters['office_id'] == $office->id)>
+                                        {{ $office->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -120,8 +120,8 @@
                             <select name="type" class="form-select">
                                 <option value="">All Types</option>
                                 @foreach($cat['machinery_type'] as $type)
-                                    <option value="{{ $type->id }}" @selected(request('type') == $type->id)>
-                                        {{ $type->name }}
+                                    <option value="{{ $type }}" @selected(request('type') == $type)>
+                                        {{ $type }}
                                     </option>
                                 @endforeach
                             </select>
@@ -132,8 +132,8 @@
                             <select name="operational_status" class="form-select">
                                 <option value="">All Status</option>
                                 @foreach($cat['machinery_operational_status'] as $status)
-                                    <option value="{{ $status->id }}" @selected(request('operational_status') == $status->id)>
-                                        {{ $status->name }}
+                                    <option value="{{ $status }}" @selected(request('operational_status') == $status)>
+                                        {{ $status }}
                                     </option>
                                 @endforeach
                             </select>
@@ -157,8 +157,8 @@
                             <select name="power_source" class="form-select">
                                 <option value="">All Power Sources</option>
                                 @foreach($cat['machinery_power_source'] as $source)
-                                    <option value="{{ $source->id }}" @selected($filters['power_source'] == $source->id)>
-                                        {{ $source->name }}
+                                    <option value="{{ $source }}" @selected($filters['power_source'] == $source)>
+                                        {{ $source }}
                                     </option>
                                 @endforeach
                             </select>
@@ -169,8 +169,8 @@
                             <select name="location" class="form-select">
                                 <option value="">All Locations</option>
                                 @foreach($cat['machinery_location'] as $location)
-                                    <option value="{{ $location->id }}" @selected($filters['location'] == $location->id)>
-                                        {{ $location->name }}
+                                    <option value="{{ $location }}" @selected($filters['location'] == $location)>
+                                        {{ $location }}
                                     </option>
                                 @endforeach
                             </select>
@@ -181,8 +181,8 @@
                             <select name="manufacturer" class="form-select">
                                 <option value="">All Manufacturers</option>
                                 @foreach($cat['machinery_manufacturer'] as $manufacturer)
-                                    <option value="{{ $manufacturer->id }}" @selected($filters['manufacturer'] == $manufacturer->id)>
-                                        {{ $manufacturer->name }}
+                                    <option value="{{ $manufacturer }}" @selected($filters['manufacturer'] == $manufacturer)>
+                                        {{ $manufacturer }}
                                     </option>
                                 @endforeach
                             </select>
@@ -193,8 +193,8 @@
                             <select name="certification_status" class="form-select">
                                 <option value="">All Certification Status</option>
                                 @foreach($cat['machinery_certification_status'] as $certification)
-                                    <option value="{{ $certification->id }}" @selected($filters['certification_status'] == $certification->id)>
-                                        {{ $certification->name }}
+                                    <option value="{{ $certification }}" @selected($filters['certification_status'] == $certification)>
+                                        {{ $certification }}
                                     </option>
                                 @endforeach
                             </select>
@@ -300,71 +300,14 @@
     <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/printThis/printThis.js') }}"></script>
     <script>
-        $(document).ready(function() {
-            const userSelect = $('#load-users');
-            const selectedUserId = '{{ request('user_id') }}';
-            const machinerySelect = $('[name="machinery_id"]');
-
-            machinerySelect.select2({
-                theme: "bootstrap-5",
-                dropdownParent: $('#load-users').parent(),
-                placeholder: "Select Machinery",
-                allowClear: true,
-                ajax: {
-                    url: '{{ route("admin.apps.machineries.search") }}',
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return { q: params.term };
-                    },
-                    processResults: function(data) {
-                        return { results: data };
-                    }
-                },
-                templateResult: function(machinery) {
-                    return machinery.text;
-                }
-            });
-
-            userSelect.select2({
-                theme: "bootstrap-5",
-                dropdownParent: $('#load-users').parent(),
-                placeholder: "Select User / Office",
-                allowClear: true,
-                ajax: {
-                    url: '{{ route("admin.apps.hr.users.api") }}',
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            q: params.term,
-                            page: params.page || 1
-                        };
-                    },
-                    processResults: function(data, params) {
-                        params.page = params.page || 1;
-                        
-                        return {
-                            results: data.results,
-                            pagination: {
-                                more: data.pagination.more
-                            }
-                        };
-                    },
-                    cache: true
-                },
-                templateResult: function(user) {
-                    if (user.loading) {
-                        return 'Loading...';
-                    }
-                    return user.text;
-                },
-                templateSelection: function(user) {
-                    return user.text || 'Select User / Office';
-                }
-            });
-
-        });
+        select2Ajax(
+            '#load-offices',
+            '{{ route("admin.apps.hr.offices.api") }}',
+            {
+                placeholder: "Select Office",
+                dropdownParent: $('#load-offices').closest('body')
+            }
+        );            
 
         $('#print-machinery-details').on('click', () => {
             $("#machinery-report").printThis({

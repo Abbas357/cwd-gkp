@@ -34,6 +34,15 @@
         </a>
     </li>
     @endcan
+
+    @canany(['viewVehicleSettings', 'updateVehicleSettings', 'initVehicleSettings'], App\Models\Setting::class)
+    <li>
+        <a href="{{ route('admin.apps.vehicles.settings.index') }}">
+            <div class="parent-icon"><i class="bi-gear text-danger"></i></div>
+            <div class="menu-title">Settings</div>
+        </a>
+    </li>
+    @endcanany
 </x-sidebar>
 @endif
 

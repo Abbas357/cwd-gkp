@@ -191,6 +191,7 @@ Route::prefix('site')->group(function () {
 
     Route::prefix('schemes')->as('schemes.')->group(function () {
         Route::get('/', [SchemeController::class, 'index'])->name('index')->can('viewAny', App\Models\Scheme::class);
+        Route::get('/api', [SchemeController::class, 'schemes'])->name('api');
         Route::get('/sync', [SchemeController::class, 'syncSchemesView'])->name('syncView')->can('sync', App\Models\Scheme::class);
         Route::get('/get/{scheme}', [SchemeController::class, 'showDetail'])->name('detail')->can('view', 'scheme');
         Route::post('/sync', [SchemeController::class, 'syncSchemes'])->name('sync')->can('sync', App\Models\Scheme::class);

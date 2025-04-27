@@ -951,6 +951,11 @@ class SyncPermissionsCommand extends Command
             'view any permission',
             'create permission',
             'delete permission',
+
+            'view settings hr', 
+            'update settings hr', 
+            'init settings hr', 
+            
             /* -----=------ Hr Permissions End ------------*/
 
             /* ----------- Machinery Permissions Start -----------*/
@@ -966,6 +971,10 @@ class SyncPermissionsCommand extends Command
 
             // Machinery Allocation
             'create machinery-allocation',
+
+            'view settings machinery', 
+            'update settings machinery', 
+            'init settings machinery', 
             /* ----------- Machinery Permissions End -------------*/
 
             /* ----------- Porms Permissions Start -----------*/
@@ -1024,7 +1033,11 @@ class SyncPermissionsCommand extends Command
             'view reports vehicle',
 
             // Vehicle Allotment
-            'create vehicle-allotment'
+            'create vehicle-allotment',
+
+            'view settings vehicle', 
+            'update settings vehicle', 
+            'init settings vehicle', 
             /* ----------- Vehicle Permissions End -------------*/
         ];
     }

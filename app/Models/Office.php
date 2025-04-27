@@ -102,12 +102,18 @@ class Office extends Model
         ->orderByDesc('postings.end_date');
     }
 
-    public function formerPostings()
+    public function formerPostings($designationId = null)
     {
-        return $this->hasMany(Posting::class, 'office_id')
+        $query = $this->hasMany(Posting::class, 'office_id')
             ->where('is_current', false)
             ->with(['user', 'designation'])
             ->orderByDesc('end_date');
+        
+        if ($designationId !== null) {
+            $query->where('designation_id', $designationId);
+        }
+        
+        return $query;
     }
 
     public function getAncestors()

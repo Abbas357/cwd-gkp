@@ -18,7 +18,7 @@ class StoreMachineryAllocationRequest extends FormRequest
             'start_date' => 'required|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'machinery_id' => 'required|exists:machineries,id',
-            'user_id' => 'required|exists:users,id',
+            'office_id' => 'required|exists:offices,id',
         ];
     }
 
@@ -29,7 +29,7 @@ class StoreMachineryAllocationRequest extends FormRequest
             'start_date' => 'Start Date',
             'end_date' => 'End Date',
             'machinery_id' => 'Machinery',
-            'user_id' => 'User',
+            'office_id' => 'Office',
             'project_id' => 'Project',
         ];
     }
@@ -39,7 +39,7 @@ class StoreMachineryAllocationRequest extends FormRequest
         return [
             'end_date.after_or_equal' => 'The end date must be equal to or after the start date.',
             'machinery_id.exists' => 'The selected machinery does not exist.',
-            'user_id.exists' => 'The selected user does not exist.',
+            'office_id.exists' => 'The selected office does not exist.',
         ];
     }
 }

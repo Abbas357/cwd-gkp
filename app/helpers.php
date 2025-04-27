@@ -25,7 +25,7 @@ function getProfilePic($user): string
 function categoryType()
 {
     return [
-        'position', 'designation', 'office', 'file_type', 'download_category', 'contractor_category',
+        'designation', 'office', 'file_type', 'download_category', 'contractor_category',
         'provincial_entity', 'gallery_type', 'news_category', 'page_type', 'tender_domain',
         'vehicle_type', 'vehicle_functional_status', 'vehicle_color', 'fuel_type', 'vehicle_registration_status', 'vehicle_brand', 'receipt_type',
         'machinery_type', 'machinery_operational_status', 'machinery_power_source',
@@ -85,12 +85,10 @@ function formatDuration($startDate, $endDate = null) {
     }
     
     try {
-        // Convert to Carbon if not already
         if (!($startDate instanceof \Carbon\Carbon)) {
             $startDate = \Carbon\Carbon::parse($startDate);
         }
         
-        // Use current date if end date not provided
         if (empty($endDate)) {
             $endDate = now();
             $isOngoing = true;
@@ -101,12 +99,10 @@ function formatDuration($startDate, $endDate = null) {
             $isOngoing = false;
         }
         
-        // Make sure start date is before end date
         if ($startDate->gt($endDate)) {
             return 'Invalid date range';
         }
         
-        // Calculate whole years, months, and days
         $interval = $startDate->diff($endDate);
         $years = (int)$interval->format('%y');
         $months = (int)$interval->format('%m');
@@ -114,8 +110,7 @@ function formatDuration($startDate, $endDate = null) {
         
         $parts = [];
         
-        // For 1 year or more, show years, months, and days
-        if ($years >= 1) {
+       if ($years >= 1) {
             $parts[] = $years . ' ' . ($years > 1 ? 'years' : 'year');
             
             if ($months > 0) {
@@ -126,7 +121,6 @@ function formatDuration($startDate, $endDate = null) {
                 $parts[] = $days . ' ' . ($days > 1 ? 'days' : 'day');
             }
         }
-        // For less than 1 year but at least 1 month, show only months and days
         elseif ($months >= 1) {
             $parts[] = $months . ' ' . ($months > 1 ? 'months' : 'month');
             
@@ -134,13 +128,11 @@ function formatDuration($startDate, $endDate = null) {
                 $parts[] = $days . ' ' . ($days > 1 ? 'days' : 'day');
             }
         }
-        // For less than 1 month, show only days
         elseif ($days >= 1) {
             $parts[] = $days . ' ' . ($days > 1 ? 'days' : 'day');
         }
-        // Handle case where difference is less than a day
         else {
-            $parts[] = '1 day'; // Minimum duration
+            $parts[] = '1 day';
         }
         
         $duration = implode(', ', $parts);

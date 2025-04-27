@@ -249,8 +249,8 @@
                         <div class="activity-timeline">
                             @foreach($recentAllocations as $allocation)
                             <div class="timeline-item">
-                                <h6 class="mb-1">{{ $allocation->machinery->manufacturer }} {{ $allocation->machinery->model }}</h6>
-                                <p class="mb-0 small">Allocated to {{ $allocation?->user?->currentPosting->office->name }}</p>
+                                <h6 class="mb-1">{{ $allocation->machinery?->manufacturer }} {{ $allocation?->machinery?->model }}</h6>
+                                <p class="mb-0 small">Allocated to {{ $allocation?->office?->name }}</p>
                                 <small class="text-muted">{{ $allocation->created_at->diffForHumans() }}</small>
                             </div>
                             @endforeach
@@ -270,26 +270,8 @@
                                 <h6 class="mb-1">{{ $machinery->manufacturer }} {{ $machinery->model }}</h6>
                                 <p class="mb-0 small text-muted">{{ $machinery->operational_status }}</p>
                                 @if($machinery->allocation)
-                                <small class="text-muted">Allocated to: {{ $machinery->allocation?->user?->currentPosting->office->name }}</small>
+                                <small class="text-muted">Allocated to: {{ $machinery->allocation?->office?->name }}</small>
                                 @endif
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header bg-light">
-                        <h5 class="card-title mb-0">Upcoming Maintenance</h5>
-                    </div>
-                    <div class="card-body">
-                        @foreach($maintenanceSchedule as $machinery)
-                        <div class="d-flex align-items-center mb-3">
-                            <span class="alert-badge bg-info"></span>
-                            <div>
-                                <h6 class="mb-1">{{ $machinery->manufacturer }} {{ $machinery->model }}</h6>
-                                <p class="mb-0 small">Due: {{ date('M d, Y', strtotime($machinery->next_maintenance_date)) }}</p>
-                                <small class="text-muted">{{ \Carbon\Carbon::parse($machinery->next_maintenance_date)->diffForHumans() }}</small>
                             </div>
                         </div>
                         @endforeach
@@ -310,19 +292,6 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header bg-light">
-                        <h5 class="card-title mb-0">Operating Hours Distribution</h5>
-                    </div>
-                    <div class="card-body">
-                        <div id="operatingHoursChart" style="height: 400px;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row g-3 mt-4">
-            <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-light">
                         <h5 class="card-title mb-0">Allocation Trends by Purpose</h5>
@@ -537,58 +506,6 @@
         };
 
         new ApexCharts(document.querySelector("#modelsByManufacturerChart"), modelsByManufacturerOptions).render();
-
-        // Operating Hours Chart
-        const operatingHoursData = @json($operatingHoursStats);
-        const operatingHoursOptions = {
-            series: [{
-                name: 'Machinery Count',
-                data: operatingHoursData.map(item => item.count)
-            }],
-            chart: {
-                type: 'bar',
-                height: 400,
-                toolbar: {
-                    show: false
-                }
-            },
-            plotOptions: {
-                bar: {
-                    borderRadius: 4,
-                    horizontal: false,
-                    columnWidth: '60%',
-                }
-            },
-            dataLabels: {
-                enabled: false
-            },
-            stroke: {
-                show: true,
-                width: 2,
-                colors: ['transparent']
-            },
-            xaxis: {
-                categories: operatingHoursData.map(item => item.hour_range),
-            },
-            yaxis: {
-                title: {
-                    text: 'Number of Machinery'
-                }
-            },
-            fill: {
-                opacity: 1,
-                colors: ['#36b9cc']
-            },
-            tooltip: {
-                y: {
-                    formatter: function (val) {
-                        return val + " machinery"
-                    }
-                }
-            }
-        };
-
-        new ApexCharts(document.querySelector("#operatingHoursChart"), operatingHoursOptions).render();
 
         // Allocation Trends Chart
         const allocationTrends = @json($allocationTrends);

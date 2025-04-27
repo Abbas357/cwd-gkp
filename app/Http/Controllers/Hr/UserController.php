@@ -185,7 +185,6 @@ class UserController extends Controller
             $bps[] = sprintf("BPS-%02d", $i);
         }
 
-        $posting_types = ['Appointment', 'Deputation', 'Transfer', 'Mutual', 'Additional-Charge', 'Promotion', 'Suspension', 'OSD', 'Out-Transfer', 'Retirement', 'Termination'];
         if (!$user) {
             return response()->json([
                 'success' => false,
@@ -200,7 +199,7 @@ class UserController extends Controller
             'allDesignations' => Designation::where('status', 'Active')->get(),
             'allOffices' => Office::where('status', 'Active')->get(),
             'bps' => $bps,
-            'posting_types' => $posting_types
+            'posting_types' => category('posting_type', 'hr')
         ];
 
         $html = view('modules.hr.users.partials.edit', compact('data'))->render();

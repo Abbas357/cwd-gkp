@@ -51,17 +51,21 @@
                                             <td>{{ $machinery->allocation->purpose }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Supervisor</th>
-                                            <td>{{ $machinery->allocation->user->name }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Designation</th>
-                                            <td>{{ $machinery->allocation->user->currentPosting->office->name }}</td>
+                                            <th>Office</th>
+                                            <td>{{ $machinery->allocation->office->name }}</td>
                                         </tr>
                                         @if($machinery->allocation->project_id)
                                         <tr>
-                                            <th>Project</th>
-                                            <td>{{ $machinery->allocation->project->name }}</td>
+                                            <th>Project Name</th>
+                                            <td>{{ $machinery->allocation->project->scheme_name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Scheme Code</th>
+                                            <td>{{ $machinery->allocation->project->scheme_code }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>ADP Number</th>
+                                            <td>{{ $machinery->allocation->project->adp_number }}</td>
                                         </tr>
                                         @endif
                                     </tbody>
@@ -99,26 +103,12 @@
         <input type="file" class="form-control" id="machiery_allocation_orders" placeholder="Allocation Orders" name="machiery_allocation_orders">
     </div>
     <div class="col-md-12 mb-3">
-        <label class="form-label" for="load-users">Supervisor</label>
-        <select name="user_id" id="load-users" class="form-select" data-placeholder="Select Supervisor">
-            <option value=""></option>
-            @foreach($cat['users'] as $user)
-                <option value="{{ $user->id }}">
-                    {{ $user->currentPosting?->office->name }} - {{ $user->name }}
-                </option>
-            @endforeach
-        </select>
+        <label class="form-label" for="load-users">Office</label>
+        <select name="office_id" id="load-offices" class="form-select" data-placeholder="Select Office"></select>
     </div>
     <div class="col-md-12 mb-3">
-        <label class="form-label" for="project_id">Project <span class="badge bg-secondary mb-1">Optional</span></label>
-        <select name="project_id" id="project_id" class="form-select" data-placeholder="Select Project">
-            <option value=""></option>
-            @if(isset($projects))
-                @foreach($projects as $project)
-                    <option value="{{ $project->id }}">{{ $project->name }}</option>
-                @endforeach
-            @endif
-        </select>
+        <label class="form-label" for="load-schemes">Project / Scheme</label>
+        <select name="project_id" id="load-schemes" class="form-select" data-placeholder="Select Schemes"></select>
     </div>
 </div>
 
@@ -126,20 +116,23 @@
 <script src="{{ asset('admin/plugins/flatpickr/flatpickr.js') }}"></script>
 <script>
     $(document).ready(function () {
-        const userSelect = $('#load-users');
-        userSelect.select2({
-            theme: "bootstrap-5",
-            dropdownParent: $('#load-users').parent(),
-            placeholder: "Select Supervisor",
-            allowClear: true
-        });
+        select2Ajax(
+            '#load-offices',
+            '{{ route("admin.apps.hr.offices.api") }}',
+            {
+                placeholder: "Select Office",
+                dropdownParent: $('#load-offices').closest('.modal')
+            }
+        );
 
-        $('#project_id').select2({
-            theme: "bootstrap-5",
-            dropdownParent: $('#project_id').parent(),
-            placeholder: "Select Project",
-            allowClear: true
-        });
+        select2Ajax(
+            '#load-schemes',
+            '{{ route("admin.schemes.api") }}',
+            {
+                placeholder: "Select Scheme",
+                dropdownParent: $('#load-schemes').closest('.modal')
+            }
+        );
 
         $("#start_date").flatpickr({
             enableTime: true,

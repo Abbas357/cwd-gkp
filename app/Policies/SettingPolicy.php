@@ -42,4 +42,52 @@ class SettingPolicy
         return $user->can('init settings damage');
     }
 
+    // Hr Settings
+    public function viewHrSettings(User $user): bool
+    {
+        return $user->can('view settings hr');
+    }
+
+    public function updateHrSettings(User $user): bool
+    {
+        return $user->can('update settings hr');
+    }
+
+    public function initHrSettings(User $user): bool
+    {
+        return $user->can('init settings hr');
+    }
+
+    // Machinery Settings
+    public function viewMachinerySettings(User $user): bool
+    {
+        return $user->can('view settings machinery');
+    }
+
+    public function updateMachinerySettings(User $user): bool
+    {
+        return $user->can('update settings machinery');
+    }
+
+    public function initMachinerySettings(User $user): bool
+    {
+        return $user->can('init settings machinery');
+    }
+
+    // Vehicle Settings
+    public function viewVehicleSettings(User $user): bool
+    {
+        return $user->can('view settings vehicle');
+    }
+
+    public function updateVehicleSettings(User $user): bool
+    {
+        return $user->can('update settings vehicle');
+    }
+
+    public function initVehicleSettings(User $user): bool
+    {
+        return $user->can('init settings vehicle');
+    }
+
 }

@@ -48,6 +48,21 @@ class SchemeController extends Controller
         return view('admin.schemes.index');
     }
 
+    public function schemes(Request $request)
+    {
+        return $this->getApiResults(
+            $request, 
+            Scheme::class, 
+            [
+                'searchColumns' => ['scheme_name', 'scheme_code', 'sector_name', 'sub_sector_name', 'year'],
+                'textFormat' => function($scheme) {
+                    return $scheme->scheme_name . ' - ' . $scheme->scheme_code;  
+                },
+                'orderBy' => 'scheme_name'
+            ]
+        );
+    }
+
     public function showDetail(Scheme $scheme)
     {
         $html = view('admin.schemes.partials.detail', compact('scheme'))->render();

@@ -329,7 +329,7 @@ class ReportController extends Controller
         $districts = District::all();
         
         // Get office hierarchy levels for filtering
-        $officeLevels = ['Provincial', 'Regional', 'Divisional', 'District', 'SubDivisional'];
+        $officeLevels = category('office_type', 'hr');
         
         return view('modules.hr.reports.office-strength', compact(
             'offices', 
@@ -424,7 +424,7 @@ class ReportController extends Controller
         $designations = Designation::where('status', 'Active')->get();
         
         // Get posting types for filtering
-        $postingTypes = ['Appointment', 'Transfer', 'Promotion', 'Deputation', 'Additional-Charge', 'OSD', 'Retirement', 'Termination'];
+        $postingTypes = category('posting_type', 'hr');
         
         return view('modules.hr.reports.posting-history', compact(
             'postings', 
@@ -545,10 +545,7 @@ class ReportController extends Controller
         $designations = Designation::where('status', 'Active')->get();
         
         // Get BPS values for filtering
-        $bpsValues = [];
-        for ($i = 1; $i <= 22; $i++) {
-            $bpsValues[] = sprintf("BPS-%02d", $i);
-        }
+        $bpsValues = category('bps', 'hr');
         
         // Calculate summary statistics
         $avgServiceYears = $allUsers->avg('service_years');

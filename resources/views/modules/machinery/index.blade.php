@@ -20,14 +20,9 @@
                     <th scope="col" class="p-3">Model</th>
                     <th scope="col" class="p-3">Serial Number</th>
                     <th scope="col" class="p-3">Power Source</th>
-                    <th scope="col" class="p-3">Power Rating</th>
                     <th scope="col" class="p-3">Manufacturing Year</th>
-                    <th scope="col" class="p-3">Operating Hours</th>
                     <th scope="col" class="p-3">Last Maintenance Date</th>
-                    <th scope="col" class="p-3">Next Maintenance Date</th>
                     <th scope="col" class="p-3">Location</th>
-                    <th scope="col" class="p-3">Hourly Cost</th>
-                    <th scope="col" class="p-3">Asset Tag</th>
                     <th scope="col" class="p-3">Certification Status</th>
                     <th scope="col" class="p-3">Specifications</th>
                     <th scope="col" class="p-3">Remarks</th>
@@ -79,35 +74,15 @@
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "power_rating"
-                        , searchBuilderType: "string"
-                    }
-                    , {
                         data: "manufacturing_year"
                         , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "operating_hours"
-                        , searchBuilderType: "num"
                     }
                     , {
                         data: "last_maintenance_date"
                         , searchBuilderType: "date"
                     }
                     , {
-                        data: "next_maintenance_date"
-                        , searchBuilderType: "date"
-                    }
-                    , {
                         data: "location"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "hourly_cost"
-                        , searchBuilderType: "num"
-                    }
-                    , {
-                        data: "asset_tag"
                         , searchBuilderType: "string"
                     }
                     , {
@@ -144,7 +119,7 @@
                 , defaultOrderColumn: 20
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
-                    targets: [0, 5, 6, 7, 9, 10, 11, 13, 14, 15, 16, 17]
+                    targets: [0, 5, 6, 7, 9, 10, 11, 13, 14]
                     , visible: false
                     }, {
                         targets: -1,
@@ -240,9 +215,7 @@
                 , formAction: "{{ route('admin.apps.machineries.allocation.store', ':id') }}"
                 , modalHeight: '65vh'
                 , tableToRefresh: table
-                , formType: 'edit'
             , });
-            
         });
 
     </script>

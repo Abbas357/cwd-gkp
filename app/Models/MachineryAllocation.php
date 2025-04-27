@@ -73,8 +73,13 @@ class MachineryAllocation extends Model implements HasMedia
         return $this->belongsTo(Machinery::class, 'machinery_id');
     }
 
-    public function user()
+    public function office()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Office::class, 'office_id');
+    }
+
+    public function project()
+    {
+        return $this->belongsTo(Scheme::class, 'project_id');
     }
 }

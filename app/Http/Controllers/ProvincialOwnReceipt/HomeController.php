@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Dmis;
+namespace App\Http\Controllers\ProvincialOwnReceipt;
 
 use App\Models\Damage;
 use App\Models\Setting;
@@ -237,7 +237,7 @@ class HomeController extends Controller
         ],
         $this->module, 'category', 'Types of Damage Nature');
         return redirect()->route('admin.apps.dmis.settings.index')
-            ->with('success', 'Damage Tracking System module initiated with default settings and categories.');
+            ->with('success', 'Damage Tracking System module initd with default settings and categories.');
     }
 
     private function initIfNeeded()

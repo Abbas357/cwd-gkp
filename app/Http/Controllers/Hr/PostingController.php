@@ -64,7 +64,7 @@ class PostingController extends Controller
         $users = User::all();
         $offices = Office::where('status', 'Active')->get();
         $designations = Designation::where('status', 'Active')->get();
-        $postingTypes = ['Appointment', 'Transfer', 'Promotion', 'Retirement', 'Termination'];
+        $postingTypes = category('posting_type', 'hr');
 
         $html = view('modules.hr.postings.partials.create', compact('users', 'offices', 'designations', 'postingTypes'))->render();
         return response()->json([
@@ -122,7 +122,7 @@ class PostingController extends Controller
         $users = User::all();
         $offices = Office::where('status', 'Active')->get();
         $designations = Designation::where('status', 'Active')->get();
-        $postingTypes = ['Appointment', 'Transfer', 'Promotion', 'Retirement', 'Termination'];
+        $postingTypes = category('posting_type', 'hr');
                 
         return view('modules.hr.postings.edit', compact('posting', 'users', 'offices', 'designations', 'postingTypes'));
     }

@@ -9,7 +9,7 @@ use App\Http\Controllers\Hr\UserController;
 use App\Http\Controllers\Hr\OfficeController;
 use App\Http\Controllers\Hr\ReportController;
 use App\Http\Controllers\Hr\PostingController;
-use App\Http\Controllers\Hr\DashboardController;
+use App\Http\Controllers\Hr\HomeController;
 use App\Http\Controllers\Hr\OrganogramController;
 use App\Http\Controllers\Hr\PermissionController;
 use App\Http\Controllers\Hr\DesignationController;
@@ -17,7 +17,13 @@ use App\Http\Controllers\Hr\SanctionedPostController;
 
 Route::prefix('hr')->as('hr.')->group(function () {
 
-    Route::get('/', [DashboardController::class, 'index'])->name('index');
+    Route::get('/', [HomeController::class, 'index'])->name('index');
+
+    Route::prefix('settings')->as('settings.')->group(function () {
+        Route::get('/', [HomeController::class, 'settings'])->name('index')->can('viewHrSettings', App\Models\Setting::class);
+        Route::post('/update', [HomeController::class, 'update'])->name('update')->can('updateHrSettings', App\Models\Setting::class);
+        Route::post('/init', [HomeController::class, 'init'])->name('init')->can('initHrSettings', App\Models\Setting::class);
+    });
 
     Route::prefix('users')->as('users.')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index')->can('viewAny', App\Models\User::class);

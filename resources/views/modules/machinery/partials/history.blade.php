@@ -103,20 +103,14 @@
                         <tr>
                             <th>Serial No:</th>
                             <td>{{ $machinery->serial_number }}</td>
-                            <th>Model No:</th>
-                            <td>{{ $machinery->model_number }}</td>
+                            <th>Model Year:</th>
+                            <td>{{ $machinery->model }}</td>
                         </tr>
                         <tr>
                             <th>Type:</th>
                             <td>{{ $machinery->type }}</td>
-                            <th>Year:</th>
-                            <td>{{ $machinery->model_year }}</td>
-                        </tr>
-                        <tr>
-                            <th>Power Rating:</th>
-                            <td>{{ $machinery->power_rating }}</td>
-                            <th>Power Source:</th>
-                            <td>{{ $machinery->power_source }}</td>
+                            <th>Manufacturing Year:</th>
+                            <td>{{ $machinery->manufacturing_year }}</td>
                         </tr>
                         <tr>
                             <th>Status:</th>
@@ -124,6 +118,43 @@
                             <th>Remarks:</th>
                             <td>{{ $machinery->remarks }}</td>
                         </tr>
+                        @if($machinery->allocation)
+                            <tr>
+                                <th>Allocated for</th>
+                                <td colspan="3">
+                                    @if($machinery->allocation->purpose === 'Pool')
+                                        <span class="badge bg-danger fs-6">Pool</span>
+                                    @else
+                                        <table class="table mb-0">
+                                            <tbody>
+                                                <tr>
+                                                    <th>Purpose</th>
+                                                    <td>{{ $machinery->allocation->purpose }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Office</th>
+                                                    <td>{{ $machinery->allocation->office->name }}</td>
+                                                </tr>
+                                                @if($machinery->allocation->project_id)
+                                                <tr>
+                                                    <th>Project Name</th>
+                                                    <td>{{ $machinery->allocation->project->scheme_name }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Scheme Code</th>
+                                                    <td>{{ $machinery->allocation->project->scheme_code }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>ADP Number</th>
+                                                    <td>{{ $machinery->allocation->project->adp_number }}</td>
+                                                </tr>
+                                                @endif
+                                            </tbody>
+                                        </table>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
             </div>
@@ -148,7 +179,7 @@
         <table class="machinery-table">
             <thead>
                 <tr>
-                    <th>Supervisor</th>
+                    <th>Office</th>
                     <th>Purpose</th>
                     <th>Dates</th>
                     <th>Duration</th>
@@ -161,22 +192,14 @@
                     <td>
                         @if($allocation->purpose !== 'Pool')
                             <div class="timeline-user">
-                                <div class="timeline-user-icon">
-                                    <img src="{{ getProfilePic($allocation->user) }}" alt="{{ $allocation->user->name }}" style="width:45px; border-radius: 50px">
-                                </div>
                                 <div class="user-details">
-                                    <span class="user-name">{{ $allocation->user->name }}</span>
-                                    <span class="user-designation">{{ $allocation->user->currentPosting->office->name ?? 'N/A' }}</span>
+                                    <span class="user-name">{{ $allocation->office->name }}</span>
                                 </div>
                             </div>
                         @else
                             <div class="timeline-user">
-                                <div class="timeline-user-icon">
-                                    <img src="{{ asset('site/images/logo-square.png') }}" alt="C&W Department" style="width:45px; border-radius: 50px">
-                                </div>
                                 <div class="user-details">
                                     <span class="user-name">C&W Department</span>
-                                    <span class="user-designation">Govt. of Khyber Pakhtunkhwa</span>
                                 </div>
                             </div>
                         @endif
@@ -192,7 +215,7 @@
                         } }}">{{ $allocation->purpose }}</span>
                         @if($allocation->project_id)
                             <div class="mt-1 small text-muted">
-                                Project: {{ $allocation->project->name }}
+                                Scheme Code: {{ $allocation->project->scheme_code }}
                             </div>
                         @endif
                     </td>

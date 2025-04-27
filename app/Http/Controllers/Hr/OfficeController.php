@@ -82,7 +82,7 @@ class OfficeController extends Controller
     {
         $offices = Office::where('status', 'Active')->get();
         $districts = District::whereDoesntHave('office')->get();
-        $officeTypes = ['Secretariat', 'Provincial', 'Regional', 'Authority', 'Project', 'Divisional', 'District', 'Tehsil'];
+        $officeTypes = category('office_type', 'hr');
         $html =  view('modules.hr.offices.partials.create', compact('offices', 'districts', 'officeTypes'))->render();
 
         return response()->json([

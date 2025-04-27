@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Machinery;
 
 use App\Models\User;
-
-use App\Models\Category;
 use App\Helpers\Database;
 use App\Models\Machinery;
 use Illuminate\Http\Request;
@@ -69,158 +67,16 @@ class MachineryController extends Controller
         return view('modules.machinery.index');
     }
 
-    private function getDistribution($field)
-    {
-        return Machinery::selectRaw("$field, COUNT(*) as count")
-            ->whereNotNull($field)
-            ->groupBy($field)
-            ->orderBy('count', 'desc')
-            ->get();
-    }
-
-    public function index(Request $request)
-    {
-        $totalMachinery = Machinery::count();
-
-        $operationalMachinery = Machinery::where('operational_status', 'Operational')->count();
-        $nonOperationalMachinery = Machinery::where('operational_status', 'Non-Operational')->count();
-        $underMaintenanceMachinery = Machinery::where('operational_status', 'Under Maintenance')->count();
-
-        $allocatedMachinery = MachineryAllocation::whereNull('end_date')->count();
-
-        $permanentAllocated = MachineryAllocation::whereNull('end_date')
-            ->where('purpose', 'Permanent')
-            ->count();
-
-        $temporaryAllocated = MachineryAllocation::whereNull('end_date')
-            ->where('purpose', 'Temporary')
-            ->count();
-
-        $inStorage = MachineryAllocation::whereNull('end_date')
-            ->where('purpose', 'Storage')
-            ->count();
-
-        $monthlyAllocations = MachineryAllocation::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as count')
-            ->groupBy('month')
-            ->orderBy('month')
-            ->limit(6)
-            ->get();
-
-        $distributions = [
-            'type' => $this->getDistribution('type'),
-            'power_source' => $this->getDistribution('power_source'),
-            'manufacturer' => $this->getDistribution('manufacturer'),
-            'manufacturing_year' => $this->getDistribution('manufacturing_year'),
-            'location' => $this->getDistribution('location'),
-            'certification_status' => $this->getDistribution('certification_status')
-        ];
-
-        $modelsByManufacturer = Machinery::selectRaw('manufacturer, model, COUNT(*) as count')
-            ->whereNotNull('manufacturer')
-            ->whereNotNull('model')
-            ->groupBy('manufacturer', 'model')
-            ->get()
-            ->groupBy('manufacturer');
-
-        $recentAllocations = MachineryAllocation::with(['machinery', 'user'])
-            ->latest()
-            ->take(5)
-            ->get();
-
-        $machineryNeedingAttention = Machinery::where('operational_status', 'Non-Operational')
-            ->orWhere('operational_status', 'Under Maintenance')
-            ->with('allocation.user')
-            ->take(5)
-            ->get();
-
-        $powerSourceStats = Machinery::selectRaw('power_source, COUNT(*) as count')
-            ->whereNotNull('power_source')
-            ->groupBy('power_source')
-            ->get();
-
-        $operationalPercentage = $totalMachinery > 0 ? ($operationalMachinery / $totalMachinery) * 100 : 0;
-        $allocatedPercentage = $totalMachinery > 0 ? ($allocatedMachinery / $totalMachinery) * 100 : 0;
-        $storagePercentage = $totalMachinery > 0 ? ($inStorage / $totalMachinery) * 100 : 0;
-
-        $yearWiseAcquisitions = Machinery::selectRaw('YEAR(created_at) as year, COUNT(*) as count')
-            ->groupBy('year')
-            ->orderBy('year', 'desc')
-            ->get();
-
-        $manufacturerWiseStatus = Machinery::selectRaw('manufacturer, operational_status, COUNT(*) as count')
-            ->whereNotNull('manufacturer')
-            ->whereNotNull('operational_status')
-            ->groupBy('manufacturer', 'operational_status')
-            ->get()
-            ->groupBy('manufacturer');
-
-        $allocationTrends = MachineryAllocation::selectRaw('
-            YEAR(created_at) as year, 
-            MONTH(created_at) as month,
-            purpose,
-            COUNT(*) as count
-        ')
-            ->whereYear('created_at', '>=', now()->subYear())
-            ->groupBy('year', 'month', 'purpose')
-            ->orderBy('year')
-            ->orderBy('month')
-            ->get()
-            ->groupBy('purpose');
-
-        $maintenanceSchedule = Machinery::whereNotNull('next_maintenance_date')
-            ->orderBy('next_maintenance_date')
-            ->take(5)
-            ->get();
-
-        $operatingHoursStats = Machinery::selectRaw('
-            CASE 
-                WHEN operating_hours < 1000 THEN "< 1,000 hours"
-                WHEN operating_hours < 5000 THEN "1,000-5,000 hours"
-                WHEN operating_hours < 10000 THEN "5,000-10,000 hours"
-                ELSE "> 10,000 hours"
-            END as hour_range,
-            COUNT(*) as count
-        ')
-            ->whereNotNull('operating_hours')
-            ->groupBy('hour_range')
-            ->get();
-
-        return view('modules.machinery.dashboard', compact(
-            'totalMachinery',
-            'operationalMachinery',
-            'nonOperationalMachinery',
-            'underMaintenanceMachinery',
-            'allocatedMachinery',
-            'permanentAllocated',
-            'temporaryAllocated',
-            'inStorage',
-            'monthlyAllocations',
-            'distributions',
-            'modelsByManufacturer',
-            'recentAllocations',
-            'machineryNeedingAttention',
-            'powerSourceStats',
-            'operationalPercentage',
-            'allocatedPercentage',
-            'storagePercentage',
-            'yearWiseAcquisitions',
-            'manufacturerWiseStatus',
-            'allocationTrends',
-            'maintenanceSchedule',
-            'operatingHoursStats'
-        ));
-    }
-
     public function create()
     {
         $cat = [
             'users' => User::all(),
-            'machinery_type' => Category::where('type', 'machinery_type')->get(),
-            'machinery_operational_status' => Category::where('type', 'machinery_operational_status')->get(),
-            'machinery_power_source' => Category::where('type', 'machinery_power_source')->get(),
-            'machinery_location' => Category::where('type', 'machinery_location')->get(),
-            'machinery_manufacturer' => Category::where('type', 'machinery_manufacturer')->get(),
-            'machinery_certification_status' => Category::where('type', 'machinery_certification_status')->get(),
+            'machinery_type' => category('machinery_type', 'machinery'),
+            'machinery_operational_status' => category('machinery_operational_status', 'machinery'),
+            'machinery_power_source' => category('machinery_power_source', 'machinery'),
+            'machinery_location' => category('machinery_location', 'machinery'),
+            'machinery_manufacturer' => category('machinery_manufacturer', 'machinery'),
+            'machinery_certification_status' => category('machinery_certification_status', 'machinery'),
         ];
 
         $html = view('modules.machinery.partials.create', compact('cat'))->render();
@@ -241,14 +97,9 @@ class MachineryController extends Controller
         $machinery->model = $request->model;
         $machinery->serial_number = $request->serial_number;
         $machinery->power_source = $request->power_source;
-        $machinery->power_rating = $request->power_rating;
         $machinery->manufacturing_year = $request->manufacturing_year;
-        $machinery->operating_hours = $request->operating_hours;
         $machinery->last_maintenance_date = $request->last_maintenance_date;
-        $machinery->next_maintenance_date = $request->next_maintenance_date;
         $machinery->location = $request->location;
-        $machinery->hourly_cost = $request->hourly_cost;
-        $machinery->asset_tag = $request->asset_tag;
         $machinery->certification_status = $request->certification_status;
         $machinery->specifications = $request->specifications;
         $machinery->user_id = $request->user()->id;
@@ -284,12 +135,12 @@ class MachineryController extends Controller
     public function showDetail(Machinery $machinery)
     {
         $cat = [
-            'machinery_type' => Category::where('type', 'machinery_type')->get(),
-            'machinery_operational_status' => Category::where('type', 'machinery_operational_status')->get(),
-            'machinery_power_source' => Category::where('type', 'machinery_power_source')->get(),
-            'machinery_location' => Category::where('type', 'machinery_location')->get(),
-            'machinery_manufacturer' => Category::where('type', 'machinery_manufacturer')->get(),
-            'machinery_certification_status' => Category::where('type', 'machinery_certification_status')->get(),
+            'machinery_type' => category('machinery_type', 'machinery'),
+            'machinery_operational_status' => category('machinery_operational_status', 'machinery'),
+            'machinery_power_source' => category('machinery_power_source', 'machinery'),
+            'machinery_location' => category('machinery_location', 'machinery'),
+            'machinery_manufacturer' => category('machinery_manufacturer', 'machinery'),
+            'machinery_certification_status' => category('machinery_certification_status', 'machinery'),
         ];
 
         if (!$machinery) {
@@ -313,7 +164,6 @@ class MachineryController extends Controller
     public function machineryHistory(Machinery $machinery)
     {
         $allocations = $machinery->allocations;
-
         if (!$machinery) {
             return response()->json([
                 'success' => false,
@@ -373,82 +223,7 @@ class MachineryController extends Controller
         return response()->json(['error' => 'Failed to update maintenance information'], 500);
     }
 
-    public function reports(Request $request)
-    {
-        $cat = [
-            'users' => User::all(),
-            'machinery_type' => Category::where('type', 'machinery_type')->get(),
-            'machinery_operational_status' => Category::where('type', 'machinery_operational_status')->get(),
-            'machinery_power_source' => Category::where('type', 'machinery_power_source')->get(),
-            'machinery_location' => Category::where('type', 'machinery_location')->get(),
-            'machinery_manufacturer' => Category::where('type', 'machinery_manufacturer')->get(),
-            'machinery_certification_status' => Category::where('type', 'machinery_certification_status')->get(),
-        ];
-
-        $filters = [
-            'user_id' => null,
-            'machinery_id' => null,
-            'type' => null,
-            'operational_status' => null,
-            'power_source' => null,
-            'location' => null,
-            'manufacturer' => null,
-            'certification_status' => null
-        ];
-
-        $filters = array_merge($filters, $request->only(array_keys($filters)));
-
-        $include_subordinates = $request->boolean('include_subordinates', false);
-        $show_history = $request->boolean('show_history', false);
-
-        $query = MachineryAllocation::query()
-            ->with(['machinery', 'user'])
-            ->when(!$show_history, fn($q) => $q->whereNull('end_date'));
-
-        if ($filters['user_id']) {
-            if ($include_subordinates) {
-                $user = User::find($filters['user_id']);
-                $subordinates = $user->getAllSubordinates()->pluck('id')->push($user->id);
-                $query->whereIn('user_id', $subordinates);
-            } else {
-                $query->where('user_id', $filters['user_id']);
-            }
-        }
-
-        if ($filters['machinery_id']) {
-            $query->where('machinery_id', $filters['machinery_id']);
-        }
-
-        $query->whereHas('machinery', function ($q) use ($filters, $cat) {
-            if ($filters['operational_status']) {
-                $status = $cat['machinery_operational_status']->firstWhere('id', $filters['operational_status']);
-                $q->where('operational_status', $status->name ?? '');
-            }
-
-            if ($filters['type']) {
-                $type = $cat['machinery_type']->firstWhere('id', $filters['type']);
-                $q->where('type', $type->name ?? '');
-            }
-
-            $additionalFilters = [
-                'power_source' => 'power_source',
-                'location' => 'machinery_location',
-                'manufacturer' => 'machinery_manufacturer',
-                'certification_status' => 'certification_status'
-            ];
-
-            foreach ($additionalFilters as $field => $categoryType) {
-                if ($filters[$field]) {
-                    $category = $cat[$categoryType]->firstWhere('id', $filters[$field]);
-                    $q->where($field, $category->name ?? '');
-                }
-            }
-        });
-
-        $allocations = $query->latest()->get();
-
-        return view('modules.machinery.reports', compact('cat', 'allocations', 'filters'));
-    }
+    
 
     public function maintenanceDue(Request $request)
     {

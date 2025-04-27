@@ -16,7 +16,7 @@ class MachineryAllocationController extends Controller
         $machinery = Machinery::find($id);
         
         $cat = [
-            'purpose' => ['Pool', 'Construction', 'Building Dismantling', 'Road Dismantling', 'Building Repair', 'Other'],
+            'purpose' => setting('machinery_purpose', 'machinery'),
             'users' => User::all(),
         ];
 
@@ -45,14 +45,14 @@ class MachineryAllocationController extends Controller
         $allotment->start_date = $request->start_date;
         $allotment->end_date = $request->end_date ?: null;
         $allotment->machinery_id = $request->machinery_id;
-        $allotment->user_id = $request->user_id;
+        $allotment->office_id = $request->office_id;
         $allotment->project_id = $request->project_id ?: null;
 
         if ($request->hasFile('machiery_allocation_orders')) {
             $allotment->addMedia($request->file('machiery_allocation_orders'))
                 ->toMediaCollection('machiery_allocation_orders');
         }
-        
+
         if ($allotment->save()) {
             return response()->json(['success' => 'Machinery has been allocated successfully.']);
         }
