@@ -30,7 +30,7 @@
     <li>
         <a href="{{ route('admin.apps.vehicles.reports') }}">
             <div class="parent-icon"><i class="bi-flag text-info"></i></div>
-            <div class="menu-title">Reports</div>
+            <div class="menu-title"> Reports</div>
         </a>
     </li>
     @endcan
