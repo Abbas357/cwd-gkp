@@ -4,12 +4,13 @@
         <select class="form-select form-select-md" id="load-offices" name="office">
         </select>
     </div>
+
     <div class="col-md-6 mb-3">
         <label for="type">Type</label>
         <select class="form-select" id="type" name="type" required>
             <option value="">Choose...</option>
             @foreach ($cat['vehicle_type'] as $type)
-            <option value="{{ $type->name }}">{{ $type->name }}</option>
+            <option value="{{ $type }}">{{ $type }}</option>
             @endforeach
         </select>
         @error('type')
@@ -22,31 +23,33 @@
         <select class="form-select" id="color" name="color" required>
             <option value="">Choose...</option>
             @foreach ($cat['vehicle_color'] as $color)
-            <option value="{{ $color->name }}">{{ $color->name }}</option>
+            <option value="{{ $color }}">{{ $color }}</option>
             @endforeach
         </select>
         @error('color')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
+
     <div class="col-md-6 mb-3">
         <label for="fuel_type">Fuel Type</label>
         <select class="form-select" id="fuel_type" name="fuel_type" required>
             <option value="">Choose...</option>
             @foreach ($cat['fuel_type'] as $fuel_type)
-            <option value="{{ $fuel_type->name }}">{{ $fuel_type->name }}</option>
+            <option value="{{ $fuel_type }}">{{ $fuel_type }}</option>
             @endforeach
         </select>
         @error('fuel_type')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
+    
     <div class="col-md-6 mb-3">
         <label for="brand">Brand</label>
         <select class="form-select" id="brand" name="brand" required>
             <option value="">Choose...</option>
             @foreach ($cat['vehicle_brand'] as $brand)
-            <option value="{{ $brand->name }}">{{ $brand->name }}</option>
+            <option value="{{ $brand }}">{{ $brand }}</option>
             @endforeach
         </select>
         @error('brand')
@@ -61,7 +64,7 @@
         <select class="form-select" id="functional_status" name="functional_status" required>
             <option value="">Choose...</option>
             @foreach ($cat['vehicle_functional_status'] as $functional_status)
-            <option value="{{ $functional_status->name }}">{{ $functional_status->name }}</option>
+            <option value="{{ $functional_status }}">{{ $functional_status }}</option>
             @endforeach
         </select>
         @error('functional_status')
@@ -73,7 +76,7 @@
         <select class="form-select" id="registration_status" name="registration_status" required>
             <option value="">Choose...</option>
             @foreach ($cat['vehicle_registration_status'] as $registration_status)
-            <option value="{{ $registration_status->name }}">{{ $registration_status->name }}</option>
+            <option value="{{ $registration_status }}">{{ $registration_status }}</option>
             @endforeach
         </select>
         @error('registration_status')
