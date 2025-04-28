@@ -1,6 +1,5 @@
 <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
 <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
-<link href="{{ asset('admin/plugins/flatpickr/flatpickr.min.css') }}" rel="stylesheet">
 <style>
     .table-cell {
         padding: 0.1rem 0.5rem;
@@ -251,7 +250,6 @@
 </div>
 <script src="{{ asset('admin/plugins/summernote/summernote-bs5.min.js') }}"></script>
 <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
-<script src="{{ asset('admin/plugins/flatpickr/flatpickr.js') }}"></script>
 <script>
 
     imageCropper({

@@ -46,6 +46,9 @@ class ServiceCard extends Model implements HasMedia
         $this->addMediaCollection('service_card_pictures')
             ->singleFile()
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif']);
+
+        $this->addMediaCollection('service_card_payrolls')
+            ->singleFile();
     }
 
     public function cards() 
@@ -59,5 +62,15 @@ class ServiceCard extends Model implements HasMedia
             ->where('status', 'active')
             ->latest('created_at')
             ->first();
+    }
+
+    public function designation() 
+    { 
+        return $this->hasOne(Designation::class); 
+    }
+
+    public function office() 
+    { 
+        return $this->hasOne(Office::class); 
     }
 }

@@ -148,16 +148,12 @@
                                     fields: ["#step-2"]
                                 },
                                 {
-                                    title: "Maintenance Info",
+                                    title: "Images",
                                     fields: ["#step-3"]
                                 },
                                 {
-                                    title: "Images",
-                                    fields: ["#step-4"]
-                                },
-                                {
                                     title: "Remarks",
-                                    fields: ["#step-5"]
+                                    fields: ["#step-4"]
                                 }
                             ],
                             formSubmitted() {

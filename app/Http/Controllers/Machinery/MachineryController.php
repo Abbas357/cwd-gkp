@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Machinery;
 
-use App\Models\User;
 use App\Helpers\Database;
 use App\Models\Machinery;
 use Illuminate\Http\Request;
 use App\Helpers\SearchBuilder;
 use Yajra\DataTables\DataTables;
-use App\Models\MachineryAllocation;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMachineryRequest;
 
@@ -69,17 +67,7 @@ class MachineryController extends Controller
 
     public function create()
     {
-        $cat = [
-            'users' => User::all(),
-            'machinery_type' => category('machinery_type', 'machinery'),
-            'machinery_operational_status' => category('machinery_operational_status', 'machinery'),
-            'machinery_power_source' => category('machinery_power_source', 'machinery'),
-            'machinery_location' => category('machinery_location', 'machinery'),
-            'machinery_manufacturer' => category('machinery_manufacturer', 'machinery'),
-            'machinery_certification_status' => category('machinery_certification_status', 'machinery'),
-        ];
-
-        $html = view('modules.machinery.partials.create', compact('cat'))->render();
+        $html = view('modules.machinery.partials.create')->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -134,15 +122,6 @@ class MachineryController extends Controller
 
     public function showDetail(Machinery $machinery)
     {
-        $cat = [
-            'machinery_type' => category('machinery_type', 'machinery'),
-            'machinery_operational_status' => category('machinery_operational_status', 'machinery'),
-            'machinery_power_source' => category('machinery_power_source', 'machinery'),
-            'machinery_location' => category('machinery_location', 'machinery'),
-            'machinery_manufacturer' => category('machinery_manufacturer', 'machinery'),
-            'machinery_certification_status' => category('machinery_certification_status', 'machinery'),
-        ];
-
         if (!$machinery) {
             return response()->json([
                 'success' => false,
@@ -152,7 +131,7 @@ class MachineryController extends Controller
             ]);
         }
 
-        $html = view('modules.machinery.partials.detail', compact('machinery', 'cat'))->render();
+        $html = view('modules.machinery.partials.detail', compact('machinery'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -222,8 +201,6 @@ class MachineryController extends Controller
 
         return response()->json(['error' => 'Failed to update maintenance information'], 500);
     }
-
-    
 
     public function maintenanceDue(Request $request)
     {

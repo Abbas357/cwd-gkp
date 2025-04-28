@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Site;
 
-use App\Models\Category;
+use App\Models\Office;
+use App\Models\Designation;
 use App\Models\ServiceCard;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -21,10 +22,10 @@ class ServiceCardController extends Controller
         }
 
         $cat = [
-            'designations' => Category::where('type', 'designation')
+            'designations' => Designation::select('id', 'name')
                 ->whereNotIn('name', ['Secretary', 'Minister'])
                 ->get(),
-            'offices' => Category::where('type', 'office')->get(),
+            'offices' => Office::select('id', 'name')->get(),
             'bps' => $bps,
             'blood_groups' => ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
         ];
@@ -36,6 +37,7 @@ class ServiceCardController extends Controller
     {
         $card = new ServiceCard();
         $card->uuid = Str::uuid();
+        $card->ddo_code = $request->ddo_code;
         $card->name = $request->name;
         $card->father_name = $request->father_name;
         $card->cnic = $request->cnic;
@@ -47,19 +49,24 @@ class ServiceCardController extends Controller
         $card->mark_of_identification = $request->mark_of_identification;
         $card->blood_group = $request->blood_group;
         $card->emergency_contact = $request->emergency_contact;
-        $card->parmanent_address = $request->parmanent_address;
+        $card->permanent_address = $request->permanent_address;
         $card->present_address = $request->present_address;
-        $card->designation = $request->designation;
+        $card->designation_id = $request->designation_id;
         $card->bps = $request->bps;
-        $card->office = $request->office;
+        $card->office_id = $request->office_id;
 
         if ($request->hasFile('profile_picture')) {
             $card->addMedia($request->file('profile_picture'))
                 ->toMediaCollection('service_card_pictures');
         }
 
+        if ($request->hasFile('payroll')) {
+            $card->addMedia($request->file('payroll'))
+                ->toMediaCollection('service_card_payrolls');
+        }
+
         if ($card->save()) {
-            Mail::to($card->email)->queue(new AppliedMail($card));
+            // Mail::to($card->email)->queue(new AppliedMail($card));
             return redirect()->route('service_cards.create')->with('success', 'Your ID card information has been submitted. We will notify you once your information is verified.');
         }
         return redirect()->route('service_cards.create')->with('error', 'There is an error submitting your data');

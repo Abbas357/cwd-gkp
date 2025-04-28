@@ -163,15 +163,6 @@ class HomeController extends Controller
 
     public function reports(Request $request)
     {
-        $cat = [
-            'machinery_type' => category('machinery_type', 'machinery'),
-            'machinery_operational_status' => category('machinery_operational_status', 'machinery'),
-            'machinery_power_source' => category('machinery_power_source', 'machinery'),
-            'machinery_location' => category('machinery_location', 'machinery'),
-            'machinery_manufacturer' => category('machinery_manufacturer', 'machinery'),
-            'machinery_certification_status' => category('machinery_certification_status', 'machinery'),
-        ];
-
         $filters = [
             'office_id' => null,
             'machinery_id' => null,
@@ -189,7 +180,7 @@ class HomeController extends Controller
         $show_history = $request->boolean('show_history', false);
 
         $query = MachineryAllocation::query()
-            ->with(['machinery', 'user'])
+            ->with(['machinery', 'office'])
             ->when(!$show_history, fn($q) => $q->whereNull('end_date'));
 
         if ($filters['office_id']) {
@@ -206,35 +197,35 @@ class HomeController extends Controller
             $query->where('machinery_id', $filters['machinery_id']);
         }
 
-        $query->whereHas('machinery', function ($q) use ($filters, $cat) {
+        $query->whereHas('machinery', function ($q) use ($filters) {
             if ($filters['operational_status']) {
-                $status = $cat['machinery_operational_status']->firstWhere('id', $filters['operational_status']);
-                $q->where('operational_status', $status->name ?? '');
+                $q->where('operational_status', $filters['operational_status']);
             }
 
             if ($filters['type']) {
-                $type = $cat['machinery_type']->firstWhere('id', $filters['type']);
-                $q->where('type', $type->name ?? '');
+                $q->where('type', $filters['type']);
             }
 
-            $additionalFilters = [
-                'power_source' => 'power_source',
-                'location' => 'machinery_location',
-                'manufacturer' => 'machinery_manufacturer',
-                'certification_status' => 'certification_status'
-            ];
+            if ($filters['power_source']) {
+                $q->where('power_source', $filters['power_source']);
+            }
 
-            foreach ($additionalFilters as $field => $categoryType) {
-                if ($filters[$field]) {
-                    $category = $cat[$categoryType]->firstWhere('id', $filters[$field]);
-                    $q->where($field, $category->name ?? '');
-                }
+            if ($filters['location']) {
+                $q->where('location', $filters['location']);
+            }
+
+            if ($filters['manufacturer']) {
+                $q->where('manufacturer', $filters['manufacturer']);
+            }
+
+            if ($filters['certification_status']) {
+                $q->where('certification_status', $filters['certification_status']);
             }
         });
 
         $allocations = $query->latest()->get();
 
-        return view('modules.machinery.reports', compact('cat', 'allocations', 'filters'));
+        return view('modules.machinery.reports', compact('allocations', 'filters'));
     }
 
     public function index(Request $request)

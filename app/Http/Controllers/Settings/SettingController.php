@@ -97,7 +97,7 @@ class SettingController extends Controller
                 $categoryItems[] = $item;
             }
         }
-        
+
         Setting::set($key, $categoryItems, $module, 'category', $description);
         
         return redirect()->route('admin.categories.index')

@@ -27,9 +27,10 @@
                         <label for="module" class="form-label">Module</label>
                         <select class="form-select" id="module" name="module">
                             <option value="main">Main Site</option>
-                            <option value="hr">HR-MIS</option>
-                            <option value="vehicle">Vehicle Mgt.</option>
-                            <option value="dmis">Damage Management & Information System</option>
+                            <option value="hr">{{ setting('appName', 'hr') }}</option>
+                            <option value="vehicle">{{ setting('appName', 'vehicle') }}</option>
+                            <option value="machinery">{{ setting('appName', 'machinery') }}</option>
+                            <option value="dmis">{{ setting('appName', 'dmis') }}</option>
                         </select>
                         <div class="form-text">Where this settings belongs to</div>
                         @error('module')

@@ -174,6 +174,13 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="mb-4">
+                                        <label for="appname" class="form-label">App Name</label>
+                                        <input type="text0" id="appname" name="settings[appname][value]" value="{{ old('settings[appname][value]', setting('appName', 'dmis')) }}" class="form-control @error('appname') is-invalid @enderror"" placeholder="App Name" required>
+                                        @error('settings.appname.value')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="mb-4">
                                         <label class="form-label fw-bold">Activity</label>
                                         <select class="form-select @error('activity') is-invalid @enderror" name="settings[activity][value]" placeholder="Activity" required>
                                             <option value="">All Activities</option>
@@ -182,7 +189,7 @@
                                                     {{ $type }}
                                                 </option>
                                             @endforeach
-                                        </select>                                        
+                                        </select>                                      
                                         @error('settings.activity.value')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror

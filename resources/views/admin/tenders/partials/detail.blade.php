@@ -1,5 +1,4 @@
 <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
-<link href="{{ asset('admin/plugins/flatpickr/flatpickr.min.css') }}" rel="stylesheet">
 <style>
     .table-cell {
         padding: 0.1rem 0.5rem;

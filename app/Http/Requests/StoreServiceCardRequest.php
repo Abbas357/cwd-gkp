@@ -14,8 +14,9 @@ class StoreServiceCardRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'father_name' => 'required|string|max:255',
+            'ddo_code' => 'required|max:50',
+            'name' => 'required|string|max:100',
+            'father_name' => 'required|string|max:100',
             'date_of_birth' => 'required|date',
             'mark_of_identification' => 'nullable|string|max:255',
             'cnic' => 'required|string|max:15|unique:service_cards,cnic',
@@ -25,11 +26,11 @@ class StoreServiceCardRequest extends FormRequest
             'personnel_number' => 'required|string|max:15|unique:service_cards,personnel_number',
             'blood_group' => 'nullable|string|max:5',
             'emergency_contact' => 'nullable|string|max:15',
-            'parmanent_address' => 'required|string|max:255',
+            'permanent_address' => 'required|string|max:255',
             'present_address' => 'required|string|max:255',
-            'designation' => 'required|string|max:100',
+            'designation_id' => 'required|exists:designations,id',
             'bps' => 'required|string|max:100',
-            'office' => 'required|string|max:100',
+            'office_id' => 'required|exists:offices,id',
         ];
     }
 }

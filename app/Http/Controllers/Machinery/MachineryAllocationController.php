@@ -15,11 +15,6 @@ class MachineryAllocationController extends Controller
     {
         $machinery = Machinery::find($id);
         
-        $cat = [
-            'purpose' => setting('machinery_purpose', 'machinery'),
-            'users' => User::all(),
-        ];
-
         if (!$machinery) {
             return response()->json([
                 'success' => false,
@@ -29,7 +24,7 @@ class MachineryAllocationController extends Controller
             ]);
         }
 
-        $html = view('modules.machinery.partials.allocation', compact('machinery', 'cat'))->render();
+        $html = view('modules.machinery.partials.allocation', compact('machinery'))->render();
         return response()->json([
             'success' => true,
             'data' => [

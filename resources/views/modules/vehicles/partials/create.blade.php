@@ -171,7 +171,5 @@
                 dropdownParent: $('#load-offices').closest('.modal')
             }
         );
-
     });
-
 </script>

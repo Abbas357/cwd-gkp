@@ -3,7 +3,7 @@
         <label for="type">Machinery Type</label>
         <select class="form-select" id="type" name="type" required>
             <option value="">Choose...</option>
-            @foreach ($cat['machinery_type'] as $type)
+            @foreach (category('machinery_type', 'machinery') as $type)
             <option value="{{ $type }}">{{ $type }}</option>
             @endforeach
         </select>
@@ -16,7 +16,7 @@
         <label for="operational_status">Operational Status</label>
         <select class="form-select" id="operational_status" name="operational_status" required>
             <option value="">Choose...</option>
-            @foreach ($cat['machinery_operational_status'] as $status)
+            @foreach (category('machinery_operational_status', 'machinery') as $status)
             <option value="{{ $status }}">{{ $status }}</option>
             @endforeach
         </select>
@@ -28,7 +28,7 @@
         <label for="power_source">Power Source</label>
         <select class="form-select" id="power_source" name="power_source" required>
             <option value="">Choose...</option>
-            @foreach ($cat['machinery_power_source'] as $power_source)
+            @foreach (category('machinery_power_source', 'machinery') as $power_source)
             <option value="{{ $power_source }}">{{ $power_source }}</option>
             @endforeach
         </select>
@@ -40,7 +40,7 @@
         <label for="manufacturer">Manufacturer</label>
         <select class="form-select" id="manufacturer" name="manufacturer" required>
             <option value="">Choose...</option>
-            @foreach ($cat['machinery_manufacturer'] as $manufacturer)
+            @foreach (category('machinery_manufacturer', 'machinery') as $manufacturer)
             <option value="{{ $manufacturer }}">{{ $manufacturer }}</option>
             @endforeach
         </select>
@@ -74,14 +74,12 @@
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
-</div>
 
-<div class="row" id="step-3">
     <div class="col-md-6 mb-3">
         <label for="location">Location</label>
         <select class="form-select" id="location" name="location">
             <option value="">Choose...</option>
-            @foreach ($cat['machinery_location'] as $location)
+            @foreach (category('machinery_location', 'machinery') as $location)
             <option value="{{ $location }}">{{ $location }}</option>
             @endforeach
         </select>
@@ -93,7 +91,7 @@
         <label for="certification_status">Certification Status</label>
         <select class="form-select" id="certification_status" name="certification_status">
             <option value="">Choose...</option>
-            @foreach ($cat['machinery_certification_status'] as $status)
+            @foreach (category('machinery_certification_status', 'machinery') as $status)
             <option value="{{ $status }}">{{ $status }}</option>
             @endforeach
         </select>
@@ -101,7 +99,7 @@
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
-    <div class="col-md-4 mb-3">
+    <div class="col-md-6 mb-3">
         <label for="last_maintenance_date">Last Maintenance Date</label>
         <input type="date" class="form-control" id="last_maintenance_date" name="last_maintenance_date">
         @error('last_maintenance_date')
@@ -110,7 +108,7 @@
     </div>
 </div>
 
-<div class="row" id="step-4">
+<div class="row" id="step-3">
     <div class="col-md-6 mb-3">
         <label for="front_view">Front View</label>
         <input type="file" class="form-control" id="front_view" name="front_view">
@@ -137,7 +135,7 @@
     </div>
 </div>
 
-<div class="row" id="step-5">
+<div class="row" id="step-4">
     <div class="col-md-12 mb-3">
         <label for="specifications">Technical Specifications</label>
         <textarea class="form-control" id="specifications" name="specifications" rows="2"></textarea>

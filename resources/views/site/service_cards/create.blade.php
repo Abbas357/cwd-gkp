@@ -24,14 +24,21 @@
                                         <h3 class="card-title">Fill all the fields</h3>
 
                                         <div class="row mb-3">
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
+                                                <label for="ddo_code">DDO Code <span class="help" title="Required">*</span></label>
+                                                <input type="text" class="form-control" id="ddo_code" value="{{ old('ddo_code') }}" placeholder="DDO Code" name="ddo_code" required>
+                                                @error('ddo_code')
+                                                <div class="text-danger">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                            <div class="col-md-4">
                                                 <label for="name">Full Name <span class="help" title="Required">*</span></label>
                                                 <input type="text" class="form-control" id="name" value="{{ old('name') }}" placeholder="Full Name" name="name" required>
                                                 @error('name')
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @enderror
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <label for="father_name">Father Name <span class="help" title="Required">*</span></label>
                                                 <input type="text" class="form-control" id="father_name" value="{{ old('father_name') }}" placeholder="Father Name" name="father_name" required>
                                                 @error('father_name')
@@ -122,9 +129,9 @@
 
                                         <div class="row mb-3">
                                             <div class="col">
-                                                <label for="parmanent_address">Parmanent Address <span class="help" title="Required">*</span></label>
-                                                <input type="text" class="form-control" id="parmanent_address" value="{{ old('parmanent_address') }}" placeholder="Parmanent Address" name="parmanent_address" required>
-                                                @error('parmanent_address')
+                                                <label for="permanent_address">Permanent Address <span class="help" title="Required">*</span></label>
+                                                <input type="text" class="form-control" id="permanent_address" value="{{ old('permanent_address') }}" placeholder="Permanent Address" name="permanent_address" required>
+                                                @error('permanent_address')
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @enderror
                                             </div>
@@ -143,10 +150,10 @@
                                         <div class="row">
                                             <div class="col-md-4 mb-3">
                                                 <label for="designation">Designation <span class="help" title="Required">*</span></label>
-                                                <select class="form-select" id="designation" name="designation" required>
+                                                <select class="form-select" id="designation" name="designation_id" required>
                                                     <option value="">Choose...</option>
                                                     @foreach ($cat['designations'] as $designation)
-                                                    <option value="{{ $designation->name }}">{{ $designation->name }}</option>
+                                                    <option value="{{ $designation->id }}">{{ $designation->name }}</option>
                                                     @endforeach
                                                 </select>
                                                 @error('designation')
@@ -167,10 +174,10 @@
                                             </div>
                                             <div class="col-md-4 mb-3">
                                                 <label for="office">Office <span class="help" title="Required">*</span></label>
-                                                <select class="form-select" id="office" name="office" required>
+                                                <select class="form-select" id="office" name="office_id" required>
                                                     <option value="">Choose...</option>
                                                     @foreach ($cat['offices'] as $office)
-                                                    <option value="{{ $office->name }}">{{ $office->name }}</option>
+                                                    <option value="{{ $office->id }}">{{ $office->name }}</option>
                                                     @endforeach
                                                 </select>
                                                 @error('office')
@@ -195,6 +202,14 @@
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                             <img id="profile_picture_preview" src="#" alt="Card Picture" style="display:none; margin-top: 10px; max-height: 200px;">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="payroll">Payroll <span class="help" title="Required">*</span></label>
+                                            <input type="file" class="form-control mt-2" id="payroll" name="payroll">
+                                            @error('payroll')
+                                            <div class="text-danger">{{ $message }}</div>
+                                            @enderror
                                         </div>
 
                                         <div class="alert alert-warning" role="alert">

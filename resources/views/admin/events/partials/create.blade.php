@@ -1,5 +1,4 @@
 <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
-<link href="{{ asset('admin/plugins/flatpickr/flatpickr.min.css') }}" rel="stylesheet">
 <div class="row mx-1" id="step-1">
     <div class="col-md-6 mb-3">
         <label for="title">Title</label>
@@ -103,22 +102,13 @@
 
 
 <script src="{{ asset('admin/plugins/summernote/summernote-bs5.min.js') }}"></script>
-<script src="{{ asset('admin/plugins/flatpickr/flatpickr.js') }}"></script>
 <script>
     $(document).ready(function() {
+        
         $('#description').summernote({
             height: 200
         , });
 
-        $("#start_datetime").flatpickr({
-            enableTime: true
-            , dateFormat: "Y-m-d H:i:S"
-        , });
-
-        $("#end_datetime").flatpickr({
-            enableTime: true
-            , dateFormat: "Y-m-d H:i:S"
-        , });
     });
 
 </script>

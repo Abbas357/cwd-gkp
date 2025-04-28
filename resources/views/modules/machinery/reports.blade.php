@@ -119,7 +119,7 @@
                             <label class="form-label fw-bold">Machinery Type</label>
                             <select name="type" class="form-select">
                                 <option value="">All Types</option>
-                                @foreach($cat['machinery_type'] as $type)
+                                @foreach(category('machinery_type', 'machinery') as $type)
                                     <option value="{{ $type }}" @selected(request('type') == $type)>
                                         {{ $type }}
                                     </option>
@@ -131,7 +131,7 @@
                             <label class="form-label fw-bold">Operational Status</label>
                             <select name="operational_status" class="form-select">
                                 <option value="">All Status</option>
-                                @foreach($cat['machinery_operational_status'] as $status)
+                                @foreach(category('machinery_operational_status', 'machinery') as $status)
                                     <option value="{{ $status }}" @selected(request('operational_status') == $status)>
                                         {{ $status }}
                                     </option>
@@ -156,7 +156,7 @@
                             <label class="form-label fw-bold">Power Source</label>
                             <select name="power_source" class="form-select">
                                 <option value="">All Power Sources</option>
-                                @foreach($cat['machinery_power_source'] as $source)
+                                @foreach(category('machinery_power_source', 'machinery') as $source)
                                     <option value="{{ $source }}" @selected($filters['power_source'] == $source)>
                                         {{ $source }}
                                     </option>
@@ -168,7 +168,7 @@
                             <label class="form-label fw-bold">Location</label>
                             <select name="location" class="form-select">
                                 <option value="">All Locations</option>
-                                @foreach($cat['machinery_location'] as $location)
+                                @foreach(category('machinery_location', 'machinery') as $location)
                                     <option value="{{ $location }}" @selected($filters['location'] == $location)>
                                         {{ $location }}
                                     </option>
@@ -180,7 +180,7 @@
                             <label class="form-label fw-bold">Manufacturer</label>
                             <select name="manufacturer" class="form-select">
                                 <option value="">All Manufacturers</option>
-                                @foreach($cat['machinery_manufacturer'] as $manufacturer)
+                                @foreach(category('machinery_manufacturer', 'machinery') as $manufacturer)
                                     <option value="{{ $manufacturer }}" @selected($filters['manufacturer'] == $manufacturer)>
                                         {{ $manufacturer }}
                                     </option>
@@ -192,7 +192,7 @@
                             <label class="form-label fw-bold">Certification Status</label>
                             <select name="certification_status" class="form-select">
                                 <option value="">All Certification Status</option>
-                                @foreach($cat['machinery_certification_status'] as $certification)
+                                @foreach(category('machinery_certification_status', 'machinery') as $certification)
                                     <option value="{{ $certification }}" @selected($filters['certification_status'] == $certification)>
                                         {{ $certification }}
                                     </option>
@@ -249,7 +249,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="fw-medium">{{ $allocation->user->currentPosting->office->name ?? 'N/A' }}</span>
+                                        <span class="fw-medium">{{ $allocation->office->name ?? 'N/A' }}</span>
                                     </td>
                                     <td>
                                         <span class="status-badge bg-{{ $allocation->machinery->operational_status === 'Operational' ? 'success' : 'danger' }} text-white">

@@ -1,5 +1,4 @@
 <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
-<link href="{{ asset('admin/plugins/flatpickr/flatpickr.min.css') }}" rel="stylesheet">
 <style>
     .table-cell {
         padding: 0.1rem 0.5rem;
@@ -18,7 +17,7 @@
                     <span id="text-type">{{ $machinery->type }}</span>
                     @if ($canUpdate)
                     <select id="input-type" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('type', {{ $machinery->id }})">
-                        @foreach ($cat['machinery_type'] as $type)
+                        @foreach (category('machinery_type', 'machinery') as $type)
                         <option value="{{ $type }}" {{ $machinery->type == $type ? 'selected' : '' }}>
                             {{ $type }}
                         </option>
@@ -36,7 +35,7 @@
                     <span id="text-operational_status">{{ $machinery->operational_status }}</span>
                     @if ($canUpdate)
                     <select id="input-operational_status" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('operational_status', {{ $machinery->id }})">
-                        @foreach ($cat['machinery_operational_status'] as $operational_status)
+                        @foreach (category('machinery_operational_status', 'machinery') as $operational_status)
                         <option value="{{ $operational_status }}" {{ $machinery->operational_status == $operational_status ? 'selected' : '' }}>
                             {{ $operational_status }}
                         </option>
@@ -54,7 +53,7 @@
                     <span id="text-manufacturer">{{ $machinery->manufacturer }}</span>
                     @if ($canUpdate)
                     <select id="input-manufacturer" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('manufacturer', {{ $machinery->id }})">
-                        @foreach ($cat['machinery_manufacturer'] as $manufacturer)
+                        @foreach (category('machinery_manufacturer', 'machinery') as $manufacturer)
                         <option value="{{ $manufacturer }}" {{ $machinery->manufacturer == $manufacturer ? 'selected' : '' }}>
                             {{ $manufacturer }}
                         </option>
@@ -96,7 +95,7 @@
                     <span id="text-power_source">{{ $machinery->power_source }}</span>
                     @if ($canUpdate)
                     <select id="input-power_source" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('power_source', {{ $machinery->id }})">
-                        @foreach ($cat['machinery_power_source'] as $power_source)
+                        @foreach (category('machinery_power_source', 'machinery') as $power_source)
                         <option value="{{ $power_source }}" {{ $machinery->power_source == $power_source ? 'selected' : '' }}>
                             {{ $power_source }}
                         </option>
@@ -150,7 +149,7 @@
                     <span id="text-certification_status">{{ $machinery->certification_status }}</span>
                     @if ($canUpdate)
                     <select id="input-certification_status" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('certification_status', {{ $machinery->id }})">
-                        @foreach ($cat['machinery_certification_status'] as $certification_status)
+                        @foreach (category('machinery_certification_status', 'machinery') as $certification_status)
                         <option value="{{ $certification_status }}" {{ $machinery->certification_status == $certification_status ? 'selected' : '' }}>
                             {{ $certification_status }}
                         </option>
@@ -193,14 +192,7 @@
     </div>
 </div>
 <script src="{{ asset('admin/plugins/summernote/summernote-bs5.min.js') }}"></script>
-<script src="{{ asset('admin/plugins/flatpickr/flatpickr.js') }}"></script>
 <script>
-    $(document).ready(function() {
-        $(".datepicker").flatpickr({
-            dateFormat: "Y-m-d"
-        });
-    });
-    
     function enableEditing(field) {
         $('#text-' + field).addClass('d-none');
         $('#input-' + field).removeClass('d-none');
@@ -215,12 +207,6 @@
                 });
                 textarea.data('summernote-initialized', true);
             }
-        }
-        
-        if (field === 'last_maintenance_date' || field === 'next_maintenance_date') {
-            $('#input-' + field).flatpickr({
-                dateFormat: "Y-m-d"
-            });
         }
     }
 

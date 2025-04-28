@@ -1,7 +1,6 @@
 <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
 <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
 <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
-<link href="{{ asset('admin/plugins/flatpickr/flatpickr.min.css') }}" rel="stylesheet">
 
 <div id="step-1" class="row">
     <div class="col-md-6 mb-3">
@@ -70,22 +69,11 @@
 
 <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
 <script src="{{ asset('admin/plugins/summernote/summernote-bs5.min.js') }}"></script>
-<script src="{{ asset('admin/plugins/flatpickr/flatpickr.js') }}"></script>
 
 <script>
     $(document).ready(function() {
         $('#description').summernote({
             height: 180
-        });
-
-        $("#date_of_advertisement").flatpickr({
-            enableTime: true
-            , dateFormat: "Y-m-d H:i:S"
-        });
-
-        $("#closing_date").flatpickr({
-            enableTime: true
-            , dateFormat: "Y-m-d H:i:S"
         });
 
         select2Ajax(

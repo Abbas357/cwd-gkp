@@ -1,6 +1,5 @@
 <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
 <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
-<link href="{{ asset('admin/plugins/flatpickr/flatpickr.min.css') }}" rel="stylesheet">
 
 <style>
     .table td, .table th {
@@ -84,7 +83,7 @@
         <label for="purpose">Allocation Purpose</label>
         <select class="form-select" id="purpose" name="purpose" required>
             <option value="">Choose...</option>
-            @foreach ($cat['purpose'] as $purpose)
+            @foreach (setting('machinery_purpose', 'machinery') as $purpose)
             <option value="{{ $purpose }}">{{ $purpose }}</option>
             @endforeach
         </select>
@@ -102,18 +101,17 @@
         <label for="machiery_allocation_orders">Allocation Orders <span class="badge bg-secondary mb-1">Optional</span></label>
         <input type="file" class="form-control" id="machiery_allocation_orders" placeholder="Allocation Orders" name="machiery_allocation_orders">
     </div>
-    <div class="col-md-12 mb-3">
-        <label class="form-label" for="load-users">Office</label>
+    <div class="col-md-6 mb-3">
+        <label class="form-label" for="load-offices">Office</label>
         <select name="office_id" id="load-offices" class="form-select" data-placeholder="Select Office"></select>
     </div>
-    <div class="col-md-12 mb-3">
+    <div class="col-md-6 mb-3">
         <label class="form-label" for="load-schemes">Project / Scheme</label>
         <select name="project_id" id="load-schemes" class="form-select" data-placeholder="Select Schemes"></select>
     </div>
 </div>
 
 <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
-<script src="{{ asset('admin/plugins/flatpickr/flatpickr.js') }}"></script>
 <script>
     $(document).ready(function () {
         select2Ajax(
@@ -133,16 +131,6 @@
                 dropdownParent: $('#load-schemes').closest('.modal')
             }
         );
-
-        $("#start_date").flatpickr({
-            enableTime: true,
-            dateFormat: "Y-m-d H:i:S",
-        });
-
-        $("#end_date").flatpickr({
-            enableTime: true,
-            dateFormat: "Y-m-d H:i:S",
-        });
 
         function handlePurposeChange() {
             const selectedPurpose = $('#purpose').val();

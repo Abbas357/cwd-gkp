@@ -1,6 +1,5 @@
 <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
 <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
-<link href="{{ asset('admin/plugins/flatpickr/flatpickr.min.css') }}" rel="stylesheet">
 
 <style>
     .table td, .table th {
@@ -143,7 +142,6 @@
 </div>
 
 <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
-<script src="{{ asset('admin/plugins/flatpickr/flatpickr.js') }}"></script>
 <script>
     $(document).ready(function () {
         select2Ajax(
@@ -177,16 +175,6 @@
                 $('#user-selection').hide();
                 $('#office-selection').hide();
             }
-        });
-
-        $("#start_date").flatpickr({
-            enableTime: true,
-            dateFormat: "Y-m-d H:i:S",
-        });
-
-        $("#end_date").flatpickr({
-            enableTime: true,
-            dateFormat: "Y-m-d H:i:S",
         });
     });
 </script>
