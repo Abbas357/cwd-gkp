@@ -152,7 +152,7 @@
             </div>            
             <div class="col-md-6 mb-2">
                 <label for="start_date">Start Date</label>
-                <input type="date" class="form-control" id="start_date" name="posting[start_date]" value="{{ old('posting.start_date', optional(optional($data['user']->currentPosting)->start_date)->format('Y-m-d')) }}">
+                <input type="date" class="form-control" id="start_date" name="posting[start_date]" value="">
             </div>
             <div class="col-md-6 mb-2">
                 <label for="order_number">Order Number</label>

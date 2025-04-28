@@ -37,19 +37,19 @@ class PostingController extends Controller
                     return view('modules.hr.postings.partials.buttons', compact('row'))->render();
                 })
                 ->addColumn('user', function ($row) {
-                    return $row->user->name;
+                    return $row?->user?->name;
                 })
                 ->addColumn('office', function ($row) {
-                    return $row->office->name;
+                    return $row?->office?->name;
                 })
                 ->addColumn('designation', function ($row) {
-                    return $row->designation->name;
+                    return $row?->designation?->name;
                 })
                 ->editColumn('start_date', function ($row) {
-                    return $row->start_date?->format('j, F Y');
+                    return $row?->start_date?->format('j, F Y');
                 })
                 ->editColumn('end_date', function ($row) {
-                    return $row->end_date?->format('j, F Y') ?? 'Current';
+                    return $row?->end_date?->format('j, F Y') ?? 'Current';
                 })
                 ->rawColumns(['action']);
                 

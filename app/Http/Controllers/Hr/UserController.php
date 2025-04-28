@@ -577,19 +577,6 @@ class UserController extends Controller
         ]);
     }
 
-    public function destroy(User $user)
-    {
-        if (request()->user()->isAdmin()) {
-            if ($user->delete()) {
-                Cache::forget('message_partial');
-                Cache::forget('team_partial');
-                return response()->json(['success' => 'User has been deleted successfully.']);
-            }
-        }
-
-        return response()->json(['error' => 'User can\'t be deleted.']);
-    }
-
     public function employee($uuid)
     {
         $user = User::where('uuid', $uuid)->first();
@@ -668,7 +655,7 @@ class UserController extends Controller
             $userData['name'] = $request->name;
             $userData['email'] = strtolower(preg_replace('/\s+/', '', $request->name)) . rand(10000, 99999) . '@cwd.gkp.pk'; 
             $userData['uuid'] = Str::uuid();
-            $userData['username'] = $request->username ?? $this->generateUsername($request->email);
+            $userData['username'] = $request->username ?? $this->generateUsername($userData['email']);
             $userData['password'] = Hash::make(Str::random(8));
             $userData['password_updated_at'] = now();
             $userData['status'] = 'Active';
@@ -690,7 +677,7 @@ class UserController extends Controller
                     'is_current' => true
                 ];
                 
-                $sanctionedPost = SanctionedPost::firstOrCreate(
+                SanctionedPost::firstOrCreate(
                     [
                         'office_id' => $officeId,
                         'designation_id' => $designationId,
@@ -724,6 +711,23 @@ class UserController extends Controller
             DB::rollBack();
             return response()->json(['error' => 'Failed to create user: ' . $e->getMessage()], 422);
         }
+    }
+
+    public function destroy(User $user)
+    {
+        if (request()->user()->isAdmin()) {
+            if ($user->delete()) {
+                $user->postings()->delete();
+                $user->profile()->delete();
+                $user->removeMediaFromCollection('profile_pictures');
+                $user->removeMediaFromCollection('posting_orders');
+                Cache::forget('message_partial');
+                Cache::forget('team_partial');
+                return response()->json(['success' => 'User has been deleted successfully.']);
+            }
+        }
+
+        return response()->json(['error' => 'User can\'t be deleted.']);
     }
 
 }
