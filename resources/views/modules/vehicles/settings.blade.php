@@ -117,7 +117,6 @@
         </style>
     @endpush
     <x-slot name="header">
-        <li class="breadcrumb-item"><a href="{{ route('admin.apps.vehicles.index') }}">Machinery Management System</a></li>
         <li class="breadcrumb-item active" aria-current="page">Settings</li>
     </x-slot>
 

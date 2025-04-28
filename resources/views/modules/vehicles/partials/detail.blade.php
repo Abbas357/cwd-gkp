@@ -23,8 +23,8 @@
                     @if ($canUpdate)
                     <select id="input-type" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('type', {{ $vehicle->id }})">
                         @foreach ($cat['vehicle_type'] as $type)
-                        <option value="{{ $type->name }}" {{ $vehicle->type == $type->name ? 'selected' : '' }}>
-                            {{ $type->name }}
+                        <option value="{{ $type }}" {{ $vehicle->type == $type ? 'selected' : '' }}>
+                            {{ $type }}
                         </option>
                         @endforeach
                     </select>
@@ -41,8 +41,8 @@
                     @if ($canUpdate)
                     <select id="input-functional_status" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('functional_status', {{ $vehicle->id }})">
                         @foreach ($cat['vehicle_functional_status'] as $functional_status)
-                        <option value="{{ $functional_status->name }}" {{ $vehicle->functional_status == $functional_status->name ? 'selected' : '' }}>
-                            {{ $functional_status->name }}
+                        <option value="{{ $functional_status }}" {{ $vehicle->functional_status == $functional_status ? 'selected' : '' }}>
+                            {{ $functional_status }}
                         </option>
                         @endforeach
                     </select>
@@ -59,8 +59,8 @@
                     @if ($canUpdate)
                     <select id="input-color" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('color', {{ $vehicle->id }})">
                         @foreach ($cat['vehicle_color'] as $color)
-                        <option value="{{ $color->name }}" {{ $vehicle->color == $color->name ? 'selected' : '' }}>
-                            {{ $color->name }}
+                        <option value="{{ $color }}" {{ $vehicle->color == $color ? 'selected' : '' }}>
+                            {{ $color }}
                         </option>
                         @endforeach
                     </select>
@@ -77,8 +77,8 @@
                     @if ($canUpdate)
                     <select id="input-fuel_type" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('fuel_type', {{ $vehicle->id }})">
                         @foreach ($cat['fuel_type'] as $fuel_type)
-                        <option value="{{ $fuel_type->name }}" {{ $vehicle->fuel_type == $fuel_type->name ? 'selected' : '' }}>
-                            {{ $fuel_type->name }}
+                        <option value="{{ $fuel_type }}" {{ $vehicle->fuel_type == $fuel_type ? 'selected' : '' }}>
+                            {{ $fuel_type }}
                         </option>
                         @endforeach
                     </select>
@@ -95,8 +95,8 @@
                     @if ($canUpdate)
                     <select id="input-brand" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('brand', {{ $vehicle->id }})">
                         @foreach ($cat['vehicle_brand'] as $brand)
-                        <option value="{{ $brand->name }}" {{ $vehicle->brand == $brand->name ? 'selected' : '' }}>
-                            {{ $brand->name }}
+                        <option value="{{ $brand }}" {{ $vehicle->brand == $brand ? 'selected' : '' }}>
+                            {{ $brand }}
                         </option>
                         @endforeach
                     </select>
@@ -113,8 +113,8 @@
                 @if ($canUpdate)
                 <select id="input-registration_status" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('registration_status', {{ $vehicle->id }})">
                     @foreach ($cat['vehicle_registration_status'] as $registration_status)
-                    <option value="{{ $registration_status->name }}" {{ $vehicle->registration_status == $registration_status->name ? 'selected' : '' }}>
-                        {{ $registration_status->name }}
+                    <option value="{{ $registration_status }}" {{ $vehicle->registration_status == $registration_status ? 'selected' : '' }}>
+                        {{ $registration_status }}
                     </option>
                     @endforeach
                 </select>
