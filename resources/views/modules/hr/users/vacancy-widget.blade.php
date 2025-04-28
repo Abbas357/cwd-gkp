@@ -70,8 +70,8 @@
                         <tbody>
                             @foreach($topVacancies as $vacancy)
                             <tr>
-                                <td>{{ $vacancy->office->name }}</td>
-                                <td>{{ $vacancy->designation->name }}</td>
+                                <td>{{ $vacancy?->office?->name }}</td>
+                                <td>{{ $vacancy?->designation?->name }}</td>
                                 <td>{{ $vacancy->total_positions }}</td>
                                 <td>{{ $vacancy->filled_positions }}</td>
                                 <td>
@@ -99,9 +99,9 @@
                             <div class="card bg-light">
                                 <div class="card-body">
                                     <h6 class="card-title">Your Position</h6>
-                                    <p class="mb-1"><strong>Designation:</strong> {{ optional($currentUser->currentDesignation)->name ?? 'Not Assigned' }}</p>
-                                    <p class="mb-1"><strong>Office:</strong> {{ optional($currentUser->currentOffice)->name ?? 'Not Assigned' }}</p>
-                                    <p class="mb-0"><strong>Since:</strong> {{ $currentUser->currentPosting->start_date->format('d M, Y') }}</p>
+                                    <p class="mb-1"><strong>Designation:</strong> {{ $currentUser?->currentDesignation?->name ?? 'Not Assigned' }}</p>
+                                    <p class="mb-1"><strong>Office:</strong> {{ $currentUser?->currentOffice?->name ?? 'Not Assigned' }}</p>
+                                    <p class="mb-0"><strong>Since:</strong> {{ $currentUser?->currentPosting?->start_date->format('d M, Y') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -130,9 +130,9 @@
                             <div class="d-flex align-items-center">
                                 <img src="{{ getProfilePic($directSupervisor) }}" alt="Supervisor" class="rounded-circle me-3" style="width: 50px; height: 50px;">
                                 <div>
-                                    <h6 class="mb-1">{{ $directSupervisor->name }}</h6>
-                                    <p class="mb-1 small">{{ optional($directSupervisor->currentDesignation)->name ?? 'No Designation' }}</p>
-                                    <p class="mb-0 small text-muted">{{ optional($directSupervisor->currentOffice)->name ?? 'No Office' }}</p>
+                                    <h6 class="mb-1">{{ $directSupervisor?->name }}</h6>
+                                    <p class="mb-1 small">{{ $directSupervisor?->currentDesignation?->name ?? 'No Designation' }}</p>
+                                    <p class="mb-0 small text-muted">{{ $directSupervisor?->currentOffice?->name ?? 'No Office' }}</p>
                                 </div>
                             </div>
                         </div>
@@ -149,9 +149,9 @@
                                                 <div class="d-flex align-items-center">
                                                     <img src="{{ getProfilePic($subordinate) }}" alt="Subordinate" class="rounded-circle me-3" style="width: 50px; height: 50px;">
                                                     <div>
-                                                        <h6 class="mb-1">{{ $subordinate->name }}</h6>
-                                                        <p class="mb-1 small">{{ optional($subordinate->currentDesignation)->name ?? 'No Designation' }}</p>
-                                                        <p class="mb-0 small text-muted">{{ optional($subordinate->currentOffice)->name ?? 'No Office' }}</p>
+                                                        <h6 class="mb-1">{{ $subordinate?->name }}</h6>
+                                                        <p class="mb-1 small">{{ $subordinate?->currentDesignation?->name ?? 'No Designation' }}</p>
+                                                        <p class="mb-0 small text-muted">{{ $subordinate?->currentOffice?->name ?? 'No Office' }}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -181,16 +181,16 @@
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <img src="{{ getProfilePic($member) }}" alt="Team Member" class="rounded-circle me-2" style="width: 30px; height: 30px;">
-                                                        {{ $member->name }}
+                                                        {{ $member?->name }}
                                                     </div>
                                                 </td>
-                                                <td>{{ optional($member->currentDesignation)->name ?? 'No Designation' }}</td>
-                                                <td>{{ optional($member->currentOffice)->name ?? 'No Office' }}</td>
+                                                <td>{{ $member?->currentDesignation?->name ?? 'No Designation' }}</td>
+                                                <td>{{ $member?->currentOffice?->name ?? 'No Office' }}</td>
                                                 <td>
                                                     @php
                                                         $memberSupervisor = $member->getDirectSupervisor();
                                                     @endphp
-                                                    {{ $memberSupervisor ? $memberSupervisor->name : 'N/A' }}
+                                                    {{ $memberSupervisor ? $memberSupervisor?->name : 'N/A' }}
                                                 </td>
                                             </tr>
                                         @endforeach
