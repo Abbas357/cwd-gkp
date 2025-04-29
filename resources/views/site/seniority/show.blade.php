@@ -52,9 +52,7 @@
 
     <x-sharer :title="$seniorityData['title'].' - '.config('app.name')" :url="url()->current()" />
 
-    @if(in_array('Seniority', json_decode(App\Models\Setting::first()->commentable_tables ?? '[]', true)))
-        <x-comments :comments="$seniorityData['comments']" modelType="Seniority" :modelId="$seniorityData['id']" />
-    @endif
+    <x-comments :comments="$seniorityData['comments']" modelType="Seniority" :modelId="$seniorityData['id']" />
     
     @push('script')
     <script src="{{ asset('site/lib/lightbox/lightbox.min.js') }}"></script>

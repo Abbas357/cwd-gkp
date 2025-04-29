@@ -35,7 +35,7 @@
         <select class="form-control" id="type" name="type" required>
             <option value="">Select Type</option>
             @foreach ($cat['receipt_type'] as $type)
-            <option value="{{ $type->name }}">{{ $type->name }}</option>
+            <option value="{{ $type }}">{{ $type }}</option>
             @endforeach
         </select>
         @error('type')

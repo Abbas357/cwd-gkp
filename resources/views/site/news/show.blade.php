@@ -73,9 +73,7 @@
  
         <x-sharer :title="$newsData['title'].' - '.config('app.name')" :url="url()->current()" />
         
-        @if(in_array('News', json_decode(App\Models\Setting::first()->commentable_tables ?? '[]', true)))
-            <x-comments :comments="$newsData['comments']" modelType="News" :modelId="$newsData['id']" />
-        @endif
+        <x-comments :comments="$newsData['comments']" modelType="News" :modelId="$newsData['id']" />
 
     </div>
 </x-main-layout>

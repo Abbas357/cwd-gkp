@@ -79,7 +79,7 @@ class DownloadController extends Controller
     public function create()
     {
         $cat = [
-            'file_type' => Category::where('type', 'file_type')->get(),
+            'file_type' => ['pdf', 'Image', 'docs', 'pptx', 'xlsx'],
             'download_category' => Category::where('type', 'download_category')->get(),
         ];
         $html = view('admin.downloads.partials.create', compact('cat'))->render();
@@ -152,7 +152,7 @@ class DownloadController extends Controller
         }
 
         $cat = [
-            'file_type' => Category::where('type', 'file_type')->get(),
+            'file_type' => ['pdf', 'Image', 'docs', 'pptx', 'xlsx'],
             'download_category' => Category::where('type', 'download_category')->get(),
         ];
 

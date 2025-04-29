@@ -45,9 +45,7 @@
 
     <x-sharer :title="$galleryData['title'].' - '.config('app.name')" :url="url()->current()" />
     
-    @if(in_array('Gallery', json_decode(App\Models\Setting::first()->commentable_tables ?? '[]', true)))
-        <x-comments :comments="$galleryData['comments']" modelType="Gallery" :modelId="$galleryData['id']" />
-    @endif
+    {{-- <x-comments :comments="$galleryData['comments']" modelType="Gallery" :modelId="$galleryData['id']" /> --}}
 
     @push('script')
         <script src="{{ asset('site/lib/lightbox/lightbox.min.js') }}"></script>

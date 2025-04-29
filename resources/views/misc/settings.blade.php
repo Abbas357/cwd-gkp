@@ -1,4 +1,4 @@
-<x-vehicle-layout title="Main Settings">
+<x-settings-layout title="Main Settings">
     @push('style')
         <style>
             .nav-tabs .settings-tab {
@@ -143,7 +143,13 @@
                                 <i class="bi bi-exclamation-triangle me-2"></i> Page Type
                             </button>
                             <button class="nav-link settings-tab" id="download_category-tab" data-bs-toggle="tab" data-bs-target="#download_category" type="button" role="tab" aria-controls="download_category" aria-selected="false">
-                                <i class="bi bi-exclamation-triangle me-2"></i> Page Type
+                                <i class="bi bi-exclamation-triangle me-2"></i> Download Category
+                            </button>
+                            <button class="nav-link settings-tab" id="gallery_type-tab" data-bs-toggle="tab" data-bs-target="#gallery_type" type="button" role="tab" aria-controls="gallery_type" aria-selected="false">
+                                <i class="bi bi-exclamation-triangle me-2"></i> Gallery Type
+                            </button>
+                            <button class="nav-link settings-tab" id="news_category-tab" data-bs-toggle="tab" data-bs-target="#news_category" type="button" role="tab" aria-controls="news_category" aria-selected="false">
+                                <i class="bi bi-exclamation-triangle me-2"></i> News Category
                             </button>
                         </div>
                     </div>
@@ -285,11 +291,68 @@
                                         @enderror
                                     </div>
 
+                                    <div class="mb-3">
+                                        <h5>Lock Modules</h5>
+                                        <div class="route-maintenance-list">
+                                            @php
+                                                $maintenanceRoutes = setting('maintenance_routes', 'main', []);
+                                                if (is_string($maintenanceRoutes)) {
+                                                    $maintenanceRoutes = json_decode($maintenanceRoutes, true) ?? [];
+                                                }
+                                            @endphp
+                                            
+                                            @foreach([
+                                                'service_cards.*' => 'Service Card',
+                                                'contractors.*' => 'Contractor',
+                                                'standardizations.*' => 'Standardization'
+                                            ] as $route => $label)
+                                                <div class="form-check mb-2">
+                                                    <input type="checkbox" 
+                                                           class="form-check-input route-group" 
+                                                           id="route_{{ $route }}"
+                                                           name="settings[maintenance_routes][value][{{ $route }}]"
+                                                           value="1"
+                                                           {{ isset($maintenanceRoutes[$route]) && $maintenanceRoutes[$route] ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="route_{{ $route }}">
+                                                        {{ $label }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                            <input type="hidden" name="settings[maintenance_routes][type]" value="json">
+                                            <input type="hidden" name="settings[maintenance_routes][description]" value="Routes exempt from maintenance mode">
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="settings[maintenance_mode]">Maintenance Mode</label>
+                                        <select class="form-select" id="settings[maintenance_mode]" name="settings[maintenance_mode][value]">
+                                            <option value="0" {{ setting('maintenance_mode') == false ? 'selected' : '' }}>Off</option>
+                                            <option value="1" {{ setting('maintenance_mode') == true ? 'selected' : '' }}>On</option>
+                                        </select>
+                                        <input type="hidden" name="settings[maintenance_mode][type]" value="boolean">
+                                        <input type="hidden" name="settings[maintenance_mode][description]" value="Website maintenance mode">
+                                        @error('settings.maintenance_mode.value')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="cache">Cache Management</label>
+                                        <select class="form-select" id="cache" name="cache">
+                                            <option value="">Choose ...</option>
+                                            <option value="create">Create Cache</option>
+                                            <option value="clear">Clear Cache</option>
+                                        </select>
+                                        <small class="text-muted">Select an option to manage application cache</small>
+                                        @error('cache')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Page Type Category -->
                         <div class="tab-pane fade" id="page_type" role="tabpanel" aria-labelledby="page_type-tab">
                             <div class="card">
                                 <div class="card-header d-flex justify-content-between align-items-center">
@@ -329,6 +392,171 @@
                                                         <tr class="new-item-row">
                                                             <td>
                                                                 <input type="text" class="form-control new-item" placeholder="Add new page type...">
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <button type="button" class="btn btn-sm btn-success add-item">
+                                                                    <i class="bi bi-plus-circle"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="download_category" role="tabpanel" aria-labelledby="download_category-tab">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">Page Type</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="category-container" data-category-key="download_category">
+                                        <p class="text-muted mb-3">Define the different types of pages in the system.</p>
+                                        
+                                        <input type="hidden" name="categories[download_category][description]" value="Page Type">
+                                        <input type="hidden" name="categories[download_category][type]" value="category">
+                                        
+                                        <div class="mb-3">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered category-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th width="90%">Status</th>
+                                                            <th width="10%">Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach(category('download_category', 'main', []) as $index => $item)
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="text" class="form-control" 
+                                                                        name="categories[download_category][value][]" 
+                                                                        value="{{ $item }}" required>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <button type="button" class="btn btn-sm btn-danger remove-item">
+                                                                        <i class="bi bi-trash"></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                        <tr class="new-item-row">
+                                                            <td>
+                                                                <input type="text" class="form-control new-item" placeholder="Add new download category...">
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <button type="button" class="btn btn-sm btn-success add-item">
+                                                                    <i class="bi bi-plus-circle"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="gallery_type" role="tabpanel" aria-labelledby="gallery_type-tab">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">Page Type</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="category-container" data-category-key="gallery_type">
+                                        <p class="text-muted mb-3">Define the different types of pages in the system.</p>
+                                        
+                                        <input type="hidden" name="categories[gallery_type][description]" value="Page Type">
+                                        <input type="hidden" name="categories[gallery_type][type]" value="category">
+                                        
+                                        <div class="mb-3">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered category-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th width="90%">Status</th>
+                                                            <th width="10%">Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach(category('gallery_type', 'main', []) as $index => $item)
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="text" class="form-control" 
+                                                                        name="categories[gallery_type][value][]" 
+                                                                        value="{{ $item }}" required>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <button type="button" class="btn btn-sm btn-danger remove-item">
+                                                                        <i class="bi bi-trash"></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                        <tr class="new-item-row">
+                                                            <td>
+                                                                <input type="text" class="form-control new-item" placeholder="Add new gallery type...">
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <button type="button" class="btn btn-sm btn-success add-item">
+                                                                    <i class="bi bi-plus-circle"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="news_category" role="tabpanel" aria-labelledby="news_category-tab">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">Page Type</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="category-container" data-category-key="news_category">
+                                        <p class="text-muted mb-3">Define the different types of pages in the system.</p>
+                                        
+                                        <input type="hidden" name="categories[news_category][description]" value="Page Type">
+                                        <input type="hidden" name="categories[news_category][type]" value="category">
+                                        
+                                        <div class="mb-3">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered category-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th width="90%">Status</th>
+                                                            <th width="10%">Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach(category('news_category', 'main', []) as $index => $item)
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="text" class="form-control" 
+                                                                        name="categories[news_category][value][]" 
+                                                                        value="{{ $item }}" required>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <button type="button" class="btn btn-sm btn-danger remove-item">
+                                                                        <i class="bi bi-trash"></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                        <tr class="new-item-row">
+                                                            <td>
+                                                                <input type="text" class="form-control new-item" placeholder="Add new news category...">
                                                             </td>
                                                             <td class="text-center">
                                                                 <button type="button" class="btn btn-sm btn-success add-item">
@@ -454,4 +682,4 @@
         });
     </script>
     @endpush
-</x-vehicle-layout>
+</x-settings-layout>

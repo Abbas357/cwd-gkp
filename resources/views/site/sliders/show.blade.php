@@ -29,8 +29,6 @@
 
     <x-sharer :title="$sliderData['title'].' - '.config('app.name')" :url="url()->current()" />
 
-    @if(in_array('Slider', json_decode(App\Models\Setting::first()->commentable_tables ?? '[]', true)))
-        <x-comments :comments="$sliderData['comments']" modelType="Slider" :modelId="$sliderData['id']" />
-    @endif
+    <x-comments :comments="$sliderData['comments']" modelType="Slider" :modelId="$sliderData['id']" />
 
 </x-main-layout>

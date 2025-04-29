@@ -12,7 +12,7 @@
         <select class="form-select form-select-md" id="file_type" name="file_type" required>
             <option value="">Select Option</option>
             @foreach ($cat['file_type'] as $file_type)
-            <option value="{{ $file_type->name }}">{{ $file_type->name }}</option>
+            <option value="{{ $file_type }}">{{ $file_type }}</option>
             @endforeach
         </select>
         @error('file_type')
@@ -25,7 +25,7 @@
         <select class="form-select form-select-md" id="category" name="category" required>
             <option value="">Select Option</option>
             @foreach ($cat['download_category'] as $category)
-            <option value="{{ $category->name }}">{{ $category->name }}</option>
+            <option value="{{ $category }}">{{ $category }}</option>
             @endforeach
         </select>
         @error('category')

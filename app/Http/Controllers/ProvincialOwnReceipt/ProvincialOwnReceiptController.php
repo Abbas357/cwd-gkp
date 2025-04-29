@@ -80,7 +80,7 @@ class ProvincialOwnReceiptController extends Controller
     public function create()
     {
         $cat = [
-            'receipt_type' => Category::where('type', 'receipt_type')->get(),
+            'receipt_type' => ['tender'],
             'districts' => District::all(),
         ];
 
@@ -262,7 +262,7 @@ class ProvincialOwnReceiptController extends Controller
         }
 
         $cat = [
-            'receipt_type' => Category::where('type', 'receipt_type')->get(),
+            'receipt_type' => ['tender'],
             'districts' => District::all(),
         ];
 
@@ -295,7 +295,7 @@ class ProvincialOwnReceiptController extends Controller
     public function edit(ProvincialOwnReceipt $ProvincialOwnReceipt)
     {
         $cat = [
-            'receipt_type' => Category::where('type', 'receipt_type')->get(),
+            'receipt_type' => ['tender'],
             'districts' => District::all(),
         ];
 

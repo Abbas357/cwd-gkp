@@ -33,8 +33,8 @@
                     @if ($canUpdate && !in_array($download->status, ['published', 'archived']))
                     <select id="input-file_type" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('file_type', {{ $download->id }})">
                         @foreach ($cat['file_type'] as $file_type)
-                        <option value="{{ $file_type->name }}" {{ $download->file_type == $file_type->name ? 'selected' : '' }}>
-                            {{ $file_type->name }}
+                        <option value="{{ $file_type }}" {{ $download->file_type == $file_type ? 'selected' : '' }}>
+                            {{ $file_type }}
                         </option>
                         @endforeach
                     </select>
@@ -52,8 +52,8 @@
                     @if ($canUpdate && !in_array($download->status, ['published', 'archived']))
                     <select id="input-category" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('category', {{ $download->id }})">
                         @foreach ($cat['download_category'] as $category)
-                        <option value="{{ $category->name }}" {{ $download->category == $category->name ? 'selected' : '' }}>
-                            {{ $category->name }}
+                        <option value="{{ $category }}" {{ $download->category == $category ? 'selected' : '' }}>
+                            {{ $category }}
                         </option>
                         @endforeach
                     </select>

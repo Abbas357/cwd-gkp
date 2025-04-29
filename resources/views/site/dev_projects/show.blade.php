@@ -102,9 +102,7 @@
 
     <x-sharer :title="$projectData['name'].' - '.config('app.name')" :url="url()->current()" />
 
-    @if(in_array('DevelopmentProject', json_decode(App\Models\Setting::first()->commentable_tables ?? '[]', true)))
-        <x-comments :comments="$projectData['comments']" modelType="DevelopmentProject" :modelId="$projectData['id']" />
-    @endif
+    {{-- <x-comments :comments="$projectData['comments']" modelType="DevelopmentProject" :modelId="$projectData['id']" /> --}}
     
 
     @push('script')

@@ -58,8 +58,8 @@
                     @if ($canUpdate)
                     <select id="input-type" class="d-none form-control" onchange="updateField('type', {{ $ProvincialOwnReceipt->id }})">
                         @foreach ($cat['receipt_type'] as $type)
-                        <option value="{{ $type->name }}" {{ $ProvincialOwnReceipt->type == $type->name ? 'selected' : '' }}>
-                            {{ $type->name }}
+                        <option value="{{ $type }}" {{ $ProvincialOwnReceipt->type == $type ? 'selected' : '' }}>
+                            {{ $type }}
                         </option>
                         @endforeach
                     </select>

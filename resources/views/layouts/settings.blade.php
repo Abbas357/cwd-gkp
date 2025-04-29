@@ -18,17 +18,6 @@
     </li>
     @endcan
 
-    @can('manageMainCategory', App\Models\Setting::class)
-    <li>
-        <a href="{{ route('admin.categories.index') }}">
-            <div class="parant-icon">
-                <i class="bi-tags text-info"></i>
-            </div>
-            <div class="menu-title">Categories </div>
-        </a>
-    </li>
-    @endcan
-
     @can('manageDistricts', App\Models\Setting::class)
     <li>
         <a href="{{ route('admin.districts.index') }}">

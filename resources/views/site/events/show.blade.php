@@ -119,9 +119,7 @@
 
     <x-sharer :title="$eventData['title'].' - '.config('app.name')" :url="url()->current()" />
 
-    @if(in_array('Event', json_decode(App\Models\Setting::first()->commentable_tables ?? '[]', true)))
-        <x-comments :comments="$eventData['comments']" modelType="Event" :modelId="$eventData['id']" />
-    @endif
+    {{-- <x-comments :comments="$eventData['comments']" modelType="Event" :modelId="$eventData['id']" /> --}}
 
     @push('script')
     <script src="{{ asset('site/lib/lightbox/lightbox.min.js') }}"></script>
