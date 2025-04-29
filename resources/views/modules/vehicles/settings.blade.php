@@ -1,4 +1,4 @@
-<x-vehicle-layout title="Damage Tracking System Settings">
+<x-vehicle-layout title="Vehicle Management System Settings">
     @push('style')
         <style>
             .nav-tabs .settings-tab {

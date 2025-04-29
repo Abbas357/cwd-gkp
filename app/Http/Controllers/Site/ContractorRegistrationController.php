@@ -47,7 +47,7 @@ class ContractorRegistrationController extends Controller
             $registration->can_edit = $registration->created_at->isToday();
         }
 
-        $categories = Category::where('type', 'contractor_category')->get();
+        $categories = ['PK-C-A', 'PK-C-B', 'PK-C-1', 'PK-C-2', 'PK-C-3', 'PK-C-4', 'PK-C-5', 'PK-C-6'];
 
         return view('site.contractors.registration.index', compact('registrations', 'categories'));
     }
@@ -55,8 +55,8 @@ class ContractorRegistrationController extends Controller
     public function create()
     {
         $cat = [
-            'contractor_category' => Category::where('type', 'contractor_category')->get(),
-            'provincial_entities' => Category::where('type', 'provincial_entity')->get(),
+            'contractor_category' => ['PK-C-A', 'PK-C-B', 'PK-C-1', 'PK-C-2', 'PK-C-3', 'PK-C-4', 'PK-C-5', 'PK-C-6'],
+            'provincial_entities' => ['C&W', 'PHE', 'Local Government', 'Local Council Board', 'Irrigation', 'PHA', 'PKHA', 'FATA', 'PDA', 'Electric Inspector', 'Others'],,
         ];
         return view('site.contractors.registration.create', compact('cat'));
     }
@@ -157,8 +157,8 @@ class ContractorRegistrationController extends Controller
         }
 
         $cat = [
-            'contractor_category' => Category::where('type', 'contractor_category')->get(),
-            'provincial_entities' => Category::where('type', 'provincial_entity')->get(),
+            'contractor_category' => ['PK-C-A', 'PK-C-B', 'PK-C-1', 'PK-C-2', 'PK-C-3', 'PK-C-4', 'PK-C-5', 'PK-C-6'],
+            'provincial_entities' => ['C&W', 'PHE', 'Local Government', 'Local Council Board', 'Irrigation', 'PHA', 'PKHA', 'FATA', 'PDA', 'Electric Inspector', 'Others'],
         ];
 
         return view('site.contractors.registration.edit', compact('registration', 'cat'));

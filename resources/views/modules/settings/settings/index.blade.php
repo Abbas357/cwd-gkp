@@ -25,7 +25,7 @@
         <li class="breadcrumb-item active" aria-current="page">Site Settings</li>
     </x-slot>
 
-    <div class="wrapper">
+    <div class="wrapper"> 
         <div class="row">
             <!-- Left Navigation -->
             <div class="col-md-3">

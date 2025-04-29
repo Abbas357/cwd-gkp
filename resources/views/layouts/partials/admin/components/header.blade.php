@@ -272,14 +272,9 @@
                             <i class="bi-gear-fill"></i>Core Settings
                         </a>
                         @endcan
-                        @can('manageMainCategory', App\Models\Setting::class)
+                        @can('manageDistricts', App\Models\Setting::class)
                         <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.districts.index') }}" onclick="event.stopPropagation();">
                             <i class="bi-geo-alt"></i>Districts
-                        </a>
-                        @endcan
-                        @can('manageDistricts', App\Models\Setting::class)
-                        <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.categories.index') }}" onclick="event.stopPropagation();">
-                            <i class="bi-list-nested"></i>Categories
                         </a>
                         @endcan
                     </div>

@@ -9,28 +9,15 @@ use App\Http\Controllers\Settings\ActivityLogController;
 
 Route::prefix('settings')->group(function () {
     
+    Route::as('settings.')->group(function () {
+        Route::get('/', [SettingController::class, 'settings'])->name('index')->can('viewVehicleSettings', App\Models\Setting::class);
+        Route::post('/update', [SettingController::class, 'update'])->name('update')->can('updateVehicleSettings', App\Models\Setting::class);
+        Route::post('/init', [SettingController::class, 'init'])->name('init')->can('initVehicleSettings', App\Models\Setting::class);
+    });
+
     Route::prefix('profile')->as('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'edit'])->name('edit');
         Route::patch('/', [ProfileController::class, 'update'])->name('update');
-    });
-
-    Route::prefix('core')->as('settings.')->middleware('can:updateCore,' . App\Models\Setting::class)->group(function () {
-        Route::get('/', [SettingController::class, 'index'])->name('index');
-        Route::patch('/', [SettingController::class, 'update'])->name('update');
-    });
-
-    Route::prefix('categories')->as('categories.')->middleware('can:manageMainCategory,' . App\Models\Setting::class)->group(function () {
-        Route::get('/', [SettingController::class, 'categories'])->name('index');
-        Route::get('/create', [SettingController::class, 'createCategory'])->name('create');
-        Route::post('/', [SettingController::class, 'storeCategory'])->name('store');
-        Route::get('/{key}/{module?}', [SettingController::class, 'showCategory'])->name('show');
-        Route::get('/{key}/{module?}/edit', [SettingController::class, 'editCategory'])->name('edit');
-        Route::patch('/{key}/{module?}', [SettingController::class, 'updateCategory'])->name('update');
-        Route::delete('/{key}/{module?}', [SettingController::class, 'deleteCategory'])->name('destroy');
-        
-        Route::get('/{key}/{module?}/items', [SettingController::class, 'getCategoryItems'])->name('items');
-        Route::post('/{key}/{module?}/items', [SettingController::class, 'addCategoryItem'])->name('items.add');
-        Route::delete('/{key}/{module?}/items', [SettingController::class, 'removeCategoryItem'])->name('items.remove');
     });
 
     Route::prefix('districts')->as('districts.')->middleware('can:manageDistricts,' . App\Models\Setting::class)->group(function () {

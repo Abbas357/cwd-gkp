@@ -5,186 +5,145 @@ namespace App\Http\Controllers\Settings;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Artisan;
 
 class SettingController extends Controller
 {
-    public function index()
-    {        
-        $tables = ['Slider', 'Gallery', 'News', 'Seniority', 'DevelopmentProject', 'Tender', 'Event'];
-        return view('modules.settings.settings.index', compact('tables'));
+    protected $module = 'main';
+
+    public function settings()
+    {
+        $this->initIfNeeded();
+        return view('misc.settings');
     }
 
-    public function update(Request $request, $module = 'main')
-    {        
+    public function update(Request $request)
+    {
         if ($request->has('settings')) {
             foreach ($request->settings as $key => $data) {
                 if (!isset($data['value']) && $data['type'] !== 'boolean') {
                     continue;
                 }
+
                 Setting::set(
-                    $key, 
-                    $data['value'], 
-                    $module, 
-                    $data['type'] ?? null, 
+                    $key,
+                    $data['value'],
+                    $this->module,
+                    'string',
+                    $key . ' for ' . $this->module
+                );
+            }
+        }
+
+        if ($request->has('categories')) {
+            foreach ($request->categories as $key => $data) {
+                if (!isset($data['value']) || !is_array($data['value'])) {
+                    continue;
+                }
+                $items = array_values(array_filter($data['value']));
+                Setting::set(
+                    $key,
+                    $items,
+                    $this->module,
+                    'category',
                     $data['description'] ?? null
                 );
             }
         }
-        
-        $message = 'Settings saved successfully.';
-        if ($request->has('cache')) {
-            if ($request->input('cache') === 'create') {
-                Artisan::call('route:cache');
-                Artisan::call('config:cache');
-                Artisan::call('view:cache');
-                $message = 'Settings saved and caches created successfully.';
-            } elseif ($request->input('cache') === 'clear') {
-                Artisan::call('route:clear');
-                Artisan::call('config:clear');
-                Artisan::call('view:clear');
-                $message = 'Settings saved and caches cleared successfully.';
-            }
-        }
-        
-        Cache::flush();
-        
+
         return redirect()->route('admin.settings.index')
-            ->with('success', $message);
+            ->with('success', 'Website settings updated successfully.');
+    }
+    
+    public function init()
+    {
+        Setting::set('app_name', 'Communication & Works Department, KP', $this->module);
+        Setting::set('description', 'Communications & Works Department was established in 1979. Since establishment the Department is working to promote safe, sustainable, cost effective and environment friendly road infrastructure leading to socio-economic development.', $this->module);
+        Setting::set('meta_description', 'Communications & Works Department was established in 1979. Since establishment the Department is working to promote safe, sustainable, cost effective and environment friendly road infrastructure leading to socio-economic development.', $this->module);
+        Setting::set('commentable_tables', '["News"]', $this->module);
+        Setting::set('contact_address', 'Civil Secretariat, Peshawar', $this->module);
+        Setting::set('contact_phone', '091-9214039', $this->module);
+        Setting::set('email', 'cwd.gkp@gmail.com', $this->module);
+        Setting::set('whatsapp', '4534543534', $this->module);
+        Setting::set('facebook', 'CWDKPGovt', $this->module);
+        Setting::set('twitter', 'CWDKPGovt', $this->module);
+        Setting::set('youtube', 'CWDKPGovt', $this->module);
+        Setting::set('secret_key', 'abbas', $this->module);
+        Setting::set('maintenance_routes', '{"contractors.*":"1"}', $this->module);
+
+        Setting::set('page_type', [
+            'about_us', 'introduction', 'vision', 'functions', 'announcement', 'organogram', 'achievements', 'e_standardization', 'e_registration', 'noc_for_pumps', 'procurement'
+        ], $this->module, 'category', 'Page types for the website');
+
+        $categorized = [
+            'page_type' => [
+                'about_us',
+                'introduction',
+                'vision',
+                'functions',
+                'Announcement',
+                'organogram',
+                'achievements',
+                'E-Standardization',
+                'E-Registration',
+                'NOC for Pumps',
+                'Procurement',
+            ],
+            'file_type' => [
+                'pdf',
+                'Image',
+                'docs',
+                'pptx',
+                'xlsx',
+            ],
+            'download_category' => [
+                'Pakistan Citizen Portal',
+                'others',
+                'PWMIS',
+                'Engineering Materials',
+                'Extension Certificate',
+                'MRS',
+                'Consultant',
+                'Enrolment Of Contractor',
+                'Planning Commission Proforma',
+                'B&R CODES',
+                'Building Codes',
+                'Minutes of Promotional Meetings',
+                'Service Rules',
+                'Solar Panels And Allied Equipment',
+                'Annual Procurement Plan Guidelines',
+                'Bidding',
+                'KIPRA Notification',
+                'E-Billing',
+                'Tech Evaluation Applications',
+                'Policies & Procedure Internal Audit',
+                'Internship Program',
+            ],
+            'gallery_type' => [
+                'Visits',
+                'PKHA',
+                'Inauguration Ceremony',
+                'General',
+            ],
+            'news_category' => [
+                'Occasions',
+                'Tender',
+                'General',
+                'Consultants',
+            ],
+            'receipt_type' => [
+                'tender',
+            ],
+        ];
+
+        return redirect()->route('admin.settings.index')
+            ->with('success', 'Website is initiated with default settings and categories.');
     }
 
-    public function categories()
-    {        
-        $categories = Setting::where('type', 'category')->get();
-        return view('modules.settings.categories.index', compact('categories'));
-    }
-    
-    public function showCategory($key, $module = 'main')
-    {        
-        $category = Setting::where('module', $module)
-            ->where('key', $key)
-            ->where('type', 'category')
-            ->firstOrFail();
-            
-        $items = json_decode($category->value, true);
-        
-        return view('modules.settings.categories.show', compact('category', 'items'));
-    }
-    
-    public function createCategory()
-    {        
-        return view('modules.settings.categories.create');
-    }
-    
-    public function storeCategory(Request $request)
-    {        
-        $request->validate([
-            'key' => 'required|string|max:255|unique:settings,key,NULL,id,module,' . $request->input('module', 'main') . ',type,category',
-            'module' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'items' => 'nullable|array',
-        ]);
-        
-        $module = $request->input('module', 'main');
-        $key = $request->input('key');
-        $description = $request->input('description');
-        $items = $request->input('items', []);
-        
-        $categoryItems = [];
-        foreach ($items as $item) {
-            if (!empty($item)) {
-                $categoryItems[] = $item;
-            }
+    private function initIfNeeded()
+    {
+        $appName = setting('app_name', $this->module, null);
+        if ($appName === null) {
+            $this->init();
         }
-
-        Setting::set($key, $categoryItems, $module, 'category', $description);
-        
-        return redirect()->route('admin.categories.index')
-            ->with('success', 'Category created successfully.');
-    }
-    
-    public function editCategory($key, $module = 'main')
-    {        
-        $category = Setting::where('module', $module)
-            ->where('key', $key)
-            ->where('type', 'category')
-            ->firstOrFail();
-            
-        $items = json_decode($category->value, true);
-        
-        return view('modules.settings.categories.edit', compact('category', 'items'));
-    }
-    
-    public function updateCategory(Request $request, $key, $module = 'main')
-    {        
-        $request->validate([
-            'description' => 'nullable|string',
-            'items' => 'required|array',
-        ]);
-        
-        $description = $request->input('description');
-        $items = array_filter($request->input('items', [])); // Remove empty values
-        
-        Setting::set($key, array_values($items), $module, 'category', $description);
-        
-        return redirect()->route('admin.categories.index')
-            ->with('success', 'Category updated successfully.');
-    }
-    
-    public function deleteCategory($key, $module = 'main')
-    {        
-        $category = Setting::where('module', $module)
-            ->where('key', $key)
-            ->where('type', 'category')
-            ->firstOrFail();
-            
-        $category->delete();
-        
-        Cache::forget("category_{$module}_{$key}");
-        Cache::forget("categories_{$module}");
-        
-        return redirect()->route('admin.categories.index')
-            ->with('success', 'Category deleted successfully.');
-    }
-        
-    public function getCategoryItems($key, $module = 'main')
-    {        
-        $items = Setting::getCategory($key, $module, []);
-        return response()->json(['items' => $items]);
-    }
-    
-    public function addCategoryItem(Request $request, $key, $module = 'main')
-    {        
-        $request->validate([
-            'item' => 'required|string|max:255',
-        ]);
-        
-        $item = $request->input('item');
-        
-        $items = Setting::addCategoryItem($key, $item, $module);
-        
-        return response()->json([
-            'success' => true,
-            'items' => $items,
-            'message' => 'Item added successfully.'
-        ]);
-    }
-    
-    public function removeCategoryItem(Request $request, $key, $module = 'main')
-    {        
-        $request->validate([
-            'item' => 'required|string|max:255'
-        ]);
-        
-        $item = $request->input('item');
-        
-        $items = Setting::removeCategoryItem($key, $item, $module);
-        
-        return response()->json([
-            'success' => true,
-            'items' => $items,
-            'message' => 'Item removed successfully.'
-        ]);
     }
 }

@@ -52,7 +52,7 @@
                             <select class="form-select" id="category_applied" name="category_applied" required>
                                 <option value="">Choose...</option>
                                 @foreach ($cat['contractor_category'] as $category)
-                                <option value="{{ $category->name }}">{{ $category->name }}</option>
+                                <option value="{{ $category }}">{{ $category }}</option>
                                 @endforeach
                             </select>
                             @error('category_applied')
@@ -64,7 +64,7 @@
                             <select class="form-select" id="pec_category" name="pec_category" required>
                                 <option value="">Choose...</option>
                                 @foreach ($cat['contractor_category'] as $pec)
-                                <option value="{{ $pec->name }}">{{ $pec->name }}</option>
+                                <option value="{{ $pec }}">{{ $pec }}</option>
                                 @endforeach
                             </select>
                             @error('pec_category')
@@ -115,7 +115,7 @@
                             <label for="pre_enlistment">In Case of already enlisted in following</label>
                             <select class="form-select" data-placeholder="Choose" id="pre_enlistment" multiple name="pre_enlistment[]">
                                 @foreach ($cat['provincial_entities'] as $entities)
-                                <option value="{{ $entities->name }}">{{ $entities->name }}</option>
+                                <option value="{{ $entities }}">{{ $entities }}</option>
                                 @endforeach
                             </select>
                             @error('pre_enlistment')
