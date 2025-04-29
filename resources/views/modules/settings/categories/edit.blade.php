@@ -86,21 +86,29 @@
     @push('script')
     <script>
         $(document).ready(function() {
-            // Add new item
             $('#addItemBtn').on('click', function() {
-                const newItem = $('#newItem').val().trim();
+                addNewItem();
+            });
+            
+            $('#newItem').on('keypress', function(e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    addNewItem();
+                }
+            });
+            
+            function addNewItem() {
+                const value = $('#newItem').val().trim();
                 
-                if (newItem === '') {
+                if (value === '') {
                     alert('Item cannot be empty!');
                     return;
                 }
                 
-                // Add to table
                 const newRow = `
                     <tr>
                         <td>
-                            <input type="text" class="form-control" name="items[]" 
-                                   value="${newItem}" required>
+                            <input type="text" class="form-control" name="items[]" value="${value}" required>
                         </td>
                         <td class="text-center">
                             <button type="button" class="btn btn-sm btn-danger remove-item">
@@ -111,15 +119,22 @@
                 `;
                 
                 $(newRow).insertBefore('#newItemRow');
-                
-                // Clear input
                 $('#newItem').val('');
+            }
+            
+            $(document).on('click', '.remove-item', function() {
+                $(this).closest('tr').remove();
             });
             
-            // Remove item
-            $(document).on('click', '.remove-item', function() {
-                if (confirm('Are you sure you want to remove this item?')) {
-                    $(this).closest('tr').remove();
+            $('form').on('submit', function(e) {
+                const newItemValue = $('#newItem').val().trim();
+                
+                if (newItemValue !== '') {
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'items[]',
+                        value: newItemValue
+                    }).appendTo(this);
                 }
             });
         });

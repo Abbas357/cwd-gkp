@@ -187,6 +187,7 @@
         </div>
         @endif
 
+        @auth()
         <div class="row mt-3">
             <h1 class="fs-3 py-2 bg-light">Posting History</h1>
             <div class="col-12">
@@ -273,6 +274,6 @@
                 </div>
             @endforeach
         </div>
-
+        @endauth
     </div>
 </x-main-layout>

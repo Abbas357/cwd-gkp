@@ -40,48 +40,82 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const categoryTabs = document.querySelectorAll('.nav-link');
+            
+            // Function to load tab content
+            const loadTabContent = (tab) => {
+                const category = tab.getAttribute('data-category');
+                const tabPaneId = tab.getAttribute('href').substring(1); 
+                const tabPane = document.getElementById(tabPaneId);
+                
+                if (tabPane && tabPane.children.length > 0 && !tabPane.querySelector('.spinner-border')) {
+                    return;
+                }
+                
+                tabPane.innerHTML = `<div class="d-flex justify-content-center">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>`;
+                
+                fetch(`/downloads/fetch-category`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        category
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    tabPane.innerHTML = data.downloads;
+                })
+                .catch(error => {
+                    console.error('Error fetching category:', error);
+                    tabPane.innerHTML = '<p class="text-center text-danger">Failed to load content. Please try again.</p>';
+                });
+            };
     
+            // Set up click event for all tabs
             categoryTabs.forEach(tab => {
                 tab.addEventListener('click', (e) => {
                     e.preventDefault();
-    
-                    const category = tab.getAttribute('data-category');
-                    const tabPaneId = tab.getAttribute('href').substring(1); 
-                    const tabPane = document.getElementById(tabPaneId);
-    
-                    if (tabPane && tabPane.children.length > 0) {
-                        return;
-                    }
-    
-                    tabPane.innerHTML = `<div class="d-flex justify-content-center">
-                                            <div class="spinner-border text-primary" role="status">
-                                                <span class="visually-hidden">Loading...</span>
-                                            </div>
-                                        </div>`;
+                    
+                    // Activate this tab
+                    document.querySelectorAll('.nav-link').forEach(t => {
+                        t.classList.remove('active');
+                        t.setAttribute('aria-selected', 'false');
+                    });
+                    tab.classList.add('active');
+                    tab.setAttribute('aria-selected', 'true');
+                    
+                    // Show this tab's content
+                    document.querySelectorAll('.tab-pane').forEach(p => {
+                        p.classList.remove('show', 'active');
+                    });
+                    const tabPane = document.getElementById(tab.getAttribute('href').substring(1));
                     tabPane.classList.add('show', 'active');
-    -
-                    fetch(`/downloads/fetch-category`, {
-                            method: 'POST'
-                            , headers: {
-                                'Content-Type': 'application/json'
-                                , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                            }
-                            , body: JSON.stringify({
-                                category
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            tabPane.innerHTML = data.downloads;
-                        })
-                        .catch(error => {
-                            console.error('Error fetching category:', error);
-                            tabPane.innerHTML = '<p class="text-center text-danger">Failed to load content. Please try again.</p>';
-                        });
+                    
+                    // Load content if needed
+                    loadTabContent(tab);
+                    
+                    // Update URL hash without scrolling
+                    history.replaceState(null, null, tab.getAttribute('href'));
                 });
             });
+            
+            // Check for hash in URL on page load
+            if (window.location.hash) {
+                const hash = window.location.hash.substring(1);
+                const matchingTab = document.querySelector(`.nav-link[href="#${hash}"]`);
+                
+                if (matchingTab) {
+                    // Simulate a click on the matching tab
+                    matchingTab.click();
+                }
+            }
         });
-    
     </script>
     @endpush
 

@@ -1,7 +1,7 @@
 <h4>{{ $category ?? 'Category' }} Downloads</h4>
 <table class="table table-striped">
     <thead>
-        <tr>
+        <tr class="table-primary text-uppercase">
             <th>#</th>
             <th>File Name</th>
             <th>Action</th>
@@ -25,13 +25,16 @@
                     $fileType = strtolower($download->file_type ?? 'default');
                     $iconClass = $icons[$fileType] ?? 'bi-file-earmark';
                 @endphp
-                <i class="bi {{ $iconClass }}"></i> 
-                {{ $download->file_type ?? 'N/A' }}
+                <span class="rounded bg-light p-1 me-3 border border-success shadow-sm">
+                    <i class="bi {{ $iconClass }}"></i> 
+                    <span style="font-size:12px; color: #777"> .{{ $download->file_type ?? 'N/A' }} </span>
+                </span>
+                
                 {{ $download->file_name }}</td>
             <td>
                 @if ($media = $download->getFirstMediaUrl('downloads'))
-                <a href="{{ $media }}" class="cw-btn" data-icon="bi-cloud-arrow-down" 
-                   data-id="{{ $download->id }}" target="_blank"> Download
+                <a href="{{ $media }}" class="cw-btn bg-light text-dark" data-icon="bi-cloud-arrow-down" 
+                   data-id="{{ $download->id }}" target="_blank"> <i class="bi-download me-1"></i> Download
                 </a>
                 @else
                 <span class="text-muted">No file available</span>
