@@ -36,7 +36,7 @@ Route::prefix('settings')->group(function () {
     Route::prefix('districts')->as('districts.')->middleware('can:manageDistricts,' . App\Models\Setting::class)->group(function () {
         Route::get('/', [DistrictController::class, 'index'])->name('index');
         Route::post('/', [DistrictController::class, 'store'])->name('store');
-        Route::delete('/{district}', [DistrictController::class, 'destroy']);
+        Route::delete('/{district}', [DistrictController::class, 'destroy'])->name('destroy');
     });
 
     Route::prefix('search')->as('search.')->group(function () {

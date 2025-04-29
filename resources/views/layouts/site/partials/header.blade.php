@@ -243,6 +243,9 @@
                                 <li role="none" data-tier-id="21">
                                     <a href="{{ route('pages.show', 'NOC for Pumps') }}" data-tier-id="21" role="menuitem" class="cw-menuItem" href="#" tabindex="0">NOC FOR PUMPS</a>
                                 </li>
+                                <li role="none" data-tier-id="21">
+                                    <a href="{{ route('pages.show', 'procurement') }}" data-tier-id="21" role="menuitem" class="cw-menuItem" href="#" tabindex="0">Procurement</a>
+                                </li>
                             </ul>
                         </li>
                         <li role="none" class="cw-top-menu {{ request()->routeIs('tenders.index') ? 'uActived' : '' }}" data-tier-id="3">
