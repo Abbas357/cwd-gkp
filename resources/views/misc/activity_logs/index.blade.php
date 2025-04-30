@@ -1,4 +1,4 @@
-<x-settings-layout title="Activity Log">
+<x-settings-layout title="Activity Log" :showAside="false">
     @push('style')
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
     @endpush

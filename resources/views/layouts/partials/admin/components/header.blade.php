@@ -262,23 +262,11 @@
                     @can('viewActivity', App\Models\Setting::class)
                     <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.activity.index') }}"><i class="bi-clock-history"></i>Activity Log</a>
                     @endcan
-                    @canany(['updateCore', 'manageMainCategory', 'manageDistricts'], App\Models\Setting::class)
-                    <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="#" onclick="event.preventDefault(); event.stopPropagation(); document.getElementById('collapseMenuItems').classList.toggle('show');">
-                        <i class="bi-arrow-down-circle-fill"></i>Settings
+                    @can('updateCore', App\Models\Setting::class)
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.settings.index') }}">
+                        <i class="bi-gear-fill"></i>Settings
                     </a>
-                    <div class="collapse px-3" id="collapseMenuItems">
-                        @can('updateCore', App\Models\Setting::class)
-                        <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.settings.index') }}" onclick="event.stopPropagation();">
-                            <i class="bi-gear-fill"></i>Core Settings
-                        </a>
-                        @endcan
-                        @can('manageDistricts', App\Models\Setting::class)
-                        <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.districts.index') }}" onclick="event.stopPropagation();">
-                            <i class="bi-geo-alt"></i>Districts
-                        </a>
-                        @endcan
-                    </div>
-                    @endcanany
+                    @endcan
                     <hr class="dropdown-divider">
                     <form method="POST" action="{{ route('logout') }}" disabled>
                         @csrf

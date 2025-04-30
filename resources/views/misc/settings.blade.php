@@ -1,4 +1,4 @@
-<x-settings-layout title="Main Settings">
+<x-settings-layout title="Main Settings" :showAside="false">
     @push('style')
         <style>
             .nav-tabs .settings-tab {
@@ -151,6 +151,16 @@
                             <button class="nav-link settings-tab" id="news_category-tab" data-bs-toggle="tab" data-bs-target="#news_category" type="button" role="tab" aria-controls="news_category" aria-selected="false">
                                 <i class="bi bi-exclamation-triangle me-2"></i> News Category
                             </button>
+                            @can('manageDistricts', App\Models\Setting::class)
+                            <a class="nav-link settings-tab" href="{{ route('admin.districts.index') }}">
+                                <i class="bi-map me-2"></i> Districts
+                            </a>
+                            @endcan
+                            @can('viewActivity', App\Models\Setting::class)
+                            <a class="nav-link settings-tab" href="{{ route('admin.activity.index') }}">
+                                <i class="bi-clipboard-pulse me-2"></i> Activity Log
+                            </a>
+                            @endcan
                         </div>
                     </div>
                 </div>

@@ -94,9 +94,6 @@ class SearchController extends Controller
             ->orWhereHas('chiefEngineer', function ($queryBuilder) use ($query) {
                 $queryBuilder->where('name', 'LIKE', "%{$query}%");
             })
-            ->orWhereHas('superintendentEngineer', function ($queryBuilder) use ($query) {
-                $queryBuilder->where('name', 'LIKE', "%{$query}%");
-            })
             ->latest()
             ->limit(5)
             ->get();

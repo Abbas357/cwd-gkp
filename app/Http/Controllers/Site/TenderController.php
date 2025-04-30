@@ -18,9 +18,7 @@ class TenderController extends Controller
             ->orderBy('published_at', 'desc')
             ->paginate(10);
 
-        $categories = Category::where('type', 'tender_domain')->get();
-
-        return view('site.tenders.index', compact('tenders', 'categories'));
+        return view('site.tenders.index', compact('tenders'));
     }
 
     public function show($slug)

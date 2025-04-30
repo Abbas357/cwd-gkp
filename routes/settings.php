@@ -2,10 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Settings\ProfileController;
-use App\Http\Controllers\Settings\SettingController;
-use App\Http\Controllers\Settings\DistrictController;
-use App\Http\Controllers\Settings\ActivityLogController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\DistrictController;
+use App\Http\Controllers\ActivityLogController;
 
 Route::prefix('settings')->group(function () {
     

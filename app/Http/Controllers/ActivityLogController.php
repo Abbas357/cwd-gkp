@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Settings;
+namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 
@@ -43,13 +43,13 @@ class ActivityLogController extends Controller
                     return 'N/A';
                 })
                 ->addColumn('subject', function ($row) {
-                    return view('modules.settings.activity_logs.partials.subject', [
+                    return view('misc.activity_logs.partials.subject', [
                         'subjectId' => $row->subject_id,
                         'subjectType' => $row->subject_type,
                     ])->render();
                 })
                 ->addColumn('properties', function ($row) {
-                    return view('modules.settings.activity_logs.partials.properties', ['row' => $row])->render();
+                    return view('misc.activity_logs.partials.properties', ['row' => $row])->render();
                 })
                 ->addColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y').' ('.$row->created_at->diffForHumans().')';
@@ -74,7 +74,7 @@ class ActivityLogController extends Controller
             return $dataTable->toJson();
         }
 
-        return view('modules.settings.activity_logs.index');
+        return view('misc.activity_logs.index');
     }
 
     public function getNotifications(Request $request)

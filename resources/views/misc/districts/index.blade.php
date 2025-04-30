@@ -1,4 +1,4 @@
-<x-settings-layout>
+<x-settings-layout title="Districts" :showAside="false">
     <x-slot name="header">
         <li class="breadcrumb-item active" aria-current="page"> Districts</li>
     </x-slot>

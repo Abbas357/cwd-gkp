@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Settings;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 
@@ -14,7 +14,7 @@ class ProfileController extends Controller
 {
     public function edit(Request $request): View
     {
-        return view('modules.settings.profile.edit', [
+        return view('misc.profile.edit', [
             'user' => $request->user(),
         ]);
     }

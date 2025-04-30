@@ -240,64 +240,72 @@ class HomeController extends Controller
         return view('site.home.partials.contact');
     }
 
-    public function notifications(Request $request)
-    {
+    public function notifications(Request $request) {
         $page = $request->input('page', 1);
         $perPage = 7;
         $search = $request->input('search', '');
         $type = $request->input('type', '');
-
+    
         $announcement = Page::where('page_type', 'Announcement')
             ->orderBy('created_at', 'desc')
             ->first();
-
+    
         $announcementData = $announcement ? [
             'id' => $announcement->id,
             'title' => $announcement->title,
             'description' => $announcement->content,
-            'image' => $announcement->getFirstMediaUrl('page_attachments')
-                ?: asset('admin/images/no-image.jpg'),
+            'image' => $announcement->getFirstMediaUrl('page_attachments') ?: asset('admin/images/no-image.jpg'),
         ] : null;
-
+    
         $query = SiteNotification::latest();
-
+    
         if (!empty($type)) {
             $query->where('notifiable_type', 'App\Models\\' . $type)
-                ->where('title', 'like', '%' . $search . '%');
+                  ->where('title', 'like', '%' . $search . '%');
         } elseif (!empty($search)) {
             $query->where('title', 'like', '%' . $search . '%')
-                ->orWhere('notifiable_type', 'like', '%' . $search . '%');
+                  ->orWhere('notifiable_type', 'like', '%' . $search . '%');
         }
-
+    
         $totalNotifications = $query->count();
-
+    
         $notifications = $query->skip(($page - 1) * $perPage)
             ->take($perPage)
             ->get()
             ->map(function ($notification) {
-                $info = [
-                    Tender::class => ['bi-file-earmark-text', 'Tenders', '#fcaf4533', route('tenders.index')],
-                    Gallery::class => ['bi-images', 'Galleries', '#00c4ff33', route('gallery.index')],
-                    Event::class => ['bi-clock-history', 'Events', '#2dde9833', route('events.index')],
-                    News::class => ['bi-broadcast', 'News', '#ff000033', route('news.index')],
-                    Seniority::class => ['bi-person-lines-fill', 'Seniorities', '#9146ff33', route('seniority.index')],
+                // Define image URLs and category information for each notification type
+                $categoryInfo = [
+                    Tender::class => ['Tenders', 'https://placehold.co/50x50/png', route('tenders.index')],
+                    Gallery::class => ['Galleries', 'https://placehold.co/50x50/png', route('gallery.index')],
+                    Event::class => ['Events', 'https://placehold.co/50x50/png', route('events.index')],
+                    News::class => ['News', 'https://placehold.co/50x50/png', route('news.index')],
+                    Seniority::class => ['Seniorities', 'https://placehold.co/50x50/png', route('seniority.index')],
                 ];
-
+    
+                // Different placeholder for each notification type
+                $imageUrl = match ($notification->notifiable_type) {
+                    Tender::class => asset('site/images/icons/tender.png'),
+                    Gallery::class => asset('site/images/icons/gallery.png'),
+                    Event::class => asset('site/images/icons/event.png'),
+                    News::class => asset('site/images/icons/news.png'),
+                    Seniority::class => asset('site/images/icons/seniority.png'),
+                    default => 'https://placehold.co/50x50/png?text=Notification'
+                };
+    
                 return [
                     'id' => $notification->id,
-                    'title' => strlen($notification->title) > 80
-                        ? substr($notification->title, 0, 80) . '...'
-                        : $notification->title,
+                    'title' => strlen($notification->title) > 80 ? substr($notification->title, 0, 80) . '...' : $notification->title,
                     'url' => $notification->url,
                     'created_at' => $notification->created_at->diffForHumans(),
                     'type' => class_basename($notification->notifiable_type),
-                    'info' => $info[$notification->notifiable_type] ?? ['bi-bell', 'Notification', '#ccc', '#'],
+                    'info' => $categoryInfo[$notification->notifiable_type] ?? ['Notification', 'https://placehold.co/50x50/png', '#'],
+                    'imageUrl' => $imageUrl,
                     'recentNotification' => $notification->created_at->gt(now()->subDay()),
                 ];
             });
-
+    
         $hasMore = ($page * $perPage) < $totalNotifications;
-
+    
         return response()->json([
             'notifications' => $notifications,
             'nextPage' => $hasMore ? $page + 1 : null,

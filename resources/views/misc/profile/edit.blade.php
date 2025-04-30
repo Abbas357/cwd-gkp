@@ -1,4 +1,4 @@
-<x-settings-layout>
+<x-settings-layout  :showAside="false" title="Edit Profile">
     @push('style')
     <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
     @endpush
@@ -6,16 +6,20 @@
         <li class="breadcrumb-item" aria-current="page">Profile</li>
     </x-slot>
 
-    <div class="py-12">
-        <div class="p-4 shadow">
-            <div class="max-w-xl">
-                @include('modules.settings.profile.partials.update-profile-information-form')
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="p-4 border h-100">
+                <div class="max-w-xl">
+                    @include('misc.profile.partials.update-profile-information-form')
+                </div>
             </div>
         </div>
-
-        <div class="p-4 shadow">
-            <div class="max-w-xl">
-                @include('modules.settings.profile.partials.update-password-form')
+    
+        <div class="col-md-6">
+            <div class="p-4 border h-100">
+                <div class="max-w-xl">
+                    @include('misc.profile.partials.update-password-form')
+                </div>
             </div>
         </div>
     </div>

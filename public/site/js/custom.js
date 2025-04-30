@@ -817,10 +817,10 @@ function pushStateModal({
         let currentPage = 1;
         let isLoading = false;
         let hasMorePages = true;
-
+    
         const announcementSeen = sessionStorage.getItem('announcement_seen');
         const notificationsSeen = sessionStorage.getItem('notifications_seen');
-
+    
         modalContainer.innerHTML = `
             <div id="news-modal" class="modal fade" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -866,7 +866,7 @@ function pushStateModal({
                 </div>
             </div>
         `;
-
+    
         document.addEventListener('DOMContentLoaded', ()=> {
             const scrollableElements = document.querySelectorAll('.custom-scrollbar');
         
@@ -890,7 +890,7 @@ function pushStateModal({
                 element.style.width = `${contentWidth}px`;
             });
         });
-
+    
         const newsModal = new bootstrap.Modal(document.getElementById('news-modal'));
         const notificationList = document.getElementById('notification-list');
         const loadingIndicator = document.getElementById('loading-indicator');
@@ -900,7 +900,7 @@ function pushStateModal({
         
         searchInput.addEventListener('input', handleSearchOrFilter);
         filterDropdown.addEventListener('change', handleSearchOrFilter);
-
+    
         function handleSearchOrFilter() {
             currentPage = 1; 
             notificationList.innerHTML = '';
@@ -910,22 +910,22 @@ function pushStateModal({
             hasMorePages = true;
             fetchNotifications(currentPage);
         }
-
+    
         if (!notificationsSeen) {
             fetchNotifications(currentPage);
             newsModal.show();
         }
-
+    
         if (!announcementSeen) {
             fetchAnnouncement();
         }
-
+    
         function fetchAnnouncement() {
             fetch('/notifications')
                 .then(response => response.json())
                 .then(data => {
                     const { announcement } = data;
-
+    
                     if (announcement) {
                         modalContainer.innerHTML += `
                             <div id="announcement-modal" class="modal fade" tabindex="-1" role="dialog" style="z-index: 9999;">
@@ -955,29 +955,29 @@ function pushStateModal({
                     }
                 });
         }
-
+    
         function fetchNotifications(page) {
             if (isLoading || !hasMorePages) return;
-
+    
             isLoading = true;
             const searchQuery = searchInput.value.trim();
             const selectedType = filterDropdown.value;
             showLoadingIndicator(true);
-
+    
             fetch(`/notifications?page=${page}&search=${encodeURIComponent(searchQuery)}&type=${selectedType}`)
                 .then(response => response.json())
                 .then(data => {
                     const { notifications, nextPage, hasMore } = data;
-
+    
                     if (notifications.length) {
                         appendNotifications(notifications);
                     }
-
+    
                     currentPage = nextPage || currentPage;
                     hasMorePages = hasMore;
                     isLoading = false;
                     sessionStorage.setItem('notifications_seen', true);
-
+    
                     if (!hasMore) {
                         showLoadingIndicator(false);
                         displayEndOfNotificationsMessage();
@@ -989,41 +989,53 @@ function pushStateModal({
                     showLoadingIndicator(false);
                 });
         }
-
+    
         function appendNotifications(notifications) {
             const notificationItems = notifications.map(item => `
                 <div class="d-flex align-items-center p-2 notification-item">
-                    <i class="bi ${item.info[0]} ${item.recentNotification ? 'notification-icon' : ''} me-3 fs-3 px-2 py-0 rounded" style="background: ${item.info[2]}"></i>
-                    <div>
+                    <div class="me-3" style="border: 1px solid #bbb; padding:5px; min-width: 45px; width: 45px; height: 40px; border-radius: 5px; display:flex; justify-content: center; align-items: center; flex-shrink: 0;">
+                        <img src="${item.imageUrl}" class="img-fluid rounded ${item.recentNotification ? 'notification-active' : ''}" 
+                             alt="${item.type}" style="width: 40px; height: 35px;">
+                    </div>
+                    <div class="flex-grow-1">
                         <a href="${item.url}">${item.title}</a>
                     </div>
-                    <small class="news-date text-muted d-flex flex-column align-items-end" style="margin-left:auto">
+                    <small class="news-date text-muted d-flex flex-column align-items-end ms-2" style="flex-shrink: 0;">
                         <div class="mb-1">
-                            <a href="${item.info[3]}" class="badge text-bg-primary" style="font-size: 10px; display: inline-block">${item.info[1]}</a>
+                            <a href="${item.info[2]}" class="badge text-bg-primary" style="font-size: 10px; display: inline-block">${item.info[0]}</a>
                         </div>
                         <span class="fw-bold" style="font-size:.7rem">${item.created_at}</span>
                     </small>
                 </div>
             `).join('');
-
+    
             notificationList.innerHTML += notificationItems;
         }
-
+    
         function showLoadingIndicator(show) {
             loadingIndicator.style.display = show ? 'flex' : 'none';
         }
-
+    
         function displayEndOfNotificationsMessage() {
             loadingIndicator.innerHTML = `
                 <span class="text-muted">No more notifications</span>
             `;
         }
-
+    
         modalBodyContent.addEventListener('scroll', () => {
             if (modalBodyContent.scrollTop + modalBodyContent.clientHeight >= modalBodyContent.scrollHeight - 50) {
                 fetchNotifications(currentPage);
             }
         });
+    
+        // Add some CSS for notification active indicator
+        const style = document.createElement('style');
+        style.textContent = `
+            .notification-active {
+                box-shadow: 0 0 0 2px #ff6600;
+            }
+        `;
+        document.head.appendChild(style);
     });
 
 })();

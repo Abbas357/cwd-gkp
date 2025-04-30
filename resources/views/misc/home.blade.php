@@ -13,21 +13,21 @@
 
         #searchBar {
             width: 80%;
-            padding: 1rem 2rem;
+            padding: .7rem 2.5rem;
             margin-bottom: 3rem;
-            border: none;
             border-radius: 50px;
-            font-size: 1.1em;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            font-size: 2em;
             transition: all 0.3s ease;
             position: relative;
             z-index: 10;
-            border: 1px solid rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            opacity: 0.9;
         }
 
         #searchBar:focus {
             outline: none;
-            box-shadow: 0 4px 20px rgba(59, 89, 152, 0.3);
+            box-shadow: 0 2px 5px rgba(59, 89, 152, 0.3);
             transform: translateY(-2px);
         }
 
@@ -250,7 +250,7 @@
         .page-header h1 {
             font-size: 2.5rem;
             font-weight: 700;
-            color: #3b5998;
+            color: #000000;
             margin-bottom: 1rem;
         }
 
@@ -276,7 +276,7 @@
             <h1>Application Dashboard</h1>
             <p>Access all your applications in one place</p>
         </div>
-        <input type="text" id="searchBar" placeholder="Search applications..." oninput="filterApps()">
+        <input type="text" id="searchBar" placeholder="Search..." oninput="filterApps()">
         @php
             $user = auth()->user();
         @endphp
@@ -436,20 +436,20 @@
         particlesJS("particles-js", {
             "particles": {
                 "number": {
-                    "value": 100,
+                    "value": 130,
                     "density": {
                         "enable": true,
                         "value_area": 1000
                     }
                 },
                 "color": {
-                    "value": "#3b5998"
+                    "value": "#000000"
                 },
                 "shape": {
                     "type": "circle",
                     "stroke": {
                         "width": 0,
-                        "color": "#3b5998"
+                        "color": "#000000"
                     },
                     "polygon": {
                         "nb_sides": 5
@@ -466,7 +466,7 @@
                     }
                 },
                 "size": {
-                    "value": 4,
+                    "value": 5,
                     "random": true,
                     "anim": {
                         "enable": true,
@@ -478,8 +478,8 @@
                 "line_linked": {
                     "enable": true,
                     "distance": 150,
-                    "color": "#3b5998",
-                    "opacity": 0.4,
+                    "color": "#000000",
+                    "opacity": 0.5,
                     "width": 1
                 },
                 "move": {
