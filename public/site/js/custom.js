@@ -992,10 +992,9 @@ function pushStateModal({
     
         function appendNotifications(notifications) {
             const notificationItems = notifications.map(item => `
-                <div class="d-flex align-items-center p-2 notification-item">
-                    <div class="me-3" style="border: 1px solid #bbb; padding:5px; min-width: 45px; width: 45px; height: 40px; border-radius: 5px; display:flex; justify-content: center; align-items: center; flex-shrink: 0;">
-                        <img src="${item.imageUrl}" class="img-fluid rounded ${item.recentNotification ? 'notification-active' : ''}" 
-                             alt="${item.type}" style="width: 40px; height: 35px;">
+                <div class="d-flex align-items-center p-2 notification-item ${item.recentNotification && 'recent-notification-indicator'}">
+                    <div class="me-3 notification-img">
+                        <img src="${item.imageUrl}" class="img-fluid rounded}" alt="${item.type}">
                     </div>
                     <div class="flex-grow-1">
                         <a href="${item.url}">${item.title}</a>
@@ -1027,15 +1026,6 @@ function pushStateModal({
                 fetchNotifications(currentPage);
             }
         });
-    
-        // Add some CSS for notification active indicator
-        const style = document.createElement('style');
-        style.textContent = `
-            .notification-active {
-                box-shadow: 0 0 0 2px #ff6600;
-            }
-        `;
-        document.head.appendChild(style);
     });
 
 })();
