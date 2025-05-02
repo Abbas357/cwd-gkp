@@ -19,7 +19,7 @@ class DistrictController extends Controller
     {
         $request->validate(['name' => 'required']);
         District::create(['name' => $request->name]);
-        return to_route('admin.districts.index')->with('success', 'District Created successfully.');
+        return to_route('admin.settings.districts.index')->with('success', 'District Created successfully.');
     }
 
     public function destroy(District $district)

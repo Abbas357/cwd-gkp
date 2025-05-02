@@ -55,12 +55,12 @@
                 </a>
                 <div class="dropdown-menu dropdown-option dropdown-menu-end shadow">
                     @can('view activity')
-                    <div><a class="dropdown-item d-flex align-items-center gap-3 py-2" href="{{ route('admin.activity.index') }}"><i class="bi-activity"></i>Activity Log</a></div>
+                    <div><a class="dropdown-item d-flex align-items-center gap-3 py-2" href="{{ route('admin.settings.activity.index') }}"><i class="bi-activity"></i>Activity Log</a></div>
                     @endcan
                     @can('view settings')
-                    <div><a class="dropdown-item d-flex align-items-center gap-3 py-2" href="{{ route('admin.settings.index') }}"><i class="bi-gear"></i>Settings</a></div>
+                    <div><a class="dropdown-item d-flex align-items-center gap-3 py-2" href="{{ route('admin.settings.core.index') }}"><i class="bi-gear"></i>Settings</a></div>
                     @endcan
-                    <div><a class="dropdown-item d-flex align-items-center gap-3 py-2" href="{{ route('admin.profile.edit') }}"><i class="bi-person-circle"></i>Edit Profile</a></div>
+                    <div><a class="dropdown-item d-flex align-items-center gap-3 py-2" href="{{ route('admin.settings.profile.edit') }}"><i class="bi-person-circle"></i>Edit Profile</a></div>
                 </div>
             </div>
             @endif

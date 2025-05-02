@@ -251,19 +251,19 @@
                     <img src="{{ getProfilePic(auth()->user()) }}" class="rounded-circle border" width="40" height="40">
                 </a>
                 <div class="dropdown-menu border dropdown-user dropdown-menu-end shadow" style="max-height: 85vh; overflow-y: auto;">
-                    <a class="dropdown-item" href="{{ route('admin.profile.edit') }}">
+                    <a class="dropdown-item" href="{{ route('admin.settings.profile.edit') }}">
                         <div class="text-center">
                             <img src="{{ getProfilePic(auth()->user()) }}" class="rounded-circle p-1 shadow mb-1" width="80" height="80" alt="">
                             <h6 class="user-name mb-0 fw-bold">{{ auth()->user()->designation }}</h6>
                         </div>
                     </a>
                     <hr class="dropdown-divider">
-                    <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.profile.edit') }}"><i class="bi-person-circle"></i>Profile</a>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.settings.profile.edit') }}"><i class="bi-person-circle"></i>Profile</a>
                     @can('viewActivity', App\Models\Setting::class)
-                    <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.activity.index') }}"><i class="bi-clock-history"></i>Activity Log</a>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.settings.activity.index') }}"><i class="bi-clock-history"></i>Activity Log</a>
                     @endcan
                     @can('updateCore', App\Models\Setting::class)
-                    <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.settings.index') }}">
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-1" href="{{ route('admin.settings.core.index') }}">
                         <i class="bi-gear-fill"></i>Settings
                     </a>
                     @endcan
@@ -279,8 +279,8 @@
         </ul>
     </nav>
     <script>
-        var linksURL = "{{ route('admin.search.links') }}";
-        var activityURL = "{{ route('admin.activity.notifications') }}";
+        var linksURL = "{{ route('admin.settings.search.links') }}";
+        var activityURL = "{{ route('admin.settings.activity.notifications') }}";
 
     </script>
 </header>

@@ -9,7 +9,7 @@
         </p>
     </header>
 
-    <form class="needs-validation" method="post" action="{{ route('admin.profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data" novalidate>
+    <form class="needs-validation" method="post" action="{{ route('admin.settings.profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data" novalidate>
         @csrf
         @method('patch')
 

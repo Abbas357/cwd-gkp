@@ -8,15 +8,15 @@ use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\LaravelLogController;
 use App\Http\Controllers\ActivityLogController;
 
-Route::prefix('settings')->group(function () {
+Route::prefix('settings')->as('settings.')->group(function () {
     
-    Route::as('settings.')->group(function () {
-        Route::get('/', [SettingController::class, 'settings'])->name('index')->can('viewVehicleSettings', App\Models\Setting::class);
-        Route::post('/update', [SettingController::class, 'update'])->name('update')->can('updateVehicleSettings', App\Models\Setting::class);
-        Route::post('/init', [SettingController::class, 'init'])->name('init')->can('initVehicleSettings', App\Models\Setting::class);
+    Route::prefix('core')->name('core.')->middleware('can:manageCoreSettings,' . App\Models\Setting::class)->group(function () {
+        Route::get('/', [SettingController::class, 'settings'])->name('index');
+        Route::post('/update', [SettingController::class, 'update'])->name('update');
+        Route::post('/init', [SettingController::class, 'init'])->name('init');
     });
 
-    Route::prefix('logs')->name('logs.')->group(function () {
+    Route::prefix('logs')->name('logs.')->middleware('can:manageLaravelLogs,' . App\Models\Setting::class)->group(function () {
         Route::get('/', [LaravelLogController::class, 'index'])->name('index');
         Route::get('/files', [LaravelLogController::class, 'getLogFiles'])->name('files');
         Route::get('/download/{filename}', [LaravelLogController::class, 'downloadLog'])->name('download');

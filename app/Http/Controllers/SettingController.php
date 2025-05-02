@@ -86,7 +86,7 @@ class SettingController extends Controller
             Cache::flush();
         }
         
-        return redirect()->route('admin.settings.index');
+        return redirect()->route('admin.settings.core.index');
     }
     
     public function init()

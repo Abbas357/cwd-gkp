@@ -1,4 +1,4 @@
-<x-settings-layout title="Districts" :showAside="false">
+<x-app-layout title="Districts" :showAside="false">
     <x-slot name="header">
         <li class="breadcrumb-item active" aria-current="page"> Districts</li>
     </x-slot>
@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-body">
                     <h3 class="card-title"> Add Districts </h3>
-                    <form class="needs-validation" action="{{ route('admin.districts.store') }}" method="post" novalidate>
+                    <form class="needs-validation" action="{{ route('admin.settings.districts.store') }}" method="post" novalidate>
                         @csrf
                         <div class="row mb-3">
                             <div class="col">
@@ -42,7 +42,7 @@
                                 <td>{{ $district->id }}</td>
                                 <td>{{ $district->name }}</td>
                                 <td>
-                                    <form id="delete-district-form-{{ $district->id }}" method="post" action="{{ route('admin.districts.destroy', ['district' => $district->id]) }}" style="display:inline;">
+                                    <form id="delete-district-form-{{ $district->id }}" method="post" action="{{ route('admin.settings.districts.destroy', ['district' => $district->id]) }}" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="button" class="bg-light border-0 delete-district-btn" style="cursor: pointer;" data-district-id="{{ $district->id }}">
@@ -77,4 +77,4 @@
 
     </script>
     @endpush
-</x-settings-layout>
+</x-app-layout>

@@ -1,4 +1,4 @@
-<x-settings-layout title="Laravel Logs" :showAside="false">
+<x-app-layout title="Laravel Logs" :showAside="false">
     @push('style')
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/plugins/chart.js/Chart.min.css') }}" rel="stylesheet">
@@ -385,7 +385,7 @@
         $(document).ready(function() {
             // Initialize Log Entries DataTable
             var table = initDataTable('#log-datatable', {
-                ajaxUrl: "{{ route('admin.logs.index') }}",
+                ajaxUrl: "{{ route('admin.settings.logs.index') }}",
                 columns: [
                     { data: 'id', searchBuilderType: "num" },
                     { data: 'level', searchBuilderType: 'string' },
@@ -436,7 +436,7 @@
             $('#clear-logs').on('click', function() {
                 if (confirm('Are you sure you want to clear all log files? This action cannot be undone.')) {
                     $.ajax({
-                        url: "{{ route('admin.logs.clear') }}",
+                        url: "{{ route('admin.settings.logs.clear') }}",
                         type: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}'
@@ -456,7 +456,7 @@
             // Function to load log files
             function loadLogFiles() {
                 $.ajax({
-                    url: "{{ route('admin.logs.files') }}",
+                    url: "{{ route('admin.settings.logs.files') }}",
                     type: 'GET',
                     success: function(response) {
                         var filesTable = $('#log-files-table tbody');
@@ -474,7 +474,7 @@
                             row.append('<td>' + file.modified + '</td>');
                             
                             var actions = $('<td></td>');
-                            var downloadBtn = $('<a href="{{ route('admin.logs.download', '') }}/' + file.name + '" class="btn btn-sm btn-info btn-manage"><i class="bi bi-download"></i> Download</a>');
+                            var downloadBtn = $('<a href="{{ route('admin.settings.logs.download', '') }}/' + file.name + '" class="btn btn-sm btn-info btn-manage"><i class="bi bi-download"></i> Download</a>');
                             var deleteBtn = $('<button class="btn btn-sm btn-danger btn-manage delete-log" data-file="' + file.name + '"><i class="bi bi-trash"></i> Delete</button>');
                             var viewBtn = $('<button class="btn btn-sm btn-primary btn-manage view-log" data-file="' + file.name + '"><i class="bi bi-eye"></i> View</button>');
                             
@@ -491,7 +491,7 @@
                             var filename = $(this).data('file');
                             if (confirm('Are you sure you want to delete this log file?')) {
                                 $.ajax({
-                                    url: "{{ route('admin.logs.delete', '') }}/" + filename,
+                                    url: "{{ route('admin.settings.logs.delete', '') }}/" + filename,
                                     type: 'DELETE',
                                     data: {
                                         _token: '{{ csrf_token() }}'
@@ -511,7 +511,7 @@
                         // Add view event handlers
                         $('.view-log').on('click', function() {
                             var filename = $(this).data('file');
-                            table.ajax.url("{{ route('admin.logs.index') }}?file=" + filename).load();
+                            table.ajax.url("{{ route('admin.settings.logs.index') }}?file=" + filename).load();
                         });
                     },
                     error: function(error) {
@@ -601,4 +601,4 @@
         });
     </script>
     @endpush
-</x-settings-layout>
+</x-app-layout>

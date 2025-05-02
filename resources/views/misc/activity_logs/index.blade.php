@@ -1,4 +1,4 @@
-<x-settings-layout title="Activity Log" :showAside="false">
+<x-app-layout title="Activity Log" :showAside="false">
     @push('style')
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
     @endpush
@@ -31,7 +31,7 @@
         $(document).ready(function() {
             var table = initDataTable('#log-datatable', {
                 // serverSide: false,
-                ajaxUrl: "{{ route('admin.activity.index') }}"
+                ajaxUrl: "{{ route('admin.settings.activity.index') }}"
                 , columns: [
                     { data: 'id', searchBuilderType: "num" },
                     { data: 'log_name', searchBuilderType: 'string' },
@@ -54,4 +54,4 @@
 
     </script>
     @endpush
-</x-settings-layout>
+</x-app-layout>

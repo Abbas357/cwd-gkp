@@ -1,4 +1,4 @@
-<x-settings-layout  :showAside="false" title="Edit Profile">
+<x-app-layout  :showAside="false" title="Edit Profile">
     @push('style')
     <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
     @endpush
@@ -35,4 +35,4 @@
         });
     </script>
     @endpush
-</x-settings-layout>
+</x-app-layout>

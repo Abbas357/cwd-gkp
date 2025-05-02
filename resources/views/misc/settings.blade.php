@@ -1,4 +1,4 @@
-<x-settings-layout title="Main Settings" :showAside="false">
+<x-app-layout title="Main Settings" :showAside="false">
     @push('style')
         <style>
             .nav-tabs .settings-tab {
@@ -152,13 +152,18 @@
                                 <i class="bi bi-exclamation-triangle me-2"></i> News Category
                             </button>
                             @can('manageDistricts', App\Models\Setting::class)
-                            <a class="nav-link settings-tab" href="{{ route('admin.districts.index') }}">
+                            <a class="nav-link settings-tab" href="{{ route('admin.settings.districts.index') }}">
                                 <i class="bi-map me-2"></i> Districts
                             </a>
                             @endcan
                             @can('viewActivity', App\Models\Setting::class)
-                            <a class="nav-link settings-tab" href="{{ route('admin.activity.index') }}">
+                            <a class="nav-link settings-tab" href="{{ route('admin.settings.activity.index') }}">
                                 <i class="bi-clipboard-pulse me-2"></i> Activity Log
+                            </a>
+                            @endcan
+                            @can('viewLaravelLogs', App\Models\Setting::class)
+                            <a class="nav-link settings-tab" href="{{ route('admin.settings.logs.index') }}">
+                                <i class="bi-clipboard-pulse me-2"></i> Error Log
                             </a>
                             @endcan
                         </div>
@@ -166,7 +171,7 @@
                 </div>
                 <div class="card mt-3">
                     <div class="card-body">
-                        <form action="{{ route('admin.settings.init') }}" method="POST" onsubmit="return confirm('This will reset all settings to default values. Continue?');">
+                        <form action="{{ route('admin.settings.core.init') }}" method="POST" onsubmit="return confirm('This will reset all settings to default values. Continue?');">
                             @csrf
                             <button type="submit" class="btn btn-warning w-100">
                                 <i class="bi bi-arrow-clockwise me-1"></i> Reset to Defaults
@@ -178,7 +183,7 @@
 
             <!-- Main Content - Tab Contents -->
             <div class="col-md-9">
-                <form id="settingsForm" action="{{ route('admin.settings.update') }}" method="POST" class="needs-validation" novalidate>
+                <form id="settingsForm" action="{{ route('admin.settings.core.update') }}" method="POST" class="needs-validation" novalidate>
                     @csrf
                     <div class="tab-content">
                         <!-- General Settings -->
@@ -692,4 +697,4 @@
         });
     </script>
     @endpush
-</x-settings-layout>
+</x-app-layout>
