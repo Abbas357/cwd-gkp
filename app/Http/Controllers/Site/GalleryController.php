@@ -11,18 +11,36 @@ class GalleryController extends Controller
     public function index()
     {
         $galleryTypes = Gallery::select('type')->distinct()->pluck('type');
-
-        $galleriesByType = $galleryTypes->mapWithKeys(function ($type) {
-            $galleries = Gallery::where('type', $type)
+        
+        $firstType = $galleryTypes->first();
+        $firstTypeGalleries = [];
+        
+        if ($firstType) {
+            $firstTypeGalleries = Gallery::where('type', $firstType)
                 ->orderBy('published_at', 'desc')
                 ->with('media')
-                ->limit(5)
                 ->get();
-
-            return [$type => $galleries];
-        });
-
-        return view('site.gallery.index', compact('galleriesByType'));
+        }
+        
+        $galleriesByType = collect([$firstType => $firstTypeGalleries]);
+        
+        return view('site.gallery.index', compact('galleryTypes', 'galleriesByType', 'firstType'));
+    }
+    
+    public function getGalleriesByType(Request $request)
+    {
+        $type = $request->type;
+        
+        $galleries = Gallery::where('type', $type)
+            ->orderBy('published_at', 'desc')
+            ->with('media')
+            ->get();
+            
+        return response()->json([
+            'success' => true,
+            'galleries' => $galleries,
+            'html' => view('site.gallery.partials.gallery-items', compact('galleries', 'type'))->render()
+        ]);
     }
 
     public function showGalleryDetail($slug)

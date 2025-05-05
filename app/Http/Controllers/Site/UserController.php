@@ -12,7 +12,7 @@ class UserController extends Controller
     public function contacts()
     {
         $offices = Office::whereIn('name', [
-            'Minister C&W', 'Secretary C&W', 'Chief Engineer North', 'Chief Engineer Mega Projects', 
+            'Secretary C&W', 'Chief Engineer North', 'Chief Engineer Mega Projects', 
             'Chief Engineer East', 'Chief Engineer Centre', 'Chief Engineer South-I', 'Chief Engineer South-II', 
             'Chief Engineer Maintenance', 'Chief Engineer CDO', 'Chief Engineer Foregn Aids', 'Managing Director PKHA'
         ])

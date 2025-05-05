@@ -57,7 +57,8 @@
                                         </div>
                                     </div>`;
                 
-                fetch(`/downloads/fetch-category`, {
+                const url = "{{ route('downloads.fetch-category') }}";
+                fetch(url, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

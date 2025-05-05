@@ -1,61 +1,360 @@
 <x-main-layout title="Gallery">
-    <x-slot name="breadcrumbTitle">
-        Gallery
-    </x-slot>
 
+    @push('style')
+    <style>
+        .gallery-wrapper {
+            background-color: #f8f9fa;
+        }
+        
+        .gallery-nav .nav-link {
+            color: #495057;
+            border-radius: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .gallery-nav .nav-link:hover {
+            background-color: #e9ecef;
+        }
+        
+        .gallery-nav .nav-link.active {
+            background-color: #575757;
+            color: white;
+        }
+        
+        .hover-card {
+            transition: all 0.3s ease;
+        }
+        
+        .hover-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .gallery-image {
+            overflow: hidden;
+        }
+        
+        .transition {
+            transition: all 0.5s ease;
+        }
+        
+        .gallery-image img:hover {
+            transform: scale(1.05);
+        }
+        
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .gallery-image:hover .gallery-overlay {
+            opacity: 1;
+        }
+        
+        .object-fit-cover {
+            object-fit: cover;
+        }
+        
+        #gallery-loader {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        /* New styles for list view */
+        .list-view .gallery-item .card {
+            flex-direction: row;
+        }
+        
+        .list-view .gallery-item .gallery-image {
+            width: 30%;
+            min-width: 200px;
+        }
+        
+        .list-view .gallery-item .card-body {
+            width: 70%;
+        }
+        
+        .list-view .gallery-item .card-footer {
+            display: none;
+        }
+        
+        .list-view .gallery-item .list-view-btn {
+            display: inline-block !important;
+        }
+        
+        @media (max-width: 767.98px) {
+            .list-view .gallery-item .card {
+                flex-direction: column;
+            }
+            
+            .list-view .gallery-item .gallery-image,
+            .list-view .gallery-item .card-body {
+                width: 100%;
+            }
+            
+            .offcanvas-categories {
+                z-index: 1050;
+            }
+            
+            .category-toggle-btn {
+                position: fixed;
+                top: 20rem;
+                right: 0px;
+                z-index: 999;
+                border-radius: 50%;
+                width: 35px;
+                height: 35px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            }
+        }
+    </style>
+    @endpush
+    <x-slot name="breadcrumbTitle">
+        <span>Gallery Collection</span>
+    </x-slot>
+    
     <x-slot name="breadcrumbItems">
+        <li class="breadcrumb-item"><a href="" class="text-decoration-none">Home</a></li>
         <li class="breadcrumb-item active">Gallery</li>
     </x-slot>
-
-    <div class="container my-5">
-        <div class="row">
-            <div class="col-md-3">
-                <ul class="nav nav-pills flex-column bg-light rounded p-3 shadow-sm" id="galleryTabs" role="tablist">
-                    @foreach ($galleriesByType as $type => $galleries)
-                    @if(!empty($galleries))
-                    <li class="nav-item mb-2" role="presentation">
-                        <a class="nav-link @if($loop->first) active @endif p-2 fw-bold" id="tab-{{ Str::slug($type) }}" data-bs-toggle="tab" href="#{{ Str::slug($type) }}" role="tab" aria-controls="{{ Str::slug($type) }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
-                            {{ ucfirst(str_replace('_', ' ', $type)) }}
-                        </a>
-                    </li>
-                    @endif
-                    @endforeach
-                </ul>
-            </div>
-
-            <div class="col-md-9">
-                <div class="tab-content" id="galleryTabContent">
-                    @foreach ($galleriesByType as $type => $galleries)
-                    @if(!empty($galleries))
-                    <div class="tab-pane fade @if($loop->first) show active @endif" id="{{ Str::slug($type) }}" role="tabpanel" aria-labelledby="tab-{{ Str::slug($type) }}">
-                        <h4 class="mt-3 mb-3 text-primary">{{ ucfirst(str_replace('_', ' ', $type)) }} Gallery</h4>
-                        <div class="row">
-                            @foreach ($galleries as $gallery)
-                            @if(!empty($gallery->title) || !empty($gallery->slug) || !empty($gallery->items))
-                            <div class="card col-md-4 mb-4 shadow-sm">
-                                @if(!empty($gallery->slug))
-                                <a href="{{ route('gallery.show', $gallery->slug) }}">
-                                    <img src="{{ $gallery->getFirstMediaUrl('gallery_covers') ?? asset('admin/images/no-image.jpg') }}" alt="{{ $gallery->title }}" class="img-fluid rounded-top" />
-                                </a>
-                                @endif
-
-                                <div class="card-body">
-                                    @if(!empty($gallery->title))
-                                    <h5 class="card-title">{{ $gallery->title }}</h5>
-                                    @endif
-                                    @if(!empty($gallery->items))
-                                    <div class="card-text d-flex justify-content-between"> <span>Items: {{ $gallery->items }}</span> <span>Views: {{ $gallery->views_count }}</span> </div>
-                                    @endif
-                                </div>
+    
+    <div class="gallery-wrapper py-5">
+        <div class="container">
+            
+            <div class="row g-4">
+                <!-- Mobile Categories Button (visible on small screens) -->
+                <div class="d-lg-none d-block">
+                    <button class="btn btn-light border border-secondary category-toggle-btn shadow" type="button" data-bs-toggle="offcanvas" data-bs-target="#categoriesOffcanvas">
+                        <i class="bi bi-filter"></i>
+                    </button>
+                </div>
+                
+                <!-- Sidebar with Categories (Hidden on mobile) -->
+                <div class="col-lg-3 col-md-4 d-none d-md-block">
+                    <div class="category-sidebar position-sticky" style="top: 2rem;">
+                        <div class="card border-0 shadow-sm overflow-hidden">
+                            <div class="card-header bg-light border p-3">
+                                <h5 class="m-0 fw-bold"><i class="bi bi-layers me-2"></i>Categories</h5>
                             </div>
-                            @endif
-                            @endforeach
+                            <div class="card-body p-0">
+                                <ul class="nav nav-pills flex-column gallery-nav" id="galleryTabs" role="tablist">
+                                    @foreach ($galleryTypes as $type)
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link d-flex justify-content-between align-items-center @if($loop->first) active @endif py-3 px-4 border-bottom" 
+                                               id="tab-{{ Str::slug($type) }}" 
+                                               data-bs-toggle="tab" 
+                                               href="#{{ Str::slug($type) }}" 
+                                               role="tab" 
+                                               data-type="{{ $type }}"
+                                               aria-controls="{{ Str::slug($type) }}" 
+                                               aria-selected="{{ $loop->first ? 'true' : 'false' }}">
+                                                <span><i class="bi bi-folder me-2"></i>{{ ucfirst(str_replace('_', ' ', $type)) }}</span>
+                                                <span class="gallery-count-{{ Str::slug($type) }}">
+                                                    @if($loop->first)
+                                                        {{ $galleriesByType[$type]->count() }}
+                                                    @else
+                                                        <i class="bi bi-info-circle"></i>
+                                                    @endif
+                                                </span>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                    @endif
-                    @endforeach
+                </div>
+                
+                <!-- Off-canvas Categories for mobile -->
+                <div class="offcanvas offcanvas-start offcanvas-categories" tabindex="-1" id="categoriesOffcanvas" aria-labelledby="categoriesOffcanvasLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="categoriesOffcanvasLabel">
+                            <i class="bi bi-layers me-2"></i>Gallery Categories
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body p-0">
+                        <ul class="nav nav-pills flex-column gallery-nav" id="mobileGalleryTabs" role="tablist">
+                            @foreach ($galleryTypes as $type)
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link d-flex justify-content-between align-items-center @if($loop->first) active @endif py-3 px-4 border-bottom" 
+                                       id="mobile-tab-{{ Str::slug($type) }}" 
+                                       data-bs-toggle="tab" 
+                                       href="#{{ Str::slug($type) }}" 
+                                       role="tab" 
+                                       data-type="{{ $type }}"
+                                       aria-controls="{{ Str::slug($type) }}" 
+                                       aria-selected="{{ $loop->first ? 'true' : 'false' }}"
+                                       data-bs-dismiss="offcanvas">
+                                        <span><i class="bi bi-folder me-2"></i>{{ ucfirst(str_replace('_', ' ', $type)) }}</span>
+                                        <span class="gallery-count-{{ Str::slug($type) }}">
+                                            @if($loop->first)
+                                                {{ $galleriesByType[$type]->count() }}
+                                            @else
+                                                <i class="bi bi-info-circle"></i>
+                                            @endif
+                                        </span>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Gallery Content -->
+                <div class="col-lg-9 col-md-8">
+                    <div class="tab-content" id="galleryTabContent">
+                        <div id="gallery-loader">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2">Loading galleries...</p>
+                        </div>
+                        
+                        @foreach ($galleryTypes as $type)
+                            <div class="tab-pane fade @if($loop->first) show active @endif" 
+                                 id="{{ Str::slug($type) }}" 
+                                 role="tabpanel" 
+                                 aria-labelledby="tab-{{ Str::slug($type) }}"
+                                 data-loaded="{{ $loop->first ? 'true' : 'false' }}">
+                                
+                                @if($loop->first)
+                                    @include('site.gallery.partials.gallery-items', ['galleries' => $galleriesByType[$type], 'type' => $type])
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+        
+    @push('script')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const viewToggles = document.querySelectorAll('.view-toggle');
+            const storageKey = 'galleryViewPreference';
+            
+            const savedView = localStorage.getItem(storageKey) || 'grid';
+            const mobileGalleryLinks = document.querySelectorAll('#mobileGalleryTabs .nav-link');
+            const offcanvasInstance = new bootstrap.Offcanvas(categoriesOffcanvas);
+            
+            mobileGalleryLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    offcanvasInstance.hide();
+                });
+            });
+            
+            document.querySelectorAll('.tab-pane').forEach(tabPane => {
+                applyViewMode(tabPane, savedView);
+                
+                const activeToggle = tabPane.querySelector(`.view-toggle[data-view="${savedView}"]`);
+                if (activeToggle) {
+                    tabPane.querySelectorAll('.view-toggle').forEach(btn => btn.classList.remove('active'));
+                    activeToggle.classList.add('active');
+                }
+            });
+            
+            function setupViewToggle() {
+                document.querySelectorAll('.view-toggle').forEach(toggle => {
+                    toggle.addEventListener('click', function() {
+                        const view = this.getAttribute('data-view');
+                        const tabPane = this.closest('.tab-pane');
+                        
+                        localStorage.setItem(storageKey, view);
+                        
+                        applyViewMode(tabPane, view);
+                        
+                        tabPane.querySelectorAll('.view-toggle').forEach(btn => btn.classList.remove('active'));
+                        this.classList.add('active');
+                    });
+                });
+            }
+            
+            function applyViewMode(tabPane, view) {
+                const galleryContainer = tabPane.querySelector('.gallery-container');
+                if (!galleryContainer) return;
+                
+                if (view === 'list') {
+                    galleryContainer.classList.add('list-view');
+                    tabPane.querySelectorAll('.gallery-item').forEach(item => {
+                        item.classList.remove('col-lg-4', 'col-md-6');
+                        item.classList.add('col-12', 'mb-3');
+                    });
+                } else {
+                    galleryContainer.classList.remove('list-view');
+                    tabPane.querySelectorAll('.gallery-item').forEach(item => {
+                        item.classList.add('col-lg-4', 'col-md-6');
+                        item.classList.remove('col-12', 'mb-3');
+                    });
+                }
+            }
+            
+            setupViewToggle();
+            
+            const galleryTabs = document.querySelectorAll('#galleryTabs .nav-link, #mobileGalleryTabs .nav-link');
+            const galleryLoader = document.getElementById('gallery-loader');
+            
+            galleryTabs.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    const type = this.getAttribute('data-type');
+                    const tabId = this.getAttribute('href').substring(1);
+                    const tabPane = document.getElementById(tabId);
+                    
+                    if (tabPane.getAttribute('data-loaded') === 'false') {
+                        galleryLoader.style.display = 'block';
+                        tabPane.style.opacity = '0.5';
+                        
+                        const url = "{{ route('gallery.type', ':type') }}".replace(':type', encodeURIComponent(type));
+                        fetch(url, {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                tabPane.innerHTML = data.html;
+                                
+                                const countBadges = document.querySelectorAll('.gallery-count-' + tabId);
+                                countBadges.forEach(countBadge => {
+                                    if (countBadge) {
+                                        countBadge.innerHTML = data.galleries.length;
+                                    }
+                                });
+                                
+                                tabPane.setAttribute('data-loaded', 'true');
+                                
+                                setupViewToggle();
+                                
+                                applyViewMode(tabPane, localStorage.getItem(storageKey) || 'grid');
+                            } else {
+                                tabPane.innerHTML = '<div class="alert alert-danger">Failed to load galleries.</div>';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching galleries:', error);
+                            tabPane.innerHTML = '<div class="alert alert-danger">An error occurred while loading galleries.</div>';
+                        })
+                        .finally(() => {
+                            galleryLoader.style.display = 'none';
+                            tabPane.style.opacity = '1';
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+    @endpush
 </x-main-layout>

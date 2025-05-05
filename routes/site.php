@@ -194,6 +194,7 @@ Route::prefix('development_projects')->as('development_projects.')->group(functi
 Route::prefix('gallery')->as('gallery.')->group(function () {
     Route::get('/', [GalleryController::class, 'index'])->name('index');
     Route::get('/{slug}', [GalleryController::class, 'showGalleryDetail'])->name('show');
+    Route::get('/type/{type}', [GalleryController::class, 'getGalleriesByType'])->name('type');
 });
 
 Route::prefix('news')->as('news.')->group(function () {
