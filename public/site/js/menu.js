@@ -17,6 +17,9 @@
 		inputLoading: $(".input-loading"),
 		searchWidget: $(".cw-search .widget"),
 		lastScrollTop: 0,
+		touchStartX: 0,
+		touchEndX: 0,
+		minSwipeDistance: 50, // Minimum distance required for a swipe (in pixels)
 
 		handleSearchIcon() {
 			if (
@@ -161,6 +164,49 @@
 			}
 		},
 
+		// Handle touch start event
+		handleTouchStart(e) {
+			CWD.touchStartX = e.touches[0].clientX;
+		},
+
+		// Handle touch end event
+		handleTouchEnd(e) {
+			CWD.touchEndX = e.changedTouches[0].clientX;
+			CWD.handleSwipe();
+		},
+
+		// Process the swipe
+		handleSwipe() {
+			const distance = CWD.touchEndX - CWD.touchStartX;
+			const isPopoverExpanded = CWD.popoverBtn.parentsUntil(".aria-expanded").last().attr("aria-expanded") === "true";
+			
+			// Left to right swipe (open menu)
+			if (distance > CWD.minSwipeDistance && CWD.matchMedia.matches && !isPopoverExpanded) {
+				CWD.openMenu();
+			}
+			// Right to left swipe (close menu)
+			else if (distance < -CWD.minSwipeDistance && CWD.matchMedia.matches && isPopoverExpanded) {
+				CWD.closeMenu();
+			}
+		},
+
+		// Open the menu
+		openMenu() {
+			// Only proceed if menu is currently closed
+			if (CWD.popoverBtn.parentsUntil(".aria-expanded").last().attr("aria-expanded") !== "true") {
+				CWD.popoverBtn.trigger("click");
+				CWD.overlay.css({ top: "65px", display: "block" });
+			}
+		},
+
+		// Close the menu
+		closeMenu() {
+			// Only proceed if menu is currently open
+			if (CWD.popoverBtn.parentsUntil(".aria-expanded").last().attr("aria-expanded") === "true") {
+				CWD.popoverBtn.trigger("click");
+				CWD.overlay.hide();
+			}
+		}
 	};
 
 	$(document).ready(function () {
@@ -168,6 +214,10 @@
 		CWD.searchInput.on("input", CWD.handleSearchInput);
 		$(window).on("resize", CWD.handleMatchMedia);
 		$(document).on('scroll', CWD.throttle(CWD.handleStickyBehavior.bind(CWD), 500));
+
+		// Add touch event listeners for swipe functionality
+		document.addEventListener('touchstart', CWD.handleTouchStart, false);
+		document.addEventListener('touchend', CWD.handleTouchEnd, false);
 
 		CWD.topMenu.on("mouseenter", function () {
 			if ($(this).hasClass("child-nav") && window.innerWidth > 1024) {

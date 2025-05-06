@@ -115,6 +115,28 @@
                 justify-content: center;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             }
+
+            .category-toggle-btn::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                animation: ripple .5s cubic-bezier(0.895, 0.03, 0.685, 0.22) infinite;
+                pointer-events: none;
+            }
+
+            @keyframes ripple {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(0,0,0,0.3);
+                }
+                100% {
+                    box-shadow: 0 0 0 20px rgba(0,0,0,0);
+                }
+            }
         }
     </style>
     @endpush
@@ -134,7 +156,7 @@
                 <!-- Mobile Categories Button (visible on small screens) -->
                 <div class="d-lg-none d-block">
                     <button class="btn btn-light border border-secondary category-toggle-btn shadow" type="button" data-bs-toggle="offcanvas" data-bs-target="#categoriesOffcanvas">
-                        <i class="bi bi-filter"></i>
+                        <i class="bi bi-layout-three-columns"></i>
                     </button>
                 </div>
                 
