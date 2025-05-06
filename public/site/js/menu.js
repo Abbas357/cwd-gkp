@@ -19,7 +19,7 @@
 		lastScrollTop: 0,
 		touchStartX: 0,
 		touchEndX: 0,
-		minSwipeDistance: 50, // Minimum distance required for a swipe (in pixels)
+		minSwipeDistance: 50, // Minimum distance required for a swipe
 
 		handleSearchIcon() {
 			if (
