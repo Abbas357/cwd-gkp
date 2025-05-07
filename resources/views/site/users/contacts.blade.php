@@ -27,7 +27,7 @@
         
         .contact-sidebar {
             position: sticky;
-            top: 2rem;
+            top: 4rem;
         }
         
         @media (max-width: 767.98px) {
@@ -37,10 +37,10 @@
             
             .office-toggle-btn {
                 position: fixed;
-                top: 20rem;
-                right: 0px;
+                top: 8rem;
+                left: 0px;
                 z-index: 999;
-                border-radius: 50%;
+                border-radius: 5px;
                 width: 35px;
                 height: 35px;
                 display: flex;
@@ -57,17 +57,17 @@
                 transform: translate(-50%, -50%);
                 width: 100%;
                 height: 100%;
-                border-radius: 50%;
+                border-radius: 5px;
                 animation: ripple .5s cubic-bezier(0.895, 0.03, 0.685, 0.22) infinite;
                 pointer-events: none;
             }
 
             @keyframes ripple {
                 0% {
-                    box-shadow: 0 0 0 0 rgba(0,0,0,0.3);
+                    box-shadow: 0 0 0 0 rgba(0,0,0,0.2);
                 }
                 100% {
-                    box-shadow: 0 0 0 20px rgba(0,0,0,0);
+                    box-shadow: 0 0 0 10px rgba(0,0,0,0);
                 }
             }
         }
@@ -79,7 +79,6 @@
     </x-slot>
 
     <x-slot name="breadcrumbItems">
-        <li class="breadcrumb-item"><a href="" class="text-decoration-none">Home</a></li>
         <li class="breadcrumb-item active">Contacts</li>
     </x-slot>
 
@@ -88,7 +87,7 @@
             <!-- Mobile Office Button (visible on small screens) -->
             <div class="d-md-none d-block">
                 <button class="btn btn-light border border-secondary office-toggle-btn shadow" type="button" data-bs-toggle="offcanvas" data-bs-target="#officesOffcanvas">
-                    <i class="bi bi-layout-three-columns"></i>
+                    <i class="bi bi-list"></i>
                 </button>
             </div>
             
@@ -103,13 +102,13 @@
                             <ul class="nav nav-pills flex-column contact-tabs" id="officeTabs" role="tablist">
                                 @foreach ($contactsByOffice as $office => $contacts)
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link @if($loop->first) active @endif" 
+                                    <a class="nav-link" 
                                        id="tab-{{ Str::slug($office) }}" 
                                        data-bs-toggle="tab" 
                                        href="#{{ Str::slug($office) }}" 
                                        role="tab" 
                                        aria-controls="{{ Str::slug($office) }}" 
-                                       aria-selected="{{ $loop->first ? 'true' : 'false' }}">
+                                       aria-selected="false">
                                         <span><i class="bi bi-telephone me-2"></i>{{ $office }}</span>
                                         <span class="badge bg-secondary rounded-pill">{{ count($contacts) }}</span>
                                     </a>
@@ -117,7 +116,7 @@
                                 @endforeach
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link" 
-                                       id="tab-PIO" 
+                                       id="tab-pio" 
                                        data-bs-toggle="tab" 
                                        href="#pio" 
                                        role="tab" 
@@ -145,13 +144,13 @@
                     <ul class="nav nav-pills flex-column contact-tabs" id="mobileOfficeTabs" role="tablist">
                         @foreach ($contactsByOffice as $office => $contacts)
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link @if($loop->first) active @endif" 
+                            <a class="nav-link" 
                                id="mobile-tab-{{ Str::slug($office) }}" 
                                data-bs-toggle="tab" 
                                href="#{{ Str::slug($office) }}" 
                                role="tab" 
                                aria-controls="{{ Str::slug($office) }}" 
-                               aria-selected="{{ $loop->first ? 'true' : 'false' }}"
+                               aria-selected="false"
                                data-bs-dismiss="offcanvas">
                                 <span><i class="bi bi-people me-2"></i>{{ $office }}</span>
                                 <span class="badge bg-secondary rounded-pill">{{ count($contacts) }}</span>
@@ -160,7 +159,7 @@
                         @endforeach
                         <li class="nav-item" role="presentation">
                             <a class="nav-link" 
-                               id="mobile-tab-PIO" 
+                               id="mobile-tab-pio" 
                                data-bs-toggle="tab" 
                                href="#pio" 
                                role="tab" 
@@ -179,10 +178,10 @@
             <div class="col-md-9 border border-light shadow-sm">
                 <div class="tab-content" id="officeTabContent">
                     @foreach ($contactsByOffice as $office => $contacts)
-                    <div class="tab-pane fade @if($loop->first) show active @endif" id="{{ Str::slug($office) }}" role="tabpanel" aria-labelledby="tab-{{ Str::slug($office) }}">
+                    <div class="tab-pane fade" id="{{ Str::slug($office) }}" role="tabpanel" aria-labelledby="tab-{{ Str::slug($office) }}">
                         <div class="card border-0 shadow-sm">
                             <div class="card-header bg-light border-0 py-3">
-                                <h5 class="m-0 text-primary"><i class="bi bi-building me-2"></i>{{ $office }} Contacts</h5>
+                                <h5 class="m-0"><i class="bi bi-building me-2"></i>{{ $office }} Contacts</h5>
                             </div>
                             <div class="card-body p-0">
                                 <div class="table-responsive">
@@ -217,7 +216,7 @@
                         </div>
                     </div>
                     @endforeach
-                    <div class="tab-pane fade" id="pio" role="tabpanel" aria-labelledby="tab-PIO">
+                    <div class="tab-pane fade" id="pio" role="tabpanel" aria-labelledby="tab-pio">
                         <div class="card border-0 shadow-sm">
                             <div class="card-header bg-light border-0 py-3">
                                 <h5 class="m-0 text-primary"><i class="bi bi-person-badge me-2"></i>Public Information Officer Contacts</h5>
@@ -268,6 +267,38 @@
                     offcanvasInstance.hide();
                 });
             });
+
+            const tabLinks = document.querySelectorAll('.nav-link[data-bs-toggle="tab"]');
+            
+            function activateTabFromHash() {
+                let hash = window.location.hash;
+                
+                hash = hash.replace('#', '');
+                
+                if (!hash) {
+                    const firstTab = document.querySelector('#officeTabs .nav-link');
+                    if (firstTab) {
+                        hash = firstTab.getAttribute('href').replace('#', '');
+                    }
+                }
+                
+                const tabToActivate = document.querySelector(`.nav-link[href="#${hash}"]`);
+                if (tabToActivate) {
+                    const tab = new bootstrap.Tab(tabToActivate);
+                    tab.show();
+                }
+            }
+            
+            tabLinks.forEach(tabLink => {
+                tabLink.addEventListener('click', function() {
+                    const href = this.getAttribute('href');
+                    history.pushState(null, null, href);
+                });
+            });
+            
+            window.addEventListener('popstate', activateTabFromHash);
+            
+            activateTabFromHash();
         });
     </script>
     @endpush

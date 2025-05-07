@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Site;
 
-use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -56,7 +55,7 @@ class ContractorRegistrationController extends Controller
     {
         $cat = [
             'contractor_category' => ['PK-C-A', 'PK-C-B', 'PK-C-1', 'PK-C-2', 'PK-C-3', 'PK-C-4', 'PK-C-5', 'PK-C-6'],
-            'provincial_entities' => ['C&W', 'PHE', 'Local Government', 'Local Council Board', 'Irrigation', 'PHA', 'PKHA', 'FATA', 'PDA', 'Electric Inspector', 'Others'],,
+            'provincial_entities' => ['C&W', 'PHE', 'Local Government', 'Local Council Board', 'Irrigation', 'PHA', 'PKHA', 'FATA', 'PDA', 'Electric Inspector', 'Others'],
         ];
         return view('site.contractors.registration.create', compact('cat'));
     }

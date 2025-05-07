@@ -24,7 +24,7 @@
         <label for="category">Category</label>
         <select class="form-select form-select-md" id="category" name="category" required>
             <option value="">Select Option</option>
-            @foreach ($cat['download_category'] as $category)
+            @foreach (category('download_category', 'main') as $category)
             <option value="{{ $category }}">{{ $category }}</option>
             @endforeach
         </select>

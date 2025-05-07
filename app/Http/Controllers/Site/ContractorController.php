@@ -12,8 +12,9 @@ use App\Http\Controllers\Controller;
 use App\Mail\Contractor\AppliedMail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Http\Requests\StoreContractorRequest;
 use App\Models\ContractorRegistration;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\StoreContractorRequest;
 
 class ContractorController extends Controller
 {
@@ -134,12 +135,33 @@ class ContractorController extends Controller
     public function update(Request $request)
     {
         $contractor = Contractor::findOrFail(session('contractor_id'));
+        
+        Validator::extend('email_exists', function ($attribute, $value, $parameters, $validator) {
+            $domain = substr(strrchr($value, "@"), 1);
+            return checkdnsrr($domain, "MX");
+        });
+        
         $validated = $request->validate([
             'name' => 'required|string|max:100',
             'firm_name' => 'required|string|max:100',
-            'cnic' => 'required|string|max:45',
-            'mobile_number' => 'required|string|max:45',
-            'email' => 'required|email|max:100',
+            'cnic' => [
+                'required',
+                'string',
+                'max:15',
+                'regex:/^[0-9]{5}-[0-9]{7}-[0-9]{1}$/'
+            ],
+            'mobile_number' => [
+                'required',
+                'string',
+                'max:45',
+                'regex:/^((\+92|92|0)([0-9]{3}|[0-9]{3}-)[0-9]{7}|(\+92|92|0)[0-9]{10})$/'
+            ],
+            'email' => [
+                'required',
+                'email',
+                'max:100',
+                'email_exists'
+            ],
             'address' => 'required|string',
             'district' => 'required|string|max:100',
         ]);

@@ -15,6 +15,11 @@ class GalleryController extends Controller
         $firstType = $galleryTypes->first();
         $firstTypeGalleries = [];
         
+        $galleryCounts = [];
+        foreach ($galleryTypes as $type) {
+            $galleryCounts[$type] = Gallery::where('type', $type)->count();
+        }
+
         if ($firstType) {
             $firstTypeGalleries = Gallery::where('type', $firstType)
                 ->orderBy('published_at', 'desc')
@@ -24,7 +29,7 @@ class GalleryController extends Controller
         
         $galleriesByType = collect([$firstType => $firstTypeGalleries]);
         
-        return view('site.gallery.index', compact('galleryTypes', 'galleriesByType', 'firstType'));
+        return view('site.gallery.index', compact('galleryTypes', 'galleriesByType', 'firstType', 'galleryCounts'));
     }
     
     public function getGalleriesByType(Request $request)

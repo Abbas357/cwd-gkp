@@ -66,7 +66,8 @@
         $(document).ready(function() {
             var table = initDataTable('#cards-datatable', {
                 ajaxUrl: "{{ route('admin.apps.service_cards.index') }}"
-                , columns: [{
+                , columns: [
+                {
                     data: "id"
                     , searchBuilderType: "num"
                 }, {
@@ -95,10 +96,8 @@
                     , searchBuilderType: "date"
                 }, {
                     data: "designation"
-                    , searchBuilderType: "string"
                 },  {
                     data: "bps"
-                    , searchBuilderType: "string"
                 }, {
                     data: "office"
                     , searchBuilderType: "string"
@@ -112,7 +111,7 @@
                     data: "emergency_contact"
                     , searchBuilderType: "string"
                 }, {
-                    data: "parmanent_address"
+                    data: "permanent_address"
                     , searchBuilderType: "string"
                 }, {
                     data: "present_address"

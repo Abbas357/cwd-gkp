@@ -5,8 +5,8 @@
         <label for="type">Gallery Type</label>
         <select class="form-select form-select-md" id="type" name="type" required>
             <option value="">Select Option</option>
-            @foreach ($cat['gallery_type'] as $type)
-            <option value="{{ $type->name }}">{{ $type->name }}</option>
+            @foreach (category('gallery_type', 'main') as $type)
+            <option value="{{ $type }}">{{ $type }}</option>
             @endforeach
         </select>
         @error('type')

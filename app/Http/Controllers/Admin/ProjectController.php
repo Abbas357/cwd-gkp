@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 
 use App\Models\Project;
-use App\Models\Category;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Requests\StoreProjectRequest;
@@ -79,12 +78,7 @@ class ProjectController extends Controller
 
     public function showDetail(Project $project)
     {
-
-        $cat = [
-            'news_category' => Category::where('type', 'news_category')->get(),
-        ];
-
-        $html = view('admin.projects.partials.detail', compact('project', 'cat'))->render();
+        $html = view('admin.projects.partials.detail', compact('project'))->render();
         return response()->json([
             'success' => true,
             'data' => [

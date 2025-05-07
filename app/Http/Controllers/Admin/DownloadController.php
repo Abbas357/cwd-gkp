@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Category;
-
 use App\Models\Download;
 use App\Helpers\Database;
 use Illuminate\Http\Request;
@@ -80,7 +78,6 @@ class DownloadController extends Controller
     {
         $cat = [
             'file_type' => ['pdf', 'Image', 'docs', 'pptx', 'xlsx'],
-            'download_category' => Category::where('type', 'download_category')->get(),
         ];
         $html = view('admin.downloads.partials.create', compact('cat'))->render();
         return response()->json([
@@ -153,7 +150,6 @@ class DownloadController extends Controller
 
         $cat = [
             'file_type' => ['pdf', 'Image', 'docs', 'pptx', 'xlsx'],
-            'download_category' => Category::where('type', 'download_category')->get(),
         ];
 
         $html = view('admin.downloads.partials.detail', compact('download', 'cat'))->render();

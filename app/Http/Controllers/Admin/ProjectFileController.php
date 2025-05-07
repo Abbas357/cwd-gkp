@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Project;
 
-use App\Models\Category;
 use App\Helpers\Database;
 use App\Models\ProjectFile;
 use Illuminate\Http\Request;
@@ -88,7 +87,7 @@ class ProjectFileController extends Controller
     {
         $cat = [
             'projects' => Project::select('id', 'name')->get(),
-            'file_type' => Category::where('type', 'file_type')->get()
+            'file_type' => ['pdf', 'Image', 'docs', 'pptx', 'xlsx'],
         ];
 
         $html = view('admin.project_files.partials.create', compact('cat'))->render();
@@ -163,7 +162,7 @@ class ProjectFileController extends Controller
         }
 
         $cat = [
-            'file_type' => Category::where('type', 'file_type')->get(),
+            'file_type' => ['pdf', 'Image', 'docs', 'pptx', 'xlsx'],
             'projects' => Project::select('id', 'name')->get(),
         ];
 

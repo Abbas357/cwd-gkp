@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 
 use App\Models\Page;
-use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -60,10 +59,7 @@ class PageController extends Controller
 
     public function create()
     {
-        $cat = [
-            'page_type' => Category::where('type', 'page_type')->get(),
-        ];
-        $html = view('admin.pages.partials.create', compact('cat'))->render();
+        $html = view('admin.pages.partials.create')->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -133,12 +129,8 @@ class PageController extends Controller
                 ],
             ]);
         }
-
-        $cat = [
-            'page_type' => Category::where('type', 'page_type')->get(),
-        ];
-
-        $html = view('admin.pages.partials.detail', compact('page', 'cat'))->render();
+        
+        $html = view('admin.pages.partials.detail', compact('page'))->render();
         return response()->json([
             'success' => true,
             'data' => [

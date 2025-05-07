@@ -4,7 +4,6 @@ namespace App\Http\Controllers\ProvincialOwnReceipt;
 
 use Carbon\Carbon;
 use App\Models\User;
-use App\Models\Category;
 use App\Models\District;
 use App\Helpers\Database;
 use Illuminate\Http\Request;

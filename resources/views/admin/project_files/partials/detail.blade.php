@@ -31,8 +31,8 @@
                     @if ($canUpdate && !in_array($project_file->status, ['published', 'archived']))
                     <select id="input-file_type" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('file_type', {{ $project_file->id }})">
                         @foreach ($cat['file_type'] as $file_type)
-                        <option value="{{ $file_type->name }}" {{ $project_file->file_type == $file_type->name ? 'selected' : '' }}>
-                            {{ $file_type->name }}
+                        <option value="{{ $file_type }}" {{ $project_file->file_type == $file_type ? 'selected' : '' }}>
+                            {{ $file_type }}
                         </option>
                         @endforeach
                     </select>

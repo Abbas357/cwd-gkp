@@ -5,8 +5,8 @@
         <label for="page_type">Page Type</label>
         <select class="form-select form-select-md" id="page_type" name="page_type" required>
             <option value="">Select Option</option>
-            @foreach ($cat['page_type'] as $type)
-            <option value="{{ $type->name }}">{{ $type->name }}</option>
+            @foreach (category('page_type', 'main') as $type)
+            <option value="{{ $type }}">{{ $type }}</option>
             @endforeach
         </select>
         @error('page_type')

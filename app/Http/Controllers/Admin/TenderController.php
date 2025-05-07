@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Models\User;
 
 use App\Models\Tender;
-use App\Models\Category;
 use App\Helpers\Database;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -177,11 +176,7 @@ class TenderController extends Controller
             ]);
         }
 
-        $cat = [
-            'tender_domain' => Category::where('type', 'tender_domain')->get(),
-        ];
-
-        $html = view('admin.tenders.partials.detail', compact('tender', 'cat'))->render();
+       $html = view('admin.tenders.partials.detail', compact('tender'))->render();
         return response()->json([
             'success' => true,
             'data' => [

@@ -52,9 +52,9 @@
                     <span id="text-type">{{ $gallery->type }}</span>
                     @if ($canUpdate && !in_array($gallery->status, ['published', 'archived']))
                     <select id="input-type" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('type', {{ $gallery->id }})">
-                        @foreach ($cat['gallery_type'] as $type)
-                        <option value="{{ $type->name }}" {{ $gallery->type == $type->name ? 'selected' : '' }}>
-                            {{ $type->name }}
+                        @foreach (category('gallery_type', 'main')  as $type)
+                        <option value="{{ $type }}" {{ $gallery->type == $type ? 'selected' : '' }}>
+                            {{ $type }}
                         </option>
                         @endforeach
                     </select>

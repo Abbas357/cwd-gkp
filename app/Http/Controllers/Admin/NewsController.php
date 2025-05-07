@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\News;
 
-use App\Models\Category;
 use App\Helpers\Database;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -79,10 +78,7 @@ class NewsController extends Controller
 
     public function create()
     {
-        $cat = [
-            'news_category' => Category::where('type', 'news_category')->get(),
-        ];
-        $html = view('admin.news.partials.create', compact('cat'))->render();
+        $html = view('admin.news.partials.create')->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -153,11 +149,7 @@ class NewsController extends Controller
             ]);
         }
 
-        $cat = [
-            'news_category' => Category::where('type', 'news_category')->get(),
-        ];
-
-        $html = view('admin.news.partials.detail', compact('news', 'cat'))->render();
+        $html = view('admin.news.partials.detail', compact('news'))->render();
         return response()->json([
             'success' => true,
             'data' => [

@@ -13,8 +13,8 @@
         <label for="news_category">Category</label>
         <select class="form-select form-select-md" id="news_category" name="news_category" required>
             <option value="">Select Option</option>
-            @foreach ($cat['news_category'] as $type)
-            <option value="{{ $type->name }}">{{ $type->name }}</option>
+            @foreach (category('news_category', 'main') as $type)
+            <option value="{{ $type }}">{{ $type }}</option>
             @endforeach
         </select>
         @error('news_category')

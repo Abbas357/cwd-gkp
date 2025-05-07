@@ -35,9 +35,9 @@
                     <span id="text-page_type">{{ $page->page_type }}</span>
                     @if ($canUpdate && $page->is_active === 0)
                     <select id="input-page_type" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('page_type', {{ $page->id }})">
-                        @foreach ($cat['page_type'] as $page_type)
-                        <option value="{{ $page_type->name }}" {{ $page->page_type == $page_type->name ? 'selected' : '' }}>
-                            {{ $page_type->name }}
+                        @foreach (category('page_type', 'main') as $page_type)
+                        <option value="{{ $page_type }}" {{ $page->page_type == $page_type ? 'selected' : '' }}>
+                            {{ $page_type }}
                         </option>
                         @endforeach
                     </select>

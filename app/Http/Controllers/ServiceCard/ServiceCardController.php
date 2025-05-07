@@ -2,17 +2,18 @@
 namespace App\Http\Controllers\ServiceCard;
 
 use Carbon\Carbon;
-use App\Models\Category;
+use App\Models\Office;
+use App\Models\Designation;
 use App\Models\ServiceCard;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Endroid\QrCode\Builder\Builder;
-use Endroid\QrCode\Writer\PngWriter;
 use App\Http\Controllers\Controller;
+use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
+
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ServiceCard\RenewedMail;
-
 use Endroid\QrCode\Encoding\Encoding;
 use App\Mail\ServiceCard\RejectedMail;
 use App\Mail\ServiceCard\VerifiedMail;
@@ -37,6 +38,12 @@ class ServiceCardController extends Controller
                 })
                 ->editColumn('name', function ($row) {
                     return '<div style="display: flex; align-items: center;"><img style="width: 30px; height: 30px; border-radius: 50%;" src="' . $row->getFirstMediaUrl('service_card_pictures') . '" /> <span> &nbsp; ' . $row->name . '</span></div>';
+                })
+                ->addColumn('designation', function ($row) {
+                    return $row->designation_id;
+                })
+                ->addColumn('office', function ($row) {
+                    return $row->office_id;
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');
@@ -141,9 +148,8 @@ class ServiceCardController extends Controller
         }
 
         $cat = [
-            'designations' => Category::where('type', 'designation')->get(),
-            'positions' => Category::where('type', 'position')->get(),
-            'offices' => Category::where('type', 'office')->get(),
+            'designations' => Designation::where('status', 'Active')->get(),
+            'offices' => Office::where('status', 'Active')->get(),
             'bps' => $bps,
             'blood_groups' => ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
         ];

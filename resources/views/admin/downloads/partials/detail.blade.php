@@ -51,7 +51,7 @@
                     <span id="text-category">{{ $download->category }}</span>
                     @if ($canUpdate && !in_array($download->status, ['published', 'archived']))
                     <select id="input-category" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('category', {{ $download->id }})">
-                        @foreach ($cat['download_category'] as $category)
+                        @foreach (category('download_category', 'main') as $category)
                         <option value="{{ $category }}" {{ $download->category == $category ? 'selected' : '' }}>
                             {{ $category }}
                         </option>

@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Category;
-
 use App\Helpers\Database;
 use App\Models\Seniority;
+use App\Models\Designation;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Helpers\SearchBuilder;
@@ -85,7 +84,7 @@ class SeniorityController extends Controller
             $bps[] = sprintf("BPS-%02d", $i);
         }
         $cat = [
-            'designations' => Category::where('type', 'designation')->get(),
+            'designations' => Designation::where('status', 'Active')->get(),
             'bps' => $bps,
         ];
         
@@ -167,7 +166,7 @@ class SeniorityController extends Controller
         }
 
         $cat = [
-            'designations' => Category::where('type', 'designation')->get(),
+            'designations' => Designation::where('status', 'Active')->get(),
             'bps' => $bps,
         ];
 

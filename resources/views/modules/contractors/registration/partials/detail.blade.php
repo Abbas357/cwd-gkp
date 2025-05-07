@@ -6,8 +6,8 @@
 </style>
 <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
 @php
-    $canUpdate = auth()->user()->can('updateField', $contractor);
-    $canUpload = auth()->user()->can('uploadFile', $contractor);
+    $canUpdate = auth()->user()->can('updateField', $contractor_registration);
+    $canUpload = auth()->user()->can('uploadFile', $contractor_registration);
 @endphp
 <div class="row contractors-details">
     <div class="col-md-12">
@@ -40,7 +40,7 @@
                     @if ($canUpdate && !in_array($contractor_registration->status, ['deferred_thrice', 'approved']))
                         <select id="input-category_applied" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('category_applied', {{ $contractor_registration->id }})">
                             @foreach($cat['contractor_category'] as $category)
-                            <option value="{{ $category->name }}" {{ $contractor_registration->category_applied == $category->name ? 'selected' : '' }}>{{ $category->name }}</option>
+                            <option value="{{ $category }}" {{ $contractor_registration->category_applied == $category ? 'selected' : '' }}>{{ $category }}</option>
                             @endforeach
                         </select>
                         <button id="save-btn-category_applied" class="btn btn-sm btn-light d-none" onclick="updateField('category_applied', {{ $contractor_registration->id }})"><i class="bi-send-fill"></i></button>
@@ -55,7 +55,7 @@
                     @if ($canUpdate && !in_array($contractor_registration->status, ['deferred_thrice', 'approved']))
                     <select id="input-pec_category" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('pec_category', {{ $contractor_registration->id }})">
                         @foreach($cat['contractor_category'] as $category)
-                        <option value="{{ $category->name }}" {{ $contractor_registration->pec_category == $category->name ? 'selected' : '' }}>{{ $category->name }}</option>
+                        <option value="{{ $category }}" {{ $contractor_registration->pec_category == $category ? 'selected' : '' }}>{{ $category }}</option>
                         @endforeach
                     </select>
                     <button id="save-btn-pec_category" class="btn btn-sm btn-light d-none" onclick="updateField('pec_category', {{ $contractor_registration->id }})"><i class="bi-send-fill"></i></button>
@@ -94,8 +94,8 @@
                     @if ($canUpdate && !in_array($contractor_registration->status, ['deferred_thrice', 'approved']))
                     <select id="input-pre_enlistment" class="d-none form-control" multiple onkeypress="if (event.key === 'Enter') updateField('pre_enlistment', {{ $contractor_registration->id }})">
                         @foreach($cat['provincial_entities'] as $category)
-                        <option value="{{ $category->name }}" {{ is_array(json_decode($contractor_registration->pre_enlistment)) && in_array($category->name, json_decode($contractor_registration->pre_enlistment)) ? 'selected' : '' }}>
-                            {{ $category->name }}
+                        <option value="{{ $category }}" {{ is_array(json_decode($contractor_registration->pre_enlistment)) && in_array($category, json_decode($contractor_registration->pre_enlistment)) ? 'selected' : '' }}>
+                            {{ $category }}
                         </option>
                         @endforeach
                     </select>

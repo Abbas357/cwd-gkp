@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Gallery;
 
-use App\Models\Category;
 use App\Helpers\Database;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -77,10 +76,7 @@ class GalleryController extends Controller
 
     public function create()
     {
-        $cat = [
-            'gallery_type' => Category::where('type', 'gallery_type')->get(),
-        ];
-        $html = view('admin.gallery.partials.create', compact('cat'))->render();
+        $html = view('admin.gallery.partials.create')->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -163,11 +159,7 @@ class GalleryController extends Controller
             ]);
         }
 
-        $cat = [
-            'gallery_type' => Category::where('type', 'gallery_type')->get(),
-        ];
-
-        $html = view('admin.gallery.partials.detail', compact('gallery', 'cat'))->render();
+        $html = view('admin.gallery.partials.detail', compact('gallery'))->render();
         return response()->json([
             'success' => true,
             'data' => [

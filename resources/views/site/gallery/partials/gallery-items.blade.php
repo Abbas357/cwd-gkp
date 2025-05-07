@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="text-primary fw-bold mb-0">
+    <h3 class="fw-bold mb-0">
         <i class="bi bi-images me-2"></i>{{ ucfirst(str_replace('_', ' ', $type)) }}
     </h3>
     <div class="d-flex gap-2">
@@ -39,7 +39,7 @@
                         
                         <div class="d-flex justify-content-between align-items-center mt-2">
                             @if(!empty($gallery->items))
-                                <span class="badge bg-light text-primary">
+                                <span class="badge bg-light">
                                     <i class="bi bi-image me-1"></i> {{ $gallery->items }} items
                                 </span>
                             @endif

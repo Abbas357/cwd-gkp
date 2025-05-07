@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Contractor;
 use App\Http\Controllers\Controller;
 
 use Carbon\Carbon;
-use App\Models\Category;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Endroid\QrCode\Builder\Builder;
@@ -141,8 +140,8 @@ class ContractorRegistrationController extends Controller
     public function showDetail(ContractorRegistration $contractor_registration)
     {
         $cat = [
-            'contractor_category' => Category::where('type', 'contractor_category')->get(),
-            'provincial_entities' => Category::where('type', 'provincial_entity')->get(),
+            'contractor_category' => ['PK-C-A', 'PK-C-B', 'PK-C-1', 'PK-C-2', 'PK-C-3', 'PK-C-4', 'PK-C-5', 'PK-C-6'],
+            'provincial_entities' => ['C&W', 'PHE', 'Local Government', 'Local Council Board', 'Irrigation', 'PHA', 'PKHA', 'FATA', 'PDA', 'Electric Inspector', 'Others'],
         ];
 
         if (!$contractor_registration) {

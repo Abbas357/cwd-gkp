@@ -52,9 +52,9 @@
                     <span id="text-category">{{ $news->category }}</span>
                     @if ($canUpdate && !in_array($news->status, ['published', 'archived']))
                     <select id="input-category" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('category', {{ $news->id }})">
-                        @foreach ($cat['news_category'] as $category)
-                        <option value="{{ $category->name }}" {{ $news->category == $category->name ? 'selected' : '' }}>
-                            {{ $category->name }}
+                        @foreach (category('news_category', 'main') as $category)
+                        <option value="{{ $category }}" {{ $news->category == $category ? 'selected' : '' }}>
+                            {{ $category }}
                         </option>
                         @endforeach
                     </select>

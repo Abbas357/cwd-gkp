@@ -66,7 +66,7 @@ class ContractorController extends Controller
                 ],
             ]);
         }
-        $html = view('modules.contractors.partials.detail', compact('Contractor', 'cat'))->render();
+        $html = view('modules.contractors.partials.detail', compact('contractor', 'cat'))->render();
         return response()->json([
             'success' => true,
             'data' => [
