@@ -224,8 +224,8 @@
 
         <div class="main">
             <h1>{{ $ServiceCard->name }}</h1>
-            <h2> {{ $ServiceCard->designation_id }}</h2>
-            <h3> OFFICE: {{ $ServiceCard->office_id }}</h3>
+            <h2> {{ $ServiceCard->designation->name }}</h2>
+            <h3> OFFICE: {{ $ServiceCard->office->name }}</h3>
         </div>
 
         <div class="footer">

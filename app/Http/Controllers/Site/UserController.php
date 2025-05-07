@@ -112,45 +112,6 @@ class UserController extends Controller
         return view('site.users.contacts', compact('contactsByOffice'));
     }
 
-    private function showPositions($position)
-    {
-        $users = User::withoutGlobalScope('active')
-            ->where('status', 'Archived')
-            ->whereHas('postings', function ($query) use ($position) {
-                $query->whereHas('designation', function ($q) use ($position) {
-                    $q->where('name', $position);
-                });
-            })
-            ->with(['profile', 'postings' => function ($query) use ($position) {
-                $query->with('designation')
-                    ->whereHas('designation', function ($q) use ($position) {
-                        $q->where('name', $position);
-                    });
-            }, 'media' => function ($query) {
-                $query->whereIn('collection_name', ['profile_pictures']);
-            }])
-            ->get();
-
-        $userData = $users->map(function ($user) {
-            
-            $relevantPosting = $user->postings->first();
-
-            return [
-                'id' => $user->id,
-                'uuid' => $user->uuid,
-                'name' => $user->name,
-                'title' => $relevantPosting->designation->name ?? null,
-                'status' => $user->status,
-                'from' => $relevantPosting->start_date ? $relevantPosting->start_date->format('j, F Y') : null,
-                'to' => $relevantPosting->end_date ? $relevantPosting->end_date->format('j, F Y') : null,
-                'profile_pictures' => $user->getFirstMediaUrl('profile_pictures', 'small')
-                    ?: asset('admin/images/default-avatar.jpg'),
-            ];
-        });
-
-        return $userData;
-    }
-
     public function getUserDetails($uuid)
     {
         $user = User::withoutGlobalScope('active')

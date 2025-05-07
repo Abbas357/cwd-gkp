@@ -66,11 +66,11 @@ class ServiceCard extends Model implements HasMedia
 
     public function designation() 
     { 
-        return $this->hasOne(Designation::class); 
+        return $this->belongsTo(Designation::class); 
     }
 
     public function office() 
     { 
-        return $this->hasOne(Office::class); 
+        return $this->belongsTo(Office::class); 
     }
 }

@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Site\AchievementController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\ContractorAuth;
 use App\Http\Middleware\StandardizationAuth;
@@ -22,6 +21,8 @@ use App\Http\Controllers\Site\DownloadController;
 use App\Http\Controllers\Site\SeniorityController;
 use App\Http\Controllers\Site\ContractorController;
 use App\Http\Controllers\Site\NewsLetterController;
+use App\Http\Controllers\Site\UserHierarchyController;
+use App\Http\Controllers\Site\AchievementController;
 use App\Http\Controllers\Site\ServiceCardController;
 use App\Http\Controllers\Site\PublicContactController;
 use App\Http\Controllers\Site\StandardizationController;
@@ -154,6 +155,7 @@ Route::prefix('sliders')->as('sliders.')->group(function () {
 
 Route::prefix('positions')->as('positions.')->group(function () {
     Route::get('/detail/{uuid}', [UserController::class, 'getUserDetails'])->name('details');
+    Route::get('/hierarchy', [UserHierarchyController::class, 'getUserHierarchy'])->name('hierarchy');
 });
 
 Route::prefix('contacts')->as('contacts.')->group(function () {

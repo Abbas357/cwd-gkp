@@ -3,15 +3,17 @@ namespace App\Http\Controllers\ServiceCard;
 
 use Carbon\Carbon;
 use App\Models\Office;
+use App\Helpers\Database;
 use App\Models\Designation;
 use App\Models\ServiceCard;
 use Illuminate\Http\Request;
+use App\Helpers\SearchBuilder;
 use Yajra\DataTables\DataTables;
 use Endroid\QrCode\Builder\Builder;
 use App\Http\Controllers\Controller;
+
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
-
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ServiceCard\RenewedMail;
 use Endroid\QrCode\Encoding\Encoding;
@@ -30,6 +32,11 @@ class ServiceCardController extends Controller
             $query->where('status', $status);
         });
 
+        $relationMappings = [
+            'designation_id' => 'designation.name',
+            'office_id' => 'office.name',
+        ];
+
         if ($request->ajax()) {
             $dataTable = Datatables::of($service_cards)
                 ->addIndexColumn()
@@ -40,10 +47,10 @@ class ServiceCardController extends Controller
                     return '<div style="display: flex; align-items: center;"><img style="width: 30px; height: 30px; border-radius: 50%;" src="' . $row->getFirstMediaUrl('service_card_pictures') . '" /> <span> &nbsp; ' . $row->name . '</span></div>';
                 })
                 ->addColumn('designation', function ($row) {
-                    return $row->designation_id;
+                    return $row->designation->name;
                 })
                 ->addColumn('office', function ($row) {
-                    return $row->office_id;
+                    return $row->office->name;
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');
@@ -53,12 +60,22 @@ class ServiceCardController extends Controller
                 })
                 ->rawColumns(['action', 'name']);
 
-            if (!$request->input('search.value') && $request->has('searchBuilder')) {
-                $dataTable->filter(function ($query) use ($request) {
-                    $sb = new \App\Helpers\SearchBuilder($request, $query);
-                    $sb->build();
-                });
-            }
+                if ($request->input('search.value')) {
+                    Database::applyRelationalSearch($dataTable, $relationMappings);
+                }
+    
+                if (!$request->input('search.value') && $request->has('searchBuilder')) {
+                    $dataTable->filter(function ($query) use ($request, $relationMappings) {
+                        $sb = new SearchBuilder(
+                            $request, 
+                            $query,
+                            [],
+                            $relationMappings,
+                        );
+                        $sb->build();
+                    });
+                }
+    
 
             return $dataTable->toJson();
         }

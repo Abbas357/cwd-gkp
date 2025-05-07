@@ -90,7 +90,128 @@
             z-index: 1;
             background-color: rgba(255, 255, 255, 0.5);
         }
+
+        #user-chart-container {
+            height: 400px;
+            overflow: auto;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            position: relative;
+            text-align: center;
+        }
+
+        #user-chart-container .symbol {
+            display: none;
+        }
+
+        #user-chart-container .orgchart {
+            background-image: none !important;
+            margin: 0 auto !important;
+            transform-origin: top center !important;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #user-chart-container .orgchart .node {
+            width: 180px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        #user-chart-container .orgchart .node .title {
+            width: 170px;
+            height: auto;
+            line-height: 20px;
+            padding: 5px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        #user-chart-container .orgchart .node .content {
+            width: 170px;
+            height: auto;
+            padding: 3px;
+            font-size: 0.8rem;
+            border: 2px solid #3498db;
+        }
+
+        #user-chart-container .orgchart .node .user-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 3px auto;
+            border: 2px solid #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        #user-chart-container .orgchart .node .user-name {
+            font-weight: bold;
+            margin: 2px 0;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #user-chart-container .orgchart .node .user-title {
+            font-size: 0.75rem;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #user-chart-container .orgchart .node.selected-user .title {
+            background-color: #e74c3c; /* Highlight the selected user */
+        }
+
+        #user-chart-container .orgchart .node.selected-user .content {
+            border: 2px solid #e74c3c;
+        }
+
+        #user-chart-container .orgchart .lines:before,
+        #user-chart-container .orgchart .lines:after,
+        #user-chart-container .orgchart .downLine,
+        #user-chart-container .orgchart .rightLine,
+        #user-chart-container .orgchart .leftLine {
+            border-color: #000 !important;
+        }
+
+        #user-chart-container .orgchart .lines .downLine {
+            background-color: #000;
+            height: 20px !important;
+            width: 2px !important;
+        }
+
+        #user-chart-container .orgchart .lines .rightLine,
+        #user-chart-container .orgchart .lines .leftLine {
+            border-top: 2px solid #000 !important;
+        }
+
+        #user-chart-container .vacancy-placeholder {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #f5f5f5;
+            border: 2px dashed #ccc;
+            margin: 3px auto;
+        }
+
+        #user-chart-container .vacancy-text {
+            font-weight: bold;
+            color: #d35400;
+            font-style: italic;
+        }
     </style>
+
     <x-slot name="breadcrumbTitle">
     Detail of {{ $user['name'] }}
     {{ (
@@ -275,5 +396,166 @@
             @endforeach
         </div>
         @endauth
+        <div class="row mt-3">
+            <h1 class="fs-3 py-2 bg-light">User Organogram</h1>
+            <div class="col-12">
+                <div id="user-chart-container" class="position-relative" style="height: 600px; background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 5px;">
+                    <div class="chart-loading position-absolute top-50 start-50 translate-middle text-center" id="user-chart-loading">
+                        <div class="spinner-border text-primary"></div>
+                        <p class="mt-3">Loading user organogram...</p>
+                    </div>
+        
+                    <div id="user-chart-controls" style="position: absolute; bottom: 10px; right: 10px; z-index: 100; background: rgba(255, 255, 255, 0.9); padding: 8px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);">
+                        <button id="user-zoom-in" class="btn btn-sm btn-light" title="Zoom In"><i class="bi bi-plus-lg"></i></button>
+                        <button id="user-zoom-out" class="btn btn-sm btn-light" title="Zoom Out"><i class="bi bi-dash-lg"></i></button>
+                        <button id="user-zoom-reset" class="btn btn-sm btn-light" title="Reset Zoom"><i class="bi bi-arrow-repeat"></i></button>
+                        <button id="user-center-chart" class="btn btn-sm btn-light" title="Center Chart"><i class="bi bi-arrows-move"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    @push('script')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/orgchart/3.1.1/js/jquery.orgchart.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        let userOrgChart = null;
+        let userZoomLevel = 2;
+        const userZoomStep = 0.03;
+        
+        function loadUserOrganogram() {
+            $('#user-chart-loading').show();
+            
+            const userUuid = '{{ $user["uuid"] }}';
+            
+            $.ajax({
+                url: "{{ route('positions.hierarchy') }}", // You'll need to create this route
+                type: "GET",
+                data: {
+                    user_uuid: userUuid
+                },
+                success: function(data) {
+                    initUserOrganogram(data);
+                    $('#user-chart-loading').hide();
+                },
+                error: function(xhr, status, error) {
+                    $('#user-chart-container').html('<div class="alert alert-danger">Error loading user organogram: ' + error + '</div>');
+                    $('#user-chart-loading').hide();
+                }
+            });
+        }
+        
+        function initUserOrganogram(data) {
+            $('#user-chart-container').find('.orgchart').remove();
+            
+            userOrgChart = $('#user-chart-container').orgchart({
+                'data': data,
+                'nodeContent': 'content',
+                'nodeID': 'id',
+                'createNode': function($node, data) {
+                    if (data.className) {
+                        $node.addClass(data.className);
+                    }
+                    
+                    let nodeContent = '';
+                    
+                    if (data.image) {
+                        nodeContent += `<div class="user-container" data-user-id="${data.id}">`;
+                        nodeContent += `<img class="user-image" src="${data.image}" alt="${data.name}">`;
+                        nodeContent += `<div class="user-name">${data.name}</div>`;
+                        nodeContent += `<div class="user-title">${data.title || 'No Designation'}</div>`;
+                        nodeContent += `</div>`;
+                    } else {
+                        nodeContent += `<div class="user-container vacant-post">`;
+                        nodeContent += `<div class="vacancy-placeholder"></div>`;
+                        nodeContent += `<div class="user-name vacancy-text">Post Vacant</div>`;
+                        nodeContent += `</div>`;
+                    }
+                    
+                    $node.find('.content').html(nodeContent);
+                    
+                    // Add data attributes for interaction
+                    if (data.user_id) {
+                        $node.attr('data-user-id', data.user_id);
+                    }
+                    
+                    return $node;
+                },
+                'direction': 't2b', // TOP TO BOTTOM direction
+                'verticalLevel': 3,
+                'pan': true,
+                'zoom': true,
+                'toggleSiblingsResp': true
+            });
+            
+            // Center the chart within the container
+            centerUserOrgChart();
+            
+            // Setup node click handlers
+            $('#user-chart-container').on('click', '.node', function() {
+                const userId = $(this).attr('data-user-id');
+                if (userId) {
+                    window.location.href = `/user/details/${userId}`;
+                }
+            });
+        }
+        
+        function centerUserOrgChart() {
+            const $chart = $('#user-chart-container .orgchart');
+            
+            if (!$chart.length) return;
+            
+            $chart.css({
+                'transform': 'scale(1)',
+                'transform-origin': 'top center',
+                'margin': '20px auto',
+                'left': '0',
+                'right': '0',
+                'position': 'relative'
+            });
+        }
+        
+        function zoomUserOrgChart(newZoom) {
+            const $chart = $('#user-chart-container .orgchart');
+            if (!$chart.length) return;
+            
+            userZoomLevel = newZoom;
+            $chart.css({
+                'transform': `scale(${userZoomLevel})`,
+                'transform-origin': 'top center'
+            });
+        }
+        
+        loadUserOrganogram();
+        
+        $('#user-zoom-in').on('click', function() {
+            zoomUserOrgChart(userZoomLevel + userZoomStep);
+        });
+        
+        $('#user-zoom-out').on('click', function() {
+            zoomUserOrgChart(Math.max(0.3, userZoomLevel - userZoomStep));
+        });
+        
+        $('#user-zoom-reset').on('click', function() {
+            zoomUserOrgChart(1);
+            centerUserOrgChart();
+        });
+        
+        $('#user-center-chart').on('click', function() {
+            centerUserOrgChart();
+        });
+        
+        // Handle window resize
+        let userResizeTimer;
+        $(window).on('resize', function() {
+            clearTimeout(userResizeTimer);
+            userResizeTimer = setTimeout(function() {
+                if (userOrgChart) {
+                    centerUserOrgChart();
+                }
+            }, 250);
+        });
+    });
+    </script>
+    @endpush
 </x-main-layout>
