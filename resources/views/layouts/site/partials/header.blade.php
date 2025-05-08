@@ -19,6 +19,11 @@
                     <div class="menu-label" style="letter-spacing: 1px">STORIES</div>
                 </button>
 
+                <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#themeCanvas" aria-controls="themeCanvas">
+                    <i class="bi bi-palette" style="font-size: 1.2rem;"></i>
+                    <div class="menu-label" style="letter-spacing: 1px">THEME</div>
+                </button>
+
                 <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#informationCanvas" aria-controls="informationCanvas">
                     <i class="bi-info-circle" style="font-size: 1.2rem"></i>
                     <div class="menu-label" style="letter-spacing: 1px">INFO</div>
@@ -284,8 +289,8 @@
                             </a>
                         </li>
                         <li role="menuitem" aria-hidden="true" class="divider cw-onlyMobileTab"></li>
-                        <button class="cw-top-nav-button" style="margin-left: 1.4rem; margin-top: 3px;padding: 7px; border: none; border-radius: 50px">
-                            <a href="https://old.cwd.gkp.pk" target="_blank"><span class="animated-gradient-text">OLD VERSION</span></a>
+                        <button class="cw-top-nav-button" style="margin-top: 3px;padding: 7px; border: none; border-radius: 50px">
+                            <a href="https://old.cwd.gkp.pk" target="_blank"><span class="animated-gradient-text">LEGACY</span></a>
                         </button>
                     </ul>
                 </nav>

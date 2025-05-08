@@ -614,7 +614,7 @@ span[class=help] {
 }
 
 .CWD .cw-top .left-column .cw-logo .LogoWrapper .mobile-logo {
-    width: 170px;
+    width: 50px;
     filter: var(--cw-logo-filter)
 }
 

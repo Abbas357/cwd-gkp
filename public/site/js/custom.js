@@ -1031,16 +1031,6 @@ function pushStateModal({
 })();
 
 document.addEventListener('DOMContentLoaded', () => {
-    const themeToggle = document.createElement('button');
-    themeToggle.id = 'theme-toggle';
-    themeToggle.className = 'position-fixed';
-    themeToggle.style.cssText = 'right: 0; top: 8rem; z-index: 1040; color: white; border: none; padding: .3rem .5rem; border-radius: 5px; cursor: pointer;background-color: #0b7240';
-
-    const icon = document.createElement('i');
-    icon.className = 'bi bi-palette';
-    icon.style.fontSize = '1.5rem';
-    themeToggle.appendChild(icon);
-
     const offcanvas = document.createElement('div');
     offcanvas.className = 'offcanvas offcanvas-end';
     offcanvas.id = 'themeCanvas';
@@ -1095,7 +1085,6 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
     `;
 
-    document.body.appendChild(themeToggle);
     document.body.appendChild(offcanvas);
 
     window.applyTheme = function(themeName) {
@@ -1122,14 +1111,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         localStorage.setItem('selectedTheme', themeName);
         window.themeCanvas.hide();
-        applyThemeColorToButton();
     };
 
     window.themeCanvas = new bootstrap.Offcanvas(document.getElementById('themeCanvas'));
-
-    themeToggle.addEventListener('click', () => {
-        window.themeCanvas.show();
-    });
 
 });
 

@@ -712,3 +712,25 @@ input[type=email]::placeholder {
     align-items: center;
     flex-shrink: 0;
 }
+
+@keyframes paletteColorCycle {
+    0%   { color: red; }
+    25%  { color: blue; }
+    75%  { color: green; }
+    100% { color: orange; }
+}
+
+@keyframes ripple {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0,0,0,0.3);
+    }
+    100% {
+        box-shadow: 0 0 0 7px rgba(0,0,0,0);
+    }
+}
+
+.bi-palette {
+    font-size: 1.2rem;
+    border-radius: 50%;
+    animation: paletteColorCycle 3s infinite, ripple 1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+}

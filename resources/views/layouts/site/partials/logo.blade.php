@@ -23,7 +23,7 @@
                 <a class="LogoWrapper dynamic-link" href="{{ route('site') }}" aria-label="Home">
                     <div>
                         <div class="cw-show-Mobile">
-                            <img src="{{ asset('site/images/logo-mobile.png') }}" class="mobile-logo" alt="Mobile Logo" />
+                            <img src="{{ asset('site/images/logo-square.png') }}" class="mobile-logo" alt="Mobile Logo" />
                         </div>
                     </div>
                 </a>

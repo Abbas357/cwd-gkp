@@ -35,6 +35,7 @@
 
     <link rel="stylesheet" href="{{ asset('site/css/bootstrap-icons.min.css') }}">
     <link href="{{ asset('site/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('site/css/animate.min.css') }}?cw=41" rel="stylesheet">
     <link href="{{ asset('site/css/style.min.css') }}?cw=41" rel="stylesheet">
     @stack('style')
     <link href="{{ asset('site/css/custom.min.css') }}?cw=41" rel="stylesheet">
