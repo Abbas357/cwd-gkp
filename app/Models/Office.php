@@ -179,13 +179,11 @@ class Office extends Model
         })->get();
     }
 
-    // Direct district relationship - an office can be associated with one district
     public function district()
     {
         return $this->belongsTo(District::class);
     }
 
-    // Get all districts managed by this office (including its children's districts)
     public function getAllManagedDistricts() {    
         if ($this->type === 'Authority') {
             return District::all();
@@ -193,7 +191,6 @@ class Office extends Model
 
         $managedDistricts = collect();
         
-        // Add this office's district if it has one
         if ($this->district_id) {
             $district = District::find($this->district_id);
             if ($district) {
@@ -201,7 +198,6 @@ class Office extends Model
             }
         }
         
-        // Add districts from child offices
         $childOffices = $this->getAllDescendants();
         foreach ($childOffices as $childOffice) {
             if ($childOffice->district_id) {

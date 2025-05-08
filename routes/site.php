@@ -155,7 +155,6 @@ Route::prefix('sliders')->as('sliders.')->group(function () {
 
 Route::prefix('positions')->as('positions.')->group(function () {
     Route::get('/detail/{uuid}', [UserController::class, 'getUserDetails'])->name('details');
-    Route::get('/hierarchy', [UserHierarchyController::class, 'getUserHierarchy'])->name('hierarchy');
 });
 
 Route::prefix('contacts')->as('contacts.')->group(function () {
