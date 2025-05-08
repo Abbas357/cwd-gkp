@@ -15,17 +15,17 @@
             </div>
             <div class="right-column">
                 <button class="btn" data-bs-toggle="offcanvas" id="view-stories" data-bs-target="#storiesCanvas" aria-controls="storiesCanvas">
-                    <i class="bi-book" style="font-size: 1.2rem"></i>
+                    <i class="bi-book-half text-secondary" style="font-size: 1.2rem"></i>
                     <div class="menu-label" style="letter-spacing: 1px">STORIES</div>
                 </button>
 
                 <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#themeCanvas" aria-controls="themeCanvas">
-                    <i class="bi bi-palette" style="font-size: 1.2rem;"></i>
+                    <i class="bi-palette-fill" style="font-size: 1.2rem;"></i>
                     <div class="menu-label" style="letter-spacing: 1px">THEME</div>
                 </button>
 
                 <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#informationCanvas" aria-controls="informationCanvas">
-                    <i class="bi-info-circle" style="font-size: 1.2rem"></i>
+                    <i class="bi-info-circle-fill text-secondary" style="font-size: 1.2rem"></i>
                     <div class="menu-label" style="letter-spacing: 1px">INFO</div>
                 </button>
 

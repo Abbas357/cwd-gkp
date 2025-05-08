@@ -717,7 +717,7 @@ input[type=email]::placeholder {
     0%   { color: red; }
     25%  { color: blue; }
     75%  { color: green; }
-    100% { color: orange; }
+    100% { color: red; }
 }
 
 @keyframes ripple {
@@ -729,7 +729,7 @@ input[type=email]::placeholder {
     }
 }
 
-.bi-palette {
+.bi-palette-fill {
     font-size: 1.2rem;
     border-radius: 50%;
     animation: paletteColorCycle 3s infinite, ripple 1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
