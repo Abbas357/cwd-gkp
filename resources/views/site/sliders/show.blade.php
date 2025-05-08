@@ -29,6 +29,6 @@
 
     <x-sharer :title="$sliderData['title'].' - '.config('app.name')" :url="url()->current()" />
 
-    <x-comments :comments="$sliderData['comments']" modelType="Slider" :modelId="$sliderData['id']" />
+    {{-- <x-comments :comments="$sliderData['comments']" modelType="Slider" :modelId="$sliderData['id']" /> --}}
 
 </x-main-layout>

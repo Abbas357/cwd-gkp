@@ -52,7 +52,7 @@
 
     <x-sharer :title="$seniorityData['title'].' - '.config('app.name')" :url="url()->current()" />
 
-    <x-comments :comments="$seniorityData['comments']" modelType="Seniority" :modelId="$seniorityData['id']" />
+    {{-- <x-comments :comments="$seniorityData['comments']" modelType="Seniority" :modelId="$seniorityData['id']" /> --}}
     
     @push('script')
     <script src="{{ asset('site/lib/lightbox/lightbox.min.js') }}"></script>

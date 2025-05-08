@@ -73,7 +73,7 @@
  
         <x-sharer :title="$newsData['title'].' - '.config('app.name')" :url="url()->current()" />
         
-        <x-comments :comments="$newsData['comments']" modelType="News" :modelId="$newsData['id']" />
+        {{-- <x-comments :comments="$newsData['comments']" modelType="News" :modelId="$newsData['id']" /> --}}
 
     </div>
 </x-main-layout>
