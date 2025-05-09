@@ -29,10 +29,6 @@
                                 {{ $slide['title'] }}
                             </h3>
                             
-                            <p class="mb-1 fs-5 p-2">
-                                {{ $slide['summary'] }}
-                            </p>
-                            
                             <div>
                                 <a class="cw-btn py-2 px-3" 
                                    href="{{ route('sliders.showSlider', $slide['slug']) }}">

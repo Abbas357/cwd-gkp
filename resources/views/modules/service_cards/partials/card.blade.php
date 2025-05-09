@@ -10,7 +10,7 @@
     }
 
     .service-card_front {
-        background-image: url('{{ asset('admin/images/cards/service-card-front.png') }}?cw=42');
+        background-image: url('{{ asset('admin/images/cards/service-card-front.png') }}?cw=43');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;
@@ -156,7 +156,7 @@
     }
 
     .service-card_back {
-        background-image: url('{{ asset('admin/images/cards/service-card-back.png') }}?cw=42');
+        background-image: url('{{ asset('admin/images/cards/service-card-back.png') }}?cw=43');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;
