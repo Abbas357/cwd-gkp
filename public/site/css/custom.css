@@ -72,12 +72,7 @@
     grid-area: aspect-ratio
 }
 
-.menu-container {
-    overflow-x: auto;
-    white-space: nowrap;
-    scroll-behavior: smooth;
-    overflow-y: none
-}
+
 
 #stories-content .story>.item-link>.item-preview {
     overflow: visible !important

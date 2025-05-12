@@ -1,5 +1,5 @@
-<div class="container-md">
-    <div class="position-relative rounded w-100 mx-auto p-3" style="background: #a4c63955; overflow-x: auto; white-space: nowrap; border-radius: 50px; border: 1px solid #a4c63955; box-shadow: 10px 10px 30px #a4c63955">
+<div class="neon-border-container">
+    <div class="position-relative w-100 mx-auto p-3" style="background: #ffffffaa; overflow-x: auto; white-space: nowrap; box-shadow: 10px 10px 30px #00000055">
         <div class="d-flex text-center gap-2 menu-container">
             <div class="col action-container">
                 <a href="https://old.cwd.gkp.pk/applyOnline.php" class="action-link">
