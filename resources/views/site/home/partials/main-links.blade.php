@@ -75,7 +75,9 @@
     max-width: 1300px;
     margin: 0 auto;
     background-color: #FFFFFF88;
+    z-index: 10;
 }
+
 .macos-dock > div {
     overflow-x: auto;
     white-space: nowrap;
@@ -99,7 +101,7 @@
     width: 60px;
     height: 60px;
     filter: grayscale(.4);
-    opacity: 0.5;
+    opacity: 0.7;
 }
 
 .action-container .action-link:hover img {

@@ -1,7 +1,7 @@
 <x-main-layout title="{{ $title }}">
     @push('style')
     <link href="{{ asset('site/lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('site/css/dashboard.min.css') }}?cw=44" rel="stylesheet">
+    <link href="{{ asset('site/css/dashboard.min.css') }}?cw=45" rel="stylesheet">
     <style>
         
     </style>
@@ -154,27 +154,6 @@
                     if (spinner) spinner.style.display = 'none';
                 });
         }
-
-        function loadNews() {
-            $.ajax({
-                url: "{{ route('notifications.get') }}",
-                method: 'GET',
-                success: function(data) {
-                    const {
-                        announcement
-                        , notifications
-                    } = data;
-                    displayNews(notifications);
-                },
-                error: function() {
-                    console.log("Error fetching news.");
-                }
-            });
-        }
-
-        $(document).ready(function() {
-            loadNews();
-        });
 
         function loadPartial(url, elementId, spinnerId) {
             $('#' + spinnerId).show();
