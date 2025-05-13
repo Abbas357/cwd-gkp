@@ -1,7 +1,6 @@
 <x-main-layout title="{{ $title }}">
     @push('style')
     <link href="{{ asset('site/lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('site/lib/newsticker/news-ticker.min.css') }}" rel="stylesheet">
     <link href="{{ asset('site/css/dashboard.min.css') }}?cw=42" rel="stylesheet">
     <style>
         
@@ -22,10 +21,6 @@
         @include('site.home.partials.main-links')
     </div>
 
-    <div class="container position-relative" class="mb-4">
-        @include('site.home.partials.newsticker')
-    </div>
-    
     <!-- Placeholder for Message Section -->
     <div id="message-section" class="container-fluid message-bg py-5" style="min-height: 400px">
         <!-- Loading Spinner -->
@@ -135,7 +130,6 @@
     <script src="{{ asset('site/lib/lightbox/js/lightbox.min.js') }}"></script>
     <script src="{{ asset('site/lib/easing/easing.min.js') }}"></script>
     <script src="{{ asset('site/lib/waypoints/waypoints.min.js') }}"></script>
-    <script src="{{ asset('site/lib/newsticker/news-ticker.min.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             loadSlider('{{ route('partials.slider') }}', 'slider-section', 'slider-spinner');
@@ -150,7 +144,7 @@
             fetch(url)
                 .then(response => response.text())
                 .then(html => {
-                    element.innerHTML = html; // Replace the content with the fetched HTML
+                    element.innerHTML = html;
                 })
                 .catch(error => {
                     console.error('Error loading slider:', error);
@@ -175,20 +169,6 @@
                 error: function() {
                     console.log("Error fetching news.");
                 }
-            });
-        }
-
-        function displayNews(newsItems) {
-            let tickerContent = newsItems.map((item, index) => 
-                `<li><a href="${item.url}" target="_blank"><span class="fw-bold">${index + 1}.</span> &nbsp; ${item.title}</a></li>`
-            ).join('');
-
-            $('#newsTicker .bn-news ul').html(tickerContent);
-
-            $('#newsTicker').breakingNews({
-                effect: 'typography',
-                themeColor: '#3b5998',
-                fontSize: '20px'
             });
         }
 

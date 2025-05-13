@@ -284,11 +284,11 @@ class HomeController extends Controller
     
                 // Different placeholder for each notification type
                 $imageUrl = match ($notification->notifiable_type) {
-                    Tender::class => asset('site/images/icons/tender.png'),
-                    Gallery::class => asset('site/images/icons/gallery.png'),
-                    Event::class => asset('site/images/icons/event.png'),
-                    News::class => asset('site/images/icons/news.png'),
-                    Seniority::class => asset('site/images/icons/seniority.png'),
+                    Tender::class => asset('site/images/icons/notification-types/tender.png'),
+                    Gallery::class => asset('site/images/icons/notification-types/gallery.png'),
+                    Event::class => asset('site/images/icons/notification-types/event.png'),
+                    News::class => asset('site/images/icons/notification-types/news.png'),
+                    Seniority::class => asset('site/images/icons/notification-types/seniority.png'),
                     default => 'https://placehold.co/50x50/png?text=Notification'
                 };
     
