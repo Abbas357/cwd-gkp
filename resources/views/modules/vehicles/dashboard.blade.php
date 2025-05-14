@@ -146,7 +146,7 @@
                             <div>
                                 <h6 class="text-muted mb-2">Permanent Alloted</h6>
                                 <h3 class="mb-0">{{ $permanentAlloted }}</h3>
-                                <small class="text-muted">Personal: {{ $personalAllotmentCount }} | Office:</small>
+                                <small class="text-muted">Personal: {{ $personalAllotmentCount }}</small>
                             </div>
                             <div class="stat-icon bg-warning bg-opacity-10">
                                 <i class="bi bi-pin-angle text-warning"></i>
