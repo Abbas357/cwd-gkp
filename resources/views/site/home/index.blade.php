@@ -1,7 +1,7 @@
 <x-main-layout title="{{ $title }}">
     @push('style')
     <link href="{{ asset('site/lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('site/css/dashboard.min.css') }}?cw=45" rel="stylesheet">
+    <link href="{{ asset('site/css/dashboard.min.css') }}?cw=46" rel="stylesheet">
     <style>
         
     </style>

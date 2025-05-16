@@ -2,11 +2,11 @@
 <link href="{{ asset('site/lib/owlcarousel/assets/owl.theme.default.min.css') }}" rel="stylesheet">
 
 <style>
-    .events-carousel {
+    .news-carousel {
         padding: 20px 0;
     }
     
-    .events-item {
+    .news-item {
         border-radius: 12px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -15,71 +15,85 @@
         background-color: white;
     }
     
-    .events-item:hover {
+    .news-item:hover {
         transform: translateY(-10px);
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
     }
     
-    .events-img {
+    .news-img {
         position: relative;
         overflow: hidden;
         height: 300px;
     }
     
-    .events-img img {
+    .news-img-inner {
+        height: 300px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .news-img-inner img {
         transition: transform 0.5s ease;
         object-fit: cover;
-        height: 300px;
+        height: 100%;
         width: 100%;
     }
     
-    .events-item:hover .events-img img {
+    .news-item:hover .news-img-inner img {
         transform: scale(1.1);
     }
     
-    .events-info {
+    .news-icon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .news-item:hover .news-icon {
+        opacity: 1;
+    }
+    
+    .news-info {
         background-color: rgba(255, 255, 255, 0.9);
         border: none !important;
         font-weight: 500;
     }
     
-    .events-info small {
+    .news-info small {
         font-size: 14px;
-        color: #555;
+        color: #fff;
     }
     
-    .events-info i {
-        color: #ff6b6b;
+    .news-info i {
+        color: #fff;
     }
     
-    .events-content {
+    .news-content {
         padding: 20px;
         background: white !important;
         border-bottom-left-radius: 12px;
         border-bottom-right-radius: 12px;
     }
     
-    .events-content h5 {
+    .news-content h4 {
         font-weight: 700;
         color: #333;
         margin-bottom: 15px;
         font-size: 20px;
         overflow: hidden;
         text-overflow: ellipsis;
-    }
-    
-    .date-time-info {
-        margin: 10px 0;
-        padding: 10px;
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        font-size: 14px;
-        color: #555;
-    }
-    
-    .date-time-info i {
-        color: #ff6b6b;
-        margin-right: 5px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        height: 52px;
     }
     
     .owl-nav button {
@@ -134,48 +148,37 @@
     }
 </style>
 
-<div class="events-carousel owl-carousel">
-    @foreach ($events as $event)
-    <div class="events-item">
-        <div class="events-img">
-            <img src="{{ $event['image'] }}" class="img-fluid rounded-top" alt="{{ $event['title'] }}">
-            <div class="events-info d-flex position-absolute">
-                <small class="flex-fill text-center border-end py-2"><i class="bi bi-geo-alt me-2"></i>{{ $event['location'] }}</small>
-                <small class="flex-fill text-center py-2"><i class="bi bi-people-fill me-2"></i>{{ $event['no_of_participants'] }} Participants</small>
+<div class="news-carousel owl-carousel">
+    @foreach ($allNews as $news)
+    <div class="news-item">
+        <div class="news-img">
+            <div class="news-img-inner">
+                @if (str_starts_with($news['file_type'], 'image'))
+                <!-- Display image if the file is an image -->
+                <img class="img-fluid rounded-top" src="{{ $news['image'] }}" alt="{{ $news['title'] }}">
+                @else
+                <!-- Display a placeholder if the file is not an image -->
+                <img class="img-fluid rounded-top" src="{{ asset('admin/images/no-image.jpg') }}" alt="File Placeholder">
+                @endif
+                <div class="news-icon">
+                    <a href="{{ route('news.show', $news['slug']) }}" class="my-auto">
+                        <i class="bi bi-link fs-1 text-white"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="news-info bg-secondary d-flex align-items-center border border-start-0 border-end-0">
+                <small class="flex-fill text-center border-end py-2">
+                    <i class="bi bi-calendar-date me-2"></i>{{ $news['published_at'] }}
+                </small>
+                <small class="flex-fill text-center py-2">
+                    <i class="bi bi-person me-2"></i>{{ $news['author'] }}
+                </small>
             </div>
         </div>
-        <div class="events-content">
-            <div class="date-time-info">
-                @if(!empty($event['start_datetime']) && !empty($event['end_datetime']))
-                <div class="flex-fill text-center mb-2">
-                    <i class="bi bi-calendar-check"></i>
-                    {{ \Carbon\Carbon::parse($event['start_datetime'])->format('M d, Y') }}
-                    @if(\Carbon\Carbon::parse($event['start_datetime'])->format('M d, Y') != \Carbon\Carbon::parse($event['end_datetime'])->format('M d, Y'))
-                    to {{ \Carbon\Carbon::parse($event['end_datetime'])->format('M d, Y') }}
-                    @endif
-                </div>
-                <div class="flex-fill text-center">
-                    <i class="bi bi-alarm"></i>
-                    {{ \Carbon\Carbon::parse($event['start_datetime'])->format('h:i A') }}
-                    to {{ \Carbon\Carbon::parse($event['end_datetime'])->format('h:i A') }}
-                </div>
-                @elseif(!empty($event['start_datetime']))
-                <div class="flex-fill text-center mb-2">
-                    <i class="bi bi-calendar-check"></i>
-                    {{ \Carbon\Carbon::parse($event['start_datetime'])->format('M d, Y') }}
-                </div>
-                <div class="flex-fill text-center">
-                    <i class="bi bi-alarm"></i>
-                    {{ \Carbon\Carbon::parse($event['start_datetime'])->format('h:i A') }}
-                </div>
-                @endif
-            </div>
-            
-            <div class="text-center mb-4">
-                <h5>{{ \Illuminate\Support\Str::limit($event['title'], 50) }}</h5>
-            </div>
-            <div class="text-center">
-                <a href="{{ route('events.show', $event['slug']) }}" class="cw-btn">Read More</a>
+        <div class="news-content border border-top-0 rounded-bottom p-4">
+            <a href="{{ route('news.show', $news['slug']) }}" class="h4">{{ $news['title'] }}</a>
+            <div class="text-center mt-3">
+                <a href="{{ route('news.show', $news['slug']) }}" class="cw-btn rounded-pill py-2 px-4"><i class="bi-eye me-1"></i> View</a>
             </div>
         </div>
     </div>
@@ -184,7 +187,7 @@
 
 <script src="{{ asset('site/lib/owlcarousel/owl.carousel.min.js') }}"></script>
 <script>
-    $(".events-carousel").owlCarousel({
+    $(".news-carousel").owlCarousel({
         autoplay: true,
         smartSpeed: 1000,
         center: false,

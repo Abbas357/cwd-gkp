@@ -18,8 +18,23 @@
     <link href="{{ asset('admin/css/responsive.css') }}" rel="stylesheet">
     @stack('style')
     <link href="{{ asset('admin/css/custom.min.css') }}" rel="stylesheet">
+    <style>
+      .bg-image::before {
+          content: "";
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-image: url("{{ asset('admin/images/bg-image.jpg') }}?cw=45");
+          background-size: cover;
+          background-position: center;
+          filter: blur(1px);
+          z-index: -1;
+      }
+    </style>
 </head>
-<body class="bg-image">
+<body class="bg-image" id="particles">
     <header>
         <div class="px-3 py-2">
           <div class="container">

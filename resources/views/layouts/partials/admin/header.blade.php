@@ -18,7 +18,7 @@
     <link href="{{ asset('admin/css/open-props.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/bootstrap-extended.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/dark-theme.css') }}" rel="stylesheet">
-    <link href="{{ asset('admin/css/main.min.css') }}?cw=45" rel="stylesheet">
+    <link href="{{ asset('admin/css/main.min.css') }}?cw=46" rel="stylesheet">
     <link href="{{ asset('admin/css/semi-dark.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/bordered-theme.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/responsive.css') }}" rel="stylesheet">
@@ -34,7 +34,7 @@
         }
     </script>
     @stack('style')
-    <link href="{{ asset('admin/css/custom.min.css') }}?cw=45" rel="stylesheet">
+    <link href="{{ asset('admin/css/custom.min.css') }}?cw=46" rel="stylesheet">
     <style>
         .page-loader {
             height: 5px;

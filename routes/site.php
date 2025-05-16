@@ -21,7 +21,6 @@ use App\Http\Controllers\Site\DownloadController;
 use App\Http\Controllers\Site\SeniorityController;
 use App\Http\Controllers\Site\ContractorController;
 use App\Http\Controllers\Site\NewsLetterController;
-use App\Http\Controllers\Site\UserHierarchyController;
 use App\Http\Controllers\Site\AchievementController;
 use App\Http\Controllers\Site\ServiceCardController;
 use App\Http\Controllers\Site\PublicContactController;
@@ -32,14 +31,14 @@ use App\Http\Controllers\Site\ContractorMachineryController;
 use App\Http\Controllers\Site\ContractorRegistrationController;
 use App\Http\Middleware\StandardizationRedirectIfAuthenticated;
 use App\Http\Controllers\Site\ContractorHumanResourceController;
-use App\Http\Controllers\Site\ContractorWorkExperienceController;
-
+use App\Http\Controllers\Site\ContractorWorkExperienceController; 
+ 
 Route::prefix('partials')->as('partials.')->group(function () {
     Route::get('/slider', [HomeController::class, 'sliderPartial'])->name('slider');
     Route::get('/message', [HomeController::class, 'messagePartial'])->name('message');
     Route::get('/about', [HomeController::class, 'aboutPartial'])->name('about');
     Route::get('/gallery', [HomeController::class, 'galleryPartial'])->name('gallery');
-    Route::get('/blogs', [HomeController::class, 'blogsPartial'])->name('blogs');
+    Route::get('/blogs', [HomeController::class, 'newsPartial'])->name('blogs');
     Route::get('/events', [HomeController::class, 'eventsPartial'])->name('events');
     Route::get('/team', [HomeController::class, 'teamPartial'])->name('team');
     Route::get('/contact', [HomeController::class, 'contactPartial'])->name('contact');

@@ -140,12 +140,12 @@ class HomeController extends Controller
     }
 
 
-    public function blogsPartial()
+    public function newsPartial()
     {
         $allNews = News::where('status', 'published')
             ->with(['media', 'user'])
             ->latest('published_at')
-            ->limit(3)
+            ->limit(5)
             ->get()
             ->map(function ($news) {
                 $media = $news->getFirstMedia('news_attachments');
@@ -166,7 +166,7 @@ class HomeController extends Controller
                 ];
             });
 
-        return view('site.home.partials.blogs', compact('allNews'));
+        return view('site.home.partials.news', compact('allNews'));
     }
 
     public function eventsPartial()

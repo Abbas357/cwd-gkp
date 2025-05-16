@@ -1149,23 +1149,11 @@ form select.error, form textarea.error, form input.error, form input.error:focus
     border-radius: 3px;
 }
 
-.bg-image::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("../images/bg-image.jpg?cw=45");
-    background-size: cover;
-    background-position: center;
-    filter: blur(5px);
-    z-index: -1;
-}
-
 .login-box {
-    background-color: #fcfbfadd !important;
-    border-radius: 5px !important;
+    background-color: #F9F9F9 !important;
+    border-radius: 7px !important;
+    border: 1px solid #ddd !important;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3) !important;
 }
 
 .form-check-img {
