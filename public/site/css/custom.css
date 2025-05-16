@@ -737,3 +737,12 @@ input[type=email]::placeholder {
         paletteColorCycle 3s infinite,
         rotateWithPause 3s linear infinite;
 }
+
+.owl-nav .owl-prev, .owl-nav .owl-next {
+    border-width: 3px !important;
+    background-color: #f0f0f0;
+}
+
+.owl-nav .bi::before {
+    font-weight: bold !important;
+}

@@ -22,7 +22,7 @@
     </div>
 
     <!-- Placeholder for Message Section -->
-    <div id="message-section" class="container-fluid message-bg py-5" style="min-height: 400px">
+    <div id="message-section" class="container-fluid message-bg pb-3" style="min-height: 400px">
         <!-- Loading Spinner -->
         <div class="container message pb-5">
             <div class="mx-auto text-center mb-5" style="max-width: 900px;">
@@ -40,7 +40,7 @@
     <!-- Placeholder for About Section -->
     <div id="about-section" class="container-fluid about about-bg py-3" style="min-height: 400px">
         <div class="container py-2">
-            <div class="mx-auto text-center mb-5" style="max-width: 900px;">
+            <div class="mx-auto text-center mb-2" style="max-width: 900px;">
                 <h5 class="section-title px-3">About US</h5>
             </div>
             <div id="content"></div>
@@ -55,7 +55,7 @@
     <!-- Placeholder for Gallery Section -->
     <div id="gallery-section" style="min-height: 400px; background: #f5f5f5">
         <div class="container gallery py-3">
-            <div class="mx-auto text-center my-5" style="max-width: 900px;">
+            <div class="mx-auto text-center my-2" style="max-width: 900px;">
                 <h5 class="section-title px-3">Our Gallery</h5>
             </div>
             <div id="content"></div>
@@ -69,8 +69,8 @@
 
     <!-- Placeholder for Blogs Section -->
     <div id="events-section" style="min-height: 400px">
-        <div class="container-fluid events py-5">
-            <div class="container py-5">
+        <div class="container-fluid events py-3">
+            <div class="container py-3">
                 <div class="mx-auto text-center mb-5" style="max-width: 900px;">
                     <h5 class="section-title px-3">Events</h5>
                 </div>
@@ -89,7 +89,7 @@
         <div class="container-fluid blog py-3">
             <div class="container py-2">
                 <div class="mx-auto text-center" style="max-width: 900px;">
-                    <h5 class="section-title px-3 my-5">News</h5>
+                    <h5 class="section-title px-3 my-2">News</h5>
                 </div>
                 <div id="content"></div>
                 <div class="d-flex justify-content-center">
@@ -105,7 +105,7 @@
     <div id="team-section" class="container-fluid team py-3" style="min-height: 400px">
         <div class="container py-2">
             <div class="mx-auto text-center" style="max-width: 900px;">
-                <h5 class="section-title my-5 px-3">Meet Our Team</h5>
+                <h5 class="section-title my-2 px-3">Meet Our Team</h5>
             </div>
             <div id="content"></div>
             <div class="d-flex justify-content-center">

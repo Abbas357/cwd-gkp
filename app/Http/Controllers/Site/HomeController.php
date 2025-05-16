@@ -161,8 +161,9 @@ class HomeController extends Controller
                     'author' => $news->user->currentPosting->designation->name,
                     'created' => $news->created_at->diffForHumans(),
                     'published_at' => $news->published_at->format('M d, Y'),
-                    'image' => $media ? $media->getUrl() : asset('admin/images/no-image.jpg'),
+                    'image' => $media ? $media->getUrl() : asset('site/images/no-image.jpg'),
                     'file_type' => $fileType,
+                    'views_count' => $news->views_count ?? 0,
                 ];
             });
 
@@ -209,16 +210,12 @@ class HomeController extends Controller
                 ->get()
                 ->map(function ($user) {
                     $profile = $user->profile ?? null;
-                    $currentPosting = $user->currentPosting ?? null;
-                    $designation = $currentPosting ? $currentPosting->designation : null;
                     
                     return [
                         'id' => $user->id,
                         'uuid' => $user->uuid,
                         'name' => $user->name,
-                        'title' => $designation ? $designation->name : 'N/A',
-                        'designation' => $designation ? $designation->name : 'N/A',
-                        'position' => $designation ? $designation->name : 'N/A',
+                        'posting' => $user->currentPosting->office->name ?? 'N/A',
                         'facebook' => $profile ? $profile->facebook : '#',
                         'twitter' => $profile ? $profile->twitter : '#',
                         'whatsapp' => $profile ? $profile->whatsapp : '#',

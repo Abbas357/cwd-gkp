@@ -419,7 +419,7 @@
 }
 
 .about-bg {
-    background: linear-gradient(rgba(230, 255, 238, .9), rgba(239, 238, 202, .9)), url(../images/about.jpg);
+    background: linear-gradient(rgba(240, 255, 255, 0.9), rgba(235, 251, 255, 0.9)), url(../images/about.jpg);
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
