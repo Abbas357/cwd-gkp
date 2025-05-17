@@ -24,45 +24,19 @@
                     <div class="menu-label" style="letter-spacing: 1px">THEME</div>
                 </button>
 
-                <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#informationCanvas" aria-controls="informationCanvas">
-                    <i class="bi-info-circle-fill text-secondary" style="font-size: 1.2rem"></i>
-                    <div class="menu-label" style="letter-spacing: 1px">INFO</div>
+                <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#tutorialsCanvas" aria-controls="tutorialsCanvas">
+                    <i class="bi-play-circle" style="font-size: 1.2rem"></i>
+                    <div class="menu-label" style="letter-spacing: 1px">GUIDE</div>
                 </button>
 
-                <div class="offcanvas offcanvas-end" tabindex="-1" id="informationCanvas" aria-labelledby="informationCanvasLabel" style="z-index: 9999">
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="tutorialsCanvas" aria-labelledby="tutorialsCanvasLabel" style="z-index: 9999">
                     <div class="offcanvas-header border-bottom">
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">
-                        <div class="mb-4 mt-2 info-box">
-                            <h4>Address</h4>
-                            <i class="bi bi-geo-alt me-2"></i>{{ setting('contact_address', 'main', 'Civil Secretariat, Peshawar') }}
-                        </div>
-                        <div class="mb-4 info-box">
-                            <h4>Email</h4>
-                            <a href="mailto:info@cwd.gkp.pk" class="text-decoration-none text-dark">
-                                <i class="bi-envelope-fill"></i> &nbsp; {{ setting('email', 'main', 'info@cwd.gkp.pk') }}
-                            </a>
-                        </div>
-                        <div class="mb-4 info-box">
-                            <h4>Contact Number</h4>
-                            <a href="tel:+919210843" class="text-decoration-none text-dark">
-                                <i class="bi-telephone-fill"></i> &nbsp; {{ setting('contact_phone', 'main', '091-9214039') }}
-                            </a>
-                        </div>
-                        <div class="mb-4 info-box">
-                            <h4>Opening Hours</h4>
-                            <div><i class="bi-calendar"></i> &nbsp; Monday - Friday</div>
-                            <div><i class="bi-alarm"></i> &nbsp; 9:00 AM - 5:00 PM</div>
-                        </div>
-                        <div class="mb-4 info-box">
-                            <h4>Follow Us</h4>
-                            <div>
-                                <a href="https://facebook.com/{{ setting('facebook', 'main', 'CWDKPGovt') }}"><i class="bi bi-facebook fs-4 me-2"></i></a>
-                                <a href="https://twitter.com/{{ setting('twitter', 'main', 'CWDKPGovt') }}"><i class="bi bi-twitter-x fs-4 me-2"></i></a>
-                                <a href="https://youtube.com/{{ setting('youtube', 'main', 'CWDKPGovt') }}"><i class="bi bi-youtube fs-4 me-2"></i> </a>
-                            </div>
-                        </div>
+                        <ul class="list-group">
+                            <a href="{{ route('pages.show', 'contractor_registration') }}" class="list-group-item list-group-item-action">Tutoral for Contractor Registration</a>
+                          </ul>
                     </div>
                 </div>
 
@@ -302,7 +276,7 @@
 <script>
     (function() {
         const leftColumn = document.querySelector(".left-column");
-        const informationCanvas = document.querySelector("#informationCanvas .offcanvas-header");
+        const tutorialsCanvas = document.querySelector("#tutorialsCanvas .offcanvas-header");
 
         const searchElement = document.createElement("div");
         searchElement.className = "cw-search cw-search-temp-wrapper";
@@ -333,8 +307,8 @@
 
         function insertSearchElement() {
             if (window.innerWidth < 768) {
-                if (informationCanvas && searchElement.parentElement !== informationCanvas) {
-                    informationCanvas.insertBefore(searchElement, informationCanvas.firstChild);
+                if (tutorialsCanvas && searchElement.parentElement !== tutorialsCanvas) {
+                    tutorialsCanvas.insertBefore(searchElement, tutorialsCanvas.firstChild);
                 }
             } else {
                 if (leftColumn && searchElement.parentElement !== leftColumn) {
