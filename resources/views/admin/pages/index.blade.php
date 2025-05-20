@@ -180,6 +180,7 @@
                 btnSelector: '.view-btn',
                 title: 'Pages Details',
                 modalSize: 'lg',
+                tableToRefresh: table,
             });
             
         });

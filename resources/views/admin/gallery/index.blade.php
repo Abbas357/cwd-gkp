@@ -213,6 +213,7 @@
                 btnSelector: '.view-btn',
                 title: 'Gallery Details',
                 modalSize: 'lg',
+                tableToRefresh: table,
             });
             
             if (new URLSearchParams(window.location.search).get("create") === "true") {

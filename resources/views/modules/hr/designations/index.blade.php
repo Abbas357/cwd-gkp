@@ -122,6 +122,7 @@
                 btnSelector: '.view-btn',
                 title: 'Designation Detail',
                 modalSize: 'md',
+                tableToRefresh: table,
             });
 
         });

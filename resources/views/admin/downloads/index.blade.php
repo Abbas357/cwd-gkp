@@ -198,6 +198,7 @@
                 btnSelector: '.view-btn',
                 title: 'Download Details',
                 modalSize: 'lg',
+                tableToRefresh: table,
             });
 
             if (new URLSearchParams(window.location.search).get("create") === "true") {

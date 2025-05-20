@@ -1,4 +1,4 @@
-<x-vehicle-layout title="Assets">
+<x-asset-layout title="Assets">
     @push('style')
     <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
@@ -13,7 +13,7 @@
         <li class="breadcrumb-item active" aria-current="page">Assets</li>
     </x-slot>
     <div class="table-responsive">
-        <table id="vehicles-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+        <table id="assets-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
             <thead>
                 <tr>
                     <th scope="col" class="p-3">ID</th>
@@ -49,8 +49,8 @@
 
     <script>
         $(document).ready(function() {
-            var table = initDataTable('#vehicles-datatable', {
-                ajaxUrl: "{{ route('admin.apps.vehicles.all') }}"
+            var table = initDataTable('#assets-datatable', {
+                ajaxUrl: "{{ route('admin.apps.assets.all') }}"
                 , columns: [{
                         data: "id"
                         , searchBuilderType: "num"
@@ -145,11 +145,11 @@
                         , action: function(e, dt, node, config) {
                         formWizardModal({
                                 title: 'Add Asset',
-                                fetchUrl: "{{ route('admin.apps.vehicles.create') }}",
+                                fetchUrl: "{{ route('admin.apps.assets.create') }}",
                                 btnSelector: '.create-btn',
                                 actionButtonName: 'Add Asset',
                                 modalSize: 'lg',
-                                formAction: "{{ route('admin.apps.vehicles.store') }}",
+                                formAction: "{{ route('admin.apps.assets.store') }}",
                                 wizardSteps: [
                                     {
                                         title: "Basic Info",
@@ -184,20 +184,20 @@
                 ]
             });
 
-            $("#vehicles-datatable").on('click', '.delete-btn', async function() {
-                const vehicleId = $(this).data("id");
-                const url = "{{ route('admin.apps.vehicles.destroy', ':id') }}".replace(':id', vehicleId);
+            $("#assets-datatable").on('click', '.delete-btn', async function() {
+                const assetId = $(this).data("id");
+                const url = "{{ route('admin.apps.assets.destroy', ':id') }}".replace(':id', assetId);
 
-                const result = await confirmAction(`Do you want to delete this vehicle?`);
+                const result = await confirmAction(`Do you want to delete this asset?`);
                 if (result && result.isConfirmed) {
                     const success = await fetchRequest(url, 'DELETE');
                     if (success) {
-                        $("#vehicles-datatable").DataTable().ajax.reload();
+                        $("#assets-datatable").DataTable().ajax.reload();
                     }
                 }
             });
 
-            $('#vehicles-datatable').colResizable({
+            $('#assets-datatable').colResizable({
                 liveDrag: true
                 , resizeMode: 'overflow'
                 , postbackSafe: true
@@ -207,27 +207,28 @@
             , });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.apps.vehicles.detail', ':id') }}",
+                fetchUrl: "{{ route('admin.apps.assets.detail', ':id') }}",
                 btnSelector: '.view-btn',
                 title: 'Asset Details',
                 modalSize: 'lg',
             });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.apps.vehicles.history', ':id') }}",
+                fetchUrl: "{{ route('admin.apps.assets.history', ':id') }}",
                 btnSelector: '.history-btn',
                 title: 'Asset History',
                 modalSize: 'xl',
+                tableToRefresh: table,
             });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.apps.vehicles.allotment.create', ':id') }}"
+                fetchUrl: "{{ route('admin.apps.assets.allotment.create', ':id') }}"
                 , btnSelector: '.allot-btn'
                 , title: 'Asset Allotment'
                 , actionButtonName: 'Allot Asset'
                 , modalSize: 'lg'
                 , includeForm: true
-                , formAction: "{{ route('admin.apps.vehicles.allotment.store', ':id') }}"
+                , formAction: "{{ route('admin.apps.assets.allotment.store', ':id') }}"
                 , tableToRefresh: table
             , });
             
@@ -235,4 +236,4 @@
 
     </script>
     @endpush
-</x-vehicle-layout>
+</x-asset-layout>

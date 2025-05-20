@@ -211,6 +211,7 @@
                 btnSelector: '.view-btn',
                 title: 'Vehicle Details',
                 modalSize: 'lg',
+                tableToRefresh: table,
             });
 
             pushStateModal({
@@ -218,6 +219,7 @@
                 btnSelector: '.history-btn',
                 title: 'Vehicle History',
                 modalSize: 'xl',
+                tableToRefresh: table,
             });
 
             pushStateModal({

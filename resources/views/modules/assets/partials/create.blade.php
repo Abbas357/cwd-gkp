@@ -9,7 +9,7 @@
         <label for="type">Type</label>
         <select class="form-select" id="type" name="type" required>
             <option value="">Choose...</option>
-            @foreach ($cat['vehicle_type'] as $type)
+            @foreach ($cat['asset_type'] as $type)
             <option value="{{ $type }}">{{ $type }}</option>
             @endforeach
         </select>
@@ -22,7 +22,7 @@
         <label for="color">Color</label>
         <select class="form-select" id="color" name="color" required>
             <option value="">Choose...</option>
-            @foreach ($cat['vehicle_color'] as $color)
+            @foreach ($cat['asset_color'] as $color)
             <option value="{{ $color }}">{{ $color }}</option>
             @endforeach
         </select>
@@ -48,7 +48,7 @@
         <label for="brand">Brand</label>
         <select class="form-select" id="brand" name="brand" required>
             <option value="">Choose...</option>
-            @foreach ($cat['vehicle_brand'] as $brand)
+            @foreach ($cat['asset_brand'] as $brand)
             <option value="{{ $brand }}">{{ $brand }}</option>
             @endforeach
         </select>
@@ -63,7 +63,7 @@
         <label for="functional_status">Functional Status</label>
         <select class="form-select" id="functional_status" name="functional_status" required>
             <option value="">Choose...</option>
-            @foreach ($cat['vehicle_functional_status'] as $functional_status)
+            @foreach ($cat['asset_functional_status'] as $functional_status)
             <option value="{{ $functional_status }}">{{ $functional_status }}</option>
             @endforeach
         </select>
@@ -75,7 +75,7 @@
         <label for="registration_status">Registration Status</label>
         <select class="form-select" id="registration_status" name="registration_status" required>
             <option value="">Choose...</option>
-            @foreach ($cat['vehicle_registration_status'] as $registration_status)
+            @foreach ($cat['asset_registration_status'] as $registration_status)
             <option value="{{ $registration_status }}">{{ $registration_status }}</option>
             @endforeach
         </select>

@@ -214,6 +214,7 @@
                 btnSelector: '.view-btn',
                 title: 'News Details',
                 modalSize: 'lg',
+                tableToRefresh: table,
             });
             
             if (new URLSearchParams(window.location.search).get("create") === "true") {

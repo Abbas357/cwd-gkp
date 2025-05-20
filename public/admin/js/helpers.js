@@ -868,6 +868,7 @@ function pushStateModal({
 
         function resetModal() {
             $(`#${modalId} .${modalContentClass}`).empty();
+            if (tableToRefresh) tableToRefresh.ajax.reload();
             if (includeForm) {
                 $(`#form-${calcModalType}`)[0].reset();
             }

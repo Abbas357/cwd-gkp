@@ -246,10 +246,11 @@
             resizableTable('#cards-datatable');
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.apps.service_cards.detail', ':id') }}"
-                , btnSelector: '.view-btn'
-                , title: 'User Details'
-                , modalSize: 'lg'
+                fetchUrl: "{{ route('admin.apps.service_cards.detail', ':id') }}",
+                btnSelector: '.view-btn',
+                title: 'User Details',
+                modalSize: 'lg',
+                tableToRefresh: table,
             , });
 
             pushStateModal({

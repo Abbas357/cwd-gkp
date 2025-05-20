@@ -84,6 +84,7 @@
                     }
                 ]
                 , defaultOrderColumn: 5
+                , pushStateToUrl: true
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
                     targets: [0]
@@ -204,6 +205,7 @@
                 btnSelector: '.view-btn',
                 title: 'Tender Details',
                 modalSize: 'lg',
+                tableToRefresh: table,
             });
 
             if (new URLSearchParams(window.location.search).get("create") === "true") {

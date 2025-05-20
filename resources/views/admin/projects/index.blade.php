@@ -136,6 +136,7 @@
                 btnSelector: '.view-btn',
                 title: 'Projects Details',
                 modalSize: 'lg',
+                tableToRefresh: table,
             });
             
         });

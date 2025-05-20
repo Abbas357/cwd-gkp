@@ -10,7 +10,7 @@
     $canUpdate = auth()->user()->can('updateField', $asset);
     $canUpload = auth()->user()->can('uploadFile', $asset);
 @endphp
-<div class="row vehicles-details">
+<div class="row assets-details">
     <div class="col-md-12">
 
         <table class="table table-bordered mt-3">
@@ -21,7 +21,7 @@
                     <span id="text-type">{{ $asset->type }}</span>
                     @if ($canUpdate)
                     <select id="input-type" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('type', {{ $asset->id }})">
-                        @foreach ($cat['vehicle_type'] as $type)
+                        @foreach ($cat['asset_type'] as $type)
                         <option value="{{ $type }}" {{ $asset->type == $type ? 'selected' : '' }}>
                             {{ $type }}
                         </option>
@@ -39,7 +39,7 @@
                     <span id="text-functional_status">{{ $asset->functional_status }}</span>
                     @if ($canUpdate)
                     <select id="input-functional_status" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('functional_status', {{ $asset->id }})">
-                        @foreach ($cat['vehicle_functional_status'] as $functional_status)
+                        @foreach ($cat['asset_functional_status'] as $functional_status)
                         <option value="{{ $functional_status }}" {{ $asset->functional_status == $functional_status ? 'selected' : '' }}>
                             {{ $functional_status }}
                         </option>
@@ -57,7 +57,7 @@
                     <span id="text-color">{{ $asset->color }}</span>
                     @if ($canUpdate)
                     <select id="input-color" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('color', {{ $asset->id }})">
-                        @foreach ($cat['vehicle_color'] as $color)
+                        @foreach ($cat['asset_color'] as $color)
                         <option value="{{ $color }}" {{ $asset->color == $color ? 'selected' : '' }}>
                             {{ $color }}
                         </option>
@@ -93,7 +93,7 @@
                     <span id="text-brand">{{ $asset->brand }}</span>
                     @if ($canUpdate)
                     <select id="input-brand" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('brand', {{ $asset->id }})">
-                        @foreach ($cat['vehicle_brand'] as $brand)
+                        @foreach ($cat['asset_brand'] as $brand)
                         <option value="{{ $brand }}" {{ $asset->brand == $brand ? 'selected' : '' }}>
                             {{ $brand }}
                         </option>
@@ -111,7 +111,7 @@
                 <span id="text-registration_status">{{ $asset->registration_status }}</span>
                 @if ($canUpdate)
                 <select id="input-registration_status" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('registration_status', {{ $asset->id }})">
-                    @foreach ($cat['vehicle_registration_status'] as $registration_status)
+                    @foreach ($cat['asset_registration_status'] as $registration_status)
                     <option value="{{ $registration_status }}" {{ $asset->registration_status == $registration_status ? 'selected' : '' }}>
                         {{ $registration_status }}
                     </option>
@@ -202,10 +202,10 @@
         <div class="row mt-3 mx-1">
             @php
             $uploads = [
-                'vehicle_front_pictures',
-                'vehicle_side_pictures',
-                'vehicle_rear_pictures',
-                'vehicle_interior_pictures',
+                'asset_front_pictures',
+                'asset_side_pictures',
+                'asset_rear_pictures',
+                'asset_interior_pictures',
             ];
             @endphp
             <h3 class="mt-3">Attachments</h3>
@@ -261,7 +261,7 @@
             formData.append('collection', input.dataset.collection);
             formData.append('_method', "PATCH");
 
-            const url = "{{ route('admin.apps.vehicles.uploadFile', ':id') }}".replace(':id', '{{ $asset->id }}');
+            const url = "{{ route('admin.apps.assets.uploadFile', ':id') }}".replace(':id', '{{ $asset->id }}');
             try {
                 const result = await fetchRequest(url, 'POST', formData);
                 if (result) {
@@ -293,7 +293,7 @@
     async function updateField(field, id) {
         const newValue = (field === 'content') ? $('#input-' + field).summernote('code') : $('#input-' + field).val();
 
-        const url = "{{ route('admin.apps.vehicles.updateField', ':id') }}".replace(':id', id);
+        const url = "{{ route('admin.apps.assets.updateField', ':id') }}".replace(':id', id);
         const data = {
             field: field
             , value: newValue

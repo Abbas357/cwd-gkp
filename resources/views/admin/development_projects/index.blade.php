@@ -231,10 +231,11 @@
             , });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.development_projects.detail', ':id') }}"
-                , btnSelector: '.view-btn'
-                , title: 'Projects Details'
-                , modalSize: 'lg'
+                fetchUrl: "{{ route('admin.development_projects.detail', ':id') }}", 
+                btnSelector: '.view-btn', 
+                title: 'Projects Details', 
+                modalSize: 'lg',
+                tableToRefresh: table,
             , });
 
             if (new URLSearchParams(window.location.search).get("create") === "true") {

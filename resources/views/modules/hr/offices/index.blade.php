@@ -125,6 +125,7 @@
                 btnSelector: '.view-btn',
                 title: 'Office Detail',
                 modalSize: 'lg',
+                tableToRefresh: table,
             });
 
         });

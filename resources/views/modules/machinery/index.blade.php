@@ -192,6 +192,7 @@
                 btnSelector: '.view-btn',
                 title: 'Machinery Details',
                 modalSize: 'lg',
+                tableToRefresh: table,
             });
 
             pushStateModal({

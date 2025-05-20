@@ -145,6 +145,7 @@
                 btnSelector: '.view-btn',
                 title: 'Receipt Details',
                 modalSize: 'lg',
+                tableToRefresh: table,
             });
 
             

@@ -1,4 +1,4 @@
-<x-vehicle-layout title="Asset Management System Settings">
+<x-asset-layout title="Asset Management System Settings">
     @push('style')
         <style>
             .nav-tabs .settings-tab {
@@ -133,22 +133,22 @@
                             <button class="nav-link settings-tab active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab" aria-controls="general" aria-selected="true">
                                 <i class="bi bi-gear me-2"></i> General Settings
                             </button>
-                            <button class="nav-link settings-tab" id="vehicle_type-tab" data-bs-toggle="tab" data-bs-target="#vehicle_type" type="button" role="tab" aria-controls="vehicle_type" aria-selected="false">
+                            <button class="nav-link settings-tab" id="asset_type-tab" data-bs-toggle="tab" data-bs-target="#asset_type" type="button" role="tab" aria-controls="asset_type" aria-selected="false">
                                 <i class="bi bi-signpost me-2"></i> Asset Type
                             </button>
-                            <button class="nav-link settings-tab" id="vehicle_functional_status-tab" data-bs-toggle="tab" data-bs-target="#vehicle_functional_status" type="button" role="tab" aria-controls="vehicle_functional_status" aria-selected="false">
+                            <button class="nav-link settings-tab" id="asset_functional_status-tab" data-bs-toggle="tab" data-bs-target="#asset_functional_status" type="button" role="tab" aria-controls="asset_functional_status" aria-selected="false">
                                 <i class="bi bi-signpost me-2"></i> Asset Functional Status
                             </button>
-                            <button class="nav-link settings-tab" id="vehicle_color-tab" data-bs-toggle="tab" data-bs-target="#vehicle_color" type="button" role="tab" aria-controls="vehicle_color" aria-selected="false">
+                            <button class="nav-link settings-tab" id="asset_color-tab" data-bs-toggle="tab" data-bs-target="#asset_color" type="button" role="tab" aria-controls="asset_color" aria-selected="false">
                                 <i class="bi bi-building me-2"></i> Asset Color
                             </button>
                             <button class="nav-link settings-tab" id="fuel_type-tab" data-bs-toggle="tab" data-bs-target="#fuel_type" type="button" role="tab" aria-controls="fuel_type" aria-selected="false">
                                 <i class="bi bi-exclamation-triangle me-2"></i> Fuel Type
                             </button>
-                            <button class="nav-link settings-tab" id="vehicle_registration_status-tab" data-bs-toggle="tab" data-bs-target="#vehicle_registration_status" type="button" role="tab" aria-controls="vehicle_registration_status" aria-selected="false">
+                            <button class="nav-link settings-tab" id="asset_registration_status-tab" data-bs-toggle="tab" data-bs-target="#asset_registration_status" type="button" role="tab" aria-controls="asset_registration_status" aria-selected="false">
                                 <i class="bi bi-list-check me-2"></i> Asset Registration Status
                             </button>
-                            <button class="nav-link settings-tab" id="vehicle_brand-tab" data-bs-toggle="tab" data-bs-target="#vehicle_brand" type="button" role="tab" aria-controls="vehicle_brand" aria-selected="false">
+                            <button class="nav-link settings-tab" id="asset_brand-tab" data-bs-toggle="tab" data-bs-target="#asset_brand" type="button" role="tab" aria-controls="asset_brand" aria-selected="false">
                                 <i class="bi bi-list-check me-2"></i> Asset Brand
                             </button>
                         </div>
@@ -156,7 +156,7 @@
                 </div>
                 <div class="card mt-3">
                     <div class="card-body">
-                        <form action="{{ route('admin.apps.vehicles.settings.init') }}" method="POST" onsubmit="return confirm('This will reset all settings to default values. Continue?');">
+                        <form action="{{ route('admin.apps.assets.settings.init') }}" method="POST" onsubmit="return confirm('This will reset all settings to default values. Continue?');">
                             @csrf
                             <button type="submit" class="btn btn-warning w-100">
                                 <i class="bi bi-arrow-clockwise me-1"></i> Reset to Defaults
@@ -168,7 +168,7 @@
 
             <!-- Main Content - Tab Contents -->
             <div class="col-md-9">
-                <form id="settingsForm" action="{{ route('admin.apps.vehicles.settings.update') }}" method="POST" class="needs-validation" novalidate>
+                <form id="settingsForm" action="{{ route('admin.apps.assets.settings.update') }}" method="POST" class="needs-validation" novalidate>
                     @csrf
                     <div class="tab-content">
                         <!-- General Settings -->
@@ -180,7 +180,7 @@
                                 <div class="card-body">
                                     <div class="mb-4">
                                         <label for="appname" class="form-label">App Name</label>
-                                        <input type="text0" id="appname" name="settings[appname][value]" value="{{ old('settings[appname][value]', setting('appName', 'vehicle')) }}" class="form-control @error('appname') is-invalid @enderror"" placeholder="App Name" required>
+                                        <input type="text0" id="appname" name="settings[appname][value]" value="{{ old('settings[appname][value]', setting('appName', 'asset')) }}" class="form-control @error('appname') is-invalid @enderror"" placeholder="App Name" required>
                                         @error('settings.appname.value')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -190,17 +190,17 @@
                         </div>
 
                         <!-- Type Category -->
-                        <div class="tab-pane fade" id="vehicle_type" role="tabpanel" aria-labelledby="vehicle_type-tab">
+                        <div class="tab-pane fade" id="asset_type" role="tabpanel" aria-labelledby="asset_type-tab">
                             <div class="card">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="card-title mb-0">Asset Type</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="category-container" data-category-key="vehicle_type">
+                                    <div class="category-container" data-category-key="asset_type">
                                         <p class="text-muted mb-3">Define the Asset types in the system.</p>
                                         
-                                        <input type="hidden" name="categories[vehicle_type][description]" value="Type">
-                                        <input type="hidden" name="categories[vehicle_type][type]" value="category">
+                                        <input type="hidden" name="categories[asset_type][description]" value="Type">
+                                        <input type="hidden" name="categories[asset_type][type]" value="category">
                                         
                                         <div class="mb-3">
                                             <div class="table-responsive">
@@ -212,11 +212,11 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach(category('vehicle_type', 'vehicle', []) as $index => $item)
+                                                        @foreach(category('asset_type', 'asset', []) as $index => $item)
                                                             <tr>
                                                                 <td>
                                                                     <input type="text" class="form-control" 
-                                                                        name="categories[vehicle_type][value][]" 
+                                                                        name="categories[asset_type][value][]" 
                                                                         value="{{ $item }}" required>
                                                                 </td>
                                                                 <td class="text-center">
@@ -228,7 +228,7 @@
                                                         @endforeach
                                                         <tr class="new-item-row">
                                                             <td>
-                                                                <input type="text" class="form-control new-item" placeholder="Add new vehicle type...">
+                                                                <input type="text" class="form-control new-item" placeholder="Add new asset type...">
                                                             </td>
                                                             <td class="text-center">
                                                                 <button type="button" class="btn btn-sm btn-success add-item">
@@ -245,17 +245,17 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade" id="vehicle_functional_status" role="tabpanel" aria-labelledby="vehicle_functional_status-tab">
+                        <div class="tab-pane fade" id="asset_functional_status" role="tabpanel" aria-labelledby="asset_functional_status-tab">
                             <div class="card">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="card-title mb-0">Asset Functional Status</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="category-container" data-category-key="vehicle_functional_status">
-                                        <p class="text-muted mb-3">Define types of vehicle functional status in the system.</p>
+                                    <div class="category-container" data-category-key="asset_functional_status">
+                                        <p class="text-muted mb-3">Define types of asset functional status in the system.</p>
                                         
-                                        <input type="hidden" name="categories[vehicle_functional_status][description]" value="Type">
-                                        <input type="hidden" name="categories[vehicle_functional_status][type]" value="category">
+                                        <input type="hidden" name="categories[asset_functional_status][description]" value="Type">
+                                        <input type="hidden" name="categories[asset_functional_status][type]" value="category">
                                         
                                         <div class="mb-3">
                                             <div class="table-responsive">
@@ -267,11 +267,11 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach(category('vehicle_functional_status', 'vehicle', []) as $index => $item)
+                                                        @foreach(category('asset_functional_status', 'asset', []) as $index => $item)
                                                             <tr>
                                                                 <td>
                                                                     <input type="text" class="form-control" 
-                                                                        name="categories[vehicle_functional_status][value][]" 
+                                                                        name="categories[asset_functional_status][value][]" 
                                                                         value="{{ $item }}" required>
                                                                 </td>
                                                                 <td class="text-center">
@@ -301,17 +301,17 @@
                         </div>
 
                         <!-- Infrastructure Type Category -->
-                        <div class="tab-pane fade" id="vehicle_color" role="tabpanel" aria-labelledby="vehicle_color-tab">
+                        <div class="tab-pane fade" id="asset_color" role="tabpanel" aria-labelledby="asset_color-tab">
                             <div class="card">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="card-title mb-0">Asset Color</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="category-container" data-category-key="vehicle_color">
+                                    <div class="category-container" data-category-key="asset_color">
                                         <p class="text-muted mb-3">Define the Asset Color in the system.</p>
                                         
-                                        <input type="hidden" name="categories[vehicle_color][description]" value="Types of Infrastructures">
-                                        <input type="hidden" name="categories[vehicle_color][type]" value="category">
+                                        <input type="hidden" name="categories[asset_color][description]" value="Types of Infrastructures">
+                                        <input type="hidden" name="categories[asset_color][type]" value="category">
                                         
                                         <div class="mb-3">
                                             <div class="table-responsive">
@@ -323,11 +323,11 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach(category('vehicle_color', 'vehicle', []) as $index => $item)
+                                                        @foreach(category('asset_color', 'asset', []) as $index => $item)
                                                             <tr>
                                                                 <td>
                                                                     <input type="text" class="form-control" 
-                                                                        name="categories[vehicle_color][value][]" 
+                                                                        name="categories[asset_color][value][]" 
                                                                         value="{{ $item }}" required>
                                                                 </td>
                                                                 <td class="text-center">
@@ -379,7 +379,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach(category('fuel_type', 'vehicle', []) as $index => $item)
+                                                        @foreach(category('fuel_type', 'asset', []) as $index => $item)
                                                             <tr>
                                                                 <td>
                                                                     <input type="text" class="form-control" 
@@ -395,7 +395,7 @@
                                                         @endforeach
                                                         <tr class="new-item-row">
                                                             <td>
-                                                                <input type="text" class="form-control new-item" placeholder="Add new vehicle fuel...">
+                                                                <input type="text" class="form-control new-item" placeholder="Add new asset fuel...">
                                                             </td>
                                                             <td class="text-center">
                                                                 <button type="button" class="btn btn-sm btn-success add-item">
@@ -413,17 +413,17 @@
                         </div>
 
                         <!-- Asset Registration Status Category -->
-                        <div class="tab-pane fade" id="vehicle_registration_status" role="tabpanel" aria-labelledby="vehicle_registration_status-tab">
+                        <div class="tab-pane fade" id="asset_registration_status" role="tabpanel" aria-labelledby="asset_registration_status-tab">
                             <div class="card">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="card-title mb-0">Asset Registration Status</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="category-container" data-category-key="vehicle_registration_status">
+                                    <div class="category-container" data-category-key="asset_registration_status">
                                         <p class="text-muted mb-3">Define the Asset Registration Statuss in the system.</p>
                                         
-                                        <input type="hidden" name="categories[vehicle_registration_status][description]" value="Types of Asset Registration Status">
-                                        <input type="hidden" name="categories[vehicle_registration_status][type]" value="category">
+                                        <input type="hidden" name="categories[asset_registration_status][description]" value="Types of Asset Registration Status">
+                                        <input type="hidden" name="categories[asset_registration_status][type]" value="category">
                                         
                                         <div class="mb-3">
                                             <div class="table-responsive">
@@ -435,11 +435,11 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach(category('vehicle_registration_status', 'vehicle', []) as $index => $item)
+                                                        @foreach(category('asset_registration_status', 'asset', []) as $index => $item)
                                                             <tr>
                                                                 <td>
                                                                     <input type="text" class="form-control" 
-                                                                        name="categories[vehicle_registration_status][value][]" 
+                                                                        name="categories[asset_registration_status][value][]" 
                                                                         value="{{ $item }}" required>
                                                                 </td>
                                                                 <td class="text-center">
@@ -468,17 +468,17 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade" id="vehicle_brand" role="tabpanel" aria-labelledby="vehicle_brand-tab">
+                        <div class="tab-pane fade" id="asset_brand" role="tabpanel" aria-labelledby="asset_brand-tab">
                             <div class="card">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="card-title mb-0">Asset Brands</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="category-container" data-category-key="vehicle_brand">
+                                    <div class="category-container" data-category-key="asset_brand">
                                         <p class="text-muted mb-3">Define the Asset brands in the system.</p>
                                         
-                                        <input type="hidden" name="categories[vehicle_brand][description]" value="List of Manufacturer">
-                                        <input type="hidden" name="categories[vehicle_brand][type]" value="category">
+                                        <input type="hidden" name="categories[asset_brand][description]" value="List of Manufacturer">
+                                        <input type="hidden" name="categories[asset_brand][type]" value="category">
                                         
                                         <div class="mb-3">
                                             <div class="table-responsive">
@@ -490,11 +490,11 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach(category('vehicle_brand', 'vehicle', []) as $index => $item)
+                                                        @foreach(category('asset_brand', 'asset', []) as $index => $item)
                                                             <tr>
                                                                 <td>
                                                                     <input type="text" class="form-control" 
-                                                                        name="categories[vehicle_brand][value][]" 
+                                                                        name="categories[asset_brand][value][]" 
                                                                         value="{{ $item }}" required>
                                                                 </td>
                                                                 <td class="text-center">
@@ -506,7 +506,7 @@
                                                         @endforeach
                                                         <tr class="new-item-row">
                                                             <td>
-                                                                <input type="text" class="form-control new-item" placeholder="Add new vehicle brand...">
+                                                                <input type="text" class="form-control new-item" placeholder="Add new asset brand...">
                                                             </td>
                                                             <td class="text-center">
                                                                 <button type="button" class="btn btn-sm btn-success add-item">
@@ -632,4 +632,4 @@
         });
     </script>
     @endpush
-</x-vehicle-layout>
+</x-asset-layout>

@@ -255,6 +255,7 @@
                 , btnSelector: '.view-btn'
                 , title: 'Registrations Details'
                 , modalSize: 'lg'
+                , tableToRefresh: table
             , });
 
             pushStateModal({

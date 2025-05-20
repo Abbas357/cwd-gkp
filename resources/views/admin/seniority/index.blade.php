@@ -199,6 +199,7 @@
                 btnSelector: '.view-btn',
                 title: 'Seniority Details',
                 modalSize: 'lg',
+                tableToRefresh: table,
             });
             
             if (new URLSearchParams(window.location.search).get("create") === "true") {

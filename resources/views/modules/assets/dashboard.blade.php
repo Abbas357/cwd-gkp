@@ -1,4 +1,4 @@
-<x-vehicle-layout title="Asset Dashboard">
+<x-asset-layout title="Asset Dashboard">
     @push('style')
     <link href="{{ asset('admin/plugins/apexchart/apexcharts.min.css') }}" rel="stylesheet">
     <style>
@@ -278,7 +278,7 @@
                         <div class="activity-timeline">
                             @foreach($recentAllotments as $allotment)
                             <div class="timeline-item">
-                                <h6 class="mb-1">{{ $allotment->vehicle->brand }} {{ $allotment->vehicle->model }}</h6>
+                                <h6 class="mb-1">{{ $allotment->asset->brand }} {{ $allotment->asset->model }}</h6>
                                 <p class="mb-0 small">
                                     @if($allotment->type === 'Pool')
                                         @if($allotment->office_id)
@@ -413,4 +413,4 @@
         });
     </script>
     @endpush
-</x-vehicle-layout>
+</x-asset-layout>

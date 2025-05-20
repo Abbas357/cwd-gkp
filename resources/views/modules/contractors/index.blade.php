@@ -158,32 +158,35 @@
             , });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.apps.contractors.detail', ':id') }}"
-                , btnSelector: '.view-btn'
-                , title: 'Contractor Details'
-                , modalSize: 'lg'
-                , 
+                fetchUrl: "{{ route('admin.apps.contractors.detail', ':id') }}",
+                btnSelector: '.view-btn', 
+                title: 'Contractor Details',
+                modalSize: 'lg',
+                tableToRefresh: table,
             });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.apps.contractors.hr.detail', ':id') }}"
-                , btnSelector: '.hr-btn'
-                , title: 'Contractor Human Resource'
-                , modalSize: 'xl'
+                fetchUrl: "{{ route('admin.apps.contractors.hr.detail', ':id') }}",
+                btnSelector: '.hr-btn',
+                title: 'Contractor Human Resource',
+                modalSize: 'xl',
+                tableToRefresh: table,
             });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.apps.contractors.machinery.detail', ':id') }}"
-                , btnSelector: '.machinery-btn'
-                , title: 'Contractor Machinery'
-                , modalSize: 'xl'
+                fetchUrl: "{{ route('admin.apps.contractors.machinery.detail', ':id') }}",
+                btnSelector: '.machinery-btn',
+                title: 'Contractor Machinery',
+                modalSize: 'xl',
+                tableToRefresh: table,
             });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.apps.contractors.experience.detail', ':id') }}"
-                , btnSelector: '.experience-btn'
-                , title: 'Contractor Work Experience'
-                , modalSize: 'xl'
+                fetchUrl: "{{ route('admin.apps.contractors.experience.detail', ':id') }}",
+                btnSelector: '.experience-btn',
+                title: 'Contractor Work Experience',
+                modalSize: 'xl',
+                tableToRefresh: table,
             });
 
         });

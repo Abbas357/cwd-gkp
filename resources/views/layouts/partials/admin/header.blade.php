@@ -30,7 +30,7 @@
             document.documentElement.setAttribute('data-bs-theme', localStorage.getItem('theme'));
         }
         if(localStorage.getItem('sidebar-toggled') === 'true') {
-            document.body.classList.add('toggled');
+            document.body?.classList.add('toggled');
         }
     </script>
     @stack('style')

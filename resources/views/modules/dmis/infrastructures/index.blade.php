@@ -161,6 +161,7 @@
                 btnSelector: '.view-btn',
                 title: 'infrastructure Details',
                 modalSize: 'lg',
+                tableToRefresh: table,
             });
 
             if (new URLSearchParams(window.location.search).get("create") === "true") {

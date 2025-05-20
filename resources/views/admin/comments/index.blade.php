@@ -177,6 +177,7 @@
                 btnSelector: '.view-btn',
                 title: 'Comment Details',
                 modalSize: 'lg',
+                tableToRefresh: table,
             });
 
             pushStateModal({

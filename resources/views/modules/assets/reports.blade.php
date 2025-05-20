@@ -1,4 +1,4 @@
-<x-vehicle-layout title="Asset Reports">
+<x-asset-layout title="Asset Reports">
     @push('style')
     <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
@@ -27,16 +27,16 @@
             border-bottom: 2px solid #e9ecef;
         }
         
-        .vehicle-details {
+        .asset-details {
             line-height: 1.7;
         }
         
-        .vehicle-details strong {
+        .asset-details strong {
             font-size: 1.05rem;
             color: #212529;
         }
         
-        .vehicle-details small {
+        .asset-details small {
             color: #6c757d;
             display: block;
             margin-top: 0.1rem;
@@ -270,12 +270,12 @@
                         </div>
 
                         <div class="col-md-3">
-                            <label class="form-label" for="vehicle_type">
+                            <label class="form-label" for="asset_type">
                                 Asset Type
                             </label>
-                            <select name="type" id="vehicle_type" class="form-select">
+                            <select name="type" id="asset_type" class="form-select">
                                 <option value="">All Types</option>
-                                @foreach($cat['vehicle_type'] ?? [] as $type)
+                                @foreach($cat['asset_type'] ?? [] as $type)
                                     <option value="{{ $type->id ?? '' }}" @selected(request('type') == ($type->id ?? ''))>
                                         {{ $type->name ?? 'Unknown Type' }}
                                     </option>
@@ -289,7 +289,7 @@
                             </label>
                             <select name="status" id="status" class="form-select">
                                 <option value="">All Status</option>
-                                @foreach($cat['vehicle_functional_status'] ?? [] as $status)
+                                @foreach($cat['asset_functional_status'] ?? [] as $status)
                                     <option value="{{ $status->id ?? '' }}" @selected(request('status') == ($status->id ?? ''))>
                                         {{ $status->name ?? 'Unknown Status' }}
                                     </option>
@@ -303,7 +303,7 @@
                             </label>
                             <select name="registration_status" id="registration_status" class="form-select">
                                 <option value="">All Registration Status</option>
-                                @foreach($cat['vehicle_registration_status'] ?? [] as $status)
+                                @foreach($cat['asset_registration_status'] ?? [] as $status)
                                     <option value="{{ $status->id ?? '' }}" @selected(request('registration_status') == ($status->id ?? ''))>
                                         {{ $status->name ?? 'Unknown Registration Status' }}
                                     </option>
@@ -312,10 +312,10 @@
                         </div>
 
                         <div class="col-md-3">
-                            <label class="form-label" for="vehicle_id">
+                            <label class="form-label" for="asset_id">
                                 Specific Asset
                             </label>
-                            <select name="vehicle_id" id="vehicle_id" class="form-select" data-placeholder="Select Asset">
+                            <select name="asset_id" id="asset_id" class="form-select" data-placeholder="Select Asset">
                                 <option value=""></option>
                                 @php
                                     $assets = [];
@@ -326,7 +326,7 @@
                                     }
                                 @endphp
                                 @foreach($assets as $Asset)
-                                    <option value="{{ $Asset->id ?? '' }}" @selected(($filters['vehicle_id'] ?? null) == ($Asset->id ?? ''))>
+                                    <option value="{{ $Asset->id ?? '' }}" @selected(($filters['asset_id'] ?? null) == ($Asset->id ?? ''))>
                                         {{ $Asset->type ?? 'Unknown Type' }} - {{ $Asset->model ?? 'Unknown Model' }}
                                     </option>
                                 @endforeach
@@ -340,7 +340,7 @@
                             </label>
                             <select name="color" id="color" class="form-select">
                                 <option value="">All Colors</option>
-                                @foreach($cat['vehicle_color'] ?? [] as $color)
+                                @foreach($cat['asset_color'] ?? [] as $color)
                                     <option value="{{ $color->name ?? '' }}" @selected(($filters['color'] ?? '') == ($color->name ?? ''))>
                                         {{ $color->name ?? 'Unknown Color' }}
                                     </option>
@@ -368,7 +368,7 @@
                             </label>
                             <select name="brand" id="brand" class="form-select">
                                 <option value="">All Brands</option>
-                                @foreach($cat['vehicle_brand'] ?? [] as $brand)
+                                @foreach($cat['asset_brand'] ?? [] as $brand)
                                     <option value="{{ $brand->id ?? '' }}" @selected(($filters['brand'] ?? '') == ($brand->id ?? ''))>
                                         {{ $brand->name ?? 'Unknown Brand' }}
                                     </option>
@@ -382,7 +382,7 @@
                                 <button type="submit" class="cw-btn">
                                     <i class="bi-filter me-2"></i> GENERATE REPORT
                                 </button>
-                                <a href="{{ route('admin.apps.vehicles.reports') }}" class="btn btn-sm px-3 border fs-6 py-1 btn-light">
+                                <a href="{{ route('admin.apps.assets.reports') }}" class="btn btn-sm px-3 border fs-6 py-1 btn-light">
                                     <i class="bi-arrow-counterclockwise me-2"></i> RESET FILTERS
                                 </a>
                             </div>
@@ -393,7 +393,7 @@
                 <div class="table-container p-3">
                     <div class="d-flex justify-content-between align-items-center p-2 bg-light border-bottom">
                         <h5 class="m-0 fw-bold">Asset Allotment Results</h5>
-                        <button type="button" id="print-vehicle-details" class="no-print btn btn-primary btn-sm">
+                        <button type="button" id="print-asset-details" class="no-print btn btn-primary btn-sm">
                             <span class="d-flex align-items-center">
                                 <i class="bi-printer me-2"></i>
                                 Print Report
@@ -420,7 +420,7 @@
                         </div>
                     </div>
 
-                    <table class="table table-hover mb-0" id="vehicle-report">
+                    <table class="table table-hover mb-0" id="asset-report">
                         <thead>
                             <tr>
                                 <th class="bg-light">Asset Details</th>
@@ -440,17 +440,17 @@
                             @forelse($allotments ?? [] as $allotment)
                             <tr>
                                 <td>
-                                    <div class="vehicle-details">
-                                        <strong>{{ $allotment?->vehicle?->brand ?? 'Unknown Brand' }} {{ $allotment?->vehicle?->model ?? 'Unknown Model' }}</strong>
-                                        <small>Type: {{ $allotment?->vehicle?->type ?? 'Unspecified' }}</small>
-                                        <small>Color: {{ $allotment?->vehicle?->color ?? 'Unspecified' }}</small>
-                                        <small>Year: {{ $allotment?->vehicle?->model_year ?? 'Unspecified' }}</small>
+                                    <div class="asset-details">
+                                        <strong>{{ $allotment?->asset?->brand ?? 'Unknown Brand' }} {{ $allotment?->asset?->model ?? 'Unknown Model' }}</strong>
+                                        <small>Type: {{ $allotment?->asset?->type ?? 'Unspecified' }}</small>
+                                        <small>Color: {{ $allotment?->asset?->color ?? 'Unspecified' }}</small>
+                                        <small>Year: {{ $allotment?->asset?->model_year ?? 'Unspecified' }}</small>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="vehicle-details">
-                                        <strong>{{ $allotment?->vehicle?->registration_number ?? 'Unregistered' }}</strong>
-                                        <small>Chassis: {{ $allotment?->vehicle?->chassis_number ?? 'Not Available' }}</small>
+                                    <div class="asset-details">
+                                        <strong>{{ $allotment?->asset?->registration_number ?? 'Unregistered' }}</strong>
+                                        <small>Chassis: {{ $allotment?->asset?->chassis_number ?? 'Not Available' }}</small>
                                     </div>
                                 </td>
                                 <td>
@@ -461,7 +461,7 @@
                                         $allotmentType = $allotment->type;
                                     @endphp
                                     
-                                    <div class="vehicle-details">
+                                    <div class="asset-details">
                                         @if($isPersonal)
                                             <div class="d-flex align-items-center mb-1">
                                                 <span class="badge bg-primary me-2">Personal {{ $allotmentType }}</span>
@@ -487,7 +487,7 @@
                                 </td>
                                 <td>
                                     @php
-                                        $status = $allotment?->vehicle?->functional_status ?? 'Unknown';
+                                        $status = $allotment?->asset?->functional_status ?? 'Unknown';
                                         $statusClass = $status === 'Functional' ? 'success' : ($status === 'Non-Functional' ? 'danger' : 'secondary');
                                     @endphp
                                     <span class="status-badge bg-{{ $statusClass }} text-white">
@@ -533,8 +533,8 @@
                                     </span>
                                 </td>
                                 <td class="no-print">
-                                    @if(method_exists($allotment, 'hasMedia') && $allotment->hasMedia('vehicle_allotment_orders'))
-                                        <a href="{{ $allotment->getFirstMediaUrl('vehicle_allotment_orders') }}" 
+                                    @if(method_exists($allotment, 'hasMedia') && $allotment->hasMedia('asset_allotment_orders'))
+                                        <a href="{{ $allotment->getFirstMediaUrl('asset_allotment_orders') }}" 
                                         class="btn btn-sm btn-outline-primary" target="_blank">
                                             <i class="bi-file-earmark-text me-1"></i> View Order
                                         </a>
@@ -543,7 +543,7 @@
                                     @endif
                                 </td>
                                 <td class="no-print text-center">
-                                    <button type="button" class="btn btn-sm btn-light details-btn" data-id="{{ $allotment->vehicle_id }}">
+                                    <button type="button" class="btn btn-sm btn-light details-btn" data-id="{{ $allotment->asset_id }}">
                                         <i class="bi-eye me-1"></i>
                                     </button>
                                 </td>
@@ -551,8 +551,8 @@
                             @empty
                                 <tr>
                                     <td colspan="{{ request('show_history', false) ? 9 : 8 }}" class="empty-state">
-                                        <p>No vehicles found matching the criteria</p>
-                                        <a href="{{ route('admin.apps.vehicles.reports') }}" class="btn btn-sm btn-outline-primary mt-2">
+                                        <p>No assets found matching the criteria</p>
+                                        <a href="{{ route('admin.apps.assets.reports') }}" class="btn btn-sm btn-outline-primary mt-2">
                                             RESET FILTERS
                                         </a>
                                     </td>
@@ -589,7 +589,7 @@
     <script>
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.apps.vehicles.details', ':id') }}",
+                fetchUrl: "{{ route('admin.apps.assets.details', ':id') }}",
                 btnSelector: '.details-btn',
                 title: 'Asset Allotment Details',
                 modalSize: 'xl',
@@ -653,9 +653,9 @@
 
             function initSelect2Fields() {
                 initSelect2($('#load-users'), "Select User / Office", '{{ route("admin.apps.hr.users.api") }}');
-                initSelect2($('[name="vehicle_id"]'), "Select Asset", '{{ route("admin.apps.vehicles.search") }}');
+                initSelect2($('[name="asset_id"]'), "Select Asset", '{{ route("admin.apps.assets.search") }}');
                 
-                $('select:not(#load-users):not([name="vehicle_id"])').each(function() {
+                $('select:not(#load-users):not([name="asset_id"])').each(function() {
                     initSelect2($(this), $(this).find('option:first').text());
                 });
             }
@@ -710,7 +710,7 @@
             }
 
             function initExportButtons() {
-                $('#print-vehicle-details').on('click', handlePrintReport);
+                $('#print-asset-details').on('click', handlePrintReport);
                 addExcelExportButton();
             }
 
@@ -725,7 +725,7 @@
                 });
                 
                 setTimeout(() => {
-                    $("#vehicle-report").printThis({
+                    $("#asset-report").printThis({
                         pageTitle: "Asset Report - " + new Date().toLocaleDateString(),
                         importCSS: true,
                         importStyle: true,
@@ -745,7 +745,7 @@
             }
 
             function addExcelExportButton() {
-                const printButton = document.getElementById('print-vehicle-details');
+                const printButton = document.getElementById('print-asset-details');
                 if (printButton) {
                     const exportButton = document.createElement('button');
                     exportButton.type = 'button';
@@ -791,7 +791,7 @@
             }
 
             function extractTableData() {
-                const table = document.getElementById('vehicle-report');
+                const table = document.getElementById('asset-report');
                 const wsData = [];
                 
                 const headerRow = table.querySelector('thead tr');
@@ -882,4 +882,4 @@
             }
     </script>
     @endpush
-</x-vehicle-layout>
+</x-asset-layout>

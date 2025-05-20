@@ -184,14 +184,6 @@
                 }
             });
 
-            
-            pushStateModal({
-                fetchUrl: "{{ route('admin.apps.vehicles.detail', ':id') }}",
-                btnSelector: '.view-logs',
-                title: 'Vehicle Details',
-                modalSize: 'lg',
-            });
-
             $('#damages-datatable').colResizable({
                 liveDrag: true
                 , resizeMode: 'overflow'
@@ -206,6 +198,7 @@
                 btnSelector: '.view-btn',
                 title: 'Damage Details',
                 modalSize: 'lg',
+                tableToRefresh: table,
             });
 
             

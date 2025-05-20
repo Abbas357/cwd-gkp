@@ -7,14 +7,14 @@
         vertical-align: middle;
     }
 
-    .vehicle-info {
+    .asset-info {
         background: #fff;
         border-radius: 0.5rem;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 </style>
  
-<div class="row vehicle-details">
+<div class="row asset-details">
     <div class="col-md-12">
         <table class="table table-striped table-bordered" style="box-shadow: 0 0 15px #00000033">
             <tbody>
@@ -45,7 +45,7 @@
                                     <span class="badge bg-warning fs-6">Office Pool</span>
                                     <span class="badge bg-info fs-6">{{ $asset->allotment->office->name ?? 'No Office' }}</span>
                                 @elseif($asset->allotment->user_id)
-                                    {{-- Legacy data structure where pool vehicles had user_id --}}
+                                    {{-- Legacy data structure where pool assets had user_id --}}
                                     <span class="badge bg-warning fs-6">Office Pool</span>
                                     <span class="badge bg-info fs-6">{{ $asset->allotment->user->currentPosting?->office?->name ?? 'No Office' }}</span>
                                     <div class="mt-1 small text-muted">(Managed by: {{ $asset->allotment->user->name }})</div>
@@ -102,7 +102,7 @@
 </div>
 
 
-<div class="row allot-vehicle mt-4">
+<div class="row allot-asset mt-4">
     <div class="col-md-6 mb-3">
         <label for="type">Allotment Type</label>
         <select class="form-select" id="type" name="type" required>
@@ -112,7 +112,7 @@
             @endforeach
         </select>
     </div>
-    <input type="hidden" name="vehicle_id" value="{{ $asset->id }}">
+    <input type="hidden" name="asset_id" value="{{ $asset->id }}">
     <div class="col-md-6 mb-3">
         <label for="start_date">Allotment Date</label>
         <input type="date" class="form-control" id="start_date" placeholder="Start Date" name="start_date" value="{{ old('start_date') }}" required>

@@ -1,9 +1,9 @@
 <style>
-    .vehicle-details-container {
+    .asset-details-container {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
-    .vehicle-gallery {
+    .asset-gallery {
         display: flex;
         overflow-x: auto;
         gap: 10px;
@@ -98,7 +98,7 @@
         color: #2563eb;
     }
     
-    .vehicle-status {
+    .asset-status {
         padding: 4px 10px;
         border-radius: 4px;
         font-size: 0.85rem;
@@ -106,17 +106,17 @@
         display: inline-block;
     }
     
-    .vehicle-status.functional {
+    .asset-status.functional {
         background-color: #dcfce7;
         color: #166534;
     }
     
-    .vehicle-status.non-functional {
+    .asset-status.non-functional {
         background-color: #fee2e2;
         color: #b91c1c;
     }
     
-    .vehicle-status.under-maintenance {
+    .asset-status.under-maintenance {
         background-color: #fff7cd;
         color: #854d0e;
     }
@@ -206,26 +206,26 @@
     }
 
     @media print {
-        .vehicle-gallery {
+        .asset-gallery {
             display: none !important;
         }
     }
 </style>
 <!-- Print Button -->
 <div class="d-flex justify-content-end">
-    <button type="button" id="print-vehicle-details" class="btn btn-light btn-sm me-2 no-print">
+    <button type="button" id="print-asset-details" class="btn btn-light btn-sm me-2 no-print">
         <i class="bi-printer me-1"></i> Print Details
     </button>
 </div>
-<div class="vehicle-details-container">
+<div class="asset-details-container">
     <!-- Asset Gallery -->
-    <div class="vehicle-gallery no-print">
+    <div class="asset-gallery no-print">
         @php
             $galleryItems = [
-                ['collection' => 'vehicle_front_pictures', 'label' => 'Front View'],
-                ['collection' => 'vehicle_side_pictures', 'label' => 'Side View'],
-                ['collection' => 'vehicle_rear_pictures', 'label' => 'Rear View'],
-                ['collection' => 'vehicle_interior_pictures', 'label' => 'Interior View'],
+                ['collection' => 'asset_front_pictures', 'label' => 'Front View'],
+                ['collection' => 'asset_side_pictures', 'label' => 'Side View'],
+                ['collection' => 'asset_rear_pictures', 'label' => 'Rear View'],
+                ['collection' => 'asset_interior_pictures', 'label' => 'Interior View'],
             ];
             $hasImages = false;
         @endphp
@@ -244,7 +244,7 @@
             <div class="d-flex align-items-center justify-content-center w-100 border rounded py-4">
                 <div class="text-center">
                     <i class="bi-camera text-muted mb-2" style="font-size: 2rem;"></i>
-                    <p class="text-muted mb-0">No images available for this vehicle</p>
+                    <p class="text-muted mb-0">No images available for this asset</p>
                 </div>
             </div>
         @endif
@@ -292,7 +292,7 @@
             </div>
             <div class="info-item">
                 <span class="info-label">Status</span>
-                <span class="vehicle-status {{ strtolower($asset?->functional_status ?? 'unknown') === 'functional' ? 'functional' : (strtolower($asset?->functional_status ?? '') === 'non-functional' ? 'non-functional' : 'under-maintenance') }}">
+                <span class="asset-status {{ strtolower($asset?->functional_status ?? 'unknown') === 'functional' ? 'functional' : (strtolower($asset?->functional_status ?? '') === 'non-functional' ? 'non-functional' : 'under-maintenance') }}">
                     {{ $asset?->functional_status ?? 'Unknown' }}
                 </span>
             </div>
@@ -392,10 +392,10 @@
                 <span class="info-label">Duration</span>
                 <span class="info-value"> {{ formatDuration($currentAllotment?->start_date, now()) }}</span>
             </div>
-            @if($currentAllotment?->hasMedia('vehicle_allotment_orders'))
+            @if($currentAllotment?->hasMedia('asset_allotment_orders'))
             <div class="info-item">
                 <span class="info-label">Allotment Order</span>
-                <a href="{{ $currentAllotment?->getFirstMediaUrl('vehicle_allotment_orders') }}" target="_blank" class="btn btn-sm btn-outline-primary mt-1">
+                <a href="{{ $currentAllotment?->getFirstMediaUrl('asset_allotment_orders') }}" target="_blank" class="btn btn-sm btn-outline-primary mt-1">
                     <i class="bi-file-earmark-text me-1"></i> View Order
                 </a>
             </div>
@@ -487,7 +487,7 @@
                         <td>{{ $allotment?->end_date ? $allotment?->end_date->format('j M, Y') : 'Current' }}</td>
                         <td>{{ formatDuration($allotment?->start_date, $allotment?->end_date ?? now()) }}</td>
                         <td>
-                            <span class="vehicle-status {{ $allotment?->is_current ? 'functional' : 'non-functional' }}">
+                            <span class="asset-status {{ $allotment?->is_current ? 'functional' : 'non-functional' }}">
                                 {{ $allotment?->is_current ? 'Current' : 'Previous' }}
                             </span>
                         </td>
@@ -522,8 +522,8 @@
 
 <script>
     $(document).ready(function() {
-        $(document).on('click', '#print-vehicle-details', function() {
-            $(".vehicle-details-container").printThis({
+        $(document).on('click', '#print-asset-details', function() {
+            $(".asset-details-container").printThis({
                 pageTitle: "Asset details",
                 beforePrint() {
                     document.querySelector('.page-loader').classList.remove('hidden');

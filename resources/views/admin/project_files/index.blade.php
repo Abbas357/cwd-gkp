@@ -210,6 +210,7 @@
                 btnSelector: '.view-btn',
                 title: 'Download Details',
                 modalSize: 'lg',
+                tableToRefresh: table,
             });
             
         });

@@ -1,29 +1,29 @@
 <style>
-    .vehicle-info td, .vehicle-info th {
+    .asset-info td, .asset-info th {
         padding: .5rem !important;
     }
 
-    .vehicle-table {
+    .asset-table {
         width: 100%;
         border-collapse: separate;
         border-spacing: 0;
         margin-top: 20px;
     }
 
-    .vehicle-table th,
-    .vehicle-table td {
+    .asset-table th,
+    .asset-table td {
         padding: 16px !important;
         border: 1px solid #e5e7eb;
     }
 
-    .vehicle-table th {
+    .asset-table th {
         background-color: #f9fafb;
         color: #1e293b;
         font-weight: 600;
         text-align: left;
     }
 
-    .vehicle-table td {
+    .asset-table td {
         background-color: white;
     }
 
@@ -111,10 +111,10 @@
     }
 </style>
 
-<main id="vehicle-history">
+<main id="asset-history">
     <div class="d-flex justify-content-between align-items-center">
         <h3 class="m-0">{{ $asset->brand ?? 'Unknown Brand' }} ({{ $asset->model ?? 'Unknown Model' }})</h3>
-        <button type="button" id="print-vehicle-history" class="no-print btn btn-light me-2 m-2">
+        <button type="button" id="print-asset-history" class="no-print btn btn-light me-2 m-2">
             <span class="">
                 <i class="bi-print"></i>
                 Print
@@ -122,10 +122,10 @@
         </button>
     </div>
 
-    <div class="vehicle-history-header">
-        <div class="vehicle-info-card d-flex align-items-start g-2">
+    <div class="asset-history-header">
+        <div class="asset-info-card d-flex align-items-start g-2">
             <div class="table-responsive flex-grow-1" style="flex-basis: 50%;">
-                <table class="table vehicle-info table-striped table-bordered align-middle">
+                <table class="table asset-info table-striped table-bordered align-middle">
                     <tbody>
                         <tr>
                             <th>Reg. No:</th>
@@ -159,10 +159,10 @@
                 @php
                     $hasAnyImages = false;
                     $views = [
-                        ['collection' => 'vehicle_front_pictures', 'label' => 'Front View'],
-                        ['collection' => 'vehicle_side_pictures', 'label' => 'Side View'],
-                        ['collection' => 'vehicle_rear_pictures', 'label' => 'Rear View'],
-                        ['collection' => 'vehicle_interior_pictures', 'label' => 'Interior View'],
+                        ['collection' => 'asset_front_pictures', 'label' => 'Front View'],
+                        ['collection' => 'asset_side_pictures', 'label' => 'Side View'],
+                        ['collection' => 'asset_rear_pictures', 'label' => 'Rear View'],
+                        ['collection' => 'asset_interior_pictures', 'label' => 'Interior View'],
                     ];
                 @endphp
 
@@ -185,7 +185,7 @@
             </div>
         </div>
 
-        <table class="vehicle-table">
+        <table class="asset-table">
             <thead>
                 <tr>
                     <th>Assignment</th>
@@ -322,7 +322,7 @@
                 <tr>
                     <td colspan="5" class="text-center py-4">
                         <i class="bi-clock-history text-muted" style="font-size: 2rem;"></i>
-                        <p class="text-muted mt-2">No allotment history available for this vehicle</p>
+                        <p class="text-muted mt-2">No allotment history available for this asset</p>
                     </td>
                 </tr>
                 @endforelse
@@ -333,8 +333,8 @@
 
 <script src="{{ asset('admin/plugins/printThis/printThis.js') }}"></script>
 <script>
-    $('#print-vehicle-history').on('click', () => {
-        $("#vehicle-history").printThis({
+    $('#print-asset-history').on('click', () => {
+        $("#asset-history").printThis({
             pageTitle: "Asset History",
             beforePrint() {
                 document.querySelector('.page-loader').classList.remove('hidden');

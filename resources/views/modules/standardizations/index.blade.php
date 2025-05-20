@@ -230,13 +230,15 @@
                 btnSelector: '.view-btn',
                 title: 'Standardization Details',
                 modalSize: 'lg',
+                tableToRefresh: table,
             });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.apps.standardizations.product.detail', ':id') }}"
-                , btnSelector: '.product-btn'
-                , title: 'Products'
-                , modalSize: 'xl'
+                fetchUrl: "{{ route('admin.apps.standardizations.product.detail', ':id') }}", 
+                btnSelector: '.product-btn', 
+                title: 'Products', 
+                modalSize: 'xl', 
+                tableToRefresh: table
             });
             
         });
