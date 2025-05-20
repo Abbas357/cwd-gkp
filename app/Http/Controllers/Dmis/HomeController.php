@@ -216,16 +216,7 @@ class HomeController extends Controller
     {
         Setting::set('activity', 'Monsoon', $this->module);
         Setting::set('session', date('Y'), $this->module);
-
-        Setting::set('road_status', [
-            'Partially restored', 'Fully restored', 'Not restored'
-        ], $this->module, 'category', 'Types of Road Status');
-        Setting::set('infrastructure_type', [
-            'Road', 'Bridge', 'Culvert'
-        ], $this->module, 'category', 'Types of Infrastructures');
-        Setting::set('damage_status', [
-            'Partially Damaged', 'Fully Damaged'
-        ], $this->module, 'category', 'Types of Damage Status');
+        
         Setting::set('damage_nature', [
             'Culvert', 'Retaining Wall', 'Embankment Damages', 'Shoulders', 'WC',
             'Base Course', 'Sub Base', 'Culverts', 'Rigid Pavement', 'Kacha Road',

@@ -8,8 +8,8 @@
     }
 </style>
 @php
-    $canUpdate = auth()->user()->can('updateField', $tender);
-    $canUpload = auth()->user()->can('uploadFile', $tender);
+    $canUpdate = auth()->user()->can('updateField', $damage);
+    $canUpload = auth()->user()->can('uploadFile', $damage);
 @endphp
 <div class="row damage-details">
     <div class="col-md-12">

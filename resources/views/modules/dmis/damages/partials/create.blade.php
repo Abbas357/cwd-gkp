@@ -14,7 +14,7 @@
         <label for="type">Type</label>
         <select class="form-control" id="type" name="type" required>
             <option value="">Select Type</option>
-            @foreach(setting('infrastructure_type', 'dmis') as $type)
+            @foreach($cat['infrastructure_type'] as $type)
             <option value="{{ $type }}">{{ $type }}</option>
             @endforeach
         </select>
@@ -62,7 +62,7 @@
     <div class="col-md-6 mb-3">
         <label for="damage_nature">Damage Nature</label>
         <select class="form-control h-50" id="damage_nature" name="damage_nature[]" multiple>
-            @foreach(setting('damage_nature', 'dmis') as $nature)
+            @foreach(category('damage_nature', 'dmis') as $nature)
             <option value="{{ $nature }}">{{ $nature }}</option>
             @endforeach
         </select>
@@ -75,7 +75,7 @@
         <label for="damage_status">Damage Status</label>
         <select class="form-control" id="damage_status" name="damage_status" required>
             <option value="">Select Damage Status</option>
-            @foreach(setting('damage_status', 'dmis') as $damage_status)
+            @foreach($cat['damage_status'] as $damage_status)
             <option value="{{ $damage_status }}">{{ $damage_status }}</option>
             @endforeach
         </select>
@@ -88,7 +88,7 @@
         <label for="road_status">Road Status</label>
         <select class="form-control" id="road_status" name="road_status" required>
             <option value="">Select Road Status</option>
-            @foreach(setting('road_status', 'dmis') as $road_status)
+            @foreach($cat['road_status'] as $road_status)
             <option value="{{ $road_status }}">{{ $road_status }}</option>
             @endforeach
         </select>
@@ -223,6 +223,13 @@
             dropdownParent: $('#load-infrastructures').closest('.modal')
         }
     );
+    
+    $('#district_id').select2({
+        theme: "bootstrap-5" 
+        , width: '100%'
+        , placeholder: 'Select District'
+        , dropdownParent: $('#district_id').closest('.modal')
+    });
 
     $('#damage_nature').select2({
         theme: "bootstrap-5" 

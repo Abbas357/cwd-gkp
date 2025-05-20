@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Dmis\DamageController;
-use App\Http\Controllers\Dmis\InfrastructureController;
 use App\Http\Controllers\Dmis\HomeController;
+use App\Http\Controllers\Dmis\DamageController;
 use App\Http\Controllers\Dmis\ReportController;
+use App\Http\Controllers\dmis\DamageLogController;
+use App\Http\Controllers\Dmis\InfrastructureController;
 
 Route::prefix('dmis')->as('dmis.')->group(function () {
 
@@ -35,6 +36,7 @@ Route::prefix('dmis')->as('dmis.')->group(function () {
         Route::get('/get/{damage}', [DamageController::class, 'showDetail'])->name('detail')->can('view', 'damage');
         Route::patch('/update/field/{damage}', [DamageController::class, 'updateField'])->name('updateField')->can('updateField', 'damage');
         Route::delete('/{damage}', [DamageController::class, 'destroy'])->name('destroy')->can('delete', 'damage');
+        Route::get('/{damage}/logs', [DamageLogController::class, 'getLogs'])->name('logs');
     });
 
     Route::prefix('reports')->as('reports.')->group(function () { 

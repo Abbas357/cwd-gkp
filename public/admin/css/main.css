@@ -1480,7 +1480,6 @@ form select.error, form textarea.error, form input.error, form input.error:focus
     outline: 2px solid transparent;
     border-radius: 5px;
     box-shadow: 0 0 5px 10px #00000005;
-    margin-top: 7px;
 }
 
 #cw-wizard input:focus,
@@ -1488,6 +1487,14 @@ form select.error, form textarea.error, form input.error, form input.error:focus
 #cw-wizard textarea:focus {
     outline: 2px solid #2e9df7;
     box-shadow: 0 0 5px 10px #0099ff1c;
+}
+
+.select2-search__field {
+    padding: 0 !important;
+    border: none !important;
+    outline: none !important;
+    border-radius: none !important;
+    box-shadow: none !important;
 }
 
 .datatable-loading-container {

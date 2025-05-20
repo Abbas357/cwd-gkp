@@ -29,7 +29,6 @@ return new class extends Migration
             $table->decimal('approximate_rehabilitation_cost')->nullable();
             $table->enum('road_status', ['Partially restored', 'Fully restored', 'Not restored'])->default('Partially restored');
             $table->text('remarks')->nullable();
-            $table->unsignedBigInteger('district_id')->nullable();
             $table->unsignedBigInteger('posting_id')->nullable();
             $table->timestamps();
         });
@@ -37,16 +36,11 @@ return new class extends Migration
         Schema::create('damage_logs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('damage_id')->nullable();
-            $table->decimal('damage_east_start', 8, 6)->nullable();
-            $table->decimal('damage_north_start', 8, 6)->nullable();
-            $table->decimal('damage_east_end', 8, 6)->nullable();
-            $table->decimal('damage_north_end', 8, 6)->nullable();
+            $table->string('damaged_length')->nullable();
             $table->string('damage_status')->nullable();
             $table->string('damage_nature')->nullable();
             $table->decimal('approximate_restoration_cost')->nullable();
             $table->decimal('approximate_rehabilitation_cost')->nullable();
-            $table->string('road_status');
-            $table->text('remarks')->nullable();
             $table->timestamps();
         });
     }

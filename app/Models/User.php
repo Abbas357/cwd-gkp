@@ -504,7 +504,7 @@ class User extends Authenticatable implements HasMedia
             return collect();
         }
 
-        if ($this->currentOffice->type === 'Authority') {
+        if (in_array($this->currentOffice->type, ['Secretariat', 'Provincial', 'Authority', 'Project'])) {
             return District::all();
         }
 

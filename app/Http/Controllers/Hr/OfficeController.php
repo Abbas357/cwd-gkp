@@ -81,7 +81,8 @@ class OfficeController extends Controller
     public function create()
     {
         $offices = Office::where('status', 'Active')->get();
-        $districts = District::whereDoesntHave('office')->get();
+        // $districts = District::whereDoesntHave('office')->get();
+        $districts = District::all();
         $officeTypes = category('office_type', 'hr');
         $html =  view('modules.hr.offices.partials.create', compact('offices', 'districts', 'officeTypes'))->render();
 

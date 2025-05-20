@@ -18,19 +18,23 @@ class AuthenticatedSessionController extends Controller
 
     public function store(LoginRequest $request): RedirectResponse
     {
+        $login = $request->input('email');
+        $password = $request->input('password');
         $remember = $request->filled('remember');
-    
-        if (Auth::attempt($request->only('email', 'password'), $remember)) {
+
+        $fieldType = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        if (Auth::attempt([$fieldType => $login, 'password' => $password], $remember)) {
             $request->session()->regenerate();
-    
+
             return redirect()->intended(route('admin.apps', absolute: false));
         }
-    
+
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
     }
-    
+        
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();

@@ -52,27 +52,22 @@ class Damage extends Model implements HasMedia
                     ->where('session', '=', setting('session', 'dmis'));
         });
     }
-
-    public function district()
-    {
-        return $this->belongsTo(District::class);
-    }
-
+    
     public function infrastructure()
     {
         return $this->belongsTo(Infrastructure::class);
     }
-
+    
     public function posting()
     {
         return $this->belongsTo(Posting::class);
     }
-
-    public function damageLogs()
+    
+    public function logs()
     {
         return $this->hasMany(DamageLog::class, 'damage_id')->orderByDesc('created_at');
     }
-
+    
     public function user()
     {
         return $this->hasOneThrough(
@@ -84,7 +79,7 @@ class Damage extends Model implements HasMedia
             'user_id' // Local key on Posting table
         );
     }
-
+    
     public function office()
     {
         return $this->hasOneThrough(
@@ -96,7 +91,17 @@ class Damage extends Model implements HasMedia
             'office_id' // Local key on Posting table
         );
     }
+    
+    public function district()
+    {
+        return $this->belongsTo(District::class);
+    }
 
+    public function getDamagedDistrictAttribute()
+    {
+        return $this->district ?? ($this->office?->district ?? 'No District');
+    }
+    
     public function scopeByOfficer($query, $userId)
     {
         return $query->whereHas('posting', function($q) use ($userId) {

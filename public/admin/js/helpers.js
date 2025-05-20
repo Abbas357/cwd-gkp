@@ -1535,10 +1535,6 @@ function select2Ajax(selector, url, options = {}) {
     };
     
     const select2Instance = $select.select2(config);
-    
-    select2Instance.on('select2:open', function() {
-        $('.select2-search__field').attr('placeholder', 'Search...');
-    });
         
     if (options.onSelect) {
         select2Instance.on('select2:select', options.onSelect);

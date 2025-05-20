@@ -303,7 +303,7 @@
             )
             <a href="{{ route('admin.home') }}" class="app-tile accent-purple">
                 <i class="bi-globe" style="color: #8d0fe0"></i>
-                <p>Website</p>
+                <p>Web Portal</p>
             </a>
             @endif
 

@@ -33,19 +33,19 @@ class DamageController extends Controller
                     return view('modules.dmis.damages.partials.buttons', compact('row'))->render();
                 })
                 ->addColumn('name', function ($row) {
-                    return $row->infrastructure?->name;
+                    return $row?->infrastructure?->name ?? 'No Infrastructure';
                 })
                 ->addColumn('office', function ($row) {
-                    return $row->posting->office->name ?? '-';
+                    return $row?->posting?->office?->name ?? 'No Office';
                 })
                 ->addColumn('district', function ($row) {
-                    return $row->district->name ?? '-';
+                    return $row->damagedDistrict->name;
                 })
                 ->editColumn('report_date', function ($row) {
                     return $row->report_date->format('j, F Y');
                 })
                 ->editColumn('damage_nature', function ($row) {
-                    return implode(', ', json_decode($row->damage_nature)) ?? '-';
+                    return implode(', ', json_decode($row->damage_nature)) ?? 'No Damage Nature';
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');
@@ -74,6 +74,9 @@ class DamageController extends Controller
             'districts' => request()->user()->districts()->count() > 0
             ? request()->user()->districts()
             : \App\Models\District::all(),
+            'infrastructure_type' => ['Road', 'Bridge', 'Culvert'],
+            'road_status' => ['Partially restored', 'Fully restored', 'Not restored'],
+            'damage_status' => ['Partially Damaged', 'Fully Damaged'],
         ];
 
         $html =  view('modules.dmis.damages.partials.create', compact('cat'))->render();

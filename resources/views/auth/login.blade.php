@@ -50,7 +50,7 @@
             
                                 <div class="col-12">
                                     <label for="email" class="form-label text-secondary">Email</label>
-                                    <input type="email" class="form-control shadow-sm" id="email" name="email" placeholder="Email" value="{{ old('email') }}" required autofocus autocomplete="email">
+                                    <input type="text" class="form-control shadow-sm" id="email" name="email" placeholder="Email" value="{{ old('email') }}" required autofocus autocomplete="email">
                                     @foreach($errors->get('email') as $error)
                                         <span class="text-danger small"> {{ $error }}</span>
                                     @endforeach
