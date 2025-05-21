@@ -760,7 +760,7 @@ input[type=email]::placeholder {
   }
   
   .zoomin .modal-dialog {
-    animation: zoomIn 1s cubic-bezier(0.455, 0.03, 0.515, 0.955) forwards;
+    animation: zoomIn 1s cubic-bezier(0.785, 0.135, 0.15, 0.86) forwards;
   }
   
   @keyframes zoomIn {
@@ -773,7 +773,7 @@ input[type=email]::placeholder {
       opacity: .5;
     }
     100% {
-      transform: scale(1);
+      transform: scale(.97);
       opacity: 1;
     }
   }
