@@ -235,7 +235,7 @@
         theme: "bootstrap-5" 
         , width: '100%'
         , placeholder: 'Select Featured On'
-        , closeOnSelect: true
+        , closeOnSelect: false
         , dropdownParent: $('#damage_nature').closest('.modal')
     , });
 

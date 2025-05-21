@@ -311,6 +311,23 @@ class HomeController extends Controller
         ]);
     }
 
+    public function announcement(Request $request) {
+    
+        $announcement = News::where('category', 'Announcement')
+            ->orderBy('created_at', 'desc')
+            ->first();
+    
+        $announcementData = $announcement ? [
+            'id' => $announcement->id,
+            'title' => $announcement->title,
+            'slug' => $announcement->slug,
+            'description' => $announcement->content,
+            'image' => $announcement->getFirstMediaUrl('news_attachments') ?: asset('admin/images/no-image.jpg'),
+        ] : null;
+        
+        return response()->json($announcementData);
+    }
+
     public function allNotifications(Request $request)
     {
         $validated = $request->validate([

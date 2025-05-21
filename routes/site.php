@@ -224,6 +224,10 @@ Route::prefix('notifications')->as('notifications.')->group(function () {
     Route::get('/', [HomeController::class, 'notifications'])->name('get');
 });
 
+Route::prefix('announcement')->as('announcement.')->group(function () {
+    Route::get('/', [HomeController::class, 'announcement'])->name('get');
+});
+
 Route::prefix('comments')->as('comments.')->group(function () {
     Route::post('/{type}/{id}', [CommentController::class, 'store'])->name('store');
 });

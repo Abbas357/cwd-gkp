@@ -746,3 +746,22 @@ input[type=email]::placeholder {
 .owl-nav .bi::before {
     font-weight: bold !important;
 }
+
+.zoomin .modal-dialog {
+  animation: zoomIn 1s ease-out;
+}
+
+@keyframes zoomIn {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: .5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

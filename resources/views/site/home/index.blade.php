@@ -1,7 +1,7 @@
 <x-main-layout title="{{ $title }}">
     @push('style')
     <link href="{{ asset('site/lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('site/css/dashboard.min.css') }}?cw=47" rel="stylesheet">
+    <link href="{{ asset('site/css/dashboard.min.css') }}?cw=48" rel="stylesheet">
     <style>
         
     </style>
@@ -145,6 +145,10 @@
                 .then(response => response.text())
                 .then(html => {
                     element.innerHTML = html;
+                    const carouselElement = document.getElementById('homePageSlider');
+                    if (carouselElement) {
+                        new bootstrap.Carousel(carouselElement);
+                    }
                 })
                 .catch(error => {
                     console.error('Error loading slider:', error);

@@ -1,6 +1,5 @@
 <div class="carousel-header">
     <div id="homePageSlider" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
-        
         <ol class="carousel-indicators">
             @foreach($slides as $index => $slide)
                 <li data-bs-target="#homePageSlider" data-bs-slide-to="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }}">{{ $index + 1 }}</li>
@@ -48,32 +47,3 @@
         </button>
     </div>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const carousel = document.getElementById('homePageSlider');
-    if (carousel) {
-        carousel.addEventListener('slide.bs.carousel', function() {
-            const titles = document.querySelectorAll('.carousel-item:not(.active) .carousel-caption h3');
-            const buttons = document.querySelectorAll('.carousel-item:not(.active) .carousel-caption .btn');
-            
-            titles.forEach(title => {
-                title.style.opacity = '0';
-                title.style.transform = 'translateX(-50px)';
-            });
-            
-            buttons.forEach(button => {
-                button.style.opacity = '0';
-                button.style.transform = 'translateX(-50px)';
-            });
-        });
-        
-        const indicators = document.querySelectorAll('.carousel-indicators [data-bs-slide-to]');
-        indicators.forEach((indicator, index) => {
-            if (indicator.innerText === '') {
-                indicator.innerText = index + 1;
-            }
-        });
-    }
-});
-</script>
