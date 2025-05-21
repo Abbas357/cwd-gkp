@@ -551,7 +551,7 @@ function loadAnnouncement() {
                 
                 announcementContainer.innerHTML = `
                     <div id="announcement-modal" class="modal zoomin" tabindex="-1" role="dialog">
-                        <div class="modal-dialog modal-dialog-centered" role="document"  style="width: 80vw">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content p-0 m-0 border border-2 border-warning shadow-lg">
                                 <div class="modal-header bg-warning">
                                     <h5 class="modal-title"><i class="bi-megaphone"></i> &nbsp; ${announcement.title}</h5>

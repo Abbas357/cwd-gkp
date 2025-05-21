@@ -20,7 +20,7 @@
     <meta property="og:description" content="{{ setting('meta_description', 'main', 'Official Website of Communication and Works Department Government of Khyber Pakhtunkhwa') }}">
     <meta property="og:image" content="{{ $ogImage }}">
     <meta property="og:site_name" content="{{ $title }}">
-    <meta name="theme-color" content="#0b7240">
+    <meta name="theme-color" content="#0b7240" id="meta-theme-color">
     <meta property="og:url" content="{{ request()->url() }}">
     <meta property="og:logo" content="{{ asset('site/images/logo-square.png') }}?cw=48">
     <link rel="canonical" href="{{ request()->url() }}">
@@ -44,8 +44,24 @@
             if (savedTheme && savedTheme !== 'default') {
                 document.write(`<link id="theme-stylesheet" rel="stylesheet" href="{{ asset('site/css/themes/${savedTheme}.css') }}?cw=48">`);
             }
+            
+            const updateThemeColor = () => {
+                const color = getComputedStyle(document.documentElement).getPropertyValue('--cw-primary').trim();
+                document.querySelector("meta[name=theme-color]").setAttribute("content", color);
+            };
+            
+            const observer = new MutationObserver(updateThemeColor);
+            observer.observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ['class', 'style'],
+            });
+            
+            updateThemeColor();
+        
+            document.addEventListener('themeChange', updateThemeColor);
+            document.dispatchEvent(new Event('themeChange'));
         })();
-    </script>
+        </script>
 </head>
 
 <body>
