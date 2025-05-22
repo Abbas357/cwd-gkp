@@ -6,7 +6,7 @@
     @can('view', $row)
         <i class="view-btn bi-eye bg-light text-primary" title="View" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
     @endcan
-    @if (!in_array($status, ['deffered_thrice', 'approved']))
+    @if (!in_array($status, ['deferred_thrice', 'approved']))
         @can('approve', $row)
             <i class="approve-btn bg-light text-success bi-check2-circle" title="Approve" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
         @endcan

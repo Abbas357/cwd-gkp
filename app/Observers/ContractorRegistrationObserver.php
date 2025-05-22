@@ -19,7 +19,7 @@ class ContractorRegistrationObserver
         if ($contractor_registration->wasChanged('status')) {
             if ($contractor_registration->status === 'approved') {
                 $this->handleApproval($contractor_registration);
-            } elseif (in_array($contractor_registration->status, ['deffered_once', 'deffered_twice', 'deffered_thrice'])) {
+            } elseif (in_array($contractor_registration->status, ['deferred_once', 'deferred_twice', 'deferred_thrice'])) {
                 $this->handleDeferral($contractor_registration);
             }
         }
@@ -57,9 +57,9 @@ class ContractorRegistrationObserver
     protected function handleDeferral(ContractorRegistration $contractor_registration): void
     {
         $mailClass = match ($contractor_registration->status) {
-            'deffered_once' => DeferredFirstMail::class,
-            'deffered_twice' => DeferredSecondMail::class,
-            'deffered_thrice' => DeferredThirdMail::class,
+            'deferred_once' => DeferredFirstMail::class,
+            'deferred_twice' => DeferredSecondMail::class,
+            'deferred_thrice' => DeferredThirdMail::class,
             default => null,
         };
 

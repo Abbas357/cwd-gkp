@@ -47,19 +47,7 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3 mb-2">
-                            <label for="category_applied">Applying Category <abbr title="Required">*</abbr></label>
-                            <select class="form-select" id="category_applied" name="category_applied" required>
-                                <option value="">Choose...</option>
-                                @foreach ($cat['contractor_category'] as $category)
-                                <option value="{{ $category }}">{{ $category }}</option>
-                                @endforeach
-                            </select>
-                            @error('category_applied')
-                            <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-md-3 mb-2">
+                        <div class="col-md-4 mb-2">
                             <label for="pec_category">PEC Category <abbr title="Required">*</abbr></label>
                             <select class="form-select" id="pec_category" name="pec_category" required>
                                 <option value="">Choose...</option>
@@ -71,7 +59,7 @@
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md-3 mb-2">
+                        <div class="col-md-4 mb-2">
                             <label for="pec_number">PEC No. <abbr title="Required">*</abbr></label>
                             <div class="input-group">
                                 <input type="text" class="form-control" id="pec_number" value="{{ old('pec_number') }}" placeholder="eg. 3423425" name="pec_number" required>
@@ -86,21 +74,21 @@
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md-3 mb-2">
+                        <div class="col-md-4 mb-2">
                             <label for="fbr_ntn">FBR Registration No <abbr title="Required">*</abbr></label>
                             <input type="text" class="form-control" id="fbr_ntn" value="{{ old('fbr_ntn') }}" placeholder="eg. 23523645" name="fbr_ntn" required>
                             @error('fbr_ntn')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md-3 mb-2">
+                        <div class="col-md-4 mb-2">
                             <label for="kpra_reg_no">KIPPRA Registration No <abbr title="Required">*</abbr></label>
                             <input type="text" class="form-control" id="kpra_reg_no" value="{{ old('kpra_reg_no') }}" placeholder="eg. K753465974-7" name="kpra_reg_no" required>
                             @error('kpra_reg_no')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md-3 mb-2">
+                        <div class="col-md-4 mb-2">
                             <label for="is_limited">Is Limitted <abbr title="Required">*</abbr></label>
                             <select class="form-select" id="is_limited" name="is_limited" required>
                                 <option value="">Choose...</option>
@@ -111,7 +99,7 @@
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-4 mb-2">
                             <label for="pre_enlistment">In Case of already enlisted in following</label>
                             <select class="form-select" data-placeholder="Choose" id="pre_enlistment" multiple name="pre_enlistment[]">
                                 @foreach ($cat['provincial_entities'] as $entities)

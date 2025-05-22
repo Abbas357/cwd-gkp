@@ -64,14 +64,14 @@
                                     $statusClass = match ($status) {
                                         'approved' => 'success',
                                         'draft' => 'warning',
-                                        'deffered_once', 'deffered_twice', 'deffered_thrice' => 'danger',
+                                        'deferred_once', 'deferred_twice', 'deferred_thrice' => 'danger',
                                         default => 'secondary',
                                     };
                                     $statusLabel = match ($status) {
                                         'draft' => 'Draft (In Progress)',
-                                        'deffered_once' => 'Deferred (1st)',
-                                        'deffered_twice' => 'Deferred (2nd)',
-                                        'deffered_thrice' => 'Deferred (3rd)',
+                                        'deferred_once' => 'Deferred (1st)',
+                                        'deferred_twice' => 'Deferred (2nd)',
+                                        'deferred_thrice' => 'Deferred (3rd)',
                                         default => ucfirst($status),
                                     };
                                 @endphp

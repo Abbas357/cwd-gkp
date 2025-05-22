@@ -15,12 +15,6 @@
             <li class="nav-item">
                 <a id="blacklisted-tab" class="nav-link" data-bs-toggle="tab" href="#blacklisted">Blacklisted</a>
             </li>
-            <li class="nav-item">
-                <a id="suspended-tab" class="nav-link" data-bs-toggle="tab" href="#suspended">Suspended</a>
-            </li>
-            <li class="nav-item">
-                <a id="dormant-tab" class="nav-link" data-bs-toggle="tab" href="#dormant">Dormant</a>
-            </li>
         </ul>
     </div>
 
@@ -128,8 +122,6 @@
                 , tabToHashMap: {
                     "#active-tab": '#active'
                     , "#blacklisted-tab": '#blacklisted'
-                    , "#suspended-tab": '#suspended'
-                    , "#dormant-tab": '#dormant'
                 , }
                 , hashToParamsMap: {
                     '#active': {
@@ -137,12 +129,6 @@
                     }
                     , '#blacklisted': {
                         status: 'blacklisted'
-                    }
-                    , '#suspended': {
-                        status: 'suspended'
-                    }
-                    , '#dormant': {
-                        status: 'dormant'
                     }
                 , }
                 , defaultHash: '#active'

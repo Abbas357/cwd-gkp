@@ -78,11 +78,11 @@ class ContractorRegistrationController extends Controller
     {
         $contractor_registration->remarks = $request->remarks;
         if ($contractor_registration->status == "draft") {
-            $contractor_registration->status = "deffered_once";
-        } elseif ($contractor_registration->status == "deffered_once") {
-            $contractor_registration->status = "deffered_twice";
-        } elseif ($contractor_registration->status == "deffered_twice") {
-            $contractor_registration->status = "deffered_thrice";
+            $contractor_registration->status = "deferred_once";
+        } elseif ($contractor_registration->status == "deferred_once") {
+            $contractor_registration->status = "deferred_twice";
+        } elseif ($contractor_registration->status == "deferred_twice") {
+            $contractor_registration->status = "deferred_thrice";
         }
         if($contractor_registration->save()) {
             return response()->json(['success' => 'Contractor has been deferred successfully.']);
@@ -92,7 +92,7 @@ class ContractorRegistrationController extends Controller
 
     public function approve(Request $request, ContractorRegistration $contractor_registration)
     {
-        if (!in_array($contractor_registration->status, ["deffered_thrice", 'approved'])) {
+        if (!in_array($contractor_registration->status, ["deferred_thrice", 'approved'])) {
             $contractor_registration->status = 'approved';
             $contractor_registration->save();
             return response()->json(['success' => 'Contractor has been approved successfully.']);
@@ -198,7 +198,7 @@ class ContractorRegistrationController extends Controller
             'value' => 'required',
         ]);
 
-        if (($request->has('reg_no') || $request->has('expiry_date') || $request->has('issue_date')) && in_array($contractor_registration->status, ['deffered_thrice', 'approved'])) {
+        if (($request->has('reg_no') || $request->has('expiry_date') || $request->has('issue_date')) && in_array($contractor_registration->status, ['deferred_thrice', 'approved'])) {
             return response()->json(['error' => 'Approved or Rejected Contractors cannot be updated']);
         }
         if ($request->field === 'pec_number') {
@@ -217,7 +217,7 @@ class ContractorRegistrationController extends Controller
 
     public function uploadFile(Request $request, ContractorRegistration $contractor_registration)
     {
-        if ($request->hasFile('contractor_pictures') && in_array($contractor_registration->status, ['deffered_thrice', 'approved'])) {
+        if ($request->hasFile('contractor_pictures') && in_array($contractor_registration->status, ['deferred_thrice', 'approved'])) {
             return response()->json(['error' => 'Approved or Rejected Contractors cannot be updated']);
         }
         $file = $request->file;

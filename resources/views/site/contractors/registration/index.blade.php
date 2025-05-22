@@ -8,9 +8,9 @@
             font-weight: 500;
         }
         .status-draft { background: #3094f8; color: #fff; }
-        .status-deffered_once { background: #fa8611; color: #fff; }
-        .status-deffered_twice { background: #fa511d; color: #fff; }
-        .status-deffered_thrice { background: #d31b1b; color: #fff; }
+        .status-deferred_once { background: #fa8611; color: #fff; }
+        .status-deferred_twice { background: #fa511d; color: #fff; }
+        .status-deferred_thrice { background: #d31b1b; color: #fff; }
         .status-approved { background: #11af19; color: #fff; }
         
         .custom-dropdown {
@@ -101,9 +101,9 @@
                             <select name="status" class="form-select">
                                 <option value="">All Status</option>
                                 <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>New</option>
-                                <option value="deffered_once" {{ request('status') === 'deffered_once' ? 'selected' : '' }}>Deferred Once</option>
-                                <option value="deffered_twice" {{ request('status') === 'deffered_twice' ? 'selected' : '' }}>Deferred Twice</option>
-                                <option value="deffered_thrice" {{ request('status') === 'deffered_thrice' ? 'selected' : '' }}>Deferred Thrice</option>
+                                <option value="deferred_once" {{ request('status') === 'deferred_once' ? 'selected' : '' }}>Deferred Once</option>
+                                <option value="deferred_twice" {{ request('status') === 'deferred_twice' ? 'selected' : '' }}>Deferred Twice</option>
+                                <option value="deferred_thrice" {{ request('status') === 'deferred_thrice' ? 'selected' : '' }}>Deferred Thrice</option>
                                 <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>Approved</option>
                             </select>
                         </div>

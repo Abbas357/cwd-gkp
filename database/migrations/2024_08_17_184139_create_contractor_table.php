@@ -30,13 +30,12 @@ return new class extends Migration
             $table->id();
             $table->string('reg_number')->unique();
             $table->string('pec_number', 100);
-            $table->string('category_applied', 45)->nullable();
             $table->string('pec_category', 45)->nullable();
             $table->string('fbr_ntn', 45)->nullable();
             $table->string('kpra_reg_no', 45)->nullable();
             $table->string('pre_enlistment')->nullable();
             $table->string('is_limited', 45)->default('no');
-            $table->enum('status', ['draft', 'deffered_once', 'deffered_twice', 'deffered_thrice', 'approved'])->default('new');
+            $table->enum('status', ['draft', 'deferred_once', 'deferred_twice', 'deferred_thrice', 'approved'])->default('new');
             $table->timestamp('status_updated_at')->nullable();
             $table->unsignedBigInteger('status_updated_by')->nullable();
             $table->text('remarks')->nullable();

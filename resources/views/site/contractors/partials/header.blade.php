@@ -125,12 +125,6 @@
                     <i class="bi bi-house-door"></i> &nbsp; Dashboard
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('contractors.hr.create') ? 'active' : '' }}" 
-                   href="{{ route('contractors.hr.create') }}">
-                    <i class="bi-filetype-pdf"></i> &nbsp; Documents
-                </a>
-            </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle {{ request()->routeIs('contractors.registration.*') ? 'active' : '' }}" 
                    href="#" 

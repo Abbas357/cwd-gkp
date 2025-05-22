@@ -28,7 +28,7 @@ class ContractorRegistrationController extends Controller
                 $q->where('status', request('status'));
             })
             ->when(request('category'), function ($q) {
-                $q->where('category_applied', request('category'));
+                $q->where('pec_category', request('category'));
             })
             ->when(request('search'), function ($q) {
                 $q->where(function ($query) {
@@ -63,11 +63,9 @@ class ContractorRegistrationController extends Controller
     public function store(StoreContractorRegistrationRequest $request)
     {
         $pecNumber = $request->input('pec_number');
-        $categoryApplied = $request->input('category_applied');
         $pecCategory = $request->input('pec_category');
 
-
-        $canApply = $this->canContractorApply($pecNumber, $categoryApplied, $pecCategory);
+        $canApply = $this->canContractorApply($pecNumber, $pecCategory);
 
         if (!$canApply['status']) {
             return redirect()->route('contractors.registration.create')
@@ -77,7 +75,6 @@ class ContractorRegistrationController extends Controller
         $registration = new ContractorRegistration();
         $registration->uuid = Str::uuid();
         $registration->pec_number = $pecNumber;
-        $registration->category_applied = $categoryApplied;
         $registration->pec_category = $pecCategory;
         $registration->fbr_ntn = $request->input('fbr_ntn');
         $registration->kpra_reg_no = $request->input('kpra_reg_no');
@@ -178,15 +175,13 @@ class ContractorRegistrationController extends Controller
         }
 
         $pecNumber = $request->input('pec_number');
-        $categoryApplied = $request->input('category_applied');
         $pecCategory = $request->input('pec_category');
 
         if (
             $pecNumber !== $registration->pec_number ||
-            $categoryApplied !== $registration->category_applied ||
             $pecCategory !== $registration->pec_category
         ) {
-            $canApply = $this->canContractorApply($pecNumber, $categoryApplied, $pecCategory, $registration->id);
+            $canApply = $this->canContractorApply($pecNumber, $pecCategory, $registration->id);
 
             if (!$canApply['status']) {
                 return redirect()->back()
@@ -195,7 +190,6 @@ class ContractorRegistrationController extends Controller
         }
 
         $registration->pec_number = $pecNumber;
-        $registration->category_applied = $categoryApplied;
         $registration->pec_category = $pecCategory;
         $registration->fbr_ntn = $request->input('fbr_ntn');
         $registration->kpra_reg_no = $request->input('kpra_reg_no');
@@ -243,10 +237,9 @@ class ContractorRegistrationController extends Controller
     public function checkPEC(Request $request)
     {
         $pecNumber = $request->input('pec_number');
-        $categoryApplied = $request->input('category_applied') ?? null;
         $pecCategory = $request->input('pec_category') ?? null;
 
-        $result = $this->canContractorApply($pecNumber, $categoryApplied, $pecCategory);
+        $result = $this->canContractorApply($pecNumber, $pecCategory);
 
         return response()->json([
             'unique' => $result['status'],
@@ -254,75 +247,156 @@ class ContractorRegistrationController extends Controller
         ]);
     }
 
-    private function canContractorApply($pecNumber, $categoryApplied = null, $pecCategory = null, $excludeId = null)
-    {
-        // 1. Check PEC number usage by other contractors
-        if (ContractorRegistration::where('pec_number', $pecNumber)
-            ->where('contractor_id', '!=', session('contractor_id'))
-            ->exists()) {
+    private function canContractorApply($pecNumber, $pecCategory = null, $excludeId = null)
+{
+    // Early return if essential parameters are missing
+    if (empty($pecNumber) || empty($pecCategory)) {
+        return [
+            'status' => false,
+            'message' => 'PEC number and category are required for validation.'
+        ];
+    }
+
+    // Validate if the category exists in our ranking system
+    if (!isset(self::CATEGORY_RANKS[$pecCategory])) {
+        return [
+            'status' => false,
+            'message' => 'Invalid PEC category provided.'
+        ];
+    }
+
+    $contractorId = session('contractor_id');
+    if (empty($contractorId)) {
+        return [
+            'status' => false,
+            'message' => 'Contractor session not found. Please login again.'
+        ];
+    }
+
+    // 1. Check if PEC number is already used by OTHER contractors
+    $pecUsedByOthers = ContractorRegistration::where('pec_number', $pecNumber)
+        ->where('contractor_id', '!=', $contractorId)
+        ->exists();
+
+    if ($pecUsedByOthers) {
+        return [
+            'status' => false,
+            'message' => 'This PEC number is already registered with another contractor. Each PEC number can only be used by one contractor.'
+        ];
+    }
+
+    // 2. Check for pending registrations (ABSOLUTE BLOCK - highest priority)
+    $pendingRegistration = ContractorRegistration::where('contractor_id', $contractorId)
+        ->whereIn('status', ['draft', 'deferred_once', 'deferred_twice'])
+        ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
+        ->orderBy('created_at', 'desc')
+        ->first();
+
+    if ($pendingRegistration) {
+        $statusMessages = [
+            'draft' => 'You have a pending registration that has not yet been reviewed by the enlistment committee. You cannot submit a new registration until this is resolved.',
+            'deferred_once' => 'Your previous registration was deferred with remarks: "' . ($pendingRegistration->remarks ?? 'No specific remarks provided') . '". You cannot apply again until this application is finalized in next enlistment committee meeting. Please address the concerns or contact the department for assistance.',
+            'deferred_twice' => 'Your registration has been deferred twice with remarks: "' . ($pendingRegistration->remarks ?? 'No specific remarks provided') . '". You must wait for the final decision in next enlistment committee meeting before submitting any new application. One more deferral will require you to restart the process. Please contact the department immediately.',
+        ];
+        
+        return [
+            'status' => false,
+            'message' => $statusMessages[$pendingRegistration->status] ?? 'You have a pending registration that must be resolved first.'
+        ];
+    }
+
+    // Get all contractor's historical registrations for validation
+    $contractorRegistrations = ContractorRegistration::where('contractor_id', $contractorId)
+        ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    if ($contractorRegistrations->isEmpty()) {
+        // First-time applicant - no restrictions
+        return [
+            'status' => true, 
+            'message' => 'Application is valid for first-time applicant.'
+        ];
+    }
+
+    // 3. Separate approved and deferred_thrice registrations
+    $approvedRegistrations = $contractorRegistrations->where('status', 'approved');
+    $deferredThriceRegistrations = $contractorRegistrations->where('status', 'deferred_thrice');
+
+    $newPecRank = self::CATEGORY_RANKS[$pecCategory];
+
+    // 4. Handle contractors with approved registrations
+    if ($approvedRegistrations->isNotEmpty()) {
+        $maxApprovedRank = $approvedRegistrations->max(fn($reg) => self::CATEGORY_RANKS[$reg->pec_category] ?? 0);
+        
+        // Approved contractors can NEVER apply for lower category
+        if ($newPecRank <= $maxApprovedRank) {
+            $highestApprovedCategory = $approvedRegistrations
+                ->sortByDesc(fn($reg) => self::CATEGORY_RANKS[$reg->pec_category] ?? 0)
+                ->first()
+                ->pec_category;
+                
             return [
                 'status' => false,
-                'message' => 'This PEC number is already registered with another contractor.'
+                'message' => "You have approved registration(s). You can only apply for categories higher than your highest approved category: {$highestApprovedCategory}."
             ];
         }
+    }
 
-        // 2. Check for pending applications
-        $pendingApplications = ContractorRegistration::where('contractor_id', session('contractor_id'))
-            ->whereIn('status', ['draft', 'deferred_once', 'deferred_twice'])
-            ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
+    // 5. Handle deferred_thrice contractors (special rules)
+    if ($deferredThriceRegistrations->isNotEmpty()) {
+        // Check if using same PEC number as any deferred_thrice registration
+        $deferredThriceWithSamePec = $deferredThriceRegistrations
+            ->where('pec_number', $pecNumber)
             ->first();
 
-        if ($pendingApplications) {
+        if ($deferredThriceWithSamePec) {
+            // Rule 1a: Same PEC number - can only apply same or lower category
+            $previousPecRank = self::CATEGORY_RANKS[$deferredThriceWithSamePec->pec_category] ?? 0;
+            
+            if ($newPecRank > $previousPecRank) {
+                return [
+                    'status' => false,
+                    'message' => "With PEC number {$pecNumber} that was deferred thrice, you can only apply for category {$deferredThriceWithSamePec->pec_category} or lower."
+                ];
+            }
+        } else {
+            // Rule 1b: Different PEC number - can apply in any category (like fresh applicant)
+            // But still need to respect approved registration rules if they exist
+            if ($approvedRegistrations->isNotEmpty()) {
+                $maxApprovedRank = $approvedRegistrations->max(fn($reg) => self::CATEGORY_RANKS[$reg->pec_category] ?? 0);
+                if ($newPecRank <= $maxApprovedRank) {
+                    return [
+                        'status' => false,
+                        'message' => 'Even with a different PEC number, you cannot apply for a category lower than your approved registrations.'
+                    ];
+                }
+            }
+        }
+    }
+
+    // 6. Final validation - ensure progressive growth with same PEC number
+    $previousWithSamePec = ContractorRegistration::where('pec_number', $pecNumber)
+        ->where('contractor_id', $contractorId)
+        ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
+        ->whereNotIn('status', ['deferred_thrice']) // Already handled above
+        ->orderBy('created_at', 'desc')
+        ->first();
+
+    if ($previousWithSamePec) {
+        $previousPecRank = self::CATEGORY_RANKS[$previousWithSamePec->pec_category] ?? 0;
+
+        if ($newPecRank <= $previousPecRank) {
             return [
                 'status' => false,
-                'message' => 'You have existing pending applications. Please wait for decision.'
+                'message' => "You have previously applied for category {$previousWithSamePec->pec_category} with this PEC number. You must apply for a higher category to show professional growth."
             ];
         }
-
-        // 3. Get historical registrations only if they exist
-        $previousRegistrations = ContractorRegistration::where('contractor_id', session('contractor_id'))
-            ->whereIn('status', ['approved', 'deferred_thrice'])
-            ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
-            ->get();
-
-        // Only validate categories if previous applications exist
-        if ($previousRegistrations->isNotEmpty()) {
-            $maxCategoryRank = $previousRegistrations->max(fn($reg) => self::CATEGORY_RANKS[$reg->category_applied] ?? 0);
-            $maxPecRank = $previousRegistrations->max(fn($reg) => self::CATEGORY_RANKS[$reg->pec_category] ?? 0);
-
-            $newCategoryRank = self::CATEGORY_RANKS[$categoryApplied] ?? 0;
-            $newPecRank = self::CATEGORY_RANKS[$pecCategory] ?? 0;
-
-            // Validate category progression
-            if ($newCategoryRank <= $maxCategoryRank || $newPecRank <= $maxPecRank) {
-                return [
-                    'status' => false,
-                    'message' => 'You must apply for categories higher than your previous highest approved applications.'
-                ];
-            }
-        }
-
-        // 4. Additional same-PEC number validation
-        if ($previousRegistrationWithSamePec = ContractorRegistration::where('pec_number', $pecNumber)
-            ->where('contractor_id', session('contractor_id'))
-            ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
-            ->latest()
-            ->first()) {
-            
-            $previousCatRank = self::CATEGORY_RANKS[$previousRegistrationWithSamePec->category_applied] ?? 0;
-            $previousPecRank = self::CATEGORY_RANKS[$previousRegistrationWithSamePec->pec_category] ?? 0;
-
-            $newCatRank = self::CATEGORY_RANKS[$categoryApplied] ?? 0;
-            $newPecRank = self::CATEGORY_RANKS[$pecCategory] ?? 0;
-
-            if ($newCatRank <= $previousCatRank || $newPecRank <= $previousPecRank) {
-                return [
-                    'status' => false,
-                    'message' => 'With this PEC number, you must apply for higher categories than previous.'
-                ];
-            }
-        }
-
-        return ['status' => true, 'message' => 'Application valid'];
     }
+
+    return [
+        'status' => true, 
+        'message' => 'Application is valid and meets all requirements.'
+    ];
+}
 }

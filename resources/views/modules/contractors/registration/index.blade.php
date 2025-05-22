@@ -38,7 +38,6 @@
                     <th scope="col" class="p-3">CNIC</th>
                     <th scope="col" class="p-3">District</th>
                     <th scope="col" class="p-3">Address</th>
-                    <th scope="col" class="p-3">Category Applied</th>
                     <th scope="col" class="p-3">PEC Number</th>
                     <th scope="col" class="p-3">PEC Category</th>
                     <th scope="col" class="p-3">FBR NTN</th>
@@ -95,10 +94,6 @@
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "category_applied"
-                        , searchBuilderType: "string"
-                    }
-                    , {
                         data: "pec_number"
                         , searchBuilderType: "string"
                     }
@@ -136,7 +131,7 @@
                 , defaultOrderColumn: 14
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
-                    targets: [0, 2, 3, 6, 11, 12, 13, 14, 15]
+                    targets: [0, 2, 3, 6, 11, 12, 13, 14]
                     , visible: false
                     }, {
                         targets: -1,
@@ -226,13 +221,13 @@
                         status: 'draft'
                     }
                     , '#deferred_once': {
-                        status: 'deffered_once'
+                        status: 'deferred_once'
                     }
                     , '#deferred_twice': {
-                        status: 'deffered_twice'
+                        status: 'deferred_twice'
                     }
                     , '#deferred_thrice': {
-                        status: 'deffered_thrice'
+                        status: 'deferred_thrice'
                     }
                     , '#approved': {
                         status: 'approved'
