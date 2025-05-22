@@ -10,16 +10,16 @@
     <div class="card-header mb-3">
         <ul class="nav nav-tabs nav-tabs-table">
             <li class="nav-item">
-                <a id="draft-tab" class="nav-link" data-bs-toggle="tab" href="#draft">Draft</a>
+                <a id="pending-tab" class="nav-link" data-bs-toggle="tab" href="#pending">Pending</a>
+            </li>
+            <li class="nav-item">
+                <a id="approval_committee-tab" class="nav-link" data-bs-toggle="tab" href="#approval_committee">Approval Committee</a>
             </li>
             <li class="nav-item">
                 <a id="approved-tab" class="nav-link" data-bs-toggle="tab" href="#approved">Approved</a>
             </li>
             <li class="nav-item">
                 <a id="rejected-tab" class="nav-link" data-bs-toggle="tab" href="#rejected">Rejected</a>
-            </li>
-            <li class="nav-item">
-                <a id="blacklisted-tab" class="nav-link" data-bs-toggle="tab" href="#blacklisted">Blacklisted</a>
             </li>
         </ul>
     </div>
@@ -114,6 +114,19 @@
                 }
             });
 
+            $("#standardizations").on('click', '.approval-committee-btn', async function() {
+                const standardizationId = $(this).data("id");
+                const url = "{{ route('admin.apps.standardizations.committeeApproval', ':id') }}".replace(':id', standardizationId);
+
+                const result = await confirmAction('Do you want to put this firm in the approval committee?');
+                if (result && result.isConfirmed) {
+                    const success = await fetchRequest(url, 'PATCH');
+                    if (success) {
+                        $("#standardizations").DataTable().ajax.reload();
+                    }
+                }
+            });
+
             $("#standardizations").on('click', '.renew-btn', async function() {
                 const standardizationId = $(this).data("id");
                 const url = "{{ route('admin.apps.standardizations.renew', ':id') }}".replace(':id', standardizationId);
@@ -142,7 +155,6 @@
             $("#standardizations").on('click', '.reject-btn', async function() {
                 const standardizationId = $(this).data("id");
                 const url = "{{ route('admin.apps.standardizations.reject', ':id') }}".replace(':id', standardizationId);
-
                 const {
                     value: remarks
                 } = await confirmWithInput({
@@ -158,9 +170,9 @@
                     , cancelButtonText: 'Cancel'
                 });
 
-                if (reason) {
+                if (remarks) {
                     const success = await fetchRequest(url, 'PATCH', {
-                        reason
+                        remarks
                     });
                     if (success) {
                         $("#standardizations").DataTable().ajax.reload();
@@ -172,26 +184,26 @@
                 table: table
                 , dataTableUrl: "{{ route('admin.apps.standardizations.index') }}"
                 , tabToHashMap: {
-                    "#draft-tab": '#draft'
+                    "#pending-tab": '#pending'
                     , "#approved-tab": '#approved'
                     , "#rejected-tab": '#rejected'
-                    , "#blacklisted-tab": '#blacklisted'
+                    , "#approval_committee-tab": '#approval_committee'
                 , }
                 , hashToParamsMap: {
-                    '#draft': {
-                        status: 'draft'
+                    '#pending': {
+                        status: 'Pending'
                     }
                     , '#approved': {
-                        status: 'approved'
+                        status: 'Approved'
                     }
                     , '#rejected': {
-                        status: 'rejected'
+                        status: 'Rejected'
                     }
-                    , '#blacklisted': {
-                        status: 'blacklisted'
+                    , '#approval_committee': {
+                        status: 'Approval Committee'
                     }
                 , }
-                , defaultHash: '#draft'
+                , defaultHash: '#pending'
             });
 
             $('#standardizations').colResizable({

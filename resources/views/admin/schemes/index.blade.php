@@ -210,13 +210,13 @@
             });
 
             $('#schemes-datatable').colResizable({
-                liveDrag: true
-                , resizeMode: 'overflow'
-                , postbackSafe: true
-                , useLocalStorage: true
-                , gripInnerHtml: "<div class='grip'></div>"
-                , draggingClass: "dragging"
-            , });
+                liveDrag: true,
+                resizeMode: 'overflow',
+                postbackSafe: true,
+                useLocalStorage: true,
+                gripInnerHtml: "<div class='grip'></div>",
+                draggingClass: "dragging"
+            });
 
             pushStateModal({
                 fetchUrl: "{{ route('admin.schemes.detail', ':id') }}",
@@ -224,7 +224,7 @@
                 title: 'Schemes Details',
                 modalSize: 'lg',
                 tableToRefresh: table,
-            , });
+             });
 
         });
 

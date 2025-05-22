@@ -87,7 +87,7 @@ class StandardizationController extends Controller
     public function showCard($id)
     {
         $Standardization = Standardization::find($id);
-        if ($Standardization->status !== 'approved') {
+        if ($Standardization->status !== 'Approved') {
             return response()->json([
                 'success' => false,
                 'data' => [
@@ -117,13 +117,24 @@ class StandardizationController extends Controller
 
     public function approve(Request $request, Standardization $standardization)
     {
-        if ($standardization->status !== 'approved') {
-            $standardization->status = 'approved';
+        if ($standardization->status === 'Approval Committee') {
+            $standardization->status = 'Approved';
             if($standardization->save()) {
                 return response()->json(['success' => 'Standardization has been approved successfully.']);
             }
         }
         return response()->json(['error' => 'Standardization can\'t be approved.']);
+    }
+
+    public function committeeApproval(Request $request, Standardization $standardization)
+    {
+        if ($standardization->status === 'Pending') {
+            $standardization->status = 'Approval Committee';
+            if($standardization->save()) {
+                return response()->json(['success' => 'Standardization firm has been put to the approval committee.']);
+            }
+        }
+        return response()->json(['error' => 'Standardization firm can\'t be put in the approaval committee.']);
     }
 
     public function renew(Request $request, Standardization $Standardization)
@@ -155,8 +166,9 @@ class StandardizationController extends Controller
 
     public function reject(Request $request, Standardization $standardization)
     {
-        if (!in_array($standardization->status, ['approved', 'rejected'])) {
-            $standardization->status = 'rejected';
+        if ($standardization->status === 'Approval Committee') {
+            $standardization->status = 'Rejected';
+            $standardization->remarks = $request->remarks;
 
             if($standardization->save()) {
                 return response()->json(['success' => 'Application has been rejected.']);

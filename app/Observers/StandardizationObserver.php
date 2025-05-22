@@ -26,9 +26,9 @@ class StandardizationObserver
     public function updated(Standardization $Standardization): void
     {
         if ($Standardization->wasChanged('status')) {
-            if ($Standardization->status === 'approved') {
+            if ($Standardization->status === 'Approved') {
                 $this->handleApproval($Standardization);
-            } elseif (in_array($Standardization->status, ['rejected', 'blacklisted'])) {
+            } elseif ($Standardization->status === 'Rejected') {
                 $this->handleRejection($Standardization);
             }
         }
@@ -57,17 +57,8 @@ class StandardizationObserver
 
     protected function handleRejection(Standardization $Standardization): void
     {
-        $mailClass = match ($Standardization->status) {
-            'rejected' => RejectedMail::class,
-            'blacklisted' => BlacklistedMail::class,
-            default => null,
-        };
-
-        $email = $Standardization->email;
-        if ($mailClass && $email) {
-            if ($email) {
-                Mail::to($email)->queue(new $mailClass($Standardization, $Standardization->remarks));
-            }
+        if ($Standardization->email) {
+            Mail::to($Standardization->email)->queue(new RejectedMail($Standardization, $Standardization->remarks));
         }
     }
 

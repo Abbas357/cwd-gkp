@@ -57,19 +57,48 @@
                             <div class="info-value">{{ $contractor->address }}</div>
                         </div>
                         <div class="info-group">
-                            <div class="info-label">Account Status</div>
+                            <div class="info-label">Status / Tracking</div>
                             <div class="info-value">
-                                <span class="badge bg-{{ $contractor->status === 'approved' ? 'success' : 'warning' }}">
-                                    {{ ucfirst($contractor->status) }} {{ $contractor->status === 'new' ? "(In Progress)" : '' }}
+                                @php
+                                    $status = $contractor->status;
+                                    $statusClass = match ($status) {
+                                        'approved' => 'success',
+                                        'draft' => 'warning',
+                                        'deffered_once', 'deffered_twice', 'deffered_thrice' => 'danger',
+                                        default => 'secondary',
+                                    };
+                                    $statusLabel = match ($status) {
+                                        'draft' => 'Draft (In Progress)',
+                                        'deffered_once' => 'Deferred (1st)',
+                                        'deffered_twice' => 'Deferred (2nd)',
+                                        'deffered_thrice' => 'Deferred (3rd)',
+                                        default => ucfirst($status),
+                                    };
+                                @endphp
+
+                                <span class="badge fs-6 px-3 py-2 my-2 bg-{{ $statusClass }}">
+                                    {{ $statusLabel }}
                                 </span>
                             </div>
                         </div>
-                        @if($contractor->remarks)
+
+                        @if($contractor->remarks && str_starts_with($status, 'deffered'))
                             <div class="info-group">
                                 <div class="info-label">Deferral Reason</div>
                                 <div class="info-value text-danger">{{ $contractor->remarks }}</div>
                             </div>
+                        @elseif($contractor->remarks && $status === 'approved')
+                            <div class="info-group">
+                                <div class="info-label">Remarks</div>
+                                <div class="info-value text-success">Congratulations! Your account has been approved. You may now proceed with further steps.</div>
+                            </div>
+                        @else
+                            <div class="info-group">
+                                <div class="info-label">Remarks</div>
+                                <div class="info-value text-secondary">Your application is being processed. Please check back later for updates.</div>
+                            </div>
                         @endif
+
                     </div>
                 </div>
 

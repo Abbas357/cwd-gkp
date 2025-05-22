@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('district', 45)->nullable();
             $table->string('address')->nullable();
             $table->string('password', 100);
-            $table->enum('status', ['draft', 'approved', 'rejected', 'blacklisted'])->default('draft');
+            $table->enum('status', ['Pending', 'Approval Committee', 'Rejected', 'Approved'])->default('draft');
             $table->timestamp('status_updated_at')->nullable();
             $table->unsignedBigInteger('status_updated_by')->nullable();
             $table->text('remarks')->nullable();

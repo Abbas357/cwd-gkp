@@ -7,6 +7,7 @@ use App\Http\Controllers\Standardization\StandardizationController;
 Route::prefix('standardizations')->as('standardizations.')->group(function () {
     Route::get('/', [StandardizationController::class, 'index'])->name('index')->can('viewAny', App\Models\Standardization::class);
     Route::patch('/approve/{standardization}', [StandardizationController::class, 'approve'])->name('approve')->can('approve', 'standardization');
+    Route::patch('/committee-approval/{standardization}', [StandardizationController::class, 'committeeApproval'])->name('committeeApproval')->can('approve', 'standardization');
     Route::patch('/reject/{standardization}', [StandardizationController::class, 'reject'])->name('reject')->can('reject', 'standardization');
     Route::get('/{standardization}', [StandardizationController::class, 'show'])->name('show')->can('view', 'standardization');
     Route::get('/get/{standardization}', [StandardizationController::class, 'showDetail'])->name('detail')->can('view', 'standardization');

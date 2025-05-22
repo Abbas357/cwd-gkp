@@ -68,7 +68,7 @@
 
         .main {
             position: absolute;
-            top: 4.5rem;
+            top: 4.9rem;
             left: 8.6rem;
             text-transform: uppercase;
             text-align: left;
@@ -230,11 +230,7 @@
 
         <div class="main">
             <h1>{{ $Standardization->firm_name }}</h1>
-            <h2> {{ $Standardization->name }}</h2>
-            <h3>Products</h3>
-            @foreach($Standardization->products as $product)
-                <div>{{ $product->name }}</div>
-            @endforeach
+            <h2 style="margin-top: 5px">Owner: {{ $Standardization->owner_name }}</h2>
         </div>
 
         <div class="footer">

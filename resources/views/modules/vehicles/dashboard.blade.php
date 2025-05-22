@@ -1,5 +1,7 @@
 <x-vehicle-layout title="Vehicle Dashboard">
     @push('style')
+    <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/plugins/apexchart/apexcharts.min.css') }}" rel="stylesheet">
     <style>
         .stat-card {
@@ -62,6 +64,18 @@
             font-size: 0.9rem;
             padding: 0.35rem 0.65rem;
             border-radius: 6px;
+        }
+        .officer-select-container {
+            margin-bottom: 20px;
+        }
+        .officer-select-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+        #officerSelect {
+            width: 100%;
+            max-width: 400px;
         }
     </style>
     @endpush
@@ -182,6 +196,55 @@
                                 <i class="bi bi-exclamation-triangle text-danger"></i>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Officer Vehicle Allocation Chart -->
+        <div class="row g-3 mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Officer Vehicle Allocation</h5>
+                            <div class="officer-select-container">
+                                <form method="GET" action="{{ route('admin.apps.vehicles.index') }}" id="officerForm">
+                                    <select class="form-select form-select-md" id="officerSelect" name="selected_officer" onchange="this.form.submit()">
+                                    <option value="">Select Officer</option>
+                                    @foreach($allUsers as $user)
+                                            <option value="{{ $user->id }}" {{ $selectedUserId == $user->id ? 'selected' : '' }}>
+                                                {{ $user->name }} 
+                                                @if($user->currentDesignation)
+                                                    - {{ $user->currentDesignation->name }}
+                                                @endif
+                                                @if($user->currentOffice)
+                                                    ({{ $user->currentOffice->name }})
+                                                @endif
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="officerVehicleChart"></div>
+                        @if($selectedUserId)
+                            <div class="mt-3">
+                                <small class="text-muted">
+                                    <i class="bi bi-info-circle"></i> 
+                                    Showing direct subordinates of {{ $allUsers->find($selectedUserId)->name ?? 'Selected Officer' }}
+                                </small>
+                            </div>
+                        @else
+                            <div class="mt-3">
+                                <small class="text-muted">
+                                    <i class="bi bi-info-circle"></i> 
+                                    Showing top-level officers. Select an officer to view their subordinates.
+                                </small>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -330,8 +393,19 @@
     </div>
 
     @push('script')
+    <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/apexchart/apexcharts.min.js') }}"></script>
     <script>
+        $(document).ready(function() {
+            select2Ajax(
+                '#officerSelect',
+                '{{ route("admin.apps.hr.users.api") }}',
+                {
+                    placeholder: "Select User / Office",
+                    dropdownParent: $('#officerSelect').closest('body')
+                }
+            );
+        });
         // Helper function to get color array
         function getColors(count) {
             const colors = [
@@ -339,6 +413,132 @@
                 '#858796', '#5a5c69', '#2c9faf', '#20c9a6', '#6610f2'
             ];
             return colors.slice(0, count);
+        }
+
+        // Officer Vehicle Allocation Bar Chart
+        function createOfficerVehicleChart() {
+            const officerData = @json($officerVehicleData);
+            
+            if (!officerData || officerData.length === 0) {
+                document.getElementById('officerVehicleChart').innerHTML = 
+                    '<div class="text-center text-muted py-4"><i class="bi bi-info-circle"></i> No data available</div>';
+                return;
+            }
+
+            const categories = officerData.map(item => {
+                // Truncate long names for better display
+                const officeName = item.office || 'No Office';
+                const name = officeName.length > 20 ? 
+                    officeName.substring(0, 20) + '...' : 
+                    officeName;
+                return name;
+            });
+            
+            const userVehiclesData = officerData.map(item => item.user_vehicles);
+            const officeVehiclesData = officerData.map(item => item.office_vehicles);
+
+            const options = {
+                series: [
+                    {
+                        name: 'User Allocations',
+                        data: userVehiclesData,
+                        color: '#4e73df'
+                    },
+                    {
+                        name: 'Office Pool',
+                        data: officeVehiclesData,
+                        color: '#1cc88a'
+                    }
+                ],
+                chart: {
+                    type: 'bar',
+                    height: 400,
+                    toolbar: {
+                        show: true,
+                        tools: {
+                            download: true,
+                            selection: false,
+                            zoom: true,
+                            zoomin: true,
+                            zoomout: true,
+                            pan: false,
+                            reset: true
+                        }
+                    }
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '70%',
+                        endingShape: 'rounded',
+                        borderRadius: 4
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                xaxis: {
+                    categories: categories,
+                    labels: {
+                        rotate: -45,
+                        style: {
+                            fontSize: '12px'
+                        }
+                    }
+                },
+                yaxis: {
+                    title: {
+                        text: 'Number of Vehicles'
+                    },
+                    min: 0
+                },
+                tooltip: {
+                    shared: true,
+                    intersect: false,
+                    custom: function({series, seriesIndex, dataPointIndex, w}) {
+                        const officer = officerData[dataPointIndex];
+                        const totalVehicles = officer.user_vehicles + officer.office_vehicles;
+                        return `
+                            <div class="p-3">
+                                <h6 class="mb-2">${officer.officer_name}</h6>
+                                <p class="mb-1 small text-muted">${officer.designation}</p>
+                                <p class="mb-2 small text-muted">${officer.office}</p>
+                                <div class="mb-1"><strong>Total Vehicles:</strong> ${totalVehicles}</div>
+                                <div class="mb-1"><strong>User Allocations:</strong> ${officer.user_vehicles}</div>
+                                <div class="mb-1"><strong>Office Pool:</strong> ${officer.office_vehicles}</div>
+                                <hr class="my-2">
+                                <small class="text-muted">
+                                    <strong>User Allocations:</strong> Vehicles assigned to officer + subordinates<br>
+                                    <strong>Office Pool:</strong> Vehicles assigned to office + subordinate offices
+                                </small>
+                            </div>
+                        `;
+                    }
+                },
+                legend: {
+                    position: 'top',
+                    horizontalAlign: 'right'
+                },
+                grid: {
+                    borderColor: '#e7e7e7',
+                    strokeDashArray: 3
+                },
+                responsive: [{
+                    breakpoint: 768,
+                    options: {
+                        chart: {
+                            height: 300
+                        },
+                        xaxis: {
+                            labels: {
+                                rotate: -90
+                            }
+                        }
+                    }
+                }]
+            };
+
+            new ApexCharts(document.querySelector("#officerVehicleChart"), options).render();
         }
 
         // Distribution Charts
@@ -389,12 +589,18 @@
             new ApexCharts(document.querySelector(elementId), options).render();
         }
 
-        // Create all distribution charts
-        const distributions = @json($distributions);
-        createDistributionChart("#typeChart", distributions.type, 'type');
-        createDistributionChart("#colorChart", distributions.color, 'color');
-        createDistributionChart("#fuelTypeChart", distributions.fuel_type, 'fuel_type');
-        createDistributionChart("#registrationStatusChart", distributions.registration_status, 'registration_status');
+        // Initialize all charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create officer vehicle allocation chart
+            createOfficerVehicleChart();
+
+            // Create all distribution charts
+            const distributions = @json($distributions);
+            createDistributionChart("#typeChart", distributions.type, 'type');
+            createDistributionChart("#colorChart", distributions.color, 'color');
+            createDistributionChart("#fuelTypeChart", distributions.fuel_type, 'fuel_type');
+            createDistributionChart("#registrationStatusChart", distributions.registration_status, 'registration_status');
+        });
 
         // Initialize tooltips
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));

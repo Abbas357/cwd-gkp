@@ -77,7 +77,7 @@ class ContractorRegistrationController extends Controller
     public function defer(Request $request, ContractorRegistration $contractor_registration)
     {
         $contractor_registration->remarks = $request->remarks;
-        if ($contractor_registration->status == "new") {
+        if ($contractor_registration->status == "draft") {
             $contractor_registration->status = "deffered_once";
         } elseif ($contractor_registration->status == "deffered_once") {
             $contractor_registration->status = "deffered_twice";

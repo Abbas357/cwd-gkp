@@ -9,20 +9,25 @@
     @can('viewAny', App\Models\Product::class)
         <i class="product-btn bi-cart bg-light text-secondary"  title="Product" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
     @endcan
-    @if ($status === 'draft')
+    @if ($status === 'Pending')
         @can('approve', $row)
-            <i class="approve-btn bg-light text-success bi-check" title="Approve" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
-        @endcan
-        @can('reject', $row)
-            <i class="reject-btn bg-light text-warning bi-ban" title="Reject" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
+            <i class="approval-committee-btn bg-light text-warning bi-person-check" title="Approval Committee" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
         @endcan
     @endif
-    @if ($status === 'approved')
+    @if ($status === 'Approved')
         @can('viewCard', $row)
             <i class="card-btn bi-credit-card bg-light text-info" title="Generate Card" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
         @endcan
         @can('renew', $row)
             <i class="renew-btn bi-arrow-clockwise bg-light text-primary" title="Renew Card" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>    
+        @endcan
+    @endif
+    @if ($status === 'Approval Committee')
+        @can('approve', $row)
+            <i class="approve-btn bg-light text-success bi-check" title="Approve" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
+        @endcan
+        @can('reject', $row)
+            <i class="reject-btn bg-light text-danger bi-ban" title="Reject" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
         @endcan
     @endif
 </div>

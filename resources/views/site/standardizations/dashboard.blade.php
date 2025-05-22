@@ -57,17 +57,44 @@
                             <div class="info-value">{{ $standardization->address }}</div>
                         </div>
                         <div class="info-group">
-                            <div class="info-label">Account Status</div>
+                            <div class="info-label">Status / Tracking</div>
                             <div class="info-value">
-                                <span class="badge bg-{{ $standardization->status === 'approved' ? 'success' : 'warning' }}">
-                                    {{ ucfirst($standardization->status) }} {{ $standardization->status === 'new' ? "(In Progress)" : '' }}
+                                @php
+                                    $status = $standardization->status;
+                                    $statusClass = match ($status) {
+                                        'Approved' => 'success',
+                                        'Pending' => 'warning',
+                                        'Approval Committee' => 'info',
+                                        'Rejected' => 'danger',
+                                        default => 'secondary',
+                                    };
+                                    $statusLabel = ucfirst($status);
+                                @endphp
+
+                                <span class="badge fs-6 px-3 py-2 my-2 bg-{{ $statusClass }}">
+                                    {{ $statusLabel }}
                                 </span>
                             </div>
                         </div>
-                        @if($standardization->remarks)
+                        @if($standardization->remarks && $status === 'Rejected')
                             <div class="info-group">
-                                <div class="info-label">Deferral Reason</div>
+                                <div class="info-label">Remarks</div>
                                 <div class="info-value text-danger">{{ $standardization->remarks }}</div>
+                            </div>
+                        @elseif ($standardization->remarks && $status === 'Approved')
+                            <div class="info-group">
+                                <div class="info-label">Remarks</div>
+                                <div class="info-value text-success">Your firm has been approved. Please collect your card from the IT Section, C&W Department.</div>
+                            </div>
+                        @elseif ($standardization->remarks && $status === 'Approval Committee')
+                            <div class="info-group">
+                                <div class="info-label">Remarks</div>
+                                <div class="info-value text-warning">Submitted to the Approval Committee for review. Good luck!</div>
+                            </div>
+                        @else
+                            <div class="info-group">
+                                <div class="info-label">Remarks</div>
+                                <div class="info-value text-secondary">Please wait, your firm will be submitted to the approval committee shortly, Keep in touch.</div>
                             </div>
                         @endif
                     </div>

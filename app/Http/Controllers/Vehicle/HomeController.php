@@ -22,6 +22,127 @@ class HomeController extends Controller
             ->get();
     }
 
+    /**
+     * Get vehicle allocation data for officer hierarchy chart
+     */
+    private function getOfficerVehicleAllocation($selectedUserId = null)
+    {
+        if (!$selectedUserId) {
+            // Get top level officers if no specific user selected
+            $topOfficers = User::whereHas('currentPosting', function($query) {
+                $query->where('is_current', true);
+            })
+            ->whereHas('currentDesignation')
+            ->with(['currentDesignation', 'currentOffice'])
+            ->get()
+            ->sortByDesc(function($user) {
+                if (!$user->currentDesignation || !$user->currentDesignation->bps) {
+                    return 0;
+                }
+                preg_match('/(\d+)/', $user->currentDesignation->bps, $matches);
+                return isset($matches[1]) ? (int)$matches[1] : 0;
+            })
+            ->take(10); // Limit to top 10 officers
+
+            $chartData = [];
+            foreach ($topOfficers as $officer) {
+                $userVehicles = $this->calculateUserVehiclesAllocation($officer);
+                $officeVehicles = $this->calculateOfficeVehiclesAllocation($officer);
+                
+                $chartData[] = [
+                    'officer_id' => $officer->id,
+                    'officer_name' => $officer->name,
+                    'designation' => optional($officer->currentDesignation)->name ?? 'No Designation',
+                    'office' => optional($officer->currentOffice)->name ?? 'No Office',
+                    'user_vehicles' => $userVehicles,
+                    'office_vehicles' => $officeVehicles
+                ];
+            }
+
+            return $chartData;
+        } else {
+            // Get subordinates of selected user
+            $selectedUser = User::find($selectedUserId);
+            if (!$selectedUser) {
+                return [];
+            }
+
+            $subordinates = $selectedUser->getSubordinates();
+            $directSubordinates = $subordinates->filter(function($subordinate) use ($selectedUser) {
+                $supervisor = $subordinate->getDirectSupervisor();
+                return $supervisor && $supervisor->id === $selectedUser->id;
+            });
+
+            $chartData = [];
+            foreach ($directSubordinates as $subordinate) {
+                $userVehicles = $this->calculateUserVehiclesAllocation($subordinate);
+                $officeVehicles = $this->calculateOfficeVehiclesAllocation($subordinate);
+                
+                $chartData[] = [
+                    'officer_id' => $subordinate->id,
+                    'officer_name' => $subordinate->name,
+                    'designation' => optional($subordinate->currentDesignation)->name ?? 'No Designation',
+                    'office' => optional($subordinate->currentOffice)->name ?? 'No Office',
+                    'user_vehicles' => $userVehicles,
+                    'office_vehicles' => $officeVehicles
+                ];
+            }
+
+            return $chartData;
+        }
+    }
+
+    /**
+     * Calculate total vehicles allocated to users (officer + subordinates)
+     */
+    private function calculateUserVehiclesAllocation($officer)
+    {
+        // Get direct vehicles allocated to this officer (user_id allocation)
+        $directVehicles = VehicleAllotment::where('is_current', 1)
+            ->where('user_id', $officer->id)
+            ->count();
+
+        // Get subordinates and their vehicles
+        $subordinates = $officer->getSubordinates();
+        $subordinateVehicles = 0;
+        
+        foreach ($subordinates as $subordinate) {
+            $subordinateVehicles += VehicleAllotment::where('is_current', 1)
+                ->where('user_id', $subordinate->id)
+                ->count();
+        }
+
+        return $directVehicles + $subordinateVehicles;
+    }
+
+    /**
+     * Calculate total vehicles allocated to offices (officer's office + subordinate offices)
+     */
+    private function calculateOfficeVehiclesAllocation($officer)
+    {
+        $officeVehicles = 0;
+        
+        // Get vehicles allocated to officer's current office
+        if ($officer->currentOffice) {
+            $officeVehicles += VehicleAllotment::where('is_current', 1)
+                ->where('office_id', $officer->currentOffice->id)
+                ->count();
+        }
+
+        // Get subordinates and their office vehicles
+        $subordinates = $officer->getSubordinates();
+        
+        foreach ($subordinates as $subordinate) {
+            if ($subordinate->currentOffice) {
+                $officeVehicles += VehicleAllotment::where('is_current', 1)
+                    ->where('office_id', $subordinate->currentOffice->id)
+                    ->count();
+            }
+        }
+
+        return $officeVehicles;
+    }
+
     public function index(Request $request)
     {
         $totalVehicles = Vehicle::count();
@@ -147,6 +268,18 @@ class HomeController extends Controller
             ->get()
             ->groupBy('brand');
 
+        // Get officer vehicle allocation data
+        $selectedUserId = $request->input('selected_officer') ?? 4;
+        $officerVehicleData = $this->getOfficerVehicleAllocation($selectedUserId);
+        
+        // Get all users for the select dropdown
+        $allUsers = User::whereHas('currentPosting', function($query) {
+            $query->where('is_current', true);
+        })
+        ->with(['currentDesignation', 'currentOffice'])
+        ->orderBy('name')
+        ->get();
+
         return view('modules.vehicles.dashboard', compact(
             'totalVehicles',
             'functionalVehicles',
@@ -171,6 +304,9 @@ class HomeController extends Controller
             'poolPercentage',
             'yearWiseRegistrations',
             'brandWiseStatus',
+            'officerVehicleData',
+            'allUsers',
+            'selectedUserId'
         ));
     }
 
