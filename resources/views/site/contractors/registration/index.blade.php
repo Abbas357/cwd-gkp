@@ -130,10 +130,10 @@
                         <thead>
                             <tr>
                                 <th>PEC Number</th>
-                                <th>Category Applied</th>
                                 <th>PEC Category</th>
                                 <th>Status</th>
                                 <th>Applied Date</th>
+                                <th>Remarks</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -141,7 +141,6 @@
                             @forelse($registrations as $registration)
                                 <tr>
                                     <td>{{ $registration->pec_number }}</td>
-                                    <td>{{ $registration->category_applied }}</td>
                                     <td>{{ $registration->pec_category }}</td>
                                     <td>
                                         <span class="status-badge status-{{ $registration->status }}">
@@ -149,6 +148,44 @@
                                         </span>
                                     </td>
                                     <td>{{ $registration->created_at->format('M d, Y') }}</td>
+                                    <td>
+                                        @php
+                                            $status = $registration->status;
+                                            $remarks = $registration->remarks ?? 'No specific remarks provided';
+                                            $pecNumber = $registration->pec_number;
+                                            $category = $registration->pec_category;
+                                    
+                                            switch ($status) {
+                                                case 'draft':
+                                                    $message = 'Your registration is currently under review by the enlistment committee.';
+                                                    $bgClass = 'bg-info';
+                                                    break;
+                                                case 'deferred_once':
+                                                    $message = 'Your registration was deferred with feedback: "' . $remarks . '". The application will be reviewed in the next enlistment committee meeting.';
+                                                    $bgClass = 'bg-warning';
+                                                    break;
+                                                case 'deferred_twice':
+                                                    $message = 'Your registration has been deferred twice with feedback: "' . $remarks . '". Final decision pending in the next committee meeting.';
+                                                    $bgClass = 'bg-warning';
+                                                    break;
+                                                case 'deferred_thrice':
+                                                    $message = "Registration with PEC number {$pecNumber} was deferred three times. Future applications are limited to category {$category} or lower.";
+                                                    $bgClass = 'bg-secondary';
+                                                    break;
+                                                case 'approved':
+                                                    $message = 'Congratulations! Your registration has been approved. Please collect your card from the IT Cell, C&W Department.';
+                                                    $bgClass = 'bg-success';
+                                                    break;
+                                                default:
+                                                    $message = $remarks;
+                                                    $bgClass = 'bg-light';
+                                                    break;
+                                            }
+                                        @endphp
+                                        <div class="p-2 rounded {{ $bgClass }} bg-opacity-25" style="max-width: 300px; white-space: normal;">
+                                            <small class="text-dark">{{ $message }}</small>
+                                        </div>
+                                    </td>
                                     <td>
                                         <a class="cw-btn" href="{{ route('contractors.registration.show', $registration->uuid) }}">
                                             <i class="bi-eye"></i>
@@ -159,7 +196,6 @@
                                         </a>
                                         @endif
                                     </td>
-                                    
                                 </tr>
                             @empty
                                 <tr>
