@@ -35,12 +35,12 @@
                     </div>
                     <div class="offcanvas-body">
                         <div class="list-group list-group-flush">
-                                <div class="list-group-item border" onclick="window.open('{{ route('documentations.epads') }}', '_blank')">
-                                    <a href="{{ route('documentations.epads') }}" target="_blank">
-                                        <i class="bi bi-book me-3"></i>
-                                        e-PADS Training
-                                    </a>
-                                </div>
+                            <div class="list-group-item border" onclick="window.open('{{ route('documentations.epads') }}', '_blank')">
+                                <a href="{{ route('documentations.epads') }}" target="_blank">
+                                    <i class="bi bi-book me-3"></i>
+                                    e-PADS Training
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
