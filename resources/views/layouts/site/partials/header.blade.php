@@ -20,13 +20,13 @@
                 </button>
 
                 <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#themeCanvas" aria-controls="themeCanvas">
-                    <i class="bi-palette-fill" style="font-size: 1.2rem;"></i>
+                    <i class="bi-palette-fill rotate-color-icon" style="font-size: 1.2rem;"></i>
                     <div class="menu-label" style="letter-spacing: 1px">THEME</div>
                 </button>
 
                 <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#tutorialsCanvas" aria-controls="tutorialsCanvas">
-                    <i class="bi-play-circle" style="font-size: 1.2rem"></i>
-                    <div class="menu-label" style="letter-spacing: 1px">GUIDE</div>
+                    <i class="bi-play-circle circular-icon" style="font-size: 1.2rem"></i>
+                    <div class="menu-label" style="letter-spacing: 1px">LEARN</div>
                 </button>
 
                 <div class="offcanvas offcanvas-end" tabindex="-1" id="tutorialsCanvas" aria-labelledby="tutorialsCanvasLabel" style="z-index: 9999">
@@ -34,9 +34,14 @@
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">
-                        <ul class="list-group">
-                            <a href="{{ route('pages.show', 'contractor_registration') }}" class="list-group-item list-group-item-action">Tutoral for Contractor Registration</a>
-                          </ul>
+                        <div class="list-group list-group-flush">
+                                <div class="list-group-item border" onclick="window.open('{{ route('documentations.epads') }}', '_blank')">
+                                    <a href="{{ route('documentations.epads') }}" target="_blank">
+                                        <i class="bi bi-book me-3"></i>
+                                        e-PADS Training
+                                    </a>
+                                </div>
+                        </div>
                     </div>
                 </div>
 

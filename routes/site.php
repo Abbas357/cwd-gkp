@@ -23,6 +23,7 @@ use App\Http\Controllers\Site\ContractorController;
 use App\Http\Controllers\Site\NewsLetterController;
 use App\Http\Controllers\Site\AchievementController;
 use App\Http\Controllers\Site\ServiceCardController;
+use App\Http\Controllers\Site\DocumentationController;
 use App\Http\Controllers\Site\PublicContactController;
 use App\Http\Controllers\Site\StandardizationController;
 use App\Http\Middleware\ContractorRedirectIfAuthenticated;
@@ -236,3 +237,8 @@ Route::prefix('schemes')->as('schemes.')->group(function () {
     Route::get('/', [SchemeController::class, 'index'])->name('index');
     Route::get('/{scheme}', [SchemeController::class, 'show'])->name('show');
 });
+
+Route::prefix('documentations')->as('documentations.')->group(function () {
+    Route::get('/epads', [DocumentationController::class, 'epads'])->name('epads');
+});
+
