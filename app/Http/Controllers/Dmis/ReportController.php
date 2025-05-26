@@ -124,6 +124,134 @@ class ReportController extends Controller
         ));
     }
 
+    public function dailySituationReport(Request $request)
+    {
+        $type = $request->get('type') ?? 'Road';
+        $userId = $request->get('user_id') ?? 4;
+        $reportDate = $request->get('date') ?? now()->format('Y-m-d');
+        
+        $selectedUser = User::findOrFail($userId);
+        $directSubordinates = $selectedUser->getDirectSubordinates();
+
+        $totalDamagedInfrastructureCount = 0;
+        $totalDamagedInfrastructureSum = 0;
+        $totalDamagedInfrastructureTotalCount = 0;
+        $totalFullyRestored = 0;
+        $totalPartiallyRestored = 0;
+        $totalNotRestored = 0;
+        $totalRestorationCost = 0;
+        $totalRehabilitationCost = 0;
+        
+        $subordinatesWithDistricts = collect();
+
+        foreach ($directSubordinates as $subordinate) {
+            $subordinatePostingId = $subordinate->currentPosting?->id;
+            
+            if (!$subordinatePostingId) {
+                continue;
+            }
+            
+            $subordinateDistricts = $subordinate->districts();
+            
+            if ($subordinateDistricts->isEmpty()) {
+                continue;
+            }
+            
+            $districts = collect();
+            
+            foreach ($subordinateDistricts as $district) {
+                $infraIds = $district->infrastructures
+                    ->where('type', $type)
+                    ->pluck('id')
+                    ->toArray();
+                
+                if (empty($infraIds)) {
+                    continue;
+                }
+                
+                $subordinateTeam = $subordinate->getSubordinates();
+                $teamPostingIds = $subordinateTeam->pluck('currentPosting.id')->filter()->toArray();
+                $teamPostingIds[] = $subordinatePostingId;
+                
+                // Filter damages for the specific date (daily report)
+                $damageQuery = Damage::whereIn('infrastructure_id', $infraIds)
+                    ->whereIn('posting_id', $teamPostingIds)
+                    ->whereDate('created_at', $reportDate); // Filter by date
+                
+                $district->damaged_infrastructure_count = $damageQuery->clone()->distinct('infrastructure_id')
+                    ->count('infrastructure_id');
+                    
+                if ($district->damaged_infrastructure_count == 0) {
+                    continue;
+                }
+                
+                $damagedInfraIds = $damageQuery->clone()->pluck('infrastructure_id')->unique()->toArray();
+                $district->damaged_infrastructure_total_count = $district->infrastructures
+                    ->where('type', $type)
+                    ->whereIn('id', $damagedInfraIds)
+                    ->sum('length');
+                
+                $district->damaged_infrastructure_sum = $damageQuery->clone()->sum('damaged_length');
+                $district->fully_restored = $damageQuery->clone()->where('road_status', 'Fully restored')->count();
+                $district->partially_restored = $damageQuery->clone()->where('road_status', 'Partially restored')->count();
+                $district->not_restored = $damageQuery->clone()->where('road_status', 'Not restored')->count();
+                $district->restoration = $damageQuery->clone()->sum('approximate_restoration_cost');
+                $district->rehabilitation = $damageQuery->clone()->sum('approximate_rehabilitation_cost');
+                
+                // Additional daily metrics
+                $district->new_damages_today = $damageQuery->clone()->count();
+                $district->updated_damages_today = Damage::whereIn('infrastructure_id', $infraIds)
+                    ->whereIn('posting_id', $teamPostingIds)
+                    ->whereDate('updated_at', $reportDate)
+                    ->where('created_at', '<', $reportDate)
+                    ->count();
+                
+                $districts->push($district);
+                
+                $totalDamagedInfrastructureCount += $district->damaged_infrastructure_count;
+                $totalDamagedInfrastructureSum += $district->damaged_infrastructure_sum;
+                $totalDamagedInfrastructureTotalCount += $district->damaged_infrastructure_total_count;
+                $totalFullyRestored += $district->fully_restored;
+                $totalPartiallyRestored += $district->partially_restored;
+                $totalNotRestored += $district->not_restored;
+                $totalRestorationCost += $district->restoration;
+                $totalRehabilitationCost += $district->rehabilitation;
+            }
+            
+            if ($districts->isNotEmpty()) {
+                $subordinatesWithDistricts->push([
+                    'subordinate' => $subordinate,
+                    'districts' => $districts,
+                    'district_count' => $districts->count()
+                ]);
+            }
+        }
+        
+        $total = [
+            'totalDamagedInfrastructureCount' => $totalDamagedInfrastructureCount,
+            'totalDamagedInfrastructureSum' => $totalDamagedInfrastructureSum,
+            'totalDamagedInfrastructureTotalCount' => $totalDamagedInfrastructureTotalCount,
+            'totalFullyRestored' => $totalFullyRestored,
+            'totalPartiallyRestored' => $totalPartiallyRestored,
+            'totalNotRestored' => $totalNotRestored,
+            'totalRestorationCost' => $totalRestorationCost,
+            'totalRehabilitationCost' => $totalRehabilitationCost,
+        ];        
+        
+        $subordinateDesignation = "Officer";
+        if ($directSubordinates->isNotEmpty() && $directSubordinates->first()->currentDesignation) {
+            $subordinateDesignation = $directSubordinates->first()->currentDesignation->name;
+        }
+        
+        return view('modules.dmis.reports.daily-situation', compact(
+            'subordinatesWithDistricts', 
+            'total', 
+            'subordinateDesignation', 
+            'selectedUser',
+            'reportDate'
+        ));
+    }
+
     public function officerReport(Request $request)
     {
         $type = $request->get('type') ?? 'Road';

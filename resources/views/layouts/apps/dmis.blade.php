@@ -48,6 +48,13 @@
                 </a>
             </li>
             @endcan
+            @can('viewMainReport', App\Models\Damage::class)
+            <li>
+                <a href="{{ route('admin.apps.dmis.reports.daily-situation') }}">
+                    <i class="bi-graph-down text-primary"></i> Daily Situation
+                </a>
+            </li>
+            @endcan
             @can('viewOfficerWiseReport', App\Models\Damage::class)
             <li>
                 <a href="{{ route('admin.apps.dmis.reports.officer-wise') }}">
