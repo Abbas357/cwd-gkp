@@ -308,7 +308,7 @@ class LearnController extends Controller
             [
                 'id' => 1,
                 'title' => 'Summary Approval KP Digital Workspace',
-                'url' => 'https://www.youtube.com/watch?v=IKm_NaoDPBc&t=812s',
+                'url' => 'https://www.youtube.com/watch?v=IKm_NaoDPBc',
                 'category' => 'General',
                 'type' => 'video',
                 'created_at' => now()->subDays(10),
