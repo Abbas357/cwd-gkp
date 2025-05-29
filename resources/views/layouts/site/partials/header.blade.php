@@ -33,14 +33,19 @@
                     <div class="offcanvas-header border-bottom">
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
-                    <div class="offcanvas-body">
-                        <div class="list-group list-group-flush">
-                            <div class="list-group-item border" onclick="window.open('{{ route('documentations.epads') }}', '_blank')">
-                                <a href="{{ route('documentations.epads') }}" target="_blank">
-                                    <i class="bi bi-book me-3"></i>
-                                    e-PADS Training
-                                </a>
-                            </div>
+                    <div class="offcanvas-body p-3">
+                        <div class="course-grid">
+                            
+                            <a href="{{ route('learn.epads') }}" target="_blank" class="course-card">
+                                <img src="{{ asset('site/images/icons/learn/epads.png') }}" alt="e-PADS Training" class="course-image">
+                                <h6 class="course-title">e-PADS</h6>
+                            </a>
+
+                            <a href="{{ route('learn.kpdws') }}" target="_blank" class="course-card">
+                                <img src="{{ asset('site/images/icons/learn/kpdws.png') }}" alt="User Manual" class="course-image">
+                                <h6 class="course-title">KP Digital Workspace</h6>
+                            </a>
+
                         </div>
                     </div>
                 </div>
