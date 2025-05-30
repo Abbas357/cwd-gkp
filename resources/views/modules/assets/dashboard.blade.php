@@ -389,26 +389,22 @@
             new ApexCharts(document.querySelector(elementId), options).render();
         }
 
-        // Create all distribution charts
         const distributions = @json($distributions);
         createDistributionChart("#typeChart", distributions.type, 'type');
         createDistributionChart("#colorChart", distributions.color, 'color');
         createDistributionChart("#fuelTypeChart", distributions.fuel_type, 'fuel_type');
         createDistributionChart("#registrationStatusChart", distributions.registration_status, 'registration_status');
 
-        // Initialize tooltips
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
 
-        // Add click handlers for chart period buttons
         document.querySelectorAll('.btn-group .btn').forEach(button => {
             button.addEventListener('click', function() {
                 const buttons = this.parentElement.querySelectorAll('.btn');
                 buttons.forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
-                // Here you can add logic to update the chart period
             });
         });
     </script>

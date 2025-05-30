@@ -14,7 +14,7 @@ class AssetAllotmentObserver
 
     public function created(AssetAllotment $allotment): void
     {
-        AssetAllotment::where('vehicle_id', $allotment->vehicle_id)
+        AssetAllotment::where('asset_id', $allotment->asset_id)
             ->where('id', '!=', $allotment->id)
             ->where('is_current', true)
             ->update([

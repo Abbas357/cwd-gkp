@@ -28,7 +28,7 @@ class AssetController extends Controller
             $dataTable = Datatables::of($assets)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    return view('modules.vehicles.partials.buttons', compact('row'))->render();
+                    return view('modules.assets.partials.buttons', compact('row'))->render();
                 })
                 ->addColumn('added_by', function ($row) {
                     return $row->user->currentPosting?->designation->name 
@@ -36,7 +36,7 @@ class AssetController extends Controller
                     : ($row->user->currentPosting?->designation->name  ?? 'N/A');
                 })
                 ->addColumn('assigned_to', function ($row) {
-                    return view('modules.vehicles.partials.assignment', compact('row'))->render();
+                    return view('modules.assets.partials.assignment', compact('row'))->render();
                 })
                 ->addColumn('officer_name', function ($row) {
                     return $row->allotment?->user?->name ?? 'Name not available';
@@ -71,22 +71,19 @@ class AssetController extends Controller
             return $dataTable->toJson();
         }
 
-        return view('modules.vehicles.index');
+        return view('modules.assets.index');
     }
 
     public function create()
     {
         $cat = [
             'users' => User::all(),
-            'vehicle_type' => category('vehicle_type', 'vehicle'),
-            'vehicle_functional_status' => category('vehicle_functional_status', 'vehicle'),
-            'vehicle_color' => category('vehicle_color', 'vehicle'),
-            'fuel_type' => category('fuel_type', 'vehicle'),
-            'vehicle_registration_status' => category('vehicle_registration_status', 'vehicle'),
-            'vehicle_brand' => category('vehicle_brand', 'vehicle'),
+            'asset_type' => category('asset_type', 'asset'),
+            'asset_functional_status' => category('asset_functional_status', 'asset'),
+            'asset_brand' => category('asset_brand', 'asset'),
         ];
 
-        $html = view('modules.vehicles.partials.create', compact('cat'))->render();
+        $html = view('modules.assets.partials.create', compact('cat'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -163,7 +160,7 @@ class AssetController extends Controller
             ]);
         }
 
-        $html = view('modules.vehicles.partials.detail', compact('vehicle', 'cat'))->render();
+        $html = view('modules.assets.partials.detail', compact('vehicle', 'cat'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -185,7 +182,7 @@ class AssetController extends Controller
             ]);
         }
 
-        $html = view('modules.vehicles.partials.history', compact('vehicle', 'allotments'))->render();
+        $html = view('modules.assets.partials.history', compact('vehicle', 'allotments'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -212,7 +209,7 @@ class AssetController extends Controller
             ]);
         }
 
-        $html = view('modules.vehicles.partials.allotment-detail', compact('vehicle', 'allotments', 'currentAllotment'))->render();
+        $html = view('modules.assets.partials.allotment-detail', compact('vehicle', 'allotments', 'currentAllotment'))->render();
         return response()->json([
             'success' => true,
             'data' => [

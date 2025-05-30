@@ -6,7 +6,7 @@ use App\Http\Controllers\Asset\HomeController;
 use App\Http\Controllers\Asset\AssetController;
 use App\Http\Controllers\Asset\AssetAllotmentController;
 
-Route::group(['prefix' => 'vehicles', 'as' => 'vehicles.'], function () {
+Route::group(['prefix' => 'assets', 'as' => 'assets.'], function () {
 
     Route::prefix('settings')->as('settings.')->group(function () {
         Route::get('/', [HomeController::class, 'settings'])->name('index')->can('viewAssetSettings', App\Models\Setting::class);

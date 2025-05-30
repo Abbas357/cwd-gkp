@@ -43,7 +43,7 @@ class AssetAllotment extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('vehicle_orders');
+        $this->addMediaCollection('asset_orders');
     }
 
     public function getDurationAttribute()
@@ -67,9 +67,9 @@ class AssetAllotment extends Model implements HasMedia
         return empty($parts) ? '0 days' : implode(', ', $parts);
     }
 
-    public function vehicle()
+    public function asset()
     {
-        return $this->belongsTo(Asset::class, 'vehicle_id');
+        return $this->belongsTo(Asset::class, 'asset_id');
     }
 
     public function user()

@@ -21,6 +21,6 @@ class AssetLayout extends Component
 
     public function render(): View
     {
-        return view('layouts.apps.assets', ['title' => $this->title, 'showAside' => $this->showAside]);
+        return view('layouts.apps.asset', ['title' => $this->title, 'showAside' => $this->showAside]);
     }
 }
