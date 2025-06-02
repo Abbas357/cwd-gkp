@@ -35,7 +35,7 @@ return new class extends Migration
             $table->string('kpra_reg_no', 45)->nullable();
             $table->string('pre_enlistment')->nullable();
             $table->string('is_limited', 45)->default('no');
-            $table->enum('status', ['draft', 'deferred_once', 'deferred_twice', 'deferred_thrice', 'approved'])->default('new');
+            $table->enum('status', ['draft', 'deferred_once', 'deferred_twice', 'deferred_thrice', 'approved'])->default('draft');
             $table->timestamp('status_updated_at')->nullable();
             $table->unsignedBigInteger('status_updated_by')->nullable();
             $table->text('remarks')->nullable();
