@@ -9,6 +9,10 @@ RewriteRule ^contractorVerification\.php$ https://old.cwd.gkp.pk/contractorVerif
     RewriteCond %{HTTP_HOST} ^old\.cwd\.gkp\.pk$ [NC]
     RewriteRule ^ - [L]
     
+    # Redirect :2096 to /mail
+    RewriteCond %{REQUEST_URI} ^/mail$
+    RewriteRule ^mail$ https://cwd.gkp.pk:2096 [R=301,L]
+    
     RewriteRule ^$ public/index.php [L]
     RewriteRule ^((?!public/).*)$ public/$1 [L,NC]
     RewriteCond %{REQUEST_FILENAME} !-d
@@ -28,9 +32,25 @@ RewriteRule ^contractorVerification\.php$ https://old.cwd.gkp.pk/contractorVerif
 # To make changes to this file, use the cPanel MultiPHP INI Editor (Home >> Software >> MultiPHP INI Editor)
 # For more information, read our documentation (https://go.cpanel.net/EA4ModifyINI)
 <IfModule php8_module>
-
+   php_flag display_errors Off
+   php_value max_execution_time 30
+   php_value max_input_time 60
+   php_value max_input_vars 1000
+   php_value memory_limit 128M
+   php_value post_max_size 8M
+   php_value session.gc_maxlifetime 1440
+   php_value upload_max_filesize 2M
+   php_flag zlib.output_compression Off
 </IfModule>
 <IfModule lsapi_module>
-
+   php_flag display_errors Off
+   php_value max_execution_time 30
+   php_value max_input_time 60
+   php_value max_input_vars 1000
+   php_value memory_limit 128M
+   php_value post_max_size 8M
+   php_value session.gc_maxlifetime 1440
+   php_value upload_max_filesize 2M
+   php_flag zlib.output_compression Off
 </IfModule>
 # END cPanel-generated php ini directives, do not edit
