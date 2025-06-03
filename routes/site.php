@@ -1,12 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\ConsultantAuth;
 use App\Http\Middleware\ContractorAuth;
 use App\Http\Middleware\StandardizationAuth;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\NewsController;
 use App\Http\Controllers\Site\PageController;
 use App\Http\Controllers\Site\UserController;
+use App\Http\Controllers\Site\LearnController;
 use App\Http\Controllers\Site\StoryController;
 use App\Http\Controllers\Site\EventsController;
 use App\Http\Controllers\Site\SchemeController;
@@ -23,10 +25,13 @@ use App\Http\Controllers\Site\ContractorController;
 use App\Http\Controllers\Site\NewsLetterController;
 use App\Http\Controllers\Site\AchievementController;
 use App\Http\Controllers\Site\ServiceCardController;
-use App\Http\Controllers\Site\LearnController;
+use App\Http\Controllers\Site\ConsultantProjectController;
 use App\Http\Controllers\Site\PublicContactController;
 use App\Http\Controllers\Site\StandardizationController;
+use App\Http\Controllers\Site\ConsultantController;
+use App\Http\Middleware\ConsultantRedirectIfAuthenticated;
 use App\Http\Middleware\ContractorRedirectIfAuthenticated;
+use App\Http\Controllers\Site\ConsultantHumanResourceController;
 use App\Http\Controllers\Site\DevelopmentProjectController;
 use App\Http\Controllers\Site\ContractorMachineryController;
 use App\Http\Controllers\Site\ContractorRegistrationController;
@@ -46,7 +51,6 @@ Route::prefix('partials')->as('partials.')->group(function () {
 });
 
 Route::prefix('contractors')->as('contractors.')->middleware('route_lock')->group(function () {
-    Route::get('/', [ContractorController::class, 'registration'])->name('registration');
     Route::post('/', [ContractorController::class, 'store'])->name('store');
     Route::post('/check', [ContractorController::class, 'checkFields'])->name('check');
     Route::get('/approved/{uuid}', [ContractorRegistrationController::class, 'approvedContractors'])->name('approved');
@@ -127,6 +131,40 @@ Route::prefix('standardizations')->as('standardizations.')->middleware('route_lo
         });
     });
 
+});
+
+Route::prefix('consultants')->as('consultants.')->middleware('route_lock')->group(function () {
+    Route::post('/', [ConsultantController::class, 'store'])->name('store');
+    Route::post('/check', [ConsultantController::class, 'checkFields'])->name('check');
+
+    Route::middleware([ConsultantRedirectIfAuthenticated::class])->group(function () {
+        Route::get('/login', [ConsultantController::class, 'view_login'])->name('login.get');
+        Route::post('/login', [ConsultantController::class, 'login'])->name('login.post');
+        Route::get('/register', [ConsultantController::class, 'register'])->name('register');
+    });
+
+    Route::middleware(ConsultantAuth::class)->group(function () {
+
+        Route::get('/dashboard', [ConsultantController::class, 'dashboard'])->name('dashboard');
+        Route::post('/logout', [ConsultantController::class, 'logout'])->name('logout');
+
+        Route::get('/password', [ConsultantController::class, 'PasswordView'])->name('password.view');
+        Route::post('/password', [ConsultantController::class, 'updatePassword'])->name('password.update');
+
+        Route::get('/edit', [ConsultantController::class, 'edit'])->name('edit');
+        Route::patch('/update', [ConsultantController::class, 'update'])->name('update');
+
+        Route::prefix('projects')->as('projects.')->group(function () {
+            Route::get('/', [ConsultantProjectController::class, 'create'])->name('create');
+            Route::post('/', [ConsultantProjectController::class, 'store'])->name('store');
+        });
+
+        Route::prefix('hr')->as('hr.')->group(function () {
+            Route::get('/', [ConsultantHumanResourceController::class, 'create'])->name('create');
+            Route::post('/', [ConsultantHumanResourceController::class, 'store'])->name('store');
+        });
+
+    });
 });
 
 Route::prefix('service_cards')->as('service_cards.')->middleware('route_lock')->group(function () {
