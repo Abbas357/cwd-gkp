@@ -134,7 +134,9 @@ Route::prefix('standardizations')->as('standardizations.')->middleware('route_lo
 });
 
 Route::prefix('consultants')->as('consultants.')->middleware('route_lock')->group(function () {
-    Route::post('/', [ConsultantController::class, 'store'])->name('store');
+    Route::get('/', [ConsultantController::class, 'view'])->name('view');
+    Route::get('/detail/{uuid}', [ConsultantController::class, 'show'])->name('show');
+    Route::post('/store', [ConsultantController::class, 'store'])->name('store');
     Route::post('/check', [ConsultantController::class, 'checkFields'])->name('check');
 
     Route::middleware([ConsultantRedirectIfAuthenticated::class])->group(function () {

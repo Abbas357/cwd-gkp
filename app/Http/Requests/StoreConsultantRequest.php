@@ -16,6 +16,7 @@ class StoreConsultantRequest extends FormRequest
         return [
             'firm_name' => 'required|max:100',
             'email' => 'required|email|max:100',
+            'pec_number' => 'required|integer|unique:consultants,pec_number',
         ];
     }
 }

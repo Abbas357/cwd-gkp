@@ -83,7 +83,7 @@
 
                         <div class="col-md-4">
                             <label for="pec_number">PEC Number <abbr title="Required">*</abbr></label>
-                            <input type="text" class="form-control" id="pec_number" value="{{ old('pec_number') }}" placeholder="Active PEC Number" name="pec_number">
+                            <input type="number" class="form-control" id="pec_number" value="{{ old('pec_number') }}" placeholder="Active PEC Number" name="pec_number" required>
                             @error('pec_number')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -207,8 +207,15 @@
 
             $('#contact_number').on('input', function() {
                 const value = $(this).val();
-                if (value.length > 5) {
+                if (value.length > 3) {
                     debouncedValidate('contact_number', value);
+                }
+            });
+
+            $('#pec_number').on('input', function() {
+                const value = $(this).val();
+                if (value.length > 3) {
+                    debouncedValidate('pec_number', value);
                 }
             });
 

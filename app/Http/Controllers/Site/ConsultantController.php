@@ -13,6 +13,32 @@ use App\Http\Requests\StoreConsultantRequest;
 
 class ConsultantController extends Controller
 {
+    public function view(Request $request)
+    {
+        $selectedSector = $request->get('sector');
+        
+        $consultantsQuery = Consultant::with('district')
+            ->where('status', 'approved');
+        
+        if ($selectedSector) {
+            $consultantsQuery->where('sector', $selectedSector);
+        }
+        
+        $consultants = $consultantsQuery->get();
+        
+        $sectors = ['Road', 'Building', 'Bridge'];
+        
+        $consultantsBySector = $consultants->groupBy('sector');
+        
+        return view('site.consultants.view', compact('consultants', 'sectors', 'selectedSector', 'consultantsBySector'));
+    }
+
+    public function show($uuid)
+    {
+        $consultant = Consultant::with('district')->where('uuid', $uuid)->firstOrFail();
+        return view('site.consultants.show', compact('consultant'));
+    }
+
     public function dashboard()
     {
         $consultant = Consultant::findOrFail(session('consultant_id'));
@@ -71,7 +97,6 @@ class ConsultantController extends Controller
         $consultant->sector = $request->input('sector');
         $consultant->address = $request->input('address');
         $consultant->password = $request->input('email');
-        $consultant->status = 'approved';
 
         if ($consultant->save()) {
             session(['consultant_id' => $consultant->id]);
@@ -174,7 +199,7 @@ class ConsultantController extends Controller
 
         $messages = [
             'email' => 'This email is already registered',
-            'cnic' => 'This CNIC is already registered',
+            'pec_number' => 'This PEC Number is already registered',
             'contact_number' => 'This contact number is already registered'
         ];
 

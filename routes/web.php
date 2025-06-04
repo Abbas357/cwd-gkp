@@ -15,6 +15,7 @@ Route::prefix('admin')->as('admin.')->middleware(['auth'])->group(function () {
     Route::prefix('apps')->as('apps.')->group(function () {
         require __DIR__ . '/apps/hr.php';
         require __DIR__ . '/apps/contractor.php';
+        require __DIR__ . '/apps/consultant.php';
         require __DIR__ . '/apps/service_card.php';
         require __DIR__ . '/apps/standardization.php';
         require __DIR__ . '/apps/vehicle.php';

@@ -10,7 +10,7 @@
             @csrf
             <div class="card cw-shadow mb-4 rounded-0">
                 <div class="card-header bg-light fw-bold text-uppercase">
-                    Personal Information <span class="ms-3 step-indicator">Step 2 of 3</span> <span class="ms-3 subtitle">After entering all Employees data click <a href="{{ route('consultants.projects.create') }}">here</a> to proceed and enter Projects details.</span>
+                    Employee Information <span class="ms-3 step-indicator">Step 2 of 3</span> <span class="ms-3 subtitle">After entering all Employees data click <a href="{{ route('consultants.projects.create') }}">here</a> to proceed and enter Projects details.</span>
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
@@ -33,7 +33,7 @@
 
                         <div class="col-md-4">
                             <label for="contact_number">Contact Number </label>
-                            <input type="text" class="form-control" id="contact_number" value="{{ old('contact_number') }}" placeholder="Contact Number" name="contact_number">
+                            <input type="number" class="form-control" id="contact_number" value="{{ old('contact_number') }}" placeholder="Contact Number" name="contact_number">
                             @error('contact_number')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -48,8 +48,8 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label for="pec_number">PEC Number <abbr title="Required">*</abbr></label>
-                            <input type="number" class="form-control" id="pec_number" value="{{ old('pec_number') }}" placeholder="PEC Number" name="pec_number" required>
+                            <label for="pec_number">PEC Number (If any) <abbr title="Required">*</abbr></label>
+                            <input type="number" class="form-control" id="pec_number" value="{{ old('pec_number') }}" placeholder="PEC Number" name="pec_number">
                             @error('pec_number')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -121,7 +121,7 @@
                             <td>{{ $employee->email }}</td>
                             <td>{{ $employee->contact_number }}</td>
                             <td>{{ $employee->cnic_number }}</td>
-                            <td>{{ $employee->pec_number }}</td>
+                            <td>{{ $employee?->pec_number ?? '-' }}</td>
                             <td>{{ $employee->designation }}</td>
                             <td>{{ number_format($employee->salary, 2) }}</td>
                             <td>{{ \Carbon\Carbon::parse($employee->start_date)->format('j F Y') }}</td>

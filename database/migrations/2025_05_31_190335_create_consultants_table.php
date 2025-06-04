@@ -48,6 +48,8 @@ return new class extends Migration
         Schema::create('consultant_projects', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
+            $table->string('adp_number')->nullable();
+            $table->string('scheme_code')->nullable();
             $table->string('district_id')->nullable();
             $table->string('estimated_cost')->nullable();
             $table->date('start_date')->nullable();

@@ -34,13 +34,6 @@ class ConsultantHumanResourceController extends Controller
                     \App\Models\ConsultantHumanResource::class,
                     null,
                     ['consultant_id' => $consultantId]
-                ),
-                // Check across other consultants for conflicts
-                new UniqueEmployeeAcrossConsultantsRule(
-                    'email',
-                    $request->input('start_date'),
-                    $request->input('end_date'),
-                    $consultantId
                 )
             ],
             'contact_number' => [
@@ -54,12 +47,6 @@ class ConsultantHumanResourceController extends Controller
                     \App\Models\ConsultantHumanResource::class,
                     null,
                     ['consultant_id' => $consultantId]
-                ),
-                new UniqueEmployeeAcrossConsultantsRule(
-                    'contact_number',
-                    $request->input('start_date'),
-                    $request->input('end_date'),
-                    $consultantId
                 )
             ],
             'cnic_number' => [
@@ -74,6 +61,7 @@ class ConsultantHumanResourceController extends Controller
                     null,
                     ['consultant_id' => $consultantId]
                 ),
+                // Primary check for employee conflicts across consultants using CNIC
                 new UniqueEmployeeAcrossConsultantsRule(
                     'cnic_number',
                     $request->input('start_date'),
@@ -82,22 +70,8 @@ class ConsultantHumanResourceController extends Controller
                 )
             ],
             'pec_number' => [
-                'required', 
-                'max:50',
-                new UniqueDateRangeValidation(
-                    'pec_number', 
-                    $request->input('start_date'), 
-                    $request->input('end_date'), 
-                    \App\Models\ConsultantHumanResource::class,
-                    null,
-                    ['consultant_id' => $consultantId]
-                ),
-                new UniqueEmployeeAcrossConsultantsRule(
-                    'pec_number',
-                    $request->input('start_date'),
-                    $request->input('end_date'),
-                    $consultantId
-                )
+                'nullable',
+                'max:50'
             ],
             'designation' => 'required|string|max:100',
             'start_date' => 'required|date',
@@ -116,7 +90,6 @@ class ConsultantHumanResourceController extends Controller
         $hr->end_date = $request->end_date;
         $hr->salary = $request->salary;
         $hr->consultant_id = $consultantId;
-        $hr->status = 'approved';
 
         if ($hr->save()) {
             return redirect()->back()->with('success', 'Record has been added and will be placed under review. It will be visible once the moderation process is complete');

@@ -139,6 +139,10 @@
             border-color: #1a9ea5;
         }
 
+        .accent-pink::before {
+            border-color: #ff69e4;
+        }
+
         .accent-orange::before {
             border-color: #f47721;
         }
@@ -173,6 +177,10 @@
 
         .accent-teal:hover {
             box-shadow: 0 15px 30px rgba(17, 148, 155, 0.2);
+        }
+
+        .accent-pink:hover {
+            box-shadow: 0 15px 30px rgb(255, 207, 246, .8);
         }
 
         .accent-orange:hover {
@@ -213,6 +221,10 @@
 
         [data-bs-theme=dark] .accent-teal:hover {
             box-shadow: 0 15px 30px rgba(12, 199, 209, 0.4);
+        }
+
+        [data-bs-theme=dark] .accent-pink:hover {
+            box-shadow: 0 15px 30px rgba(255, 35, 215, 0.8);
         }
 
         [data-bs-theme=dark] .accent-orange:hover {
@@ -365,6 +377,17 @@
             <a href="{{ route('admin.apps.contractors.index') }}" class="app-tile accent-teal">
                 <i class="bi-person-vcard" style="color: #1cc7d0"></i>
                 <p>Contractors</p>
+            </a>
+            @endif
+
+            @if(
+                $user->can('viewAny', App\Models\Consultant::class) ||
+                $user->can('viewAny', App\Models\ConsultantHumanResource::class) ||
+                $user->can('viewAny', App\Models\ConsultantProject::class)
+            )
+            <a href="{{ route('admin.apps.consultants.index') }}" class="app-tile accent-pink">
+                <i class="bi-person-lines-fill" style="color: #d01caf"></i>
+                <p>Consultants</p>
             </a>
             @endif
 
