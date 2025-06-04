@@ -14,7 +14,7 @@ class StoreConsultantRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|max:100',
+            'firm_name' => 'required|max:100',
             'email' => 'required|email|max:100',
         ];
     }

@@ -167,7 +167,7 @@ class ContractorController extends Controller
         ]);
 
         if ($contractor->updated_at && $contractor->updated_at->isToday()) {
-            return redirect()->route('standardizations.edit')
+            return redirect()->route('contractors.edit')
                 ->with('error', 'Update Failed! Come back tomorrow to update your profile again');
         }
 

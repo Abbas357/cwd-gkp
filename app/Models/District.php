@@ -133,4 +133,9 @@ class District extends Model
 
         return $chain;
     }
+
+    public function consultants()
+    {
+        return $this->hasMany(Consultant::class);
+    }
 }

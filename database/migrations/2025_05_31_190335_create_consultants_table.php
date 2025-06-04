@@ -29,7 +29,6 @@ return new class extends Migration
         Schema::create('consultant_human_resources', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
-            $table->string('father_name')->nullable();
             $table->string('email')->nullable();
             $table->string('contact_number')->nullable();
             $table->string('cnic_number')->nullable();
@@ -49,31 +48,20 @@ return new class extends Migration
         Schema::create('consultant_projects', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
-            $table->string('district')->nullable();
-            $table->string('estimated')->nullable();
+            $table->string('district_id')->nullable();
+            $table->string('estimated_cost')->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->enum('status', ['active', 'completed', 'on_hold', 'cancelled'])->default('active');
+            $table->longText('hr')->nullable();
             $table->text('remarks')->nullable();
             $table->foreignId('consultant_id')->references('id')->on('consultants')->onDelete('cascade');
-            $table->timestamps();
-        });
-
-        Schema::create('consultant_projects_hr', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('project_id')->references('id')->on('consultant_projects')->onDelete('cascade');
-            $table->foreignId('employee_id')->references('id')->on('consultant_human_resources')->onDelete('cascade');
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
-            $table->enum('status', ['active', 'completed', 'removed'])->default('active');
-            $table->text('remarks')->nullable();
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('consultant_project_human_resources');
         Schema::dropIfExists('consultant_projects');
         Schema::dropIfExists('consultant_human_resources');
         Schema::dropIfExists('consultants');

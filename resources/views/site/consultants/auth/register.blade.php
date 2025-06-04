@@ -102,7 +102,7 @@
                             <select class="form-select" id="district" name="district">
                                 <option value="">Choose...</option>
                                 @foreach ($cat['districts'] as $district)
-                                <option value="{{ $district->name }}">{{ $district->name }}</option>
+                                <option value="{{ $district->id }}">{{ $district->name }}</option>
                                 @endforeach
                             </select>
                             @error('district')

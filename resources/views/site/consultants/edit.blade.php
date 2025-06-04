@@ -47,8 +47,8 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4 mb-3">
-                            <label for="name">Name <abbr title="Required">*</abbr></label>
-                            <input type="text" class="form-control" id="name" value="{{ old('name', $consultant->name) }}" placeholder="eg. Aslam Khan" name="name" required>
+                            <label for="name">Firm Name <abbr title="Required">*</abbr></label>
+                            <input type="text" class="form-control" id="name" value="{{ old('name', $consultant->name) }}" name="name" required>
                             @error('name')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -61,71 +61,44 @@
                             @enderror
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label for="firm_name">Firm / Company Name <abbr title="Required">*</abbr></label>
-                            <input type="text" class="form-control" id="firm_name" value="{{ old('firm_name', $consultant->firm_name) }}" placeholder="eg. Aslam Builders" name="firm_name" required>
-                            @error('firm_name')
+                            <label for="contact_number">Contact Number. <abbr title="Required">*</abbr></label>
+                            <input type="text" class="form-control" id="contact_number" value="{{ old('contact_number', $consultant->contact_number) }}" placeholder="eg. 0333-3333333" name="contact_number" required>
+                            @error('contact_number')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label for="mobile_number">Mobile No. <abbr title="Required">*</abbr></label>
-                            <input type="text" class="form-control" id="mobile_number" value="{{ old('mobile_number', $consultant->mobile_number) }}" placeholder="eg. 0333-3333333" name="mobile_number" required>
-                            @error('mobile_number')
-                            <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="cnic">CNIC No <abbr title="Required">*</abbr></label>
-                            <input type="text" class="form-control" id="cnic" value="{{ old('cnic', $consultant->cnic) }}" placeholder="National Identity Card Number" name="cnic" required>
-                            @error('cnic')
+                            <label for="district_id">District <abbr title="Required">*</abbr></label>
+                            <select class="form-select" id="district_id" name="district_id" required>
+                                <option value="">Choose...</option>
+                                @foreach ($cat['districts'] as $district)
+                                <option value="{{ $district->id }}" {{ $consultant->district_id == $district->id ? 'selected' : '' }}>{{ $district->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('district_id')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="col-md-4 mb-3">
-                            <label for="district">District <abbr title="Required">*</abbr></label>
-                            <select class="form-select" id="district" name="district" required>
+                            <label for="sector">Sector <abbr title="Required">*</abbr></label>
+                            <select class="form-select" id="sector" name="sector" required>
                                 <option value="">Choose...</option>
-                                @foreach ($cat['districts'] as $district)
-                                <option value="{{ $district->name }}" {{ $consultant->district == $district->name ? 'selected' : '' }}>{{ $district->name }}</option>
+                                @foreach ($cat['sectors'] as $sector)
+                                <option value="{{ $sector }}" {{ $consultant->sector == $sector ? 'selected' : '' }}>{{ $sector }}</option>
                                 @endforeach
                             </select>
-                            @error('district')
+                            @error('sector')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md-12 mb-3">
+
+                        <div class="col-md-4 mb-3">
                             <label for="address">Address (as per PEC) <abbr title="Required">*</abbr></label>
                             <input type="text" class="form-control" id="address" value="{{ old('address', $consultant->address) }}" placeholder="eg. Dir Upper" name="address" required>
                             @error('address')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="consultant_picture">Consultant Picture (Picture on Card)</label>
-                            <input type="file" class="form-control" id="consultant_picture" name="consultant_picture">
-                            @error('consultant_picture')
-                            <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                            <img id="previewConsultantPicture" src="#" alt="Consultant Picture Preview" style="display:none; margin-top: 10px; max-height: 100px;">
-                        </div>
-
-                        <div class="col-md-4 mb-3">
-                            <label for="cnic_front">CNIC (Front Side)</label>
-                            <input type="file" class="form-control" id="cnic_front" name="cnic_front">
-                            @error('cnic_front')
-                            <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                            <img id="previewCnicFront" src="#" alt="CNIC Front Preview" style="display:none; margin-top: 10px; max-height: 100px;">
-                        </div>
-
-                        <div class="col-md-4 mb-3">
-                            <label for="cnic_back">CNIC (Back Side)</label>
-                            <input type="file" class="form-control" id="cnic_back" name="cnic_back">
-                            @error('cnic_back')
-                            <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                            <img id="previewCnicBack" src="#" alt="CNIC Back Preview" style="display:none; margin-top: 10px; max-height: 100px;">
                         </div>
                     </div>
                 </div>

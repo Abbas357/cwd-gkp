@@ -67,14 +67,15 @@ class ConsultantController extends Controller
         $consultant->email = $request->input('email');
         $consultant->pec_number = $request->input('pec_number');
         $consultant->contact_number = $request->input('contact_number');
-        $consultant->district = $request->input('district');
+        $consultant->district_id = $request->input('district');
         $consultant->sector = $request->input('sector');
         $consultant->address = $request->input('address');
         $consultant->password = $request->input('email');
+        $consultant->status = 'approved';
 
         if ($consultant->save()) {
             session(['consultant_id' => $consultant->id]);
-            return redirect()->route('consultants.dashboard')->with('success', 'Congratulations! Your account has been created successfully. The email ' . $request->input('email') . ' has been set as your password for managing your account in future.');
+            return redirect()->route('consultants.hr.create')->with('success', 'Congratulations! Your account has been created successfully. The email ' . $request->input('email') . ' has been set as your password for managing your account in future.');
         }
 
         return redirect()->route('consultants.login')->with('error', 'There is an error submitting your data');
@@ -108,6 +109,7 @@ class ConsultantController extends Controller
         $consultant = Consultant::findOrFail(session('consultant_id'));
         $cat = [
             'districts' => District::all(),
+            'sectors' => ['Road', 'Building', 'Bridge'],
         ];
 
         return view('site.consultants.edit', compact('consultant', 'cat'));
@@ -124,47 +126,27 @@ class ConsultantController extends Controller
         
         $validated = $request->validate([
             'name' => 'required|string|max:100',
-            'firm_name' => 'required|string|max:100',
-            'cnic' => [
+            'contact_number' => [
                 'required',
                 'string',
-                'max:15',
-                'regex:/^[0-9]{5}-[0-9]{7}-[0-9]{1}$/'
-            ],
-            'mobile_number' => [
-                'required',
-                'string',
-                'max:45',
-                'regex:/^((\+92|92|0)([0-9]{3}|[0-9]{3}-)[0-9]{7}|(\+92|92|0)[0-9]{10})$/'
-            ],
+                'max:45',            ],
             'email' => [
                 'required',
                 'email',
                 'max:100',
                 'email_exists'
             ],
-            'address' => 'required|string',
-            'district' => 'required|string|max:100',
+            'address' => 'string',
+            'district_id' => 'string',
+            'sector' => 'string',
         ]);
 
-        if ($consultant->updated_at && $consultant->updated_at->isToday()) {
-            return redirect()->route('standardizations.edit')
-                ->with('error', 'Update Failed! Come back tomorrow to update your profile again');
-        }
+        // if ($consultant->updated_at && $consultant->updated_at->isToday()) {
+        //     return redirect()->route('consultants.edit')
+        //         ->with('error', 'Update Failed! Come back tomorrow to update your profile again');
+        // }
 
         $consultant->update($validated);
-
-        if ($request->hasFile('consultant_picture')) {
-            $consultant->addMedia($request->file('consultant_picture'))->toMediaCollection('consultant_pictures');
-        }
-
-        if ($request->hasFile('cnic_front')) {
-            $consultant->addMedia($request->file('cnic_front'))->toMediaCollection('consultant_cnic_front');
-        }
-
-        if ($request->hasFile('cnic_back')) {
-            $consultant->addMedia($request->file('cnic_back'))->toMediaCollection('consultant_cnic_back');
-        }
         
         return redirect()->route('consultants.edit')
             ->with('status', 'Profile Updated');
@@ -193,7 +175,7 @@ class ConsultantController extends Controller
         $messages = [
             'email' => 'This email is already registered',
             'cnic' => 'This CNIC is already registered',
-            'mobile_number' => 'This mobile number is already registered'
+            'contact_number' => 'This contact number is already registered'
         ];
 
         return response()->json([

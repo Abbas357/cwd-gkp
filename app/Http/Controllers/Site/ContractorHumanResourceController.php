@@ -21,13 +21,37 @@ class ContractorHumanResourceController extends Controller
             'name' => 'required|string|max:255',
             'father_name' => 'required|string|max:255',
             'email' => ['required', 'email', 'max:255', 
-                new UniqueDateRangeValidation('email', $request->input('start_date'), $request->input('end_date'))],
+                new UniqueDateRangeValidation(
+                    'email', 
+                    $request->input('start_date'), 
+                    $request->input('end_date'), 
+                    \App\Models\ContractorHumanResource::class
+                )
+            ],
             'mobile_number' => ['required', 'string', 'max:255', 
-                new UniqueDateRangeValidation('mobile_number', $request->input('start_date'), $request->input('end_date'))],
+                new UniqueDateRangeValidation(
+                    'mobile_number', 
+                    $request->input('start_date'), 
+                    $request->input('end_date'), 
+                    \App\Models\ContractorHumanResource::class
+                )
+            ],
             'cnic_number' => ['required', 'string', 'max:15', 
-                new UniqueDateRangeValidation('cnic_number', $request->input('start_date'), $request->input('end_date'))],
+                new UniqueDateRangeValidation(
+                    'cnic_number', 
+                    $request->input('start_date'), 
+                    $request->input('end_date'), 
+                    \App\Models\ContractorHumanResource::class
+                )
+            ],
             'pec_number' => ['required', 'max:50', 
-                new UniqueDateRangeValidation('pec_number', $request->input('start_date'), $request->input('end_date'))],
+                new UniqueDateRangeValidation(
+                    'pec_number', 
+                    $request->input('start_date'), 
+                    $request->input('end_date'), 
+                    \App\Models\ContractorHumanResource::class
+                )
+            ],
             'designation' => 'required|string|max:100',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',

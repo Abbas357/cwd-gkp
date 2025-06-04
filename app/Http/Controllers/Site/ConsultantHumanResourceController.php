@@ -6,53 +6,118 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ConsultantHumanResource;
 use App\Rules\UniqueDateRangeValidation;
+use App\Rules\UniqueEmployeeAcrossConsultantsRule;
 
 class ConsultantHumanResourceController extends Controller
 {
     public function create()
     {
-        $humanResources = ConsultantHumanResource::where('contractor_id', session('contractor_id'))->paginate(10);
-        return view('site.contractors.hr_profile', compact('humanResources'));
+        $employees = ConsultantHumanResource::where('consultant_id', session('consultant_id'))->paginate(10);
+        return view('site.consultants.hr_profile', compact('employees'));
     }
 
     public function store(Request $request)
     {
+        $consultantId = session('consultant_id');
+        
         $request->validate([
             'name' => 'required|string|max:255',
-            'father_name' => 'required|string|max:255',
-            'email' => ['required', 'email', 'max:255', 
-                new UniqueDateRangeValidation('email', $request->input('start_date'), $request->input('end_date'))],
-            'mobile_number' => ['required', 'string', 'max:255', 
-                new UniqueDateRangeValidation('mobile_number', $request->input('start_date'), $request->input('end_date'))],
-            'cnic_number' => ['required', 'string', 'max:15', 
-                new UniqueDateRangeValidation('cnic_number', $request->input('start_date'), $request->input('end_date'))],
-            'pec_number' => ['required', 'max:50', 
-                new UniqueDateRangeValidation('pec_number', $request->input('start_date'), $request->input('end_date'))],
+            'email' => [
+                'required', 
+                'email', 
+                'max:255',
+                // Check within same consultant for duplicates
+                new UniqueDateRangeValidation(
+                    'email', 
+                    $request->input('start_date'), 
+                    $request->input('end_date'), 
+                    \App\Models\ConsultantHumanResource::class,
+                    null,
+                    ['consultant_id' => $consultantId]
+                ),
+                // Check across other consultants for conflicts
+                new UniqueEmployeeAcrossConsultantsRule(
+                    'email',
+                    $request->input('start_date'),
+                    $request->input('end_date'),
+                    $consultantId
+                )
+            ],
+            'contact_number' => [
+                'required', 
+                'string', 
+                'max:255',
+                new UniqueDateRangeValidation(
+                    'contact_number', 
+                    $request->input('start_date'), 
+                    $request->input('end_date'), 
+                    \App\Models\ConsultantHumanResource::class,
+                    null,
+                    ['consultant_id' => $consultantId]
+                ),
+                new UniqueEmployeeAcrossConsultantsRule(
+                    'contact_number',
+                    $request->input('start_date'),
+                    $request->input('end_date'),
+                    $consultantId
+                )
+            ],
+            'cnic_number' => [
+                'required', 
+                'string', 
+                'max:15',
+                new UniqueDateRangeValidation(
+                    'cnic_number', 
+                    $request->input('start_date'), 
+                    $request->input('end_date'), 
+                    \App\Models\ConsultantHumanResource::class,
+                    null,
+                    ['consultant_id' => $consultantId]
+                ),
+                new UniqueEmployeeAcrossConsultantsRule(
+                    'cnic_number',
+                    $request->input('start_date'),
+                    $request->input('end_date'),
+                    $consultantId
+                )
+            ],
+            'pec_number' => [
+                'required', 
+                'max:50',
+                new UniqueDateRangeValidation(
+                    'pec_number', 
+                    $request->input('start_date'), 
+                    $request->input('end_date'), 
+                    \App\Models\ConsultantHumanResource::class,
+                    null,
+                    ['consultant_id' => $consultantId]
+                ),
+                new UniqueEmployeeAcrossConsultantsRule(
+                    'pec_number',
+                    $request->input('start_date'),
+                    $request->input('end_date'),
+                    $consultantId
+                )
+            ],
             'designation' => 'required|string|max:100',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
-            'salary' => 'required|numeric',
-            'resume' => 'nullable|file|mimes:jpg,png,gif,pdf,doc,docx|max:5000'
+            'salary' => 'numeric'
         ]);
 
         $hr = new ConsultantHumanResource();
         $hr->name = $request->name;
-        $hr->father_name = $request->father_name;
         $hr->email = $request->email;
-        $hr->mobile_number = $request->mobile_number;
+        $hr->contact_number = $request->contact_number;
         $hr->cnic_number = $request->cnic_number;
         $hr->pec_number = $request->pec_number;
         $hr->designation = $request->designation;
         $hr->start_date = $request->start_date;
         $hr->end_date = $request->end_date;
         $hr->salary = $request->salary;
-        $hr->contractor_id = session('contractor_id');
+        $hr->consultant_id = $consultantId;
+        $hr->status = 'approved';
 
-        if ($request->hasFile('resume')) {
-            $hr->addMedia($request->file('resume'))
-                ->toMediaCollection('contractor_hr_resumes');
-        }
- 
         if ($hr->save()) {
             return redirect()->back()->with('success', 'Record has been added and will be placed under review. It will be visible once the moderation process is complete');
         }

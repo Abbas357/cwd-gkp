@@ -19,7 +19,7 @@
     <div class="container p-2">
         <div class="card mb-4">
             <div class="card-header bg-light fw-bold text-uppercase">
-                Account
+                Account <span class="ms-3 step-indicator">Step 1 of 3</span> <span class="ms-3 subtitle">First step is complete. Click <a href="{{ route('consultants.hr.create') }}">here</a> to proceed and enter HR details.</span>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -29,8 +29,12 @@
                             <div class="info-value">{{ $consultant->email }}</div>
                         </div>
                         <div class="info-group">
+                            <div class="info-label">PEC Number</div>
+                            <div class="info-value">{{ $consultant->pec_number }}</div>
+                        </div>
+                        <div class="info-group">
                             <div class="info-label">Firm / Company Name</div>
-                            <div class="info-value">{{ $consultant->firm_name }}</div>
+                            <div class="info-value">{{ $consultant->name }}</div>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -40,7 +44,11 @@
                         </div>
                         <div class="info-group">
                             <div class="info-label">District</div>
-                            <div class="info-value">{{ $consultant->district->name }}</div>
+                            <div class="info-value">{{ $consultant->district?->name }}</div>
+                        </div>
+                        <div class="info-group">
+                            <div class="info-label">Sector</div>
+                            <div class="info-value">{{ $consultant->sector }}</div>
                         </div>
                     </div>
                     <div class="col-md-4">
