@@ -138,6 +138,171 @@
         }
     }
 
+    .dropdown-menu {
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(20px) !important;
+        border: 1px solid rgba(13, 110, 253, 0.2) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
+        animation: dropdownSlide 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+        overflow: hidden !important;
+    }
+
+    @keyframes dropdownSlide {
+        0% {
+            opacity: 0;
+            transform: translateY(-10px) scale(0.95);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .dropdown-item {
+        transition: all 0.3s ease !important;
+        border-radius: 8px !important;
+        margin: 2px 8px !important;
+        position: relative !important;
+        overflow: hidden !important;
+    }
+
+    .dropdown-item::before {
+        content: '' !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: -100% !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: linear-gradient(90deg, transparent, rgba(13, 110, 253, 0.1), transparent) !important;
+        transition: left 0.6s ease !important;
+    }
+
+    .dropdown-item:hover::before {
+        left: 100% !important;
+    }
+
+    .dropdown-item:hover {
+        background: linear-gradient(135deg, rgba(13, 110, 253, 0.1), rgba(13, 110, 253, 0.05)) !important;
+        color: #0d6efd !important;
+        transform: translateX(5px) !important;
+        box-shadow: 0 2px 10px rgba(13, 110, 253, 0.2) !important;
+    }
+
+    .dropdown-item i {
+        transition: transform 0.3s ease !important;
+    }
+
+    .dropdown-item:hover i {
+        transform: scale(1.2) !important;
+    }
+
+    /* Floating animation for nav items */
+    .nav-item {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .nav-item:nth-child(2) {
+        animation-delay: -2s;
+    }
+
+    .nav-item:nth-child(3) {
+        animation-delay: -4s;
+    }
+
+    @keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-3px);
+        }
+    }
+
+    @media (max-width: 991px) {
+        .hamburger {
+            display: block;
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            z-index: 1001;
+        }
+
+        .hamburger.active .hamburger-line:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active .hamburger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        .container {
+            flex-direction: column;
+            align-items: flex-start !important;
+        }
+
+        .nav-tabs {
+            display: none;
+            width: 100%;
+            padding: 10px 0;
+            animation: mobileSlide 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        @keyframes mobileSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .nav-tabs.show {
+            display: block;
+        }
+
+        .nav-tabs .nav-item {
+            width: 100%;
+            margin: 5px 0;
+        }
+
+        .nav-tabs .nav-link {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 12px;
+        }
+
+        .dropdown-menu {
+            position: static !important;
+            width: 100%;
+            margin-left: 20px;
+            border: none;
+            box-shadow: none;
+            background: transparent;
+        }
+
+        .account-dropdown {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+    }
+
 </style>
 @php
 use App\Models\Consultant;
@@ -170,7 +335,7 @@ $consultant = Consultant::find($consultantId);
             </li>
         </ul>
         <div class="dropdown account-dropdown">
-            <button class="btn btn-light dropdown-toggle py-1 d-flex align-items-center" type="button" id="dropdownMenuButton">
+            <button class="btn dropdown-toggle py-1 d-flex align-items-center" type="button" id="dropdownMenuButton">
                 <img src="{{ asset('site/images/default-dp.png') }}" alt="Profile Picture" style="width:30px; height:30px; border-radius: 50px; outline: 2px solid #fff">
                 <span> &nbsp; {{ $consultant?->name }}</span>
             </button>

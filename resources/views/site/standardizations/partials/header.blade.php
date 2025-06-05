@@ -153,7 +153,7 @@ $profilePictureUrl = $standardization?->getFirstMediaUrl('standardization_firms_
             </li>
         </ul>
         <div class="dropdown account-dropdown">
-            <button class="btn btn-light dropdown-toggle py-1 d-flex align-items-center" type="button" id="dropdownMenuButton">
+            <button class="btn dropdown-toggle py-1 d-flex align-items-center" type="button" id="dropdownMenuButton">
                 <img src="{{ $profilePictureUrl }}" alt="Profile Picture" style="width:30px; height:30px; border-radius: 50px; outline: 2px solid #fff">
                 <span> &nbsp; {{ $standardization->owner_name }}</span>
             </button>
