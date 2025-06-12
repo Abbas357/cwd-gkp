@@ -22,7 +22,6 @@ Route::prefix('admin')->as('admin.')->middleware(['auth'])->group(function () {
         require __DIR__ . '/apps/porms.php';
         require __DIR__ . '/apps/machinery.php';
         require __DIR__ . '/apps/dmis.php';
-        require __DIR__ . '/apps/asset.php';
     });
     
 });

@@ -79,8 +79,10 @@
                 </div>
             </div>
         </div>
+        @if($consultant->status !== 'approved')
         <div class="d-flex justify-content-end">
             <a href="{{ route('consultants.edit') }}" class="btn btn-primary">Edit Information</a>
         </div>
+        @endif
     </div>
 </x-main-layout>

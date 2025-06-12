@@ -12,11 +12,12 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             $table->string('name', 45)->nullable();
-            $table->string('email', 100)->unique();
+            $table->string('email', 100);
             $table->string('contact_number', 15)->nullable();
             $table->string('district_id')->nullable();
             $table->string('address')->nullable();
             $table->string('sector')->nullable();
+            $table->date('order_date')->nullable();
             $table->string('pec_number', 100);
             $table->enum('status', ['draft', 'rejected', 'approved'])->default('draft');
             $table->timestamp('status_updated_at')->nullable();

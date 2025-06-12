@@ -132,6 +132,10 @@ class ConsultantController extends Controller
     public function edit()
     {
         $consultant = Consultant::findOrFail(session('consultant_id'));
+        if($consultant->status === 'approved') {
+            return redirect()->route('consultants.dashboard')->with('error', 'You cannot edit your profile after approval. Please contact the admin for any changes.');
+        }
+
         $cat = [
             'districts' => District::all(),
             'sectors' => ['Road', 'Building', 'Bridge'],
