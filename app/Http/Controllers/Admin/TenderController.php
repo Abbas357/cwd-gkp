@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Helpers\SearchBuilder;
 use App\Models\SiteNotification;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Requests\StoreTenderRequest;
@@ -50,9 +51,9 @@ class TenderController extends Controller
                     return view('admin.tenders.partials.status', compact('row'))->render();
                 })
                 ->addColumn('user', function ($row) {
-                    return $row->user?->currentPosting?->designation?->name 
-                    ? '<a href="'.route('admin.apps.hr.users.show', $row?->user?->id).'" target="_blank">'.$row->user?->currentPosting?->designation?->name .'</a>' 
-                    : ($row->user?->currentPosting?->designation?->name  ?? 'N/A');
+                    return $row->user?->currentPosting?->designation?->name
+                        ? '<a href="' . route('admin.apps.hr.users.show', $row?->user?->id) . '" target="_blank">' . $row->user?->currentPosting?->designation?->name . '</a>'
+                        : ($row->user?->currentPosting?->designation?->name  ?? 'N/A');
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');
@@ -69,7 +70,7 @@ class TenderController extends Controller
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
                 $dataTable->filter(function ($query) use ($request, $relationMappings) {
                     $sb = new SearchBuilder(
-                        $request, 
+                        $request,
                         $query,
                         [],
                         $relationMappings,
@@ -97,42 +98,88 @@ class TenderController extends Controller
 
     public function store(StoreTenderRequest $request)
     {
-        $name = data_get(User::find($request->user), 'currentPosting.office.name');
-        $tender = new Tender();
-        $tender->title = $request->title . ' ('.$name. ')';
-        $tender->slug = Str::uuid();
-        $tender->description = $request->description;
-        $tender->date_of_advertisement = $request->date_of_advertisement;
-        $tender->closing_date = $request->closing_date;
-        $tender->user_id = $request->user ?? 0;
-        
-        $tender_documents = $request->file('tender_documents');
-        $tender_eoi_documents = $request->file('tender_eoi_documents');
-        $bidding_documents = $request->file('bidding_documents');
+        try {
+            $this->validateFileUploads($request);
 
-        if ($tender_documents) {
-            foreach ($tender_documents as $document) {
-                $tender->addMedia($document)->toMediaCollection('tender_documents');
-            }
-        }
+            $name = data_get(User::find($request->user), 'currentPosting.office.name');
 
-        if ($tender_eoi_documents) {
-            foreach ($tender_eoi_documents as $document) {
-                $tender->addMedia($document)->toMediaCollection('tender_eoi_documents');
-            }
-        }
+            $tender = new Tender();
+            $tender->title = $request->title . ' (' . $name . ')';
+            $tender->slug = Str::uuid();
+            $tender->description = $request->description;
+            $tender->date_of_advertisement = $request->date_of_advertisement;
+            $tender->closing_date = $request->closing_date;
+            $tender->user_id = $request->user ?? 0;
 
-        if ($bidding_documents) {
-            foreach ($bidding_documents as $document) {
-                $tender->addMedia($document)->toMediaCollection('bidding_documents');
+            // Save tender first to get the ID
+            if (!$tender->save()) {
+                return response()->json(['error' => 'Failed to save tender data.'], 500);
             }
-        }
-        
-        if ($tender->save()) {
+
+            $this->handleFileUploads($tender, $request);
+
             return response()->json(['success' => 'Tender added successfully.']);
-        }
+        } catch (\Exception $e) {
+            Log::error('Tender creation failed: ' . $e->getMessage(), [
+                'user_id' => $request->user,
+                'title' => $request->title,
+                'error' => $e->getTraceAsString()
+            ]);
 
-        return response()->json(['error' => 'There was an error adding the tender.']);
+            return response()->json([
+                'error' => 'There was an error adding the tender: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    private function validateFileUploads($request)
+    {
+        $fileFields = ['tender_documents', 'tender_eoi_documents', 'bidding_documents'];
+
+        foreach ($fileFields as $field) {
+            if ($request->hasFile($field)) {
+                $files = $request->file($field);
+                foreach ($files as $file) {
+                    if (!$file->isValid()) {
+                        throw new \Exception("Invalid file upload for {$field}: " . $file->getErrorMessage());
+                    }
+
+                    if ($file->getSize() > 10 * 1024 * 1024) { // 10MB
+                        throw new \Exception("File too large for {$field}: " . $file->getClientOriginalName());
+                    }
+
+                    $allowedMimes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                    if (!in_array($file->getMimeType(), $allowedMimes)) {
+                        throw new \Exception("Invalid file type for {$field}: " . $file->getClientOriginalName());
+                    }
+                }
+            }
+        }
+    }
+
+    private function handleFileUploads($tender, $request)
+    {
+        $fileCollections = [
+            'tender_documents' => 'tender_documents',
+            'tender_eoi_documents' => 'tender_eoi_documents',
+            'bidding_documents' => 'bidding_documents'
+        ];
+
+        foreach ($fileCollections as $requestField => $collection) {
+            if ($request->hasFile($requestField)) {
+                $files = $request->file($requestField);
+                foreach ($files as $document) {
+                    try {
+                        $tender->addMedia($document)
+                            ->usingName($document->getClientOriginalName())
+                            ->toMediaCollection($collection);
+                    } catch (\Exception $e) {
+                        Log::error("Failed to upload file {$document->getClientOriginalName()}: " . $e->getMessage());
+                        throw new \Exception("Failed to upload file: " . $document->getClientOriginalName());
+                    }
+                }
+            }
+        }
     }
 
     public function show(Tender $tender)
@@ -176,7 +223,7 @@ class TenderController extends Controller
             ]);
         }
 
-       $html = view('admin.tenders.partials.detail', compact('tender'))->render();
+        $html = view('admin.tenders.partials.detail', compact('tender'))->render();
         return response()->json([
             'success' => true,
             'data' => [
