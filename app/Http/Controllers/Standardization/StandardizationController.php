@@ -184,7 +184,7 @@ class StandardizationController extends Controller
             'value' => 'required|string',
         ]);
 
-        if(($request->has('expiry_date') || $request->has('issue_date')) && $standardization->status !== 'new') {
+        if(($request->has('expiry_date') || $request->has('issue_date')) && $standardization->status !== 'draft') {
             return response()->json(['error' => 'Approved or Rejected Standardization cannot be updated']);
         }
         $standardization->{$request->field} = $request->value;
@@ -195,7 +195,7 @@ class StandardizationController extends Controller
 
     public function uploadFile(Request $request, Standardization $standardization)
     {
-        if($request->hasFile('firm_pictures') && $standardization->status !== 'new') {
+        if($request->hasFile('firm_pictures') && $standardization->status !== 'draft') {
             return response()->json(['error' => 'Approved or Rejected Standardization cannot be updated']);
         }
         $file = $request->file;
