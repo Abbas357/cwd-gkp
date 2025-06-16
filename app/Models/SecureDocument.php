@@ -16,15 +16,6 @@ class SecureDocument extends Model implements HasMedia
 
     protected $guarded = [];
 
-    protected function casts(): array
-    {
-        return [
-            'card_issue_date' => 'datetime',
-            'card_expiry_date' => 'datetime',
-            'password' => 'hashed'
-        ];
-    }
-    
     protected static $recordEvents = ['updated', 'deleted'];
     public function getActivitylogOptions(): LogOptions
     {
@@ -37,6 +28,13 @@ class SecureDocument extends Model implements HasMedia
             ->setDescriptionForEvent(function (string $eventName) {
                 return "Secure Document {$eventName}";
             });
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'issue_date' => 'date',
+        ];
     }
     
     public function registerMediaCollections(): void

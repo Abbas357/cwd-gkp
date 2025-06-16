@@ -21,22 +21,23 @@ use App\Http\Controllers\Site\ProductController;
 use App\Http\Controllers\Site\ProjectController;
 use App\Http\Controllers\Site\DownloadController;
 use App\Http\Controllers\Site\SeniorityController;
+use App\Http\Controllers\Site\ConsultantController;
 use App\Http\Controllers\Site\ContractorController;
 use App\Http\Controllers\Site\NewsLetterController;
 use App\Http\Controllers\Site\AchievementController;
 use App\Http\Controllers\Site\ServiceCardController;
-use App\Http\Controllers\Site\ConsultantProjectController;
 use App\Http\Controllers\Site\PublicContactController;
 use App\Http\Controllers\Site\StandardizationController;
-use App\Http\Controllers\Site\ConsultantController;
+use App\Http\Controllers\Site\ConsultantProjectController;
 use App\Http\Middleware\ConsultantRedirectIfAuthenticated;
 use App\Http\Middleware\ContractorRedirectIfAuthenticated;
-use App\Http\Controllers\Site\ConsultantHumanResourceController;
 use App\Http\Controllers\Site\DevelopmentProjectController;
 use App\Http\Controllers\Site\ContractorMachineryController;
 use App\Http\Controllers\Site\ContractorRegistrationController;
 use App\Http\Middleware\StandardizationRedirectIfAuthenticated;
+use App\Http\Controllers\Site\ConsultantHumanResourceController;
 use App\Http\Controllers\Site\ContractorHumanResourceController;
+use App\Http\Controllers\SecureDocument\SecureDocumentController;
 use App\Http\Controllers\Site\ContractorWorkExperienceController; 
  
 Route::prefix('partials')->as('partials.')->group(function () {
@@ -173,6 +174,10 @@ Route::prefix('service_cards')->as('service_cards.')->middleware('route_lock')->
     Route::get('/apply', [ServiceCardController::class, 'create'])->name('create');
     Route::post('/', [ServiceCardController::class, 'store'])->name('store');
     Route::get('/verified/{uuid}', [ServiceCardController::class, 'verified'])->name('verified');
+});
+
+Route::prefix('documents')->as('documents.')->middleware('route_lock')->group(function () {
+    Route::get('/approved/{uuid}', [SecureDocumentController::class, 'approved'])->name('approved');
 });
 
 Route::prefix('stories')->as('stories.')->group(function () {

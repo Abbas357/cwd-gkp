@@ -11,18 +11,24 @@ return new class extends Migration
         Schema::create('secure_documents', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->string('document_type', 100)->index(); // 'letter', 'report', 'notification', 'seniority_list', 'merit_list', etc.
+            $table->enum('document_type', [
+                'letter',
+                'notification',
+                'report',
+                'seniority_list',
+                'merit_list',
+                'invoice',
+                'memo',
+                'contract',
+                'policy'
+            ])->default('letter');
             $table->string('title')->nullable();
             $table->text('description')->nullable();
             $table->string('document_number')->unique()->nullable();
             $table->date('issue_date')->nullable();
             $table->string('posting_id')->nullable();      
-            $table->enum('status', ['draft', 'published', 'archived'])->default('draft');     
-            $table->timestamp('published_at')->nullable();
-            $table->foreignId('published_by')->nullable()->constrained('users');       
+            $table->unsignedBigInteger('published_by')->nullable();       
             $table->timestamps();
-            $table->index(['document_type', 'status']);
-            $table->index(['issue_date', 'status']);
         });
     }
 

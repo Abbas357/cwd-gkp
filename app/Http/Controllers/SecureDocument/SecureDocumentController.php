@@ -2,31 +2,33 @@
 
 namespace App\Http\Controllers\SecureDocument;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\SecureDocument;
 use Yajra\DataTables\DataTables;
 use Endroid\QrCode\Builder\Builder;
+use App\Http\Controllers\Controller;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Encoding\Encoding;
+use App\Http\Requests\StoreSecureDocumentRequest;
 
 class SecureDocumentController extends Controller
 {
+    protected $cat = [
+        'document_type' => ['letter', 'notification', 'report', 'seniority_list', 'merit_list', 'invoice', 'memo', 'contract', 'policy']
+    ];
+
     public function index(Request $request)
     {
-        $status = $request->query('status', null);
-
         $documents = SecureDocument::query();
-
-        $documents->when($status !== null, function ($query) use ($status) {
-            $query->where('status', $status);
-        });
-
         if ($request->ajax()) {
             $dataTable = Datatables::of($documents)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    return view('modules.documents.partials.buttons', compact('row'))->render();
+                    return view('modules.secure_documents.partials.buttons', compact('row'))->render();
+                })
+                ->editColumn('issue_date', function ($row) {
+                    return $row->issue_date?->format('j, F Y');
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at?->format('j, F Y');
@@ -34,7 +36,7 @@ class SecureDocumentController extends Controller
                 ->editColumn('updated_at', function ($row) {
                     return $row->updated_at->diffForHumans();
                 })
-                ->rawColumns(['action']);
+                ->rawColumns(['action', 'description']);
 
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
                 $dataTable->filter(function ($query) use ($request) {
@@ -46,7 +48,41 @@ class SecureDocumentController extends Controller
             return $dataTable->toJson();
         }
 
-        return view('modules.documents.index');
+        return view('modules.secure_documents.index');
+    }
+
+    public function create()
+    {
+        $cat = $this->cat;
+        $html = view('modules.secure_documents.partials.create', compact('cat'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
+    }
+
+    public function store(StoreSecureDocumentRequest $request)
+    {
+        $document = new SecureDocument();
+        $document->uuid = Str::uuid();
+        $document->document_type = $request->document_type;
+        $document->title = $request->title;
+        $document->description = $request->description;
+        $document->document_number = $request->document_number;
+        $document->issue_date = $request->issue_date;
+        $document->posting_id = $request->user()->currentPosting->id;
+
+        if ($request->hasFile('attachment')) {
+            $document->addMedia($request->file('attachment'))
+                ->toMediaCollection('secure_document_attachments');
+        }
+
+        if (!$document->save()) {
+            return response()->json(['error' => 'Failed to save document.'], 500);
+        }
+        return response()->json(['success' => 'Document added successfully.']);
     }
 
     public function show(SecureDocument $document)
@@ -61,6 +97,7 @@ class SecureDocumentController extends Controller
 
     public function showDetail($id)
     {
+        $cat = $this->cat;
         $document = SecureDocument::find($id);
         if (!$document) {
             return response()->json([
@@ -70,7 +107,7 @@ class SecureDocumentController extends Controller
                 ],
             ]);
         }
-        $html = view('modules.documents.partials.detail', compact('document'))->render();
+        $html = view('modules.secure_documents.partials.detail', compact('document', 'cat'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -79,7 +116,7 @@ class SecureDocumentController extends Controller
         ]);
     }
 
-    public function showCard($id)
+    public function viewQR($id)
     {
         $document = SecureDocument::find($id);
         $data = route('documents.approved', ['uuid' => $document->uuid]);
@@ -93,38 +130,13 @@ class SecureDocumentController extends Controller
 
         $qrCodeUri = $qrCode->getDataUri();
 
-        $html = view('modules.documents.partials.qrcode', compact('qrCodeUri'))->render();
+        $html = view('modules.secure_documents.partials.qrcode', compact('qrCodeUri'))->render();
         return response()->json([
             'success' => true,
             'data' => [
                 'result' => $html,
             ],
         ]);
-    }
-
-    public function publishDocument(Request $request, SecureDocument $document)
-    {
-        if ($document->status === 'draft') {
-            $document->published_at = now();
-            $document->status = 'published';
-            $message = 'Document has been published successfully.';
-        } else {
-            $document->status = 'draft';
-            $message = 'Document has been unpublished.';
-        }
-        $document->published_by = $request->user()->id;
-        $document->save();
-        return response()->json(['success' => $message], 200);
-    }
-
-    public function archiveDocument(Request $request, SecureDocument $document)
-    {
-        if (!is_null($document->published_at)) {
-            $document->status = 'archived';
-            $document->save();
-            return response()->json(['success' => 'Document has been archived successfully.'], 200);
-        }
-        return response()->json(['success' => 'Document cannot be archived.'], 403);
     }
 
     public function updateField(Request $request, SecureDocument $document)
@@ -134,13 +146,25 @@ class SecureDocumentController extends Controller
             'value' => 'required|string',
         ]);
 
-        if($document->status !== 'draft') {
-            return response()->json(['error' => 'Published or Archived document cannot be updated']);
-        }
         $document->{$request->field} = $request->value;
         $document->save();
 
         return response()->json(['success' => 'Field saved']);
+    }
+
+    public function uploadFile(Request $request, SecureDocument $document)
+    {
+        $request->validate([
+            'attachment' => 'required|file|mimes:jpeg,jpg,png,gif|max:10240', 
+        ]);
+
+        try {
+            $document->addMedia($request->file('attachment'))
+                ->toMediaCollection('secure_document_attachments');
+            return response()->json(['success' => 'File uploaded successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error uploading file: ' . $e->getMessage()], 500);
+        }
     }
 
     public function destroy(SecureDocument $document)

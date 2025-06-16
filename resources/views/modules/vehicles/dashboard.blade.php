@@ -351,9 +351,9 @@
                                         @endif
                                     @else
                                         @if($allotment->user_id)
-                                            <span class="badge bg-primary">{{ $allotment->type }} to {{ $allotment->user->name }}</span>
+                                            <span class="badge bg-primary">{{ $allotment->type }} to {{ $allotment?->user?->name }}</span>
                                         @elseif($allotment->office_id)
-                                            <span class="badge bg-warning">{{ $allotment->type }} to {{ $allotment->office->name }}</span>
+                                            <span class="badge bg-warning">{{ $allotment->type }} to {{ $allotment?->office?->name }}</span>
                                         @endif
                                     @endif
                                 </p>
@@ -377,9 +377,9 @@
                                 <p class="mb-0 small text-muted">{{ $vehicle->functional_status }}</p>
                                 @if($vehicle->allotment)
                                     @if($vehicle->allotment->user_id)
-                                        <small class="text-muted">Alloted to: {{ $vehicle->allotment->user->name }}</small>
+                                        <small class="text-muted">Alloted to: {{ $vehicle?->allotment?->user?->name }}</small>
                                     @elseif($vehicle->allotment->office_id)
-                                        <small class="text-muted">Alloted to: {{ $vehicle->allotment->office->name }}</small>
+                                        <small class="text-muted">Alloted to: {{ $vehicle?->allotment?->office?->name }}</small>
                                     @endif
                                 @endif
                             </div>
