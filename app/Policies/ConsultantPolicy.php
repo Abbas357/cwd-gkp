@@ -10,6 +10,21 @@ class ConsultantPolicy
 {
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->can('view any consultant');
+    }
+
+    public function view(User $user, Consultant $consultant): bool
+    {
+        return $user->can('view consultant');
+    }
+
+    public function updateField(User $user, Consultant $consultant): bool
+    {
+        return $user->can('update field consultant');
+    }
+
+    public function updateFile(User $user, Consultant $consultant): bool
+    {
+        return $user->can('update file consultant');
     }
 }

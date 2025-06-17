@@ -78,4 +78,19 @@ class UserPolicy
     {
         return $user->can('view office staff report user');
     }
+
+    public function viewSettings(User $user): bool
+    {
+        return $user->can('view settings hr');
+    }
+
+    public function updateSettings(User $user): bool
+    {
+        return $user->can('update settings hr');
+    }
+
+    public function initSettings(User $user): bool
+    {
+        return $user->can('init settings hr');
+    }
 }

@@ -7,9 +7,9 @@ use App\Http\Controllers\Machinery\MachineryAllocationController;
 
 Route::group(['prefix' => 'machineries', 'as' => 'machineries.'], function () {
     Route::prefix('settings')->as('settings.')->group(function () {
-        Route::get('/', [HomeController::class, 'settings'])->name('index')->can('viewMachinerySettings', App\Models\Setting::class);
-        Route::post('/update', [HomeController::class, 'update'])->name('update')->can('updateMachinerySettings', App\Models\Setting::class);
-        Route::post('/init', [HomeController::class, 'init'])->name('init')->can('initMachinerySettings', App\Models\Setting::class);
+        Route::get('/', [HomeController::class, 'settings'])->name('index')->can('viewSettings', App\Models\Machinery::class);
+        Route::post('/update', [HomeController::class, 'update'])->name('update')->can('updateSettings', App\Models\Machinery::class);
+        Route::post('/init', [HomeController::class, 'init'])->name('init')->can('initSettings', App\Models\Machinery::class);
     });
 
     Route::get('/', [HomeController::class, 'index'])->name('index');

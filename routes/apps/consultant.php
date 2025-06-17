@@ -20,8 +20,8 @@ Route::prefix('consultants')->as('consultants.')->group(function () {
 
     Route::prefix('projects')->as('projects.')->group(function () {
         Route::get('/{consultant}', [ConsultantProjectController::class, 'detail'])->name('detail')->can('viewAny', App\Models\ConsultantProject::class);
-        Route::get('consultant-projects/{id}/hr', [ConsultantProjectController::class, 'getAvailableHr'])->name('get-available-hr');
-        Route::post('consultant-projects/{id}/hr', [ConsultantProjectController::class, 'updateHrAssignments'])->name('update-hr-assignments');
+        Route::get('consultant-projects/{id}/hr', [ConsultantProjectController::class, 'getAvailableHr'])->name('get-available-hr')->can('viewAny', App\Models\ConsultantProject::class);
+        Route::post('consultant-projects/{id}/hr', [ConsultantProjectController::class, 'updateHrAssignments'])->name('update-hr-assignments')->can('viewAny', App\Models\ConsultantProject::class);
         Route::post('/{id}/update', [ConsultantProjectController::class, 'update'])->name('update')->can('update', App\Models\ConsultantProject::class);
         Route::patch('/{id}/upload', [ConsultantProjectController::class, 'upload'])->name('upload')->can('upload', App\Models\ConsultantProject::class);
         Route::delete('{id}', [ConsultantProjectController::class, 'destroy'])->name('destroy')->can('delete', App\Models\ConsultantProject::class);

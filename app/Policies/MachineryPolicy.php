@@ -47,4 +47,19 @@ class MachineryPolicy
     {
         return $user->can('view reports machinery');
     }
+
+    public function viewSettings(User $user): bool
+    {
+        return $user->can('view settings machinery');
+    }
+
+    public function updateSettings(User $user): bool
+    {
+        return $user->can('update settings machinery');
+    }
+
+    public function initSettings(User $user): bool
+    {
+        return $user->can('init settings machinery');
+    }
 }

@@ -10,6 +10,21 @@ class ConsultantProjectPolicy
 {
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->can('view any consultant project');
+    }
+
+    public function update(User $user): bool
+    {
+        return $user->can('update consultant project');
+    }
+    
+    public function upload(User $user): bool
+    {
+        return $user->can('upload consultant project');
+    }
+
+    public function delete(User $user): bool
+    {
+        return $user->can('delete consultant project');
     }
 }

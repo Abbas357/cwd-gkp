@@ -52,4 +52,19 @@ class DamagePolicy
     {
         return $user->can('view active-officer report damage');
     }
+
+    public function viewSettings(User $user): bool
+    {
+        return $user->can('view settings damage');
+    }
+
+    public function updateSettings(User $user): bool
+    {
+        return $user->can('update settings damage');
+    }
+
+    public function initSettings(User $user): bool
+    {
+        return $user->can('init settings damage');
+    }
 }

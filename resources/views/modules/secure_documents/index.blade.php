@@ -6,7 +6,7 @@
     <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header">
-        <li class="breadcrumb-item active" aria-current="page">Service Card</li>
+        <li class="breadcrumb-item active" aria-current="page">Secure Documents</li>
     </x-slot>
 
     <div class="table-responsive">
@@ -18,6 +18,7 @@
                     <th scope="col" class="p-3">Subject / Title</th>
                     <th scope="col" class="p-3">Description</th>
                     <th scope="col" class="p-3">Number</th>
+                    <th scope="col" class="p-3">Officer</th>
                     <th scope="col" class="p-3">Dated</th>
                     <th scope="col" class="p-3">Created At</th>
                     <th scope="col" class="p-3">Updated At</th>
@@ -56,6 +57,9 @@
                     , searchBuilderType: "string"
                 }, {
                     data: "document_number"
+                    , searchBuilderType: "string"
+                }, {
+                    data: "officer"
                     , searchBuilderType: "string"
                 }, {
                     data: "issue_date"

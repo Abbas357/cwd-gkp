@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dmis\HomeController;
 use App\Http\Controllers\Dmis\DamageController;
 use App\Http\Controllers\Dmis\ReportController;
-use App\Http\Controllers\dmis\DamageLogController;
 use App\Http\Controllers\Dmis\InfrastructureController;
 
 Route::prefix('dmis')->as('dmis.')->group(function () {
@@ -12,9 +11,9 @@ Route::prefix('dmis')->as('dmis.')->group(function () {
     Route::get('/', [HomeController::class, 'dashboard'])->name('dashboard');
 
     Route::prefix('settings')->as('settings.')->group(function () {
-        Route::get('/', [HomeController::class, 'settings'])->name('index')->can('viewDmisSettings', App\Models\Setting::class);
-        Route::post('/update', [HomeController::class, 'update'])->name('update')->can('updateDmisSettings', App\Models\Setting::class);
-        Route::post('/init', [HomeController::class, 'init'])->name('init')->can('initDmisSettings', App\Models\Setting::class);
+        Route::get('/', [HomeController::class, 'settings'])->name('index')->can('viewSettings', App\Models\Damage::class);
+        Route::post('/update', [HomeController::class, 'update'])->name('update')->can('updateSettings', App\Models\Damage::class);
+        Route::post('/init', [HomeController::class, 'init'])->name('init')->can('initSettings', App\Models\Damage::class);
     });
 
     Route::prefix('infrastructures')->as('infrastructures.')->group(function () {

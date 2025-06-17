@@ -434,6 +434,14 @@
                 <p>Damage Mgt.</p>
             </a>
             @endif
+            @if(
+                $user->can('viewAny', App\Models\SecureDocument::class)
+            )
+            <a href="{{ route('admin.apps.documents.index') }}" class="app-tile accent-red">
+                <i class="bi-file-earmark-pdf" style="color: #d01c1c"></i>
+                <p>Secure Docs</p>
+            </a>
+            @endif
         </div>
     </div>
     <audio id="hoverSound" src="{{ asset('admin/click.wav') }}" preload="auto"></audio>

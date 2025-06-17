@@ -9,6 +9,7 @@ use Yajra\DataTables\DataTables;
 use Endroid\QrCode\Builder\Builder;
 use App\Http\Controllers\Controller;
 use Endroid\QrCode\Writer\PngWriter;
+use Illuminate\Support\Facades\Auth;
 use Endroid\QrCode\Encoding\Encoding;
 use App\Http\Requests\StoreSecureDocumentRequest;
 
@@ -20,7 +21,12 @@ class SecureDocumentController extends Controller
 
     public function index(Request $request)
     {
-        $documents = SecureDocument::query();
+        $user = request()->user();
+        $documents = SecureDocument::query()
+        ->when(!$user->isAdmin(), function ($query) use ($user) {
+            return $query->where('posting_id', $user->currentPosting->id);
+        });
+
         if ($request->ajax()) {
             $dataTable = Datatables::of($documents)
                 ->addIndexColumn()
@@ -29,6 +35,9 @@ class SecureDocumentController extends Controller
                 })
                 ->editColumn('issue_date', function ($row) {
                     return $row->issue_date?->format('j, F Y');
+                })
+                ->addColumn('officer', function ($row) {
+                    return $row->posting->office->name;
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at?->format('j, F Y');

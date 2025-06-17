@@ -1039,6 +1039,36 @@ class SyncPermissionsCommand extends Command
             'update settings vehicle', 
             'init settings vehicle', 
             /* ----------- Vehicle Permissions End -------------*/
+
+            /* ----------- Consultant Permissions Start -----------*/
+            // Consultant
+            'view any consultant',
+            'view consultant',
+            'update field consultant',
+            'upload file consultant',
+
+            // Consultant Hr
+            'view any consultant hr',
+            'update consultant hr',
+            'upload consultant hr',
+            'delete consultant hr',
+
+            // Consultant Project
+            'view any consultant project',
+            'update consultant project',
+            'upload consultant project',
+            'delete consultant project',
+            /* ----------- Consultant Permissions End -------------*/
+
+            /* ----------- Secure Documents Permissions Start -----------*/
+            // Secure Documents
+            'view any secure-document',
+            'view secure-document',
+            'create secure-document',
+            'update field secure-document',
+            'upload file secure-document',
+            'delete secure-document',
+            /* ----------- Secure Documents Permissions End -------------*/
         ];
     }
 }

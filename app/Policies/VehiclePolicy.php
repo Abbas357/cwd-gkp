@@ -46,4 +46,20 @@ class VehiclePolicy
     {
         return $user->can('view reports vehicle');
     }
+
+    public function viewSettings(User $user): bool
+    {
+        return $user->can('view settings vehicle');
+    }
+
+    public function updateSettings(User $user): bool
+    {
+        return $user->can('update settings vehicle');
+    }
+
+    public function initSettings(User $user): bool
+    {
+        return $user->can('init settings vehicle');
+    }
+
 }

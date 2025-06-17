@@ -22,6 +22,7 @@
                         </nav>
                     </div>
                 </div>
+                <a href="/" class="d-none d-md-block px-2 py-0 bg-light border shadow-sm" target="_blank"><i class="bi-box-arrow-up-right"></i> View</a>
                 @endif
             </div>
             <div class="search-bar" style="max-width: 500px; flex-grow: 1">

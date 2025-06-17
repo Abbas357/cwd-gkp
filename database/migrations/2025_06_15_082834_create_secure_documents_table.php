@@ -11,20 +11,10 @@ return new class extends Migration
         Schema::create('secure_documents', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->enum('document_type', [
-                'letter',
-                'notification',
-                'report',
-                'seniority_list',
-                'merit_list',
-                'invoice',
-                'memo',
-                'contract',
-                'policy'
-            ])->default('letter');
+            $table->enum('document_type', ['letter', 'notification', 'report', 'seniority_list', 'merit_list', 'invoice', 'memo', 'contract', 'policy'])->default('letter');
             $table->string('title')->nullable();
             $table->text('description')->nullable();
-            $table->string('document_number')->unique()->nullable();
+            $table->string('document_number')->nullable();
             $table->date('issue_date')->nullable();
             $table->string('posting_id')->nullable();      
             $table->unsignedBigInteger('published_by')->nullable();       
