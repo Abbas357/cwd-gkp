@@ -139,6 +139,12 @@ class SecureDocumentController extends Controller
         ]);
     }
 
+    public function approved($uuid)
+    {
+        $document = SecureDocument::where('uuid', $uuid)->first();
+        return view('site.secure_documents.approved', compact('document'));
+    }
+
     public function updateField(Request $request, SecureDocument $document)
     {
         $request->validate([

@@ -41,4 +41,9 @@ class SecureDocument extends Model implements HasMedia
     {
         $this->addMediaCollection('secure_document_attachments')->singleFile();
     }
+
+    public function posting() 
+    {
+        return $this->belongsTo(Posting::class);
+    }
 }

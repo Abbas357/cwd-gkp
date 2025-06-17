@@ -1,25 +1,19 @@
 <style>
     .qr-display-container {
-        background: #9bacf6;
-        border-radius: 20px;
-        padding: 40px;
+        background: #776bf9;
+        border-radius: 5px;
+        padding: 20px;
         text-align: center;
         position: relative;
         overflow: hidden;
     }
-    .qr-title {
-        color: white;
-        font-size: 24px;
-        font-weight: 600;
-        margin-bottom: 10px;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        position: relative;
-        z-index: 2;
-    }
-
+    
     .qr-subtitle {
         color: rgba(255, 255, 255, 0.8);
-        font-size: 14px;
+        display: block;
+        padding: 10px;
+        background:rgba(0, 0, 0, 0.15);
+        font-size: 15px;
         margin-bottom: 30px;
         position: relative;
         z-index: 2;
@@ -27,7 +21,7 @@
 
     .qr-code-wrapper {
         background: white;
-        border-radius: 16px;
+        border-radius: 10px;
         padding: 20px;
         display: inline-block;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -42,7 +36,7 @@
 
     .qr-code-wrapper img {
         display: block;
-        border-radius: 8px;
+        border-radius: 5px;
         max-width: 200px;
         height: auto;
     }
@@ -166,23 +160,14 @@
 
 <div id="capture">
     <div class="qr-display-container">
-        <h2 class="qr-title">
-            <i class="fas fa-qrcode me-2"></i>
-            {{ $title ?? 'QR Code' }}
-        </h2>
-        <p class="qr-subtitle">{{ $description ?? 'Scan to check authenticity' }}</p>
+        <p class="qr-subtitle"><strong style="background: red; color: white; padding: 5px">Note:</strong> Right click on QR Code and click Copy image or Download</p>
         
         <div class="qr-code-wrapper">
             <img src="{{ $qrCodeUri }}" alt="QR Code" id="qr-image">
         </div>
 
         <div class="qr-actions">
-            <button class="qr-copy-btn" id="copyQrBtn">
-                <i class="fas fa-copy"></i>
-                <span class="btn-text">Copy QR Code</span>
-            </button>
-            <button class="qr-copy-btn qr-download-btn" id="downloadQrBtn" style="margin-left: 10px;">
-                <i class="fas fa-download"></i>
+            <button class="cw-btn success qr-download-btn" id="downloadQrBtn">
                 <span class="btn-text">Download</span>
             </button>
         </div>
@@ -193,30 +178,6 @@
     const copyBtn = document.getElementById('copyQrBtn');
     const downloadBtn = document.getElementById('downloadQrBtn');
     const qrImage = document.getElementById('qr-image');
-
-    // Copy functionality
-    copyBtn.addEventListener('click', async function() {
-        const btnText = copyBtn.querySelector('.btn-text');
-        const btnIcon = copyBtn.querySelector('i');
-        
-        try {
-            if (copyBtn.classList.contains('copying')) return;
-            
-            copyBtn.classList.add('copying');
-            btnText.textContent = 'Copying...';
-            btnIcon.className = 'fas fa-spinner fa-spin';
-
-            if (navigator.clipboard && navigator.clipboard.write && window.isSecureContext) {
-                await copyImageModern(copyBtn, btnText, btnIcon);
-            } else {
-                copyImageFallback(copyBtn, btnText, btnIcon);
-            }
-            
-        } catch (err) {
-            console.error('Copy failed: ', err);
-            copyImageFallback(copyBtn, btnText, btnIcon);
-        }
-    });
 
     // Download functionality
     downloadBtn.addEventListener('click', function() {
@@ -229,67 +190,6 @@
         
         downloadImage(downloadBtn, btnText, btnIcon);
     });
-
-    async function copyImageModern(btn, text, icon) {
-        try {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            canvas.width = qrImage.naturalWidth;
-            canvas.height = qrImage.naturalHeight;
-            ctx.drawImage(qrImage, 0, 0);
-            
-            canvas.toBlob(async function(blob) {
-                try {
-                    await navigator.clipboard.write([
-                        new ClipboardItem({ 'image/png': blob })
-                    ]);
-                    showSuccess(btn, text, icon, 'Copied!', 'fas fa-check');
-                } catch (err) {
-                    throw err;
-                }
-            }, 'image/png');
-            
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    function copyImageFallback(btn, text, icon) {
-        try {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            canvas.width = qrImage.naturalWidth;
-            canvas.height = qrImage.naturalHeight;
-            ctx.drawImage(qrImage, 0, 0);
-            
-            const dataURL = canvas.toDataURL('image/png');
-            const textArea = document.createElement('textarea');
-            textArea.value = dataURL;
-            textArea.style.position = 'fixed';
-            textArea.style.opacity = '0';
-            document.body.appendChild(textArea);
-            textArea.select();
-            
-            try {
-                const successful = document.execCommand('copy');
-                document.body.removeChild(textArea);
-                
-                if (successful) {
-                    showSuccess(btn, text, icon, 'Copied!', 'fas fa-check');
-                } else {
-                    showError(btn, text, icon, 'Try Right-Click', 'fas fa-mouse-pointer');
-                }
-            } catch (err) {
-                document.body.removeChild(textArea);
-                showError(btn, text, icon, 'Try Right-Click', 'fas fa-mouse-pointer');
-            }
-            
-        } catch (err) {
-            showError(btn, text, icon, 'Copy Failed', 'fas fa-exclamation-triangle');
-        }
-    }
 
     function downloadImage(btn, text, icon) {
         try {
@@ -313,29 +213,5 @@
         } catch (err) {
             showError(btn, text, icon, 'Download Failed', 'fas fa-exclamation-triangle');
         }
-    }
-
-    function showSuccess(btn, text, icon, message, iconClass) {
-        btn.classList.remove('copying');
-        btn.classList.add('copied');
-        text.textContent = message;
-        icon.className = iconClass;
-        
-        setTimeout(() => {
-            btn.classList.remove('copied');
-            text.textContent = btn.id === 'copyQrBtn' ? 'Copy QR Code' : 'Download';
-            icon.className = btn.id === 'copyQrBtn' ? 'fas fa-copy' : 'fas fa-download';
-        }, 2000);
-    }
-
-    function showError(btn, text, icon, message, iconClass) {
-        btn.classList.remove('copying');
-        text.textContent = message;
-        icon.className = iconClass;
-        
-        setTimeout(() => {
-            text.textContent = btn.id === 'copyQrBtn' ? 'Copy QR Code' : 'Download';
-            icon.className = btn.id === 'copyQrBtn' ? 'fas fa-copy' : 'fas fa-download';
-        }, 3000);
     }
 </script>
