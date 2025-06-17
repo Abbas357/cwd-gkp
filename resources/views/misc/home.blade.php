@@ -438,7 +438,7 @@
                 $user->can('viewAny', App\Models\SecureDocument::class)
             )
             <a href="{{ route('admin.apps.documents.index') }}" class="app-tile accent-red">
-                <i class="bi-file-earmark-pdf" style="color: #d01c1c"></i>
+                <i class="bi-shield" style="color: #d01c1c"></i>
                 <p>Secure Docs</p>
             </a>
             @endif

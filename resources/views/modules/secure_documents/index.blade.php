@@ -116,6 +116,19 @@
                 }
             });
 
+            $("#documents-datatable").on('click', '.delete-btn', async function() {
+                const documentId = $(this).data("id");
+                const url = "{{ route('admin.apps.documents.destroy', ':id') }}".replace(':id', documentId);
+
+                const result = await confirmAction(`Do you want to delete this document?`);
+                if (result && result.isConfirmed) {
+                    const success = await fetchRequest(url, 'DELETE');
+                    if (success) {
+                        $("#documents-datatable").DataTable().ajax.reload();
+                    }
+                }
+            });
+
             resizableTable('#documents-datatable');
 
             pushStateModal({

@@ -170,7 +170,7 @@ class SecureDocumentController extends Controller
     public function uploadFile(Request $request, SecureDocument $document)
     {
         $request->validate([
-            'attachment' => 'required|file|mimes:jpeg,jpg,png,gif|max:10240', 
+            'attachment' => 'required|file|mimes:pdf,jpeg,jpg,png,gif|max:10240', 
         ]);
 
         try {
@@ -184,10 +184,10 @@ class SecureDocumentController extends Controller
 
     public function destroy(SecureDocument $document)
     {
-        if (($document->status === 'draft' && is_null($document->published_at)) && $document->delete()) {
+        if ($document->delete()) {
             return response()->json(['success' => 'Document has been deleted successfully.']);
         }
 
-        return response()->json(['error' => 'Published, Archived, or Draft document that were once published cannot be deleted.']);
+        return response()->json(['error' => 'Document cannot be deleted.']);
     }
 }

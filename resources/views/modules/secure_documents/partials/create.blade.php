@@ -48,7 +48,7 @@
     </div>
     <div class="col-md-12 mb-3">
         <label for="attachment">Attachments</label>
-        <input type="file" class="form-control" id="attachment" name="attachments">
+        <input type="file" class="form-control" id="attachment" name="attachment">
         @error('attachment')
         <div class="text-danger">{{ $message }}</div>
         @enderror
@@ -56,3 +56,13 @@
 </div>
 
 <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
+
+<script>
+    $(document).ready(function() {
+        imageCropper({
+            fileInput: '#attachment'
+            , inputLabelPreview: '#preview-attachment'
+            , aspectRatio: 2 / 3
+        });
+    });
+</script>
