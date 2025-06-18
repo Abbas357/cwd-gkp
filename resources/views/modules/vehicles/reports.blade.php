@@ -729,7 +729,6 @@
                         pageTitle: "Vehicle Report - " + new Date().toLocaleDateString(),
                         importCSS: true,
                         importStyle: true,
-                        loadCSS: "{{ asset('path/to/print.css') }}",
                         header: "<h1 class='text-center mb-4'>Vehicle Allotment Report</h1>" +
                                 "<p class='text-center text-muted mb-4'>Generated on " + new Date().toLocaleDateString() + "</p>",
                         footer: "<p class='text-center mt-4'>&copy; " + new Date().getFullYear() + " - All Rights Reserved</p>",

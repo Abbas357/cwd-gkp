@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Consultant;
 
-use App\Http\Controllers\Controller;
 use App\Models\District;
-
 use App\Models\Consultant;
+
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use App\Models\ConsultantProject;
+use App\Http\Controllers\Controller;
+use App\Models\ConsultantHumanResource;
 
 class ConsultantController extends Controller
 {
@@ -54,6 +56,26 @@ class ConsultantController extends Controller
         return view('modules.consultants.index');
     }
 
+    public function consultants(Request $request)
+    {
+        return $this->getApiResults(
+            $request,
+            Consultant::class, 
+            [
+                'searchColumns' => ['name', 'email', 'address', 'sector'],
+                'withRelations' => ['district'],
+                'textFormat' => function($consultant) {
+                    return $consultant->name . ' - ' . ($consultant->sector ?? '');
+                },
+                'searchRelations' => [
+                    'district' => ['name'],
+                ],
+                'status' => 'approved',
+                'orderBy' => 'id',
+            ]
+        );
+    }
+
     public function detail(Consultant $consultant)
     {
         $cat = [
@@ -77,6 +99,100 @@ class ConsultantController extends Controller
                 'result' => $html,
             ],
         ]);
+    }
+
+    public function report(Request $request)
+    {
+        $selectedConsultantId = $request->get('consultant_id');
+        $consultants = Consultant::where('status', 'approved')->orderBy('name')->get();
+
+        $reportData = null;
+
+        if ($selectedConsultantId) {
+            $consultant = Consultant::with(['humanResources', 'projects'])->findOrFail($selectedConsultantId);
+
+            // Get all active projects with HR assignments
+            $activeProjects = ConsultantProject::where('consultant_id', $selectedConsultantId)
+                ->where('status', 'active')
+                ->whereNotNull('hr')
+                ->get();
+
+            // Get all approved HR for this consultant
+            $allHr = ConsultantHumanResource::where('consultant_id', $selectedConsultantId)
+                ->where('status', 'approved')
+                ->get();
+
+            // Track HR assignments across projects
+            $hrAssignments = [];
+            $projectDetails = [];
+
+            foreach ($activeProjects as $project) {
+                $hrIds = $project->getHrIds();
+
+                $projectDetails[] = [
+                    'id' => $project->id,
+                    'name' => $project->name,
+                    'adp_number' => $project->adp_number,
+                    'scheme_code' => $project->scheme_code,
+                    'start_date' => $project->start_date->format('j, F Y'),
+                    'end_date' => $project->end_date->format('j, F Y'),
+                    'estimated_cost' => $project->estimated_cost,
+                    'hr_count' => count($hrIds),
+                    'hr_ids' => $hrIds,
+                    'assigned_hr' => $allHr->whereIn('id', $hrIds)->values()
+                ];
+
+                // Track HR assignments
+                if (!empty($hrIds) && is_array($hrIds)) {
+                    foreach ($hrIds as $hrId) {
+                        if (!isset($hrAssignments[$hrId])) {
+                            $hrAssignments[$hrId] = [];
+                        }
+                        $hrAssignments[$hrId][] = [
+                            'project_id' => $project->id,
+                            'project_name' => $project->name,
+                            'start_date' => $project->start_date->format('j, F Y'),
+                            'end_date' => $project->end_date->format('j, F Y')
+                        ];
+                    }
+                }
+            }
+
+            // Identify HR with multiple assignments
+            $multipleAssignmentHr = [];
+            foreach ($hrAssignments as $hrId => $assignments) {
+                if (count($assignments) > 1) {
+                    $hr = $allHr->find($hrId);
+                    if ($hr) {
+                        $multipleAssignmentHr[] = [
+                            'hr' => $hr,
+                            'assignments' => $assignments,
+                            'project_count' => count($assignments)
+                        ];
+                    }
+                }
+            }
+
+            // Get unassigned HR
+            $assignedHrIds = array_keys($hrAssignments);
+            $unassignedHr = $allHr->whereNotIn('id', $assignedHrIds)->values();
+
+            $reportData = [
+                'consultant' => $consultant,
+                'total_projects' => $activeProjects->count(),
+                'total_hr' => $allHr->count(),
+                'assigned_hr_count' => count($assignedHrIds),
+                'unassigned_hr_count' => $unassignedHr->count(),
+                'multiple_assignment_count' => count($multipleAssignmentHr),
+                'projects' => $projectDetails,
+                'hr_assignments' => $hrAssignments,
+                'multiple_assignment_hr' => $multipleAssignmentHr,
+                'unassigned_hr' => $unassignedHr,
+                'all_hr' => $allHr
+            ];
+        }
+
+        return view('modules.consultants.report', compact('consultants', 'selectedConsultantId', 'reportData'));
     }
 
     public function projects(Consultant $consultant)

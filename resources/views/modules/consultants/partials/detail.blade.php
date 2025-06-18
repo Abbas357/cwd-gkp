@@ -106,7 +106,7 @@
             <tr>
                 <th class="table-cell">District</th>
                 <td class="d-flex justify-content-between align-items-center gap-2" class="table-cell">
-                    <span id="text-district_id">{{ $consultant->district->name }}</span>
+                    <span id="text-district_id">{{ $consultant?->district?->name }}</span>
                     @if($canUpdate)
                     <select id="input-district_id" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('district_id', {{ $consultant->id }})">
                         @foreach($cat['districts'] as $district)

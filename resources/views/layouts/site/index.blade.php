@@ -49,7 +49,6 @@
             const updateThemeColor = () => {
                 const color = getComputedStyle(document.documentElement).getPropertyValue('--cw-primary').trim();
                 document.querySelector("meta[name=theme-color]").setAttribute("content", color);
-                console.log("Theme color updated to:", document.querySelector("meta[name=theme-color]"));
             };
             updateThemeColor();
 

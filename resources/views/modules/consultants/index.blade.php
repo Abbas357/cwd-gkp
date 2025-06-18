@@ -169,7 +169,7 @@
             pushStateModal({
                 fetchUrl: "{{ route('admin.apps.consultants.projects.detail', ':id') }}",
                 btnSelector: '.projects-btn',
-                title: 'Consultant Machinery',
+                title: 'Consultant Projects',
                 modalSize: 'xl',
                 tableToRefresh: table,
             });

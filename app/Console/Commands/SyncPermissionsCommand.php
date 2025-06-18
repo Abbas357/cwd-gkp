@@ -1046,6 +1046,7 @@ class SyncPermissionsCommand extends Command
             'view consultant',
             'update field consultant',
             'upload file consultant',
+            'view report consultant',
 
             // Consultant Hr
             'view any consultant hr',

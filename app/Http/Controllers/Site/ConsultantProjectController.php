@@ -19,7 +19,7 @@ class ConsultantProjectController extends Controller
         // Get all approved HR (not just available ones)
         $allHr = $this->getAllApprovedHumanResources($consultantId);
         
-        // Get HR assignment info for warnings
+        // Get HR assignment info for warnings - UPDATED to show all projects
         $hrAssignmentInfo = $this->getHrAssignmentInfo($consultantId);
 
         $districts = District::all();
@@ -100,7 +100,7 @@ class ConsultantProjectController extends Controller
 
     /**
      * Get HR assignment information for warnings based on date ranges
-     * FIXED: This method had issues with date comparison and data retrieval
+     * UPDATED: Now returns array of projects for each HR instead of single project
      */
     private function getHrAssignmentInfo($consultantId)
     {
@@ -127,58 +127,19 @@ class ConsultantProjectController extends Controller
                     // Convert to integer if it's a string
                     $hrId = (int) $hrId;
                     
-                    $assignmentInfo[$hrId] = [
+                    // Initialize array for this HR if not exists
+                    if (!isset($assignmentInfo[$hrId])) {
+                        $assignmentInfo[$hrId] = [];
+                    }
+                    
+                    // Add this project to the HR's assignments
+                    $assignmentInfo[$hrId][] = [
                         'project_name' => $project->name,
                         'project_id' => $project->id,
                         'start_date' => $project->start_date,
                         'end_date' => $project->end_date,
                         'is_currently_active' => true
                     ];
-                }
-            }
-        }
-
-        return $assignmentInfo;
-    }
-
-    /**
-     * Alternative method to get HR assignment info if the above doesn't work
-     * This method checks all projects and determines if they're currently active
-     */
-    private function getHrAssignmentInfoAlternative($consultantId)
-    {
-        $currentDate = now()->toDateString();
-        
-        // Get ALL active projects for this consultant
-        $projects = ConsultantProject::where('consultant_id', $consultantId)
-            ->where('status', 'active')
-            ->whereNotNull('hr')
-            ->get();
-
-        $assignmentInfo = [];
-        
-        foreach ($projects as $project) {
-            // Check if project has start and end dates
-            if ($project->start_date && $project->end_date) {
-                // Check if current date is within project date range
-                $isCurrentlyActive = $currentDate >= $project->start_date && $currentDate <= $project->end_date;
-                
-                if ($isCurrentlyActive) {
-                    $hrIds = $project->getHrIds();
-                    
-                    if (!empty($hrIds) && is_array($hrIds)) {
-                        foreach ($hrIds as $hrId) {
-                            $hrId = (int) $hrId;
-                            
-                            $assignmentInfo[$hrId] = [
-                                'project_name' => $project->name,
-                                'project_id' => $project->id,
-                                'start_date' => $project->start_date,
-                                'end_date' => $project->end_date,
-                                'is_currently_active' => true
-                            ];
-                        }
-                    }
                 }
             }
         }
@@ -195,18 +156,20 @@ class ConsultantProjectController extends Controller
             $hr = ConsultantHumanResource::find($hrId);
             
             if ($hr) {
-                // Check if HR is currently assigned to any active project within date range
-                $currentAssignment = $this->getCurrentActiveAssignment($hr, $currentDate);
+                // Check if HR is currently assigned to any active projects within date range
+                $currentAssignments = $this->getCurrentActiveAssignments($hr, $currentDate);
                 
-                if ($currentAssignment) {
-                    $warnings[] = [
-                        'hr_id' => $hrId,
-                        'hr_name' => $hr->name,
-                        'current_project' => $currentAssignment['project_name'],
-                        'start_date' => $currentAssignment['start_date'],
-                        'end_date' => $currentAssignment['end_date'],
-                        'message' => "HR {$hr->name} is currently assigned to project: {$currentAssignment['project_name']} (Active: {$currentAssignment['start_date']} to {$currentAssignment['end_date']})"
-                    ];
+                if (!empty($currentAssignments)) {
+                    foreach ($currentAssignments as $assignment) {
+                        $warnings[] = [
+                            'hr_id' => $hrId,
+                            'hr_name' => $hr->name,
+                            'current_project' => $assignment['project_name'],
+                            'start_date' => $assignment['start_date'],
+                            'end_date' => $assignment['end_date'],
+                            'message' => "HR {$hr->name} is currently assigned to project: {$assignment['project_name']} (Active: {$assignment['start_date']} to {$assignment['end_date']})"
+                        ];
+                    }
                 }
             }
         }
@@ -245,6 +208,7 @@ class ConsultantProjectController extends Controller
 
     /**
      * Get warnings for HR with date-based assignment conflicts
+     * UPDATED: Now handles multiple projects per HR
      */
     private function getDateBasedAssignmentWarnings($hrIds, $consultantId, $newStartDate, $newEndDate)
     {
@@ -338,9 +302,12 @@ class ConsultantProjectController extends Controller
 
     /**
      * Get current active assignment for an HR based on date range
+     * UPDATED: Now returns all active assignments instead of just one
      */
-    private function getCurrentActiveAssignment($hr, $currentDate)
+    private function getCurrentActiveAssignments($hr, $currentDate)
     {
+        $assignments = [];
+        
         $projects = ConsultantProject::where('consultant_id', $hr->consultant_id)
             ->where('status', 'active')
             ->whereNotNull('hr')
@@ -353,7 +320,7 @@ class ConsultantProjectController extends Controller
         foreach ($projects as $project) {
             $hrIds = $project->getHrIds();
             if (!empty($hrIds) && is_array($hrIds) && in_array($hr->id, $hrIds)) {
-                return [
+                $assignments[] = [
                     'project_name' => $project->name,
                     'project_id' => $project->id,
                     'start_date' => $project->start_date,
@@ -362,6 +329,15 @@ class ConsultantProjectController extends Controller
             }
         }
 
-        return null;
+        return $assignments;
+    }
+
+    /**
+     * DEPRECATED: Keep for backward compatibility but use getCurrentActiveAssignments instead
+     */
+    private function getCurrentActiveAssignment($hr, $currentDate)
+    {
+        $assignments = $this->getCurrentActiveAssignments($hr, $currentDate);
+        return !empty($assignments) ? $assignments[0] : null;
     }
 }

@@ -19,11 +19,11 @@
         </a>
     </li>
     @endcan
-    @can('viewAny', App\Models\Consultant::class)
+    @can('report', App\Models\Consultant::class)
     <li>
-        <a href="#">
+        <a href="{{ route('admin.apps.consultants.report') }}">
             <div class="parent-icon">
-                <i class="bi-list-check text-secondary"></i>
+                <i class="bi-flag text-secondary"></i>
             </div>
             <div class="menu-title">
                 Reports

@@ -27,4 +27,9 @@ class ConsultantPolicy
     {
         return $user->can('update file consultant');
     }
+
+    public function report(User $user, Consultant $consultant): bool
+    {
+        return $user->can('view report consultant');
+    }
 }

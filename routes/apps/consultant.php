@@ -11,6 +11,9 @@ Route::prefix('consultants')->as('consultants.')->group(function () {
     Route::patch('/update/field/{consultant}', [ConsultantController::class, 'updateField'])->name('updateField')->can('updateField', 'consultant');
     Route::patch('/update/file/{consultant}', [ConsultantController::class, 'uploadFile'])->name('uploadFile')->can('uploadFile', 'consultant');
 
+    Route::get('/api', [ConsultantController::class, 'consultants'])->name('api');
+    Route::get('/report', [ConsultantController::class, 'report'])->name('report')->can('report', App\Models\Consultant::class);
+
     Route::prefix('hr')->as('hr.')->group(function () {
         Route::get('/{consultant}', [ConsultantHumanResourceController::class, 'detail'])->name('detail')->can('viewAny', App\Models\ConsultantHumanResource::class);
         Route::post('/{id}/update', [ConsultantHumanResourceController::class, 'update'])->name('update')->can('update', App\Models\ConsultantHumanResource::class);
