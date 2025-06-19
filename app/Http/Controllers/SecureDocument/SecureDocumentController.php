@@ -104,10 +104,9 @@ class SecureDocumentController extends Controller
         ]);
     }
 
-    public function showDetail($id)
+    public function showDetail(SecureDocument $document)
     {
         $cat = $this->cat;
-        $document = SecureDocument::find($id);
         if (!$document) {
             return response()->json([
                 'success' => false,
@@ -125,9 +124,8 @@ class SecureDocumentController extends Controller
         ]);
     }
 
-    public function viewQR($id)
+    public function viewQR(SecureDocument $document)
     {
-        $document = SecureDocument::find($id);
         $data = route('documents.approved', ['uuid' => $document->uuid]);
         $qrCode = Builder::create()
             ->writer(new PngWriter())
