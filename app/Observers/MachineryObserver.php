@@ -10,7 +10,7 @@ class MachineryObserver
     public function created(Machinery $Machinery): void
     {
         MachineryAllocation::create([
-            'purpose' => 'Pool',
+            'type' => 'Pool',
             'start_date' => now(),
             'machinery_id' => $Machinery->id,
             'is_current' => 1,

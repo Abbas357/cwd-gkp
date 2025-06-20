@@ -102,7 +102,7 @@
                     <tbody>
                         <tr>
                             <th>Serial No:</th>
-                            <td>{{ $machinery->serial_number }}</td>
+                            <td>{{ $machinery->engine_number }}</td>
                             <th>Model Year:</th>
                             <td>{{ $machinery->model }}</td>
                         </tr>
@@ -110,11 +110,11 @@
                             <th>Type:</th>
                             <td>{{ $machinery->type }}</td>
                             <th>Manufacturing Year:</th>
-                            <td>{{ $machinery->manufacturing_year }}</td>
+                            <td>{{ $machinery->model_year }}</td>
                         </tr>
                         <tr>
                             <th>Status:</th>
-                            <td>{{ $machinery->operational_status }}</td>
+                            <td>{{ $machinery->functional_status }}</td>
                             <th>Remarks:</th>
                             <td>{{ $machinery->remarks }}</td>
                         </tr>
@@ -122,14 +122,14 @@
                             <tr>
                                 <th>Allocated for</th>
                                 <td colspan="3">
-                                    @if($machinery->allocation->purpose === 'Pool')
+                                    @if($machinery->allocation->type === 'Pool')
                                         <span class="badge bg-danger fs-6">Pool</span>
                                     @else
                                         <table class="table mb-0">
                                             <tbody>
                                                 <tr>
                                                     <th>Purpose</th>
-                                                    <td>{{ $machinery->allocation->purpose }}</td>
+                                                    <td>{{ $machinery->allocation->type }}</td>
                                                 </tr>
                                                 <tr>
                                                     <th>Office</th>
@@ -190,7 +190,7 @@
                 @foreach($allocations as $allocation)
                 <tr>
                     <td>
-                        @if($allocation->purpose !== 'Pool')
+                        @if($allocation->type !== 'Pool')
                             <div class="timeline-user">
                                 <div class="user-details">
                                     <span class="user-name">{{ $allocation->office->name }}</span>
@@ -205,14 +205,14 @@
                         @endif
                     </td>
                     <td>
-                        <span class="badge {{ match($allocation->purpose) {
+                        <span class="badge {{ match($allocation->type) {
                             'Pool' => 'bg-danger',
                             'Construction' => 'bg-primary',
                             'Building Dismantling' => 'bg-warning text-dark',
                             'Road Dismantling' => 'bg-info text-dark',
                             'Building Repair' => 'bg-success',
                             default => 'bg-secondary'
-                        } }}">{{ $allocation->purpose }}</span>
+                        } }}">{{ $allocation->type }}</span>
                         @if($allocation->project_id)
                             <div class="mt-1 small text-muted">
                                 Scheme Code: {{ $allocation->project->scheme_code }}

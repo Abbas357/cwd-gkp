@@ -26,7 +26,7 @@
                 </tr>
                 <tr>
                     <th>Serial Number</th>
-                    <td>{{ $machinery->serial_number }}</td>
+                    <td>{{ $machinery->engine_number }}</td>
                     <th>Functional Status</th>
                     <td>{{ $machinery->functional_status }}</td>
                 </tr>
@@ -34,20 +34,20 @@
                     <th>Model</th>
                     <td>{{ $machinery->model }}</td>
                     <th>Power Source</th>
-                    <td>{{ $machinery->power_source }}</td>
+                    <td>{{ $machinery->registration_number }}</td>
                 </tr>
                 @if($machinery->allocation)
                     <tr>
                         <th>Allocated for</th>
                         <td colspan="3">
-                            @if($machinery->allocation->purpose === 'Pool')
+                            @if($machinery->allocation->type === 'Pool')
                                 <span class="badge bg-danger fs-6">Pool</span>
                             @else
                                 <table class="table mb-0">
                                     <tbody>
                                         <tr>
                                             <th>Purpose</th>
-                                            <td>{{ $machinery->allocation->purpose }}</td>
+                                            <td>{{ $machinery->allocation->type }}</td>
                                         </tr>
                                         <tr>
                                             <th>Office</th>
@@ -80,11 +80,11 @@
 
 <div class="row allocate-machinery mt-4">
     <div class="col-md-6 mb-3">
-        <label for="purpose">Allocation Purpose</label>
-        <select class="form-select" id="purpose" name="purpose" required>
+        <label for="type">Allocation Purpose</label>
+        <select class="form-select" id="type" name="type" required>
             <option value="">Choose...</option>
-            @foreach (setting('machinery_purpose', 'machinery') as $purpose)
-            <option value="{{ $purpose }}">{{ $purpose }}</option>
+            @foreach (setting('machinery_purpose', 'machinery') as $type)
+            <option value="{{ $type }}">{{ $type }}</option>
             @endforeach
         </select>
     </div>
@@ -133,7 +133,7 @@
         );
 
         function handlePurposeChange() {
-            const selectedPurpose = $('#purpose').val();
+            const selectedPurpose = $('#type').val();
             const isPool = selectedPurpose === 'Pool';
             
             const startDateField = $('#start_date');
@@ -159,7 +159,7 @@
             }
         }
         
-        $('#purpose').on('change', handlePurposeChange);
+        $('#type').on('change', handlePurposeChange);
         
         handlePurposeChange();
     });

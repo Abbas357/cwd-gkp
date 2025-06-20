@@ -6,45 +6,36 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('machineries', function (Blueprint $table) {
             $table->id();
             $table->string('type')->nullable();
-            $table->string('operational_status')->nullable();
-            $table->string('manufacturer')->nullable();
+            $table->string('functional_status')->nullable();
+            $table->string('fuel_type')->nullable();
+            $table->string('brand')->nullable();
             $table->string('model')->nullable();
-            $table->string('serial_number')->nullable();
-            $table->string('power_source')->nullable();
-            $table->string('manufacturing_year')->nullable();
-            $table->date('last_maintenance_date')->nullable();
-            $table->string('location')->nullable();
-            $table->string('certification_status')->nullable();
-            $table->text('specifications')->nullable();
+            $table->string('model_year')->nullable();
+            $table->string('registration_number')->nullable();
+            $table->string('chassis_number')->nullable();
+            $table->string('engine_number')->nullable();
             $table->text('remarks')->nullable();
-            $table->unsignedBigInteger('office_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
         });
         
         Schema::create('machinery_allocations', function (Blueprint $table) {
             $table->id();
-            $table->string('purpose')->nullable();
+            $table->string('type')->nullable();
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
             $table->unsignedBigInteger('machinery_id')->nullable();
             $table->unsignedBigInteger('office_id')->nullable();
-            $table->unsignedBigInteger('project_id')->nullable();
             $table->boolean('is_current')->default(false);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('machinery');

@@ -13,38 +13,38 @@
     </div>
 
     <div class="col-md-6 mb-3">
-        <label for="operational_status">Operational Status</label>
-        <select class="form-select" id="operational_status" name="operational_status" required>
+        <label for="functional_status">Operational Status</label>
+        <select class="form-select" id="functional_status" name="functional_status" required>
             <option value="">Choose...</option>
-            @foreach (category('machinery_operational_status', 'machinery') as $status)
+            @foreach (category('machinery_functional_status', 'machinery') as $status)
             <option value="{{ $status }}">{{ $status }}</option>
             @endforeach
         </select>
-        @error('operational_status')
+        @error('functional_status')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
     <div class="col-md-6 mb-3">
-        <label for="power_source">Power Source</label>
-        <select class="form-select" id="power_source" name="power_source" required>
+        <label for="registration_number">Power Source</label>
+        <select class="form-select" id="registration_number" name="registration_number" required>
             <option value="">Choose...</option>
-            @foreach (category('machinery_power_source', 'machinery') as $power_source)
-            <option value="{{ $power_source }}">{{ $power_source }}</option>
+            @foreach (category('machinery_power_source', 'machinery') as $registration_number)
+            <option value="{{ $registration_number }}">{{ $registration_number }}</option>
             @endforeach
         </select>
-        @error('power_source')
+        @error('registration_number')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
     <div class="col-md-6 mb-3">
-        <label for="manufacturer">Manufacturer</label>
-        <select class="form-select" id="manufacturer" name="manufacturer" required>
+        <label for="brand">Manufacturer</label>
+        <select class="form-select" id="brand" name="brand" required>
             <option value="">Choose...</option>
-            @foreach (category('machinery_manufacturer', 'machinery') as $manufacturer)
-            <option value="{{ $manufacturer }}">{{ $manufacturer }}</option>
+            @foreach (category('machinery_manufacturer', 'machinery') as $brand)
+            <option value="{{ $brand }}">{{ $brand }}</option>
             @endforeach
         </select>
-        @error('manufacturer')
+        @error('brand')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
@@ -60,17 +60,17 @@
     </div>
     
     <div class="col-md-6 mb-3">
-        <label for="manufacturing_year">Manufacturing Year</label>
-        <input type="number" class="form-control" id="manufacturing_year" name="manufacturing_year" min="1900" max="{{ date('Y')+1 }}">
-        @error('manufacturing_year')
+        <label for="model_year">Manufacturing Year</label>
+        <input type="number" class="form-control" id="model_year" name="model_year" min="1900" max="{{ date('Y')+1 }}">
+        @error('model_year')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
     
     <div class="col-md-6 mb-3">
-        <label for="serial_number">Serial Number*</label>
-        <input type="text" class="form-control" id="serial_number" name="serial_number" required>
-        @error('serial_number')
+        <label for="engine_number">Serial Number*</label>
+        <input type="text" class="form-control" id="engine_number" name="engine_number" required>
+        @error('engine_number')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
@@ -88,21 +88,21 @@
         @enderror
     </div>
     <div class="col-md-6 mb-3">
-        <label for="certification_status">Certification Status</label>
-        <select class="form-select" id="certification_status" name="certification_status">
+        <label for="chassis_number">Certification Status</label>
+        <select class="form-select" id="chassis_number" name="chassis_number">
             <option value="">Choose...</option>
             @foreach (category('machinery_certification_status', 'machinery') as $status)
             <option value="{{ $status }}">{{ $status }}</option>
             @endforeach
         </select>
-        @error('certification_status')
+        @error('chassis_number')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
     <div class="col-md-6 mb-3">
-        <label for="last_maintenance_date">Last Maintenance Date</label>
-        <input type="date" class="form-control" id="last_maintenance_date" name="last_maintenance_date">
-        @error('last_maintenance_date')
+        <label for="fuel_type">Last Maintenance Date</label>
+        <input type="date" class="form-control" id="fuel_type" name="fuel_type">
+        @error('fuel_type')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>

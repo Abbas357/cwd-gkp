@@ -80,16 +80,14 @@ class MachineryController extends Controller
     {
         $machinery = new Machinery();
         $machinery->type = $request->type;
-        $machinery->operational_status = $request->operational_status;
-        $machinery->manufacturer = $request->manufacturer;
+        $machinery->functional_status = $request->functional_status;
+        $machinery->brand = $request->brand;
         $machinery->model = $request->model;
-        $machinery->serial_number = $request->serial_number;
-        $machinery->power_source = $request->power_source;
-        $machinery->manufacturing_year = $request->manufacturing_year;
-        $machinery->last_maintenance_date = $request->last_maintenance_date;
-        $machinery->location = $request->location;
-        $machinery->certification_status = $request->certification_status;
-        $machinery->specifications = $request->specifications;
+        $machinery->registration_number = $request->registration_number;
+        $machinery->model_year = $request->model_year;
+        $machinery->fuel_type = $request->fuel_type;
+        $machinery->engine_number = $request->engine_number;
+        $machinery->chassis_number = $request->chassis_number;
         $machinery->user_id = $request->user()->id;
         $machinery->remarks = $request->remarks;
 
@@ -101,16 +99,6 @@ class MachineryController extends Controller
         if ($request->hasFile('side_view')) {
             $machinery->addMedia($request->file('side_view'))
                 ->toMediaCollection('machinery_side_pictures');
-        }
-
-        if ($request->hasFile('control_panel')) {
-            $machinery->addMedia($request->file('control_panel'))
-                ->toMediaCollection('machinery_control_panel_pictures');
-        }
-
-        if ($request->hasFile('specification_plate')) {
-            $machinery->addMedia($request->file('specification_plate'))
-                ->toMediaCollection('machinery_specification_plate_pictures');
         }
 
         if ($machinery->save()) {
@@ -182,13 +170,13 @@ class MachineryController extends Controller
     {
         $request->validate([
             'operating_hours' => 'required|numeric',
-            'last_maintenance_date' => 'nullable|date',
+            'fuel_type' => 'nullable|date',
             'next_maintenance_date' => 'nullable|date',
             'maintenance_notes' => 'nullable|string',
         ]);
 
         $machinery->operating_hours = $request->operating_hours;
-        $machinery->last_maintenance_date = $request->last_maintenance_date;
+        $machinery->fuel_type = $request->fuel_type;
         $machinery->next_maintenance_date = $request->next_maintenance_date;
         
         if ($request->has('maintenance_notes')) {
@@ -218,12 +206,12 @@ class MachineryController extends Controller
     {
         return Machinery::query()
             ->when($request->q, fn($q) => $q->where('asset_tag', 'like', "%{$request->q}%")
-                ->orWhere('manufacturer', 'like', "%{$request->q}%")
+                ->orWhere('brand', 'like', "%{$request->q}%")
                 ->orWhere('model', 'like', "%{$request->q}%")
-                ->orWhere('serial_number', 'like', "%{$request->q}%"))
+                ->orWhere('engine_number', 'like', "%{$request->q}%"))
             ->limit(10)
             ->get()
-            ->map(fn($m) => ['id' => $m->id, 'text' => "{$m->manufacturer} - {$m->model} ({$m->asset_tag})"]);
+            ->map(fn($m) => ['id' => $m->id, 'text' => "{$m->brand} - {$m->model} ({$m->asset_tag})"]);
     }
 
     public function destroy($id)

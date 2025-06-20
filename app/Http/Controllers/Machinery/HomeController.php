@@ -17,161 +17,17 @@ class HomeController extends Controller
 {
     protected $module = 'machinery';
 
-    public function dashboard(Request $request)
-    {
-        $type = $request->get('type', 'Road');
-        
-        $totalInfrastructure = Infrastructure::where('type', $type)->count();
-        $totalDamages = Damage::where('type', $type)
-            ->count();
-        
-        $fullyDamaged = Damage::where('type', $type)
-            ->where('damage_status', 'Fully Damaged')
-            ->count();
-        
-        $partiallyDamaged = Damage::where('type', $type)
-            ->where('damage_status', 'Partially Damaged')
-            ->count();
-        
-        $fullyRestored = Damage::where('type', $type)
-            ->where('road_status', 'Fully restored')
-            ->count();
-        
-        $partiallyRestored = Damage::where('type', $type)
-            ->where('road_status', 'Partially restored')
-            ->count();
-        
-        $notRestored = Damage::where('type', $type)
-            ->where('road_status', 'Not restored')
-            ->count();
-        
-        $totalRestorationCost = Damage::where('type', $type)
-            ->sum('approximate_restoration_cost');
-        
-        $totalRehabilitationCost = Damage::where('type', $type)
-            ->sum('approximate_rehabilitation_cost');
-        
-        $districtsWithStats = District::withCount([
-            'infrastructures as infrastructure_count' => function($query) use ($type) {
-                $query->where('type', $type);
-            },
-            'infrastructures as total_length' => function($query) use ($type) {
-                $query->where('type', $type);
-                $query->select(DB::raw('SUM(length)'));
-            }
-        ])
-        ->with(['infrastructures' => function($query) use ($type) {
-            $query->where('type', $type);
-        }])
-        ->get();
-        
-        foreach ($districtsWithStats as $district) {
-            
-            $infrastructureIds = $district->infrastructures->pluck('id')->toArray();            
-            
-            $district->damage_count = Damage::where('type', $type)
-                ->whereIn('infrastructure_id', $infrastructureIds)
-                ->count();            
-            
-            $district->damaged_length = Damage::where('type', $type)
-                ->whereIn('infrastructure_id', $infrastructureIds)
-                ->sum('damaged_length');            
-            
-            $district->restoration_cost = Damage::where('type', $type)
-                ->whereIn('infrastructure_id', $infrastructureIds)
-                ->sum('approximate_restoration_cost');            
-            
-            $district->rehabilitation_cost = Damage::where('type', $type)
-                ->whereIn('infrastructure_id', $infrastructureIds)
-                ->sum('approximate_rehabilitation_cost');
-                
-            
-            $district->fully_restored = Damage::where('type', $type)
-                ->whereIn('infrastructure_id', $infrastructureIds)
-                ->where('road_status', 'Fully restored')
-                ->count();
-                
-            $district->partially_restored = Damage::where('type', $type)
-                ->whereIn('infrastructure_id', $infrastructureIds)
-                ->where('road_status', 'Partially restored')
-                ->count();
-                
-            $district->not_restored = Damage::where('type', $type)
-                ->whereIn('infrastructure_id', $infrastructureIds)
-                ->where('road_status', 'Not restored')
-                ->count();
-        }       
-        
-        $districtsWithStats = $districtsWithStats->sortByDesc('damage_count');
-        
-        $recentDamages = Damage::with(['infrastructure', 'posting.user', 'district'])
-            ->where('type', $type)
-            ->latest()
-            ->take(5)
-            ->get();
-        
-        $mostAffectedDistricts = $districtsWithStats->take(5);
-        
-        $highestRestorationCostDistricts = $districtsWithStats->sortByDesc('restoration_cost')->take(5);
-        
-        $damagesByMonth = Damage::where('type', $type)
-            ->select(DB::raw('MONTH(report_date) as month'), DB::raw('COUNT(*) as count'))
-            ->groupBy('month')
-            ->orderBy('month')
-            ->get();
-            
-        
-        $months = [];
-        $damageCounts = [];
-        
-        for ($i = 1; $i <= 12; $i++) {
-            $monthName = date('M', mktime(0, 0, 0, $i, 1));
-            $months[] = $monthName;
-            
-            $found = false;
-            foreach ($damagesByMonth as $damage) {
-                if ($damage->month == $i) {
-                    $damageCounts[] = $damage->count;
-                    $found = true;
-                    break;
-                }
-            }
-            
-            if (!$found) {
-                $damageCounts[] = 0;
-            }
-        }
-        return view('modules.machinery.home.dashboard', compact(
-            'type',
-            'totalInfrastructure',
-            'totalDamages',
-            'fullyDamaged',
-            'partiallyDamaged',
-            'fullyRestored',
-            'partiallyRestored',
-            'notRestored',
-            'totalRestorationCost',
-            'totalRehabilitationCost',
-            'districtsWithStats',
-            'recentDamages',
-            'mostAffectedDistricts',
-            'highestRestorationCostDistricts',
-            'months',
-            'damageCounts',
-        ));
-    }
-
     public function reports(Request $request)
     {
         $filters = [
             'office_id' => null,
             'machinery_id' => null,
             'type' => null,
-            'operational_status' => null,
-            'power_source' => null,
+            'functional_status' => null,
+            'registration_number' => null,
             'location' => null,
-            'manufacturer' => null,
-            'certification_status' => null
+            'brand' => null,
+            'chassis_number' => null
         ];
 
         $filters = array_merge($filters, $request->only(array_keys($filters)));
@@ -198,28 +54,28 @@ class HomeController extends Controller
         }
 
         $query->whereHas('machinery', function ($q) use ($filters) {
-            if ($filters['operational_status']) {
-                $q->where('operational_status', $filters['operational_status']);
+            if ($filters['functional_status']) {
+                $q->where('functional_status', $filters['functional_status']);
             }
 
             if ($filters['type']) {
                 $q->where('type', $filters['type']);
             }
 
-            if ($filters['power_source']) {
-                $q->where('power_source', $filters['power_source']);
+            if ($filters['registration_number']) {
+                $q->where('registration_number', $filters['registration_number']);
             }
 
             if ($filters['location']) {
                 $q->where('location', $filters['location']);
             }
 
-            if ($filters['manufacturer']) {
-                $q->where('manufacturer', $filters['manufacturer']);
+            if ($filters['brand']) {
+                $q->where('brand', $filters['brand']);
             }
 
-            if ($filters['certification_status']) {
-                $q->where('certification_status', $filters['certification_status']);
+            if ($filters['chassis_number']) {
+                $q->where('chassis_number', $filters['chassis_number']);
             }
         });
 
@@ -232,22 +88,22 @@ class HomeController extends Controller
     {
         $totalMachinery = Machinery::count();
 
-        $operationalMachinery = Machinery::where('operational_status', 'Operational')->count();
-        $nonOperationalMachinery = Machinery::where('operational_status', 'Non-Operational')->count();
-        $underMaintenanceMachinery = Machinery::where('operational_status', 'Under Maintenance')->count();
+        $operationalMachinery = Machinery::where('functional_status', 'Operational')->count();
+        $nonOperationalMachinery = Machinery::where('functional_status', 'Non-Operational')->count();
+        $underMaintenanceMachinery = Machinery::where('functional_status', 'Under Maintenance')->count();
 
         $allocatedMachinery = MachineryAllocation::whereNull('end_date')->count();
 
         $permanentAllocated = MachineryAllocation::whereNull('end_date')
-            ->where('purpose', 'Permanent')
+            ->where('type', 'Permanent')
             ->count();
 
         $temporaryAllocated = MachineryAllocation::whereNull('end_date')
-            ->where('purpose', 'Temporary')
+            ->where('type', 'Temporary')
             ->count();
 
         $inStorage = MachineryAllocation::whereNull('end_date')
-            ->where('purpose', 'Storage')
+            ->where('type', 'Storage')
             ->count();
 
         $monthlyAllocations = MachineryAllocation::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as count')
@@ -258,34 +114,33 @@ class HomeController extends Controller
 
         $distributions = [
             'type' => $this->getDistribution('type'),
-            'power_source' => $this->getDistribution('power_source'),
-            'manufacturer' => $this->getDistribution('manufacturer'),
-            'manufacturing_year' => $this->getDistribution('manufacturing_year'),
-            'location' => $this->getDistribution('location'),
-            'certification_status' => $this->getDistribution('certification_status')
+            'registration_number' => $this->getDistribution('registration_number'),
+            'brand' => $this->getDistribution('brand'),
+            'model_year' => $this->getDistribution('model_year'),
+            'chassis_number' => $this->getDistribution('chassis_number')
         ];
 
-        $modelsByManufacturer = Machinery::selectRaw('manufacturer, model, COUNT(*) as count')
-            ->whereNotNull('manufacturer')
+        $modelsByManufacturer = Machinery::selectRaw('brand, model, COUNT(*) as count')
+            ->whereNotNull('brand')
             ->whereNotNull('model')
-            ->groupBy('manufacturer', 'model')
+            ->groupBy('brand', 'model')
             ->get()
-            ->groupBy('manufacturer');
+            ->groupBy('brand');
 
         $recentAllocations = MachineryAllocation::with(['machinery', 'office'])
             ->latest()
             ->take(5)
             ->get();
 
-        $machineryNeedingAttention = Machinery::where('operational_status', 'Non-Operational')
-            ->orWhere('operational_status', 'Under Maintenance')
+        $machineryNeedingAttention = Machinery::where('functional_status', 'Non-Operational')
+            ->orWhere('functional_status', 'Under Maintenance')
             ->with('allocation.office')
             ->take(5)
             ->get();
 
-        $powerSourceStats = Machinery::selectRaw('power_source, COUNT(*) as count')
-            ->whereNotNull('power_source')
-            ->groupBy('power_source')
+        $powerSourceStats = Machinery::selectRaw('registration_number, COUNT(*) as count')
+            ->whereNotNull('registration_number')
+            ->groupBy('registration_number')
             ->get();
 
         $operationalPercentage = $totalMachinery > 0 ? ($operationalMachinery / $totalMachinery) * 100 : 0;
@@ -297,25 +152,25 @@ class HomeController extends Controller
             ->orderBy('year', 'desc')
             ->get();
 
-        $manufacturerWiseStatus = Machinery::selectRaw('manufacturer, operational_status, COUNT(*) as count')
-            ->whereNotNull('manufacturer')
-            ->whereNotNull('operational_status')
-            ->groupBy('manufacturer', 'operational_status')
+        $manufacturerWiseStatus = Machinery::selectRaw('brand, functional_status, COUNT(*) as count')
+            ->whereNotNull('brand')
+            ->whereNotNull('functional_status')
+            ->groupBy('brand', 'functional_status')
             ->get()
-            ->groupBy('manufacturer');
+            ->groupBy('brand');
 
         $allocationTrends = MachineryAllocation::selectRaw('
             YEAR(created_at) as year, 
             MONTH(created_at) as month,
-            purpose,
+            type,
             COUNT(*) as count
         ')
             ->whereYear('created_at', '>=', now()->subYear())
-            ->groupBy('year', 'month', 'purpose')
+            ->groupBy('year', 'month', 'type')
             ->orderBy('year')
             ->orderBy('month')
             ->get()
-            ->groupBy('purpose');
+            ->groupBy('type');
 
         return view('modules.machinery.dashboard', compact(
             'totalMachinery',
@@ -398,38 +253,18 @@ class HomeController extends Controller
     {
         Setting::set('appName', 'Machinery Management System', $this->module);
 
-        Setting::set('machinery_purpose', [
-            'Pool', 'Construction', 'Building Dismantling', 'Road Dismantling', 'Building Repair', 'Other'
-        ], $this->module, 'category', 'Machine Purpose and Objective');
-
         Setting::set('machinery_type', [
             'Excavator', 'Bulldozer', 'Crane', 'Loader', 'Grader', 
             'Backhoe', 'Compactor', 'Forklift', 'Paver', 'Scraper'
         ], $this->module, 'category', 'Machine Type');
 
-        Setting::set('machinery_operational_status', [
-            'Operational', 'Under Maintenance', 'Out of Service', 'In Storage', 'Decommissioned', 
-            'Awaiting Parts', 'Under Repair', 'Retired', 'In Transit', 'Available for Use'
-        ], $this->module, 'category', 'Machine Operational Status and Working Condition');
-
-        Setting::set('machinery_power_source', [
-            'Diesel', 'Electric', 'Gasoline', 'Hybrid', 'Hydraulic', 
-            'Solar', 'Steam', 'Compressed Air', 'Manual', 'Natural Gas'
-        ], $this->module, 'category', 'Machine Power Source');
-
-        Setting::set('machinery_location', [
-            'Repair Facility', 'Storage Yard', 'Headquarters', 'Remote Site', 'On Route', 'Deployed Location'
-        ], $this->module, 'category', 'Machine location where it is place now');
-
-        Setting::set('machinery_manufacturer', [
+        Setting::set('brand', [
             'Caterpillar', 'Komatsu', 'Hitachi', 'Volvo', 'Liebherr', 
             'John Deere', 'Doosan', 'Hyundai', 'JCB', 'Case'
-        ], $this->module, 'category', 'Name of manufacturer of the machine');
+        ], $this->module, 'category', 'Name of brand of the machine');
 
-        Setting::set('machinery_certification_status', [
-            'Certified', 'Pending Certification', 'Expired Certification', 'Not Certified', 'Under Review', 
-            'Provisional Certification', 'Re-certified', 'Certification Revoked', 'Certification In Progress', 'Certification Not Required'
-        ], $this->module, 'category', 'Machine Certification Status');
+        Setting::set('model', ['1000cc', '2000cc', '3000cc', '4000cc', '5000cc'
+        ], $this->module, 'category', 'Machine Model');
 
         return redirect()->route('admin.apps.machineries.settings.index')
             ->with('success', 'Machinery Management System module initiated with default settings and categories.');

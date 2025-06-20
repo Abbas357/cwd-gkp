@@ -14,7 +14,7 @@ class StoreMachineryAllocationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'purpose' => 'required|string|max:50',
+            'type' => 'required|string|max:50',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'machinery_id' => 'required|exists:machineries,id',
@@ -25,7 +25,7 @@ class StoreMachineryAllocationRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'purpose' => 'Allocation Purpose',
+            'type' => 'Allocation Purpose',
             'start_date' => 'Start Date',
             'end_date' => 'End Date',
             'machinery_id' => 'Machinery',

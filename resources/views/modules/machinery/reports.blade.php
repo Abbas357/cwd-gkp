@@ -129,10 +129,10 @@
 
                         <div class="col-md-3">
                             <label class="form-label fw-bold">Operational Status</label>
-                            <select name="operational_status" class="form-select">
+                            <select name="functional_status" class="form-select">
                                 <option value="">All Status</option>
-                                @foreach(category('machinery_operational_status', 'machinery') as $status)
-                                    <option value="{{ $status }}" @selected(request('operational_status') == $status)>
+                                @foreach(category('machinery_functional_status', 'machinery') as $status)
+                                    <option value="{{ $status }}" @selected(request('functional_status') == $status)>
                                         {{ $status }}
                                     </option>
                                 @endforeach
@@ -154,10 +154,10 @@
                         <!-- Additional Filters -->
                         <div class="col-md-3">
                             <label class="form-label fw-bold">Power Source</label>
-                            <select name="power_source" class="form-select">
+                            <select name="registration_number" class="form-select">
                                 <option value="">All Power Sources</option>
                                 @foreach(category('machinery_power_source', 'machinery') as $source)
-                                    <option value="{{ $source }}" @selected($filters['power_source'] == $source)>
+                                    <option value="{{ $source }}" @selected($filters['registration_number'] == $source)>
                                         {{ $source }}
                                     </option>
                                 @endforeach
@@ -178,11 +178,11 @@
 
                         <div class="col-md-6">
                             <label class="form-label fw-bold">Manufacturer</label>
-                            <select name="manufacturer" class="form-select">
+                            <select name="brand" class="form-select">
                                 <option value="">All Manufacturers</option>
-                                @foreach(category('machinery_manufacturer', 'machinery') as $manufacturer)
-                                    <option value="{{ $manufacturer }}" @selected($filters['manufacturer'] == $manufacturer)>
-                                        {{ $manufacturer }}
+                                @foreach(category('machinery_manufacturer', 'machinery') as $brand)
+                                    <option value="{{ $brand }}" @selected($filters['brand'] == $brand)>
+                                        {{ $brand }}
                                     </option>
                                 @endforeach
                             </select>
@@ -190,10 +190,10 @@
 
                         <div class="col-md-6">
                             <label class="form-label fw-bold">Certification Status</label>
-                            <select name="certification_status" class="form-select">
+                            <select name="chassis_number" class="form-select">
                                 <option value="">All Certification Status</option>
                                 @foreach(category('machinery_certification_status', 'machinery') as $certification)
-                                    <option value="{{ $certification }}" @selected($filters['certification_status'] == $certification)>
+                                    <option value="{{ $certification }}" @selected($filters['chassis_number'] == $certification)>
                                         {{ $certification }}
                                     </option>
                                 @endforeach
@@ -237,14 +237,14 @@
                                 <tr>
                                     <td>
                                         <div class="machinery-details">
-                                            <strong>{{ $allocation->machinery->manufacturer }} {{ $allocation->machinery->model }}</strong>
+                                            <strong>{{ $allocation->machinery->brand }} {{ $allocation->machinery->model }}</strong>
                                             <small>Type: {{ $allocation->machinery->type }}</small>
-                                            <small>Power: {{ $allocation->machinery->power_source }}</small>
+                                            <small>Power: {{ $allocation->machinery->registration_number }}</small>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="machinery-details">
-                                            <strong>{{ $allocation->machinery->serial_number }}</strong>
+                                            <strong>{{ $allocation->machinery->engine_number }}</strong>
                                             <small>Location: {{ $allocation->machinery->location }}</small>
                                         </div>
                                     </td>
@@ -252,8 +252,8 @@
                                         <span class="fw-medium">{{ $allocation->office->name ?? 'N/A' }}</span>
                                     </td>
                                     <td>
-                                        <span class="status-badge bg-{{ $allocation->machinery->operational_status === 'Operational' ? 'success' : 'danger' }} text-white">
-                                            {{ $allocation->machinery->operational_status }}
+                                        <span class="status-badge bg-{{ $allocation->machinery->functional_status === 'Operational' ? 'success' : 'danger' }} text-white">
+                                            {{ $allocation->machinery->functional_status }}
                                         </span>
                                     </td>
                                     <td>

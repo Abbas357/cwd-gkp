@@ -36,7 +36,7 @@ class MachineryAllocationController extends Controller
     public function store(StoreMachineryAllocationRequest $request)
     {
         $allotment = new MachineryAllocation();
-        $allotment->purpose = $request->purpose;
+        $allotment->type = $request->type;
         $allotment->start_date = $request->start_date;
         $allotment->end_date = $request->end_date ?: null;
         $allotment->machinery_id = $request->machinery_id;

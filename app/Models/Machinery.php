@@ -33,8 +33,6 @@ class Machinery extends Model  implements HasMedia
     {
         $this->addMediaCollection('machinery_front_pictures')->singleFile();
         $this->addMediaCollection('machinery_side_pictures')->singleFile();
-        $this->addMediaCollection('machinery_control_panel_pictures')->singleFile();
-        $this->addMediaCollection('machinery_specification_plate_pictures')->singleFile();
     }
     
     public function user()

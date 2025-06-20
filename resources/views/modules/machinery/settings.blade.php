@@ -134,26 +134,14 @@
                             <button class="nav-link settings-tab active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab" aria-controls="general" aria-selected="true">
                                 <i class="bi bi-gear me-2"></i> General Settings
                             </button>
-                            <button class="nav-link settings-tab" id="machinery_purpose-tab" data-bs-toggle="tab" data-bs-target="#machinery_purpose" type="button" role="tab" aria-controls="machinery_purpose" aria-selected="false">
-                                <i class="bi bi-signpost me-2"></i> Purpose
-                            </button>
                             <button class="nav-link settings-tab" id="machinery_type-tab" data-bs-toggle="tab" data-bs-target="#machinery_type" type="button" role="tab" aria-controls="machinery_type" aria-selected="false">
                                 <i class="bi bi-signpost me-2"></i> Type
                             </button>
-                            <button class="nav-link settings-tab" id="machinery_operational_status-tab" data-bs-toggle="tab" data-bs-target="#machinery_operational_status" type="button" role="tab" aria-controls="machinery_operational_status" aria-selected="false">
-                                <i class="bi bi-building me-2"></i> Operational Status
+                            <button class="nav-link settings-tab" id="brand-tab" data-bs-toggle="tab" data-bs-target="#brand" type="button" role="tab" aria-controls="brand" aria-selected="false">
+                                <i class="bi bi-list-check me-2"></i> Brand
                             </button>
-                            <button class="nav-link settings-tab" id="machinery_power_source-tab" data-bs-toggle="tab" data-bs-target="#machinery_power_source" type="button" role="tab" aria-controls="machinery_power_source" aria-selected="false">
-                                <i class="bi bi-exclamation-triangle me-2"></i> Power Source
-                            </button>
-                            <button class="nav-link settings-tab" id="machinery_location-tab" data-bs-toggle="tab" data-bs-target="#machinery_location" type="button" role="tab" aria-controls="machinery_location" aria-selected="false">
-                                <i class="bi bi-list-check me-2"></i> Location
-                            </button>
-                            <button class="nav-link settings-tab" id="machinery_manufacturer-tab" data-bs-toggle="tab" data-bs-target="#machinery_manufacturer" type="button" role="tab" aria-controls="machinery_manufacturer" aria-selected="false">
-                                <i class="bi bi-list-check me-2"></i> Manufacturer
-                            </button>
-                            <button class="nav-link settings-tab" id="machinery_certification_status-tab" data-bs-toggle="tab" data-bs-target="#machinery_certification_status" type="button" role="tab" aria-controls="machinery_certification_status" aria-selected="false">
-                                <i class="bi bi-list-check me-2"></i> Certification Status
+                            <button class="nav-link settings-tab" id="model-tab" data-bs-toggle="tab" data-bs-target="#model" type="button" role="tab" aria-controls="model" aria-selected="false">
+                                <i class="bi bi-building me-2"></i> Model
                             </button>
                         </div>
                     </div>
@@ -188,62 +176,6 @@
                                         @error('settings.appname.value')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Type Category -->
-                        <div class="tab-pane fade" id="machinery_purpose" role="tabpanel" aria-labelledby="machinery_purpose-tab">
-                            <div class="card">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5 class="card-title mb-0">Machinery Purpose</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="category-container" data-category-key="machinery_purpose">
-                                        <p class="text-muted mb-3">Define the possible machinery purposes in the system.</p>
-                                        
-                                        <input type="hidden" name="categories[machinery_purpose][description]" value="Type">
-                                        <input type="hidden" name="categories[machinery_purpose][type]" value="category">
-                                        
-                                        <div class="mb-3">
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered category-table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th width="90%">Status</th>
-                                                            <th width="10%">Actions</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach(category('machinery_purpose', 'machinery', []) as $index => $item)
-                                                            <tr>
-                                                                <td>
-                                                                    <input type="text" class="form-control" 
-                                                                        name="categories[machinery_purpose][value][]" 
-                                                                        value="{{ $item }}" required>
-                                                                </td>
-                                                                <td class="text-center">
-                                                                    <button type="button" class="btn btn-sm btn-danger remove-item">
-                                                                        <i class="bi bi-trash"></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                        <tr class="new-item-row">
-                                                            <td>
-                                                                <input type="text" class="form-control new-item" placeholder="Add new machinery purpose...">
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <button type="button" class="btn btn-sm btn-success add-item">
-                                                                    <i class="bi bi-plus-circle"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -304,130 +236,17 @@
                             </div>
                         </div>
 
-                        <!-- Infrastructure Type Category -->
-                        <div class="tab-pane fade" id="machinery_operational_status" role="tabpanel" aria-labelledby="machinery_operational_status-tab">
+                        <div class="tab-pane fade" id="brand" role="tabpanel" aria-labelledby="brand-tab">
                             <div class="card">
                                 <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5 class="card-title mb-0">Operational Status</h5>
+                                    <h5 class="card-title mb-0">Brands</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="category-container" data-category-key="machinery_operational_status">
-                                        <p class="text-muted mb-3">Define the Operational Status in the system.</p>
+                                    <div class="category-container" data-category-key="brand">
+                                        <p class="text-muted mb-3">Define the MAchine Brands in the system.</p>
                                         
-                                        <input type="hidden" name="categories[machinery_operational_status][description]" value="Types of Infrastructures">
-                                        <input type="hidden" name="categories[machinery_operational_status][type]" value="category">
-                                        
-                                        <div class="mb-3">
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered category-table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th width="90%">Type</th>
-                                                            <th width="10%">Actions</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach(category('machinery_operational_status', 'machinery', []) as $index => $item)
-                                                            <tr>
-                                                                <td>
-                                                                    <input type="text" class="form-control" 
-                                                                        name="categories[machinery_operational_status][value][]" 
-                                                                        value="{{ $item }}" required>
-                                                                </td>
-                                                                <td class="text-center">
-                                                                    <button type="button" class="btn btn-sm btn-danger remove-item">
-                                                                        <i class="bi bi-trash"></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                        <tr class="new-item-row">
-                                                            <td>
-                                                                <input type="text" class="form-control new-item" placeholder="Add new Operational Status...">
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <button type="button" class="btn btn-sm btn-success add-item">
-                                                                    <i class="bi bi-plus-circle"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Power Source Category -->
-                        <div class="tab-pane fade" id="machinery_power_source" role="tabpanel" aria-labelledby="machinery_power_source-tab">
-                            <div class="card">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5 class="card-title mb-0">Power Source</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="category-container" data-category-key="machinery_power_source">
-                                        <p class="text-muted mb-3">Define the power source in the system.</p>
-                                        
-                                        <input type="hidden" name="categories[machinery_power_source][description]" value="Types of Power Source">
-                                        <input type="hidden" name="categories[machinery_power_source][type]" value="category">
-                                        
-                                        <div class="mb-3">
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered category-table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th width="90%">Status</th>
-                                                            <th width="10%">Actions</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach(category('machinery_power_source', 'machinery', []) as $index => $item)
-                                                            <tr>
-                                                                <td>
-                                                                    <input type="text" class="form-control" 
-                                                                        name="categories[machinery_power_source][value][]" 
-                                                                        value="{{ $item }}" required>
-                                                                </td>
-                                                                <td class="text-center">
-                                                                    <button type="button" class="btn btn-sm btn-danger remove-item">
-                                                                        <i class="bi bi-trash"></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                        <tr class="new-item-row">
-                                                            <td>
-                                                                <input type="text" class="form-control new-item" placeholder="Add new power source...">
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <button type="button" class="btn btn-sm btn-success add-item">
-                                                                    <i class="bi bi-plus-circle"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Location Category -->
-                        <div class="tab-pane fade" id="machinery_location" role="tabpanel" aria-labelledby="machinery_location-tab">
-                            <div class="card">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5 class="card-title mb-0">Location</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="category-container" data-category-key="machinery_location">
-                                        <p class="text-muted mb-3">Define the Locations in the system.</p>
-                                        
-                                        <input type="hidden" name="categories[machinery_location][description]" value="Types of Location">
-                                        <input type="hidden" name="categories[machinery_location][type]" value="category">
+                                        <input type="hidden" name="categories[brand][description]" value="List of Brands">
+                                        <input type="hidden" name="categories[brand][type]" value="category">
                                         
                                         <div class="mb-3">
                                             <div class="table-responsive">
@@ -439,66 +258,11 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach(category('machinery_location', 'machinery', []) as $index => $item)
+                                                        @foreach(category('brand', 'machinery', []) as $index => $item)
                                                             <tr>
                                                                 <td>
                                                                     <input type="text" class="form-control" 
-                                                                        name="categories[machinery_location][value][]" 
-                                                                        value="{{ $item }}" required>
-                                                                </td>
-                                                                <td class="text-center">
-                                                                    <button type="button" class="btn btn-sm btn-danger remove-item">
-                                                                        <i class="bi bi-trash"></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                        <tr class="new-item-row">
-                                                            <td>
-                                                                <input type="text" class="form-control new-item" placeholder="Add new Location...">
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <button type="button" class="btn btn-sm btn-success add-item">
-                                                                    <i class="bi bi-plus-circle"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="tab-pane fade" id="machinery_manufacturer" role="tabpanel" aria-labelledby="machinery_manufacturer-tab">
-                            <div class="card">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5 class="card-title mb-0">Manufacturer</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="category-container" data-category-key="machinery_manufacturer">
-                                        <p class="text-muted mb-3">Define the Manufacturers in the system.</p>
-                                        
-                                        <input type="hidden" name="categories[machinery_manufacturer][description]" value="List of Manufacturer">
-                                        <input type="hidden" name="categories[machinery_manufacturer][type]" value="category">
-                                        
-                                        <div class="mb-3">
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered category-table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th width="90%">Nature</th>
-                                                            <th width="10%">Actions</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach(category('machinery_manufacturer', 'machinery', []) as $index => $item)
-                                                            <tr>
-                                                                <td>
-                                                                    <input type="text" class="form-control" 
-                                                                        name="categories[machinery_manufacturer][value][]" 
+                                                                        name="categories[brand][value][]" 
                                                                         value="{{ $item }}" required>
                                                                 </td>
                                                                 <td class="text-center">
@@ -527,33 +291,34 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade" id="machinery_certification_status" role="tabpanel" aria-labelledby="machinery_certification_status-tab">
+                        <!-- Infrastructure Type Category -->
+                        <div class="tab-pane fade" id="model" role="tabpanel" aria-labelledby="model-tab">
                             <div class="card">
                                 <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5 class="card-title mb-0">Certification Status</h5>
+                                    <h5 class="card-title mb-0">Model</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="category-container" data-category-key="machinery_certification_status">
-                                        <p class="text-muted mb-3">Define the Certification Status in the system.</p>
+                                    <div class="category-container" data-category-key="model">
+                                        <p class="text-muted mb-3">Define the Machine Model in the system.</p>
                                         
-                                        <input type="hidden" name="categories[machinery_certification_status][description]" value="Certification Status">
-                                        <input type="hidden" name="categories[machinery_certification_status][type]" value="category">
+                                        <input type="hidden" name="categories[model][description]" value="Types of Infrastructures">
+                                        <input type="hidden" name="categories[model][type]" value="category">
                                         
                                         <div class="mb-3">
                                             <div class="table-responsive">
                                                 <table class="table table-bordered category-table">
                                                     <thead>
                                                         <tr>
-                                                            <th width="90%">Nature</th>
+                                                            <th width="90%">Type</th>
                                                             <th width="10%">Actions</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach(category('machinery_certification_status', 'machinery', []) as $index => $item)
+                                                        @foreach(category('model', 'machinery', []) as $index => $item)
                                                             <tr>
                                                                 <td>
                                                                     <input type="text" class="form-control" 
-                                                                        name="categories[machinery_certification_status][value][]" 
+                                                                        name="categories[model][value][]" 
                                                                         value="{{ $item }}" required>
                                                                 </td>
                                                                 <td class="text-center">
@@ -565,7 +330,7 @@
                                                         @endforeach
                                                         <tr class="new-item-row">
                                                             <td>
-                                                                <input type="text" class="form-control new-item" placeholder="Add new Certification Status...">
+                                                                <input type="text" class="form-control new-item" placeholder="Add new Operational Status...">
                                                             </td>
                                                             <td class="text-center">
                                                                 <button type="button" class="btn btn-sm btn-success add-item">

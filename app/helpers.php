@@ -22,17 +22,6 @@ function getProfilePic($user): string
     return $url;
 }
 
-function categoryType()
-{
-    return [
-        'designation', 'office', 'file_type', 'download_category', 'contractor_category',
-        'provincial_entity', 'gallery_type', 'news_category', 'page_type', 'tender_domain',
-        'vehicle_type', 'vehicle_functional_status', 'vehicle_color', 'fuel_type', 'vehicle_registration_status', 'vehicle_brand', 'receipt_type',
-        'machinery_type', 'machinery_operational_status', 'machinery_power_source',
-        'machinery_location', 'machinery_manufacturer', 'machinery_certification_status',
-    ];
-}
-
 function getYears() {
     $currentYear = (int)date('Y');
     $years = [];

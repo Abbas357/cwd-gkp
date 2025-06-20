@@ -54,11 +54,11 @@
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "operational_status"
+                        data: "functional_status"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "manufacturer"
+                        data: "brand"
                         , searchBuilderType: "string"
                     }
                     , {
@@ -66,19 +66,19 @@
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "serial_number"
+                        data: "engine_number"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "power_source"
+                        data: "registration_number"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "manufacturing_year"
+                        data: "model_year"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "last_maintenance_date"
+                        data: "fuel_type"
                         , searchBuilderType: "date"
                     }
                     , {
@@ -86,7 +86,7 @@
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "certification_status"
+                        data: "chassis_number"
                         , searchBuilderType: "string"
                     }
                     , {

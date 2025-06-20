@@ -249,7 +249,7 @@
                         <div class="activity-timeline">
                             @foreach($recentAllocations as $allocation)
                             <div class="timeline-item">
-                                <h6 class="mb-1">{{ $allocation->machinery?->manufacturer }} {{ $allocation?->machinery?->model }}</h6>
+                                <h6 class="mb-1">{{ $allocation->machinery?->brand }} {{ $allocation?->machinery?->model }}</h6>
                                 <p class="mb-0 small">Allocated to {{ $allocation?->office?->name }}</p>
                                 <small class="text-muted">{{ $allocation->created_at->diffForHumans() }}</small>
                             </div>
@@ -265,10 +265,10 @@
                     <div class="card-body">
                         @foreach($machineryNeedingAttention as $machinery)
                         <div class="d-flex align-items-center mb-3">
-                            <span class="alert-badge {{ $machinery->operational_status == 'Non-Operational' ? 'bg-danger' : 'bg-warning' }}"></span>
+                            <span class="alert-badge {{ $machinery->functional_status == 'Non-Operational' ? 'bg-danger' : 'bg-warning' }}"></span>
                             <div>
-                                <h6 class="mb-1">{{ $machinery->manufacturer }} {{ $machinery->model }}</h6>
-                                <p class="mb-0 small text-muted">{{ $machinery->operational_status }}</p>
+                                <h6 class="mb-1">{{ $machinery->brand }} {{ $machinery->model }}</h6>
+                                <p class="mb-0 small text-muted">{{ $machinery->functional_status }}</p>
                                 @if($machinery->allocation)
                                 <small class="text-muted">Allocated to: {{ $machinery->allocation?->office?->name }}</small>
                                 @endif
@@ -411,16 +411,16 @@
         // Create all distribution charts
         const distributions = @json($distributions);
         createDistributionChart("#typeChart", distributions.type, 'type');
-        createDistributionChart("#powerSourceChart", distributions.power_source, 'power_source');
-        createDistributionChart("#certificationStatusChart", distributions.certification_status, 'certification_status');
-        createDistributionChart("#manufacturingYearChart", distributions.manufacturing_year, 'manufacturing_year');
+        createDistributionChart("#powerSourceChart", distributions.registration_number, 'registration_number');
+        createDistributionChart("#certificationStatusChart", distributions.chassis_number, 'chassis_number');
+        createDistributionChart("#manufacturingYearChart", distributions.model_year, 'model_year');
 
         // Models by Manufacturer Chart
         const modelsByManufacturer = @json($modelsByManufacturer);
         const manufacturerLabels = Object.keys(modelsByManufacturer);
-        const modelData = manufacturerLabels.map(manufacturer => ({
-            name: manufacturer,
-            data: modelsByManufacturer[manufacturer].map(model => ({
+        const modelData = manufacturerLabels.map(brand => ({
+            name: brand,
+            data: modelsByManufacturer[brand].map(model => ({
                 x: model.model,
                 y: model.count
             }))
@@ -509,10 +509,10 @@
 
         // Allocation Trends Chart
         const allocationTrends = @json($allocationTrends);
-        const allocationTrendsSeries = Object.keys(allocationTrends).map(purpose => {
-            const data = allocationTrends[purpose];
+        const allocationTrendsSeries = Object.keys(allocationTrends).map(type => {
+            const data = allocationTrends[type];
             return {
-                name: purpose,
+                name: type,
                 data: data.map(item => ({
                     x: `${item.year}-${item.month.toString().padStart(2, '0')}`,
                     y: item.count
