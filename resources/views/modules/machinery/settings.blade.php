@@ -134,7 +134,7 @@
                             <button class="nav-link settings-tab active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab" aria-controls="general" aria-selected="true">
                                 <i class="bi bi-gear me-2"></i> General Settings
                             </button>
-                            <button class="nav-link settings-tab" id="machinery_type-tab" data-bs-toggle="tab" data-bs-target="#machinery_type" type="button" role="tab" aria-controls="machinery_type" aria-selected="false">
+                            <button class="nav-link settings-tab" id="type-tab" data-bs-toggle="tab" data-bs-target="#type" type="button" role="tab" aria-controls="type" aria-selected="false">
                                 <i class="bi bi-signpost me-2"></i> Type
                             </button>
                             <button class="nav-link settings-tab" id="brand-tab" data-bs-toggle="tab" data-bs-target="#brand" type="button" role="tab" aria-controls="brand" aria-selected="false">
@@ -181,17 +181,17 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade" id="machinery_type" role="tabpanel" aria-labelledby="machinery_type-tab">
+                        <div class="tab-pane fade" id="type" role="tabpanel" aria-labelledby="type-tab">
                             <div class="card">
                                 <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5 class="card-title mb-0">Machinery Type</h5>
+                                    <h5 class="card-title mb-0">Type</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="category-container" data-category-key="machinery_type">
+                                    <div class="category-container" data-category-key="type">
                                         <p class="text-muted mb-3">Define the possible types of machines in the system.</p>
                                         
-                                        <input type="hidden" name="categories[machinery_type][description]" value="Type">
-                                        <input type="hidden" name="categories[machinery_type][type]" value="category">
+                                        <input type="hidden" name="categories[type][description]" value="Type">
+                                        <input type="hidden" name="categories[type][type]" value="category">
                                         
                                         <div class="mb-3">
                                             <div class="table-responsive">
@@ -203,11 +203,11 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach(category('machinery_type', 'machinery', []) as $index => $item)
+                                                        @foreach(category('type', 'machinery', []) as $index => $item)
                                                             <tr>
                                                                 <td>
                                                                     <input type="text" class="form-control" 
-                                                                        name="categories[machinery_type][value][]" 
+                                                                        name="categories[type][value][]" 
                                                                         value="{{ $item }}" required>
                                                                 </td>
                                                                 <td class="text-center">

@@ -25,7 +25,7 @@
                     <td>{{ $machinery->model_year }}</td>
                 </tr>
                 <tr>
-                    <th>Serial Number</th>
+                    <th>Engine Number</th>
                     <td>{{ $machinery->engine_number }}</td>
                     <th>Functional Status</th>
                     <td>{{ $machinery->functional_status }}</td>
@@ -33,7 +33,7 @@
                 <tr>
                     <th>Model</th>
                     <td>{{ $machinery->model }}</td>
-                    <th>Power Source</th>
+                    <th>Registration Number</th>
                     <td>{{ $machinery->registration_number }}</td>
                 </tr>
                 @if($machinery->allocation)
@@ -46,27 +46,13 @@
                                 <table class="table mb-0">
                                     <tbody>
                                         <tr>
-                                            <th>Purpose</th>
+                                            <th>Allocation Type</th>
                                             <td>{{ $machinery->allocation->type }}</td>
                                         </tr>
                                         <tr>
                                             <th>Office</th>
-                                            <td>{{ $machinery->allocation->office->name }}</td>
+                                            <td>{{ $machinery?->allocation?->office?->name ?? "N/A" }}</td>
                                         </tr>
-                                        @if($machinery->allocation->project_id)
-                                        <tr>
-                                            <th>Project Name</th>
-                                            <td>{{ $machinery->allocation->project->scheme_name }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Scheme Code</th>
-                                            <td>{{ $machinery->allocation->project->scheme_code }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>ADP Number</th>
-                                            <td>{{ $machinery->allocation->project->adp_number }}</td>
-                                        </tr>
-                                        @endif
                                     </tbody>
                                 </table>
                             @endif
@@ -80,10 +66,10 @@
 
 <div class="row allocate-machinery mt-4">
     <div class="col-md-6 mb-3">
-        <label for="type">Allocation Purpose</label>
+        <label for="type">Allocation</label>
         <select class="form-select" id="type" name="type" required>
             <option value="">Choose...</option>
-            @foreach (setting('machinery_purpose', 'machinery') as $type)
+            @foreach ($cat['allocation_type'] as $type)
             <option value="{{ $type }}">{{ $type }}</option>
             @endforeach
         </select>
@@ -105,10 +91,6 @@
         <label class="form-label" for="load-offices">Office</label>
         <select name="office_id" id="load-offices" class="form-select" data-placeholder="Select Office"></select>
     </div>
-    <div class="col-md-6 mb-3">
-        <label class="form-label" for="load-schemes">Project / Scheme</label>
-        <select name="project_id" id="load-schemes" class="form-select" data-placeholder="Select Schemes"></select>
-    </div>
 </div>
 
 <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
@@ -123,39 +105,25 @@
             }
         );
 
-        select2Ajax(
-            '#load-schemes',
-            '{{ route("admin.schemes.api") }}',
-            {
-                placeholder: "Select Scheme",
-                dropdownParent: $('#load-schemes').closest('.modal')
-            }
-        );
-
         function handlePurposeChange() {
             const selectedPurpose = $('#type').val();
             const isPool = selectedPurpose === 'Pool';
             
             const startDateField = $('#start_date');
             const userSelect = $('#load-users');
-            const projectSelect = $('#project_id');
             
             if (isPool) {
                 startDateField.prop('disabled', true).val('');
                 userSelect.prop('disabled', true).val(null).trigger('change');
-                projectSelect.prop('disabled', true).val(null).trigger('change');
                 
                 startDateField.prop('required', false);
                 userSelect.prop('required', false);
-                projectSelect.prop('required', false);
             } else {
                 startDateField.prop('disabled', false);
                 userSelect.prop('disabled', false);
-                projectSelect.prop('disabled', false);
                 
                 startDateField.prop('required', true);
                 userSelect.prop('required', true);
-                projectSelect.prop('required', false);
             }
         }
         

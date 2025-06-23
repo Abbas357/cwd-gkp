@@ -15,16 +15,14 @@
                 <tr>
                     <th scope="col" class="p-3">ID</th>
                     <th scope="col" class="p-3">Type</th>
-                    <th scope="col" class="p-3">Operational Status</th>
-                    <th scope="col" class="p-3">Manufacturer</th>
+                    <th scope="col" class="p-3">Functional Status</th>
+                    <th scope="col" class="p-3">Brand</th>
                     <th scope="col" class="p-3">Model</th>
-                    <th scope="col" class="p-3">Serial Number</th>
-                    <th scope="col" class="p-3">Power Source</th>
-                    <th scope="col" class="p-3">Manufacturing Year</th>
-                    <th scope="col" class="p-3">Last Maintenance Date</th>
-                    <th scope="col" class="p-3">Location</th>
-                    <th scope="col" class="p-3">Certification Status</th>
-                    <th scope="col" class="p-3">Specifications</th>
+                    <th scope="col" class="p-3">Model Year</th>
+                    <th scope="col" class="p-3">Fuel Type</th>
+                    <th scope="col" class="p-3">registration Number</th>
+                    <th scope="col" class="p-3">Chassis Number</th>
+                    <th scope="col" class="p-3">Engine Number</th>
                     <th scope="col" class="p-3">Remarks</th>
                     <th scope="col" class="p-3">Added By</th>
                     <th scope="col" class="p-3">Created At</th>
@@ -66,7 +64,11 @@
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "engine_number"
+                        data: "model_year"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "fuel_type"
                         , searchBuilderType: "string"
                     }
                     , {
@@ -74,31 +76,19 @@
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "model_year"
-                        , searchBuilderType: "string"
-                    }
-                    , {
-                        data: "fuel_type"
-                        , searchBuilderType: "date"
-                    }
-                    , {
-                        data: "location"
-                        , searchBuilderType: "string"
-                    }
-                    , {
                         data: "chassis_number"
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "specifications"
+                        data: "engine_number"
                         , searchBuilderType: "string"
                     }
                     , {
                         data: "remarks"
-                        , searchBuilderType: "string"
+                        , searchBuilderType: "date"
                     }
                     , {
-                        data: "user_id"
+                        data: "added_by"
                         , searchBuilderType: "string"
                     }
                     , {
@@ -119,7 +109,7 @@
                 , defaultOrderColumn: 20
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
-                    targets: [0, 5, 6, 7, 9, 10, 11, 13, 14]
+                    targets: [0, 7, 8, 9, 11, 13]
                     , visible: false
                     }, {
                         targets: -1,
@@ -144,16 +134,8 @@
                                     fields: ["#step-1"]
                                 },
                                 {
-                                    title: "Technical Details",
+                                    title: "More Details",
                                     fields: ["#step-2"]
-                                },
-                                {
-                                    title: "Images",
-                                    fields: ["#step-3"]
-                                },
-                                {
-                                    title: "Remarks",
-                                    fields: ["#step-4"]
                                 }
                             ],
                             formSubmitted() {

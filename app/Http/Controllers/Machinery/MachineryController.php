@@ -12,6 +12,8 @@ use App\Http\Requests\StoreMachineryRequest;
 
 class MachineryController extends Controller
 {
+    protected $statuses = ['functional', 'condemned', 'repairable'];
+    protected $fuel_types = ['diesel', 'petrol', 'electric', 'hybrid', 'other'];
     public function all(Request $request)
     {
         $machines = Machinery::query();
@@ -28,9 +30,9 @@ class MachineryController extends Controller
                     return view('modules.machinery.partials.buttons', compact('row'))->render();
                 })
                 ->addColumn('added_by', function ($row) {
-                    return $row->user->currentPosting?->designation->name 
-                    ? '<a href="'.route('admin.apps.hr.users.show', $row->user->id).'" target="_blank">'.$row->user->currentPosting?->designation->name .'</a>' 
-                    : ($row->user->currentPosting?->designation->name  ?? 'N/A');
+                    return $row->user->currentPosting?->designation->name
+                        ? '<a href="' . route('admin.apps.hr.users.show', $row->user->id) . '" target="_blank">' . $row->user->currentPosting?->designation->name . '</a>'
+                        : ($row->user->currentPosting?->designation->name  ?? 'N/A');
                 })
                 ->addColumn('assigned_to', function ($row) {
                     return $row->allocation->user->currentPosting->office->name ?? 'Pool';
@@ -50,7 +52,7 @@ class MachineryController extends Controller
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
                 $dataTable->filter(function ($query) use ($request, $relationMappings) {
                     $sb = new SearchBuilder(
-                        $request, 
+                        $request,
                         $query,
                         [],
                         $relationMappings,
@@ -67,7 +69,7 @@ class MachineryController extends Controller
 
     public function create()
     {
-        $html = view('modules.machinery.partials.create')->render();
+        $html = view('modules.machinery.partials.create', ['statuses' => $this->statuses, 'fuel_types' => $this->fuel_types])->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -119,7 +121,7 @@ class MachineryController extends Controller
             ]);
         }
 
-        $html = view('modules.machinery.partials.detail', compact('machinery'))->render();
+        $html = view('modules.machinery.partials.detail', ['machinery' => $machinery, 'statuses' => $this->statuses, 'fuel_types' => $this->fuel_types])->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -141,6 +143,33 @@ class MachineryController extends Controller
         }
 
         $html = view('modules.machinery.partials.history', compact('machinery', 'allocations'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
+    }
+
+    public function showMachineDetails(Machinery $machinery)
+    {
+        $allotments = $machinery->allocations()
+            ->with(['user', 'user.currentPosting', 'user.currentPosting.designation', 'user.currentPosting.office'])
+            ->orderBy('start_date', 'desc')
+            ->get();
+
+        $currentAllotment = $allotments->where('is_current', true)->first();
+
+        if (!$machinery) {
+            return response()->json([
+                'success' => false,
+                'data' => [
+                    'result' => 'Unable to load Vehicle Details',
+                ],
+            ]);
+        }
+
+        $html = view('modules.machinery.partials.allotment-detail', compact('vehicle', 'allotments', 'currentAllotment'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -178,7 +207,7 @@ class MachineryController extends Controller
         $machinery->operating_hours = $request->operating_hours;
         $machinery->fuel_type = $request->fuel_type;
         $machinery->next_maintenance_date = $request->next_maintenance_date;
-        
+
         if ($request->has('maintenance_notes')) {
             $machinery->remarks = $machinery->remarks . "\n\nMaintenance (" . now()->format('Y-m-d') . "): " . $request->maintenance_notes;
         }
@@ -193,12 +222,12 @@ class MachineryController extends Controller
     public function maintenanceDue(Request $request)
     {
         $daysAhead = $request->input('days_ahead', 30);
-        
+
         $dueMachinery = Machinery::whereNotNull('next_maintenance_date')
             ->where('next_maintenance_date', '<=', now()->addDays($daysAhead))
             ->orderBy('next_maintenance_date')
             ->get();
-            
+
         return view('modules.machinery.maintenance-due', compact('dueMachinery', 'daysAhead'));
     }
 

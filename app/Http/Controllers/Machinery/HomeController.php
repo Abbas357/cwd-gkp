@@ -19,15 +19,25 @@ class HomeController extends Controller
 
     public function reports(Request $request)
     {
+        $cat = [
+            'offices' => Office::all(),
+            'machinery_types' => category('type', 'machinery'),
+            'machinery_brands' => category('brand', 'machinery'),
+            'machinery_models' => category('model', 'machinery'),
+            'statuses' => ['functional', 'condemned', 'repairable', 'under_maintenance'],
+            'fuel_types' => ['diesel', 'petrol', 'electric', 'hybrid', 'other'],
+        ];
+
         $filters = [
             'office_id' => null,
             'machinery_id' => null,
             'type' => null,
             'functional_status' => null,
-            'registration_number' => null,
-            'location' => null,
             'brand' => null,
-            'chassis_number' => null
+            'model' => null,
+            'registration_number' => null,
+            'engine_number' => null,
+            'chassis_number' => null,
         ];
 
         $filters = array_merge($filters, $request->only(array_keys($filters)));
@@ -35,10 +45,28 @@ class HomeController extends Controller
         $include_subordinates = $request->boolean('include_subordinates', false);
         $show_history = $request->boolean('show_history', false);
 
+        $perPage = $request->input('per_page', 10);
+        $showAll = $perPage === 'all';
+
+        if (!$showAll && is_string($perPage)) {
+            $perPage = (int) $perPage;
+        }
+
         $query = MachineryAllocation::query()
             ->with(['machinery', 'office'])
             ->when(!$show_history, fn($q) => $q->whereNull('end_date'));
+            // ->when(request('allocation_status'), function ($q) {
+            //     $status = request('allocation_status');
 
+            //     return match ($status) {
+            //         'Office Pool' => $q->whereNotNull('office_id')->where('type', 'Pool'),
+            //         'Department Pool' => $q->whereNull('office_id')->where('type', 'Pool'),
+            //         'Active Allocation' => $q->whereNotNull('office_id')->where('type', '!=', 'Pool'),
+            //         default => $q,
+            //     };
+            // });
+        // dd($show_history);
+        
         if ($filters['office_id']) {
             if ($include_subordinates) {
                 $office = Office::find($filters['office_id']);
@@ -62,26 +90,51 @@ class HomeController extends Controller
                 $q->where('type', $filters['type']);
             }
 
-            if ($filters['registration_number']) {
-                $q->where('registration_number', $filters['registration_number']);
-            }
-
-            if ($filters['location']) {
-                $q->where('location', $filters['location']);
-            }
-
             if ($filters['brand']) {
                 $q->where('brand', $filters['brand']);
             }
 
+            if ($filters['model']) {
+                $q->where('model', $filters['model']);
+            }
+
+            if ($filters['registration_number']) {
+                $q->where('registration_number', 'LIKE', '%' . $filters['registration_number'] . '%');
+            }
+
+            if ($filters['engine_number']) {
+                $q->where('engine_number', 'LIKE', '%' . $filters['engine_number'] . '%');
+            }
+
             if ($filters['chassis_number']) {
-                $q->where('chassis_number', $filters['chassis_number']);
+                $q->where('chassis_number', 'LIKE', '%' . $filters['chassis_number'] . '%');
             }
         });
 
-        $allocations = $query->latest()->get();
+        $totalCount = $query->count();
 
-        return view('modules.machinery.reports', compact('allocations', 'filters'));
+        if ($showAll) {
+            $allocations = $query->latest()->get();
+        } else {
+            try {
+                $allocations = $query->latest()->paginate($perPage);
+                $allocations->appends($request->except('page'));
+            } catch (\Exception $e) {
+                $perPage = 10;
+                $allocations = $query->latest()->paginate($perPage);
+                $allocations->appends($request->except('page'));
+            }
+        }
+
+        $paginationOptions = [
+            10 => '10 per page',
+            25 => '25 per page',
+            50 => '50 per page',
+            100 => '100 per page',
+            'all' => 'Show All'
+        ];
+
+        return view('modules.machinery.reports', compact('cat', 'allocations', 'filters', 'totalCount', 'perPage', 'paginationOptions'));
     }
 
     public function index(Request $request)
@@ -253,17 +306,38 @@ class HomeController extends Controller
     {
         Setting::set('appName', 'Machinery Management System', $this->module);
 
-        Setting::set('machinery_type', [
-            'Excavator', 'Bulldozer', 'Crane', 'Loader', 'Grader', 
-            'Backhoe', 'Compactor', 'Forklift', 'Paver', 'Scraper'
+        Setting::set('type', [
+            'Excavator',
+            'Bulldozer',
+            'Crane',
+            'Loader',
+            'Grader',
+            'Backhoe',
+            'Compactor',
+            'Forklift',
+            'Paver',
+            'Scraper'
         ], $this->module, 'category', 'Machine Type');
 
         Setting::set('brand', [
-            'Caterpillar', 'Komatsu', 'Hitachi', 'Volvo', 'Liebherr', 
-            'John Deere', 'Doosan', 'Hyundai', 'JCB', 'Case'
+            'Caterpillar',
+            'Komatsu',
+            'Hitachi',
+            'Volvo',
+            'Liebherr',
+            'John Deere',
+            'Doosan',
+            'Hyundai',
+            'JCB',
+            'Case'
         ], $this->module, 'category', 'Name of brand of the machine');
 
-        Setting::set('model', ['1000cc', '2000cc', '3000cc', '4000cc', '5000cc'
+        Setting::set('model', [
+            '1000cc',
+            '2000cc',
+            '3000cc',
+            '4000cc',
+            '5000cc'
         ], $this->module, 'category', 'Machine Model');
 
         return redirect()->route('admin.apps.machineries.settings.index')

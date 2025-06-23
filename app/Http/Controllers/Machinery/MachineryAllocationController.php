@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Machinery;
 
 use App\Models\User;
 
+use App\Models\Office;
 use App\Models\Machinery;
 use App\Models\MachineryAllocation;
 use App\Http\Controllers\Controller;
@@ -14,7 +15,10 @@ class MachineryAllocationController extends Controller
     public function create($id)
     {
         $machinery = Machinery::find($id);
-        
+        $cat = [
+            'allocation_type' => ['Pool', 'Permanent','Temporary'],
+            'Office' => Office::all(),
+        ];
         if (!$machinery) {
             return response()->json([
                 'success' => false,
@@ -24,7 +28,7 @@ class MachineryAllocationController extends Controller
             ]);
         }
 
-        $html = view('modules.machinery.partials.allocation', compact('machinery'))->render();
+        $html = view('modules.machinery.partials.allocation', compact('machinery', 'cat'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -41,7 +45,6 @@ class MachineryAllocationController extends Controller
         $allotment->end_date = $request->end_date ?: null;
         $allotment->machinery_id = $request->machinery_id;
         $allotment->office_id = $request->office_id;
-        $allotment->project_id = $request->project_id ?: null;
 
         if ($request->hasFile('machiery_allocation_orders')) {
             $allotment->addMedia($request->file('machiery_allocation_orders'))

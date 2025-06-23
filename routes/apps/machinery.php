@@ -20,10 +20,13 @@ Route::group(['prefix' => 'machineries', 'as' => 'machineries.'], function () {
     Route::post('/', [MachineryController::class, 'store'])->name('store')->can('create', App\Models\Machinery::class);
     Route::get('/{machinery}', [MachineryController::class, 'show'])->name('show')->can('view', 'machinery');
     Route::get('/get/{machinery}', [MachineryController::class, 'showDetail'])->name('detail')->can('view', 'machinery');
+    Route::get('/{machinery}/details', [MachineryController::class, 'showMachineDetails'])->name('details')->can('detail', 'machinery');
     Route::get('/history/{machinery}', [MachineryController::class, 'machineryHistory'])->name('history')->can('viewHistory', 'machinery');
     Route::patch('/update/field/{machinery}', [MachineryController::class, 'updateField'])->name('updateField')->can('updateField', 'machinery');
     Route::patch('/upload/file/{machinery}', [MachineryController::class, 'uploadFile'])->name('uploadFile')->can('uploadFile', 'machinery');
     Route::delete('/{machinery}', [MachineryController::class, 'destroy'])->name('destroy')->can('delete', 'machinery');
+    Route::get('/search', [MachineryController::class, 'search'])->name('search')->can('viewAny', App\Models\Machinery::class);
+    Route::get('/filter-options', [MachineryController::class, 'getFilterOptions'])->name('filter-options')->can('viewAny', App\Models\Machinery::class);
 
     Route::prefix('allocation')->as('allocation.')->group(function () {
         Route::get('/{machinery}', [MachineryAllocationController::class, 'create'])->name('create')->can('create', App\Models\MachineryAllocation::class);

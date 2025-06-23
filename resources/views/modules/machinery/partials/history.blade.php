@@ -86,7 +86,7 @@
 
 <main id="machinery-history">
     <div class="d-flex justify-content-between align-items-center">
-        <h3 class="m-0">{{ $machinery->type }} ({{ $machinery->model }})</h3>
+        <h3 class="m-0">{{ $machinery->type }} ({{ $machinery->brand }})</h3>
         <button type="button" id="print-machinery-history" class="no-print btn btn-light me-2 m-2">
             <span class="">
                 <i class="bi-print"></i>
@@ -101,7 +101,7 @@
                 <table class="table machinery-info table-striped table-bordered align-middle">
                     <tbody>
                         <tr>
-                            <th>Serial No:</th>
+                            <th>Engine No:</th>
                             <td>{{ $machinery->engine_number }}</td>
                             <th>Model Year:</th>
                             <td>{{ $machinery->model }}</td>
@@ -109,7 +109,7 @@
                         <tr>
                             <th>Type:</th>
                             <td>{{ $machinery->type }}</td>
-                            <th>Manufacturing Year:</th>
+                            <th>Model Year:</th>
                             <td>{{ $machinery->model_year }}</td>
                         </tr>
                         <tr>
@@ -128,27 +128,13 @@
                                         <table class="table mb-0">
                                             <tbody>
                                                 <tr>
-                                                    <th>Purpose</th>
+                                                    <th>Allocation Type</th>
                                                     <td>{{ $machinery->allocation->type }}</td>
                                                 </tr>
                                                 <tr>
                                                     <th>Office</th>
-                                                    <td>{{ $machinery->allocation->office->name }}</td>
+                                                    <td>{{ $machinery?->allocation?->office?->name ?? "N/A" }}</td>
                                                 </tr>
-                                                @if($machinery->allocation->project_id)
-                                                <tr>
-                                                    <th>Project Name</th>
-                                                    <td>{{ $machinery->allocation->project->scheme_name }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Scheme Code</th>
-                                                    <td>{{ $machinery->allocation->project->scheme_code }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>ADP Number</th>
-                                                    <td>{{ $machinery->allocation->project->adp_number }}</td>
-                                                </tr>
-                                                @endif
                                             </tbody>
                                         </table>
                                     @endif
@@ -163,8 +149,6 @@
                 @foreach([
                     ['collection' => 'machinery_front_pictures', 'label' => 'Front View'],
                     ['collection' => 'machinery_side_pictures', 'label' => 'Side View'],
-                    ['collection' => 'machinery_rear_pictures', 'label' => 'Rear View'],
-                    ['collection' => 'machinery_operator_area_pictures', 'label' => 'Operator Area'],
                 ] as $view)
                     @if($machinery->hasMedia($view['collection']))
                         <div class="slide" style="height:150px; display: inline-block; position: relative; margin-right:10px;">
