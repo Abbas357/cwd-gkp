@@ -569,7 +569,7 @@
                                                 </div>
                                             @endforeach
                                         @else
-                                            <span class="badge-info">Not assigned</span>
+                                            <span class="badge-info">No Assignments</span>
                                         @endif
                                     </td>
                                 </tr>
