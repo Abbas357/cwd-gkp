@@ -244,6 +244,7 @@
                         <div class="col-md-6">
                             <label class="form-label" for="load-offices">Office</label>
                             <select name="office_id" id="load-offices" class="form-select" data-placeholder="Select Office">
+                                <option value="">Select Office</option>
                                 @foreach(App\Models\Office::all() as $office)
                                     <option value="{{ $office->id }}" @selected(($filters['office_id'] ?? null) == $office->id)>
                                         {{ $office->name }}
@@ -434,17 +435,16 @@
                                 <td>
                                     <div class="machinery-details">
                                         <strong>Registration No: {{ $allocation?->machinery?->registration_number ?? 'Unregistered' }}</strong>
-                                        <small>EngineNumber: {{ $allocation?->machinery?->engine_number ?? 'Not Available' }}</small>
+                                        <small>Engine Number: {{ $allocation?->machinery?->engine_number ?? 'Not Available' }}</small>
                                     </div>
                                 </td>
                                 <td>
 
                                     <div class="machinery-details">
                                         <div class="d-flex align-items-center mb-1">
-                                            <span class="allocation-type-badge badge bg-warning text-dark">Office Pool</span>
+                                            <span class="allocation-type-badge badge bg-warning text-dark">{{ $allocation->type }}</span>
                                         </div>
-                                        <strong>{{ $allocation->office->name ?? 'Unknown Office' }}</strong>
-                                        <small>Pool Machinery Assignment</small>
+                                        <strong>{{ $allocation->office->name ?? 'Not Allocated' }}</strong>
                                     </div>
                                 </td>
                                 <td>
@@ -466,9 +466,9 @@
                                         @php
                                         $startDate = null;
                                         try {
-                                        $startDate = $allocation?->start_date?->format('j F, Y');
+                                            $startDate = $allocation?->start_date?->format('j F, Y');
                                         } catch (\Exception $e) {
-                                        $startDate = 'Not Specified';
+                                            $startDate = 'Not Specified';
                                         }
                                         @endphp
                                         {{ $startDate }}
@@ -478,16 +478,16 @@
                                 <td>
                                     <span class="text-muted">
                                         @php
-                                        $endDate = 'Current';
+                                            $endDate = 'Current';
                                         try {
                                         if(!empty($allocation->end_date)) {
-                                        $endDate = $allocation?->end_date?->format('j F, Y');
+                                            $endDate = $allocation?->end_date?->format('j F, Y');
                                         }
                                         } catch (\Exception $e) {
 
                                         }
                                         @endphp
-                                        {{ $endDate }}
+                                        {{ $endDate }}  
                                     </span>
                                 </td>
                                 @endif
@@ -495,9 +495,9 @@
                                     <span class="text-muted">
                                         @php
                                         try {
-                                        $duration = formatDuration($allocation->start_date, $allocation->end_date ?? null);
+                                            $duration = formatDuration($allocation->start_date, $allocation->end_date ?? now());
                                         } catch (\Exception $e) {
-                                        $duration = 'Not Available';
+                                            $duration = 'Not Available';
                                         }
                                         @endphp
                                         {{ $duration }}

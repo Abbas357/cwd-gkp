@@ -14,6 +14,7 @@ class MachineryController extends Controller
 {
     protected $statuses = ['functional', 'condemned', 'repairable'];
     protected $fuel_types = ['diesel', 'petrol', 'electric', 'hybrid', 'other'];
+    
     public function all(Request $request)
     {
         $machines = Machinery::query();
@@ -153,23 +154,22 @@ class MachineryController extends Controller
 
     public function showMachineDetails(Machinery $machinery)
     {
-        $allotments = $machinery->allocations()
-            ->with(['user', 'user.currentPosting', 'user.currentPosting.designation', 'user.currentPosting.office'])
+        $allocations = $machinery->allocations()
             ->orderBy('start_date', 'desc')
             ->get();
 
-        $currentAllotment = $allotments->where('is_current', true)->first();
+        $currentAllocation = $allocations->where('is_current', true)->first();
 
         if (!$machinery) {
             return response()->json([
                 'success' => false,
                 'data' => [
-                    'result' => 'Unable to load Vehicle Details',
+                    'result' => 'Unable to load Machinery Details',
                 ],
             ]);
         }
 
-        $html = view('modules.machinery.partials.allotment-detail', compact('vehicle', 'allotments', 'currentAllotment'))->render();
+        $html = view('modules.machinery.partials.allocation-detail', compact('machinery', 'allocations', 'currentAllocation'))->render();
         return response()->json([
             'success' => true,
             'data' => [

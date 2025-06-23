@@ -24,7 +24,8 @@ class HomeController extends Controller
             'machinery_types' => category('type', 'machinery'),
             'machinery_brands' => category('brand', 'machinery'),
             'machinery_models' => category('model', 'machinery'),
-            'statuses' => ['functional', 'condemned', 'repairable', 'under_maintenance'],
+            'allocation_status' => ['Temporary', 'Permanent'],
+            'statuses' => ['functional', 'condemned', 'repairable'],
             'fuel_types' => ['diesel', 'petrol', 'electric', 'hybrid', 'other'],
         ];
 
@@ -54,18 +55,10 @@ class HomeController extends Controller
 
         $query = MachineryAllocation::query()
             ->with(['machinery', 'office'])
-            ->when(!$show_history, fn($q) => $q->whereNull('end_date'));
-            // ->when(request('allocation_status'), function ($q) {
-            //     $status = request('allocation_status');
-
-            //     return match ($status) {
-            //         'Office Pool' => $q->whereNotNull('office_id')->where('type', 'Pool'),
-            //         'Department Pool' => $q->whereNull('office_id')->where('type', 'Pool'),
-            //         'Active Allocation' => $q->whereNotNull('office_id')->where('type', '!=', 'Pool'),
-            //         default => $q,
-            //     };
-            // });
-        // dd($show_history);
+            ->when(!$show_history, fn($q) => $q->whereNull('end_date'))
+            ->when(request('allocation_status'), function ($q) {
+                $q->where('type', request('allocation_status'));
+            });
         
         if ($filters['office_id']) {
             if ($include_subordinates) {

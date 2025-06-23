@@ -122,22 +122,18 @@
                             <tr>
                                 <th>Allocated for</th>
                                 <td colspan="3">
-                                    @if($machinery->allocation->type === 'Pool')
-                                        <span class="badge bg-danger fs-6">Pool</span>
-                                    @else
-                                        <table class="table mb-0">
-                                            <tbody>
-                                                <tr>
-                                                    <th>Allocation Type</th>
-                                                    <td>{{ $machinery->allocation->type }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Office</th>
-                                                    <td>{{ $machinery?->allocation?->office?->name ?? "N/A" }}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    @endif
+                                    <table class="table mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th>Allocation Type</th>
+                                                <td>{{ $machinery->allocation->type }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Office</th>
+                                                <td>{{ $machinery?->allocation?->office?->name ?? "No Office" }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </td>
                             </tr>
                         @endif
@@ -164,7 +160,7 @@
             <thead>
                 <tr>
                     <th>Office</th>
-                    <th>Purpose</th>
+                    <th>Allocation Type</th>
                     <th>Dates</th>
                     <th>Duration</th>
                     <th>Status</th>
@@ -174,34 +170,18 @@
                 @foreach($allocations as $allocation)
                 <tr>
                     <td>
-                        @if($allocation->type !== 'Pool')
-                            <div class="timeline-user">
-                                <div class="user-details">
-                                    <span class="user-name">{{ $allocation->office->name }}</span>
-                                </div>
+                        <div class="timeline-user">
+                            <div class="user-details">
+                                <span class="user-name">{{ $allocation?->office?->name ?? "C&W DEPARTMENT" }}</span>
                             </div>
-                        @else
-                            <div class="timeline-user">
-                                <div class="user-details">
-                                    <span class="user-name">C&W Department</span>
-                                </div>
-                            </div>
-                        @endif
+                        </div>
                     </td>
                     <td>
                         <span class="badge {{ match($allocation->type) {
-                            'Pool' => 'bg-danger',
-                            'Construction' => 'bg-primary',
-                            'Building Dismantling' => 'bg-warning text-dark',
-                            'Road Dismantling' => 'bg-info text-dark',
-                            'Building Repair' => 'bg-success',
+                            'Temporary' => 'bg-danger',
+                            'Permanent' => 'bg-success',
                             default => 'bg-secondary'
                         } }}">{{ $allocation->type }}</span>
-                        @if($allocation->project_id)
-                            <div class="mt-1 small text-muted">
-                                Scheme Code: {{ $allocation->project->scheme_code }}
-                            </div>
-                        @endif
                     </td>
                     <td>
                         <span class="timeline-date">

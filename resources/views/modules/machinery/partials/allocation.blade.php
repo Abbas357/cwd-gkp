@@ -1,5 +1,6 @@
 <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
 <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
+<link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
 
 <style>
     .table td, .table th {
@@ -94,8 +95,15 @@
 </div>
 
 <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
+<script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
 <script>
     $(document).ready(function () {
+
+        imageCropper({
+            fileInput: '#machiery_allocation_orders'
+            , aspectRatio: 2 / 3
+        });
+
         select2Ajax(
             '#load-offices',
             '{{ route("admin.apps.hr.offices.api") }}',

@@ -16,12 +16,12 @@
     <link href="{{ asset('admin/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/bootstrap-icons.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/open-props.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('admin/css/bootstrap-extended.css') }}?cw=52" rel="stylesheet">
-    <link href="{{ asset('admin/css/dark-theme.css') }}?cw=52" rel="stylesheet">
-    <link href="{{ asset('admin/css/main.min.css') }}?cw=52" rel="stylesheet">
-    <link href="{{ asset('admin/css/semi-dark.css') }}?cw=52" rel="stylesheet">
-    <link href="{{ asset('admin/css/bordered-theme.css') }}?cw=52" rel="stylesheet">
-    <link href="{{ asset('admin/css/responsive.css') }}?cw=52" rel="stylesheet">
+    <link href="{{ asset('admin/css/bootstrap-extended.css') }}?cw=53" rel="stylesheet">
+    <link href="{{ asset('admin/css/dark-theme.css') }}?cw=53" rel="stylesheet">
+    <link href="{{ asset('admin/css/main.min.css') }}?cw=53" rel="stylesheet">
+    <link href="{{ asset('admin/css/semi-dark.css') }}?cw=53" rel="stylesheet">
+    <link href="{{ asset('admin/css/bordered-theme.css') }}?cw=53" rel="stylesheet">
+    <link href="{{ asset('admin/css/responsive.css') }}?cw=53" rel="stylesheet">
     <script>
 
         if(localStorage.getItem('theme') === 'dark') {
@@ -34,7 +34,7 @@
         }
     </script>
     @stack('style')
-    <link href="{{ asset('admin/css/custom.min.css') }}?cw=52" rel="stylesheet">
+    <link href="{{ asset('admin/css/custom.min.css') }}?cw=53" rel="stylesheet">
     <style>
         .page-loader {
             height: 5px;

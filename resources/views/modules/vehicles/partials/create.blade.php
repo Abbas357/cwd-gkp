@@ -1,3 +1,5 @@
+<link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
+
 <div class="row" id=step-1>
     <div class="col-md-12 mb-3">
         <label for="load-offices">Office Pool</label>
@@ -161,8 +163,31 @@
     </div>
 </div>
 
+<script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
+
 <script>
     $(document).ready(function() {
+
+        imageCropper({
+            fileInput: '#front_view'
+            , aspectRatio: 3 / 2
+        });
+
+        imageCropper({
+            fileInput: '#side_view'
+            , aspectRatio: 3 / 2
+        });
+
+        imageCropper({
+            fileInput: '#rear_view'
+            , aspectRatio: 3 / 2
+        });
+
+        imageCropper({
+            fileInput: '#interior_view'
+            , aspectRatio: 3 / 2
+        });
+
         select2Ajax(
             '#load-offices',
             '{{ route("admin.apps.hr.offices.api") }}',

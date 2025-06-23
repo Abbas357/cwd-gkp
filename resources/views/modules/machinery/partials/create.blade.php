@@ -1,3 +1,5 @@
+<link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
+
 <div class="row" id="step-1">
     <div class="col-md-6 mb-3">
         <label for="type">Type</label>
@@ -117,3 +119,18 @@
     </div>
     
 </div>
+
+<script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        imageCropper({
+            fileInput: '#front_view'
+            , aspectRatio: 3 / 2
+        });
+
+        imageCropper({
+            fileInput: '#side_view'
+            , aspectRatio: 3 / 2
+        });
+    });
+</script>

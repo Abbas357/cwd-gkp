@@ -20,7 +20,7 @@
                     <th scope="col" class="p-3">Model</th>
                     <th scope="col" class="p-3">Model Year</th>
                     <th scope="col" class="p-3">Fuel Type</th>
-                    <th scope="col" class="p-3">registration Number</th>
+                    <th scope="col" class="p-3">Registration Number</th>
                     <th scope="col" class="p-3">Chassis Number</th>
                     <th scope="col" class="p-3">Engine Number</th>
                     <th scope="col" class="p-3">Remarks</th>

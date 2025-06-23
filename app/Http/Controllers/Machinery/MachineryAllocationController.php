@@ -16,7 +16,7 @@ class MachineryAllocationController extends Controller
     {
         $machinery = Machinery::find($id);
         $cat = [
-            'allocation_type' => ['Pool', 'Permanent','Temporary'],
+            'allocation_type' => ['Permanent','Temporary'],
             'Office' => Office::all(),
         ];
         if (!$machinery) {
@@ -46,9 +46,9 @@ class MachineryAllocationController extends Controller
         $allotment->machinery_id = $request->machinery_id;
         $allotment->office_id = $request->office_id;
 
-        if ($request->hasFile('machiery_allocation_orders')) {
-            $allotment->addMedia($request->file('machiery_allocation_orders'))
-                ->toMediaCollection('machiery_allocation_orders');
+        if ($request->hasFile('machinery_allocation_orders')) {
+            $allotment->addMedia($request->file('machinery_allocation_orders'))
+                ->toMediaCollection('machinery_allocation_orders');
         }
 
         if ($allotment->save()) {
