@@ -28,7 +28,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col action-container">
+            {{-- <div class="col action-container">
                 <a href="http://eprocurement.cwd.gkp.pk" class="action-link">
                     <div class="action-button">
                         <img src="{{ asset('site/images/icons/home-links/ebidding.png') }}" alt="E-Bidding">
@@ -43,6 +43,15 @@
                         <img src="{{ asset('site/images/icons/home-links/contractor-login.png') }}" alt="Contractor Login">
                         <div class="action-label">Contractor Login</div>
                         <small class="explanation-text">(Contractor Dashboard)</small>
+                    </div>
+                </a>
+            </div> --}}
+            <div class="col action-container">
+                <a href="https://kp.eprocure.gov.pk" class="action-link">
+                    <div class="action-button">
+                        <img src="{{ asset('site/images/icons/home-links/ebidding.png') }}" alt="E-Bidding">
+                        <div class="action-label">E-PADS</div>
+                        <small class="explanation-text">(Online Bidding System)</small>
                     </div>
                 </a>
             </div>

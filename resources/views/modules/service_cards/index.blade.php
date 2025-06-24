@@ -250,8 +250,8 @@
                 btnSelector: '.view-btn',
                 title: 'User Details',
                 modalSize: 'lg',
-                tableToRefresh: table,
-            , });
+                tableToRefresh: table
+             });
 
             pushStateModal({
                 fetchUrl: "{{ route('admin.apps.service_cards.showCard', ':id') }}"

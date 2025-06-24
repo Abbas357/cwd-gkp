@@ -28,7 +28,7 @@
             </label>
         </div>
         <h3 class="display-3 fs-3 text-center"> {{ $ServiceCard->name }}</h3>
-        <h3 class="fs-6  text-center"> {{ $ServiceCard->designation }} ({{ $ServiceCard->bps }})</h3>
+        <h3 class="fs-6  text-center"> {{ $ServiceCard->designation->name }} ({{ $ServiceCard->bps }})</h3>
         <hr>
 
         <table class="table table-bordered mt-3">
@@ -132,11 +132,11 @@
             <tr>
                 <th class="table-cell">Designation</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-designation">{{ $ServiceCard->designation }}</span>
+                    <span id="text-designation">{{ $ServiceCard->designation->name }}</span>
                     @if ($canUpdate && !in_array($ServiceCard->status, ['Verified', 'Rejected']))
                     <select id="input-designation" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('designation', {{ $ServiceCard->id }})">
                         @foreach ($cat['designations'] as $designation)
-                        <option value="{{ $designation->name }}" {{ $ServiceCard->designation == $designation->name ? 'selected' : '' }}>
+                        <option value="{{ $designation->name }}" {{ $ServiceCard->designation->name == $designation->name ? 'selected' : '' }}>
                             {{ $designation->name }}
                         </option>
                         @endforeach
@@ -168,11 +168,11 @@
             <tr>
                 <th class="table-cell">Office</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-office">{{ $ServiceCard->office }}</span>
+                    <span id="text-office">{{ $ServiceCard->office->name }}</span>
                     @if ($canUpdate && !in_array($ServiceCard->status, ['Verified', 'Rejected']))
                     <select id="input-office" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('office', {{ $ServiceCard->id }})">
                         @foreach ($cat['offices'] as $office)
-                        <option value="{{ $office->name }}" {{ $ServiceCard->office == $office->name ? 'selected' : '' }}>
+                        <option value="{{ $office->name }}" {{ $ServiceCard->office->name == $office->name ? 'selected' : '' }}>
                             {{ $office->name }}
                         </option>
                         @endforeach
