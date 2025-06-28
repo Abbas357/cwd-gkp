@@ -12,51 +12,15 @@
     $canUpload = auth()->user()->can('uploadFile', $damage);
 @endphp
 <div class="row damage-details">
+
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <i class="bi-exclamation-triangle-fill me-2"></i>
+        Note: All changes are logged. Please proceed with caution when editing. You can view logs for this damage to see the history of changes made. <a href="{{ route('admin.apps.dmis.damages.index') }}?id={{ $damage->id }}&type=logs">Click to see Logs for this damage</a>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    
     <div class="col-md-12">
         <table class="table table-bordered mt-3">
-            <!-- Basic Information -->
-            <tr>
-                <th class="table-cell">Report Date</th>
-                <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-report_date">{{ $damage->report_date->format('Y-m-d') }}</span>
-                    @if($canUpdate)
-                    <input type="date" id="input-report_date" value="{{ $damage->report_date->format('Y-m-d') }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('report_date', {{ $damage->id }})" />
-                    <button id="save-btn-report_date" class="btn btn-sm btn-light d-none" onclick="updateField('report_date', {{ $damage->id }})"><i class="bi-send-fill"></i></button>
-                    <button id="edit-btn-report_date" class="no-print btn btn-sm edit-button" onclick="enableEditing('report_date')"><i class="bi-pencil fs-6"></i></button>
-                    @endif
-                </td>
-            </tr>
-            <tr>
-                <th class="table-cell">Type</th>
-                <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-type">{{ $damage->type }}</span>
-                    @if($canUpdate)
-                    <select id="input-type" class="d-none form-control" onchange="updateField('type', {{ $damage->id }})">
-                        <option value="">Select Type</option>
-                        @foreach(setting('infrastructure_type', 'dmis') as $type)
-                        <option value="{{ $type }}" {{ $damage->type == $type ? 'selected' : '' }}>
-                            {{ $type }}
-                        </option>
-                        @endforeach
-                    </select>
-                    <button id="save-btn-type" class="btn btn-sm btn-light d-none" onclick="updateField('type', {{ $damage->id }})"><i class="bi-send-fill"></i></button>
-                    <button id="edit-btn-type" class="no-print btn btn-sm edit-button" onclick="enableEditing('type')"><i class="bi-pencil fs-6"></i></button>
-                    @endif
-                </td>
-            </tr>
-            <tr>
-                <th class="table-cell">Infrastructure</th>
-                <td class="d-flex justify-content-between align-items-center gap-2">
-                    <span id="text-infrastructure_id">{{ $damage->infrastructure->name ?? 'N/A' }}</span>
-                    @if($canUpdate)
-                    <select id="input-infrastructure_id" class="d-none form-control select2" onchange="updateField('infrastructure_id', {{ $damage->id }})">
-                        <option value="{{ $damage->infrastructure_id }}" selected>{{ $damage->infrastructure->name ?? 'N/A' }}</option>
-                    </select>
-                    <button id="save-btn-infrastructure_id" class="btn btn-sm btn-light d-none" onclick="updateField('infrastructure_id', {{ $damage->id }})"><i class="bi-send-fill"></i></button>
-                    <button id="edit-btn-infrastructure_id" class="no-print btn btn-sm edit-button" onclick="enableEditing('infrastructure_id')"><i class="bi-pencil fs-6"></i></button>
-                    @endif
-                </td>
-            </tr>
             
             <!-- Damage Information -->
             <tr>

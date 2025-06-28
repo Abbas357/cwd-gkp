@@ -188,8 +188,18 @@
             pushStateModal({
                 fetchUrl: "{{ route('admin.apps.dmis.damages.detail', ':id') }}",
                 btnSelector: '.view-btn',
+                modalType: 'edit',
                 title: 'Damage Details',
                 modalSize: 'lg',
+                tableToRefresh: table,
+            });
+
+            pushStateModal({
+                fetchUrl: "{{ route('admin.apps.dmis.damages.logs', ':id') }}",
+                btnSelector: '.view-logs-btn',
+                modalType: 'logs',
+                title: 'Damage Logs',
+                modalSize: 'xl',
                 tableToRefresh: table,
             });
 

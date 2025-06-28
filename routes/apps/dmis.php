@@ -33,6 +33,7 @@ Route::prefix('dmis')->as('dmis.')->group(function () {
         Route::post('/', [DamageController::class, 'store'])->name('store')->can('create', App\Models\Damage::class);
         Route::get('/{damage}', [DamageController::class, 'show'])->name('show')->can('view', 'damage');
         Route::get('/get/{damage}', [DamageController::class, 'showDetail'])->name('detail')->can('view', 'damage');
+        Route::get('/logs/{damage}', [DamageController::class, 'showLogs'])->name('logs')->can('view', 'damage');
         Route::patch('/update/field/{damage}', [DamageController::class, 'updateField'])->name('updateField')->can('updateField', 'damage');
         Route::delete('/{damage}', [DamageController::class, 'destroy'])->name('destroy')->can('delete', 'damage');
     });

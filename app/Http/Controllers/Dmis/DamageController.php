@@ -159,6 +159,26 @@ class DamageController extends Controller
             ],
         ]);
     }
+
+    public function showLogs(Damage $damage)
+    {
+        if (!$damage) {
+            return response()->json([
+                'success' => false,
+                'data' => [
+                    'result' => 'Unable to load Damage Logs',
+                ],
+            ]);
+        }
+ 
+        $html = view('modules.dmis.damages.partials.logs', compact('damage'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
+    }
  
     public function updateField(Request $request, Damage $damage)
     {
