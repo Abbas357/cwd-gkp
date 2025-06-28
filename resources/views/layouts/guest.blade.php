@@ -26,16 +26,16 @@
           left: 0;
           width: 100%;
           height: 100%;
-          background-image: url("{{ asset('admin/images/bg-image.jpg') }}?cw=53");
+          background-image: url("{{ asset('admin/images/bg-image.jpg') }}?cw=54");
           background-size: cover;
           background-position: center;
-          filter: blur(1px);
+          filter: blur(5px);
           z-index: -1;
       }
     </style>
 </head>
 <body class="bg-image" id="particles">
-    <header>
+    <header style="background: #ffffff55; backdrop-filter: blur(10px);">
         <div class="px-3 py-2">
           <div class="container">
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
@@ -49,11 +49,7 @@
                     Home
                   </a>
                 </li>
-                <li>
-                  <a class="nav-link text-secondary" onclick="history.back()">
-                    Go Back
-                  </a>
-                </li>
+                
               </ul>
             </div>
           </div>

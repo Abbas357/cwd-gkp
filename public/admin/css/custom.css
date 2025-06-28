@@ -680,6 +680,7 @@ html[data-bs-theme="dark"] div.dt-container div.dtb-popover-close {
     outline: none;
     cursor: pointer;
     transition: box-shadow 0.2s;
+    user-select: none;
 }
 
 .cw-btn.primary {

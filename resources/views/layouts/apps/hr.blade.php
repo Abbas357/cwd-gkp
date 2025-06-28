@@ -79,7 +79,7 @@
             </li>
             @endcan
 
-            @canany(['viewHrSettings', 'updateHrSettings', 'initHrSettings'], App\Models\Setting::class)
+            @canany(['viewSettings', 'updateSettings', 'initSettings'], App\Models\User::class)
             <li>
                 <a href="{{ route('admin.apps.hr.settings.index') }}">
                     <i class="bi-gear text-danger"></i>Settings

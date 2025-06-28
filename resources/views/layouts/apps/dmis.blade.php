@@ -16,20 +16,20 @@
     </li>
     @endcan
 
-    @can('viewAny', App\Models\Infrastructure::class)
-    <li>
-        <a href="{{ route('admin.apps.dmis.infrastructures.index') }}">
-            <div class="parent-icon"><i class="bi-building text-info"></i></div>
-            <div class="menu-title">Infrastructures</div>
-        </a>
-    </li>
-    @endcan
-
     @can('viewAny', App\Models\Damage::class)
     <li>
         <a href="{{ route('admin.apps.dmis.damages.index') }}">
             <div class="parent-icon"><i class="bi-exclamation-triangle text-warning"></i></div>
             <div class="menu-title">Damages</div>
+        </a>
+    </li>
+    @endcan
+
+    @can('viewAny', App\Models\Infrastructure::class)
+    <li>
+        <a href="{{ route('admin.apps.dmis.infrastructures.index') }}">
+            <div class="parent-icon"><i class="bi-building text-info"></i></div>
+            <div class="menu-title">Infrastructures</div>
         </a>
     </li>
     @endcan
@@ -48,7 +48,7 @@
                 </a>
             </li>
             @endcan
-            @can('viewMainReport', App\Models\Damage::class)
+            @can('viewSituationReport', App\Models\Damage::class)
             <li>
                 <a href="{{ route('admin.apps.dmis.reports.daily-situation') }}">
                     <i class="bi-graph-down text-primary"></i> Daily Situation
@@ -80,7 +80,7 @@
     </li>
     @endcanany
 
-    @canany(['viewDmisSettings', 'updateDmisSettings', 'initDmisSettings'], App\Models\Setting::class)
+    @canany(['viewSettings', 'updateSettings', 'initSettings'], App\Models\Damage::class)
     <li>
         <a href="{{ route('admin.apps.dmis.settings.index') }}">
             <div class="parent-icon"><i class="bi-gear text-danger"></i></div>

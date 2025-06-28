@@ -17,10 +17,10 @@
                     <th>Office</th>
                     <th>District</th>
                     <th>Damaged Length</th>
-                    <th>Damage East Start</th>
                     <th>Damage North Start</th>
-                    <th>Damage East End</th>
                     <th>Damage North End</th>
+                    <th>Damage East Start</th>
+                    <th>Damage East End</th>
                     <th>Damage Status</th>
                     <th>Damage Nature</th>
                     <th>Approximate Restoration Cost</th>
@@ -73,19 +73,19 @@
                         searchBuilderType: "num"
                     },
                     {
-                        data: 'damage_east_start',
-                        searchBuilderType: "num"
-                    },
-                    {
                         data: 'damage_north_start',
                         searchBuilderType: "num"
                     },
                     {
-                        data: 'damage_east_end',
+                        data: 'damage_north_end',
                         searchBuilderType: "num"
                     },
                     {
-                        data: 'damage_north_end',
+                        data: 'damage_east_start',
+                        searchBuilderType: "num"
+                    },
+                    {
+                        data: 'damage_east_end',
                         searchBuilderType: "num"
                     },
                     {
@@ -121,7 +121,7 @@
                 , defaultOrderColumn: 7
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
-                    targets: [0, 6, 7, 8, 9, 12, 13, 14, 15]
+                    targets: [0, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16]
                     , visible: false
                     }, {
                         targets: -1,
@@ -146,20 +146,12 @@
                                     fields: ["#step-1"]
                                 },
                                 {
-                                    title: "Damage Information",
+                                    title: "Detail & Coordinates",
                                     fields: ["#step-2"]
                                 },
                                 {
-                                    title: "Damage Coordinates",
+                                    title: "Cost Info & Images",
                                     fields: ["#step-3"]
-                                },
-                                {
-                                    title: "Cost and Additional Info",
-                                    fields: ["#step-4"]
-                                },
-                                {
-                                    title: "Images",
-                                    fields: ["#step-5"]
                                 }
                             ],
                             formSubmitted() {

@@ -241,8 +241,7 @@
         <div class="table-responsive">
             <table id="daily-situation-report" class="table table-bordered">
                 <caption class="report-metadata">
-                    <div><strong>Daily Report for:</strong> {{ \Carbon\Carbon::parse($reportDate)->format('F d, Y (l)') }}</div>
-                    <div><strong>Officer:</strong> {{ $selectedUser->name }} ({{ $selectedUser->currentDesignation->name ?? 'No Designation' }})</div>
+                    <div><strong>Daily Situation Report for:</strong> {{ \Carbon\Carbon::parse($reportDate)->format('F d, Y (l)') }}</div>
                     <div><strong>Office:</strong> {{ $selectedUser->currentOffice->name ?? 'No Office Assigned' }}</div>
                     <div class="mt-2 text-muted"><small>This report shows damage assessments recorded on the selected date only</small></div>
                 </caption>
@@ -444,7 +443,7 @@
 
             $('#print-report').on('click', () => {
                 $("#daily-situation-report").printThis({
-                    header: "<h4 class='text-center mb-3'>Daily Infrastructure Damage Situation Report - {{ \Carbon\Carbon::parse($reportDate)->format('F d, Y') }}</h4>",
+                    header: "<h4 class='text-center mb-3'>Daily Situation Report - {{ \Carbon\Carbon::parse($reportDate)->format('F d, Y') }}</h4>",
                     beforePrint() {
                         document.querySelector('.page-loader').classList.remove('hidden');
                     },

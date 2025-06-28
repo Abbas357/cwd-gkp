@@ -1,4 +1,4 @@
-<x-dmis-layout title="dmis Dashboard">
+<x-dmis-layout title="DMIS Dashboard">
     @push('style')
     <link href="{{ asset('admin/plugins/apexchart/apexcharts.min.css') }}" rel="stylesheet">
     <style>

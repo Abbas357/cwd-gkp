@@ -38,6 +38,11 @@ class DamagePolicy
         return $user->can('view main report damage');
     }
 
+    public function viewSituationReport(User $user): bool
+    {
+        return $user->can('view situation report damage');
+    }
+
     public function viewOfficerWiseReport(User $user): bool
     {
         return $user->can('view officer-wise report damage');

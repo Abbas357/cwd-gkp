@@ -202,6 +202,7 @@ class SyncPermissionsCommand extends Command
             'view officer report damage',
             'view district-wise report damage',
             'view active-officer report damage',
+            'view situation report damage',
 
             'view any service-card',
             'create service-card',
@@ -229,6 +230,7 @@ class SyncPermissionsCommand extends Command
         return [
             'view main report damage',
             'view officer report damage',
+            'view situation report damage',
 
             'view any tender',
             'view tender',
@@ -511,6 +513,7 @@ class SyncPermissionsCommand extends Command
             'view officer report damage',
             'view district-wise report damage',
             'view active-officer report damage',
+            'view situation report damage',
             
             // Infrastructure
             'view any infrastructure',
@@ -865,6 +868,7 @@ class SyncPermissionsCommand extends Command
             'update field damage',
             'delete damage',
             'view main report damage',
+            'view situation report damage',
             'view officer report damage',
             'view district-wise report damage',
             'view active-officer report damage',

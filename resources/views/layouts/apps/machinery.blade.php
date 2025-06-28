@@ -34,7 +34,7 @@
         </a>
     </li>
     @endcan
-    @canany(['viewMachinerySettings', 'updateMachinerySettings', 'initMachinerySettings'], App\Models\Setting::class)
+    @canany(['viewSettings', 'updateSettings', 'initSettings'], App\Models\Machinery::class)
     <li>
         <a href="{{ route('admin.apps.machineries.settings.index') }}">
             <div class="parent-icon"><i class="bi-gear text-danger"></i></div>

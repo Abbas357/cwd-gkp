@@ -36,7 +36,7 @@
     </div>
 
     <div class="col-md-6 mb-3">
-        <label for="length">Length</label>
+        <label for="length">Length <small class="text-danger fw-bold infrastructure-type"></small></label>
         <input type="number" class="form-control" id="length" name="length" value="{{ old('length') }}" required>
         @error('length')
         <div class="text-danger">{{ $message }}</div>
@@ -78,3 +78,11 @@
         @enderror
     </div>
 </div>
+
+<script>
+    $('#type').on('change', function() {        
+        const selectedType = $(this).val();
+        var selectedTypeMeasurement = selectedType === "Road" ? "(in Kilometers)" : '(in Meters)';
+        $('.infrastructure-type').text(selectedTypeMeasurement);
+    });
+</script>

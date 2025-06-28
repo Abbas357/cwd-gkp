@@ -1,40 +1,90 @@
 <x-guest-layout>
-    @push('style')
-    <style>
-        body {
-            background: linear-gradient(135deg, #e0eafc, #cfdef3);
-            font-family: Arial, sans-serif;
+    
+@push('style')
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    .info-text {
+        background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+        border: none !important;
+        border-radius: 16px !important;
+        padding: 2rem !important;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .info-text::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+        background-size: 200% 100%;
+        animation: gradientShift 1s ease-in-out infinite;
+    }
+    
+    @keyframes gradientShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+    
+    .info-text h2 {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 700 !important;
+        font-size: 2rem;
+        letter-spacing: -0.5px;
+        text-shadow: none !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .info-text p {
+        color: #64748b;
+        font-weight: 500;
+        font-size: 0.875rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .form-control {
+        padding: 0.55rem 1rem;
+    }
+    /* Focus ring for accessibility */
+    .form-control:focus-visible,
+    .cw-btn:focus-visible,
+    .form-check-input:focus-visible {
+        outline: 2px solid #667eea;
+    }
+
+    /* Responsive enhancements */
+    @media (max-width: 768px) {
+        .card-body {
+            padding: 1.5rem !important;
         }
-        .login-box {
-            background-color: #ffffff;
+        
+        .info-text {
+            padding: 1.5rem !important;
         }
-        .form-label {
-            font-weight: bold;
+        
+        .info-text h4 {
+            font-size: 1.5rem;
         }
-        .btn-primary {
-            background: #5f8cec;
-            border: none;
-            transition: background 0.3s ease;
-        }
-        .btn-primary:hover {
-            background: #3b5998;
-        }
-        .input-group-text {
-            cursor: pointer;
-        }
-        .shadow-lg {
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-        }
-    </style>
-    @endpush
+    }
+
+</style>
+@endpush
     
     <div class="container-fluid my-5">
         <div class="row">
             <div class="col-12 col-md-8 col-lg-6 col-xl-5 col-xxl-4 mx-auto">
                 <div class="card p-3 overflow-hidden login-box">
                     <div class="card-body p-2 py-3 position-relative">
-                        <div class="border text-center py-4 rounded-top" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.15)">
-                            <h4 class="fw-bold mb-2" style="text-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5)">WELCOME BACK</h4>
+                        <div class="info-text border text-center py-4 rounded-top" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.15)">
+                            <h2 class="fw-bold mb-2" style="text-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5)">WELCOME BACK</h2>
                             <p class="small mb-0">PLEASE LOGIN TO CONTINUE</p>
                         </div>
             
@@ -49,8 +99,8 @@
                                 @csrf
             
                                 <div class="col-12">
-                                    <label for="email" class="form-label text-secondary">Email</label>
-                                    <input type="text" class="form-control shadow-sm" id="email" name="email" placeholder="Email" value="{{ old('email') }}" required autofocus autocomplete="email">
+                                    <label for="email" class="form-label text-secondary">Email / Username</label>
+                                    <input type="text" class="form-control shadow-sm" id="email" name="email" placeholder="Email / Username" value="{{ old('email') }}" required autofocus autocomplete="email">
                                     @foreach($errors->get('email') as $error)
                                         <span class="text-danger small"> {{ $error }}</span>
                                     @endforeach
@@ -77,7 +127,7 @@
                                 </div>
             
                                 <div class="col-12 mt-3">
-                                    <button type="submit" class="cw-btn block">Login</button>
+                                    <button type="submit" class="submit-btn cw-btn block">Login</button>
                                 </div>
                             </form>
                         </div>
@@ -99,6 +149,10 @@
             toggleIcon.classList.replace("bi-eye-slash-fill", "bi-eye-fill");
         }
     }
+
+    document.querySelector('form').addEventListener('submit', function() {
+        document.querySelector('button[type="submit"]').textContent = 'Please wait ...';
+    });
 
     </script>
     @endpush
