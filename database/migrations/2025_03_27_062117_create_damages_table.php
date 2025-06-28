@@ -30,6 +30,7 @@ return new class extends Migration
             $table->enum('road_status', ['Partially restored', 'Fully restored', 'Not restored'])->default('Partially restored');
             $table->text('remarks')->nullable();
             $table->unsignedBigInteger('posting_id')->nullable();
+            $table->unsignedBigInteger('district_id')->nullable();
             $table->timestamps();
         });
 

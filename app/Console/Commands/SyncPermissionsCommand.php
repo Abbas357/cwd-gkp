@@ -106,6 +106,7 @@ class SyncPermissionsCommand extends Command
             'Damages Manager' => $this->getDamagesManagerPermissions(),
             'Machinery Manager' => $this->getMachineryManagerPermissions(),
             'Porms Manager' => $this->getPormsManagerPermissions(),
+            'Consultant Manager' => $this->getConsultantManagerPermissions(),
         ];
 
         foreach ($roles as $roleName => $permissions) {
@@ -664,6 +665,29 @@ class SyncPermissionsCommand extends Command
             'update field tender',
             'publish tender',
             'archive tender',
+        ];
+    }
+
+    protected function getConsultantManagerPermissions()
+    {
+        return [
+            'view any consultant',
+            'view consultant',
+            'update field consultant',
+            'upload file consultant',
+            'view report consultant',
+
+            // Consultant Hr
+            'view any consultant hr',
+            'update consultant hr',
+            'upload consultant hr',
+            'delete consultant hr',
+
+            // Consultant Project
+            'view any consultant project',
+            'update consultant project',
+            'upload consultant project',
+            'delete consultant project',
         ];
     }
     

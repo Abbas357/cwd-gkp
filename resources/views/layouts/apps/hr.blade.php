@@ -7,7 +7,7 @@
 </x-header>
 
 @if ($showAside)
-<x-sidebar app-name="HRMIS" app-url="{{ route('admin.apps.hr.index') }}">
+<x-sidebar app-name="USER MGT." app-url="{{ route('admin.apps.hr.index') }}">
     @php
         $user = auth()->user();
     @endphp

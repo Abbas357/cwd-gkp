@@ -7,9 +7,9 @@ use App\Http\Controllers\Consultant\ConsultantHumanResourceController;
 
 Route::prefix('consultants')->as('consultants.')->group(function () {
     Route::get('/', [ConsultantController::class, 'index'])->name('index')->can('viewAny', App\Models\Consultant::class);
-    Route::get('/{consultant}/detail', [ConsultantController::class, 'detail'])->name('detail')->can('view', 'consultant');
-    Route::patch('/update/field/{consultant}', [ConsultantController::class, 'updateField'])->name('updateField')->can('updateField', 'consultant');
-    Route::patch('/update/file/{consultant}', [ConsultantController::class, 'uploadFile'])->name('uploadFile')->can('uploadFile', 'consultant');
+    Route::get('/{consultant}/detail', [ConsultantController::class, 'detail'])->name('detail')->can('view', App\Models\ConsultantHumanResource::class);
+    Route::patch('/update/field/{consultant}', [ConsultantController::class, 'updateField'])->name('updateField')->can('updateField', App\Models\ConsultantHumanResource::class);
+    Route::patch('/update/file/{consultant}', [ConsultantController::class, 'uploadFile'])->name('uploadFile')->can('uploadFile', App\Models\ConsultantHumanResource::class);
 
     Route::get('/api', [ConsultantController::class, 'consultants'])->name('api');
     Route::get('/report', [ConsultantController::class, 'report'])->name('report')->can('report', App\Models\Consultant::class);
