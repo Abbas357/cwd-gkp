@@ -209,8 +209,7 @@
             <table id="assessment-report" class="table table-bordered">
                 <caption class="report-metadata">
                     <div><strong>Report Date:</strong> {{ now()->format('F d, Y') }}</div>
-                    <div><strong>Officer:</strong> {{ $selectedUser->name }} ({{ $selectedUser->currentDesignation->name ?? 'No Designation' }})</div>
-                    <div><strong>Office:</strong> {{ $selectedUser->currentOffice->name ?? 'No Office Assigned' }}</div>
+                    <div><strong>Office:</strong> {{ $selectedUser->currentOffice->name ?? 'C&W DEPARTMENT' }}</div>
                 </caption>
                 <thead>
                     <tr class="bg-success text-white text-uppercase fw-bold">
