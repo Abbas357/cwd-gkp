@@ -41,8 +41,7 @@ Route::prefix('dmis')->as('dmis.')->group(function () {
     Route::prefix('reports')->as('reports.')->group(function () { 
         Route::get('/', [ReportController::class, 'index'])->name('index')->can('viewMainReport', App\Models\Damage::class);
         Route::get('/daily-situation', [ReportController::class, 'dailySituationReport'])->name('daily-situation')->can('viewSituationReport', App\Models\Damage::class);
-        Route::get('/officer-wise', [ReportController::class, 'officerReport'])->name('officer-wise')->can('viewOfficerWiseReport', App\Models\Damage::class);
         Route::get('/district-wise', [ReportController::class, 'districtDamagesReport'])->name('district-wise')->can('viewDistrictWiseReport', App\Models\Damage::class);
-        Route::get('/active-officers', [ReportController::class, 'activeOfficersReport'])->name('active-officers')->can('viewActiveOfficerReport', App\Models\Damage::class);
+        Route::get('/district-details/{district}', [ReportController::class, 'districtDetailsReport'])->name('district-details')->can('viewDistrictWiseReport', App\Models\Damage::class);
     });
 });

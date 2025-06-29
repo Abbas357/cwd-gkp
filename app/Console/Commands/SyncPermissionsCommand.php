@@ -200,9 +200,7 @@ class SyncPermissionsCommand extends Command
     {
         return [
             'view main report damage',
-            'view officer report damage',
             'view district-wise report damage',
-            'view active-officer report damage',
             'view situation report damage',
 
             'view any service-card',
@@ -230,7 +228,6 @@ class SyncPermissionsCommand extends Command
     {
         return [
             'view main report damage',
-            'view officer report damage',
             'view situation report damage',
 
             'view any tender',
@@ -275,9 +272,7 @@ class SyncPermissionsCommand extends Command
     {
         return [
             'view main report damage',
-            'view officer report damage',
             'view district-wise report damage',
-            'view active-officer report damage',
 
             'view vacancy report user',
             'view employee directory report user',
@@ -511,9 +506,7 @@ class SyncPermissionsCommand extends Command
             'view damage',
             'update field damage',
             'view main report damage',
-            'view officer report damage',
             'view district-wise report damage',
-            'view active-officer report damage',
             'view situation report damage',
             
             // Infrastructure
@@ -893,9 +886,7 @@ class SyncPermissionsCommand extends Command
             'delete damage',
             'view main report damage',
             'view situation report damage',
-            'view officer report damage',
             'view district-wise report damage',
-            'view active-officer report damage',
             
             // Infrastructure
             'view any infrastructure',

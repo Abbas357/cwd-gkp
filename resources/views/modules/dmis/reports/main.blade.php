@@ -275,7 +275,7 @@
                         @endif
                         @endif
                         <td class="text-center fw-medium">{{ $district->name }}</td>
-                        <td class="text-center fw-medium">{{ $district->damaged_infrastructure_count }}</td>
+                        <td class="text-center fw-medium"><a href="{{ route('admin.apps.dmis.reports.district-details', ['district' => $district->id, 'type' => request()->query("type") ?? "Road"]) }}">{{ $district->damaged_infrastructure_count }}</a></td>
                         <td class="text-center fw-medium">{{ number_format($district->damaged_infrastructure_total_count, 2) }}</td>
                         <td class="text-center fw-medium">{{ number_format($district->damaged_infrastructure_sum, 2) }}</td>
                         <td class="text-center fw-medium">{{ $district->fully_restored }}</td>

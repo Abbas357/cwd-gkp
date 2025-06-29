@@ -141,11 +141,22 @@
             overflow-y: auto;
             font-size: 0.85rem;
         }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-detail {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            border-radius: 0.25rem;
+        }
     </style>
     @endpush
 
     <x-slot name="header">
-        <li class="breadcrumb-item"><a href="{{ route('admin.apps.dmis.dashboard') }}">dmis</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.apps.dmis.dashboard') }}">DMIS</a></li>
         <li class="breadcrumb-item"><a href="{{ route('admin.apps.dmis.reports.index') }}">Reports</a></li>
         <li class="breadcrumb-item active" aria-current="page">District Damages</li>
     </x-slot>
@@ -202,16 +213,17 @@
                     <tr class="bg-success text-white text-uppercase fw-bold">
                         <th scope="col" class="text-center align-middle">Rank</th>
                         <th scope="col" class="text-center align-middle">District</th>
-                        <th scope="col" class="text-center align-middle">Total Infrastructures</th>
-                        <th scope="col" class="text-center align-middle">Damaged Infrastructures</th>
+                        <th scope="col" class="text-center align-middle">Total {{ request()->query("type") ?? "Road" }}s</th>
+                        <th scope="col" class="text-center align-middle">Damaged {{ request()->query("type") ?? "Road" }}s</th>
                         <th scope="col" class="text-center align-middle">Damage Reports</th>
                         <th scope="col" class="text-center align-middle">Damaged Length</th>
                         <th scope="col" class="text-center align-middle">Fully Restored</th>
                         <th scope="col" class="text-center align-middle">Partially Restored</th>
                         <th scope="col" class="text-center align-middle">Not Restored</th>
-                        <th scope="col" class="text-center align-middle">Restoration Cost (M)</th>
-                        <th scope="col" class="text-center align-middle">Rehabilitation Cost (M)</th>
-                        <th scope="col" class="text-center align-middle">Total Cost (M)</th>
+                        <th scope="col" class="text-center align-middle">Restoration Cost(M)</th>
+                        <th scope="col" class="text-center align-middle">Rehabilitation Cost(M)</th>
+                        <th scope="col" class="text-center align-middle">Total Cost(M)</th>
+                        <th scope="col" class="text-center align-middle no-print">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -226,14 +238,14 @@
                             @if($stats['damaged_infrastructure_count'] > 0)
                                 {{ $stats['damaged_infrastructure_count'] }}
                             @else
-                                <span class="no-damage">None</span>
+                                <span class="no-damage">-</span>
                             @endif
                         </td>
                         <td class="text-center">
                             @if($stats['damage_count'] > 0)
                                 {{ $stats['damage_count'] }}
                             @else
-                                <span class="no-damage">None</span>
+                                <span class="no-damage">-</span>
                             @endif
                         </td>
                         <td class="text-center">
@@ -249,11 +261,20 @@
                         <td class="text-center">{{ number_format($stats['restoration_cost'], 2) }}</td>
                         <td class="text-center">{{ number_format($stats['rehabilitation_cost'], 2) }}</td>
                         <td class="text-center fw-bold">{{ number_format($stats['total_cost'], 2) }}</td>
+                        <td class="text-center no-print">
+                            <div class="action-buttons">
+                                <a href="{{ route('admin.apps.dmis.reports.district-details', ['district' => $stats['district']->id, 'type' => $type]) }}" 
+                                    class="btn btn-light border btn-detail" 
+                                    title="View Details">
+                                    <i class="bi-eye"></i>
+                                </a>
+                            </div>
+                        </td>
                     </tr>
                     @endforeach
                     
                     <tr class="fw-bold total-row">
-                        <td colspan="3" class="text-end">Total:</td>
+                        <td colspan="2" class="text-end">Total:</td>
                         <td class="text-center">{{ $total['total_infrastructure_count'] }}</td>
                         <td class="text-center">{{ $total['total_damaged_infrastructure_count'] }}</td>
                         <td class="text-center">{{ $total['total_damage_count'] }}</td>
@@ -264,6 +285,7 @@
                         <td class="text-center">{{ number_format($total['total_restoration_cost'], 2) }}</td>
                         <td class="text-center">{{ number_format($total['total_rehabilitation_cost'], 2) }}</td>
                         <td class="text-center">{{ number_format($total['total_cost'], 2) }}</td>
+                        <td class="text-center no-print">-</td>
                     </tr>
                 </tbody>
             </table>

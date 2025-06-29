@@ -5,6 +5,7 @@ namespace App\Http\Controllers\dmis;
 use App\Models\Damage;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreDamageRequest;
@@ -72,8 +73,8 @@ class DamageController extends Controller
     {
         $cat = [
             'districts' => request()->user()->districts()->count() > 0
-            ? request()->user()->districts()
-            : \App\Models\District::all(),
+                ? request()->user()->districts()
+                : \App\Models\District::all(),
             'infrastructure_type' => ['Road', 'Bridge', 'Culvert'],
             'road_status' => ['Partially restored', 'Fully restored', 'Not restored'],
             'damage_status' => ['Partially Damaged', 'Fully Damaged'],
@@ -117,7 +118,7 @@ class DamageController extends Controller
         $damage->posting_id = Auth::user()->currentPosting->id;
 
         $userDistricts = request()->user()->districts();
-        
+
         if ($request->filled('district_id')) {
             $damage->district_id = $request->district_id;
         } else {
@@ -129,9 +130,33 @@ class DamageController extends Controller
         }
 
         if ($damage->save()) {
+            $this->handleFileUploads($damage, $request);
             return response()->json(['success' => 'Damage added successfully']);
         } else {
             return response()->json(['error' => 'There is an error adding the damage']);
+        }
+    }
+
+    private function handleFileUploads($damage, $request)
+    {
+        $fileCollections = [
+            'damage_before_images' => 'damage_before_images',
+            'damage_after_images' => 'damage_after_images',
+        ];
+
+        foreach ($fileCollections as $requestField => $collection) {
+            if ($request->hasFile($requestField)) {
+                $files = $request->file($requestField);
+                foreach ($files as $document) {
+                    try {
+                        $damage->addMedia($document)
+                            ->usingName($document->getClientOriginalName())
+                            ->toMediaCollection($collection);
+                    } catch (\Exception $e) {
+                        Log::error("Failed to upload file: " . $document->getClientOriginalName() . " - " . $e->getMessage());
+                    }
+                }
+            }
         }
     }
 
@@ -150,7 +175,7 @@ class DamageController extends Controller
                 ],
             ]);
         }
- 
+
         $html = view('modules.dmis.damages.partials.detail', compact('damage'))->render();
         return response()->json([
             'success' => true,
@@ -170,7 +195,7 @@ class DamageController extends Controller
                 ],
             ]);
         }
- 
+
         $html = view('modules.dmis.damages.partials.logs', compact('damage'))->render();
         return response()->json([
             'success' => true,
@@ -179,7 +204,7 @@ class DamageController extends Controller
             ],
         ]);
     }
- 
+
     public function updateField(Request $request, Damage $damage)
     {
         $request->validate([

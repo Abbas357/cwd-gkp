@@ -43,19 +43,9 @@ class DamagePolicy
         return $user->can('view situation report damage');
     }
 
-    public function viewOfficerWiseReport(User $user): bool
-    {
-        return $user->can('view officer-wise report damage');
-    }
-
     public function viewDistrictWiseReport(User $user): bool
     {
         return $user->can('view district-wise report damage');
-    }
-
-    public function viewActiveOfficerReport(User $user): bool
-    {
-        return $user->can('view active-officer report damage');
     }
 
     public function viewSettings(User $user): bool

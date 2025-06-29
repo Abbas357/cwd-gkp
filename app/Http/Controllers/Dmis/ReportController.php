@@ -251,60 +251,6 @@ class ReportController extends Controller
             'reportDate'
         ));
     }
-
-    public function officerReport(Request $request)
-    {
-        $type = $request->get('type') ?? 'Road';
-        $officers = User::whereHas('postings', function($query) {
-            $query->where('is_current', true)
-                ->whereNotNull('office_id');
-        })->with(['currentPosting', 'currentOffice', 'currentDesignation'])
-        ->get();
-        $officerStats = collect();
-        
-        foreach ($officers as $officer) {
-            $postingId = $officer->currentPosting?->id;
-            if (!$postingId) {
-                continue;
-            }            
-            $damageQuery = Damage::where('posting_id', $postingId);
-            if ($type !== 'All') {
-                $damageQuery->whereHas('infrastructure', function($query) use ($type) {
-                    $query->where('type', $type);
-                });
-            }
-            $damages = $damageQuery->get();
-            if ($damages->isEmpty()) {
-                continue;
-            }            
-            $stats = [
-                'officer' => $officer,
-                'damage_count' => $damages->count(),
-                'distinct_infrastructure_count' => $damages->pluck('infrastructure_id')->unique()->count(),
-                'fully_restored' => $damages->where('road_status', 'Fully restored')->count(),
-                'partially_restored' => $damages->where('road_status', 'Partially restored')->count(),
-                'not_restored' => $damages->where('road_status', 'Not restored')->count(),
-                'restoration_cost' => $damages->sum('approximate_restoration_cost'),
-                'rehabilitation_cost' => $damages->sum('approximate_rehabilitation_cost'),
-                'total_cost' => $damages->sum('approximate_restoration_cost') + $damages->sum('approximate_rehabilitation_cost'),
-                'last_reported' => $damages->max('created_at'),
-            ];
-            $officerStats->push($stats);
-        }
-        $officerStats = $officerStats->sortByDesc('damage_count')->values();
-        $total = [
-            'total_damage_count' => $officerStats->sum('damage_count'),
-            'total_infrastructure_count' => $officerStats->sum('distinct_infrastructure_count'),
-            'total_fully_restored' => $officerStats->sum('fully_restored'),
-            'total_partially_restored' => $officerStats->sum('partially_restored'),
-            'total_not_restored' => $officerStats->sum('not_restored'),
-            'total_restoration_cost' => $officerStats->sum('restoration_cost'),
-            'total_rehabilitation_cost' => $officerStats->sum('rehabilitation_cost'),
-            'total_cost' => $officerStats->sum('total_cost'),
-        ];
-        return view('modules.dmis.reports.officer-wise', compact('officerStats', 'total', 'type'));
-    }
-
     
     public function districtDamagesReport(Request $request)
     {
@@ -353,61 +299,73 @@ class ReportController extends Controller
         return view('modules.dmis.reports.district-wise', compact('districtStats', 'total', 'type'));
     }
 
-    public function activeOfficersReport(Request $request)
+    public function districtDetailsReport(Request $request, District $district)
     {
         $type = $request->get('type') ?? 'Road';
-        $period = $request->get('period') ?? 30; 
-        $startDate = now()->subDays($period);
-        $officers = User::whereHas('postings', function($query) {
-            $query->where('is_current', true)
-                ->whereNotNull('office_id');
-        })->with(['currentPosting', 'currentOffice', 'currentDesignation'])
-        ->get();
-        $officerStats = collect();
-        foreach ($officers as $officer) {
-            $postingId = $officer->currentPosting?->id;
-            
-            if (!$postingId) {
-                continue;
-            }            
-            $damageQuery = Damage::where('posting_id', $postingId)
-                ->where('created_at', '>=', $startDate);
-            if ($type !== 'All') {
-                $damageQuery->whereHas('infrastructure', function($query) use ($type) {
-                    $query->where('type', $type);
-                });
-            }
-            $recentDamages = $damageQuery->get();    
-            $allDamageQuery = Damage::where('posting_id', $postingId);
-            
-            if ($type !== 'All') {
-                $allDamageQuery->whereHas('infrastructure', function($query) use ($type) {
-                    $query->where('type', $type);
-                });
-            }
-            $allDamages = $allDamageQuery->get();
-            $stats = [
-                'officer' => $officer,
-                'recent_damage_count' => $recentDamages->count(),
-                'all_damage_count' => $allDamages->count(),
-                'last_activity' => $allDamages->max('created_at'),
-                'assigned_districts' => $officer->districts() ?? collect(),
-                'recent_restoration_cost' => $recentDamages->sum('approximate_restoration_cost'),
-                'recent_rehabilitation_cost' => $recentDamages->sum('approximate_rehabilitation_cost'),
-                'recent_total_cost' => $recentDamages->sum('approximate_restoration_cost') + $recentDamages->sum('approximate_rehabilitation_cost'),
-            ];
-            $officerStats->push($stats);
-        }
         
-        $officerStats = $officerStats->sortByDesc('recent_damage_count')->values();
-        $total = [
-            'total_recent_damage_count' => $officerStats->sum('recent_damage_count'),
-            'total_all_damage_count' => $officerStats->sum('all_damage_count'),
-            'total_recent_restoration_cost' => $officerStats->sum('recent_restoration_cost'),
-            'total_recent_rehabilitation_cost' => $officerStats->sum('recent_rehabilitation_cost'),
-            'total_recent_cost' => $officerStats->sum('recent_total_cost'),
+        // Get infrastructures in this district
+        $infrastructures = $district->infrastructures()
+            ->when($type !== 'All', function($query) use ($type) {
+                return $query->where('type', $type);
+            })
+            ->get();
+        
+        $infrastructureIds = $infrastructures->pluck('id')->toArray();
+        
+        // Get all damages for this district's infrastructures with media
+        $damages = Damage::whereIn('infrastructure_id', $infrastructureIds)
+            ->with([
+                'infrastructure',
+                'posting.user.currentDesignation',
+                'posting.office',
+                'media' // This will load all media collections
+            ])
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        // Group damages by infrastructure
+        $damagesByInfrastructure = $damages->groupBy('infrastructure_id');
+        
+        // Calculate statistics
+        $stats = [
+            'total_damages' => $damages->count(),
+            'unique_infrastructures' => $damages->pluck('infrastructure_id')->unique()->count(),
+            'total_damaged_length' => $damages->sum('damaged_length'),
+            'fully_restored' => $damages->where('road_status', 'Fully restored')->count(),
+            'partially_restored' => $damages->where('road_status', 'Partially restored')->count(),
+            'not_restored' => $damages->where('road_status', 'Not restored')->count(),
+            'total_restoration_cost' => $damages->sum('approximate_restoration_cost'),
+            'total_rehabilitation_cost' => $damages->sum('approximate_rehabilitation_cost'),
+            'total_cost' => $damages->sum('approximate_restoration_cost') + $damages->sum('approximate_rehabilitation_cost'),
         ];
         
-        return view('modules.dmis.reports.active-officers', compact('officerStats', 'total', 'type', 'period'));
+        // Get officers who reported damages in this district
+        $reportingOfficers = $damages->map(function($damage) {
+            return [
+                'user' => $damage->posting->user ?? null,
+                'office' => $damage->posting->office ?? null,
+                'designation' => $damage->posting->user->currentDesignation ?? null,
+                'damage_count' => 1
+            ];
+        })->filter(function($officer) {
+            return $officer['user'] !== null;
+        })->groupBy('user.id')->map(function($group) {
+            $first = $group->first();
+            return [
+                'user' => $first['user'],
+                'office' => $first['office'],
+                'designation' => $first['designation'],
+                'damage_count' => $group->count()
+            ];
+        })->values();
+        
+        return view('modules.dmis.reports.district-details', compact(
+            'district',
+            'damages',
+            'damagesByInfrastructure',
+            'stats',
+            'reportingOfficers',
+            'type'
+        ));
     }
 }

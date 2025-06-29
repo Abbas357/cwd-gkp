@@ -1,8 +1,4 @@
 <style>
-    .damage-logs {
-        padding: 1rem;
-    }
-
     .logs-header {
         display: flex;
         justify-content: space-between;
@@ -47,8 +43,6 @@
         border: 1px solid #dee2e6;
         border-radius: 0.5rem;
         overflow: hidden;
-        max-height: 500px;
-        overflow-y: auto;
     }
 
     .logs-table {
@@ -286,13 +280,13 @@
 
 <div class="damage-logs">
     <div class="logs-header">
-        <h4><i class="fas fa-history"></i> Damage History</h4>
+        <h4><i class="bi-clock-history"></i> Damage History</h4>
         <span class="logs-count">{{ $damage->logs->count() }} entries</span>
     </div>
 
     @if($damage->logs->isEmpty())
     <div class="no-logs">
-        <i class="fas fa-clipboard-list"></i>
+        <i class="bi-clipboard"></i>
         <p>No history available</p>
     </div>
     @else

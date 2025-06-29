@@ -161,7 +161,7 @@
 
     <div class="col-md-6 mb-3">
         <label for="before_images">Before Images</label>
-        <input type="file" class="form-control" id="before_images" name="before_images[]" multiple accept="image/*">
+        <input type="file" class="form-control" id="before_images" name="damage_before_images[]" multiple accept="image/*">
         <small class="form-text text-muted">You can select multiple images</small>
         @error('before_images')
         <div class="text-danger">{{ $message }}</div>
@@ -170,20 +170,11 @@
 
     <div class="col-md-6 mb-3">
         <label for="after_images">After Images</label>
-        <input type="file" class="form-control" id="after_images" name="after_images[]" multiple accept="image/*">
+        <input type="file" class="form-control" id="after_images" name="damage_after_images[]" multiple accept="image/*">
         <small class="form-text text-muted">You can select multiple images</small>
         @error('after_images')
         <div class="text-danger">{{ $message }}</div>
         @enderror
-    </div>
-    
-    <div class="col-md-12 mb-3">
-        <div class="row" id="before_images_preview">
-            <!-- Before images preview will be displayed here -->
-        </div>
-        <div class="row" id="after_images_preview">
-            <!-- After images preview will be displayed here -->
-        </div>
     </div>
 </div>
 

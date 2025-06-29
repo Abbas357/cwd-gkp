@@ -38,11 +38,11 @@ class Damage extends Model implements HasMedia
                 return "Damage {$eventName}";
             });
     }
-
+    
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('before_work_pictures');
-        $this->addMediaCollection('after_work_pictures');
+        $this->addMediaCollection('damage_before_images');
+        $this->addMediaCollection('damage_after_images');
     }
 
     protected static function booted()

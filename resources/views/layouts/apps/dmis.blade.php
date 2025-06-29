@@ -6,7 +6,7 @@
 </x-header>
 
 @if ($showAside)
-<x-sidebar app-name="dmis" app-url="{{ route('admin.apps.dmis.dashboard') }}">
+<x-sidebar app-name="DMIS" app-url="{{ route('admin.apps.dmis.dashboard') }}">
     @can('viewAny', App\Models\Damage::class)
     <li>
         <a href="{{ route('admin.apps.dmis.dashboard') }}">
@@ -51,14 +51,7 @@
             @can('viewSituationReport', App\Models\Damage::class)
             <li>
                 <a href="{{ route('admin.apps.dmis.reports.daily-situation') }}">
-                    <i class="bi-graph-down text-primary"></i> Daily Situation
-                </a>
-            </li>
-            @endcan
-            @can('viewOfficerWiseReport', App\Models\Damage::class)
-            <li>
-                <a href="{{ route('admin.apps.dmis.reports.officer-wise') }}">
-                    <i class="bi-person-lines-fill text-success"></i> Officers Wise
+                    <i class="bi-calendar3 text-primary"></i> Daily Situation
                 </a>
             </li>
             @endcan
@@ -68,13 +61,6 @@
                     <i class="bi-geo-alt-fill text-warning"></i> District Wise
                 </a>
             </li>
-            @endcan
-            @can('viewActiveOfficerReport', App\Models\Damage::class)
-            <li>
-                <a href="{{ route('admin.apps.dmis.reports.active-officers') }}">
-                    <i class="bi-person-check-fill text-info"></i> Active Officers
-                </a>
-            </li>            
             @endcan
         </ul>
     </li>
