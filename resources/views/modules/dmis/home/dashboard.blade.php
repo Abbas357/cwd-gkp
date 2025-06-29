@@ -340,7 +340,7 @@
                         <div class="activity-timeline">
                             @foreach($recentDamages as $damage)
                             <div class="timeline-item">
-                                <h6 class="mb-1">{{ $damage->infrastructure->name }}</h6>
+                                <h6 class="mb-1">{{ $damage?->infrastructure?->name }}</h6>
                                 <p class="mb-0 small">
                                     <span class="badge {{ $damage->damage_status == 'Fully Damaged' ? 'bg-danger' : 'bg-warning' }}">
                                         {{ $damage->damage_status }}
