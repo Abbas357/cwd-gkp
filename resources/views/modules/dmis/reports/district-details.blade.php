@@ -92,15 +92,14 @@
         .image-container {
             position: relative;
             padding: 1rem;
-            min-height: 200px;
             display: flex;
-            flex-direction: column;
             gap: 0.5rem;
+            overflow-x: auto;
         }
 
         .damage-image {
-            width: 100%;
-            height: 150px;
+            width: 250px;
+            height: 200px;
             object-fit: cover;
             border-radius: 0.25rem;
             cursor: pointer;
@@ -784,6 +783,31 @@
                     }
                 });
             });
+
+            // Image modal functionality
+            const imageModal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalLabel = document.getElementById('imageModalLabel');
+            const downloadLink = document.getElementById('downloadImage');
+
+            imageModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+                const imageSrc = button.getAttribute('data-image-src');
+                const imageTitle = button.getAttribute('data-image-title');
+                
+                modalImage.src = imageSrc;
+                modalImage.alt = imageTitle;
+                modalLabel.textContent = imageTitle;
+                downloadLink.href = imageSrc;
+            });
+
+            // Clear modal when hidden
+            imageModal.addEventListener('hidden.bs.modal', function() {
+                modalImage.src = '';
+                modalLabel.textContent = 'Image Preview';
+                downloadLink.href = '';
+            });
+
         });
 
     </script>

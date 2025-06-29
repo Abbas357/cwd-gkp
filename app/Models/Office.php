@@ -99,7 +99,7 @@ class Office extends Model
             'id',
             'user_id'
         )->where('postings.is_current', false)
-        ->orderByDesc('postings.end_date');
+            ->orderByDesc('postings.end_date');
     }
 
     public function formerPostings($designationId = null)
@@ -108,11 +108,11 @@ class Office extends Model
             ->where('is_current', false)
             ->with(['user', 'designation'])
             ->orderByDesc('end_date');
-        
+
         if ($designationId !== null) {
             $query->where('designation_id', $designationId);
         }
-        
+
         return $query;
     }
 
@@ -135,7 +135,7 @@ class Office extends Model
     }
 
     public function getAllDescendants()
-    {        
+    {
         $descendants = collect();
 
         $children = $this->children;
@@ -184,20 +184,21 @@ class Office extends Model
         return $this->belongsTo(District::class);
     }
 
-    public function getAllManagedDistricts() {    
-        if ($this->type === 'Authority') {
+    public function getAllManagedDistricts()
+    {
+        if (in_array($this->type, ['Secretariat', 'Provincial', 'Authority', 'Project'])) {
             return District::all();
         }
 
         $managedDistricts = collect();
-        
+
         if ($this->district_id) {
             $district = District::find($this->district_id);
             if ($district) {
                 $managedDistricts->push($district);
             }
         }
-        
+
         $childOffices = $this->getAllDescendants();
         foreach ($childOffices as $childOffice) {
             if ($childOffice->district_id) {
@@ -207,7 +208,7 @@ class Office extends Model
                 }
             }
         }
-        
+
         return $managedDistricts->unique('id');
     }
 
@@ -231,7 +232,7 @@ class Office extends Model
             'id',
             'id',
             'vehicle_id'
-        )->whereHas('allotment', function($query) {
+        )->whereHas('allotment', function ($query) {
             $query->where('is_current', true);
         });
     }
@@ -239,16 +240,71 @@ class Office extends Model
     public function poolVehicles()
     {
         return $this->hasManyThrough(
-            Vehicle::class, 
+            Vehicle::class,
             VehicleAllotment::class,
             'office_id',
             'id',
             'id',
             'vehicle_id'
-        )->whereHas('allotment', function($query) {
+        )->whereHas('allotment', function ($query) {
             $query->where('is_current', true)
                 ->where('type', 'Pool');
         });
     }
 
+    public function getAncestorsOptimized()
+    {
+        if (!$this->parent_id) {
+            return collect();
+        }
+
+        // Use recursive CTE if your database supports it (MySQL 8.0+, PostgreSQL)
+        $ancestors = collect();
+        $parentIds = [$this->parent_id];
+
+        while (!empty($parentIds)) {
+            $parents = Office::whereIn('id', $parentIds)->get();
+            $ancestors = $ancestors->merge($parents);
+            $parentIds = $parents->where('parent_id', '!=', null)->pluck('parent_id')->toArray();
+        }
+
+        return $ancestors;
+    }
+
+    public function getAllDescendantsOptimized()
+    {
+        // Get all descendants in one query using a recursive approach
+        $allDescendants = collect();
+        $currentLevelIds = [$this->id];
+
+        while (!empty($currentLevelIds)) {
+            $children = Office::whereIn('parent_id', $currentLevelIds)->get();
+
+            if ($children->isEmpty()) {
+                break;
+            }
+
+            $allDescendants = $allDescendants->merge($children);
+            $currentLevelIds = $children->pluck('id')->toArray();
+        }
+
+        return $allDescendants;
+    }
+
+    // OR if you're using MySQL 8.0+ or PostgreSQL, use this CTE version:
+    public function getAllDescendantsCTE()
+    {
+        return Office::from('offices as descendants')
+            ->select('descendants.*')
+            ->from(DB::raw("(
+            WITH RECURSIVE office_tree AS (
+                SELECT * FROM offices WHERE parent_id = {$this->id}
+                UNION ALL
+                SELECT o.* FROM offices o
+                INNER JOIN office_tree ot ON o.parent_id = ot.id
+            )
+            SELECT * FROM office_tree
+        ) as descendants"))
+            ->get();
+    }
 }

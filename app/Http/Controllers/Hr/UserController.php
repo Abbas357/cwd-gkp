@@ -69,7 +69,7 @@ class UserController extends Controller
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
                 $dataTable->filter(function ($query) use ($request, $relationMappings) {
                     $sb = new SearchBuilder(
-                        $request, 
+                        $request,
                         $query,
                         [],
                         $relationMappings,
@@ -84,28 +84,84 @@ class UserController extends Controller
         return view('modules.hr.users.index');
     }
 
+    // public function users(Request $request)
+    // {
+    //     return $this->getApiResults(
+    //         $request, 
+    //         User::class, 
+    //         [
+    //             'searchColumns' => ['name', 'email', 'username'],
+    //             'withRelations' => ['currentPosting.designation', 'currentPosting.office'],
+    //             'textFormat' => function($user) {
+    //                 return $user->name . ' - ' . 
+    //                     ($user->currentPosting ? 
+    //                         $user->currentPosting->designation->name . ' at ' . 
+    //                         $user->currentPosting->office->name 
+    //                     : 'No Current Posting');
+    //             },
+    //             'searchRelations' => [
+    //                 'currentPosting.designation' => ['name'],
+    //                 'currentPosting.office' => ['name']
+    //             ],
+    //             'orderBy' => 'id',
+    //         ]
+    //     );
+    // }
+
     public function users(Request $request)
     {
-        return $this->getApiResults(
-            $request, 
-            User::class, 
-            [
-                'searchColumns' => ['name', 'email', 'username'],
-                'withRelations' => ['currentPosting.designation', 'currentPosting.office'],
-                'textFormat' => function($user) {
-                    return $user->name . ' - ' . 
-                        ($user->currentPosting ? 
-                            $user->currentPosting->designation->name . ' at ' . 
-                            $user->currentPosting->office->name 
-                        : 'No Current Posting');
-                },
-                'searchRelations' => [
-                    'currentPosting.designation' => ['name'],
-                    'currentPosting.office' => ['name']
-                ],
-                'orderBy' => 'id',
+        $currentUser = request()->user();
+
+        $query = User::query();
+
+        if ($currentUser && $currentUser->currentPosting && $currentUser->currentOffice) {
+            $subordinates = $currentUser->getUsers();
+            $subordinateIds = $subordinates->pluck('id')->toArray();
+
+            if (!empty($subordinateIds)) {
+                $query->whereIn('id', $subordinateIds);
+            } else {
+                $query->whereRaw('1 = 0');
+            }
+        } else {
+            $query->whereRaw('1 = 0');
+        }
+
+        $query->with(['currentPosting.designation', 'currentPosting.office']);
+
+        if ($request->q) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', "%{$request->q}%")
+                    ->orWhere('email', 'like', "%{$request->q}%")
+                    ->orWhere('username', 'like', "%{$request->q}%")
+                    ->orWhereHas('currentPosting.designation', function ($subQuery) use ($request) {
+                        $subQuery->where('name', 'like', "%{$request->q}%");
+                    })
+                    ->orWhereHas('currentPosting.office', function ($subQuery) use ($request) {
+                        $subQuery->where('name', 'like', "%{$request->q}%");
+                    });
+            });
+        }
+
+        $query->orderBy('id', 'asc');
+
+        $results = $query->paginate(10);
+
+        return response()->json([
+            'results' => collect($results->items())->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'text' => $user->name . ' - ' .
+                        ($user->currentPosting ?
+                            $user->currentPosting?->designation?->name . ' at ' .
+                            $user->currentPosting?->office?->name
+                            : 'No Current Posting')
+                ];
+            }),
+            'pagination' => [
+                'more' => $results->hasMorePages()
             ]
-        );
+        ]);
     }
 
     public function create()
@@ -151,9 +207,9 @@ class UserController extends Controller
             if ($request->has('posting')) {
                 $postingData = $request->input('posting');
                 $postingData['type'] = 'Appointment';
-                
+
                 if (isset($postingData['office_id']) && isset($postingData['designation_id'])) {
-                     $this->handleRegularPosting($user, $postingData, $request);
+                    $this->handleRegularPosting($user, $postingData, $request);
                 }
             }
 
@@ -172,7 +228,7 @@ class UserController extends Controller
             return response()->json(['error' => 'Failed to create user: ' . $e->getMessage()]);
         }
     }
-    
+
     public function show(User $user)
     {
         return response()->json($user);
@@ -217,19 +273,19 @@ class UserController extends Controller
 
         try {
             $userData = $request->only(['name', 'username', 'email', 'status']);
-            
+
             if ($request->filled('password')) {
                 $userData['password'] = Hash::make($request->password);
                 $userData['password_updated_at'] = now();
             }
 
             $user->update($userData);
-            
+
             $profileData = $request->input('profile', []);
             if (isset($profileData['featured_on'])) {
                 $profileData['featured_on'] = json_encode($profileData['featured_on']);
             }
-            
+
             $user->profile()->updateOrCreate(
                 ['user_id' => $user->id],
                 $profileData
@@ -243,28 +299,28 @@ class UserController extends Controller
                 if ($postingType && isset($postingData['office_id']) && isset($postingData['designation_id'])) {
                     $currentPosting = $user->currentPosting;
                     $postingChanged = $this->hasPostingChanged($currentPosting, $postingData);
-                    
-                    if($postingChanged) {
+
+                    if ($postingChanged) {
                         switch ($postingType) {
                             case 'Mutual':
                                 $this->handleMutualTransfer($user, $postingData, $request);
                                 break;
-                                
+
                             case 'Suspension':
                             case 'OSD':
                                 $this->handleSpecialStatus($user, $postingType, $postingData);
                                 break;
-    
+
                             case 'Additional-Charge':
                                 $this->handleAdditionalCharge($user, $postingData, $request);
                                 break;
-    
+
                             case 'Retirement':
                             case 'Termination':
                             case 'Out-Transfer':
                                 $this->handleExitStatus($user, $postingType, $postingData);
                                 break;
-                            
+
                             default: // Appointment, Transfer, Promotion
                                 $this->handleRegularPosting($user, $postingData, $request);
                                 break;
@@ -295,20 +351,24 @@ class UserController extends Controller
         if (!$currentPosting) {
             return true;
         }
-        
+
         // Check if office, designation or type has changed
-        if ($currentPosting->office_id != $newPostingData['office_id'] ||
+        if (
+            $currentPosting->office_id != $newPostingData['office_id'] ||
             $currentPosting->designation_id != $newPostingData['designation_id'] ||
-            $currentPosting->type != $newPostingData['type']) {
+            $currentPosting->type != $newPostingData['type']
+        ) {
             return true;
         }
-        
+
         // If the order number is being changed, consider it a posting change
-        if (isset($newPostingData['order_number']) && 
-            $currentPosting->order_number != $newPostingData['order_number']) {
+        if (
+            isset($newPostingData['order_number']) &&
+            $currentPosting->order_number != $newPostingData['order_number']
+        ) {
             return true;
         }
-        
+
         // No significant changes detected
         return false;
     }
@@ -322,12 +382,12 @@ class UserController extends Controller
                 ->where('designation_id', $postingData['designation_id'])
                 ->where('status', 'Active')
                 ->first();
-                
+
             if (!$sanctionedPost) {
                 throw new \Exception('This position is not sanctioned for the selected office.');
             }
         }
-        
+
         // Create new posting for the additional charge WITHOUT ending current posting
         $newPosting = $user->postings()->create([
             'office_id' => $postingData['office_id'],
@@ -338,23 +398,23 @@ class UserController extends Controller
             'order_number' => $postingData['order_number'] ?? null,
             'is_current' => true  // This is also marked as current alongside the main posting
         ]);
-        
+
         if ($request->hasFile('posting_order')) {
             $newPosting->addMedia($request->file('posting_order'))
                 ->toMediaCollection('posting_orders');
         }
-        
+
         // Check if vacating another officer from the additional charge position
         if ($request->has('vacate_officer_id')) {
             $officerToVacate = User::findOrFail($request->input('vacate_officer_id'));
-            
+
             // Find the posting at the specific office/designation
             $vacatePosting = $officerToVacate->postings()
                 ->where('office_id', $postingData['office_id'])
                 ->where('designation_id', $postingData['designation_id'])
                 ->where('is_current', true)
                 ->first();
-                
+
             if ($vacatePosting) {
                 $vacatePosting->update([
                     'is_current' => false,
@@ -367,46 +427,46 @@ class UserController extends Controller
     private function handleMutualTransfer(User $user, array $postingData, Request $request)
     {
         $currentPosting = $user->currentPosting;
-        
+
         if (!$currentPosting) {
             throw new \Exception('Cannot perform mutual transfer. The selected officer does not have an active posting.');
         }
-        
+
         // Check if mutual transfer partner is specified
         $mutualPartnerId = $request->input('mutual_transfer_user_id');
-        
+
         if (!$mutualPartnerId) {
             // Check if there's someone in the target position
             $partnerPosting = Posting::where('office_id', $postingData['office_id'])
                 ->where('designation_id', $postingData['designation_id'])
                 ->where('is_current', true)
                 ->first();
-                
+
             if (!$partnerPosting) {
                 throw new \Exception('No officer found in the target position for mutual transfer.');
             }
-            
+
             $mutualPartnerId = $partnerPosting->user_id;
         }
-        
+
         $mutualPartner = User::findOrFail($mutualPartnerId);
         $partnerPosting = $mutualPartner->currentPosting;
-        
+
         if (!$partnerPosting) {
             throw new \Exception('Mutual transfer partner does not have an active posting.');
         }
-        
+
         // End current postings
         $currentPosting->update([
             'is_current' => false,
             'end_date' => now()
         ]);
-        
+
         $partnerPosting->update([
             'is_current' => false,
             'end_date' => now()
         ]);
-        
+
         // Create new postings (swapped)
         $user->postings()->create([
             'office_id' => $partnerPosting->office_id,
@@ -417,7 +477,7 @@ class UserController extends Controller
             'order_number' => $postingData['order_number'] ?? null,
             'is_current' => true
         ]);
-        
+
         $mutualPartner->postings()->create([
             'office_id' => $currentPosting->office_id,
             'designation_id' => $currentPosting->designation_id,
@@ -438,7 +498,7 @@ class UserController extends Controller
                 'end_date' => now()
             ]);
         }
-        
+
         // Create new posting with special status
         $user->postings()->create([
             'office_id' => null, // No office for these status types
@@ -461,7 +521,7 @@ class UserController extends Controller
                     'end_date' => now()
                 ]);
             }
-        
+
             // Create new posting with special status
             $posted = $user->postings()->create([
                 'office_id' => null,
@@ -472,7 +532,7 @@ class UserController extends Controller
                 'order_number' => $postingData['order_number'] ?? null,
                 'is_current' => true
             ]);
-        
+
             if ($posted) {
                 $user->status = 'Archived';
                 $user->save();
@@ -486,13 +546,13 @@ class UserController extends Controller
         if ($request->has('vacate_officer_id')) {
             $officerToVacate = User::findOrFail($request->input('vacate_officer_id'));
             $vacateReason = $request->input('vacate_reason', 'Transfer');
-            
+
             if ($currentVacatePosting = $officerToVacate->currentPosting) {
                 $currentVacatePosting->update([
                     'is_current' => false,
                     'end_date' => now()
                 ]);
-                
+
                 // If vacating with special status, create appropriate posting
                 if (in_array($vacateReason, ['Retirement', 'Suspension', 'OSD'])) {
                     $officerToVacate->postings()->create([
@@ -506,25 +566,25 @@ class UserController extends Controller
                 }
             }
         }
-        
+
         // Check if exceeding sanctioned strength
         if (!$request->has('override_sanctioned_post')) {
             $sanctionedPost = SanctionedPost::where('office_id', $postingData['office_id'])
                 ->where('designation_id', $postingData['designation_id'])
                 ->where('status', 'Active')
                 ->first();
-                
+
             if (!$sanctionedPost) {
                 throw new \Exception('This position is not sanctioned for the selected office.');
             }
-            
+
             if (!$sanctionedPost->isAvailableForPosting($postingData['type'], $user->id)) {
                 if (!$request->has('excess_justification')) {
                     throw new \Exception('No vacancy available for this position in the selected office.');
                 }
             }
         }
-        
+
         // End current posting if exists
         if ($currentPosting = $user->currentPosting) {
             $currentPosting->update([
@@ -532,7 +592,7 @@ class UserController extends Controller
                 'end_date' => now()
             ]);
         }
-        
+
         // Create new posting
         $newPosting = $user->postings()->create([
             'office_id' => $postingData['office_id'],
@@ -543,7 +603,7 @@ class UserController extends Controller
             'order_number' => $postingData['order_number'] ?? null,
             'is_current' => true
         ]);
-        
+
         // If posting order file is provided
         if ($request->hasFile('posting_order')) {
             $newPosting->addMedia($request->file('posting_order'))
@@ -569,9 +629,9 @@ class UserController extends Controller
     {
         $userId = $request->input('user_id');
         $user = User::findOrFail($userId);
-        
+
         $currentPosting = $user->currentPosting()->with(['office', 'designation'])->first();
-        
+
         return response()->json([
             'current_posting' => $currentPosting
         ]);
@@ -653,13 +713,13 @@ class UserController extends Controller
             }
 
             $userData['name'] = $request->name;
-            $userData['email'] = strtolower(preg_replace('/\s+/', '', $request->name)) . rand(10000, 99999) . '@cwd.gkp.pk'; 
+            $userData['email'] = strtolower(preg_replace('/\s+/', '', $request->name)) . rand(10000, 99999) . '@cwd.gkp.pk';
             $userData['uuid'] = Str::uuid();
             $userData['username'] = $request->username ?? $this->generateUsername($userData['email']);
             $userData['password'] = Hash::make(Str::random(8));
             $userData['password_updated_at'] = now();
             $userData['status'] = 'Active';
-            
+
             $user = User::create($userData);
 
             $profileData = $request->input('profile', []);
@@ -676,7 +736,7 @@ class UserController extends Controller
                     'start_date' => now(),
                     'is_current' => true
                 ];
-                
+
                 SanctionedPost::firstOrCreate(
                     [
                         'office_id' => $officeId,
@@ -687,7 +747,7 @@ class UserController extends Controller
                         'status' => 'Active'
                     ]
                 );
-                
+
                 $user->postings()->create($postingData);
             }
 
@@ -729,5 +789,4 @@ class UserController extends Controller
 
         return response()->json(['error' => 'User can\'t be deleted.']);
     }
-
 }

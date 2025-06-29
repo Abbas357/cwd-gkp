@@ -101,21 +101,21 @@ class User extends Authenticatable implements HasMedia
 
     public function scopeFeaturedOnHome($query)
     {
-        return $query->whereHas('profile', function($q) {
+        return $query->whereHas('profile', function ($q) {
             $q->where('featured_on', 'LIKE', '%"Home"%');
         });
     }
 
     public function scopeFeaturedOnTeam($query)
     {
-        return $query->whereHas('profile', function($q) {
+        return $query->whereHas('profile', function ($q) {
             $q->where('featured_on', 'LIKE', '%"Team"%');
         });
     }
 
     public function scopeFeaturedOnContact($query)
     {
-        return $query->whereHas('profile', function($q) {
+        return $query->whereHas('profile', function ($q) {
             $q->where('featured_on', 'LIKE', '%"Contact"%');
         });
     }
@@ -195,7 +195,7 @@ class User extends Authenticatable implements HasMedia
             'id',
             'id',
             'vehicle_id'
-        )->whereHas('allotment', function($query) {
+        )->whereHas('allotment', function ($query) {
             $query->where('is_current', true)
                 ->whereNot('type', 'Pool');
         });
@@ -210,7 +210,7 @@ class User extends Authenticatable implements HasMedia
             'id',
             'office_id',
             'vehicle_id'
-        )->whereHas('allotment', function($query) {
+        )->whereHas('allotment', function ($query) {
             $query->where('is_current', true)
                 ->where('type', 'Pool')
                 ->whereNull('user_id');
@@ -221,7 +221,7 @@ class User extends Authenticatable implements HasMedia
     {
         $personalVehicleIds = $this->personalVehicles()->pluck('id');
         $officeVehicleIds = $this->officePoolVehicles()->pluck('id');
-        
+
         return Vehicle::whereIn('id', $personalVehicleIds->merge($officeVehicleIds));
     }
 
@@ -360,6 +360,20 @@ class User extends Authenticatable implements HasMedia
         })->get();
     }
 
+
+    public function getUsers()
+    {
+        if (!$this->currentPosting || !$this->currentOffice) {
+            return collect();
+        }
+
+        if (in_array($this->currentOffice->type, ['Secretariat', 'Provincial', 'Authority', 'Project'])) {
+            return User::whereHas('currentPosting')->get();
+        }
+        
+        return $this->getSubordinates();
+    }
+
     public function getDirectSubordinates()
     {
         if (!$this->currentPosting || !$this->currentOffice) {
@@ -368,15 +382,15 @@ class User extends Authenticatable implements HasMedia
 
         $office = $this->currentOffice;
         $directSubordinates = collect();
-        
+
         $childOffices = $office->children;
-        
+
         foreach ($childOffices as $childOffice) {
             $usersInChildOffice = User::whereHas('currentPosting', function ($query) use ($childOffice) {
                 $query->where('office_id', $childOffice->id)
                     ->where('is_current', true);
             })->get();
-            
+
             if ($usersInChildOffice->isNotEmpty()) {
                 $directSubordinates = $directSubordinates->merge($usersInChildOffice);
             } else {
@@ -384,34 +398,34 @@ class User extends Authenticatable implements HasMedia
                 $directSubordinates = $directSubordinates->merge($deeperSubordinates);
             }
         }
-        
+
         return $directSubordinates->unique('id');
     }
 
     protected function getDeepestDirectSubordinates($office)
     {
         $subordinates = collect();
-        
+
         $usersInOffice = User::whereHas('currentPosting', function ($query) use ($office) {
             $query->where('office_id', $office->id)
                 ->where('is_current', true);
         })->get();
-        
+
         if ($usersInOffice->isNotEmpty()) {
             return $usersInOffice;
         }
-        
+
         $childOffices = $office->children;
-        
+
         if ($childOffices->isEmpty()) {
             return collect();
         }
-        
+
         foreach ($childOffices as $childOffice) {
             $deeperSubordinates = $this->getDeepestDirectSubordinates($childOffice);
             $subordinates = $subordinates->merge($deeperSubordinates);
         }
-        
+
         return $subordinates;
     }
 

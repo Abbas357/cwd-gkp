@@ -175,6 +175,7 @@
                             @endforeach
                         </select>
                     </div>
+                    
                     <div class="col-md-6">
                         <label class="form-label" for="load-users">Reporting Officer</label>
                         <select name="user_id" id="load-users" class="form-select" data-placeholder="Select Officer">
