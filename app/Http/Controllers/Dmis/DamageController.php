@@ -228,4 +228,22 @@ class DamageController extends Controller
         }
         return response()->json(['error' => 'Error deleting damage.']);
     }
+
+    public function uploadFile(Request $request, Damage $damage)
+    {
+        $request->validate([
+            'attachment' => 'required|file|mimes:jpeg,jpg,png,gif|max:10240',
+            'collection_name' => 'required|string',
+        ]);
+
+        try {
+            $damage->addMedia($request->file('attachment'))
+                ->toMediaCollection($request->input('collection_name'));
+                
+            return response()->json(['success' => 'File uploaded successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error uploading file: ' . $e->getMessage()], 500);
+        }
+    }
+
 }

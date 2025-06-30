@@ -6,10 +6,11 @@
         padding: 0.1rem 0.5rem;
         vertical-align: middle;
     }
+
 </style>
 @php
-    $canUpdate = auth()->user()->can('updateField', $damage);
-    $canUpload = auth()->user()->can('uploadFile', $damage);
+$canUpdate = auth()->user()->can('updateField', $damage);
+$canUpload = auth()->user()->can('uploadFile', $damage);
 @endphp
 <div class="row damage-details">
 
@@ -18,10 +19,10 @@
         Note: All changes are logged. Please proceed with caution when editing. You can view logs for this damage to see the history of changes made. <a href="{{ route('admin.apps.dmis.damages.index') }}?id={{ $damage->id }}&type=logs">Click to see Logs for this damage</a>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-    
+
     <div class="col-md-12">
         <table class="table table-bordered mt-3">
-            
+
             <!-- Damage Information -->
             <tr>
                 <th class="table-cell">Damaged Length</th>
@@ -87,7 +88,7 @@
                     @endif
                 </td>
             </tr>
-            
+
             <!-- Damage Coordinates -->
             <tr>
                 <th class="table-cell">Damage Start (Easting)</th>
@@ -133,7 +134,7 @@
                     @endif
                 </td>
             </tr>
-            
+
             <!-- Cost Information -->
             <tr>
                 <th class="table-cell">Restoration Cost (Millions)</th>
@@ -168,8 +169,42 @@
                     @endif
                 </td>
             </tr>
+            <tr>
+                <th class="table-cell">Files</th>
+                <td class="d-flex justify-content-between align-items-center gap-2">
+                    @php
+                    $hasBefore = $damage->hasMedia('damage_before_images');
+                    $beforeCount = $damage->getMedia('damage_before_images')->count();
+                    $hasAfter = $damage->hasMedia('damage_after_images');
+                    $afterCount = $damage->getMedia('damage_after_images')->count();
+                    @endphp
+            
+                    @if($hasBefore)
+                    <div class="d-flex flex-wrap gap-2">
+                        <span>Before images: <strong>{{ $beforeCount }}</strong> </span><hr>
+                        <span>After images:  <strong>{{ $afterCount }}</strong></span>
+                    </div>
+                    @else
+                    <span>Not Uploaded</span>
+                    @endif
+            
+                    <div class="no-print d-flex justify-content-between align-items-center gap-2">
+                        <select id="collectionSelector" class="form-select form-select-sm">
+                            <option value="">Select Type</option>
+                            <option value="damage_before_images">Before</option>
+                            <option value="damage_after_images">After</option>
+                        </select>
+                    
+                        <label for="attachment" class="btn btn-light border border-secondary">
+                            <i class="bi-plus-circle"></i>
+                        </label>
+                    
+                        <input type="file" id="attachment" name="attachment" class="d-none file-input" accept="image/*">
+                    </div>
+                </td>
+            </tr>
         </table>
-        
+
     </div>
 </div>
 
@@ -178,6 +213,33 @@
 <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
 
 <script>
+    $(document).ready(function() {
+
+        $('#attachment').on('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const collectionName = $('#collectionSelector').val();
+
+            const formData = new FormData();
+            formData.append('attachment', file);
+            formData.append('_method', "PATCH");
+            formData.append('collection_name', collectionName);
+
+            const url = "{{ route('admin.apps.dmis.damages.uploadFile', ':id') }}".replace(':id', '{{ $damage->id }}');
+
+            try {
+                const result = await fetchRequest(url, 'POST', formData);
+                if (result) {
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.error('Error during form submission:', error);
+            }
+        });
+
+    });
+
     function enableEditing(field) {
         $('#text-' + field).addClass('d-none');
         $('#input-' + field).removeClass('d-none');
@@ -193,33 +255,32 @@
                 textarea.data('summernote-initialized', true);
             }
         }
-        
+
         if (field === 'infrastructure_id') {
             select2Ajax(
-                '#input-infrastructure_id',
-                '{{ route("admin.apps.dmis.infrastructures.api") }}',
-                {
-                    placeholder: "Select Infrastructure",
-                    params: {
+                '#input-infrastructure_id'
+                , '{{ route("admin.apps.dmis.infrastructures.api") }}', {
+                    placeholder: "Select Infrastructure"
+                    , params: {
                         type: $('#input-type').val() || $('#text-type').text()
                     }
                 }
             );
         }
-        
+
         if (field === 'damage_nature') {
             $('#input-damage_nature').select2({
-                theme: "bootstrap-5",
-                width: '100%',
-                placeholder: 'Select Damage Nature',
-                closeOnSelect: false
+                theme: "bootstrap-5"
+                , width: '100%'
+                , placeholder: 'Select Damage Nature'
+                , closeOnSelect: false
             });
         }
     }
 
     async function updateField(field, id) {
         let newValue;
-        
+
         if (field === 'remarks') {
             newValue = $('#input-' + field).summernote('code');
         } else if (field === 'damage_nature') {
@@ -230,10 +291,10 @@
 
         const url = "{{ route('admin.apps.dmis.damages.updateField', ':id') }}".replace(':id', id);
         const data = {
-            field: field,
-            value: newValue
+            field: field
+            , value: newValue
         };
-        
+
         const success = await fetchRequest(url, 'PATCH', data);
         if (success) {
             if (field === 'remarks') {
@@ -250,16 +311,17 @@
             } else {
                 $('#text-' + field).text(newValue);
             }
-            
+
             $('#input-' + field).addClass('d-none');
             $('#save-btn-' + field).addClass('d-none');
             $('#edit-btn-' + field).removeClass('d-none');
             $('#text-' + field).removeClass('d-none');
-            
+
             if (field === 'type') {
-                $('#text-infrastructure_id').text(''); 
+                $('#text-infrastructure_id').text('');
                 $('#input-infrastructure_id').empty();
             }
         }
     }
+
 </script>

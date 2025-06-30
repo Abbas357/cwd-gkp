@@ -35,6 +35,7 @@ Route::prefix('dmis')->as('dmis.')->group(function () {
         Route::get('/get/{damage}', [DamageController::class, 'showDetail'])->name('detail')->can('view', 'damage');
         Route::get('/logs/{damage}', [DamageController::class, 'showLogs'])->name('logs')->can('view', 'damage');
         Route::patch('/update/field/{damage}', [DamageController::class, 'updateField'])->name('updateField')->can('updateField', 'damage');
+        Route::patch('/upload/file/{damage}', [DamageController::class, 'uploadFile'])->name('uploadFile')->can('updateField', 'damage');
         Route::delete('/{damage}', [DamageController::class, 'destroy'])->name('destroy')->can('delete', 'damage');
     });
 
