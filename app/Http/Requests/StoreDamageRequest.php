@@ -16,6 +16,7 @@ class StoreDamageRequest extends FormRequest
         return [
             'report_date' => 'required|date',
             'type' => 'required|string|max:50',
+            'infrastructure_id' => 'required|exists:infrastructures,id',
             'damaged_length' => 'required|numeric|min:0',
             'damage_east_start' => 'nullable|numeric|between:-180,180',
             'damage_north_start' => 'nullable|numeric|between:-90,90',

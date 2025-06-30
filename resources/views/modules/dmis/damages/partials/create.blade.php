@@ -40,7 +40,7 @@
     
     <div class="col-md-{{ request()->user()->districts()->count() > 1 ? '6' : '12' }} mb-3">
         <label for="load-infrastructures">Infrastructures</label>
-        <select class="form-select form-select-md" id="load-infrastructures" name="infrastructure_id"></select>
+        <select class="form-select form-select-md" id="load-infrastructures" name="infrastructure_id" required></select>
         <small class="form-text text-muted">
             <a href="{{ route('admin.apps.dmis.infrastructures.index', ['create' => 'true', 'popup' => 'true']) }}" 
                onclick="openPopup(event, this.href)">Create</a> new if not available
