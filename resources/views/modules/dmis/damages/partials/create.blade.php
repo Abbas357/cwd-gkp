@@ -41,10 +41,14 @@
     <div class="col-md-{{ request()->user()->districts()->count() > 1 ? '6' : '12' }} mb-3">
         <label for="load-infrastructures">Infrastructures</label>
         <select class="form-select form-select-md" id="load-infrastructures" name="infrastructure_id" required></select>
-        <small class="form-text text-muted">
-            <a href="{{ route('admin.apps.dmis.infrastructures.index', ['create' => 'true', 'popup' => 'true']) }}" 
-               onclick="openPopup(event, this.href)">Create</a> new if not available
-        </small>        
+        <p class="form-text text-muted m-2">
+            <span class="fw-bold">If not available,</span>
+            <a class="btn btn-sm btn-outline-success ms-1" 
+               href="{{ route('admin.apps.dmis.infrastructures.index', ['create' => 'true', 'popup' => 'true']) }}" 
+               onclick="openPopup(event, this.href)">
+                + Create New Infrastructure
+            </a>
+        </p>       
     </div>
 
 </div>
@@ -52,8 +56,8 @@
 <!-- Step 2: Damage Information -->
 <div class="row" id="step-2">
     <div class="col-md-6 mb-3">
-        <label for="damaged_length">Damaged Length <small class="text-danger fw-bold infrastructure-type"></small></label>
-        <input type="text" class="form-control" id="damaged_length" name="damaged_length" value="{{ old('damaged_length') }}">
+        <label for="damaged_length">Damaged Length <small class="text-danger fw-bold infrastructure-type" style="font-size:18px"></small></label>
+        <input type="text" class="form-control" id="damaged_length" placeholder="Note: Road = Kilometer & Bridge/Culverts = Meters" name="damaged_length" value="{{ old('damaged_length') }}">
         @error('damaged_length')
         <div class="text-danger">{{ $message }}</div>
         @enderror
@@ -102,7 +106,7 @@
 
     <div class="col-md-3 mb-3">
         <label for="damage_north_start">Damage Start (North)</label>
-        <input type="text" class="form-control" id="damage_north_start" name="damage_north_start" value="{{ old('damage_north_start') }}">
+        <input type="text" class="form-control" id="damage_north_start" name="damage_north_start" placeholder="eg 34.646253" value="{{ old('damage_north_start') }}">
         @error('damage_north_start')
         <div class="text-danger">{{ $message }}</div>
         @enderror
@@ -110,7 +114,7 @@
 
     <div class="col-md-3 mb-3">
         <label for="damage_north_end">Damage End (North)</label>
-        <input type="text" class="form-control" id="damage_north_end" name="damage_north_end" value="{{ old('damage_north_end') }}">
+        <input type="text" class="form-control" id="damage_north_end" name="damage_north_end" placeholder="eg 34.644727" value="{{ old('damage_north_end') }}">
         @error('damage_north_end')
         <div class="text-danger">{{ $message }}</div>
         @enderror
@@ -118,7 +122,7 @@
 
     <div class="col-md-3 mb-3">
         <label for="damage_east_start">Damage Start (East)</label>
-        <input type="text" class="form-control" id="damage_east_start" name="damage_east_start" value="{{ old('damage_east_start') }}">
+        <input type="text" class="form-control" id="damage_east_start" name="damage_east_start" placeholder="eg 72.629942" value="{{ old('damage_east_start') }}">
         @error('damage_east_start')
         <div class="text-danger">{{ $message }}</div>
         @enderror
@@ -126,7 +130,7 @@
 
     <div class="col-md-3 mb-3">
         <label for="damage_east_end">Damage End (East)</label>
-        <input type="text" class="form-control" id="damage_east_end" name="damage_east_end" value="{{ old('damage_east_end') }}">
+        <input type="text" class="form-control" id="damage_east_end" name="damage_east_end" placeholder="eg 72.952492" value="{{ old('damage_east_end') }}">
         @error('damage_east_end')
         <div class="text-danger">{{ $message }}</div>
         @enderror
@@ -136,16 +140,16 @@
 <!-- Step 4: Cost and Additional Info -->
 <div class="row" id="step-3">
     <div class="col-md-6 mb-3">
-        <label for="approximate_restoration_cost">Approximate Restoration Cost <small class="text-danger fw-bold">(Millions)</small></label>
-        <input type="text" class="form-control" id="approximate_restoration_cost" name="approximate_restoration_cost" value="{{ old('approximate_restoration_cost') }}" required>
+        <label for="approximate_restoration_cost">Approximate Restoration Cost <small class="text-danger fw-bold" style="font-size:18px">(Millions)</small></label>
+        <input type="text" class="form-control" id="approximate_restoration_cost" name="approximate_restoration_cost" placeholder="Enter amount in millions (e.g., 2.3)" value="{{ old('approximate_restoration_cost') }}" required>
         @error('approximate_restoration_cost')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
 
     <div class="col-md-6 mb-3">
-        <label for="approximate_rehabilitation_cost">Approximate Rehabilitation Cost <small class="text-danger fw-bold">(Millions)</small></label>
-        <input type="text" class="form-control" id="approximate_rehabilitation_cost" name="approximate_rehabilitation_cost" value="{{ old('approximate_rehabilitation_cost') }}" required>
+        <label for="approximate_rehabilitation_cost">Approximate Rehabilitation Cost <small class="text-danger fw-bold" style="font-size:18px">(Millions)</small></label>
+        <input type="text" class="form-control" id="approximate_rehabilitation_cost" name="approximate_rehabilitation_cost" placeholder="Enter amount in millions (e.g., 3.7)" value="{{ old('approximate_rehabilitation_cost') }}" required>
         @error('approximate_rehabilitation_cost')
         <div class="text-danger">{{ $message }}</div>
         @enderror
@@ -153,7 +157,7 @@
 
     <div class="col-md-12 mb-3">
         <label for="remarks">Remarks</label>
-        <input type="text" class="form-control" id="remarks" name="remarks" value="{{ old('remarks') }}" />
+        <input type="text" class="form-control" id="remarks" placeholder="Additional Info (If any)" name="remarks" value="{{ old('remarks') }}" />
         @error('remarks')
         <div class="text-danger">{{ $message }}</div>
         @enderror

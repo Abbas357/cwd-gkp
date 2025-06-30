@@ -557,8 +557,8 @@
                 <div class="summary-label">Affected Infrastructures</div>
             </div>
             <div class="summary-card">
-                <div class="summary-number">{{ number_format($stats['total_damaged_length'], 1) }}</div>
-                <div class="summary-label">Damaged Length (km)</div>
+                <div class="summary-number">{{ $stats['total_damaged_length'] }}</div>
+                <div class="summary-label">Damaged Length {{ request()->query("type") == "Road" || !request()->has("type") ? "(KM)" : "(Meter)" }}</div>
             </div>
             <div class="summary-card">
                 <div class="summary-number">{{ $stats['fully_restored'] }}</div>
@@ -573,7 +573,7 @@
                 <div class="summary-label">Not Restored</div>
             </div>
             <div class="summary-card">
-                <div class="summary-number">{{ number_format($stats['total_cost'] / 1000000, 1) }}M</div>
+                <div class="summary-number">{{ $stats['total_cost'] }} Millions</div>
                 <div class="summary-label">Total Cost (PKR)</div>
             </div>
         </div>
@@ -618,7 +618,7 @@
                     </div>
                     <div class="text-muted small">
                         Type: {{ $infrastructure->type }} |
-                        Length: {{ $infrastructure->length ?? 'N/A' }} km |
+                        Length: {{ $infrastructure->length ?? 'N/A' }} {{ request()->query("type") == "Road" || !request()->has("type") ? "(KM)" : "(Meter)" }} |
                         Damages: {{ $infrastructureDamages->count() }}
                     </div>
                 </div>
@@ -642,7 +642,7 @@
                             </div>
                             <div class="meta-item">
                                 <div class="meta-label">Damaged Length</div>
-                                <div class="meta-value">{{ $damage->damaged_length ?? 'N/A' }} km</div>
+                                <div class="meta-value">{{ $damage->damaged_length ?? 'N/A' }} {{ request()->query("type") == "Road" || !request()->has("type") ? "(KM)" : "(Meter)" }}</div>
                             </div>
                             <div class="meta-item">
                                 <div class="meta-label">Reported Date</div>
@@ -650,11 +650,11 @@
                             </div>
                             <div class="meta-item">
                                 <div class="meta-label">Restoration Cost</div>
-                                <div class="meta-value">PKR {{ number_format($damage->approximate_restoration_cost) }}</div>
+                                <div class="meta-value">{{ $damage->approximate_restoration_cost }} Millions</div>
                             </div>
                             <div class="meta-item">
                                 <div class="meta-label">Rehabilitation Cost</div>
-                                <div class="meta-value">PKR {{ number_format($damage->approximate_rehabilitation_cost) }}</div>
+                                <div class="meta-value">{{ $damage->approximate_rehabilitation_cost }} Millions</div>
                             </div>
                         </div>
 
