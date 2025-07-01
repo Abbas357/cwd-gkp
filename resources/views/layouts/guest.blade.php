@@ -26,7 +26,7 @@
           left: 0;
           width: 100%;
           height: 100%;
-          background-image: url("{{ asset('admin/images/bg-image.jpg') }}?cw=54");
+          background-image: url("{{ asset('admin/images/bg-image.jpg') }}?cw=55");
           background-size: cover;
           background-position: center;
           filter: blur(5px);

@@ -6,7 +6,7 @@
         <li class="breadcrumb-item active" aria-current="page">Schemes</li>
     </x-slot>
 
-    <div class="card-header mb-3">
+    <div class="inward-tabs mb-3">
         <div class="row">
             <div class="row">
                 <div class="col-md-6 mb-4">

@@ -13,7 +13,19 @@ class InfrastructureController extends Controller
 {
     public function index(Request $request)
     {
+        $type = $request->query('type', 'Road');
         $infrastructure = Infrastructure::query();
+
+        $infrastructure->when($type !== null, function ($query) use ($type) {
+            $query->where('type', $type);
+        });
+        
+        $userDistricts = request()->user()->districts();
+    
+        if ($userDistricts->isNotEmpty()) {
+            $districtIds = $userDistricts->pluck('id')->toArray();
+            $infrastructure->whereIn('district_id', $districtIds);
+        }
 
         if ($request->ajax()) {
             $dataTable = Datatables::of($infrastructure)

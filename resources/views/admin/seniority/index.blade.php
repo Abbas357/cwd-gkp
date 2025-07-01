@@ -6,7 +6,7 @@
         <li class="breadcrumb-item active" aria-current="page">Seniority</li>
     </x-slot>
 
-    <div class="card-header mb-3">
+    <div class="inward-tabs mb-3">
         <ul class="nav nav-tabs nav-tabs-table">
             <li class="nav-item">
                 <a id="draft-tab" class="nav-link" data-bs-toggle="tab" href="#draft">Draft</a>

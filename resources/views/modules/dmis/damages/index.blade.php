@@ -6,6 +6,20 @@
         <li class="breadcrumb-item active" aria-current="page">Damages</li>
     </x-slot>
 
+    <div class="inward-tabs mb-3">
+        <ul class="nav nav-tabs nav-tabs-table">
+            <li class="nav-item">
+                <a id="road-tab" class="nav-link" data-bs-toggle="tab" href="#road">Road</a>
+            </li>
+            <li class="nav-item">
+                <a id="bridge-tab" class="nav-link" data-bs-toggle="tab" href="#bridge">Bridge</a>
+            </li>
+            <li class="nav-item">
+                <a id="culvert-tab" class="nav-link" data-bs-toggle="tab" href="#culvert">Culvert</a>
+            </li>
+        </ul>
+    </div>
+
     <div class="table-responsive">
         <table id="damages-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
             <thead>
@@ -27,6 +41,8 @@
                     <th>Approximate Rehabilitation Cost</th>
                     <th>Road Status</th>
                     <th>Remarks</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -113,15 +129,23 @@
                         searchBuilderType: "string"
                     },
                     {
+                        data: 'created_at',
+                        searchBuilderType: "date"
+                    },
+                    {
+                        data: 'updated_at',
+                        searchBuilderType: "date"
+                    },
+                    {
                         data: 'action',
                         orderable: false,
                         searchable: false
-                    }
+                    }   
                 ]
-                , defaultOrderColumn: 7
+                , defaultOrderColumn: 17
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
-                    targets: [0, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16]
+                    targets: [0, 2, 4, 5, 7, 8, 9, 10, 16]
                     , visible: false
                     }, {
                         targets: -1,
@@ -174,6 +198,28 @@
                         $("#damages-datatable").DataTable().ajax.reload();
                     }
                 }
+            });
+
+            hashTabsNavigator({
+                table: table
+                , dataTableUrl: "{{ route('admin.apps.dmis.damages.index') }}"
+                , tabToHashMap: {
+                    "#road-tab": '#road'
+                    , "#bridge-tab": '#bridge'
+                    , '#culvert-tab': '#culvert'
+                }
+                , hashToParamsMap: {
+                    '#road': {
+                        type: 'Road'
+                    }
+                    , '#bridge': {
+                        type: 'Bridge'
+                    }
+                    , '#culvert': {
+                        type: 'Culvert'
+                    }
+                }
+                , defaultHash: '#road'
             });
 
             $('#damages-datatable').colResizable({

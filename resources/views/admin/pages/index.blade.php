@@ -6,7 +6,7 @@
         <li class="breadcrumb-item active" aria-current="page">Pages</li>
     </x-slot>
 
-    <div class="card-header mb-3">
+    <div class="inward-tabs mb-3">
         <ul class="nav nav-tabs nav-tabs-table">
             <li class="nav-item">
                 <a id="active-tab" class="nav-link" data-bs-toggle="tab" href="#active">Active</a>

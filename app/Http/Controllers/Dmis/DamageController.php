@@ -14,7 +14,12 @@ class DamageController extends Controller
 {
     public function index(Request $request)
     {
+        $type = $request->query('type', 'Road');
         $damage = Damage::query();
+
+        $damage->when($type !== null, function ($query) use ($type) {
+            $query->where('type', $type);
+        });
 
         /** @var \App\Models\User $user */
         $user = Auth::user();

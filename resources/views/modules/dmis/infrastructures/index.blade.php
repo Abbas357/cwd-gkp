@@ -6,6 +6,20 @@
         <li class="breadcrumb-item active" aria-current="page">Infrastructures</li>
     </x-slot>
 
+    <div class="inward-tabs mb-3">
+        <ul class="nav nav-tabs nav-tabs-table">
+            <li class="nav-item">
+                <a id="road-tab" class="nav-link" data-bs-toggle="tab" href="#road">Road</a>
+            </li>
+            <li class="nav-item">
+                <a id="bridge-tab" class="nav-link" data-bs-toggle="tab" href="#bridge">Bridge</a>
+            </li>
+            <li class="nav-item">
+                <a id="culvert-tab" class="nav-link" data-bs-toggle="tab" href="#culvert">Culvert</a>
+            </li>
+        </ul>
+    </div>
+
     <div class="table-responsive">
         <table id="infrastructure-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
             <thead>
@@ -132,6 +146,28 @@
 
                     },
                 }
+            });
+
+            hashTabsNavigator({
+                table: table
+                , dataTableUrl: "{{ route('admin.apps.dmis.infrastructures.index') }}"
+                , tabToHashMap: {
+                    "#road-tab": '#road'
+                    , "#bridge-tab": '#bridge'
+                    , '#culvert-tab': '#culvert'
+                }
+                , hashToParamsMap: {
+                    '#road': {
+                        type: 'Road'
+                    }
+                    , '#bridge': {
+                        type: 'Bridge'
+                    }
+                    , '#culvert': {
+                        type: 'Culvert'
+                    }
+                }
+                , defaultHash: '#road'
             });
 
             $("#infrastructure-datatable").on('click', '.delete-btn', async function() {

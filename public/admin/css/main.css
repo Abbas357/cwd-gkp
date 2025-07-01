@@ -1560,3 +1560,41 @@ form select.error, form textarea.error, form input.error, form input.error:focus
 .datatable-loading-container.loading {
     pointer-events: none;
 }
+
+.inward-tabs .nav-link {
+    display: block;
+    padding: .8rem 2rem;
+    text-decoration: none;
+    color: #6c757d;
+    font-weight: 500;
+    font-size: 14px;
+    text-align: center;
+    background: #f1f3f4;
+    border: none;
+    border-right: 1px solid #dadce0;
+    transition: all 0.3s ease;
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom:none;
+}
+
+.inward-tabs .nav-item:last-child .nav-link {
+    border-right: none;
+}
+
+.inward-tabs .nav-link:hover {
+    background: #e8eaed;
+    color: #495057;
+    transform: translateY(-1px);
+}
+
+.inward-tabs .nav-link.active {
+    background: #FFFEFE !important;
+    color: #343a40;
+    box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-top: 3px solid #007bff;
+    border-bottom: none;
+    transform: translateY(0px);
+}
