@@ -535,9 +535,6 @@
                 </div>
             </div>
             <div class="no-print action-buttons">
-                <a href="{{ route('admin.apps.dmis.reports.district-wise', ['type' => $type]) }}" class="btn btn-outline-secondary">
-                    <i class="bi-arrow-left"></i> Back to Districts
-                </a>
                 <div class="btn-group-custom">
                     <button type="button" id="print-report" class="cw-btn">
                         <i class="bi-printer me-1"></i> Print Report

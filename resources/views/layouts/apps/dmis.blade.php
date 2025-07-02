@@ -34,37 +34,14 @@
     </li>
     @endcan
 
-    @canany(['viewMainReport', 'viewOfficerWiseReport', 'viewDistrictWiseReport', 'viewActiveOfficerReport'], App\Models\Damage::class)
+    @can('viewMainReport', App\Models\Damage::class)
     <li>
-        <a href="javascript:;" class="has-arrow">
+        <a href="{{ route('admin.apps.dmis.reports.index') }}">
             <div class="parent-icon"><i class="bi-flag text-primary"></i></div>
             <div class="menu-title">Reports</div>
         </a>
-        <ul class="p-2 menu-items">
-            @can('viewMainReport', App\Models\Damage::class)
-            <li>
-                <a href="{{ route('admin.apps.dmis.reports.index') }}">
-                    <i class="bi-graph-up text-primary"></i> Main Report
-                </a>
-            </li>
-            @endcan
-            @can('viewSituationReport', App\Models\Damage::class)
-            <li>
-                <a href="{{ route('admin.apps.dmis.reports.daily-situation') }}">
-                    <i class="bi-calendar3 text-primary"></i> Daily Situation
-                </a>
-            </li>
-            @endcan
-            @can('viewDistrictWiseReport', App\Models\Damage::class)
-            <li>
-                <a href="{{ route('admin.apps.dmis.reports.district-wise') }}">
-                    <i class="bi-geo-alt-fill text-warning"></i> District Wise
-                </a>
-            </li>
-            @endcan
-        </ul>
     </li>
-    @endcanany
+    @endcan
 
     @canany(['viewSettings', 'updateSettings', 'initSettings'], App\Models\Damage::class)
     <li>

@@ -140,9 +140,6 @@
                             <button class="nav-link settings-tab" id="brand-tab" data-bs-toggle="tab" data-bs-target="#brand" type="button" role="tab" aria-controls="brand" aria-selected="false">
                                 <i class="bi bi-list-check me-2"></i> Brand
                             </button>
-                            <button class="nav-link settings-tab" id="model-tab" data-bs-toggle="tab" data-bs-target="#model" type="button" role="tab" aria-controls="model" aria-selected="false">
-                                <i class="bi bi-building me-2"></i> Model
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -275,62 +272,6 @@
                                                         <tr class="new-item-row">
                                                             <td>
                                                                 <input type="text" class="form-control new-item" placeholder="Add new Manufacturer...">
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <button type="button" class="btn btn-sm btn-success add-item">
-                                                                    <i class="bi bi-plus-circle"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Infrastructure Type Category -->
-                        <div class="tab-pane fade" id="model" role="tabpanel" aria-labelledby="model-tab">
-                            <div class="card">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5 class="card-title mb-0">Model</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="category-container" data-category-key="model">
-                                        <p class="text-muted mb-3">Define the Machine Model in the system.</p>
-                                        
-                                        <input type="hidden" name="categories[model][description]" value="Types of Infrastructures">
-                                        <input type="hidden" name="categories[model][type]" value="category">
-                                        
-                                        <div class="mb-3">
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered category-table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th width="90%">Type</th>
-                                                            <th width="10%">Actions</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach(category('model', 'machinery', []) as $index => $item)
-                                                            <tr>
-                                                                <td>
-                                                                    <input type="text" class="form-control" 
-                                                                        name="categories[model][value][]" 
-                                                                        value="{{ $item }}" required>
-                                                                </td>
-                                                                <td class="text-center">
-                                                                    <button type="button" class="btn btn-sm btn-danger remove-item">
-                                                                        <i class="bi bi-trash"></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                        <tr class="new-item-row">
-                                                            <td>
-                                                                <input type="text" class="form-control new-item" placeholder="Add new Operational Status...">
                                                             </td>
                                                             <td class="text-center">
                                                                 <button type="button" class="btn btn-sm btn-success add-item">

@@ -325,14 +325,6 @@ class HomeController extends Controller
             'Case'
         ], $this->module, 'category', 'Name of brand of the machine');
 
-        Setting::set('model', [
-            '1000cc',
-            '2000cc',
-            '3000cc',
-            '4000cc',
-            '5000cc'
-        ], $this->module, 'category', 'Machine Model');
-
         return redirect()->route('admin.apps.machineries.settings.index')
             ->with('success', 'Machinery Management System module initiated with default settings and categories.');
     }

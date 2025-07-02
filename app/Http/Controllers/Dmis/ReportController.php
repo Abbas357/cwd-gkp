@@ -8,12 +8,35 @@ use App\Models\District;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 class ReportController extends Controller
 {
+    use AuthorizesRequests;
+    
     public function index(Request $request)
     {
+        return view('modules.dmis.reports.index');
+    }
+
+    public function loadReport(Request $request) {
+        $report_type = $request->get('report_type') ?? 'Summary';
         $type = $request->get('type') ?? 'Road';
         $userId = $request->get('user_id') ?? 4;
+        $reportDate = $request->get('report_date') ?? now()->format('Y-m-d');
+
+        return match ($report_type) {
+            'Summary'         => $this->summary($type, $userId),
+            'Daily Situation' => $this->dailySituation($type, $reportDate, $userId),
+            'District Wise'   => $this->districtWise($type),
+            default           => $this->summary($type, $userId),
+        };
+    }
+
+    public function summary($type, $userId)
+    {
+        $this->authorize('viewMainReport', \App\Models\Damage::class);
+
         $selectedUser = User::findOrFail($userId);
 
         $officerDistricts = request()->user()->districts();
@@ -138,23 +161,27 @@ class ReportController extends Controller
             $subordinateDesignation = $directSubordinates->first()->currentDesignation->name;
         }
 
-        return view('modules.dmis.reports.main', compact(
+        $html =  view('modules.dmis.reports.partials.summary', compact(
             'subordinatesWithDistricts',
             'total',
             'subordinateDesignation',
-            'selectedUser'
-        ));
+            'selectedUser',
+            'type'
+        ))->render();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
     }
 
-    public function dailySituationReport(Request $request)
+    public function dailySituation($type, $reportDate, $userId)
     {
-        $type = $request->get('type') ?? 'Road';
-        $userId = $request->get('user_id') ?? 4;
-        $reportDate = $request->get('date') ?? now()->format('Y-m-d');
+        $this->authorize('viewSituationReport', \App\Models\Damage::class);
 
         $selectedUser = User::findOrFail($userId);
-
-        // Get districts that come under the selected officer
         $officerDistricts = $selectedUser->districts();
 
         if ($officerDistricts->isEmpty()) {
@@ -289,18 +316,26 @@ class ReportController extends Controller
             $subordinateDesignation = $directSubordinates->first()->currentDesignation->name;
         }
 
-        return view('modules.dmis.reports.daily-situation', compact(
+        $html = view('modules.dmis.reports.partials.daily-situation', compact(
             'subordinatesWithDistricts',
             'total',
             'subordinateDesignation',
             'selectedUser',
-            'reportDate'
-        ));
+            'reportDate',
+            'type'
+        ))->render();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
     }
 
-    public function districtDamagesReport(Request $request)
+    public function districtWise($type)
     {
-        $type = $request->get('type') ?? 'Road';
+        $this->authorize('viewDistrictWiseReport', \App\Models\Damage::class);
 
         $districts = request()->user()->districts();
 
@@ -347,14 +382,22 @@ class ReportController extends Controller
             'total_cost' => $districtStats->sum('total_cost'),
         ];
 
-        return view('modules.dmis.reports.district-wise', compact('districtStats', 'total', 'type'));
+        $html = view('modules.dmis.reports.partials.district-wise', compact('districtStats', 'total', 'type'))->render();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
     }
 
     public function districtDetailsReport(Request $request, District $district)
     {
+        $this->authorize('viewDistrictWiseReport', \App\Models\Damage::class);
+
         $type = $request->get('type') ?? 'Road';
 
-        // Get infrastructures in this district
         $infrastructures = $district->infrastructures()
             ->when($type !== 'All', function ($query) use ($type) {
                 return $query->where('type', $type);
@@ -363,21 +406,18 @@ class ReportController extends Controller
 
         $infrastructureIds = $infrastructures->pluck('id')->toArray();
 
-        // Get all damages for this district's infrastructures with media
         $damages = Damage::whereIn('infrastructure_id', $infrastructureIds)
             ->with([
                 'infrastructure',
                 'posting.user.currentDesignation',
                 'posting.office',
-                'media' // This will load all media collections
+                'media'
             ])
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Group damages by infrastructure
         $damagesByInfrastructure = $damages->groupBy('infrastructure_id');
 
-        // Calculate statistics
         $stats = [
             'total_damages' => $damages->count(),
             'unique_infrastructures' => $damages->pluck('infrastructure_id')->unique()->count(),
@@ -390,7 +430,6 @@ class ReportController extends Controller
             'total_cost' => $damages->sum('approximate_restoration_cost') + $damages->sum('approximate_rehabilitation_cost'),
         ];
 
-        // Get officers who reported damages in this district
         $reportingOfficers = $damages->map(function ($damage) {
             return [
                 'user' => $damage->posting->user ?? null,

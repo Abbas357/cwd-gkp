@@ -41,12 +41,7 @@
     
     <div class="col-md-6 mb-3">
         <label for="model">Model</label>
-        <select class="form-select" id="model" name="model" required>
-            <option value="">Choose...</option>
-            @foreach (category('model', 'machinery') as $model)
-            <option value="{{ $model }}">{{ $model }}</option>
-            @endforeach
-        </select>
+        <input type="text" class="form-control" id="model" name="model" min="1900">
         @error('model')
         <div class="text-danger">{{ $message }}</div>
         @enderror
