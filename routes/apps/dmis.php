@@ -8,7 +8,8 @@ use App\Http\Controllers\Dmis\InfrastructureController;
 
 Route::prefix('dmis')->as('dmis.')->group(function () {
 
-    Route::get('/', [HomeController::class, 'dashboard'])->name('dashboard');
+    Route::get('/', [HomeController::class, 'index'])->name('index');
+    Route::post('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 
     Route::prefix('settings')->as('settings.')->group(function () {
         Route::get('/', [HomeController::class, 'settings'])->name('index')->can('viewSettings', App\Models\Damage::class);

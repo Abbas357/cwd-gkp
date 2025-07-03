@@ -40,6 +40,7 @@ return new class extends Migration
             $table->string('damaged_length')->nullable();
             $table->string('damage_status')->nullable();
             $table->string('damage_nature')->nullable();
+            $table->string('road_status')->nullable();
             $table->decimal('approximate_restoration_cost')->nullable();
             $table->decimal('approximate_rehabilitation_cost')->nullable();
             $table->timestamps();

@@ -14,47 +14,65 @@ class HomeController extends Controller
 {
     protected $module = 'dmis';
 
+    public function index() {
+        return view('modules.dmis.home.index');
+    }
+    
     public function dashboard(Request $request)
     {
         $type = $request->get('type', 'Road');
+        $fromDate = $request->get('from_date');
+        $toDate = $request->get('to_date');
         
+        // Build base query with date filtering
+        $baseQuery = function($query) use ($type, $fromDate, $toDate) {
+            $query->where('type', $type);
+            
+            if ($fromDate) {
+                $query->whereDate('report_date', '>=', $fromDate);
+            }
+            
+            if ($toDate) {
+                $query->whereDate('report_date', '<=', $toDate);
+            }
+        };
+        
+        // Total infrastructure (not filtered by date as it's structural data)
         $totalInfrastructure = Infrastructure::where('type', $type)->count();
-        $totalDamages = Damage::where('type', $type)
-            ->count();
         
-        $fullyDamaged = Damage::where('type', $type)
+        // Damage statistics with date filtering
+        $totalDamages = Damage::where($baseQuery)->count();
+        
+        $fullyDamaged = Damage::where($baseQuery)
             ->where('damage_status', 'Fully Damaged')
             ->count();
         
-        $partiallyDamaged = Damage::where('type', $type)
+        $partiallyDamaged = Damage::where($baseQuery)
             ->where('damage_status', 'Partially Damaged')
             ->count();
         
-        $fullyRestored = Damage::where('type', $type)
+        $fullyRestored = Damage::where($baseQuery)
             ->where('road_status', 'Fully restored')
             ->count();
         
-        $partiallyRestored = Damage::where('type', $type)
+        $partiallyRestored = Damage::where($baseQuery)
             ->where('road_status', 'Partially restored')
             ->count();
         
-        $notRestored = Damage::where('type', $type)
+        $notRestored = Damage::where($baseQuery)
             ->where('road_status', 'Not restored')
             ->count();
         
-        $totalRestorationCost = Damage::where('type', $type)
+        $totalRestorationCost = Damage::where($baseQuery)
             ->sum('approximate_restoration_cost');
         
-        $totalRehabilitationCost = Damage::where('type', $type)
+        $totalRehabilitationCost = Damage::where($baseQuery)
             ->sum('approximate_rehabilitation_cost');
         
+        // Districts with stats
         $districtsWithStats = District::withCount([
             'infrastructures as infrastructure_count' => function($query) use ($type) {
                 $query->where('type', $type);
-            },
-            'infrastructures as total_length' => function($query) use ($type) {
-                $query->where('type', $type);
-                $query->select(DB::raw('SUM(length)'));
             }
         ])
         ->with(['infrastructures' => function($query) use ($type) {
@@ -63,61 +81,77 @@ class HomeController extends Controller
         ->get();
         
         foreach ($districtsWithStats as $district) {
+            $infrastructureIds = $district->infrastructures->pluck('id')->toArray();
             
-            $infrastructureIds = $district->infrastructures->pluck('id')->toArray();            
-            
-            $district->damage_count = Damage::where('type', $type)
-                ->whereIn('infrastructure_id', $infrastructureIds)
-                ->count();            
-            
-            $district->damaged_length = Damage::where('type', $type)
-                ->whereIn('infrastructure_id', $infrastructureIds)
-                ->sum('damaged_length');            
-            
-            $district->restoration_cost = Damage::where('type', $type)
-                ->whereIn('infrastructure_id', $infrastructureIds)
-                ->sum('approximate_restoration_cost');            
-            
-            $district->rehabilitation_cost = Damage::where('type', $type)
-                ->whereIn('infrastructure_id', $infrastructureIds)
-                ->sum('approximate_rehabilitation_cost');
+            // Apply date filtering to district damage counts
+            $districtDamageQuery = function($query) use ($type, $fromDate, $toDate, $infrastructureIds) {
+                $query->where('type', $type)
+                      ->whereIn('infrastructure_id', $infrastructureIds);
                 
+                if ($fromDate) {
+                    $query->whereDate('report_date', '>=', $fromDate);
+                }
+                
+                if ($toDate) {
+                    $query->whereDate('report_date', '<=', $toDate);
+                }
+            };
             
-            $district->fully_restored = Damage::where('type', $type)
-                ->whereIn('infrastructure_id', $infrastructureIds)
+            $district->damage_count = Damage::where($districtDamageQuery)->count();
+            
+            $district->damaged_length = Damage::where($districtDamageQuery)
+                ->sum('damaged_length');
+            
+            $district->restoration_cost = Damage::where($districtDamageQuery)
+                ->sum('approximate_restoration_cost');
+            
+            $district->rehabilitation_cost = Damage::where($districtDamageQuery)
+                ->sum('approximate_rehabilitation_cost');
+            
+            $district->fully_restored = Damage::where($districtDamageQuery)
                 ->where('road_status', 'Fully restored')
                 ->count();
                 
-            $district->partially_restored = Damage::where('type', $type)
-                ->whereIn('infrastructure_id', $infrastructureIds)
+            $district->partially_restored = Damage::where($districtDamageQuery)
                 ->where('road_status', 'Partially restored')
                 ->count();
                 
-            $district->not_restored = Damage::where('type', $type)
-                ->whereIn('infrastructure_id', $infrastructureIds)
+            $district->not_restored = Damage::where($districtDamageQuery)
                 ->where('road_status', 'Not restored')
                 ->count();
-        }       
+        }
         
         $districtsWithStats = $districtsWithStats->sortByDesc('damage_count');
         
-        $recentDamages = Damage::with(['infrastructure', 'posting.user', 'district'])
-            ->where('type', $type)
-            ->latest()
-            ->take(5)
-            ->get();
+        // Recent damages with date filtering
+        $recentDamagesQuery = Damage::with(['infrastructure', 'posting.user', 'district'])
+            ->where($baseQuery)
+            ->latest();
+        
+        $recentDamages = $recentDamagesQuery->take(5)->get();
         
         $mostAffectedDistricts = $districtsWithStats->take(5);
         
         $highestRestorationCostDistricts = $districtsWithStats->sortByDesc('restoration_cost')->take(5);
         
-        $damagesByMonth = Damage::where('type', $type)
+        // Monthly damages with date filtering
+        $damagesByMonthQuery = Damage::where('type', $type);
+        
+        if ($fromDate) {
+            $damagesByMonthQuery->whereDate('report_date', '>=', $fromDate);
+        }
+        
+        if ($toDate) {
+            $damagesByMonthQuery->whereDate('report_date', '<=', $toDate);
+        }
+        
+        $damagesByMonth = $damagesByMonthQuery
             ->select(DB::raw('MONTH(report_date) as month'), DB::raw('COUNT(*) as count'))
             ->groupBy('month')
             ->orderBy('month')
             ->get();
-            
         
+        // Prepare monthly data
         $months = [];
         $damageCounts = [];
         
@@ -138,7 +172,9 @@ class HomeController extends Controller
                 $damageCounts[] = 0;
             }
         }
-        return view('modules.dmis.home.dashboard', compact(
+        
+        // Render the dashboard view
+        $html = view('modules.dmis.home.partials.dashboard', compact(
             'type',
             'totalInfrastructure',
             'totalDamages',
@@ -155,9 +191,18 @@ class HomeController extends Controller
             'highestRestorationCostDistricts',
             'months',
             'damageCounts',
-        ));
+            'fromDate',
+            'toDate'
+        ))->render();
+    
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
     }
-
+    
     public function settings()
     {
         $this->initIfNeeded();
