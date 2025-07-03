@@ -332,7 +332,7 @@
                         <x-table-skeleton 
                             :rows="6" 
                             :columns="7" 
-                            loading-text="Pondering, stand by..."
+                            loading-text="Generating report, please wait..."
                         />
                     `);
 
