@@ -36,7 +36,7 @@ class MachineryController extends Controller
                         : ($row->user->currentPosting?->designation->name  ?? 'N/A');
                 })
                 ->addColumn('assigned_to', function ($row) {
-                    return $row->allocation->user->currentPosting->office->name ?? 'Pool';
+                    return view('modules.machinery.partials.assignment', compact('row'))->render();
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');
@@ -44,7 +44,7 @@ class MachineryController extends Controller
                 ->editColumn('updated_at', function ($row) {
                     return $row->updated_at->diffForHumans();
                 })
-                ->rawColumns(['action', 'added_by', 'user']);
+                ->rawColumns(['action', 'added_by', 'user', 'assigned_to']);
 
             if ($request->input('search.value')) {
                 Database::applyRelationalSearch($dataTable, $relationMappings);

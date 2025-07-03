@@ -23,8 +23,9 @@
                     <th scope="col" class="p-3">Registration Number</th>
                     <th scope="col" class="p-3">Chassis Number</th>
                     <th scope="col" class="p-3">Engine Number</th>
-                    <th scope="col" class="p-3">Remarks</th>
+                    <th scope="col" class="p-3">Assigned To</th>
                     <th scope="col" class="p-3">Added By</th>
+                    <th scope="col" class="p-3">Remarks</th>
                     <th scope="col" class="p-3">Created At</th>
                     <th scope="col" class="p-3">Updated At</th>
                     <th scope="col" class="p-3">Actions</th>
@@ -84,11 +85,15 @@
                         , searchBuilderType: "string"
                     }
                     , {
-                        data: "remarks"
-                        , searchBuilderType: "date"
+                        data: "assigned_to"
+                        , searchBuilderType: "string"
                     }
                     , {
                         data: "added_by"
+                        , searchBuilderType: "string"
+                    }
+                    , {
+                        data: "remarks"
                         , searchBuilderType: "string"
                     }
                     , {
