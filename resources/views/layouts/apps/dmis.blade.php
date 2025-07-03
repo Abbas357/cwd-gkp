@@ -6,10 +6,10 @@
 </x-header>
 
 @if ($showAside)
-<x-sidebar app-name="DMIS" app-url="{{ route('admin.apps.dmis.dashboard') }}">
+<x-sidebar app-name="DMIS" app-url="{{ route('admin.apps.dmis.index') }}">
     @can('viewAny', App\Models\Damage::class)
     <li>
-        <a href="{{ route('admin.apps.dmis.dashboard') }}">
+        <a href="{{ route('admin.apps.dmis.index') }}">
             <div class="parent-icon"><i class="bi-house text-primary"></i></div>
             <div class="menu-title">Home</div>
         </a>

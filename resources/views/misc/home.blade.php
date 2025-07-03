@@ -429,7 +429,7 @@
                 $user->can('viewDistrictWiseReport', App\Models\Damage::class) ||
                 $user->can('viewActiveOfficerReport', App\Models\Damage::class)
             )
-            <a href="{{ route('admin.apps.dmis.dashboard') }}" class="app-tile accent-red">
+            <a href="{{ route('admin.apps.dmis.index') }}" class="app-tile accent-red">
                 <i class="bi-cloud-drizzle" style="color: #ff0000"></i>
                 <p>Damage Mgt.</p>
             </a>

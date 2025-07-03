@@ -281,308 +281,263 @@
         </div>
     </div>
 </div>
+
 <script src="{{ asset('admin/plugins/apexchart/apexcharts.min.js') }}"></script>
 <script>
-    // Store chart data in global scope for access by initDamageCharts
-    window.chartData = {
-        damageCounts: @json($damageCounts),
-        months: @json($months),
-        fullyDamaged: {{ $fullyDamaged }},
-        partiallyDamaged: {{ $partiallyDamaged }},
-        totalDamages: {{ $totalDamages }},
-        fullyRestored: {{ $fullyRestored }},
-        partiallyRestored: {{ $partiallyRestored }},
-        notRestored: {{ $notRestored }},
-        restorationCosts: [
-            @foreach($highestRestorationCostDistricts as $district)
-                {{ number_format($district->restoration_cost) }},
-            @endforeach
-        ],
-        rehabilitationCosts: [
-            @foreach($highestRestorationCostDistricts as $district)
-                {{ number_format($district->rehabilitation_cost) }},
-            @endforeach
-        ],
-        districtNames: [
-            @foreach($highestRestorationCostDistricts as $district)
-                '{{ $district->name }}',
-            @endforeach
-        ]
-    };
-
-    // If this script runs when page first loads (not via AJAX)
-    if (typeof initDamageCharts === 'function') {
-        initDamageCharts();
-    } else {
-        // Fallback: initialize charts directly if initDamageCharts is not available
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                if (typeof ApexCharts !== 'undefined') {
-                    // Your existing chart initialization code here
-                    const monthlyDamageOptions = {
-                        series: [{
-                            name: 'Damage Reports',
-                            data: @json($damageCounts)
-                        }],
-                        chart: {
-                            height: 300,
-                            type: 'bar',
-                            toolbar: {
-                                show: false
-                            }
-                        },
-                        plotOptions: {
-                            bar: {
-                                borderRadius: 4,
-                                dataLabels: {
-                                    enabled: true,
-                                    formatter: function(val) {
-                                        return val;
-                                    },
-                                    offsetY: -20,
-                                    style: {
-                                        fontSize: '12px',
-                                        colors: ["#304758"]
-                                    }
-                                }
-                            }
-                        },
-                        xaxis: {
-                            categories: @json($months),
-                            position: 'bottom',
-                            axisBorder: {
-                                show: false
-                            },
-                            axisTicks: {
-                                show: false
-                            },
-                            crosshairs: {
-                                fill: {
-                                    type: 'gradient',
-                                    gradient: {
-                                        colorFrom: '#D8E3F0',
-                                        colorTo: '#BED1E6',
-                                        stops: [0, 100],
-                                        opacityFrom: 0.4,
-                                        opacityTo: 0.5,
-                                    }
-                                }
-                            },
-                            tooltip: {
-                                enabled: true,
-                            }
-                        },
-                        yaxis: {
-                            axisBorder: {
-                                show: false
-                            },
-                            axisTicks: {
-                                show: false,
-                            },
-                            labels: {
-                                show: true,
-                                formatter: function(val) {
-                                    return val;
-                                }
-                            }
-                        },
-                        colors: ['#4e73df']
-                    };
-
-                    if (document.querySelector("#monthlyDamageChart")) {
-                        const monthlyDamageChart = new ApexCharts(document.querySelector("#monthlyDamageChart"), monthlyDamageOptions);
-                        monthlyDamageChart.render();
-                    }
-
-                    // Damage Status Chart
-                    const damageStatusOptions = {
-                        series: [{{ $fullyDamaged }}, {{ $partiallyDamaged }}],
-                        chart: {
-                            type: 'donut',
-                            height: 250
-                        },
-                        labels: ['Fully Damaged', 'Partially Damaged'],
-                        colors: ['#e74a3b', '#f6c23e'],
-                        plotOptions: {
-                            pie: {
-                                donut: {
-                                    size: '50%',
-                                    labels: {
-                                        show: true,
-                                        total: {
-                                            show: true,
-                                            formatter: function(w) {
-                                                return {{ $totalDamages }};
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        legend: {
-                            position: 'bottom',
-                            horizontalAlign: 'center',
-                            offsetY: 0,
-                            fontSize: '13px'
-                        },
-                        responsive: [{
-                            breakpoint: 480,
-                            options: {
-                                chart: {
-                                    width: 200
-                                },
-                                legend: {
-                                    position: 'bottom'
-                                }
-                            }
-                        }]
-                    };
-
-                    if (document.querySelector("#damageStatusChart")) {
-                        const damageStatusChart = new ApexCharts(document.querySelector("#damageStatusChart"), damageStatusOptions);
-                        damageStatusChart.render();
-                    }
-
-                    // Restoration Status Chart
-                    const restorationStatusOptions = {
-                        series: [{{ $fullyRestored }}, {{ $partiallyRestored }}, {{ $notRestored }}],
-                        chart: {
-                            type: 'donut',
-                            height: 250
-                        },
-                        labels: ['Fully Restored', 'Partially Restored', 'Not Restored'],
-                        colors: ['#1cc88a', '#36b9cc', '#e74a3b'],
-                        plotOptions: {
-                            pie: {
-                                donut: {
-                                    size: '50%',
-                                    labels: {
-                                        show: true,
-                                        total: {
-                                            show: true,
-                                            formatter: function(w) {
-                                                return {{ $totalDamages }};
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        legend: {
-                            position: 'bottom',
-                            horizontalAlign: 'center',
-                            offsetY: 0,
-                            fontSize: '13px'
-                        },
-                        responsive: [{
-                            breakpoint: 480,
-                            options: {
-                                chart: {
-                                    width: 200
-                                },
-                                legend: {
-                                    position: 'bottom'
-                                }
-                            }
-                        }]
-                    };
-
-                    if (document.querySelector("#restorationStatusChart")) {
-                        const restorationStatusChart = new ApexCharts(document.querySelector("#restorationStatusChart"), restorationStatusOptions);
-                        restorationStatusChart.render();
-                    }
-
-                    // Cost Chart
-                    const costChartOptions = {
-                        series: [{
-                            name: 'Restoration Cost',
-                            data: [
-                                @foreach($highestRestorationCostDistricts as $district)
-                                    {{ number_format($district->restoration_cost) }},
-                                @endforeach
-                            ]
-                        }, {
-                            name: 'Rehabilitation Cost',
-                            data: [
-                                @foreach($highestRestorationCostDistricts as $district)
-                                    {{ number_format($district->rehabilitation_cost) }},
-                                @endforeach
-                            ]
-                        }],
-                        chart: {
-                            type: 'bar',
-                            height: 300,
-                            stacked: true,
-                            toolbar: {
-                                show: false
-                            }
-                        },
-                        plotOptions: {
-                            bar: {
-                                horizontal: true,
-                                dataLabels: {
-                                    total: {
-                                        enabled: true,
-                                        offsetX: 0,
-                                        style: {
-                                            fontSize: '13px',
-                                            fontWeight: 900
-                                        }
-                                    }
-                                }
-                            },
-                        },
-                        stroke: {
-                            width: 1,
-                            colors: ['#fff']
-                        },
-                        xaxis: {
-                            categories: [
-                                @foreach($highestRestorationCostDistricts as $district)
-                                    '{{ $district->name }}',
-                                @endforeach
-                            ],
-                            labels: {
-                                formatter: function(val) {
-                                    return val + "M";
-                                }
-                            }
-                        },
-                        yaxis: {
-                            title: {
-                                text: undefined
-                            },
-                        },
-                        tooltip: {
-                            y: {
-                                formatter: function(val) {
-                                    return val + " Million Rs.";
-                                }
-                            }
-                        },
-                        fill: {
-                            opacity: 1
-                        },
-                        legend: {
-                            position: 'bottom',
-                            horizontalAlign: 'center',
-                            offsetY: 0
-                        },
-                        colors: ['#4e73df', '#1cc88a']
-                    };
-
-                    if (document.querySelector("#costChart")) {
-                        const costChart = new ApexCharts(document.querySelector("#costChart"), costChartOptions);
-                        costChart.render();
-                    }
-
-                    // Initialize tooltips
-                    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-                    tooltipTriggerList.map(function(tooltipTriggerEl) {
-                        return new bootstrap.Tooltip(tooltipTriggerEl);
-                    });
+    (function () {
+        console.log("Initializing Damage Charts");
+        const monthlyDamageOptions = {
+            series: [{
+                name: 'Damage Reports'
+                , data: @json($damageCounts)
+            }]
+            , chart: {
+                height: 300
+                , type: 'bar'
+                , toolbar: {
+                    show: false
                 }
-            }, 100);
+            }
+            , plotOptions: {
+                bar: {
+                    borderRadius: 4
+                    , dataLabels: {
+                        enabled: true
+                        , formatter: function(val) {
+                            return val;
+                        }
+                        , offsetY: -20
+                        , style: {
+                            fontSize: '12px'
+                            , colors: ["#304758"]
+                        }
+                    }
+                }
+            }
+            , xaxis: {
+                categories: @json($months)
+                , position: 'bottom'
+                , axisBorder: {
+                    show: false
+                }
+                , axisTicks: {
+                    show: false
+                }
+                , crosshairs: {
+                    fill: {
+                        type: 'gradient'
+                        , gradient: {
+                            colorFrom: '#D8E3F0'
+                            , colorTo: '#BED1E6'
+                            , stops: [0, 100]
+                            , opacityFrom: 0.4
+                            , opacityTo: 0.5
+                        , }
+                    }
+                }
+                , tooltip: {
+                    enabled: true
+                , }
+            }
+            , yaxis: {
+                axisBorder: {
+                    show: false
+                }
+                , axisTicks: {
+                    show: false
+                , }
+                , labels: {
+                    show: true
+                    , formatter: function(val) {
+                        return val;
+                    }
+                }
+            }
+            , colors: ['#4e73df']
+        };
+
+        const monthlyDamageChart = new ApexCharts(document.querySelector("#monthlyDamageChart"), monthlyDamageOptions);
+        monthlyDamageChart.render();
+
+        // Damage Status Chart
+        const damageStatusOptions = {
+            series: [{{ $fullyDamaged }}, {{ $partiallyDamaged }}],
+            chart: {
+                type: 'donut',
+                height: 250
+            },
+            labels: ['Fully Damaged', 'Partially Damaged'],
+            colors: ['#e74a3b', '#f6c23e'],
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '50%',
+                        labels: {
+                            show: true,
+                            total: {
+                                show: true,
+                                formatter: function(w) {
+                                    return {{ $totalDamages ?? 0 }};
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            legend: {
+                position: 'bottom',
+                horizontalAlign: 'center',
+                offsetY: 0,
+                fontSize: '13px'
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 200
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }]
+        };
+
+        const damageStatusChart = new ApexCharts(document.querySelector("#damageStatusChart"), damageStatusOptions);
+        damageStatusChart.render();
+
+        // Restoration Status Chart
+        const restorationStatusOptions = {
+            series: [{{ $fullyRestored }}, {{ $partiallyRestored }}, {{ $notRestored }}],
+            chart: {
+                type: 'donut',
+                height: 250
+            },
+            labels: ['Fully Restored', 'Partially Restored', 'Not Restored'],
+            colors: ['#1cc88a', '#36b9cc', '#e74a3b'],
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '50%',
+                        labels: {
+                            show: true,
+                            total: {
+                                show: true,
+                                formatter: function(w) {
+                                    return {{ $totalDamages }};
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            legend: {
+                position: 'bottom',
+                horizontalAlign: 'center',
+                offsetY: 0,
+                fontSize: '13px'
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 200
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }]
+        };
+
+
+        const restorationStatusChart = new ApexCharts(document.querySelector("#restorationStatusChart"), restorationStatusOptions);
+        restorationStatusChart.render();
+
+        const costChartOptions = {
+            series: [{
+                name: 'Restoration Cost',
+                data: [
+                    @foreach($highestRestorationCostDistricts as $district)
+                        {{ number_format($district->restoration_cost, 0, '', '') }},
+                    @endforeach
+                ]
+            }, {
+                name: 'Rehabilitation Cost',
+                data: [
+                    @foreach($highestRestorationCostDistricts as $district)
+                        {{ number_format($district->rehabilitation_cost, 0, '', '') }},
+                    @endforeach
+                ]
+            }],
+            chart: {
+                type: 'bar',
+                height: 300,
+                stacked: true,
+                toolbar: {
+                    show: false
+                }
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: true,
+                    dataLabels: {
+                        total: {
+                            enabled: true,
+                            offsetX: 0,
+                            style: {
+                                fontSize: '13px',
+                                fontWeight: 900
+                            }
+                        }
+                    }
+                }
+            },
+            stroke: {
+                width: 1,
+                colors: ['#fff']
+            },
+            xaxis: {
+                categories: [
+                    @foreach($highestRestorationCostDistricts as $district)
+                        '{{ $district->name }}',
+                    @endforeach
+                ],
+                labels: {
+                    formatter: function(val) {
+                        return val + "M";
+                    }
+                }
+            },
+            yaxis: {
+                title: {
+                    text: undefined
+                }
+            },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return val + " Million Rs.";
+                    }
+                }
+            },
+            fill: {
+                opacity: 1
+            },
+            legend: {
+                position: 'bottom',
+                horizontalAlign: 'center',
+                offsetY: 0
+            },
+            colors: ['#4e73df', '#1cc88a']
+        };
+
+        const costChart = new ApexCharts(document.querySelector("#costChart"), costChartOptions);
+        costChart.render();
+
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
         });
-    }
+    })();
 </script>
