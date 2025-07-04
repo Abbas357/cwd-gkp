@@ -216,6 +216,7 @@
         <div class="row mb-4 no-print">
             <div class="col-md-12">
                 <form method="get" class="row" id="report-form">
+
                     <div class="col-md-3">
                         <label class="form-label" for="type">Report Type</label>
                         <select name="report_type" id="report_type" class="form-control" placeholder="Select report_type">
@@ -230,10 +231,12 @@
                             @endcan
                         </select>
                     </div>
+                    
                     <div class="col-md-3 report-date-field">
                         <label class="form-label" for="report_date">Report Date</label>
                         <input type="date" name="report_date" id="report_date" class="form-control" value="{{ request()->query('report_date') ?? now()->format('Y-m-d') }}">
                     </div>
+
                     <div class="col-md-3">
                         <label class="form-label" for="type">Infrastructure Type</label>
                         <select name="type" id="type" class="form-control" placeholder="Select Type">
@@ -245,7 +248,17 @@
                         </select>
                     </div>
 
-                    <div class="col-md-6 load-users-field">
+                    <div class="col-md-3 start-date-field">
+                        <label class="form-label" for="start_date">Start Date</label>
+                        <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request()->query('start_date') ?? now()->subDays(30)->format('Y-m-d') }}">
+                    </div>
+
+                    <div class="col-md-3 end-date-field">
+                        <label class="form-label" for="end_date">End Date</label>
+                        <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request()->query('end_date') ?? now()->format('Y-m-d') }}">
+                    </div>
+
+                    <div class="col-md-3 load-users-field">
                         <label class="form-label" for="load-users">Officer</label>
                         <select name="user_id" id="load-users" class="form-select" data-placeholder="Select Officer">
                             <option value="">Select Officer</option>
@@ -256,6 +269,7 @@
                             @endforeach
                         </select>
                     </div>
+
                     <div class="d-flex justify-content-between p-3">
                         <div>
                             <button type="button" id="generate-report" class="cw-btn success">
@@ -271,6 +285,7 @@
                             </button>
                         </div>
                     </div>
+
                 </form>
             </div>
         </div>
@@ -287,36 +302,24 @@
     <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/printThis/printThis.js') }}"></script>
     <script>
-        const $reportType   = $('#report_type');
-        const $dateField    = $('.report-date-field');
-        const $usersField   = $('.load-users-field');
-        const $infraField   = $('#type').closest('.col-md-3');
+        const $reportType      = $('#report_type');
+        const $infraField      = $('#type').closest('.col-md-3');
+        const $dateField       = $('.report-date-field');
+        const $usersField      = $('.load-users-field');
+        const $startDateField  = $('.start-date-field');
+        const $endDateField    = $('.end-date-field');
 
         function toggleFields() {
-        const val = $reportType.val();
-
-        // always show infra
-        $infraField.show();
-
-        if (val === 'Summary') {
-            $dateField.hide();
-            $usersField.show();
-        }
-        else if (val === 'Daily Situation') {
-            $dateField.show();
-            $usersField.show();
-        }
-        else if (val === 'District Wise') {
-            $dateField.hide();
-            $usersField.hide();
-        }
+            const val = $reportType.val();
+            $infraField.toggle(true);
+            $dateField.toggle(val === 'Daily Situation');
+            $usersField.toggle(val === 'Summary' || val === 'Daily Situation');
+            $startDateField.toggle(val === 'Summary' || val === 'District Wise');
+            $endDateField.toggle(val === 'Summary' || val === 'District Wise');
         }
 
-        // initialize on load
-        toggleFields();
-
-        // re‑toggle on select change
         $reportType.on('change', toggleFields);
+        toggleFields();
 
         $(document).ready(function() {
             loadMainReport();
@@ -340,6 +343,8 @@
                     const type = $('#type').val() || "Road";
                     const userId = $('#load-users').val() || 4;
                     const reportDate = $('#report_date').val();
+                    const startDate = $('#start_date').val();
+                    const endDate = $('#end_date').val();
 
                     const url = "{{ route('admin.apps.dmis.reports.loadReport') }}";
 
@@ -354,7 +359,9 @@
                             'report_type': reportType,
                             'type': type,
                             'user_id': userId,
-                            'report_date': reportDate
+                            'report_date': reportDate,
+                            'start_date': startDate,
+                            'end_date': endDate
                         })
                     });
 

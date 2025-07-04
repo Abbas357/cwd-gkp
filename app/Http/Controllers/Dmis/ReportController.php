@@ -38,6 +38,19 @@ class ReportController extends Controller
         $this->authorize('viewMainReport', \App\Models\Damage::class);
 
         $selectedUser = User::findOrFail($userId);
+        
+        $startDate = request()->get('start_date');
+        $endDate = request()->get('end_date');
+        
+        if (!$startDate) {
+            $startDate = now()->subDays(30)->format('Y-m-d');
+        }
+        if (!$endDate) {
+            $endDate = now()->format('Y-m-d');
+        }
+         
+        $startDate = \Carbon\Carbon::parse($startDate)->startOfDay();
+        $endDate = \Carbon\Carbon::parse($endDate)->endOfDay();
 
         $officerDistricts = request()->user()->districts();
 
@@ -56,7 +69,9 @@ class ReportController extends Controller
                     'totalRehabilitationCost' => 0,
                 ],
                 'subordinateDesignation' => 'Officer',
-                'selectedUser' => $selectedUser
+                'selectedUser' => $selectedUser,
+                'startDate' => $startDate,
+                'endDate' => $endDate
             ]);
         }
 
@@ -81,7 +96,6 @@ class ReportController extends Controller
                 continue;
             }
 
-            // Only get districts that are both under the subordinate AND under the selected officer
             $subordinateDistricts = $subordinate->districts()->intersect($officerDistricts);
 
             if ($subordinateDistricts->isEmpty()) {
@@ -103,8 +117,10 @@ class ReportController extends Controller
                 $subordinateTeam = $subordinate->getSubordinates();
                 $teamPostingIds = $subordinateTeam->pluck('currentPosting.id')->filter()->toArray();
                 $teamPostingIds[] = $subordinatePostingId;
+                
                 $damageQuery = Damage::whereIn('infrastructure_id', $infraIds)
-                    ->whereIn('posting_id', $teamPostingIds);
+                    ->whereIn('posting_id', $teamPostingIds)
+                    ->whereBetween('created_at', [$startDate, $endDate]);
 
                 $district->damaged_infrastructure_count = $damageQuery->clone()->distinct('infrastructure_id')
                     ->count('infrastructure_id');
@@ -166,12 +182,14 @@ class ReportController extends Controller
             $subordinateDesignation = $directSubordinates->first()->currentDesignation->name;
         }
 
-        $html =  view('modules.dmis.reports.partials.summary', compact(
+        $html = view('modules.dmis.reports.partials.summary', compact(
             'subordinatesWithDistricts',
             'total',
             'subordinateDesignation',
             'selectedUser',
-            'type'
+            'type',
+            'startDate',
+            'endDate'
         ))->render();
 
         return response()->json([
@@ -347,6 +365,19 @@ class ReportController extends Controller
     {
         $this->authorize('viewDistrictWiseReport', \App\Models\Damage::class);
 
+        $startDate = request()->get('start_date');
+        $endDate = request()->get('end_date');
+        
+        if (!$startDate) {
+            $startDate = now()->subDays(30)->format('Y-m-d');
+        }
+        if (!$endDate) {
+            $endDate = now()->format('Y-m-d');
+        }
+        
+        $startDate = \Carbon\Carbon::parse($startDate)->startOfDay();
+        $endDate = \Carbon\Carbon::parse($endDate)->endOfDay();
+
         $districts = request()->user()->districts();
 
         $districtStats = collect();
@@ -364,7 +395,9 @@ class ReportController extends Controller
                 continue;
             }
             
-            $damageQuery = Damage::whereIn('infrastructure_id', $infrastructureIds);
+            $damageQuery = Damage::whereIn('infrastructure_id', $infrastructureIds)
+                ->whereBetween('created_at', [$startDate, $endDate]); // Add date range filter
+            
             $damages = $damageQuery->get();
 
             if ($damages->isEmpty()) {
@@ -402,7 +435,13 @@ class ReportController extends Controller
             'total_cost' => $districtStats->sum('total_cost'),
         ];
 
-        $html = view('modules.dmis.reports.partials.district-wise', compact('districtStats', 'total', 'type'))->render();
+        $html = view('modules.dmis.reports.partials.district-wise', compact(
+            'districtStats', 
+            'total', 
+            'type',
+            'startDate',
+            'endDate'
+        ))->render();
 
         return response()->json([
             'success' => true,

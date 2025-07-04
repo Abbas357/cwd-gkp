@@ -166,16 +166,16 @@
     <div class="col-md-6 mb-3">
         <label for="before_images">Before Images</label>
         <input type="file" class="form-control" id="before_images" name="damage_before_images[]" multiple accept="image/*">
-        <small class="form-text text-muted">You can select multiple images</small>
+        <small class="form-text text-danger">Please select only 1, 2, or 3 images.</small>
         @error('before_images')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
-
+    
     <div class="col-md-6 mb-3">
         <label for="after_images">After Images</label>
         <input type="file" class="form-control" id="after_images" name="damage_after_images[]" multiple accept="image/*">
-        <small class="form-text text-muted">You can select multiple images</small>
+        <small class="form-text text-danger">Please select only 1, 2, or 3 images.</small>
         @error('after_images')
         <div class="text-danger">{{ $message }}</div>
         @enderror
@@ -186,16 +186,36 @@
 
 <script>
 
-    $('#type').on('change', function() {
+    $(document).ready(function() {
+        $('#before_images, #after_images').on('change', function() {
+            if (this.files.length > 3) {
+                showNotification("Warning! Only the first 3 images will be uploaded", "info", {timer: 5000});
+                const dt = new DataTransfer();
+                for (let i = 0; i < 3; i++) {
+                    dt.items.add(this.files[i]);
+                }
+                this.files = dt.files;
+            }
+        });
+    });
+
+    $('#type, #district_id').on('change', function() {
         $('#load-infrastructures').val(null).empty();
         
-        const selectedType = $(this).val();
+        const selectedType = $('#type').val();
+        const selectedDistrictId = $('#district_id').val();
+        
         var selectedTypeMeasurement = selectedType === "Road" ? "(in Kilometers)" : '(in Meters)';
         $('.infrastructure-type').text(selectedTypeMeasurement);
+        
         const params = {};
         
-        if (selectedType) {
+        if (selectedType && selectedType !== '') {
             params.type = selectedType;
+        }
+        
+        if (selectedDistrictId && selectedDistrictId !== '') {
+            params.district_id = selectedDistrictId;
         }
         
         select2Ajax(
@@ -208,15 +228,6 @@
             }
         );
     });
-
-    select2Ajax(
-        '#load-infrastructures',
-        '{{ route("admin.apps.dmis.infrastructures.api") }}',
-        {
-            placeholder: "Select Infrastructure",
-            dropdownParent: $('#load-infrastructures').closest('.modal')
-        }
-    );
     
     $('#district_id').select2({
         theme: "bootstrap-5" 

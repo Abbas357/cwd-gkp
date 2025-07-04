@@ -66,6 +66,10 @@ class InfrastructureController extends Controller
             $conditions['type'] = $request->type;
         }
         
+        if ($request->has('district_id') && !empty($request->district_id)) {
+            $conditions['district_id'] = $request->district_id;
+        }
+        
         if ($userDistricts->count() > 0) {
             $districtIds = $userDistricts->pluck('id')->toArray();
             
@@ -75,7 +79,18 @@ class InfrastructureController extends Controller
                 $query->where('type', $conditions['type']);
             }
             
-            $query->whereIn('district_id', $districtIds);
+            if (!empty($conditions['district_id'])) {
+                if (in_array($conditions['district_id'], $districtIds)) {
+                    $query->where('district_id', $conditions['district_id']);
+                } else {
+                    return response()->json([
+                        'results' => [],
+                        'pagination' => ['more' => false]
+                    ]);
+                }
+            } else {
+                $query->whereIn('district_id', $districtIds);
+            }
             
             if ($request->q) {
                 $query->where(function($q) use ($request) {
@@ -88,7 +103,6 @@ class InfrastructureController extends Controller
             }
             
             $query->with(['district']);
-            
             $query->orderBy('name', 'asc');
             
             $results = $query->paginate(10);

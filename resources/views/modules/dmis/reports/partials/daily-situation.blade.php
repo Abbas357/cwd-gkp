@@ -2,7 +2,7 @@
     <table id="generated-report" class="table table-bordered">
         <caption class="report-metadata">
             <div>
-                <h5><strong>Daily Situation Report on {{ $type ?? "Road" }}s –</strong> {{ \Carbon\Carbon::parse($reportDate)->format('F d, Y (l)') }}</h5>
+                <h5><strong>Daily Situation Report </strong> on <strong class="px-2 py-1 bg-light shadow-sm rounded border">{{ $type ?? "Road" }}s</strong> dated <strong>{{ \Carbon\Carbon::parse($reportDate)->format('F d, Y (l)') }}</strong></h5>
             </div>
             <div><h6><strong>Office:</strong> {{ $selectedUser->currentOffice->name ?? '-' }}</h6></div>
         </caption>
@@ -11,7 +11,7 @@
                 <th scope="col" class="text-center align-middle" rowspan="2">S#</th>
                 <th scope="col" class="text-center align-middle" rowspan="2">Officer</th>
                 <th scope="col" class="text-center align-middle" rowspan="2">District</th>
-                <th scope="colgroup" class="text-center align-middle bg-light" colspan="3">
+                <th scope="colgroup" class="text-center align-middle bg-light" colspan="4">
                     Daily Damages - {{ $type ?? "Road" }}s {{ $type == "Road" || !request()->has("type") ? "(KM)" : "(Meter)" }}
                 </th>
                 <th scope="colgroup" class="text-center align-middle bg-light" colspan="3">

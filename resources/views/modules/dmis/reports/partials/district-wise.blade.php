@@ -2,7 +2,18 @@
     <table id="generated-report" class="table table-bordered table-hover">
         <caption class="report-metadata">
             <div>
-                <h5><strong>{{ $type ?? "Road" }}s - District Wise Report - Dated: </strong> {{ now()->format('F d, Y (l)') }}</h5>
+                <h5>
+                    <strong>District Wise <span class="px-2 py-1 bg-light shadow-sm rounded border">{{ $type ?? "Road" }}s</span> Report</strong>
+                    @if(isset($startDate) && isset($endDate))
+                        @if($startDate->format('Y-m-d') === $endDate->format('Y-m-d'))
+                            <span class="text-muted"> Date <strong>{{ $startDate->format('F d, Y (l)') }}</strong></span>
+                        @else
+                            <span class="text-muted"> from <strong>{{ $startDate->format('F d, Y') }} </strong> to <strong>{{ $endDate->format('F d, Y') }}</strong></span>
+                        @endif
+                    @else
+                        <span class="text-muted">- Generated: <strong>{{ now()->format('F d, Y (l)') }}</strong></span>
+                    @endif
+                </h5>
             </div>
         </caption>
         <thead>`
