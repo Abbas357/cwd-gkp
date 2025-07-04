@@ -194,6 +194,7 @@ class ReportController extends Controller
                 'subordinatesWithDistricts' => collect(),
                 'total' => [
                     'totalDamagedInfrastructureCount' => 0,
+                    'totalDamageCount' => 0,
                     'totalDamagedInfrastructureSum' => 0,
                     'totalDamagedInfrastructureTotalCount' => 0,
                     'totalFullyRestored' => 0,
@@ -211,6 +212,7 @@ class ReportController extends Controller
         $directSubordinates = $selectedUser->getDirectSubordinates();
 
         $totalDamagedInfrastructureCount = 0;
+        $totalDamageCount = 0;
         $totalDamagedInfrastructureSum = 0;
         $totalDamagedInfrastructureTotalCount = 0;
         $totalFullyRestored = 0;
@@ -270,6 +272,7 @@ class ReportController extends Controller
                     ->sum('length');
 
                 $district->damaged_infrastructure_sum = $damageQuery->clone()->sum('damaged_length');
+                $district->damage_count = $damageQuery->clone()->count();
                 $district->fully_restored = $damageQuery->clone()->where('road_status', 'Fully restored')->count();
                 $district->partially_restored = $damageQuery->clone()->where('road_status', 'Partially restored')->count();
                 $district->not_restored = $damageQuery->clone()->where('road_status', 'Not restored')->count();
@@ -287,6 +290,7 @@ class ReportController extends Controller
                 $districts->push($district);
 
                 $totalDamagedInfrastructureCount += $district->damaged_infrastructure_count;
+                $totalDamageCount += $district->damage_count;
                 $totalDamagedInfrastructureSum += $district->damaged_infrastructure_sum;
                 $totalDamagedInfrastructureTotalCount += $district->damaged_infrastructure_total_count;
                 $totalFullyRestored += $district->fully_restored;
@@ -307,6 +311,7 @@ class ReportController extends Controller
 
         $total = [
             'totalDamagedInfrastructureCount' => $totalDamagedInfrastructureCount,
+            'totalDamageCount' => $totalDamageCount,
             'totalDamagedInfrastructureSum' => $totalDamagedInfrastructureSum,
             'totalDamagedInfrastructureTotalCount' => $totalDamagedInfrastructureTotalCount,
             'totalFullyRestored' => $totalFullyRestored,
@@ -352,9 +357,19 @@ class ReportController extends Controller
                     return $query->where('type', $type);
                 })
                 ->get();
+            
             $infrastructureIds = $infrastructures->pluck('id')->toArray();
+            
+            if (empty($infrastructureIds)) {
+                continue;
+            }
+            
             $damageQuery = Damage::whereIn('infrastructure_id', $infrastructureIds);
             $damages = $damageQuery->get();
+
+            if ($damages->isEmpty()) {
+                continue;
+            }
 
             $stats = [
                 'district' => $district,

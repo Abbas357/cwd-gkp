@@ -395,8 +395,7 @@
 
             $('#print-report').on('click', () => {
                 $("#generated-report").printThis({
-                    header: "<h4 class='text-center mb-3'>Infrastructure Damages Report</h4>"
-                    , beforePrint() {
+                    beforePrint() {
                         document.querySelector('.page-loader').classList.remove('hidden');
                     }
                     , afterPrint() {

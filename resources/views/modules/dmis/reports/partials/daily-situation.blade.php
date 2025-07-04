@@ -1,9 +1,10 @@
 <div class="table-responsive">
     <table id="generated-report" class="table table-bordered">
         <caption class="report-metadata">
-            <div><strong>Daily Situation Report for:</strong> {{ \Carbon\Carbon::parse($reportDate)->format('F d, Y (l)') }}</div>
-            <div><strong>Office:</strong> {{ $selectedUser->currentOffice->name ?? 'No Office Assigned' }}</div>
-            <div class="mt-2 text-muted"><small>This report shows damage assessments recorded on the selected date only</small></div>
+            <div>
+                <h5><strong>Daily Situation Report on {{ $type ?? "Road" }}s –</strong> {{ \Carbon\Carbon::parse($reportDate)->format('F d, Y (l)') }}</h5>
+            </div>
+            <div><h6><strong>Office:</strong> {{ $selectedUser->currentOffice->name ?? '-' }}</h6></div>
         </caption>
         <thead>
             <tr class="bg-danger text-white text-uppercase fw-bold">
@@ -26,6 +27,9 @@
             <tr class="bg-danger bg-opacity-75 text-white text-uppercase fw-bold">
                 <th scope="col" class="text-center align-middle">
                     Affected {{ $type ?? "Road" }}s
+                </th>
+                <th scope="col" class="text-center align-middle">
+                    No. of Damages
                 </th>
                 <th scope="col" class="text-center align-middle">
                     Total Length
@@ -79,10 +83,8 @@
                 <td class="text-center fw-medium">{{ $district->name }}</td>
                 <td class="text-center fw-medium">
                     {{ $district->damaged_infrastructure_count }}
-                    @if($district->new_damages_today > 0)
-                    <span class="new-damage-indicator">{{ $district->new_damages_today }} new</span>
-                    @endif
                 </td>
+                <td class="text-center fw-medium">{{ $district->damage_count }}</td>
                 <td class="text-center fw-medium">{{ number_format($district->damaged_infrastructure_total_count, 2) }}</td>
                 <td class="text-center fw-medium">{{ number_format($district->damaged_infrastructure_sum, 2) }}</td>
                 <td class="text-center fw-medium">{{ $district->fully_restored }}</td>
@@ -108,6 +110,7 @@
                 @endif
                 <th class="bg-light text-center"></th>
                 <th class="bg-light text-center">{{ $total["totalDamagedInfrastructureCount"] }}</th>
+                <th class="bg-light text-center">{{ $total['totalDamageCount'] }}</th>
                 <th class="bg-light text-center">{{ number_format($total["totalDamagedInfrastructureTotalCount"], 2) }}</th>
                 <th class="bg-light text-center">{{ number_format($total["totalDamagedInfrastructureSum"], 2) }}</th>
                 <th class="bg-light text-center">{{ $total["totalFullyRestored"] }}</th>
@@ -128,6 +131,17 @@
             </tr>
             @endif
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="14">
+                    <span style="display: block; margin-top: 5px; font-size: 10px; text-align: center; color: #777;">
+                        This is a system-generated report from Damage Management Information System (DMIS), C&W
+                        Department. All efforts have been made to ensure accuracy; however, errors and omissions are
+                        excepted.
+                    </span>
+                </td>
+            </tr>
+        </tfoot>
     </table>
 
     @if(count($subordinatesWithDistricts) == 0)

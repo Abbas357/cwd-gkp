@@ -1,7 +1,9 @@
 <table id="generated-report" class="table table-bordered">
     <caption class="report-metadata">
-        <span><strong>Report Date:</strong> {{ now()->format('F d, Y') }}</span><br>
-        <span><strong>Office:</strong> {{ $selectedUser->currentOffice->name ?? 'C&W DEPARTMENT' }}</span>
+        <div>
+            <h5><strong>{{ $type ?? "Road" }}s - Summary Report - Dated: </strong> {{ now()->format('F d, Y (l)') }}</h5>
+        </div>
+        <div><h6><strong>Office:</strong> {{ $selectedUser->currentOffice->name ?? '-' }}</h6></div>
     </caption>
     <thead>
         <tr class="bg-success text-white text-uppercase fw-bold">
@@ -23,7 +25,7 @@
                 Effected {{ $type ?? 'Road' }}s
             </th>
             <th scope="col" class="text-center align-middle">
-                Total Damages
+                No. of Damages
             </th>
             <th scope="col" class="text-center align-middle">
                 Total Length
@@ -108,7 +110,7 @@
     <tfoot>
         <tr>
             <td colspan="12">
-                <span style="display: block; margin-top: 5px; font-size: 9px; text-align: center; color: #888888;">
+                <span style="display: block; margin-top: 5px; font-size: 10px; text-align: center; color: #777;">
                     This is a system-generated report from Damage Management Information System (DMIS), C&W Department. All efforts have been made to ensure accuracy; however, errors and omissions are excepted.
                 </span>
             </td>
