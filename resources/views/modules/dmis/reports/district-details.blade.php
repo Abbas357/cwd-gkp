@@ -519,16 +519,22 @@
             <div>
                 <h4 class="fw-bold mb-1">{{ $district->name }} District - Damage Details</h4>
                 <div class="text-muted">
-                    <span class="badge bg-primary fs-6 px-2 py-1">Report Date: <strong> {{ now()->format('F d, Y') }}
-                        </strong></span>
-                    <span class="badge bg-secondary fs-6 px-2 py-1">Infrastructure Type: <strong>{{ $type }}
-                        </strong></span>
-                    <span class="badge bg-info fs-6 px-2 py-1">Total Damages:
-                        <strong>{{ $stats['total_damages'] }}</strong></span>
+                    <span class="badge bg-primary fs-6 px-2 py-1">Report Date: <strong> {{ now()->format('F d, Y') }}</strong></span>
+                    <span class="badge bg-secondary fs-6 px-2 py-1">Infrastructure Type: <strong>{{ $type }}</strong></span>
+                    <span class="badge bg-info fs-6 px-2 py-1">Total Damages: <strong>{{ $stats['total_damages'] }}</strong></span>
                 </div>
             </div>
             <div class="no-print action-buttons">
                 <div class="btn-group-custom">
+                    <!-- Add Image Toggle Switch -->
+                    <div class="form-check form-switch me-3">
+                        <input class="form-check-input" type="checkbox" role="switch" id="includeImagesSwitch" 
+                            {{ request()->query('images', 'false') === 'true' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="includeImagesSwitch">
+                            <i class="bi-image me-1"></i>Include Images
+                        </label>
+                    </div>
+                    
                     <button type="button" id="print-report" class="btn btn-outline-primary">
                         <i class="bi-printer me-1"></i> Print Report
                     </button>
@@ -699,7 +705,7 @@
                                         @endif
 
                                         <!-- Images Row -->
-                                        <tr class="images-row">
+                                        <tr class="images-row" id="images-row-{{ $damage->id }}" style="{{ request()->query('images', 'false') === 'false' ? 'display: none;' : '' }}">
                                             <td colspan="7">
                                                 <div class="image-gallery">
                                                     <!-- Before Work Pictures -->
@@ -709,9 +715,7 @@
                                                         </div>
                                                         <div class="image-container">
                                                             @php
-                                                                $beforeImages = $damage->getMedia(
-                                                                    'damage_before_images',
-                                                                );
+                                                                $beforeImages = $damage->getMedia('damage_before_images');
                                                             @endphp
 
                                                             @if ($beforeImages->count() > 0)
@@ -725,8 +729,7 @@
                                                                 @endforeach
                                                             @else
                                                                 <div class="no-images">
-                                                                    <i class="bi-image me-2"></i>No before pictures
-                                                                    available
+                                                                    <i class="bi-image me-2"></i>No before pictures available
                                                                 </div>
                                                                 <!-- Print placeholder -->
                                                                 <div class="print-image-placeholder d-none">
@@ -757,8 +760,7 @@
                                                                 @endforeach
                                                             @else
                                                                 <div class="no-images">
-                                                                    <i class="bi-image me-2"></i>No after pictures
-                                                                    available
+                                                                    <i class="bi-image me-2"></i>No after pictures available
                                                                 </div>
                                                                 <!-- Print placeholder -->
                                                                 <div class="print-image-placeholder d-none">
@@ -815,6 +817,36 @@
 
         <script>
             $(document).ready(function() {
+                // Handle image toggle switch
+                $('#includeImagesSwitch').on('change', function() {
+                    const isChecked = $(this).is(':checked');
+                    const currentUrl = new URL(window.location.href);
+                    
+                    // Update URL parameter
+                    currentUrl.searchParams.set('images', isChecked ? 'true' : 'false');
+                    
+                    // Update browser URL without refreshing
+                    window.history.pushState({}, '', currentUrl.toString());
+                    
+                    // Show/hide all image rows
+                    $('.images-row').toggle(isChecked);
+                    
+                    // Optional: Add smooth transition
+                    if (isChecked) {
+                        $('.images-row').slideDown(300);
+                    } else {
+                        $('.images-row').slideUp(300);
+                    }
+                });
+
+                // Initialize images visibility based on URL parameter
+                const showImages = new URLSearchParams(window.location.search).get('images') === 'true';
+                $('.images-row').toggle(showImages);
+                
+                // Update switch state if URL parameter exists
+                $('#includeImagesSwitch').prop('checked', showImages);
+
+                // Rest of your existing JavaScript code...
                 $('#print-report').on('click', function() {
                     $('.no-images').each(function() {
                         $(this).siblings('.print-image-placeholder').removeClass('d-none');
@@ -858,9 +890,7 @@
                         width: document.getElementById('district-report').scrollWidth,
                         height: document.getElementById('district-report').scrollHeight
                     }).then(function(canvas) {
-                        const {
-                            jsPDF
-                        } = window.jspdf;
+                        const { jsPDF } = window.jspdf;
                         const pdf = new jsPDF('p', 'mm', 'a4');
 
                         const imgData = canvas.toDataURL('image/png');
@@ -880,8 +910,7 @@
                             heightLeft -= pageHeight;
                         }
 
-                        const fileName =
-                            `{{ $district->name }}_Damage_Report_${new Date().toISOString().split('T')[0]}.pdf`;
+                        const fileName = `{{ $district->name }}_Damage_Report_${new Date().toISOString().split('T')[0]}.pdf`;
                         pdf.save(fileName);
 
                         button.html(originalText);
@@ -958,6 +987,6 @@
                     }
                 );
             });
-        </script>
+            </script>
     @endpush
 </x-dmis-layout>
