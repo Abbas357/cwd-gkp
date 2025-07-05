@@ -217,8 +217,8 @@
             <div class="col-md-12">
                 <form method="get" class="row" id="report-form">
 
-                    <div class="col-md-3">
-                        <label class="form-label" for="type">Report Type</label>
+                    <div class="col-md-2 report-type-field">
+                        <label class="form-label" for="report_type">Report Type</label>
                         <select name="report_type" id="report_type" class="form-control" placeholder="Select report_type">
                             @can('viewMainReport', App\Models\Damage::class)
                             <option value="Summary" {{ request()->query('report_type') == 'Summary' ? 'selected' : '' }}>Summary</option>
@@ -231,13 +231,8 @@
                             @endcan
                         </select>
                     </div>
-                    
-                    <div class="col-md-3 report-date-field">
-                        <label class="form-label" for="report_date">Report Date</label>
-                        <input type="date" name="report_date" id="report_date" class="form-control" value="{{ request()->query('report_date') ?? now()->format('Y-m-d') }}">
-                    </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-2 type-field">
                         <label class="form-label" for="type">Infrastructure Type</label>
                         <select name="type" id="type" class="form-control" placeholder="Select Type">
                             @foreach(setting('infrastructure_type', 'dmis', ['Road', 'Bridge', 'Culvert']) as $infrastructure_type)
@@ -248,17 +243,33 @@
                         </select>
                     </div>
 
-                    <div class="col-md-3 start-date-field">
+                    <div class="col-md-2 report-date-field">
+                        <label class="form-label" for="report_date">Report Date</label>
+                        <input type="date" name="report_date" id="report_date" class="form-control" value="{{ request()->query('report_date') ?? now()->format('Y-m-d') }}">
+                    </div>
+
+                    <div class="col-md-2 duration-field">
+                        <label class="form-label" for="duration">Report Duration</label>
+                        <select name="duration" id="duration" class="form-control" placeholder="Select Duration">
+                            <option value="90">Last 90 days</option>
+                            <option value="45">Last 45 days</option>
+                            <option value="30" selected>Last 30 days</option>
+                            <option value="15">Last 15 days</option>
+                            <option value="Custom">Custom</option>
+                        </select>
+                    </div>
+                
+                    <div class="col-md-2 start-date-field">
                         <label class="form-label" for="start_date">Start Date</label>
                         <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request()->query('start_date') ?? now()->subDays(30)->format('Y-m-d') }}">
                     </div>
-
-                    <div class="col-md-3 end-date-field">
+                
+                    <div class="col-md-2 end-date-field">
                         <label class="form-label" for="end_date">End Date</label>
                         <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request()->query('end_date') ?? now()->format('Y-m-d') }}">
                     </div>
 
-                    <div class="col-md-3 load-users-field">
+                    <div class="col-md-6 load-users-field">
                         <label class="form-label" for="load-users">Officer</label>
                         <select name="user_id" id="load-users" class="form-select" data-placeholder="Select Officer">
                             <option value="">Select Officer</option>
@@ -302,23 +313,31 @@
     <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/printThis/printThis.js') }}"></script>
     <script>
-        const $reportType      = $('#report_type');
-        const $infraField      = $('#type').closest('.col-md-3');
-        const $dateField       = $('.report-date-field');
-        const $usersField      = $('.load-users-field');
-        const $startDateField  = $('.start-date-field');
-        const $endDateField    = $('.end-date-field');
+        const $reportType = $('.report-type-field');
+        const $infraField = $('.type-field');
+        const $dateField = $('.report-date-field');
+        const $usersField = $('.load-users-field');
+        const $durationField = $('.duration-field');
+        const $startDateField = $('.start-date-field');
+        const $endDateField = $('.end-date-field');
 
         function toggleFields() {
-            const val = $reportType.val();
-            $infraField.toggle(true);
-            $dateField.toggle(val === 'Daily Situation');
-            $usersField.toggle(val === 'Summary' || val === 'Daily Situation');
-            $startDateField.toggle(val === 'Summary' || val === 'District Wise');
-            $endDateField.toggle(val === 'Summary' || val === 'District Wise');
+            const reportTypeVal = $('#report_type').val();
+            const durationVal = $('#duration').val();
+            
+            $infraField.toggle(true);            
+            $dateField.toggle(reportTypeVal === 'Daily Situation');
+            $usersField.toggle(reportTypeVal === 'Summary' || reportTypeVal === 'Daily Situation');
+            $durationField.toggle(reportTypeVal !== 'Daily Situation');
+
+            const showCustomDates = (reportTypeVal === 'Summary' || reportTypeVal === 'District Wise') && durationVal === 'Custom';
+            $startDateField.toggle(showCustomDates);
+            $endDateField.toggle(showCustomDates);
         }
 
         $reportType.on('change', toggleFields);
+        $('#duration').on('change', toggleFields);
+
         toggleFields();
 
         $(document).ready(function() {
@@ -342,6 +361,7 @@
                     const reportType = $('#report_type').val() || "Summary";
                     const type = $('#type').val() || "Road";
                     const userId = $('#load-users').val() || 4;
+                    const duration = $('#duration').val();
                     const reportDate = $('#report_date').val();
                     const startDate = $('#start_date').val();
                     const endDate = $('#end_date').val();
@@ -359,6 +379,7 @@
                             'report_type': reportType,
                             'type': type,
                             'user_id': userId,
+                            'duration': duration,
                             'report_date': reportDate,
                             'start_date': startDate,
                             'end_date': endDate

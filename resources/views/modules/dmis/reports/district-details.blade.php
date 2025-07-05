@@ -6,16 +6,18 @@
             .damage-card {
                 border: 1px solid #dee2e6;
                 border-radius: 8px;
-                margin-bottom: 2rem;
                 overflow: hidden;
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                 background: #ffffff;
             }
 
             .damage-card-header {
+                display: flex;
+                justify-content: space-between;
+                padding: .5rem;
+                align-items: center;
                 background: #f8f9fa;
-                padding: 1.5rem;
-                border-bottom: 1px solid #dee2e6;
+                border-bottom: 1px solid #000 !important;
             }
 
             .damage-card-body {
@@ -24,7 +26,7 @@
 
             .infrastructure-title {
                 font-weight: 600;
-                font-size: 1.2rem;
+                font-size: 1.3rem;
                 color: #495057;
                 margin-bottom: 0.5rem;
             }
@@ -32,7 +34,6 @@
             .damage-table {
                 width: 100%;
                 border-collapse: collapse;
-                margin-bottom: 1rem;
                 background: #ffffff;
                 border-radius: 6px;
                 overflow: hidden;
@@ -48,7 +49,7 @@
             }
 
             .damage-table th {
-                background: #495057;
+                background: #999;
                 color: #ffffff;
                 font-weight: 600;
                 font-size: 0.9rem;
@@ -68,20 +69,12 @@
             }
 
             .damage-row {
-                border-bottom: 2px solid #495057 !important;
                 background: #f8f9fa !important;
             }
 
             .damage-row td {
                 font-weight: 600;
                 color: #495057;
-                border-bottom: 2px solid #495057 !important;
-            }
-
-            .damage-separator {
-                height: 2px;
-                background: #dee2e6;
-                margin: 1rem 0;
             }
 
             .images-row {
@@ -245,30 +238,9 @@
             }
 
             .infrastructure-separator {
-                margin: 2rem 0;
+                margin: .5rem 0;
                 text-align: center;
                 position: relative;
-            }
-
-            .infrastructure-separator::before {
-                content: '';
-                position: absolute;
-                top: 50%;
-                left: 0;
-                right: 0;
-                height: 1px;
-                background: #dee2e6;
-            }
-
-            .infrastructure-separator span {
-                background: #ffffff;
-                padding: 0.5rem 1rem;
-                color: #6c757d;
-                font-weight: 500;
-                border: 1px solid #dee2e6;
-                border-radius: 4px;
-                position: relative;
-                z-index: 1;
             }
 
             /* Print Styles */
@@ -279,12 +251,16 @@
                 }
 
                 body {
-                    font-size: 11px;
+                    font-size: 12px;
                     line-height: 1.3;
-                    color: #000 !important;
+                    color: #888 !important;
                     background: white !important;
                     margin: 0;
                     padding: 0;
+                }
+
+                .damage-card-header {
+                    border-bottom: 1px solid #000 !important;
                 }
 
                 .container {
@@ -295,20 +271,20 @@
                 }
 
                 .page-header {
-                    border-bottom: 2px solid #000;
+                    border-bottom: 2px solid #888;
                     margin-bottom: 15px;
                     padding-bottom: 10px;
                 }
 
                 .summary-cards {
-                    display: flex !important;
-                    flex-wrap: wrap !important;
-                    gap: 6px !important;
-                    margin-bottom: 20px !important;
+                    display: grid !important;
+                    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+                    gap: 1rem !important;
+                    margin-bottom: 2rem !important;
                 }
 
                 .summary-card {
-                    border: 1px solid #000 !important;
+                    border: 1px solid #888 !important;
                     background: white !important;
                     box-shadow: none !important;
                     page-break-inside: avoid;
@@ -331,19 +307,12 @@
                 }
 
                 .damage-card {
-                    border: 2px solid #000 !important;
+                    border: 2px solid #888 !important;
                     background: white !important;
                     box-shadow: none !important;
-                    margin-bottom: 20px !important;
                     page-break-inside: avoid;
                 }
 
-                .damage-card-header {
-                    background: #f5f5f5 !important;
-                    border-bottom: 1px solid #000 !important;
-                    color: #000 !important;
-                    padding: 10px !important;
-                }
 
                 .damage-card-body {
                     background: white !important;
@@ -358,7 +327,7 @@
 
                 .damage-table th,
                 .damage-table td {
-                    border: 1px solid #000 !important;
+                    border: 1px solid #888 !important;
                     padding: 6px !important;
                     color: #000 !important;
                     background: white !important;
@@ -372,25 +341,19 @@
                 }
 
                 .damage-row td {
-                    border-bottom: 2px solid #000 !important;
+                    border-bottom: 2px solid #888 !important;
                     font-weight: bold !important;
                     background: #f5f5f5 !important;
-                }
-
-                .damage-separator {
-                    height: 1px !important;
-                    background: #000 !important;
-                    margin: 8px 0 !important;
                 }
 
                 .images-row td {
                     background: white !important;
                     padding: 8px !important;
-                    border-bottom: 1px solid #000 !important;
+                    border-bottom: 1px solid #888 !important;
                 }
 
                 .officer-info {
-                    border: 1px solid #000 !important;
+                    border: 1px solid #888 !important;
                     background: white !important;
                     color: #000 !important;
                     margin-bottom: 8px !important;
@@ -398,7 +361,7 @@
                 }
 
                 .image-section {
-                    border: 1px solid #000 !important;
+                    border: 1px solid #888 !important;
                     background: white !important;
                     margin-bottom: 10px !important;
                     page-break-inside: avoid;
@@ -406,7 +369,7 @@
 
                 .image-section-header {
                     background: #f0f0f0 !important;
-                    border-bottom: 1px solid #000 !important;
+                    border-bottom: 1px solid #888 !important;
                     color: #000 !important;
                     padding: 6px !important;
                     font-size: 10px !important;
@@ -423,7 +386,7 @@
                 }
 
                 .damage-image {
-                    border: 1px solid #000 !important;
+                    border: 1px solid #888 !important;
                     width: 130px !important;
                     height: 100px !important;
                     object-fit: cover !important;
@@ -432,7 +395,7 @@
 
                 .no-images {
                     background: white !important;
-                    border: 1px dashed #000 !important;
+                    border: 1px dashed #888 !important;
                     color: #000 !important;
                     padding: 15px !important;
                     text-align: center !important;
@@ -442,7 +405,7 @@
                 .status-badge {
                     background: white !important;
                     color: #000 !important;
-                    border: 1px solid #000 !important;
+                    border: 1px solid #888 !important;
                     padding: 2px 4px !important;
                     font-size: 8px !important;
                     border-radius: 2px !important;
@@ -450,27 +413,9 @@
 
                 .infrastructure-title {
                     color: #000 !important;
-                    font-size: 12px !important;
+                    font-size: 1rem !important;
                     font-weight: bold !important;
-                    border-bottom: 1px solid #000 !important;
                     padding-bottom: 4px !important;
-                }
-
-                .infrastructure-separator {
-                    margin: 15px 0 !important;
-                }
-
-                .infrastructure-separator::before {
-                    background: #000 !important;
-                    height: 1px !important;
-                }
-
-                .infrastructure-separator span {
-                    background: white !important;
-                    color: #000 !important;
-                    border: 1px solid #000 !important;
-                    font-size: 10px !important;
-                    padding: 3px 8px !important;
                 }
 
                 h1,
@@ -525,13 +470,13 @@
                 </div>
             </div>
             <div class="no-print action-buttons">
-                <div class="btn-group-custom">
+                <div class="btn-group-custom d-flex align-items-center">
                     <!-- Add Image Toggle Switch -->
                     <div class="form-check form-switch me-3">
                         <input class="form-check-input" type="checkbox" role="switch" id="includeImagesSwitch" 
                             {{ request()->query('images', 'false') === 'true' ? 'checked' : '' }}>
                         <label class="form-check-label" for="includeImagesSwitch">
-                            <i class="bi-image me-1"></i>Include Images
+                            Include Images
                         </label>
                     </div>
                     
@@ -548,12 +493,12 @@
         <!-- Summary Cards -->
         <div class="summary-cards">
             <div class="summary-card">
-                <div class="summary-number">{{ $stats['total_damages'] }}</div>
-                <div class="summary-label">Total Damages</div>
-            </div>
-            <div class="summary-card">
                 <div class="summary-number">{{ $stats['unique_infrastructures'] }}</div>
                 <div class="summary-label">Affected Infrastructures</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-number">{{ $stats['total_damages'] }}</div>
+                <div class="summary-label">Number of Damages</div>
             </div>
             <div class="summary-card">
                 <div class="summary-number">{{ $stats['total_damaged_length'] }}</div>
@@ -592,20 +537,15 @@
                 <div class="card-header">
                     <h5 class="mb-0"><i class="bi-people me-2"></i>Reporting Officers</h5>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        @foreach ($reportingOfficers as $officer)
-                            <div class="col-md-6 col-lg-4 mb-3">
-                                <div class="officer-info">
-                                    <div class="fw-bold">{{ $officer['user']->name }}</div>
-                                    <div class="text-muted small">{{ $officer['designation']->name ?? 'N/A' }}</div>
-                                    <div class="text-muted small">{{ $officer['office']->name ?? 'N/A' }}</div>
-                                    <div class="text-primary small">{{ $officer['damage_count'] }} damage(s) reported
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
+                <div class="d-flex">
+                    @foreach ($reportingOfficers as $officer)
+                        <div class="officer-info m-3">
+                            <div class="fw-bold">{{ $officer['user']->name }}</div>
+                            <div class="text-muted small">{{ $officer['designation']->name ?? 'N/A' }}</div>
+                            <div class="text-muted small">{{ $officer['office']->name ?? 'N/A' }}</div>
+                            <div class="text-primary small">{{ $officer['damage_count'] }} damage(s) reported</div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         @endif
@@ -622,22 +562,20 @@
 
                     @if (!$loop->first)
                         <div class="infrastructure-separator">
-                            <span><i class="bi-arrow-down-circle me-2"></i>Next
-                                {{ request()->query('type') ?? 'Road' }}</span>
+                            <i class="bi-three-dots"></i>
                         </div>
                     @endif
 
                     <div class="damage-card">
                         <div class="damage-card-header">
                             <div class="infrastructure-title">
-                                <i class="bi-geo-alt me-2"></i>{{ $infrastructure->name }}
+                                <i class="bi-geo-alt-fill me-2"></i>{{ $infrastructure->type }} name: {{ $infrastructure->name }}
                             </div>
-                            <div class="text-muted">
-                                Type: <strong>{{ $infrastructure->type }} </strong> |
+                            <div class="me-3" style="font-size: 15px">
                                 Length: <strong>{{ $infrastructure->length ?? 'N/A' }}
                                     {{ request()->query('type') == 'Road' || !request()->has('type') ? '(KM)' : '(Meter)' }}
-                                </strong>|
-                                Damages: <strong>{{ $infrastructureDamages->count() }}</strong>
+                                </strong> </br>
+                                Damages to this {{ $infrastructure->type }}: <strong>{{ $infrastructureDamages->count() }}</strong>
                             </div>
                         </div>
 
@@ -651,19 +589,10 @@
                                         <th>Reported Date</th>
                                         <th>Restoration Cost</th>
                                         <th>Rehabilitation Cost</th>
-                                        <th>Reported By</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($infrastructureDamages as $damage)
-                                        @if (!$loop->first)
-                                            <tr>
-                                                <td colspan="7">
-                                                    <div class="damage-separator"></div>
-                                                </td>
-                                            </tr>
-                                        @endif
-
                                         <!-- Damage Information Row -->
                                         <tr class="damage-row">
                                             <td><strong>#{{ $loop->iteration }}</strong></td>
@@ -679,17 +608,6 @@
                                             <td>{{ $damage->created_at->format('M d, Y') }}</td>
                                             <td>{{ $damage->approximate_restoration_cost }} M</td>
                                             <td>{{ $damage->approximate_rehabilitation_cost }} M</td>
-                                            <td>
-                                                @if ($damage->posting && $damage->posting->user)
-                                                    <strong>{{ $damage->posting->user->name }}</strong><br>
-                                                    <small
-                                                        class="text-muted">{{ $damage->posting->user->currentDesignation->name ?? 'N/A' }}</small><br>
-                                                    <small
-                                                        class="text-muted">{{ $damage->posting->office->name ?? 'N/A' }}</small>
-                                                @else
-                                                    N/A
-                                                @endif
-                                            </td>
                                         </tr>
 
                                         <!-- Description Row (if exists) -->
@@ -710,7 +628,7 @@
                                                 <div class="image-gallery">
                                                     <!-- Before Work Pictures -->
                                                     <div class="image-section">
-                                                        <div class="image-section-header before-header">
+                                                        <div class="image-section-header before-header d-flex align-items-center justify-content-center">
                                                             <i class="bi-camera me-2"></i>Images Before Work
                                                         </div>
                                                         <div class="image-container">
@@ -728,7 +646,7 @@
                                                                         data-image-title="Before Work - {{ $infrastructure->name }}">
                                                                 @endforeach
                                                             @else
-                                                                <div class="no-images">
+                                                                <div class="no-images no-print p-2">
                                                                     <i class="bi-image me-2"></i>No before pictures available
                                                                 </div>
                                                                 <!-- Print placeholder -->
@@ -741,7 +659,7 @@
 
                                                     <!-- After Work Pictures -->
                                                     <div class="image-section">
-                                                        <div class="image-section-header after-header">
+                                                        <div class="image-section-header after-header d-flex align-items-center justify-content-center">
                                                             <i class="bi-camera me-2"></i>Images After Work
                                                         </div>
                                                         <div class="image-container">
@@ -759,7 +677,7 @@
                                                                         data-image-title="After Work - {{ $infrastructure->name }}">
                                                                 @endforeach
                                                             @else
-                                                                <div class="no-images">
+                                                                <div class="no-images no-print p-2">
                                                                     <i class="bi-image me-2"></i>No after pictures available
                                                                 </div>
                                                                 <!-- Print placeholder -->

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\dmis;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Damage;
 use App\Models\District;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ReportController extends Controller
@@ -39,18 +40,20 @@ class ReportController extends Controller
 
         $selectedUser = User::findOrFail($userId);
         
+        $duration = request()->get('duration');
         $startDate = request()->get('start_date');
         $endDate = request()->get('end_date');
         
-        if (!$startDate) {
-            $startDate = now()->subDays(30)->format('Y-m-d');
-        }
-        if (!$endDate) {
+        if ($duration && $duration !== 'Custom') {
             $endDate = now()->format('Y-m-d');
+            $startDate = now()->subDays((int)$duration)->format('Y-m-d');
+        } else {
+            $startDate = $startDate ?: now()->subDays(30)->format('Y-m-d');
+            $endDate = $endDate ?: now()->format('Y-m-d');
         }
          
-        $startDate = \Carbon\Carbon::parse($startDate)->startOfDay();
-        $endDate = \Carbon\Carbon::parse($endDate)->endOfDay();
+        $startDate = Carbon::parse($startDate)->startOfDay();
+        $endDate = Carbon::parse($endDate)->endOfDay();
 
         $officerDistricts = request()->user()->districts();
 
@@ -365,18 +368,20 @@ class ReportController extends Controller
     {
         $this->authorize('viewDistrictWiseReport', \App\Models\Damage::class);
 
+        $duration = request()->get('duration');
         $startDate = request()->get('start_date');
         $endDate = request()->get('end_date');
         
-        if (!$startDate) {
-            $startDate = now()->subDays(30)->format('Y-m-d');
-        }
-        if (!$endDate) {
+        if ($duration && $duration !== 'Custom') {
             $endDate = now()->format('Y-m-d');
+            $startDate = now()->subDays((int)$duration)->format('Y-m-d');
+        } else {
+            $startDate = $startDate ?: now()->subDays(30)->format('Y-m-d');
+            $endDate = $endDate ?: now()->format('Y-m-d');
         }
         
-        $startDate = \Carbon\Carbon::parse($startDate)->startOfDay();
-        $endDate = \Carbon\Carbon::parse($endDate)->endOfDay();
+        $startDate = Carbon::parse($startDate)->startOfDay();
+        $endDate = Carbon::parse($endDate)->endOfDay();
 
         $districts = request()->user()->districts();
 
