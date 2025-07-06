@@ -813,9 +813,14 @@ function pushStateModal({
                     ${formTagOpen}
                     <div class="modal-body" style="${heightStyle}">
                         <div class="${loadingSpinner} text-center mt-2">
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
+                            <form-skeleton
+                                tabs="3"
+                                input-rows="2"
+                                input-columns="3"
+                                textareas="1"
+                                show-footer="false"
+                                show-loading-text="false">
+                            </form-skeleton>
                         </div>
                         <div class="${modalContentClass} p-1"></div>
                     </div>
