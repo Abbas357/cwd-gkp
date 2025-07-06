@@ -50,6 +50,34 @@
             </tbody>
         </table>
     </div>
+
+    <div class="modal fade" id="tutorialModal" tabindex="-1" aria-labelledby="tutorialModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tutorialModalLabel">
+                        <i class="bi-play-circle me-2"></i>Damages Management Tutorial
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="ratio ratio-16x9">
+                        <iframe id="tutorial-iframe" 
+                                src="" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi-x-circle me-1"></i>Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!--end row-->
     @push('script')
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
@@ -153,38 +181,50 @@
                     }
                 ]
                 , pageLength: 10
-                , customButton: {
-                    text: `<span class="symbol-container fw-bold create-btn"><i class="bi-plus-circle"></i>&nbsp; Add Damage</span>`
-                    , action: function(e, dt, node, config) {
+                , customButton: [
+                        {
+                        text: `<span class="symbol-container fw-bold create-btn"><i class="bi-plus-circle"></i>&nbsp; Add Damage</span>`
+                        , action: function(e, dt, node, config) {
 
-                       formWizardModal({
-                            title: 'Add Damage',
-                            fetchUrl: "{{ route('admin.apps.dmis.damages.create') }}",
-                            btnSelector: '.create-btn',
-                            actionButtonName: 'Add Damage',
-                            modalSize: 'lg',
-                            formAction: "{{ route('admin.apps.dmis.damages.store') }}",
-                            wizardSteps: [
-                                {
-                                    title: "Basic Info",
-                                    fields: ["#step-1"]
-                                },
-                                {
-                                    title: "Detail & Coordinates",
-                                    fields: ["#step-2"]
-                                },
-                                {
-                                    title: "Cost Info & Images",
-                                    fields: ["#step-3"]
+                        formWizardModal({
+                                title: 'Add Damage',
+                                fetchUrl: "{{ route('admin.apps.dmis.damages.create') }}",
+                                btnSelector: '.create-btn',
+                                actionButtonName: 'Add Damage',
+                                modalSize: 'lg',
+                                formAction: "{{ route('admin.apps.dmis.damages.store') }}",
+                                wizardSteps: [
+                                    {
+                                        title: "Basic Info",
+                                        fields: ["#step-1"]
+                                    },
+                                    {
+                                        title: "Detail & Coordinates",
+                                        fields: ["#step-2"]
+                                    },
+                                    {
+                                        title: "Cost Info & Images",
+                                        fields: ["#step-3"]
+                                    }
+                                ],
+                                formSubmitted() {
+                                    table.ajax.reload();
                                 }
-                            ],
-                            formSubmitted() {
-                                table.ajax.reload();
-                            }
-                        });
+                            });
 
+                        },
                     },
-                }
+                    {
+                        text: `<span class="symbol-container position-relative">
+                                    <i class="bi-question-circle"></i>&nbsp; Help / Tutorial
+                                    <span class="badge bg-danger position-absolute top-0 start-100 translate-middle">New</span>
+                                </span>`
+                        , action: function(e, dt, node, config) {
+                            $('#tutorial-iframe').attr('src', 'https://www.youtube.com/embed/IPM2IeswWvk');
+                            $('#tutorialModal').modal('show');
+                        }
+                    }
+                ]
             });
 
             $("#damages-datatable").on('click', '.delete-btn', async function() {
