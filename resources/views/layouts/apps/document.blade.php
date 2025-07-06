@@ -12,7 +12,7 @@
     <li>
         <a href="{{ route('admin.apps.documents.index') }}">
             <div class="parent-icon"><i class="bi-credit-card text-success"></i></div>
-            <div class="menu-title">Documenrs</div>
+            <div class="menu-title">Documents</div>
         </a>
     </li>
     @endcan

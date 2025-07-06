@@ -350,7 +350,7 @@
             )
             <a href="{{ route('admin.apps.vehicles.index') }}" class="app-tile accent-black">
                 <i class="bi-bus-front" style="color: #000000"></i>
-                <p>Vehicle Mgt.</p>
+                <p>{{ setting('appName', 'vehicle', 'Vehicle Mgt.') }}</p>
             </a>
             @endif
 
@@ -417,7 +417,7 @@
             )
             <a href="{{ route('admin.apps.machineries.index') }}" class="app-tile accent-brown">
                 <i class="bi-building-gear" style="color: #d5641c"></i>
-                <p>Machinery Mgt.</p>
+                <p>{{ setting('appName', 'machinery', 'Machnery Mgt.') }}</p>
             </a>
             @endif
 
@@ -431,7 +431,7 @@
             )
             <a href="{{ route('admin.apps.dmis.index') }}" class="app-tile accent-red">
                 <i class="bi-cloud-drizzle" style="color: #ff0000"></i>
-                <p>Damage Mgt.</p>
+                <p>{{ setting('appName', 'dmis') }}</p>
             </a>
             @endif
             @if(

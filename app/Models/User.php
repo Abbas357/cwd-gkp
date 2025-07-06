@@ -371,7 +371,7 @@ class User extends Authenticatable implements HasMedia
             return User::whereHas('currentPosting')->get();
         }
         
-        return $this->getSubordinates();
+        return $this->getDirectSubordinates();
     }
 
     public function getDirectSubordinates()

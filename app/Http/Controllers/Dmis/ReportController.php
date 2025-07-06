@@ -38,7 +38,13 @@ class ReportController extends Controller
     {
         $this->authorize('viewMainReport', \App\Models\Damage::class);
 
-        $selectedUser = User::findOrFail($userId);
+        if (in_array(request()->user()->currentOffice->type, ['Regional', 'Divisional'])) {
+            $selectedUser = request()->user();
+        } elseif(request()->user()->currentOffice->type == 'District') {
+            $selectedUser = request()->user()->getDirectSupervisor();
+        } else {
+            $selectedUser = User::findOrFail($userId);
+        }
         
         $duration = request()->get('duration');
         $startDate = request()->get('start_date');

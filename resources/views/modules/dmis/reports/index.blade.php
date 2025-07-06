@@ -217,7 +217,7 @@
             <div class="col-md-12">
                 <form method="get" class="row" id="report-form">
 
-                    <div class="col-md-2 report-type-field">
+                    <div class="col report-type-field">
                         <label class="form-label" for="report_type">Report Type</label>
                         <select name="report_type" id="report_type" class="form-control" placeholder="Select report_type">
                             @can('viewMainReport', App\Models\Damage::class)
@@ -232,7 +232,7 @@
                         </select>
                     </div>
 
-                    <div class="col-md-2 type-field">
+                    <div class="col type-field">
                         <label class="form-label" for="type">Infrastructure Type</label>
                         <select name="type" id="type" class="form-control" placeholder="Select Type">
                             @foreach(setting('infrastructure_type', 'dmis', ['Road', 'Bridge', 'Culvert']) as $infrastructure_type)
@@ -243,12 +243,12 @@
                         </select>
                     </div>
 
-                    <div class="col-md-2 report-date-field">
+                    <div class="col report-date-field">
                         <label class="form-label" for="report_date">Report Date</label>
                         <input type="date" name="report_date" id="report_date" class="form-control" value="{{ request()->query('report_date') ?? now()->format('Y-m-d') }}">
                     </div>
 
-                    <div class="col-md-2 duration-field">
+                    <div class="col duration-field">
                         <label class="form-label" for="duration">Report Duration</label>
                         <select name="duration" id="duration" class="form-control" placeholder="Select Duration">
                             <option value="90">Last 90 days</option>
@@ -259,17 +259,17 @@
                         </select>
                     </div>
                 
-                    <div class="col-md-2 start-date-field">
+                    <div class="col start-date-field">
                         <label class="form-label" for="start_date">Start Date</label>
                         <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request()->query('start_date') ?? now()->subDays(30)->format('Y-m-d') }}">
                     </div>
                 
-                    <div class="col-md-2 end-date-field">
+                    <div class="col end-date-field">
                         <label class="form-label" for="end_date">End Date</label>
                         <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request()->query('end_date') ?? now()->format('Y-m-d') }}">
                     </div>
 
-                    <div class="col-md-6 load-users-field">
+                    <div class="col-md-3 load-users-field">
                         <label class="form-label" for="load-users">Officer</label>
                         <select name="user_id" id="load-users" class="form-select" data-placeholder="Select Officer">
                             <option value="">Select Officer</option>
