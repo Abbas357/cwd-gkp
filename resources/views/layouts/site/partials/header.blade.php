@@ -288,6 +288,9 @@
                                 <li role="none" data-tier-id="8">
                                     <a href="{{ route('pages.show', 'contingency_plan') }}" role="menuitem" class="cw-menuItem" data-tier-id="8" tabindex="0">CONTIGENCY PLAN</a>
                                 </li>
+                                <li role="none" data-tier-id="8">
+                                    <a href="{{ route(setting('activity', 'dmis') . '.index') }}" role="menuitem" class="cw-menuItem" data-tier-id="8" tabindex="0">{{ setting('activity', 'dmis') . ' ' . setting('session','dmis') }}</a>
+                                </li>
                             </ul>
                         </li>
                         <li role="menuitem" aria-hidden="true" class="divider cw-onlyMobileTab"></li>

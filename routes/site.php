@@ -10,6 +10,7 @@ use App\Http\Controllers\Site\PageController;
 use App\Http\Controllers\Site\UserController;
 use App\Http\Controllers\Site\LearnController;
 use App\Http\Controllers\Site\StoryController;
+use App\Http\Controllers\Site\DamageController;
 use App\Http\Controllers\Site\EventsController;
 use App\Http\Controllers\Site\SchemeController;
 use App\Http\Controllers\Site\SearchController;
@@ -288,3 +289,9 @@ Route::prefix('learn')->as('learn.')->group(function () {
     Route::get('/kpdws', [LearnController::class, 'kpdws'])->name('kpdws');
 });
 
+$activity = setting('activity', 'dmis');
+Route::prefix($activity)->as($activity.'.')->group(function () {
+    $session = setting('session', 'dmis');
+    Route::get("/{$session}", [DamageController::class, 'index'])->name('index');
+    Route::get("/{$session}/{district}", [DamageController::class, 'districtDetail'])->name('detail.district');
+});
