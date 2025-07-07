@@ -20,8 +20,8 @@ class MachineryController extends Controller
         $machines = Machinery::query();
 
         $relationMappings = [
-            'added_by' => 'user.currentPosting.designation.name',
-            'assigned_to' => 'allocation.user.currentPosting.office.name'
+            'added_by' => 'user.currentDesignation.name',
+            'office_name' => 'allocation.office.name',
         ];
 
         if ($request->ajax()) {
