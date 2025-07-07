@@ -216,10 +216,12 @@ $canUpload = auth()->user()->can('uploadFile', $damage);
     $(document).ready(function() {
 
         $('#attachment').on('change', async function(e) {
+            showNotification('Uploading file, please wait...', 'info', {timer: 5000});
             const file = e.target.files[0];
             if (!file) return;
 
             const collectionName = $('#collectionSelector').val();
+            collectionName ? collectionName : showNotification('Please select before or after', 'warning');
 
             const formData = new FormData();
             formData.append('attachment', file);

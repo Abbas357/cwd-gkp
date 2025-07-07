@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table id="generated-report" class="table table-bordered table-hover">
+    <table id="generated-report" class="table table-bordered table-hover generated-report">
         <caption class="report-metadata">
             <div>
                 <h5>
@@ -16,7 +16,7 @@
                 </h5>
             </div>
         </caption>
-        <thead>`
+        <thead>
             <tr class="bg-success text-white text-uppercase fw-bold">
                 <th scope="col" class="text-center align-middle">Rank</th>
                 <th scope="col" class="text-center align-middle">District</th>

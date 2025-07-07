@@ -1,4 +1,4 @@
-<table id="generated-report" class="table table-bordered">
+<table id="generated-report" class="table table-bordered generated-report">
     <caption class="report-metadata">
         <div>
             <h5>

@@ -196,6 +196,24 @@
             border-radius: 0.25rem;
         }
 
+        .generated-report {
+            display: block;
+            page-break-inside: avoid;
+            margin-bottom: 1rem;
+        }
+
+        .duration-field { position: relative; }
+
+        .duration-field .form-switch {
+            position: absolute;
+            top: 0.1rem;
+            right: .7rem; 
+        }
+
+        .duration-field .form-switch {
+            width: auto;
+        }
+
     </style>
     @endpush
 
@@ -235,10 +253,12 @@
                     <div class="col type-field">
                         <label class="form-label" for="type">Infrastructure Type</label>
                         <select name="type" id="type" class="form-control" placeholder="Select Type">
+                            <option value="All" {{ request()->query('type') === 'All' ? 'selected' : '' }}>All</option>
                             @foreach(setting('infrastructure_type', 'dmis', ['Road', 'Bridge', 'Culvert']) as $infrastructure_type)
-                            <option value="{{ $infrastructure_type }}" {{ request()->query('type') == $infrastructure_type ? 'selected' : '' }}>
-                                {{ $infrastructure_type }}
-                            </option>
+                                <option value="{{ $infrastructure_type }}"
+                                    {{ request()->query('type', 'Road') == $infrastructure_type ? 'selected' : '' }}>
+                                    {{ $infrastructure_type }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -249,15 +269,23 @@
                     </div>
 
                     <div class="col duration-field">
-                        <label class="form-label" for="duration">Report Duration</label>
+                        <label class="form-label" for="duration">
+                          Report Duration
+                        </label>
+                      
+                        <span class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="date_type" value="created_at" id="date_type" />
+                            <label class="form-check-label mb-0" for="date_type">Created</label>
+                        </span>
+                      
                         <select name="duration" id="duration" class="form-control" placeholder="Select Duration">
-                            <option value="90">Last 90 days</option>
-                            <option value="45">Last 45 days</option>
-                            <option value="30" selected>Last 30 days</option>
-                            <option value="15">Last 15 days</option>
-                            <option value="Custom">Custom</option>
+                          <option value="90">Last 90 days</option>
+                          <option value="45">Last 45 days</option>
+                          <option value="30" selected>Last 30 days</option>
+                          <option value="15">Last 15 days</option>
+                          <option value="Custom">Custom</option>
                         </select>
-                    </div>
+                      </div>
                 
                     <div class="col start-date-field">
                         <label class="form-label" for="start_date">Start Date</label>
@@ -341,7 +369,6 @@
         toggleFields();
 
         $(document).ready(function() {
-            loadMainReport();
 
             $('#generate-report').on('click', function(e) {
                 e.preventDefault();
@@ -365,6 +392,7 @@
                     const reportDate = $('#report_date').val();
                     const startDate = $('#start_date').val();
                     const endDate = $('#end_date').val();
+                    const dateType = $('#date_type').is(':checked') ? 'created_at' : 'report_date';
 
                     const url = "{{ route('admin.apps.dmis.reports.loadReport') }}";
 
@@ -382,7 +410,8 @@
                             'duration': duration,
                             'report_date': reportDate,
                             'start_date': startDate,
-                            'end_date': endDate
+                            'end_date': endDate,
+                            'date_type': dateType
                         })
                     });
 
@@ -422,7 +451,7 @@
             );
 
             $('#print-report').on('click', () => {
-                $("#generated-report").printThis({
+                $(".generated-report").printThis({
                     beforePrint() {
                         document.querySelector('.page-loader').classList.remove('hidden');
                     }

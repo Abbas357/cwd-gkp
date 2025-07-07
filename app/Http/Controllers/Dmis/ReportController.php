@@ -21,6 +21,8 @@ class ReportController extends Controller
     }
 
     public function loadReport(Request $request) {
+        set_time_limit(300);
+        ini_set('max_execution_time', 300);
         $report_type = $request->get('report_type') ?? 'Summary';
         $type = $request->get('type') ?? 'Road';
         $userId = $request->get('user_id') ?? 4;
@@ -49,6 +51,7 @@ class ReportController extends Controller
         $duration = request()->get('duration');
         $startDate = request()->get('start_date');
         $endDate = request()->get('end_date');
+        $dateType = request()->get('date_type', 'report_date');
         
         if ($duration && $duration !== 'Custom') {
             $endDate = now()->format('Y-m-d');
@@ -57,7 +60,7 @@ class ReportController extends Controller
             $startDate = $startDate ?: now()->subDays(30)->format('Y-m-d');
             $endDate = $endDate ?: now()->format('Y-m-d');
         }
-         
+        
         $startDate = Carbon::parse($startDate)->startOfDay();
         $endDate = Carbon::parse($endDate)->endOfDay();
 
@@ -84,6 +87,60 @@ class ReportController extends Controller
             ]);
         }
 
+        // Handle "All" type by generating reports for each infrastructure type
+        if ($type === 'All') {
+            $infrastructureTypes = setting('infrastructure_type', 'dmis', ['Road', 'Bridge', 'Culvert']);
+            $allReportsHtml = '';
+            
+            foreach ($infrastructureTypes as $infraType) {
+                $reportData = $this->generateReportForType($infraType, $selectedUser, $startDate, $endDate, $officerDistricts, $dateType);
+                
+                if ($reportData['subordinatesWithDistricts']->isNotEmpty()) {
+                    $html = view('modules.dmis.reports.partials.summary', [
+                        'subordinatesWithDistricts' => $reportData['subordinatesWithDistricts'],
+                        'total' => $reportData['total'],
+                        'subordinateDesignation' => $reportData['subordinateDesignation'],
+                        'selectedUser' => $selectedUser,
+                        'type' => $infraType,
+                        'startDate' => $startDate,
+                        'endDate' => $endDate
+                    ])->render();
+                    
+                    $allReportsHtml .= $html . '<br><hr />';
+                }
+            }
+            
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'result' => $allReportsHtml ?: '<div class="alert alert-info text-center"><i class="bi-info-circle me-2"></i>No damages found for any infrastructure type.</div>',
+                ],
+            ]);
+        }
+
+        // Original logic for single infrastructure type
+        $reportData = $this->generateReportForType($type, $selectedUser, $startDate, $endDate, $officerDistricts, $dateType);
+
+        $html = view('modules.dmis.reports.partials.summary', [
+            'subordinatesWithDistricts' => $reportData['subordinatesWithDistricts'],
+            'total' => $reportData['total'],
+            'subordinateDesignation' => $reportData['subordinateDesignation'],
+            'selectedUser' => $selectedUser,
+            'type' => $type,
+            'startDate' => $startDate,
+            'endDate' => $endDate
+        ])->render();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
+    }
+
+    private function generateReportForType($type, $selectedUser, $startDate, $endDate, $officerDistricts, $dateType)
+    {
         $directSubordinates = $selectedUser->getDirectSubordinates();
 
         $totalDamagedInfrastructureCount = 0;
@@ -129,7 +186,7 @@ class ReportController extends Controller
                 
                 $damageQuery = Damage::whereIn('infrastructure_id', $infraIds)
                     ->whereIn('posting_id', $teamPostingIds)
-                    ->whereBetween('created_at', [$startDate, $endDate]);
+                    ->whereBetween($dateType, [$startDate, $endDate]);
 
                 $district->damaged_infrastructure_count = $damageQuery->clone()->distinct('infrastructure_id')
                     ->count('infrastructure_id');
@@ -191,22 +248,11 @@ class ReportController extends Controller
             $subordinateDesignation = $directSubordinates->first()->currentDesignation->name;
         }
 
-        $html = view('modules.dmis.reports.partials.summary', compact(
-            'subordinatesWithDistricts',
-            'total',
-            'subordinateDesignation',
-            'selectedUser',
-            'type',
-            'startDate',
-            'endDate'
-        ))->render();
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'result' => $html,
-            ],
-        ]);
+        return [
+            'subordinatesWithDistricts' => $subordinatesWithDistricts,
+            'total' => $total,
+            'subordinateDesignation' => $subordinateDesignation
+        ];
     }
 
     public function dailySituation($type, $reportDate, $userId)
@@ -217,25 +263,66 @@ class ReportController extends Controller
         $officerDistricts = $selectedUser->districts();
 
         if ($officerDistricts->isEmpty()) {
-            return view('modules.dmis.reports.daily-situation', [
-                'subordinatesWithDistricts' => collect(),
-                'total' => [
-                    'totalDamagedInfrastructureCount' => 0,
-                    'totalDamageCount' => 0,
-                    'totalDamagedInfrastructureSum' => 0,
-                    'totalDamagedInfrastructureTotalCount' => 0,
-                    'totalFullyRestored' => 0,
-                    'totalPartiallyRestored' => 0,
-                    'totalNotRestored' => 0,
-                    'totalRestorationCost' => 0,
-                    'totalRehabilitationCost' => 0,
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'result' => '<div class="alert alert-info text-center"><i class="bi-info-circle me-2"></i>No districts assigned to this officer.</div>',
                 ],
-                'subordinateDesignation' => 'Officer',
-                'selectedUser' => $selectedUser,
-                'reportDate' => $reportDate
             ]);
         }
 
+        // Handle "All" type by generating reports for each infrastructure type
+        if ($type === 'All') {
+            $infrastructureTypes = setting('infrastructure_type', 'dmis', ['Road', 'Bridge', 'Culvert']);
+            $allReportsHtml = '';
+            
+            foreach ($infrastructureTypes as $infraType) {
+                $reportData = $this->generateDailySituationForType($infraType, $reportDate, $selectedUser, $officerDistricts);
+                
+                if ($reportData['subordinatesWithDistricts']->isNotEmpty()) {
+                    $html = view('modules.dmis.reports.partials.daily-situation', [
+                        'subordinatesWithDistricts' => $reportData['subordinatesWithDistricts'],
+                        'total' => $reportData['total'],
+                        'subordinateDesignation' => $reportData['subordinateDesignation'],
+                        'selectedUser' => $selectedUser,
+                        'reportDate' => $reportDate,
+                        'type' => $infraType
+                    ])->render();
+                    
+                    $allReportsHtml .= $html . '<br><hr />';
+                }
+            }
+            
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'result' => $allReportsHtml ?: '<div class="alert alert-info text-center"><i class="bi-info-circle me-2"></i>No damages found for any infrastructure type on this date.</div>',
+                ],
+            ]);
+        }
+
+        // Original logic for single infrastructure type
+        $reportData = $this->generateDailySituationForType($type, $reportDate, $selectedUser, $officerDistricts);
+
+        $html = view('modules.dmis.reports.partials.daily-situation', [
+            'subordinatesWithDistricts' => $reportData['subordinatesWithDistricts'],
+            'total' => $reportData['total'],
+            'subordinateDesignation' => $reportData['subordinateDesignation'],
+            'selectedUser' => $selectedUser,
+            'reportDate' => $reportDate,
+            'type' => $type
+        ])->render();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
+    }
+
+    private function generateDailySituationForType($type, $reportDate, $selectedUser, $officerDistricts)
+    {
         $directSubordinates = $selectedUser->getDirectSubordinates();
 
         $totalDamagedInfrastructureCount = 0;
@@ -353,21 +440,11 @@ class ReportController extends Controller
             $subordinateDesignation = $directSubordinates->first()->currentDesignation->name;
         }
 
-        $html = view('modules.dmis.reports.partials.daily-situation', compact(
-            'subordinatesWithDistricts',
-            'total',
-            'subordinateDesignation',
-            'selectedUser',
-            'reportDate',
-            'type'
-        ))->render();
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'result' => $html,
-            ],
-        ]);
+        return [
+            'subordinatesWithDistricts' => $subordinatesWithDistricts,
+            'total' => $total,
+            'subordinateDesignation' => $subordinateDesignation
+        ];
     }
 
     public function districtWise($type)
@@ -377,6 +454,7 @@ class ReportController extends Controller
         $duration = request()->get('duration');
         $startDate = request()->get('start_date');
         $endDate = request()->get('end_date');
+        $dateType = request()->get('date_type', 'report_date');
         
         if ($duration && $duration !== 'Custom') {
             $endDate = now()->format('Y-m-d');
@@ -391,13 +469,61 @@ class ReportController extends Controller
 
         $districts = request()->user()->districts();
 
+        // Handle "All" type by generating reports for each infrastructure type
+        if ($type === 'All') {
+            $infrastructureTypes = setting('infrastructure_type', 'dmis', ['Road', 'Bridge', 'Culvert']);
+            $allReportsHtml = '';
+            
+            foreach ($infrastructureTypes as $infraType) {
+                $reportData = $this->generateDistrictWiseForType($infraType, $startDate, $endDate, $districts, $dateType);
+                
+                if ($reportData['districtStats']->isNotEmpty()) {
+                    $html = view('modules.dmis.reports.partials.district-wise', [
+                        'districtStats' => $reportData['districtStats'],
+                        'total' => $reportData['total'],
+                        'type' => $infraType,
+                        'startDate' => $startDate,
+                        'endDate' => $endDate
+                    ])->render();
+                    
+                    $allReportsHtml .= $html . '<br><hr />';
+                }
+            }
+            
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'result' => $allReportsHtml ?: '<div class="alert alert-info text-center"><i class="bi-info-circle me-2"></i>No damages found for any infrastructure type in the selected period.</div>',
+                ],
+            ]);
+        }
+
+        // Original logic for single infrastructure type
+        $reportData = $this->generateDistrictWiseForType($type, $startDate, $endDate, $districts, $dateType);
+
+        $html = view('modules.dmis.reports.partials.district-wise', [
+            'districtStats' => $reportData['districtStats'],
+            'total' => $reportData['total'],
+            'type' => $type,
+            'startDate' => $startDate,
+            'endDate' => $endDate
+        ])->render();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
+    }
+
+    private function generateDistrictWiseForType($type, $startDate, $endDate, $districts, $dateType)
+    {
         $districtStats = collect();
 
         foreach ($districts as $district) {
             $infrastructures = $district->infrastructures()
-                ->when($type !== 'All', function ($query) use ($type) {
-                    return $query->where('type', $type);
-                })
+                ->where('type', $type)
                 ->get();
             
             $infrastructureIds = $infrastructures->pluck('id')->toArray();
@@ -407,7 +533,7 @@ class ReportController extends Controller
             }
             
             $damageQuery = Damage::whereIn('infrastructure_id', $infrastructureIds)
-                ->whereBetween('created_at', [$startDate, $endDate]); // Add date range filter
+                ->whereBetween($dateType, [$startDate, $endDate]); // Add date range filter
             
             $damages = $damageQuery->get();
 
@@ -446,20 +572,10 @@ class ReportController extends Controller
             'total_cost' => $districtStats->sum('total_cost'),
         ];
 
-        $html = view('modules.dmis.reports.partials.district-wise', compact(
-            'districtStats', 
-            'total', 
-            'type',
-            'startDate',
-            'endDate'
-        ))->render();
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'result' => $html,
-            ],
-        ]);
+        return [
+            'districtStats' => $districtStats,
+            'total' => $total
+        ];
     }
 
     public function districtDetailsReport(Request $request, District $district)

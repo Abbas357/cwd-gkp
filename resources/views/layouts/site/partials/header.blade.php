@@ -267,6 +267,15 @@
                                 <span>CONTACTS</span>
                             </a>
                         </li>
+                        <li role="none" style="position:relative" class="cw-top-menu {{ request()->routeIs('contacts.index') ? 'uActived' : '' }}" data-tier-id="71">
+                            <a href="{{ route(setting('activity', 'dmis') . '.index') }}" data-tier-id="71" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
+                                <span style="white-space: nowrap">
+                                    {{ strtoupper(setting('activity', 'dmis')) . ' ' . setting('session','dmis') }}
+                                    <span style="position:absolute; top:-5px; z-index:9999; right:0;background: red; color: white; font-size: 9px; padding: 0px 5px; border-radius: 5px; ">NEW</span>
+                                </span>
+                            </a>
+                        </li>
+                        
                         <li role="none" class="cw-top-menu child-nav" data-tier-id="8">
                             <button role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>MORE</span>
@@ -287,9 +296,6 @@
                                 </li>
                                 <li role="none" data-tier-id="8">
                                     <a href="{{ route('pages.show', 'contingency_plan') }}" role="menuitem" class="cw-menuItem" data-tier-id="8" tabindex="0">CONTIGENCY PLAN</a>
-                                </li>
-                                <li role="none" data-tier-id="8">
-                                    <a href="{{ route(setting('activity', 'dmis') . '.index') }}" role="menuitem" class="cw-menuItem" data-tier-id="8" tabindex="0">{{ setting('activity', 'dmis') . ' ' . setting('session','dmis') }}</a>
                                 </li>
                             </ul>
                         </li>

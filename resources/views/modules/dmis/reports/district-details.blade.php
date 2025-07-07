@@ -589,6 +589,7 @@
                                         <th>Reported Date</th>
                                         <th>Restoration Cost</th>
                                         <th>Rehabilitation Cost</th>
+                                        <th>Reported By</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -608,15 +609,22 @@
                                             <td>{{ $damage->created_at->format('M d, Y') }}</td>
                                             <td>{{ $damage->approximate_restoration_cost }} M</td>
                                             <td>{{ $damage->approximate_rehabilitation_cost }} M</td>
+                                            <td>
+                                                @if ($damage->posting && $damage->posting->user)
+                                                    <small class="text-muted">{{ $damage->posting->office->name ?? 'N/A' }}</small>
+                                                @else
+                                                    N/A
+                                                @endif
+                                            </td>
                                         </tr>
 
-                                        <!-- Description Row (if exists) -->
-                                        @if ($damage->description)
+                                        <!-- Remarks Row (if exists) -->
+                                        @if ($damage->remarks)
                                             <tr>
                                                 <td colspan="7">
                                                     <div class="p-3 bg-light rounded">
-                                                        <strong><i class="bi-card-text me-2"></i>Description:</strong>
-                                                        {{ $damage->description }}
+                                                        <strong><i class="bi-card-text me-2"></i>remarks:</strong>
+                                                        {{ $damage->remarks }}
                                                     </div>
                                                 </td>
                                             </tr>

@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table id="generated-report" class="table table-bordered">
+    <table id="generated-report" class="table table-bordered generated-report">
         <caption class="report-metadata">
             <div>
                 <h5><strong>Daily Situation Report </strong> on <strong class="px-2 py-1 bg-light shadow-sm rounded border">{{ $type ?? "Road" }}s</strong> dated <strong>{{ \Carbon\Carbon::parse($reportDate)->format('F d, Y (l)') }}</strong></h5>
