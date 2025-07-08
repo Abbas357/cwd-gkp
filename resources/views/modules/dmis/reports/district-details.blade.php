@@ -3,6 +3,9 @@
         <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
         <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
         <style>
+            #district-report {
+                font-family: Tahoma, Courier, monospace;
+            }
             .damage-card {
                 border: 1px solid #dee2e6;
                 border-radius: 8px;
@@ -623,8 +626,8 @@
                                             <tr>
                                                 <td colspan="7">
                                                     <div class="p-3 bg-light rounded">
-                                                        <strong><i class="bi-card-text me-2"></i>remarks:</strong>
-                                                        {{ $damage->remarks }}
+                                                        <strong><i class="bi-card-text me-2"></i>Remarks:</strong>
+                                                        {!! $damage->remarks !!}
                                                     </div>
                                                 </td>
                                             </tr>

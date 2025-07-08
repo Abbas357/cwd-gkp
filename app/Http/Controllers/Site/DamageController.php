@@ -20,16 +20,22 @@ class DamageController extends Controller
         $startDate = request()->get('start_date');
         $endDate = request()->get('end_date');
         
-        if ($duration && $duration !== 'Custom') {
-            $endDate = now()->format('Y-m-d');
-            $startDate = now()->subDays((int)$duration)->format('Y-m-d');
-        } else {
-            $startDate = $startDate ?: now()->subDays(30)->format('Y-m-d');
-            $endDate = $endDate ?: now()->format('Y-m-d');
-        }
+        // Initialize date variables as null
+        $parsedStartDate = null;
+        $parsedEndDate = null;
         
-        $startDate = Carbon::parse($startDate)->startOfDay();
-        $endDate = Carbon::parse($endDate)->endOfDay();
+        // Only process dates if duration is provided
+        if (!empty($duration)) {
+            if ($duration !== 'Custom') {
+                $parsedEndDate = now()->endOfDay();
+                $parsedStartDate = now()->subDays((int)$duration)->startOfDay();
+            } else {
+                // Custom duration - use provided dates or defaults
+                $parsedStartDate = $startDate ? Carbon::parse($startDate)->startOfDay() : now()->subDays(30)->startOfDay();
+                $parsedEndDate = $endDate ? Carbon::parse($endDate)->endOfDay() : now()->endOfDay();
+            }
+        }
+        // If no duration is provided, dates remain null and no date filtering will be applied
 
         $districts = District::all();
 
@@ -48,8 +54,13 @@ class DamageController extends Controller
                 continue;
             }
             
-            $damageQuery = Damage::whereIn('infrastructure_id', $infrastructureIds)
-                ->whereBetween('created_at', [$startDate, $endDate]); // Add date range filter
+            // Build the damage query
+            $damageQuery = Damage::whereIn('infrastructure_id', $infrastructureIds);
+            
+            // Only apply date filtering if both startDate and endDate are provided
+            if ($parsedStartDate && $parsedEndDate) {
+                $damageQuery->whereBetween('report_date', [$parsedStartDate, $parsedEndDate]);
+            }
             
             $damages = $damageQuery->get();
 
@@ -92,15 +103,35 @@ class DamageController extends Controller
             'districtStats', 
             'total', 
             'type',
-            'startDate',
-            'endDate'
+            'parsedStartDate',
+            'parsedEndDate'
         ));
     }
 
     public function districtDetail(Request $request, $name)
     {
-
         $type = $request->get('type') ?? 'Road';
+        $dateType = $request->get('date_type', 'created_at');
+        
+        $duration = request()->get('duration');
+        $startDate = request()->get('start_date');
+        $endDate = request()->get('end_date');
+        
+        // Initialize date variables as null
+        $parsedStartDate = null;
+        $parsedEndDate = null;
+        
+        // Only process dates if duration is provided
+        if (!empty($duration)) {
+            if ($duration !== 'Custom') {
+                $parsedEndDate = now()->endOfDay();
+                $parsedStartDate = now()->subDays((int)$duration)->startOfDay();
+            } else {
+                // Custom duration - use provided dates or defaults
+                $parsedStartDate = $startDate ? Carbon::parse($startDate)->startOfDay() : now()->subDays(30)->startOfDay();
+                $parsedEndDate = $endDate ? Carbon::parse($endDate)->endOfDay() : now()->endOfDay();
+            }
+        }
 
         $district = District::where('name', $name)->firstOrFail();
         $infrastructures = $district->infrastructures()
@@ -111,8 +142,15 @@ class DamageController extends Controller
 
         $infrastructureIds = $infrastructures->pluck('id')->toArray();
 
-        $damages = Damage::whereIn('infrastructure_id', $infrastructureIds)
-            ->with([
+        // Build the damage query
+        $damageQuery = Damage::whereIn('infrastructure_id', $infrastructureIds);
+        
+        // Only apply date filtering if both startDate and endDate are provided
+        if ($parsedStartDate && $parsedEndDate) {
+            $damageQuery->whereBetween('report_date', [$parsedStartDate, $parsedEndDate]);
+        }
+        
+        $damages = $damageQuery->with([
                 'infrastructure',
                 'posting.user.currentDesignation',
                 'posting.office',
@@ -160,7 +198,9 @@ class DamageController extends Controller
             'damagesByInfrastructure',
             'stats',
             'reportingOfficers',
-            'type'
+            'type',
+            'parsedStartDate',
+            'parsedEndDate'
         ));
     }
 }

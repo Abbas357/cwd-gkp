@@ -6,8 +6,12 @@
         <li class="breadcrumb-item active">Damages</li>
     </x-slot>
 
-    @push('styles')
+    @push('style')
         <style>
+            .district-wise {
+                font-family: Tahoma, Courier, monospace;
+            }
+            
             .table> :not(caption)>*>* {
                 vertical-align: middle;
             }
@@ -49,11 +53,12 @@
             }
 
             .filter-section {
-                background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-                padding: 2rem;
-                border-radius: 0.5rem;
+                background: #F5F5F5;
+                padding: 1rem;
+                border-radius: 0.3rem;
                 margin-bottom: 1.5rem;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                border: 1px solid #ccc
             }
 
             @media print {
@@ -140,13 +145,13 @@
         </style>
     @endpush
 
-    <div class="container mt-4">
+    <div class="container district-wise mt-4">
         <div class="col-md-12">
             <div class="filter-section mb-3">
                 @php
                     $activity = setting('activity', 'dmis');
                 @endphp
-                <form method="GET" action="{{ route($activity . '.index') }}" class="row g-3" id="filterForm">
+                <form method="GET" action="{{ route($activity . '.index') }}" class="row g-3 p-2" id="filterForm">
                     <div class="col-md-3">
                         <label class="form-label" for="type">Infrastructure Type</label>
                         <select name="type" id="type" class="form-control">
@@ -162,12 +167,13 @@
                     <div class="col-md-3">
                         <label class="form-label" for="duration">Report Duration</label>
                         <select name="duration" id="duration" class="form-control">
+                            <option value="">Select Duration</option>
                             <option value="90" {{ request()->query('duration') == '90' ? 'selected' : '' }}>Last 90
                                 days</option>
                             <option value="45" {{ request()->query('duration') == '45' ? 'selected' : '' }}>Last 45
                                 days</option>
                             <option value="30"
-                                {{ request()->query('duration') == '30' || !request()->query('duration') ? 'selected' : '' }}>
+                                {{ request()->query('duration') == '30' ? 'selected' : '' }}>
                                 Last 30 days</option>
                             <option value="15" {{ request()->query('duration') == '15' ? 'selected' : '' }}>Last 15
                                 days</option>
@@ -179,13 +185,13 @@
                     <div class="col-md-3 date-fields" id="start-date-field">
                         <label class="form-label" for="start_date">Start Date</label>
                         <input type="date" name="start_date" id="start_date" class="form-control"
-                            value="{{ request()->query('start_date') ?? now()->subDays(30)->format('Y-m-d') }}">
+                            value="{{ request()->query('start_date') }}">
                     </div>
 
                     <div class="col-md-3 date-fields" id="end-date-field">
                         <label class="form-label" for="end_date">End Date</label>
                         <input type="date" name="end_date" id="end_date" class="form-control"
-                            value="{{ request()->query('end_date') ?? now()->format('Y-m-d') }}">
+                            value="{{ request()->query('end_date') }}">
                     </div>
 
                     <div class="col-12">
@@ -194,12 +200,12 @@
                                 <button type="submit" class="cw-btn success">
                                     <i class="bi-filter me-2"></i> FILTER
                                 </button>
-                                <a href="{{ route($activity . '.index') }}" class="cw-btn light ms-3">
-                                    <i class="bi-arrow-counterclockwise me-1"></i> RESET
+                                <a href="{{ route($activity . '.index') }}" class="cw-btn bg-secondary ms-3">
+                                    <i class="bi-arrow-counterclockwise me-1"></i>
                                 </a>
                             </div>
                             <div>
-                                <button type="button" id="print-report" class="cw-btn dark">
+                                <button type="button" id="print-report" class="cw-btn bg-dark">
                                     <i class="bi-printer me-1"></i> PRINT
                                 </button>
                             </div>
@@ -217,15 +223,15 @@
                             class="px-2 py-1 bg-light shadow-sm rounded border text-dark">{{ $type ?? 'Road' }}s</span>
                         Damage Report
                     </h5>
-                    @if (isset($startDate) && isset($endDate))
-                        @if ($startDate->format('Y-m-d') === $endDate->format('Y-m-d'))
-                            <div class="text-dark mt-1">Date: {{ $startDate->format('F d, Y (l)') }}</div>
+                    @if (isset($parsedStartDate) && isset($parsedEndDate))
+                        @if ($parsedStartDate->format('Y-m-d') === $parsedEndDate->format('Y-m-d'))
+                            <div class="text-dark mt-1">Date: {{ $parsedStartDate->format('F d, Y (l)') }}</div>
                         @else
-                            <div class="text-dark mt-1">From {{ $startDate->format('F d, Y') }} to
-                                {{ $endDate->format('F d, Y') }}</div>
+                            <div class="text-dark mt-1">From {{ $parsedStartDate->format('F d, Y') }} to
+                                {{ $parsedEndDate->format('F d, Y') }}</div>
                         @endif
                     @else
-                        <div class="text-dark mt-1">Generated: {{ now()->format('F d, Y (l)') }}</div>
+                        <div class="text-dark mt-1">Dated: {{ now()->format('F d, Y (l)') }}</div>
                     @endif
                 </div>
                 <table class="table table-bordered table-hover">
@@ -243,7 +249,7 @@
                             <th scope="col" class="text-center align-middle">Restoration Cost(M)</th>
                             <th scope="col" class="text-center align-middle">Rehabilitation Cost(M)</th>
                             <th scope="col" class="text-center align-middle">Total Cost(M)</th>
-                            <th scope="col" class="text-center align-middle no-print">View</th>
+                            <th scope="col" class="text-center align-middle no-print px-3">View</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -281,10 +287,18 @@
                                 <td class="text-center">{{ number_format($stats['rehabilitation_cost'], 2) }}</td>
                                 <td class="text-center fw-bold">{{ number_format($stats['total_cost'], 2) }}</td>
                                 <td class="text-center no-print">
-                                    <div class="action-buttons">
-                                        <a href="{{ route($activity . '.detail.district', ['district' => $stats['district']->name]) }}?type={{ $type }}"
-                                            class="btn btn-white border btn-detail" title="View Details">
-                                            <i class="bi-eye-fill"></i>
+                                    <div class="action-buttons d-flex justify-content-center align-items-center">
+                                        @php
+                                            $detailUrl = route($activity . '.detail.district', ['district' => $stats['district']->name]);
+                                            $queryParams = [];
+                                            if (request()->query('type')) $queryParams['type'] = request()->query('type');
+                                            if (request()->query('duration')) $queryParams['duration'] = request()->query('duration');
+                                            if (request()->query('start_date')) $queryParams['start_date'] = request()->query('start_date');
+                                            if (request()->query('end_date')) $queryParams['end_date'] = request()->query('end_date');
+                                            $detailUrl .= '?' . http_build_query($queryParams);
+                                        @endphp
+                                        <a href="{{ $detailUrl }}" class="btn btn-white border-secondary btn-detail" title="View Details">
+                                            <i class="bi-eye-fill fs-5"></i>
                                         </a>
                                     </div>
                                 </td>
@@ -307,13 +321,11 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="13" class="text-center pt-3">
-                                <small class="text-muted">
+                            <td colspan="13" class="text-center">
+                                <small class="text-muted" style="font-size: .7rem;">
                                     This is a system-generated report from Damage Management Information System (DMIS),
-                                    C&W
-                                    Department. All efforts have been made to ensure accuracy; however, errors and
-                                    omissions are
-                                    excepted.
+                                    C&W Department. All efforts have been made to ensure accuracy; however, errors and
+                                    omissions are excepted.
                                 </small>
                             </td>
                         </tr>
@@ -324,7 +336,11 @@
             @if ($districtStats->isEmpty())
                 <div class="alert alert-info text-center">
                     <i class="bi-info-circle me-2"></i>
-                    No data available for the selected criteria.
+                    @if (request()->query('duration'))
+                        No data available for the selected criteria and time period.
+                    @else
+                        No damage data available in the system.
+                    @endif
                 </div>
             @endif
         </div>
