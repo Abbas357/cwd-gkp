@@ -82,11 +82,11 @@
                             <td class="text-center fw-medium officer-cell" rowspan="{{ $districtCount }}">
                                 <div class="officer-office">{{ $subordinate?->currentOffice?->name ?? 'No Office' }}
                                 </div>
-                                <div class="officer-name">({{ $subordinate->name }})</div>
+                                <div class="officer-name" style="font-size:.7rem">({{ $subordinate->name }})</div>
                             </td>
                         @endif
                     @endif
-                    <td class="text-center fw-medium">{{ $district->name }}</td>
+                    <td class="text-center fw-medium" style="white-space: nowrap">{{ $district->name }}</td>
                     <td class="text-center fw-medium"><a
                             href="{{ route('admin.apps.dmis.reports.district-details', ['district' => $district->id, 'type' => $type ?? 'Road']) }}">{{ $district->damaged_infrastructure_count }}</a>
                     </td>

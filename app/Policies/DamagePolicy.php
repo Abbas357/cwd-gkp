@@ -30,7 +30,7 @@ class DamagePolicy
 
     public function delete(User $user, Damage $damage): bool
     {
-        return $user->can('delete damage');
+        return $user->currentPosting->id === $damage->posting_id || $user->can('delete damage');
     }
 
     public function viewMainReport(User $user): bool

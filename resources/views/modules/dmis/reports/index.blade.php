@@ -3,6 +3,9 @@
     <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
     <style>
+        .report-container {
+            font-family: Tahoma, Courier, monospace;
+        }
         .table > :not(caption) > * > * {
             vertical-align: middle;
         }
@@ -222,10 +225,10 @@
     </x-slot>
     
 
-    <div class="container py-2 px-1 rounded">
-        <div class="report-header">
+    <div class="container report-container py-2 px-1 rounded">
+        <div class="report-header border-bottom">
             <div class="report-title">
-                <h4 class="fw-bold border-bottom pb-2">
+                <h4 class="fw-bold pb-2">
                     DAMAGE ASSESSMENT REPORT
                 </h4>
             </div>
@@ -233,7 +236,7 @@
 
         <div class="row mb-4 no-print">
             <div class="col-md-12">
-                <form method="get" class="row" id="report-form">
+                <form method="get" class="row border-bottom" id="report-form">
 
                     <div class="col report-type-field">
                         <label class="form-label" for="report_type">Report Type</label>
@@ -330,9 +333,9 @@
         </div>
 
         <div class="table-responsive" id="main-report">
-            <div class="alert alert-info" role="alert">
+            <div class="alert alert-info d-flex align-items-center" role="alert">
                 <i class="bi-info-circle me-2"></i>
-                Please select your criteria and click "Generate Report" to view the damage assessment data.
+                Please select your criteria and click <strong> &nbsp; GENERATE REPORT &nbsp; </strong> to view the damage assessment data.
             </div>
         </div>
     </div>

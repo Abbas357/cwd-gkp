@@ -121,7 +121,7 @@
 
         <!-- Pagination links -->
         <div class="d-flex justify-content-around mt-4">
-            {{ $schemes->links() }}
+            {{ $schemes->appends(request()->query())->links() }}
         </div>
     </div>
 

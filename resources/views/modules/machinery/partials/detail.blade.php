@@ -71,13 +71,7 @@ $canUpdate = auth()->user()->can('updateField', $machinery);
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     <span id="text-model">{{ $machinery->model }}</span>
                     @if ($canUpdate)
-                    <select id="input-model" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('model', {{ $machinery->id }})">
-                        @foreach (category('model', 'machinery') as $model)
-                        <option value="{{ $model }}" {{ $machinery->model == $model ? 'selected' : '' }}>
-                            {{ $model }}
-                        </option>
-                        @endforeach
-                    </select>
+                    <input type="text" id="input-model" value="{{ $machinery->model }}" class="d-none form-control" onkeypress="if (event.key === 'Enter') updateField('model', {{ $machinery->id }})" />
                     <button id="save-btn-model" class="btn btn-sm btn-light d-none" onclick="updateField('model', {{ $machinery->id }})"><i class="bi-send-fill"></i></button>
                     <button id="edit-btn-model" class="no-print btn btn-sm edit-button" onclick="enableEditing('model')"><i class="bi-pencil fs-6"></i></button>
                     @endif
