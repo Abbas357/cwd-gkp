@@ -1,3 +1,30 @@
+<style>
+    .new-label-bounce {
+        position: absolute;
+        top: -1.2rem;
+        right: 0;
+        z-index: 9999;
+        background: red;
+        color: white;
+        font-size: 9px;
+        padding: 0px 5px;
+        border-radius: 5px;
+        animation: bounce 1s infinite;
+        font-weight: bold;
+        border: 1px solid #aaa;
+    }
+
+    @keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+            scale: .85
+        }
+        50% {
+            transform: translateY(-5px);
+            scale: 1;
+        }
+    }
+</style>
 <header id="integrated-plate" class="CWD">
     <div class="cw-top">
         <div class="cw-top-wrapper">
@@ -269,13 +296,12 @@
                         </li>
                         <li role="none" style="position:relative" class="cw-top-menu {{ request()->routeIs('contacts.index') ? 'uActived' : '' }}" data-tier-id="71">
                             <a href="{{ route(setting('activity', 'dmis') . '.index') }}" data-tier-id="71" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
-                                <span style="white-space: nowrap">
+                                <span style="white-space: nowrap; position:relative;">
                                     {{ strtoupper(setting('activity', 'dmis')) . ' ' . setting('session','dmis') }}
-                                    <span style="position:absolute; top:-5px; z-index:9999; right:0;background: red; color: white; font-size: 9px; padding: 0px 5px; border-radius: 5px; ">NEW</span>
+                                    <span class="new-label-bounce">NEW</span>
                                 </span>
                             </a>
                         </li>
-                        
                         <li role="none" class="cw-top-menu child-nav" data-tier-id="8">
                             <button role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>MORE</span>

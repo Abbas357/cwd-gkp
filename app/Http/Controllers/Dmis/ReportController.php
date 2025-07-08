@@ -35,7 +35,7 @@ class ReportController extends Controller
             default           => $this->summary($type, $userId),
         };
     }
-
+    
     public function summary($type, $userId)
     {
         $this->authorize('viewMainReport', \App\Models\Damage::class);
@@ -53,16 +53,22 @@ class ReportController extends Controller
         $endDate = request()->get('end_date');
         $dateType = request()->get('date_type', 'report_date');
         
-        if ($duration && $duration !== 'Custom') {
-            $endDate = now()->format('Y-m-d');
-            $startDate = now()->subDays((int)$duration)->format('Y-m-d');
-        } else {
-            $startDate = $startDate ?: now()->subDays(30)->format('Y-m-d');
-            $endDate = $endDate ?: now()->format('Y-m-d');
-        }
+        // Initialize date variables as null
+        $parsedStartDate = null;
+        $parsedEndDate = null;
         
-        $startDate = Carbon::parse($startDate)->startOfDay();
-        $endDate = Carbon::parse($endDate)->endOfDay();
+        // Only process dates if duration is provided
+        if (!empty($duration)) {
+            if ($duration !== 'Custom') {
+                $parsedEndDate = now()->startOfDay();
+                $parsedStartDate = now()->subDays((int)$duration)->startOfDay();
+            } else {
+                // Custom duration - use provided dates or defaults
+                $parsedStartDate = $startDate ? Carbon::parse($startDate)->startOfDay() : now()->subDays(30)->startOfDay();
+                $parsedEndDate = $endDate ? Carbon::parse($endDate)->endOfDay() : now()->endOfDay();
+            }
+        }
+        // If no duration is provided, dates remain null and no date filtering will be applied
 
         $officerDistricts = request()->user()->districts();
 
@@ -82,8 +88,8 @@ class ReportController extends Controller
                 ],
                 'subordinateDesignation' => 'Officer',
                 'selectedUser' => $selectedUser,
-                'startDate' => $startDate,
-                'endDate' => $endDate
+                'startDate' => $parsedStartDate,
+                'endDate' => $parsedEndDate
             ]);
         }
 
@@ -93,7 +99,7 @@ class ReportController extends Controller
             $allReportsHtml = '';
             
             foreach ($infrastructureTypes as $infraType) {
-                $reportData = $this->generateReportForType($infraType, $selectedUser, $startDate, $endDate, $officerDistricts, $dateType);
+                $reportData = $this->generateReportForType($infraType, $selectedUser, $parsedStartDate, $parsedEndDate, $officerDistricts, $dateType);
                 
                 if ($reportData['subordinatesWithDistricts']->isNotEmpty()) {
                     $html = view('modules.dmis.reports.partials.summary', [
@@ -102,8 +108,8 @@ class ReportController extends Controller
                         'subordinateDesignation' => $reportData['subordinateDesignation'],
                         'selectedUser' => $selectedUser,
                         'type' => $infraType,
-                        'startDate' => $startDate,
-                        'endDate' => $endDate
+                        'startDate' => $parsedStartDate,
+                        'endDate' => $parsedEndDate
                     ])->render();
                     
                     $allReportsHtml .= $html . '<br><hr />';
@@ -119,7 +125,7 @@ class ReportController extends Controller
         }
 
         // Original logic for single infrastructure type
-        $reportData = $this->generateReportForType($type, $selectedUser, $startDate, $endDate, $officerDistricts, $dateType);
+        $reportData = $this->generateReportForType($type, $selectedUser, $parsedStartDate, $parsedEndDate, $officerDistricts, $dateType);
 
         $html = view('modules.dmis.reports.partials.summary', [
             'subordinatesWithDistricts' => $reportData['subordinatesWithDistricts'],
@@ -127,8 +133,8 @@ class ReportController extends Controller
             'subordinateDesignation' => $reportData['subordinateDesignation'],
             'selectedUser' => $selectedUser,
             'type' => $type,
-            'startDate' => $startDate,
-            'endDate' => $endDate
+            'startDate' => $parsedStartDate,
+            'endDate' => $parsedEndDate
         ])->render();
 
         return response()->json([
@@ -185,8 +191,11 @@ class ReportController extends Controller
                 $teamPostingIds[] = $subordinatePostingId;
                 
                 $damageQuery = Damage::whereIn('infrastructure_id', $infraIds)
-                    ->whereIn('posting_id', $teamPostingIds)
-                    ->whereBetween($dateType, [$startDate, $endDate]);
+                    ->whereIn('posting_id', $teamPostingIds);
+
+                if ($startDate && $endDate) {
+                    $damageQuery->whereBetween($dateType, [$startDate, $endDate]);
+                }
 
                 $district->damaged_infrastructure_count = $damageQuery->clone()->distinct('infrastructure_id')
                     ->count('infrastructure_id');
@@ -261,6 +270,7 @@ class ReportController extends Controller
 
         $selectedUser = User::findOrFail($userId);
         $officerDistricts = $selectedUser->districts();
+        $dateType = request()->get('date_type', 'report_date');
 
         if ($officerDistricts->isEmpty()) {
             return response()->json([
@@ -277,7 +287,7 @@ class ReportController extends Controller
             $allReportsHtml = '';
             
             foreach ($infrastructureTypes as $infraType) {
-                $reportData = $this->generateDailySituationForType($infraType, $reportDate, $selectedUser, $officerDistricts);
+                $reportData = $this->generateDailySituationForType($infraType, $reportDate, $selectedUser, $officerDistricts, $dateType);
                 
                 if ($reportData['subordinatesWithDistricts']->isNotEmpty()) {
                     $html = view('modules.dmis.reports.partials.daily-situation', [
@@ -302,7 +312,7 @@ class ReportController extends Controller
         }
 
         // Original logic for single infrastructure type
-        $reportData = $this->generateDailySituationForType($type, $reportDate, $selectedUser, $officerDistricts);
+        $reportData = $this->generateDailySituationForType($type, $reportDate, $selectedUser, $officerDistricts, $dateType);
 
         $html = view('modules.dmis.reports.partials.daily-situation', [
             'subordinatesWithDistricts' => $reportData['subordinatesWithDistricts'],
@@ -321,7 +331,7 @@ class ReportController extends Controller
         ]);
     }
 
-    private function generateDailySituationForType($type, $reportDate, $selectedUser, $officerDistricts)
+    private function generateDailySituationForType($type, $reportDate, $selectedUser, $officerDistricts, $dateType)
     {
         $directSubordinates = $selectedUser->getDirectSubordinates();
 
@@ -334,7 +344,6 @@ class ReportController extends Controller
         $totalNotRestored = 0;
         $totalRestorationCost = 0;
         $totalRehabilitationCost = 0;
-
         $subordinatesWithDistricts = collect();
 
         foreach ($directSubordinates as $subordinate) {
@@ -370,7 +379,7 @@ class ReportController extends Controller
                 // Filter damages for the specific date (daily report)
                 $damageQuery = Damage::whereIn('infrastructure_id', $infraIds)
                     ->whereIn('posting_id', $teamPostingIds)
-                    ->whereDate('created_at', $reportDate); // Filter by date
+                    ->whereDate($dateType, $reportDate); // Filter by date
 
                 $district->damaged_infrastructure_count = $damageQuery->clone()->distinct('infrastructure_id')
                     ->count('infrastructure_id');
@@ -456,16 +465,22 @@ class ReportController extends Controller
         $endDate = request()->get('end_date');
         $dateType = request()->get('date_type', 'report_date');
         
-        if ($duration && $duration !== 'Custom') {
-            $endDate = now()->format('Y-m-d');
-            $startDate = now()->subDays((int)$duration)->format('Y-m-d');
-        } else {
-            $startDate = $startDate ?: now()->subDays(30)->format('Y-m-d');
-            $endDate = $endDate ?: now()->format('Y-m-d');
-        }
+        // Initialize date variables as null
+        $parsedStartDate = null;
+        $parsedEndDate = null;
         
-        $startDate = Carbon::parse($startDate)->startOfDay();
-        $endDate = Carbon::parse($endDate)->endOfDay();
+        // Only process dates if duration is provided
+        if (!empty($duration)) {
+            if ($duration !== 'Custom') {
+                $parsedEndDate = now()->endOfDay();
+                $parsedStartDate = now()->subDays((int)$duration)->startOfDay();
+            } else {
+                // Custom duration - use provided dates or defaults
+                $parsedStartDate = $startDate ? Carbon::parse($startDate)->startOfDay() : now()->subDays(30)->startOfDay();
+                $parsedEndDate = $endDate ? Carbon::parse($endDate)->endOfDay() : now()->endOfDay();
+            }
+        }
+        // If no duration is provided, dates remain null and no date filtering will be applied
 
         $districts = request()->user()->districts();
 
@@ -475,15 +490,15 @@ class ReportController extends Controller
             $allReportsHtml = '';
             
             foreach ($infrastructureTypes as $infraType) {
-                $reportData = $this->generateDistrictWiseForType($infraType, $startDate, $endDate, $districts, $dateType);
+                $reportData = $this->generateDistrictWiseForType($infraType, $parsedStartDate, $parsedEndDate, $districts, $dateType);
                 
                 if ($reportData['districtStats']->isNotEmpty()) {
                     $html = view('modules.dmis.reports.partials.district-wise', [
                         'districtStats' => $reportData['districtStats'],
                         'total' => $reportData['total'],
                         'type' => $infraType,
-                        'startDate' => $startDate,
-                        'endDate' => $endDate
+                        'startDate' => $parsedStartDate,
+                        'endDate' => $parsedEndDate
                     ])->render();
                     
                     $allReportsHtml .= $html . '<br><hr />';
@@ -499,14 +514,14 @@ class ReportController extends Controller
         }
 
         // Original logic for single infrastructure type
-        $reportData = $this->generateDistrictWiseForType($type, $startDate, $endDate, $districts, $dateType);
+        $reportData = $this->generateDistrictWiseForType($type, $parsedStartDate, $parsedEndDate, $districts, $dateType);
 
         $html = view('modules.dmis.reports.partials.district-wise', [
             'districtStats' => $reportData['districtStats'],
             'total' => $reportData['total'],
             'type' => $type,
-            'startDate' => $startDate,
-            'endDate' => $endDate
+            'startDate' => $parsedStartDate,
+            'endDate' => $parsedEndDate
         ])->render();
 
         return response()->json([
@@ -532,8 +547,11 @@ class ReportController extends Controller
                 continue;
             }
             
-            $damageQuery = Damage::whereIn('infrastructure_id', $infrastructureIds)
-                ->whereBetween($dateType, [$startDate, $endDate]); // Add date range filter
+            $damageQuery = Damage::whereIn('infrastructure_id', $infrastructureIds);
+            
+            if ($startDate && $endDate) {
+                $damageQuery->whereBetween($dateType, [$startDate, $endDate]);
+            }
             
             $damages = $damageQuery->get();
 

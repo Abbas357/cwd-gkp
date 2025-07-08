@@ -3,14 +3,14 @@
         <div>
             <h5>
                 <strong>{{ $type ?? "Road" }}s Summary</strong> Report
-                @if(isset($startDate) && isset($endDate))
+                @if(isset($startDate) && isset($endDate) && $startDate && $endDate)
                     @if($startDate->format('Y-m-d') === $endDate->format('Y-m-d'))
                         <span class="text-muted"> Date: <strong>{{ $startDate->format('F d, Y (l)') }}</strong></span>
                     @else
                         <span class="text-muted"> from <strong>{{ $startDate->format('F d, Y') }} </strong> to <strong> {{ $endDate->format('F d, Y') }} </strong></span>
                     @endif
                 @else
-                    <span class="text-muted">- Generated: <strong>{{ now()->format('F d, Y (l)') }}</strong></span>
+                    <span class="text-muted"> (Dated: <strong>{{ now()->format('F d, Y') . ' - ' . now()->format('l') }}</strong>)</span>
                 @endif
             </h5>
         </div>
@@ -46,13 +46,16 @@
                 Damage Length
             </th>
             <th scope="col" class="text-center align-middle">
-                Fully Restored
+                Fully Restored<br>
+                <small class="help-text">(Open to all traffic)</small>
             </th>
             <th scope="col" class="text-center align-middle">
-                Partially Restored
+                Partially Restored<br>
+                <small class="help-text">(Open to light traffic)</small>
             </th>
             <th scope="col" class="text-center align-middle">
-                Not Restored
+                Not Restored<br>
+                <small class="help-text">(Closed for traffic)</small>
             </th>
             <th scope="col" class="text-center align-middle">
                 Restoration

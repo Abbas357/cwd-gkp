@@ -4,14 +4,14 @@
             <div>
                 <h5>
                     <strong>District Wise <span class="px-2 py-1 bg-light shadow-sm rounded border">{{ $type ?? "Road" }}s</span> Report</strong>
-                    @if(isset($startDate) && isset($endDate))
+                    @if(isset($startDate) && isset($endDate) && $startDate && $endDate)
                         @if($startDate->format('Y-m-d') === $endDate->format('Y-m-d'))
                             <span class="text-muted"> Date <strong>{{ $startDate->format('F d, Y (l)') }}</strong></span>
                         @else
                             <span class="text-muted"> from <strong>{{ $startDate->format('F d, Y') }} </strong> to <strong>{{ $endDate->format('F d, Y') }}</strong></span>
                         @endif
                     @else
-                        <span class="text-muted">- Generated: <strong>{{ now()->format('F d, Y (l)') }}</strong></span>
+                        <span class="text-muted"> (Dated: <strong>{{ now()->format('F d, Y') . ' - ' . now()->format('l') }}</strong>)</span>
                     @endif
                 </h5>
             </div>
@@ -20,13 +20,12 @@
             <tr class="bg-success text-white text-uppercase fw-bold">
                 <th scope="col" class="text-center align-middle">Rank</th>
                 <th scope="col" class="text-center align-middle">District</th>
-                <th scope="col" class="text-center align-middle">Total {{ $type ?? 'Road' }}s</th>
                 <th scope="col" class="text-center align-middle">Damaged {{ $type ?? 'Road' }}s</th>
                 <th scope="col" class="text-center align-middle">Damage Reports</th>
-                <th scope="col" class="text-center align-middle">Damaged Length</th>
-                <th scope="col" class="text-center align-middle">Fully Restored</th>
-                <th scope="col" class="text-center align-middle">Partially Restored</th>
-                <th scope="col" class="text-center align-middle">Not Restored</th>
+                <th scope="col" class="text-center align-middle">Damaged Length {{ $type === 'Road' ? '(KM)' : '(Meter)' }}</th>
+                <th scope="col" class="text-center align-middle">Fully Restored <small class="help-text">(Open to all traffic)</small></th>
+                <th scope="col" class="text-center align-middle">Partially Restored <small class="help-text">(Open to light traffic)</small></th>
+                <th scope="col" class="text-center align-middle">Not Restored <small class="help-text">(Closed for traffic)</small></th>
                 <th scope="col" class="text-center align-middle">Restoration Cost(M)</th>
                 <th scope="col" class="text-center align-middle">Rehabilitation Cost(M)</th>
                 <th scope="col" class="text-center align-middle">Total Cost(M)</th>
@@ -40,7 +39,6 @@
                     <td class="district-cell">
                         <div class="district-name">{{ $stats['district']->name }}</div>
                     </td>
-                    <td class="text-center">{{ $stats['infrastructure_count'] }}</td>
                     <td class="text-center">
                         @if ($stats['damaged_infrastructure_count'] > 0)
                             {{ $stats['damaged_infrastructure_count'] }}
@@ -81,7 +79,6 @@
 
             <tr class="fw-bold total-row">
                 <td colspan="2" class="text-end">Total:</td>
-                <td class="text-center">{{ $total['total_infrastructure_count'] }}</td>
                 <td class="text-center">{{ $total['total_damaged_infrastructure_count'] }}</td>
                 <td class="text-center">{{ $total['total_damage_count'] }}</td>
                 <td class="text-center">{{ number_format($total['total_damaged_length'], 2) }}</td>

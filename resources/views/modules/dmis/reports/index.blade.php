@@ -202,15 +202,15 @@
             margin-bottom: 1rem;
         }
 
-        .duration-field { position: relative; }
+        .report-type-field { position: relative; }
 
-        .duration-field .form-switch {
+        .report-type-field .form-switch {
             position: absolute;
             top: 0.1rem;
             right: .7rem; 
         }
 
-        .duration-field .form-switch {
+        .report-type-field .form-switch {
             width: auto;
         }
 
@@ -237,6 +237,10 @@
 
                     <div class="col report-type-field">
                         <label class="form-label" for="report_type">Report Type</label>
+                        <span class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="date_type" value="created_at" id="date_type" />
+                            <label class="form-check-label mb-0" for="date_type">Entry Date</label>
+                        </span>
                         <select name="report_type" id="report_type" class="form-control" placeholder="Select report_type">
                             @can('viewMainReport', App\Models\Damage::class)
                             <option value="Summary" {{ request()->query('report_type') == 'Summary' ? 'selected' : '' }}>Summary</option>
@@ -273,15 +277,11 @@
                           Report Duration
                         </label>
                       
-                        <span class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" name="date_type" value="created_at" id="date_type" />
-                            <label class="form-check-label mb-0" for="date_type">Created</label>
-                        </span>
-                      
                         <select name="duration" id="duration" class="form-control" placeholder="Select Duration">
+                          <option value="">Select Option</option>
                           <option value="90">Last 90 days</option>
                           <option value="45">Last 45 days</option>
-                          <option value="30" selected>Last 30 days</option>
+                          <option value="30">Last 30 days</option>
                           <option value="15">Last 15 days</option>
                           <option value="Custom">Custom</option>
                         </select>
