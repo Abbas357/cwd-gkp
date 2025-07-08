@@ -67,9 +67,9 @@
                     <td class="text-center">{{ number_format($stats['rehabilitation_cost'], 2) }}</td>
                     <td class="text-center fw-bold">{{ number_format($stats['total_cost'], 2) }}</td>
                     <td class="text-center no-print">
-                        <div class="action-buttons">
+                        <div class="action-buttons d-flex justify-content-center align-items-center">
                             <a href="{{ route('admin.apps.dmis.reports.district-details', ['district' => $stats['district']->id, 'type' => $type]) }}"
-                                class="btn btn-white border btn-detail" title="View Details">
+                                class="btn btn-white border-secondary btn-detail" title="View Details">
                                 <i class="bi-eye"></i>
                             </a>
                         </div>
