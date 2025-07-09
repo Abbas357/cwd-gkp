@@ -237,17 +237,24 @@ class DamageController extends Controller
     public function uploadFile(Request $request, Damage $damage)
     {
         $request->validate([
-            'attachment' => 'required|file|mimes:jpeg,jpg,png,gif|max:10240',
+            'attachment'   => 'required|array',
+            'attachment.*' => 'file|mimes:jpeg,jpg,png,gif|max:10240',
             'collection_name' => 'required|string',
         ]);
-
+        
         try {
-            $damage->addMedia($request->file('attachment'))
-                ->toMediaCollection($request->input('collection_name'));
-                
-            return response()->json(['success' => 'File uploaded successfully'], 200);
+            $damage->clearMediaCollection($request->input('collection_name'));
+
+            foreach ($request->file('attachment') as $file) {
+                $damage->addMedia($file)
+                    ->toMediaCollection($request->input('collection_name'));
+            }
+
+            return response()->json(['success' => 'Files uploaded successfully'], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error uploading file: ' . $e->getMessage()], 500);
+            return response()->json([
+                'error' => 'Error uploading file: ' . $e->getMessage()
+            ], 500);
         }
     }
 
