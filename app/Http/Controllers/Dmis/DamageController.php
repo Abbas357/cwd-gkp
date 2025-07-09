@@ -257,5 +257,4 @@ class DamageController extends Controller
             ], 500);
         }
     }
-
 }

@@ -231,27 +231,44 @@
                 </td>
             </tr>
             <tr>
-                <th class="table-cell">Files</th>
+                <th class="table-cell">Images</th>
                 <td class="d-flex justify-content-between align-items-center gap-2">
                     @php
                         $hasBefore = $damage->hasMedia('damage_before_images');
-                        $beforeCount = $damage->getMedia('damage_before_images')->count();
+                        $beforeImages = $damage->getMedia('damage_before_images');
                         $hasAfter = $damage->hasMedia('damage_after_images');
-                        $afterCount = $damage->getMedia('damage_after_images')->count();
+                        $afterImages = $damage->getMedia('damage_after_images');
                     @endphp
 
-                    @if ($hasBefore)
-                        <div class="d-flex flex-wrap gap-2">
-                            <span>Before images: <strong>{{ $beforeCount }}</strong> </span>
-                            <hr>
-                            <span>After images: <strong>{{ $afterCount }}</strong></span>
+                    <div class="d-flex flex-column gap-2">
+                        <div>
+                            <span>Before images:</span>
+                            @if ($hasBefore && $beforeImages->count())
+                                @foreach ($beforeImages as $index => $media)
+                                    <a href="{{ $media->getUrl() }}" target="_blank" class="btn btn-sm btn-outline-primary me-1 py-0 px-2">
+                                        {{ $index + 1 }}
+                                    </a>
+                                @endforeach
+                            @else
+                                <span>Not Uploaded</span>
+                            @endif
                         </div>
-                    @else
-                        <span>Not Uploaded</span>
-                    @endif
+                        <div>
+                            <span>After images:</span>
+                            @if ($hasAfter && $afterImages->count())
+                                @foreach ($afterImages as $index => $media)
+                                    <a href="{{ $media->getUrl() }}" target="_blank" class="btn btn-sm btn-outline-success me-1 py-0 px-2">
+                                        {{ $index + 1 }}
+                                    </a>
+                                @endforeach
+                            @else
+                                <span>Not Uploaded</span>
+                            @endif
+                        </div>
+                    </div>
 
                     <div class="no-print d-flex justify-content-between align-items-center gap-2">
-                        <select id="collectionSelector" class="form-select form-select-sm">
+                        <select id="collectionSelector" style="min-width:150px" class="form-select form-select-sm">
                             <option value="">Select Type</option>
                             <option value="damage_before_images">Before</option>
                             <option value="damage_after_images">After</option>
@@ -275,22 +292,15 @@
 <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
 
 <script>
-    function reloadAndRun(callback) {
-        const key = '__reloadAndRun__';
-        if (sessionStorage.getItem(key) === '1') {
-            sessionStorage.removeItem(key);
-            callback();
-        } else {
-            sessionStorage.setItem(key, '1');
-            window.location.reload();
-        }
-    }
     $(document).ready(function() {
 
         imageCropper({
             fileInput: "#attachment",
             aspectRatio: 3 / 2,
-            quality: 0.1,
+            minFileSizeInKB: 150,
+            maxFileSizeInKB: 100,
+            maxQualityAttempts: 15,
+            quality: 0.5,
             onComplete: async (processedFiles) => {
                 const files = Array.isArray(processedFiles) ? processedFiles : [processedFiles];
                 if (!files.length) return;
@@ -303,7 +313,6 @@
 
                 const formData = new FormData();
                 files.forEach(file => formData.append('attachment[]', file));
-                formData.append('_method', 'PATCH');
                 formData.append('collection_name', collectionName);
 
                 const url = "{{ route('admin.apps.dmis.damages.uploadFile', ':id') }}"
@@ -313,12 +322,9 @@
                     showNotification('Uploading file, please wait...', 'info', {
                         timer: 5000
                     });
-                    const result = await fetchRequest(url, 'PATCH', formData);
+                    const result = await fetchRequest(url, 'POST', formData);
                     if (result) {
-                        reloadAndRun(() => showNotification('Image has been uploaded...',
-                        'success', {
-                            timer: 3000
-                        }));
+                        window.location.reload();
                     }
                 } catch (error) {
                     showNotification('Failed to upload file...', 'danger', {

@@ -41,8 +41,8 @@ class Damage extends Model implements HasMedia
     
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('damage_before_images');
-        $this->addMediaCollection('damage_after_images');
+        $this->addMediaCollection('damage_before_images')->onlyKeepLatest(3);
+        $this->addMediaCollection('damage_after_images')->onlyKeepLatest(3);
     }
 
     protected static function booted()

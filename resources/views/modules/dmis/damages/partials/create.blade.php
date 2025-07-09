@@ -194,13 +194,19 @@
         imageCropper({
             fileInput: "#before_images",
             aspectRatio: 3 / 2,
-            quality: 0.1
+            minFileSizeInKB: 150,
+            maxFileSizeInKB: 100,
+            maxQualityAttempts: 15,
+            quality: 0.5,
         });
 
         imageCropper({
             fileInput: "#after_images",
             aspectRatio: 3 / 2,
-            quality: 0.1
+            minFileSizeInKB: 150,
+            maxFileSizeInKB: 100,
+            maxQualityAttempts: 15,
+            quality: 0.5,
         });
 
         $('#before_images, #after_images').on('change', function() {

@@ -22,7 +22,7 @@
     <meta property="og:site_name" content="{{ $title }}">
     <meta name="theme-color" content="#0b7240">
     <meta property="og:url" content="{{ request()->url() }}">
-    <meta property="og:logo" content="{{ asset('site/images/logo-square.png') }}?cw=58">
+    <meta property="og:logo" content="{{ asset('site/images/logo-square.png') }}?cw=59">
     <link rel="canonical" href="{{ request()->url() }}">
 
     <link rel="icon" href="{{ asset('site/images/favicon.ico') }}" type="image/x-icon">
@@ -34,16 +34,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600&family=Roboto&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('site/css/bootstrap-icons.min.css') }}">
-    <link href="{{ asset('site/css/bootstrap.min.css') }}?cw=58" rel="stylesheet">
-    <link href="{{ asset('site/css/bootstrap-extended.css') }}?cw=58" rel="stylesheet">
-    <link href="{{ asset('site/css/style.min.css') }}?cw=58" rel="stylesheet">
+    <link href="{{ asset('site/css/bootstrap.min.css') }}?cw=59" rel="stylesheet">
+    <link href="{{ asset('site/css/bootstrap-extended.css') }}?cw=59" rel="stylesheet">
+    <link href="{{ asset('site/css/style.min.css') }}?cw=59" rel="stylesheet">
     @stack('style')
-    <link href="{{ asset('site/css/custom.min.css') }}?cw=58" rel="stylesheet">
+    <link href="{{ asset('site/css/custom.min.css') }}?cw=59" rel="stylesheet">
     <script>
         (function() {
             const savedTheme = localStorage.getItem('selectedTheme');
             if (savedTheme && savedTheme !== 'default') {
-                document.write(`<link id="theme-stylesheet" rel="stylesheet" href="{{ asset('site/css/themes/${savedTheme}.css') }}?cw=58">`);
+                document.write(`<link id="theme-stylesheet" rel="stylesheet" href="{{ asset('site/css/themes/${savedTheme}.css') }}?cw=59">`);
             }
             
             const updateThemeColor = () => {
@@ -106,9 +106,9 @@
 
     <script src="{{ asset('site/js/jquery.min.js') }}"></script>
     <script src="{{ asset('site/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('site/js/menu.min.js') }}?cw=58"></script>
-    <script src="{{ asset('site/js/core.min.js') }}?cw=58"></script>
-    <script src="{{ asset('site/js/utils.min.js') }}?cw=58"></script>
+    <script src="{{ asset('site/js/menu.min.js') }}?cw=59"></script>
+    <script src="{{ asset('site/js/core.min.js') }}?cw=59"></script>
+    <script src="{{ asset('site/js/utils.min.js') }}?cw=59"></script>
 
     @stack('script')
     <script src="{{ asset('site/js/custom.min.js') }}?v=47"></script>

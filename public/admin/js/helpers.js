@@ -495,6 +495,9 @@ function imageCropper(options) {
         viewMode: 2,
         imageType: "image/jpeg",
         quality: 0.7,
+        minFileSizeInKB: 150, // 150 KB
+        maxFileSizeInKB: 200, // 200 KB
+        maxQualityAttempts: 10,
         onComplete: null,
     };
 
@@ -505,6 +508,8 @@ function imageCropper(options) {
     var processedImages = [];
     var currentImageIndex = 0;
     var totalImages = 0;
+    var minFileSize = options.minFileSizeInKB * 1024;
+    var maxFileSize = options.maxFileSizeInKB * 1024;
 
     $fileInput.on("change", function (e) {
         var files = e.target.files;
@@ -607,11 +612,32 @@ function imageCropper(options) {
                 }, 300);
             });
 
+        function generateLoadingModalHtml(uniqueId) {
+            var loadingTitle = totalImages > 1 ? 
+                `Processing image ${currentImageIndex + 1} of ${totalImages}...` : 
+                'Processing image...';
+        
+            return `
+            <div class="modal modal fade" id="loading-modal-${uniqueId}" tabindex="-1" role="dialog" aria-labelledby="loadingModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body text-center py-4">
+                            <div class="spinner-border text-primary mb-3" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <h6 class="modal-title" id="loadingModalLabel">${loadingTitle}</h6>
+                            <p class="text-muted small mb-0">Please wait while we prepare the next image...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `;
+        }
         // Crop button handler
         $cropButton.on("click", function () {
             var canvas;
             $cropModal.modal("hide");
-
+        
             if (cropper) {
                 canvas = cropper.getCroppedCanvas();
                 
@@ -622,33 +648,83 @@ function imageCropper(options) {
                         canvas.toDataURL(options.imageType, options.quality)
                     );
                 }
-
-                canvas.toBlob(
-                    function (blob) {
-                        var fileName = file.name.replace(/\.[^/.]+$/, "");
-                        var croppedFile = new File([blob], `${fileName}-cropped-${uniqId(6)}.jpg`, {
-                            type: options.imageType,
-                        });
-
-                        processedImages.push(croppedFile);
-                        currentImageIndex++;
-                        
-                        // If all images processed, update file input
-                        if (currentImageIndex >= imageFiles.length) {
-                            updateFileInput(processedImages, fileInput);
-                            if (typeof options.onComplete === "function") {
-                                options.onComplete(processedImages, fileInput);
+        
+                // Function to adjust quality based on file size
+                function createOptimizedBlob(canvas, callback) {
+                    var quality = options.quality;
+                    var maxAttempts = options.maxQualityAttempts;
+                    var attempt = 0;
+        
+                    function tryQuality(q) {
+                        canvas.toBlob(function(blob) {
+                            attempt++;
+                            var size = blob.size;
+                            
+                            if (size >= minFileSize && size <= maxFileSize) {
+                                // Perfect size range
+                                callback(blob);
+                            } else if (attempt >= maxAttempts) {
+                                // Max attempts reached, use current blob
+                                callback(blob);
+                            } else if (size > maxFileSize) {
+                                // Too large, reduce quality
+                                var newQuality = Math.max(0.1, q - 0.1);
+                                tryQuality(newQuality);
+                            } else {
+                                // Too small, increase quality
+                                var newQuality = Math.min(1.0, q + 0.1);
+                                tryQuality(newQuality);
                             }
-                        } else {
-                            // Process next image
-                            setTimeout(function() {
-                                processNextImage(imageFiles, fileInput);
-                            }, 100);
+                        }, options.imageType, q);
+                    }
+        
+                    tryQuality(quality);
+                }
+        
+                createOptimizedBlob(canvas, function(blob) {
+                    var fileName = file.name.replace(/\.[^/.]+$/, "");
+                    var croppedFile = new File([blob], `${fileName}-cropped.jpg`, {
+                        type: options.imageType,
+                    });
+        
+                    processedImages.push(croppedFile);
+                    currentImageIndex++;
+                    
+                    // If all images processed, update file input
+                    if (currentImageIndex >= imageFiles.length) {
+                        updateFileInput(processedImages, fileInput);
+                        if (typeof options.onComplete === "function") {
+                            options.onComplete(processedImages, fileInput);
                         }
-                    },
-                    options.imageType,
-                    options.quality
-                );
+                        
+                        // Close loading modal after everything is done
+                        if (window.currentLoadingModal) {
+                            window.currentLoadingModal.modal("hide");
+                            setTimeout(function() {
+                                window.currentLoadingModal.remove();
+                                window.currentLoadingModal = null;
+                            }, 300);
+                        }
+                    } else {
+                        // Show loading indicator for next image (only once)
+                        if (!window.currentLoadingModal) {
+                            var loadingUniqueId = uniqId(6);
+                            $("body").append(generateLoadingModalHtml(loadingUniqueId));
+                            window.currentLoadingModal = $(`#loading-modal-${loadingUniqueId}`);
+                            window.currentLoadingModal.modal({ backdrop: "static", keyboard: false });
+                            window.currentLoadingModal.modal("show");
+                        } else {
+                            // Update loading modal text
+                            var loadingTitle = `Processing image ${currentImageIndex + 1} of ${totalImages}...`;
+                            window.currentLoadingModal.find('.modal-title').text(loadingTitle);
+                        }
+                        
+                        // Process next image after a brief delay
+                        setTimeout(function() {
+                            processNextImage(imageFiles, fileInput);
+                        }, 100);
+                    }
+                });
             }
         });
 
