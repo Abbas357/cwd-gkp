@@ -6,6 +6,7 @@
         .report-container {
             font-family: Tahoma, Courier, monospace;
         }
+        
         .table > :not(caption) > * > * {
             vertical-align: middle;
         }

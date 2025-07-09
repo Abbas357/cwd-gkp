@@ -1497,6 +1497,10 @@ form select.error, form textarea.error, form input.error, form input.error:focus
     box-shadow: none !important;
 }
 
+.select2-container--bootstrap-5 .select2-selection {
+    background-color: #ffffff11 !important;
+}
+
 .datatable-loading-container {
     position: relative;
 }

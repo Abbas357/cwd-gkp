@@ -8,7 +8,7 @@
     }
 </style>
 @php
-    $canUpdate = auth()->user()->can('updateField', $tender);
+    $canUpdate = auth()->user()->can('updateField', $infrastructure);
 @endphp
 <div class="row infrastructure-details">
     <div class="col-md-12">

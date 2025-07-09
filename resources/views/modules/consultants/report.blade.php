@@ -180,8 +180,8 @@
 
         /* Selection Area */
         .selection-area {
-            background: white;
-            border: 1px solid #e9ecef;
+            background: #ffffff11;
+            border: 1px solid #00000022;
             border-radius: 8px;
             padding: 1.5rem;
             margin-bottom: 2rem;

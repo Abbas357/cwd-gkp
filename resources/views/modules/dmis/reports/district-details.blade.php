@@ -390,8 +390,10 @@
 
                 .damage-image {
                     border: 1px solid #888 !important;
-                    width: 130px !important;
-                    height: 100px !important;
+                    width: 100% !important;
+                    min-height: 250px !important;
+                    max-height: 500px !important;
+                    height: auto !important;
                     object-fit: cover !important;
                     margin: 0 !important;
                 }

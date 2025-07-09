@@ -500,168 +500,207 @@ function imageCropper(options) {
 
     options = $.extend({}, defaults, options);
 
-    var uniqueId = uniqId(6);
-
-    var modalId = `#crop-modal-${uniqueId}`,
-        cropBoxImageId = `#cropbox-image-${uniqueId}`,
-        cropButtonId = `#apply-crop-${uniqueId}`,
-        aspectRatioSelectId = `#aspect-ratio-select`,
-        actionsContainerId = `#action-buttons-${uniqueId}`;
-
-    $("body").append(generateModalHtml(uniqueId));
-
-    var $fileInput = $(options.fileInput),
-        $inputLabelPreview = $(options.inputLabelPreview),
-        $cropBoxImage = $(cropBoxImageId),
-        $cropModal = $(modalId),
-        $aspectRatioSelect = $(aspectRatioSelectId),
-        $cropButton = $(cropButtonId),
-        $actionsContainer = $(actionsContainerId);
-
-    var cropper;
+    var $fileInput = $(options.fileInput);
+    var $inputLabelPreview = $(options.inputLabelPreview);
+    var processedImages = [];
+    var currentImageIndex = 0;
+    var totalImages = 0;
 
     $fileInput.on("change", function (e) {
         var files = e.target.files;
-        if (files.length === 0 || !files[0].type.startsWith("image/")) {
-            options.onComplete(files[0], this);
+        var imageFiles = Array.from(files).filter(file => file.type.startsWith("image/"));
+        
+        if (imageFiles.length === 0) {
+            if (typeof options.onComplete === "function") {
+                options.onComplete(files[0], this);
+            }
             return;
         }
+
+        totalImages = imageFiles.length;
+        processedImages = [];
+        currentImageIndex = 0;
+
+        // Process images one by one
+        processNextImage(imageFiles, this);
+    });
+
+    function processNextImage(imageFiles, fileInput) {
+        if (currentImageIndex >= imageFiles.length) {
+            // All images processed, update file input and call onComplete
+            updateFileInput(processedImages, fileInput);
+            if (typeof options.onComplete === "function") {
+                options.onComplete(processedImages, fileInput);
+            }
+            return;
+        }
+
+        var file = imageFiles[currentImageIndex];
+        var uniqueId = uniqId(6);
+        
+        var modalId = `#crop-modal-${uniqueId}`;
+        var cropBoxImageId = `#cropbox-image-${uniqueId}`;
+        var cropButtonId = `#apply-crop-${uniqueId}`;
+        var aspectRatioSelectId = `#aspect-ratio-select-${uniqueId}`;
+        var actionsContainerId = `#action-buttons-${uniqueId}`;
+
+        // Generate and append modal HTML
+        $("body").append(generateModalHtml(uniqueId));
+
+        var $cropBoxImage = $(cropBoxImageId);
+        var $cropModal = $(modalId);
+        var $aspectRatioSelect = $(aspectRatioSelectId);
+        var $cropButton = $(cropButtonId);
+        var $actionsContainer = $(actionsContainerId);
+
+        var cropper;
+
         var done = function (url) {
             $cropBoxImage.attr("src", url);
             $cropModal.modal({ backdrop: "static", keyboard: false });
             $cropModal.modal("show");
         };
 
-        var reader, file;
-
-        if (files && files.length > 0) {
-            file = files[0];
-
-            if (URL) {
-                done(URL.createObjectURL(file));
-            } else if (FileReader) {
-                reader = new FileReader();
-                reader.onload = function (e) {
-                    done(reader.result);
-                };
-                reader.readAsDataURL(file);
-            }
+        // Load the image
+        if (URL) {
+            done(URL.createObjectURL(file));
+        } else if (FileReader) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                done(reader.result);
+            };
+            reader.readAsDataURL(file);
         }
 
-        $cropButton.data("input", this);
-        $cropButton.data("preview", $inputLabelPreview);
-    });
-
-    $cropModal.on("click", function (e) {
-        if ($(e.target).is($cropModal)) {
-            $cropModal.addClass("shake");
-            setTimeout(function () {
-                $cropModal.removeClass("shake");
-            }, 500);
-        }
-    });
-
-    $cropModal
-        .on("shown.bs.modal", function () {
-            var selectedAspectRatio =
-                parseFloat($aspectRatioSelect.val()) || options.aspectRatio;
-            cropper = new Cropper($cropBoxImage[0], {
-                aspectRatio: selectedAspectRatio,
-                viewMode: options.viewMode,
-                ready: function () {
-                    if ($actionsContainer) {
-                        loadActionButtons($actionsContainer);
-                    }
-                },
-            });
-        })
-        .on("hidden.bs.modal", function () {
-            if (cropper) {
-                cropper.destroy();
-                cropper = null;
+        // Modal click handler (shake effect)
+        $cropModal.on("click", function (e) {
+            if ($(e.target).is($cropModal)) {
+                $cropModal.addClass("shake");
+                setTimeout(function () {
+                    $cropModal.removeClass("shake");
+                }, 500);
             }
         });
 
-    $cropButton.on("click", function () {
-        var canvas;
-        $cropModal.modal("hide");
+        // Modal show/hide handlers
+        $cropModal
+            .on("shown.bs.modal", function () {
+                var selectedAspectRatio = parseFloat($aspectRatioSelect.val()) || options.aspectRatio;
+                cropper = new Cropper($cropBoxImage[0], {
+                    aspectRatio: selectedAspectRatio,
+                    viewMode: options.viewMode,
+                    ready: function () {
+                        if ($actionsContainer) {
+                            loadActionButtons($actionsContainer, uniqueId, cropper);
+                        }
+                    },
+                });
+            })
+            .on("hidden.bs.modal", function () {
+                if (cropper) {
+                    cropper.destroy();
+                    cropper = null;
+                }
+                // Remove modal from DOM after hiding
+                setTimeout(function() {
+                    $cropModal.remove();
+                }, 300);
+            });
 
-        if (cropper) {
-            canvas = cropper.getCroppedCanvas();
-            var $inputLabelPreview = $(this).data("preview");
-            $inputLabelPreview.attr(
-                "src",
-                canvas.toDataURL(options.imageType, options.quality)
-            );
+        // Crop button handler
+        $cropButton.on("click", function () {
+            var canvas;
+            $cropModal.modal("hide");
 
-            var $fileInput = $(this).data("input");
-            canvas.toBlob(
-                function (blob) {
-                    var file = new File([blob], `cropped-${uniqId(6)}.jpg`, {
-                        type: options.imageType,
-                    });
+            if (cropper) {
+                canvas = cropper.getCroppedCanvas();
+                
+                // Update preview only for single image or last image
+                if (totalImages === 1 || currentImageIndex === totalImages - 1) {
+                    $inputLabelPreview.attr(
+                        "src",
+                        canvas.toDataURL(options.imageType, options.quality)
+                    );
+                }
 
-                    if (typeof options.onComplete === "function") {
-                        options.onComplete(file, $fileInput);
-                    }
+                canvas.toBlob(
+                    function (blob) {
+                        var fileName = file.name.replace(/\.[^/.]+$/, "");
+                        var croppedFile = new File([blob], `${fileName}-cropped-${uniqId(6)}.jpg`, {
+                            type: options.imageType,
+                        });
 
-                    var dataTransfer = new DataTransfer();
-                    dataTransfer.items.add(file);
-                    $fileInput.files = dataTransfer.files;
-                },
-                options.imageType,
-                options.quality
-            );
-        }
-    });
-
-    $actionsContainer.on("click", function (event) {
-        var target = event.target;
-        if (!cropper) {
-            return;
-        }
-
-        while (target !== this) {
-            if (target.getAttribute("data-method")) {
-                break;
+                        processedImages.push(croppedFile);
+                        currentImageIndex++;
+                        
+                        // If all images processed, update file input
+                        if (currentImageIndex >= imageFiles.length) {
+                            updateFileInput(processedImages, fileInput);
+                            if (typeof options.onComplete === "function") {
+                                options.onComplete(processedImages, fileInput);
+                            }
+                        } else {
+                            // Process next image
+                            setTimeout(function() {
+                                processNextImage(imageFiles, fileInput);
+                            }, 100);
+                        }
+                    },
+                    options.imageType,
+                    options.quality
+                );
             }
-            target = target.parentNode;
-        }
+        });
 
-        if (
-            target === this ||
-            target.disabled ||
-            target.className.indexOf("disabled") > -1
-        ) {
-            return;
-        }
-
-        var data = {
-            method: target.getAttribute("data-method"),
-            option: target.getAttribute("data-option"),
-            secondOption: target.getAttribute("data-second-option"),
-        };
-
-        if (data.method) {
-            cropper[data.method](data.option, data.secondOption);
-            if (data.method === "scaleX" || data.method === "scaleY") {
-                target.setAttribute("data-option", -data.option);
+        // Action buttons handler
+        $actionsContainer.on("click", function (event) {
+            var target = event.target;
+            if (!cropper) {
+                return;
             }
-        }
-    });
 
-    function loadActionButtons($container) {
+            while (target !== this) {
+                if (target.getAttribute("data-method")) {
+                    break;
+                }
+                target = target.parentNode;
+            }
+
+            if (
+                target === this ||
+                target.disabled ||
+                target.className.indexOf("disabled") > -1
+            ) {
+                return;
+            }
+
+            var data = {
+                method: target.getAttribute("data-method"),
+                option: target.getAttribute("data-option"),
+                secondOption: target.getAttribute("data-second-option"),
+            };
+
+            if (data.method) {
+                cropper[data.method](data.option, data.secondOption);
+                if (data.method === "scaleX" || data.method === "scaleY") {
+                    target.setAttribute("data-option", -data.option);
+                }
+            }
+        });
+    }
+
+    function loadActionButtons($container, uniqueId, cropperInstance) {
         var buttonsHTML = `
-        <select id="aspect-ratio-select" class="select-aspect-ratio form-control">
+        <select id="aspect-ratio-select-${uniqueId}" class="select-aspect-ratio form-control">
             <option value="">Choose Size</option>
-            <option value="1 / 1">1:1 (Square)</option>
-            <option value="16 / 9">16:9 (Widescreen)</option>
-            <option value="9 / 16">9:16 (Vertical)</option>
-            <option value="21 / 9">21:9 (Ultra-wide)</option>
-            <option value="4 / 3">4:3 (Old TV)</option>
-            <option value="3 / 2">3:2 (DSLR)</option>
-            <option value="1 / 1.294">1:1.294 (Letter)</option>
-            <option value="1 / 1.6471">1:1.6471 (Legal)</option>
+            <option value="1">1:1 (Square)</option>
+            <option value="1.7777777777777777">16:9 (Widescreen)</option>
+            <option value="0.5625">9:16 (Vertical)</option>
+            <option value="2.3333333333333335">21:9 (Ultra-wide)</option>
+            <option value="1.3333333333333333">4:3 (Old TV)</option>
+            <option value="1.5">3:2 (DSLR)</option>
+            <option value="0.7728706624605679">1:1.294 (Letter)</option>
+            <option value="0.6070287539936102">1:1.6471 (Legal)</option>
             <option value="NaN">Free (Whatever you want)</option>
         </select>
         <button type="button" class="btn-mode-move btn btn-light btn-sm" data-method="setDragMode" data-option="move" title="Move">
@@ -734,24 +773,50 @@ function imageCropper(options) {
                 <span class="text-xs bi-unlock"></span>
             </span>
         </button>
-    `;
+        `;
         $container.html(buttonsHTML);
 
-        $container.find("#aspect-ratio-select").on("change", function () {
-            var aspectRatio = eval($(this).val());
-            if (cropper) {
-                cropper.setAspectRatio(aspectRatio);
+        // Fixed aspect ratio change handler
+        $container.find(`#aspect-ratio-select-${uniqueId}`).on("change", function () {
+            var selectedValue = $(this).val();
+            var aspectRatio;
+            
+            if (selectedValue === "" || selectedValue === "NaN") {
+                aspectRatio = NaN; // Free aspect ratio
+            } else {
+                aspectRatio = parseFloat(selectedValue);
+                if (isNaN(aspectRatio)) {
+                    console.error('Invalid aspect ratio:', selectedValue);
+                    aspectRatio = NaN; // Fallback to free aspect ratio
+                }
+            }
+            
+            // Use the cropper instance passed to this function
+            if (cropperInstance) {
+                cropperInstance.setAspectRatio(aspectRatio);
             }
         });
     }
 
+    function updateFileInput(files, fileInput) {
+        var dataTransfer = new DataTransfer();
+        files.forEach(function(file) {
+            dataTransfer.items.add(file);
+        });
+        fileInput.files = dataTransfer.files;
+    }
+
     function generateModalHtml(uniqueId) {
+        var modalTitle = totalImages > 1 ? 
+            `Crop image ${currentImageIndex + 1} of ${totalImages}` : 
+            'Crop the image';
+
         return `
         <div class="modal modal fade" id="crop-modal-${uniqueId}" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalLabel">Crop the image</h5>
+                        <h5 class="modal-title" id="modalLabel">${modalTitle}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -761,8 +826,8 @@ function imageCropper(options) {
                         <div id="action-buttons-${uniqueId}"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary btn-sm" id="apply-crop-${uniqueId}">Crop</button>
+                        <button type="button" class="cw-btn bg-light text-dark" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="cw-btn bg-primary" id="apply-crop-${uniqueId}">Crop</button>
                     </div>
                 </div>
             </div>

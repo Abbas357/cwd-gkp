@@ -1,5 +1,6 @@
 <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
 <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
+<link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
 <!-- Step 1: Basic Information -->
 <div class="row" id="step-1">
     <div class="col-md-6 mb-3">
@@ -183,10 +184,25 @@
 </div>
 
 <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
-
+<script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
 <script>
 
     $(document).ready(function() {
+
+        imageCropper({
+            fileInput: "#before_images",
+            inputLabelPreview: "#before-preview-container",
+            aspectRatio: 3 / 2,
+            quality: 0.1
+        });
+
+        imageCropper({
+            fileInput: "#after_images",
+            inputLabelPreview: "#after-preview-container",
+            aspectRatio: 3 / 2,
+            quality: 0.1
+        });
+
         $('#before_images, #after_images').on('change', function() {
             if (this.files.length > 3) {
                 showNotification("Warning! Only the first 3 images will be uploaded", "info", {timer: 5000});
