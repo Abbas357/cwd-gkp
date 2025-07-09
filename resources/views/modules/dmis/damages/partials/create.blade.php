@@ -171,6 +171,7 @@
         @error('before_images')
         <div class="text-danger">{{ $message }}</div>
         @enderror
+        <div id="before-preview-container"></div>
     </div>
     
     <div class="col-md-6 mb-3">
@@ -180,6 +181,7 @@
         @error('after_images')
         <div class="text-danger">{{ $message }}</div>
         @enderror
+        <div id="after-preview-container"></div>
     </div>
 </div>
 
@@ -191,14 +193,12 @@
 
         imageCropper({
             fileInput: "#before_images",
-            inputLabelPreview: "#before-preview-container",
             aspectRatio: 3 / 2,
             quality: 0.1
         });
 
         imageCropper({
             fileInput: "#after_images",
-            inputLabelPreview: "#after-preview-container",
             aspectRatio: 3 / 2,
             quality: 0.1
         });
