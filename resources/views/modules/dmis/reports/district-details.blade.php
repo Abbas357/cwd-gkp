@@ -6,6 +6,7 @@
             #district-report {
                 font-family: Tahoma, Courier, monospace;
             }
+
             .damage-card {
                 border: 1px solid #ccc;
                 border-radius: 8px;
@@ -42,7 +43,7 @@
 
             .infrastructure-title {
                 font-weight: 600;
-                font-size: 1.3rem;
+                font-size: 1.2rem;
                 color: #495057;
                 margin-bottom: 0.5rem;
             }
@@ -453,33 +454,63 @@
 
     <div id="district-report" class="container py-2 px-1">
         <!-- Header -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h4 class="fw-bold mb-1">{{ $district->name }} District - Damage Details</h4>
-                <div class="text-muted">
-                    <span class="badge bg-primary fs-6 px-2 py-1">Report Date: <strong> {{ now()->format('F d, Y') }}</strong></span>
-                    <span class="badge bg-secondary fs-6 px-2 py-1">Infrastructure Type: <strong>{{ $type }}</strong></span>
-                    <span class="badge bg-info fs-6 px-2 py-1">Total Damages: <strong>{{ $stats['total_damages'] }}</strong></span>
+        <div>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="fw-bold">District {{ $district->name }} - Damage Details</h4>
+                <div class="no-print action-buttons">
+                    <div class="btn-group-custom d-flex align-items-center">
+                        <!-- Add Image Toggle Switch -->
+                        <label for="includeImagesSwitch" class="form-check form-switch me-3 border py-2 rounded-3 bg-light shadow-sm cursor-pointer user-select-none">
+                            <input class="form-check-input" type="checkbox" role="switch" id="includeImagesSwitch"
+                                {{ request()->query('images', 'false') === 'true' ? 'checked' : '' }}>
+                            <span class="form-check-label">
+                                Pictures &nbsp;
+                            </span>
+                        </label>
+
+                        <button type="button" id="print-report" class="cw-btn bg-secondary">
+                            <i class="bi-printer me-1"></i> Print
+                        </button>
+                        <button type="button" id="export-pdf" class="cw-btn bg-danger">
+                            <i class="bi-file-pdf me-1"></i> PDF
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="no-print action-buttons">
-                <div class="btn-group-custom d-flex align-items-center">
-                    <!-- Add Image Toggle Switch -->
-                    <div class="form-check form-switch me-3">
-                        <input class="form-check-input" type="checkbox" role="switch" id="includeImagesSwitch" 
-                            {{ request()->query('images', 'false') === 'true' ? 'checked' : '' }}>
-                        <label class="form-check-label" for="includeImagesSwitch">
-                            Include Images
-                        </label>
+
+            @if ($reportingOfficers->count() > 0)
+                <div class="mb-3">
+                    <div class="d-flex align-items-center flex-wrap">
+                        <span class="fs-6 me-2">
+                            <i class="bi bi-person-check me-1"></i>
+                            <strong>Reported by:</strong>
+                        </span>
+                        <div class="d-flex flex-wrap align-items-center">
+                            @foreach ($reportingOfficers as $index => $officer)
+                                <span class="text-primary fw-semibold me-1">{{ $officer['user']->name }}</span>
+                                <span class="text-muted small me-1">({{ $officer['office']->name ?? 'N/A' }})</span>
+                                @if (!$loop->last)
+                                    <span class="text-muted me-2">,</span>
+                                @endif
+                            @endforeach
+                        </div>
                     </div>
-                    
-                    <button type="button" id="print-report" class="btn btn-outline-primary">
-                        <i class="bi-printer me-1"></i> Print Report
-                    </button>
-                    <button type="button" id="export-pdf" class="btn btn-outline-success">
-                        <i class="bi-file-pdf me-1"></i> Export PDF
-                    </button>
                 </div>
+            @endif
+
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <span class="badge bg-primary fs-6 px-3 py-2">
+                    <i class="bi bi-calendar-event me-1"></i>
+                    <strong>Report Date:</strong> {{ now()->format('F d, Y') }}
+                </span>
+                <span class="badge bg-secondary fs-6 px-3 py-2">
+                    <i class="bi bi-building me-1"></i>
+                    <strong>Infrastructure Type:</strong> {{ $type }}
+                </span>
+                <span class="badge bg-info fs-6 px-3 py-2">
+                    <i class="bi bi-exclamation-triangle me-1"></i>
+                    <strong>Total Damages:</strong> {{ $stats['total_damages'] }}
+                </span>
             </div>
         </div>
 
@@ -524,28 +555,9 @@
             </div>
         </div>
 
-        <!-- Reporting Officers Section -->
-        @if ($reportingOfficers->count() > 0)
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="bi-people me-2"></i>Reporting Officers</h5>
-                </div>
-                <div class="d-flex">
-                    @foreach ($reportingOfficers as $officer)
-                        <div class="officer-info m-3">
-                            <div class="fw-bold">{{ $officer['user']->name }}</div>
-                            <div class="text-muted small">{{ $officer['designation']->name ?? 'N/A' }}</div>
-                            <div class="text-muted small">{{ $officer['office']->name ?? 'N/A' }}</div>
-                            <div class="text-primary small">{{ $officer['damage_count'] }} damage(s) reported</div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        @endif
-
         <!-- Damages by Infrastructure -->
         <div class="mb-4">
-            <h5 class="fw-bold mb-5"><i class="bi-list-ul me-2"></i>Damages by Infrastructure</h5>
+            <h5 class="fw-bold mb-5"><i class="bi-list-ul me-2"></i>List of damaged {{ request()->query('type') ?? 'Road' }}s</h5>
 
             @if ($damages->count() > 0)
                 @foreach ($damagesByInfrastructure as $infrastructureId => $infrastructureDamages)
@@ -556,13 +568,15 @@
                     <div class="damage-card mt-5">
                         <div class="damage-card-header">
                             <div class="infrastructure-title">
-                                <span class="damage-card-iteration"> {{ $loop->iteration }}</span> <i class="bi-geo-alt-fill me-2"></i>{{ $infrastructure->type }} name: {{ $infrastructure->name }}
+                                <span class="damage-card-iteration"> {{ $loop->iteration }}</span> <i
+                                    class="bi-geo-alt me-2"></i> {{ $infrastructure->name }}
                             </div>
                             <div class="me-3" style="font-size: 15px">
                                 Length: <strong>{{ $infrastructure->length ?? 'N/A' }}
                                     {{ request()->query('type') == 'Road' || !request()->has('type') ? '(KM)' : '(Meter)' }}
                                 </strong> </br>
-                                Damages to this {{ $infrastructure->type }}: <strong>{{ $infrastructureDamages->count() }}</strong>
+                                Damages to this {{ $infrastructure->type }}:
+                                <strong>{{ $infrastructureDamages->count() }}</strong>
                             </div>
                         </div>
 
@@ -598,7 +612,8 @@
                                             <td>{{ $damage->approximate_rehabilitation_cost }} M</td>
                                             <td>
                                                 @if ($damage->posting && $damage->posting->user)
-                                                    <small class="text-muted">{{ $damage->posting->office->name ?? 'N/A' }}</small>
+                                                    <small
+                                                        class="text-muted">{{ $damage->posting->office->name ?? 'N/A' }}</small>
                                                 @else
                                                     N/A
                                                 @endif
@@ -618,17 +633,21 @@
                                         @endif
 
                                         <!-- Images Row -->
-                                        <tr class="images-row" id="images-row-{{ $damage->id }}" style="{{ request()->query('images', 'false') === 'false' ? 'display: none;' : '' }}">
+                                        <tr class="images-row" id="images-row-{{ $damage->id }}"
+                                            style="{{ request()->query('images', 'false') === 'false' ? 'display: none;' : '' }}">
                                             <td colspan="7">
                                                 <div class="image-gallery">
                                                     <!-- Before Work Pictures -->
                                                     <div class="image-section">
-                                                        <div class="image-section-header before-header d-flex align-items-center justify-content-center">
+                                                        <div
+                                                            class="image-section-header before-header d-flex align-items-center justify-content-center">
                                                             <h4 class="fw-bold">Before</h4>
                                                         </div>
                                                         <div class="image-container">
                                                             @php
-                                                                $beforeImages = $damage->getMedia('damage_before_images');
+                                                                $beforeImages = $damage->getMedia(
+                                                                    'damage_before_images',
+                                                                );
                                                             @endphp
 
                                                             @if ($beforeImages->count() > 0)
@@ -641,8 +660,10 @@
                                                                         data-image-title="Before Work - {{ $infrastructure->name }}">
                                                                 @endforeach
                                                             @else
-                                                                <div class="no-images no-print p-3 d-flex flex-column align-items-center justify-content-center">
-                                                                    <i class="bi-image me-2 fs-1"></i>Before pictures not uploaded
+                                                                <div
+                                                                    class="no-images no-print p-3 d-flex flex-column align-items-center justify-content-center">
+                                                                    <i class="bi-image me-2 fs-1"></i>Before pictures
+                                                                    not uploaded
                                                                 </div>
                                                                 <!-- Print placeholder -->
                                                                 <div class="print-image-placeholder d-none">
@@ -654,7 +675,8 @@
 
                                                     <!-- After Work Pictures -->
                                                     <div class="image-section">
-                                                        <div class="image-section-header after-header d-flex align-items-center justify-content-center">
+                                                        <div
+                                                            class="image-section-header after-header d-flex align-items-center justify-content-center">
                                                             <h4 class="fw-bold">After</h4>
                                                         </div>
                                                         <div class="image-container">
@@ -672,8 +694,10 @@
                                                                         data-image-title="After Work - {{ $infrastructure->name }}">
                                                                 @endforeach
                                                             @else
-                                                                <div class="no-images no-print p-3 d-flex flex-column align-items-center justify-content-center">
-                                                                    <i class="bi-image me-2 fs-1"></i>After pictures not uploaded
+                                                                <div
+                                                                    class="no-images no-print p-3 d-flex flex-column align-items-center justify-content-center">
+                                                                    <i class="bi-image me-2 fs-1"></i>After pictures
+                                                                    not uploaded
                                                                 </div>
                                                                 <!-- Print placeholder -->
                                                                 <div class="print-image-placeholder d-none">
@@ -734,16 +758,16 @@
                 $('#includeImagesSwitch').on('change', function() {
                     const isChecked = $(this).is(':checked');
                     const currentUrl = new URL(window.location.href);
-                    
+
                     // Update URL parameter
                     currentUrl.searchParams.set('images', isChecked ? 'true' : 'false');
-                    
+
                     // Update browser URL without refreshing
                     window.history.pushState({}, '', currentUrl.toString());
-                    
+
                     // Show/hide all image rows
                     $('.images-row').toggle(isChecked);
-                    
+
                     // Optional: Add smooth transition
                     if (isChecked) {
                         $('.images-row').slideDown(300);
@@ -755,7 +779,7 @@
                 // Initialize images visibility based on URL parameter
                 const showImages = new URLSearchParams(window.location.search).get('images') === 'true';
                 $('.images-row').toggle(showImages);
-                
+
                 // Update switch state if URL parameter exists
                 $('#includeImagesSwitch').prop('checked', showImages);
 
@@ -803,7 +827,9 @@
                         width: document.getElementById('district-report').scrollWidth,
                         height: document.getElementById('district-report').scrollHeight
                     }).then(function(canvas) {
-                        const { jsPDF } = window.jspdf;
+                        const {
+                            jsPDF
+                        } = window.jspdf;
                         const pdf = new jsPDF('p', 'mm', 'a4');
 
                         const imgData = canvas.toDataURL('image/png');
@@ -823,7 +849,8 @@
                             heightLeft -= pageHeight;
                         }
 
-                        const fileName = `{{ $district->name }}_Damage_Report_${new Date().toISOString().split('T')[0]}.pdf`;
+                        const fileName =
+                            `{{ $district->name }}_Damage_Report_${new Date().toISOString().split('T')[0]}.pdf`;
                         pdf.save(fileName);
 
                         button.html(originalText);
@@ -891,6 +918,6 @@
                     }, 500);
                 });
             });
-            </script>
+        </script>
     @endpush
 </x-dmis-layout>
