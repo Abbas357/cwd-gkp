@@ -1,4 +1,4 @@
-<x-dmis-layout title="District Damage Details - {{ $district->name }}">
+<x-dmis-layout title="District {{ $district->name }} Damage Details">
     @push('style')
         <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
         <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
@@ -7,11 +7,24 @@
                 font-family: Tahoma, Courier, monospace;
             }
             .damage-card {
-                border: 1px solid #dee2e6;
+                border: 1px solid #ccc;
                 border-radius: 8px;
-                overflow: hidden;
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                 background: #ffffff;
+                position: relative;
+            }
+
+            .damage-card-iteration {
+                position: absolute;
+                top: -1.8rem;
+                left: -.2rem;
+                border: 1px solid #999;
+                background: #f8f9fa;
+                color: #000000;
+                padding: 0.3rem 0.8rem;
+                border-radius: 50%;
+                font-size: 1.2rem;
+                font-weight: bold;
             }
 
             .damage-card-header {
@@ -52,23 +65,14 @@
             }
 
             .damage-table th {
-                background: #999;
-                color: #ffffff;
+                background: #eee;
+                color: #444;
                 font-weight: 600;
                 font-size: 0.9rem;
             }
 
             .damage-table tbody tr {
                 background-color: #ffffff;
-                transition: background-color 0.2s;
-            }
-
-            .damage-table tbody tr:nth-child(even) {
-                background-color: #f8f9fa;
-            }
-
-            .damage-table tbody tr:hover {
-                background-color: #e9ecef;
             }
 
             .damage-row {
@@ -83,10 +87,6 @@
             .images-row {
                 background: #f8f9fa !important;
                 border-bottom: 1px solid #dee2e6 !important;
-            }
-
-            .images-row td {
-                padding: 1.5rem !important;
             }
 
             .status-badge {
@@ -123,7 +123,7 @@
             }
 
             .image-section {
-                border: 1px solid #dee2e6;
+                border: 1px solid #ccc;
                 border-radius: 6px;
                 overflow: hidden;
                 background: #ffffff;
@@ -172,10 +172,9 @@
                 align-items: center;
                 justify-content: center;
                 height: 120px;
-                color: #6c757d;
-                font-style: italic;
+                color: #575757;
                 background: #f8f9fa;
-                border: 1px dashed #dee2e6;
+                border: 1px dashed #ccc;
                 border-radius: 4px;
             }
 
@@ -194,15 +193,19 @@
                 text-align: center;
                 box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
                 transition: transform 0.2s;
+                cursor: pointer;
+                user-select: none
             }
 
             .summary-card:hover {
                 transform: translateY(-2px);
+                background: #f9f9f6;
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+                border: 1px solid #9bc60e;
             }
 
             .summary-number {
-                font-size: 2rem;
+                font-size: 1.7rem;
                 font-weight: 700;
                 color: #495057;
                 margin-bottom: 0.5rem;
@@ -240,27 +243,8 @@
                 gap: 0.5rem;
             }
 
-            .infrastructure-separator {
-                margin: .5rem 0;
-                text-align: center;
-                position: relative;
-            }
-
             /* Print Styles */
             @media print {
-                .no-print {
-                    display: none !important;
-                    visibility: hidden !important;
-                }
-
-                body {
-                    font-size: 12px;
-                    line-height: 1.3;
-                    color: #888 !important;
-                    background: white !important;
-                    margin: 0;
-                    padding: 0;
-                }
 
                 .damage-card-header {
                     border-bottom: 1px solid #000 !important;
@@ -269,7 +253,7 @@
                 .container {
                     width: 100% !important;
                     max-width: none !important;
-                    margin: 0 !important;
+                    margin: 10px !important;
                     padding: 8px !important;
                 }
 
@@ -277,6 +261,10 @@
                     border-bottom: 2px solid #888;
                     margin-bottom: 15px;
                     padding-bottom: 10px;
+                }
+
+                .damage-card-iteration {
+                    position: static;
                 }
 
                 .summary-cards {
@@ -557,7 +545,7 @@
 
         <!-- Damages by Infrastructure -->
         <div class="mb-4">
-            <h5 class="fw-bold mb-3"><i class="bi-list-ul me-2"></i>Damages by Infrastructure</h5>
+            <h5 class="fw-bold mb-5"><i class="bi-list-ul me-2"></i>Damages by Infrastructure</h5>
 
             @if ($damages->count() > 0)
                 @foreach ($damagesByInfrastructure as $infrastructureId => $infrastructureDamages)
@@ -565,16 +553,10 @@
                         $infrastructure = $infrastructureDamages->first()->infrastructure;
                     @endphp
 
-                    @if (!$loop->first)
-                        <div class="infrastructure-separator">
-                            <i class="bi-three-dots"></i>
-                        </div>
-                    @endif
-
-                    <div class="damage-card">
+                    <div class="damage-card mt-5">
                         <div class="damage-card-header">
                             <div class="infrastructure-title">
-                                <i class="bi-geo-alt-fill me-2"></i>{{ $infrastructure->type }} name: {{ $infrastructure->name }}
+                                <span class="damage-card-iteration"> {{ $loop->iteration }}</span> <i class="bi-geo-alt-fill me-2"></i>{{ $infrastructure->type }} name: {{ $infrastructure->name }}
                             </div>
                             <div class="me-3" style="font-size: 15px">
                                 Length: <strong>{{ $infrastructure->length ?? 'N/A' }}
@@ -601,7 +583,7 @@
                                     @foreach ($infrastructureDamages as $damage)
                                         <!-- Damage Information Row -->
                                         <tr class="damage-row">
-                                            <td><strong>#{{ $loop->iteration }}</strong></td>
+                                            <td><strong>{{ $loop->iteration }}</strong></td>
                                             <td>
                                                 <span
                                                     class="status-badge status-{{ str_replace(' ', '-', strtolower($damage->road_status)) }}">
@@ -627,7 +609,7 @@
                                         @if ($damage->remarks)
                                             <tr>
                                                 <td colspan="7">
-                                                    <div class="p-3 bg-light rounded">
+                                                    <div class="p-1 border">
                                                         <strong><i class="bi-card-text me-2"></i>Remarks:</strong>
                                                         {!! $damage->remarks !!}
                                                     </div>
@@ -642,7 +624,7 @@
                                                     <!-- Before Work Pictures -->
                                                     <div class="image-section">
                                                         <div class="image-section-header before-header d-flex align-items-center justify-content-center">
-                                                            <i class="bi-camera me-2"></i>Images Before Work
+                                                            <h4 class="fw-bold">Before</h4>
                                                         </div>
                                                         <div class="image-container">
                                                             @php
@@ -659,8 +641,8 @@
                                                                         data-image-title="Before Work - {{ $infrastructure->name }}">
                                                                 @endforeach
                                                             @else
-                                                                <div class="no-images no-print p-2">
-                                                                    <i class="bi-image me-2"></i>No before pictures available
+                                                                <div class="no-images no-print p-3 d-flex flex-column align-items-center justify-content-center">
+                                                                    <i class="bi-image me-2 fs-1"></i>Before pictures not uploaded
                                                                 </div>
                                                                 <!-- Print placeholder -->
                                                                 <div class="print-image-placeholder d-none">
@@ -673,7 +655,7 @@
                                                     <!-- After Work Pictures -->
                                                     <div class="image-section">
                                                         <div class="image-section-header after-header d-flex align-items-center justify-content-center">
-                                                            <i class="bi-camera me-2"></i>Images After Work
+                                                            <h4 class="fw-bold">After</h4>
                                                         </div>
                                                         <div class="image-container">
                                                             @php
@@ -690,8 +672,8 @@
                                                                         data-image-title="After Work - {{ $infrastructure->name }}">
                                                                 @endforeach
                                                             @else
-                                                                <div class="no-images no-print p-2">
-                                                                    <i class="bi-image me-2"></i>No after pictures available
+                                                                <div class="no-images no-print p-3 d-flex flex-column align-items-center justify-content-center">
+                                                                    <i class="bi-image me-2 fs-1"></i>After pictures not uploaded
                                                                 </div>
                                                                 <!-- Print placeholder -->
                                                                 <div class="print-image-placeholder d-none">
@@ -908,15 +890,6 @@
                         opacity: 1
                     }, 500);
                 });
-
-                $('.summary-card').hover(
-                    function() {
-                        $(this).find('.summary-number').css('color', '#28a745');
-                    },
-                    function() {
-                        $(this).find('.summary-number').css('color', '#007bff');
-                    }
-                );
             });
             </script>
     @endpush

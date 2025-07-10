@@ -319,7 +319,7 @@
                     .replace(':id', '{{ $damage->id }}');
 
                 try {
-                    showNotification('Uploading file, please wait...', 'info', {
+                    showNotification('Uploading file, please wait...', 'success', {
                         timer: 5000
                     });
                     const result = await fetchRequest(url, 'POST', formData);

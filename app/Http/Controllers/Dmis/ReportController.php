@@ -5,9 +5,10 @@ namespace App\Http\Controllers\dmis;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Damage;
+use App\Models\Office;
 use App\Models\District;
-use Illuminate\Http\Request;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
@@ -603,21 +604,306 @@ class ReportController extends Controller
         ];
     }
 
+    // public function districtWise($type)
+    // {
+    //     $this->authorize('viewDistrictWiseReport', \App\Models\Damage::class);
+
+    //     $duration = request()->get('duration');
+    //     $startDate = request()->get('start_date');
+    //     $endDate = request()->get('end_date');
+    //     $dateType = request()->get('date_type', 'report_date');
+        
+    //     // Initialize date variables as null
+    //     $parsedStartDate = null;
+    //     $parsedEndDate = null;
+        
+    //     // Only process dates if duration is provided
+    //     if (!empty($duration)) {
+    //         if ($duration !== 'Custom') {
+    //             $parsedEndDate = now()->endOfDay();
+    //             $parsedStartDate = now()->subDays((int)$duration)->startOfDay();
+    //         } else {
+    //             // Custom duration - use provided dates or defaults
+    //             $parsedStartDate = $startDate ? Carbon::parse($startDate)->startOfDay() : now()->subDays(30)->startOfDay();
+    //             $parsedEndDate = $endDate ? Carbon::parse($endDate)->endOfDay() : now()->endOfDay();
+    //         }
+    //     }
+    //     // If no duration is provided, dates remain null and no date filtering will be applied
+
+    //     $userDistricts = request()->user()->districts();
+
+    //     // Handle "All" type by generating reports for each infrastructure type
+    //     if ($type === 'All') {
+    //         $infrastructureTypes = setting('infrastructure_type', 'dmis', ['Road', 'Bridge', 'Culvert']);
+    //         $allReportsHtml = '';
+            
+    //         foreach ($infrastructureTypes as $infraType) {
+    //             // Generate District Office Report
+    //             $districtOfficeReportData = $this->generateDistrictOfficeReport($infraType, $parsedStartDate, $parsedEndDate, $userDistricts, $dateType);
+                
+    //             if ($districtOfficeReportData['districtStats']->isNotEmpty()) {
+    //                 $html = view('modules.dmis.reports.partials.district-wise', [
+    //                     'districtStats' => $districtOfficeReportData['districtStats'],
+    //                     'total' => $districtOfficeReportData['total'],
+    //                     'type' => $infraType,
+    //                     'startDate' => $parsedStartDate,
+    //                     'endDate' => $parsedEndDate,
+    //                     'reportTitle' => 'District Office Report - ' . $infraType
+    //                 ])->render();
+                    
+    //                 $allReportsHtml .= $html;
+    //             }
+                
+    //             // Generate Provincial Office Report
+    //             $provincialOfficeReportData = $this->generateProvincialOfficeReport($infraType, $parsedStartDate, $parsedEndDate, $userDistricts, $dateType);
+                
+    //             if ($provincialOfficeReportData['districtStats']->isNotEmpty()) {
+    //                 $html = view('modules.dmis.reports.partials.district-wise', [
+    //                     'districtStats' => $provincialOfficeReportData['districtStats'],
+    //                     'total' => $provincialOfficeReportData['total'],
+    //                     'type' => $infraType,
+    //                     'startDate' => $parsedStartDate,
+    //                     'endDate' => $parsedEndDate,
+    //                     'reportTitle' => 'Provincial Office Report - ' . $infraType
+    //                 ])->render();
+                    
+    //                 $allReportsHtml .= '<br><hr><br>' . $html;
+    //             }
+                
+    //             $allReportsHtml .= '<br><hr><br>';
+    //         }
+            
+    //         return response()->json([
+    //             'success' => true,
+    //             'data' => [
+    //                 'result' => $allReportsHtml ?: '<div class="alert alert-info text-center"><i class="bi-info-circle me-2"></i>No damages found for any infrastructure type in the selected period.</div>',
+    //             ],
+    //         ]);
+    //     }
+
+    //     // Generate District Office Report
+    //     $districtOfficeReportData = $this->generateDistrictOfficeReport($type, $parsedStartDate, $parsedEndDate, $userDistricts, $dateType);
+        
+    //     $districtOfficeHtml = '';
+    //     if ($districtOfficeReportData['districtStats']->isNotEmpty()) {
+    //         $districtOfficeHtml = view('modules.dmis.reports.partials.district-wise', [
+    //             'districtStats' => $districtOfficeReportData['districtStats'],
+    //             'total' => $districtOfficeReportData['total'],
+    //             'type' => $type,
+    //             'startDate' => $parsedStartDate,
+    //             'endDate' => $parsedEndDate,
+    //             'reportTitle' => 'District Office Report'
+    //         ])->render();
+    //     }
+
+    //     // Generate Provincial Office Report
+    //     $provincialOfficeReportData = $this->generateProvincialOfficeReport($type, $parsedStartDate, $parsedEndDate, $userDistricts, $dateType);
+        
+    //     $provincialOfficeHtml = '';
+    //     if ($provincialOfficeReportData['districtStats']->isNotEmpty()) {
+    //         $provincialOfficeHtml = view('modules.dmis.reports.partials.district-wise', [
+    //             'districtStats' => $provincialOfficeReportData['districtStats'],
+    //             'total' => $provincialOfficeReportData['total'],
+    //             'type' => $type,
+    //             'startDate' => $parsedStartDate,
+    //             'endDate' => $parsedEndDate,
+    //             'reportTitle' => 'Provincial Office Report'
+    //         ])->render();
+    //     }
+
+    //     // Combine reports
+    //     $combinedHtml = '';
+    //     if (!empty($districtOfficeHtml)) {
+    //         $combinedHtml .= $districtOfficeHtml;
+    //     }
+    //     if (!empty($provincialOfficeHtml)) {
+    //         $combinedHtml .= '<br><hr><br>' . $provincialOfficeHtml;
+    //     }
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'data' => [
+    //             'result' => $combinedHtml ?: '<div class="alert alert-info text-center"><i class="bi-info-circle me-2"></i>No damages found in the selected period.</div>',
+    //         ],
+    //     ]);
+    // }
+
+    // private function generateDistrictOfficeReport($type, $startDate, $endDate, $userDistricts, $dateType)
+    // {
+    //     $districtStats = collect();
+
+    //     foreach ($userDistricts as $district) {
+    //         $infrastructures = $district->infrastructures()
+    //             ->where('type', $type)
+    //             ->get();
+            
+    //         $infrastructureIds = $infrastructures->pluck('id')->toArray();
+            
+    //         if (empty($infrastructureIds)) {
+    //             continue;
+    //         }
+            
+    //         $damageQuery = Damage::whereIn('infrastructure_id', $infrastructureIds);
+            
+    //         // Filter damages reported by district office users only
+    //         if ($district->office) {
+    //             $damageQuery->whereHas('posting', function ($query) use ($district) {
+    //                 $query->where('office_id', $district->office->id);
+    //             });
+    //         }
+            
+    //         if ($startDate && $endDate) {
+    //             $damageQuery->whereBetween($dateType, [$startDate, $endDate]);
+    //         }
+            
+    //         $damages = $damageQuery->get();
+
+    //         if ($damages->isEmpty()) {
+    //             continue;
+    //         }
+
+    //         $stats = [
+    //             'district' => $district,
+    //             'office' => $district->office,
+    //             'display_name' => $district->name,
+    //             'office_type' => 'District',
+    //             'infrastructure_count' => $infrastructures->count(),
+    //             'damaged_infrastructure_count' => $damages->pluck('infrastructure_id')->unique()->count(),
+    //             'damage_count' => $damages->count(),
+    //             'damaged_length' => $damages->sum('damaged_length'),
+    //             'fully_restored' => $damages->where('road_status', 'Fully restored')->count(),
+    //             'partially_restored' => $damages->where('road_status', 'Partially restored')->count(),
+    //             'not_restored' => $damages->where('road_status', 'Not restored')->count(),
+    //             'restoration_cost' => $damages->sum('approximate_restoration_cost'),
+    //             'rehabilitation_cost' => $damages->sum('approximate_rehabilitation_cost'),
+    //             'total_cost' => $damages->sum('approximate_restoration_cost') + $damages->sum('approximate_rehabilitation_cost'),
+    //         ];
+    //         $districtStats->push($stats);
+    //     }
+
+    //     $districtStats = $districtStats->sortByDesc('damage_count')->values();
+
+    //     $total = [
+    //         'total_infrastructure_count' => $districtStats->sum('infrastructure_count'),
+    //         'total_damaged_infrastructure_count' => $districtStats->sum('damaged_infrastructure_count'),
+    //         'total_damage_count' => $districtStats->sum('damage_count'),
+    //         'total_damaged_length' => $districtStats->sum('damaged_length'),
+    //         'total_fully_restored' => $districtStats->sum('fully_restored'),
+    //         'total_partially_restored' => $districtStats->sum('partially_restored'),
+    //         'total_not_restored' => $districtStats->sum('not_restored'),
+    //         'total_restoration_cost' => $districtStats->sum('restoration_cost'),
+    //         'total_rehabilitation_cost' => $districtStats->sum('rehabilitation_cost'),
+    //         'total_cost' => $districtStats->sum('total_cost'),
+    //     ];
+
+    //     return [
+    //         'districtStats' => $districtStats,
+    //         'total' => $total
+    //     ];
+    // }
+
+    // private function generateProvincialOfficeReport($type, $startDate, $endDate, $userDistricts, $dateType)
+    // {
+    //     $districtStats = collect();
+        
+    //     // Get all provincial offices
+    //     $provincialOffices = Office::where('type', 'Provincial')->get();
+        
+    //     foreach ($provincialOffices as $provincialOffice) {
+    //         $managedDistricts = $provincialOffice->getAllManagedDistricts();
+            
+    //         foreach ($managedDistricts as $district) {
+    //             // Only include if this district is in user's accessible districts
+    //             if (!$userDistricts->contains('id', $district->id)) {
+    //                 continue;
+    //             }
+                
+    //             $infrastructures = $district->infrastructures()
+    //                 ->where('type', $type)
+    //                 ->get();
+                
+    //             $infrastructureIds = $infrastructures->pluck('id')->toArray();
+                
+    //             if (empty($infrastructureIds)) {
+    //                 continue;
+    //             }
+                
+    //             $damageQuery = Damage::whereIn('infrastructure_id', $infrastructureIds);
+                
+    //             // Filter damages reported by provincial office users only
+    //             $damageQuery->whereHas('posting', function ($query) use ($provincialOffice) {
+    //                 $query->where('office_id', $provincialOffice->id);
+    //             });
+                
+    //             if ($startDate && $endDate) {
+    //                 $damageQuery->whereBetween($dateType, [$startDate, $endDate]);
+    //             }
+                
+    //             $damages = $damageQuery->get();
+
+    //             if ($damages->isEmpty()) {
+    //                 continue;
+    //             }
+
+    //             $stats = [
+    //                 'district' => $district,
+    //                 'office' => $provincialOffice,
+    //                 'display_name' => $district->name . ' (' . $provincialOffice->name . ')',
+    //                 'office_type' => 'Provincial',
+    //                 'infrastructure_count' => $infrastructures->count(),
+    //                 'damaged_infrastructure_count' => $damages->pluck('infrastructure_id')->unique()->count(),
+    //                 'damage_count' => $damages->count(),
+    //                 'damaged_length' => $damages->sum('damaged_length'),
+    //                 'fully_restored' => $damages->where('road_status', 'Fully restored')->count(),
+    //                 'partially_restored' => $damages->where('road_status', 'Partially restored')->count(),
+    //                 'not_restored' => $damages->where('road_status', 'Not restored')->count(),
+    //                 'restoration_cost' => $damages->sum('approximate_restoration_cost'),
+    //                 'rehabilitation_cost' => $damages->sum('approximate_rehabilitation_cost'),
+    //                 'total_cost' => $damages->sum('approximate_restoration_cost') + $damages->sum('approximate_rehabilitation_cost'),
+    //             ];
+    //             $districtStats->push($stats);
+    //         }
+    //     }
+
+    //     $districtStats = $districtStats->sortByDesc('damage_count')->values();
+
+    //     $total = [
+    //         'total_infrastructure_count' => $districtStats->sum('infrastructure_count'),
+    //         'total_damaged_infrastructure_count' => $districtStats->sum('damaged_infrastructure_count'),
+    //         'total_damage_count' => $districtStats->sum('damage_count'),
+    //         'total_damaged_length' => $districtStats->sum('damaged_length'),
+    //         'total_fully_restored' => $districtStats->sum('fully_restored'),
+    //         'total_partially_restored' => $districtStats->sum('partially_restored'),
+    //         'total_not_restored' => $districtStats->sum('not_restored'),
+    //         'total_restoration_cost' => $districtStats->sum('restoration_cost'),
+    //         'total_rehabilitation_cost' => $districtStats->sum('rehabilitation_cost'),
+    //         'total_cost' => $districtStats->sum('total_cost'),
+    //     ];
+
+    //     return [
+    //         'districtStats' => $districtStats,
+    //         'total' => $total
+    //     ];
+    // }
+
     public function districtDetailsReport(Request $request, District $district)
     {
         $this->authorize('viewDistrictWiseReport', \App\Models\Damage::class);
 
         $type = $request->get('type') ?? 'Road';
+        $user = $request->get('user');
 
+        $posting = User::findOrFail($user)->getSubordinates;
         $infrastructures = $district->infrastructures()
             ->when($type !== 'All', function ($query) use ($type) {
                 return $query->where('type', $type);
             })
             ->get();
-
+            dd($posting);
         $infrastructureIds = $infrastructures->pluck('id')->toArray();
 
         $damages = Damage::whereIn('infrastructure_id', $infrastructureIds)
+            ->where('posting_id', $posting->id)
             ->with([
                 'infrastructure',
                 'posting.user.currentDesignation',
