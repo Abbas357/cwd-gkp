@@ -28,9 +28,11 @@
             <th scope="colgroup" class="text-center align-middle bg-light" colspan="3">
                 {{ $type ?? 'Road' }} Status
             </th>
+            @if($costInfo)
             <th scope="colgroup" class="text-center align-middle bg-light" colspan="2">
                 Approximate Cost (Millions)
             </th>
+            @endif
         </tr>
         <tr class="bg-success bg-opacity-75 text-white text-uppercase fw-bold">
             <th scope="col" class="text-center align-middle">
@@ -57,12 +59,14 @@
                 Not Restored<br>
                 <small class="help-text">(Closed for traffic)</small>
             </th>
+            @if($costInfo)
             <th scope="col" class="text-center align-middle">
                 Restoration
             </th>
             <th scope="col" class="text-center align-middle">
                 Rehabilitation
             </th>
+            @endif
         </tr>
     </thead>
     <tbody>
@@ -96,8 +100,10 @@
                     <td class="text-center fw-medium">{{ $district->fully_restored }}</td>
                     <td class="text-center fw-medium">{{ $district->partially_restored }}</td>
                     <td class="text-center fw-medium">{{ $district->not_restored }}</td>
+                    @if($costInfo)
                     <td class="text-center fw-medium">{{ number_format($district->restoration, 2) }}</td>
                     <td class="text-center fw-medium">{{ number_format($district->rehabilitation, 2) }}</td>
+                    @endif
                 </tr>
             @endforeach
         @endforeach
@@ -117,8 +123,10 @@
                 <th class="bg-light text-center">{{ $total['totalFullyRestored'] }}</th>
                 <th class="bg-light text-center">{{ $total['totalPartiallyRestored'] }}</th>
                 <th class="bg-light text-center">{{ $total['totalNotRestored'] }}</th>
+                @if($costInfo)
                 <th class="bg-light text-center">{{ number_format($total['totalRestorationCost'], 2) }}</th>
                 <th class="bg-light text-center">{{ number_format($total['totalRehabilitationCost'], 2) }}</th>
+                @endif
             </tr>
         @endif
     </tbody>

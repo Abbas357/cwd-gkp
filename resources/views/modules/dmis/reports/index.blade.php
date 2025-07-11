@@ -238,13 +238,8 @@
         <div class="row mb-4 no-print">
             <div class="col-md-12">
                 <form method="get" class="row border-bottom" id="report-form">
-
                     <div class="col report-type-field">
                         <label class="form-label" for="report_type">Report Type</label>
-                        <span class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" name="date_type" value="created_at" id="date_type" />
-                            <label class="form-check-label mb-0" for="date_type">Entry Date</label>
-                        </span>
                         <select name="report_type" id="report_type" class="form-control" placeholder="Select report_type">
                             @can('viewMainReport', App\Models\Damage::class)
                             <option value="Summary" {{ request()->query('report_type') == 'Summary' ? 'selected' : '' }}>Summary</option>
@@ -312,7 +307,16 @@
                             @endforeach
                         </select>
                     </div>
-
+                    <div class="col">
+                        <span class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="date_type" value="created_at" id="date_type" />
+                            <label class="form-check-label mb-0" for="date_type">Entry Date</label>
+                        </span>
+                        <span class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="cost_info" name="cost_info" value="true" checked />
+                            <label class="form-check-label mb-0" for="cost_info">Cost Info</label>
+                        </span>
+                    </div>
                     <div class="d-flex justify-content-between p-3">
                         <div>
                             <button type="button" id="generate-report" class="cw-btn success">
@@ -397,6 +401,7 @@
                     const startDate = $('#start_date').val();
                     const endDate = $('#end_date').val();
                     const dateType = $('#date_type').is(':checked') ? 'created_at' : 'report_date';
+                    const costInfo = $('#cost_info').is(':checked') ? true : false;
 
                     const url = "{{ route('admin.apps.dmis.reports.loadReport') }}";
 
@@ -415,7 +420,8 @@
                             'report_date': reportDate,
                             'start_date': startDate,
                             'end_date': endDate,
-                            'date_type': dateType
+                            'date_type': dateType,
+                            'cost_info': costInfo
                         })
                     });
 

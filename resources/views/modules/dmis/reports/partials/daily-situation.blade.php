@@ -22,9 +22,11 @@
                 <th scope="colgroup" class="text-center align-middle bg-light" colspan="3">
                     {{ $type ?? 'Road' }} Status (Today)
                 </th>
+                @if($costInfo)
                 <th scope="colgroup" class="text-center align-middle bg-light" colspan="2">
                     Approximate Cost (Millions)
                 </th>
+                @endif
                 <th scope="colgroup" class="text-center align-middle bg-warning text-dark" colspan="2">
                     Daily Activity
                 </th>
@@ -51,12 +53,14 @@
                 <th scope="col" class="text-center align-middle">
                     Not Restored
                 </th>
+                @if($costInfo)
                 <th scope="col" class="text-center align-middle">
                     Restoration
                 </th>
                 <th scope="col" class="text-center align-middle">
                     Rehabilitation
                 </th>
+                @endif
                 <th scope="col" class="text-center align-middle bg-warning text-dark">
                     New Today
                 </th>
@@ -98,8 +102,10 @@
                         <td class="text-center fw-medium">{{ $district->fully_restored }}</td>
                         <td class="text-center fw-medium">{{ $district->partially_restored }}</td>
                         <td class="text-center fw-medium">{{ $district->not_restored }}</td>
+                        @if($costInfo)
                         <td class="text-center fw-medium">{{ number_format($district->restoration, 2) }}</td>
                         <td class="text-center fw-medium">{{ number_format($district->rehabilitation, 2) }}</td>
+                        @endif
                         <td class="text-center fw-medium">
                             <span class="badge bg-danger">{{ $district->new_damages_today ?? 0 }}</span>
                         </td>
@@ -126,8 +132,10 @@
                     <th class="bg-light text-center">{{ $total['totalFullyRestored'] }}</th>
                     <th class="bg-light text-center">{{ $total['totalPartiallyRestored'] }}</th>
                     <th class="bg-light text-center">{{ $total['totalNotRestored'] }}</th>
+                    @if($costInfo)
                     <th class="bg-light text-center">{{ number_format($total['totalRestorationCost'], 2) }}</th>
                     <th class="bg-light text-center">{{ number_format($total['totalRehabilitationCost'], 2) }}</th>
+                    @endif
                     <th class="bg-light text-center">
                         <span class="badge bg-danger">
                             {{ collect($subordinatesWithDistricts)->flatMap(fn($item) => $item['districts'])->sum('new_damages_today') }}

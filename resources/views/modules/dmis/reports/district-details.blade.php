@@ -499,15 +499,15 @@
             @endif
 
             <div class="d-flex flex-wrap gap-2 mb-3">
-                <span class="badge bg-primary fs-6 px-3 py-2">
+                <span class="badge border border-primary text-primary bg-transparent fs-6 px-3 py-2">
                     <i class="bi bi-calendar-event me-1"></i>
                     <strong>Report Date:</strong> {{ now()->format('F d, Y') }}
                 </span>
-                <span class="badge bg-secondary fs-6 px-3 py-2">
+                <span class="badge border border-success text-success bg-transparent fs-6 px-3 py-2">
                     <i class="bi bi-building me-1"></i>
                     <strong>Infrastructure Type:</strong> {{ $type }}
                 </span>
-                <span class="badge bg-info fs-6 px-3 py-2">
+                <span class="badge border border-danger text-danger bg-transparent fs-6 px-3 py-2">
                     <i class="bi bi-exclamation-triangle me-1"></i>
                     <strong>Total Damages:</strong> {{ $stats['total_damages'] }}
                 </span>

@@ -129,11 +129,11 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <div class="text-muted">
-                        <span class="badge bg-primary fs-6 px-2 py-1">Report Date:
+                        <span class="badge border border-primary text-primary bg-transparent fs-6 px-2 py-1">Report Date:
                             <strong>{{ now()->format('F d, Y') }}</strong></span>
-                        <span class="badge bg-secondary fs-6 px-2 py-1">Infrastructure Type:
+                        <span class="badge border border-success text-success bg-transparent  fs-6 px-2 py-1">Infrastructure Type:
                             <strong>{{ $type }}</strong></span>
-                        <span class="badge bg-info fs-6 px-2 py-1">Total Damages:
+                        <span class="badge border border-danger text-danger bg-transparent  fs-6 px-2 py-1">Total Damages:
                             <strong>{{ $stats['total_damages'] }}</strong></span>
                     </div>
                 </div>
@@ -171,10 +171,10 @@
                     <div class="summary-number">{{ $stats['not_restored'] }}</div>
                     <div class="summary-label">Not Restored</div>
                 </div>
-                <div class="summary-card">
+                {{-- <div class="summary-card">
                     <div class="summary-number">{{ $stats['total_cost'] }} M</div>
                     <div class="summary-label">Total Cost (PKR)</div>
-                </div>
+                </div> --}}
             </div>
 
             <!-- Reporting Officers -->
@@ -209,8 +209,8 @@
                                 <th width="10%">Total Length</th>
                                 <th width="10%">Status</th>
                                 <th width="10%">Damaged Length</th>
-                                <th width="10%">Restoration Cost</th>
-                                <th width="10%">Rehabilitation Cost</th>
+                                {{-- <th width="10%">Restoration Cost</th>
+                                <th width="10%">Rehabilitation Cost</th> --}}
                                 <th width="10%">Dated</th>
                             </tr>
                         </thead>
@@ -252,8 +252,8 @@
                                     <td>{{ $firstDamage->damaged_length ?? 'N/A' }}
                                         {{ request()->query('type') == 'Road' || !request()->has('type') ? '(KM)' : '(Meter)' }}
                                     </td>
-                                    <td>{{ $firstDamage->approximate_restoration_cost }} M</td>
-                                    <td>{{ $firstDamage->approximate_rehabilitation_cost }} M</td>
+                                    {{-- <td>{{ $firstDamage->approximate_restoration_cost }} M</td>
+                                    <td>{{ $firstDamage->approximate_rehabilitation_cost }} M</td> --}}
                                     <td>{{ $firstDamage->created_at->format('M d, Y') }}</td>
                                 </tr>
 
@@ -279,8 +279,8 @@
                                         <td>{{ $damage->damaged_length ?? 'N/A' }}
                                             {{ request()->query('type') == 'Road' || !request()->has('type') ? '(KM)' : '(Meter)' }}
                                         </td>
-                                        <td>{{ $damage->approximate_restoration_cost }} M</td>
-                                        <td>{{ $damage->approximate_rehabilitation_cost }} M</td>
+                                        {{-- <td>{{ $damage->approximate_restoration_cost }} M</td>
+                                        <td>{{ $damage->approximate_rehabilitation_cost }} M</td> --}}
                                         <td>{{ $damage->created_at->format('M d, Y') }}</td>
                                     </tr>
 

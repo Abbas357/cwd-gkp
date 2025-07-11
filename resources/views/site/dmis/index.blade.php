@@ -246,9 +246,9 @@
                             <th scope="col" class="text-center align-middle">Fully Restored</th>
                             <th scope="col" class="text-center align-middle">Partially Restored</th>
                             <th scope="col" class="text-center align-middle">Not Restored</th>
-                            <th scope="col" class="text-center align-middle">Restoration Cost(M)</th>
+                            {{-- <th scope="col" class="text-center align-middle">Restoration Cost(M)</th>
                             <th scope="col" class="text-center align-middle">Rehabilitation Cost(M)</th>
-                            <th scope="col" class="text-center align-middle">Total Cost(M)</th>
+                            <th scope="col" class="text-center align-middle">Total Cost(M)</th> --}}
                             <th scope="col" class="text-center align-middle no-print px-3">View</th>
                         </tr>
                     </thead>
@@ -283,9 +283,9 @@
                                 <td class="text-center">{{ $stats['fully_restored'] }}</td>
                                 <td class="text-center">{{ $stats['partially_restored'] }}</td>
                                 <td class="text-center">{{ $stats['not_restored'] }}</td>
-                                <td class="text-center">{{ number_format($stats['restoration_cost'], 2) }}</td>
+                                {{-- <td class="text-center">{{ number_format($stats['restoration_cost'], 2) }}</td>
                                 <td class="text-center">{{ number_format($stats['rehabilitation_cost'], 2) }}</td>
-                                <td class="text-center fw-bold">{{ number_format($stats['total_cost'], 2) }}</td>
+                                <td class="text-center fw-bold">{{ number_format($stats['total_cost'], 2) }}</td> --}}
                                 <td class="text-center no-print">
                                     <div class="action-buttons d-flex justify-content-center align-items-center">
                                         @php
@@ -313,9 +313,9 @@
                             <td class="text-center">{{ $total['total_fully_restored'] }}</td>
                             <td class="text-center">{{ $total['total_partially_restored'] }}</td>
                             <td class="text-center">{{ $total['total_not_restored'] }}</td>
-                            <td class="text-center">{{ number_format($total['total_restoration_cost'], 2) }}</td>
+                            {{-- <td class="text-center">{{ number_format($total['total_restoration_cost'], 2) }}</td>
                             <td class="text-center">{{ number_format($total['total_rehabilitation_cost'], 2) }}</td>
-                            <td class="text-center">{{ number_format($total['total_cost'], 2) }}</td>
+                            <td class="text-center">{{ number_format($total['total_cost'], 2) }}</td> --}}
                             <td class="text-center no-print">-</td>
                         </tr>
                     </tbody>

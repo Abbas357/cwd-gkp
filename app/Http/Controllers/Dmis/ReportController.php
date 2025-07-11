@@ -53,6 +53,7 @@ class ReportController extends Controller
         $startDate = request()->get('start_date');
         $endDate = request()->get('end_date');
         $dateType = request()->get('date_type', 'report_date');
+        $costInfo = request()->get('cost_info');
 
         // Initialize date variables as null
         $parsedStartDate = null;
@@ -135,7 +136,8 @@ class ReportController extends Controller
             'selectedUser' => $selectedUser,
             'type' => $type,
             'startDate' => $parsedStartDate,
-            'endDate' => $parsedEndDate
+            'endDate' => $parsedEndDate,
+            'costInfo' => $costInfo
         ])->render();
 
         return response()->json([
@@ -279,6 +281,7 @@ class ReportController extends Controller
 
         $officerDistricts = $selectedUser->districts();
         $dateType = request()->get('date_type', 'report_date');
+        $costInfo = request()->get('cost_info');
 
         if ($officerDistricts->isEmpty()) {
             return response()->json([
@@ -328,7 +331,8 @@ class ReportController extends Controller
             'subordinateDesignation' => $reportData['subordinateDesignation'],
             'selectedUser' => $selectedUser,
             'reportDate' => $reportDate,
-            'type' => $type
+            'type' => $type,
+            'costInfo' => $costInfo,
         ])->render();
 
         return response()->json([
@@ -472,6 +476,7 @@ class ReportController extends Controller
         $startDate = request()->get('start_date');
         $endDate = request()->get('end_date');
         $dateType = request()->get('date_type', 'report_date');
+        $costInfo = request()->get('cost_info');
 
         // Initialize date variables as null
         $parsedStartDate = null;
@@ -529,7 +534,8 @@ class ReportController extends Controller
             'total' => $reportData['total'],
             'type' => $type,
             'startDate' => $parsedStartDate,
-            'endDate' => $parsedEndDate
+            'endDate' => $parsedEndDate,
+            'costInfo' => $costInfo,
         ])->render();
 
         return response()->json([
