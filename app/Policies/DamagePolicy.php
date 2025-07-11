@@ -62,9 +62,4 @@ class DamagePolicy
     {
         return $user->can('init settings damage');
     }
-
-    public function viewCost(User $user): bool
-    {
-        return $user->can('view cost info damage');
-    }
 }
