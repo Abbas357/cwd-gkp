@@ -111,7 +111,8 @@ class ReportController extends Controller
                         'selectedUser' => $selectedUser,
                         'type' => $infraType,
                         'startDate' => $parsedStartDate,
-                        'endDate' => $parsedEndDate
+                        'endDate' => $parsedEndDate,
+                        'costInfo' => $costInfo,
                     ])->render();
 
                     $allReportsHtml .= $html . '<br><hr />';
@@ -307,7 +308,8 @@ class ReportController extends Controller
                         'subordinateDesignation' => $reportData['subordinateDesignation'],
                         'selectedUser' => $selectedUser,
                         'reportDate' => $reportDate,
-                        'type' => $infraType
+                        'type' => $infraType,
+                        'costInfo' => $costInfo,
                     ])->render();
 
                     $allReportsHtml .= $html . '<br><hr />';
@@ -511,7 +513,8 @@ class ReportController extends Controller
                         'total' => $reportData['total'],
                         'type' => $infraType,
                         'startDate' => $parsedStartDate,
-                        'endDate' => $parsedEndDate
+                        'endDate' => $parsedEndDate,
+                        'costInfo' => $costInfo,
                     ])->render();
 
                     $allReportsHtml .= $html . '<br><hr />';

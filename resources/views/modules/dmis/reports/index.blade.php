@@ -308,13 +308,14 @@
                         </select>
                     </div>
                     <div class="col">
+                        <span>More</span>
                         <span class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" name="date_type" value="created_at" id="date_type" />
-                            <label class="form-check-label mb-0" for="date_type">Entry Date</label>
+                            <label class="form-check-label mb-0" style="color: #999;" for="date_type">Entry Date</label>
                         </span>
                         <span class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" id="cost_info" name="cost_info" value="true" checked />
-                            <label class="form-check-label mb-0" for="cost_info">Cost Info</label>
+                            <label class="form-check-label mb-0" style="color: #999;" for="cost_info">Cost Info</label>
                         </span>
                     </div>
                     <div class="d-flex justify-content-between p-3">
