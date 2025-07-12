@@ -90,7 +90,7 @@
                             </td>
                         @endif
                     @endif
-                    <td class="text-center fw-medium" style="white-space: nowrap">{{ $district->name }}</td>
+                    <td class="text-center fw-medium">{{ $district->name }}</td>
                     <td class="text-center fw-medium"><a
                             href="{{ route('admin.apps.dmis.reports.district-details', ['district' => $district->id, 'type' => $type ?? 'Road', 'user' => $subordinate->id]) }}">{{ $district->damaged_infrastructure_count }}</a>
                     </td>

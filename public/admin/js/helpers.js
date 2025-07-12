@@ -1,13 +1,13 @@
-function showNotification(message, type = 'success', options = {}) {
+function showNotification(message, type = "success", options = {}) {
     Swal.fire({
-        icon: type
-        , title: type === 'success' ? 'Success' : 'Error'
-        , text: message
-        , toast: true
-        , position: 'top-end'
-        , showConfirmButton: options.showConfirmButton || false
-        , timer: options.timer || 3000
-        , timerProgressBar: true
+        icon: type,
+        title: type === "success" ? "Success" : "Error",
+        text: message,
+        toast: true,
+        position: "top-end",
+        showConfirmButton: options.showConfirmButton || false,
+        timer: options.timer || 3000,
+        timerProgressBar: true,
     });
 }
 
@@ -37,7 +37,7 @@ async function confirmWithInput({
 } = {}) {
     const options = {
         title: text,
-        input: inputType === 'textarea' ? 'textarea' : inputType,
+        input: inputType === "textarea" ? "textarea" : inputType,
         inputPlaceholder: inputPlaceholder,
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -135,8 +135,9 @@ function handleValidationErrors(errors) {
 
 function debounce(func, wait) {
     let timeout;
-    return function() {
-        const context = this, args = arguments;
+    return function () {
+        const context = this,
+            args = arguments;
         clearTimeout(timeout);
         timeout = setTimeout(() => {
             func.apply(context, args);
@@ -145,19 +146,18 @@ function debounce(func, wait) {
 }
 
 function initDataTable(selector, options = {}) {
-
     const $table = $(selector);
-    if (!$table.hasClass('datatable-loading-container')) {
+    if (!$table.hasClass("datatable-loading-container")) {
         $table.wrap('<div class="datatable-loading-container"></div>');
-        
+
         $table.append(`
             <div class="datatable-loading-progress"></div>
             <div class="datatable-content-dimmer"></div>
         `);
     }
-    
-    const $loadingProgress = $table.find('.datatable-loading-progress');
-    const $contentDimmer = $table.find('.datatable-content-dimmer');
+
+    const $loadingProgress = $table.find(".datatable-loading-progress");
+    const $contentDimmer = $table.find(".datatable-content-dimmer");
 
     const exportButtons = [
         {
@@ -167,7 +167,7 @@ function initDataTable(selector, options = {}) {
                     &nbsp; Copy
                 </span>`,
             exportOptions: {
-                columns: ':visible:not(.action-column)',
+                columns: ":visible:not(.action-column)",
             },
         },
         {
@@ -177,7 +177,7 @@ function initDataTable(selector, options = {}) {
                     &nbsp; CSV
                 </span>`,
             exportOptions: {
-                columns: ':visible:not(.action-column)',
+                columns: ":visible:not(.action-column)",
             },
         },
         {
@@ -187,7 +187,7 @@ function initDataTable(selector, options = {}) {
                     &nbsp; Excel
                 </span>`,
             exportOptions: {
-                columns: ':visible:not(.action-column)',
+                columns: ":visible:not(.action-column)",
             },
         },
         {
@@ -198,17 +198,17 @@ function initDataTable(selector, options = {}) {
                 </span>`,
             autoPrint: false,
             exportOptions: {
-                columns: ':visible:not(.action-column)',
+                columns: ":visible:not(.action-column)",
             },
         },
     ];
 
     const customButtons = [];
-    
+
     if (options.customButton) {
         customButtons.push(options.customButton);
     }
-    
+
     if (options.customButtons && Array.isArray(options.customButtons)) {
         customButtons.push(...options.customButtons);
     }
@@ -323,14 +323,14 @@ function initDataTable(selector, options = {}) {
         },
         columnDefs: options.columnDefs || [],
         preDrawCallback() {
-            $table.addClass('loading');
-            $loadingProgress.addClass('active');
-            $contentDimmer.addClass('active');
+            $table.addClass("loading");
+            $loadingProgress.addClass("active");
+            $contentDimmer.addClass("active");
         },
         drawCallback() {
-            $table.removeClass('loading');
-            $loadingProgress.removeClass('active');
-            $contentDimmer.removeClass('active');
+            $table.removeClass("loading");
+            $loadingProgress.removeClass("active");
+            $contentDimmer.removeClass("active");
         },
     };
 
@@ -513,8 +513,10 @@ function imageCropper(options) {
 
     $fileInput.on("change", function (e) {
         var files = e.target.files;
-        var imageFiles = Array.from(files).filter(file => file.type.startsWith("image/"));
-        
+        var imageFiles = Array.from(files).filter((file) =>
+            file.type.startsWith("image/")
+        );
+
         if (imageFiles.length === 0) {
             if (typeof options.onComplete === "function") {
                 options.onComplete(files[0], this);
@@ -542,7 +544,7 @@ function imageCropper(options) {
 
         var file = imageFiles[currentImageIndex];
         var uniqueId = uniqId(6);
-        
+
         var modalId = `#crop-modal-${uniqueId}`;
         var cropBoxImageId = `#cropbox-image-${uniqueId}`;
         var cropButtonId = `#apply-crop-${uniqueId}`;
@@ -590,13 +592,18 @@ function imageCropper(options) {
         // Modal show/hide handlers
         $cropModal
             .on("shown.bs.modal", function () {
-                var selectedAspectRatio = parseFloat($aspectRatioSelect.val()) || options.aspectRatio;
+                var selectedAspectRatio =
+                    parseFloat($aspectRatioSelect.val()) || options.aspectRatio;
                 cropper = new Cropper($cropBoxImage[0], {
                     aspectRatio: selectedAspectRatio,
                     viewMode: options.viewMode,
                     ready: function () {
                         if ($actionsContainer) {
-                            loadActionButtons($actionsContainer, uniqueId, cropper);
+                            loadActionButtons(
+                                $actionsContainer,
+                                uniqueId,
+                                cropper
+                            );
                         }
                     },
                 });
@@ -607,16 +614,19 @@ function imageCropper(options) {
                     cropper = null;
                 }
                 // Remove modal from DOM after hiding
-                setTimeout(function() {
+                setTimeout(function () {
                     $cropModal.remove();
                 }, 300);
             });
 
         function generateLoadingModalHtml(uniqueId) {
-            var loadingTitle = totalImages > 1 ? 
-                `Processing image ${currentImageIndex + 1} of ${totalImages}...` : 
-                'Processing image...';
-        
+            var loadingTitle =
+                totalImages > 1
+                    ? `Processing image ${
+                          currentImageIndex + 1
+                      } of ${totalImages}...`
+                    : "Processing image...";
+
             return `
             <div class="modal modal fade" id="loading-modal-${uniqueId}" tabindex="-1" role="dialog" aria-labelledby="loadingModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
@@ -637,70 +647,84 @@ function imageCropper(options) {
         $cropButton.on("click", function () {
             var canvas;
             $cropModal.modal("hide");
-        
+
             if (cropper) {
                 canvas = cropper.getCroppedCanvas();
-                
+
                 // Update preview only for single image or last image
-                if (totalImages === 1 || currentImageIndex === totalImages - 1) {
+                if (
+                    totalImages === 1 ||
+                    currentImageIndex === totalImages - 1
+                ) {
                     $inputLabelPreview.attr(
                         "src",
                         canvas.toDataURL(options.imageType, options.quality)
                     );
                 }
-        
+
                 // Function to adjust quality based on file size
                 function createOptimizedBlob(canvas, callback) {
                     var quality = options.quality;
                     var maxAttempts = options.maxQualityAttempts;
                     var attempt = 0;
-        
+
                     function tryQuality(q) {
-                        canvas.toBlob(function(blob) {
-                            attempt++;
-                            var size = blob.size;
-                            
-                            if (size >= minFileSize && size <= maxFileSize) {
-                                // Perfect size range
-                                callback(blob);
-                            } else if (attempt >= maxAttempts) {
-                                // Max attempts reached, use current blob
-                                callback(blob);
-                            } else if (size > maxFileSize) {
-                                // Too large, reduce quality
-                                var newQuality = Math.max(0.1, q - 0.1);
-                                tryQuality(newQuality);
-                            } else {
-                                // Too small, increase quality
-                                var newQuality = Math.min(1.0, q + 0.1);
-                                tryQuality(newQuality);
-                            }
-                        }, options.imageType, q);
+                        canvas.toBlob(
+                            function (blob) {
+                                attempt++;
+                                var size = blob.size;
+
+                                if (
+                                    size >= minFileSize &&
+                                    size <= maxFileSize
+                                ) {
+                                    // Perfect size range
+                                    callback(blob);
+                                } else if (attempt >= maxAttempts) {
+                                    // Max attempts reached, use current blob
+                                    callback(blob);
+                                } else if (size > maxFileSize) {
+                                    // Too large, reduce quality
+                                    var newQuality = Math.max(0.1, q - 0.1);
+                                    tryQuality(newQuality);
+                                } else {
+                                    // Too small, increase quality
+                                    var newQuality = Math.min(1.0, q + 0.1);
+                                    tryQuality(newQuality);
+                                }
+                            },
+                            options.imageType,
+                            q
+                        );
                     }
-        
+
                     tryQuality(quality);
                 }
-        
-                createOptimizedBlob(canvas, function(blob) {
+
+                createOptimizedBlob(canvas, function (blob) {
                     var fileName = file.name.replace(/\.[^/.]+$/, "");
-                    var croppedFile = new File([blob], `${fileName}-cropped.jpg`, {
-                        type: options.imageType,
-                    });
-        
+                    var croppedFile = new File(
+                        [blob],
+                        `${fileName}-cropped.jpg`,
+                        {
+                            type: options.imageType,
+                        }
+                    );
+
                     processedImages.push(croppedFile);
                     currentImageIndex++;
-                    
+
                     // If all images processed, update file input
                     if (currentImageIndex >= imageFiles.length) {
                         updateFileInput(processedImages, fileInput);
                         if (typeof options.onComplete === "function") {
                             options.onComplete(processedImages, fileInput);
                         }
-                        
+
                         // Close loading modal after everything is done
                         if (window.currentLoadingModal) {
                             window.currentLoadingModal.modal("hide");
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 window.currentLoadingModal.remove();
                                 window.currentLoadingModal = null;
                             }, 300);
@@ -709,18 +733,29 @@ function imageCropper(options) {
                         // Show loading indicator for next image (only once)
                         if (!window.currentLoadingModal) {
                             var loadingUniqueId = uniqId(6);
-                            $("body").append(generateLoadingModalHtml(loadingUniqueId));
-                            window.currentLoadingModal = $(`#loading-modal-${loadingUniqueId}`);
-                            window.currentLoadingModal.modal({ backdrop: "static", keyboard: false });
+                            $("body").append(
+                                generateLoadingModalHtml(loadingUniqueId)
+                            );
+                            window.currentLoadingModal = $(
+                                `#loading-modal-${loadingUniqueId}`
+                            );
+                            window.currentLoadingModal.modal({
+                                backdrop: "static",
+                                keyboard: false,
+                            });
                             window.currentLoadingModal.modal("show");
                         } else {
                             // Update loading modal text
-                            var loadingTitle = `Processing image ${currentImageIndex + 1} of ${totalImages}...`;
-                            window.currentLoadingModal.find('.modal-title').text(loadingTitle);
+                            var loadingTitle = `Processing image ${
+                                currentImageIndex + 1
+                            } of ${totalImages}...`;
+                            window.currentLoadingModal
+                                .find(".modal-title")
+                                .text(loadingTitle);
                         }
-                        
+
                         // Process next image after a brief delay
-                        setTimeout(function() {
+                        setTimeout(function () {
                             processNextImage(imageFiles, fileInput);
                         }, 100);
                     }
@@ -853,39 +888,42 @@ function imageCropper(options) {
         $container.html(buttonsHTML);
 
         // Fixed aspect ratio change handler
-        $container.find(`#aspect-ratio-select-${uniqueId}`).on("change", function () {
-            var selectedValue = $(this).val();
-            var aspectRatio;
-            
-            if (selectedValue === "" || selectedValue === "NaN") {
-                aspectRatio = NaN; // Free aspect ratio
-            } else {
-                aspectRatio = parseFloat(selectedValue);
-                if (isNaN(aspectRatio)) {
-                    console.error('Invalid aspect ratio:', selectedValue);
-                    aspectRatio = NaN; // Fallback to free aspect ratio
+        $container
+            .find(`#aspect-ratio-select-${uniqueId}`)
+            .on("change", function () {
+                var selectedValue = $(this).val();
+                var aspectRatio;
+
+                if (selectedValue === "" || selectedValue === "NaN") {
+                    aspectRatio = NaN; // Free aspect ratio
+                } else {
+                    aspectRatio = parseFloat(selectedValue);
+                    if (isNaN(aspectRatio)) {
+                        console.error("Invalid aspect ratio:", selectedValue);
+                        aspectRatio = NaN; // Fallback to free aspect ratio
+                    }
                 }
-            }
-            
-            // Use the cropper instance passed to this function
-            if (cropperInstance) {
-                cropperInstance.setAspectRatio(aspectRatio);
-            }
-        });
+
+                // Use the cropper instance passed to this function
+                if (cropperInstance) {
+                    cropperInstance.setAspectRatio(aspectRatio);
+                }
+            });
     }
 
     function updateFileInput(files, fileInput) {
         var dataTransfer = new DataTransfer();
-        files.forEach(function(file) {
+        files.forEach(function (file) {
             dataTransfer.items.add(file);
         });
         fileInput.files = dataTransfer.files;
     }
 
     function generateModalHtml(uniqueId) {
-        var modalTitle = totalImages > 1 ? 
-            `Crop image ${currentImageIndex + 1} of ${totalImages}` : 
-            'Crop the image';
+        var modalTitle =
+            totalImages > 1
+                ? `Crop image ${currentImageIndex + 1} of ${totalImages}`
+                : "Crop the image";
 
         return `
         <div class="modal modal fade" id="crop-modal-${uniqueId}" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
@@ -925,19 +963,27 @@ function pushStateModal({
     modalHeight = null,
     hash = true,
     tableToRefresh = null,
-    formType = 'create'
+    formType = "create",
 }) {
     return new Promise((resolve) => {
-        const calcModalType = modalType ?? btnSelector.replace(/^[.#]/, '').split('-')[0];
+        const calcModalType =
+            modalType ?? btnSelector.replace(/^[.#]/, "").split("-")[0];
         let modalId = `modal-${calcModalType}`;
         const modalContentClass = `detail-${calcModalType}`;
-        const heightStyle = modalHeight === "auto" ? 
-            "max-height: 75vh; height: auto;" : 
-            `max-height: 75vh; height: ${modalHeight};`;
-        const actionBtnId = actionButtonName && actionButtonName.replace(/\s+/g, '-').toLowerCase()+'-'+calcModalType;
+        const heightStyle =
+            modalHeight === "auto"
+                ? "max-height: 75vh; height: auto;"
+                : `max-height: 75vh; height: ${modalHeight};`;
+        const actionBtnId =
+            actionButtonName &&
+            actionButtonName.replace(/\s+/g, "-").toLowerCase() +
+                "-" +
+                calcModalType;
 
-        const formTagOpen = includeForm ? `<form id="form-${calcModalType}" method="POST" enctype="multipart/form-data">` : '';
-        const formTagClose = includeForm ? `</form>` : '';
+        const formTagOpen = includeForm
+            ? `<form id="form-${calcModalType}" method="POST" enctype="multipart/form-data">`
+            : "";
+        const formTagClose = includeForm ? `</form>` : "";
 
         if ($(`#${modalId}`).length) {
             $(`#${modalId}`).remove();
@@ -967,20 +1013,27 @@ function pushStateModal({
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                        ${actionButtonName ? `<button type="submit" id="${actionBtnId}" class="btn btn-primary px-3">${actionButtonName}</button>` : ''}    
+                        ${
+                            actionButtonName
+                                ? `<button type="submit" id="${actionBtnId}" class="btn btn-primary px-3">${actionButtonName}</button>`
+                                : ""
+                        }    
                     </div>
                     ${formTagClose}
                 </div>
             </div>
         </div>`;
 
-        $('body').append(modalTemplate);
+        $("body").append(modalTemplate);
 
         async function openModal(recordId) {
             const url = fetchUrl.replace(":id", recordId);
 
             if (includeForm) {
-                $(`#form-${calcModalType}`).attr('action', formAction.replace(":id", recordId));
+                $(`#form-${calcModalType}`).attr(
+                    "action",
+                    formAction.replace(":id", recordId)
+                );
             }
 
             $(`#${modalId}`).modal("show");
@@ -989,7 +1042,7 @@ function pushStateModal({
 
             try {
                 const response = await fetchRequest(url);
-                const result = response['result'];
+                const result = response["result"];
 
                 if (result) {
                     $(`#${modalId} .modal-title`).text(title);
@@ -1022,7 +1075,7 @@ function pushStateModal({
 
         function openModalFromUrl() {
             if (!hash) return;
-            
+
             const urlParams = new URLSearchParams(window.location.search);
             const recordId = urlParams.get("id");
             const type = urlParams.get("type");
@@ -1033,24 +1086,26 @@ function pushStateModal({
         }
 
         $(document).off("click", btnSelector);
-        
+
         $(document).on("click", btnSelector, function () {
             const recordId = $(this).data("id");
-            
+
             if (hash) {
                 const currentUrl = new URL(window.location);
                 const newUrl = `${currentUrl.pathname}?id=${recordId}&type=${calcModalType}${window.location.hash}`;
                 history.pushState(null, null, newUrl);
             }
-            
+
             openModal(recordId, calcModalType);
         });
 
         if (hash) {
             const popstateEvent = `popstate.${modalId}`;
-            $(window).off(popstateEvent).on(popstateEvent, function () {
-                openModalFromUrl();
-            });
+            $(window)
+                .off(popstateEvent)
+                .on(popstateEvent, function () {
+                    openModalFromUrl();
+                });
 
             $(`#${modalId}`).on("hidden.bs.modal", function () {
                 const currentUrl = new URL(window.location);
@@ -1059,48 +1114,55 @@ function pushStateModal({
 
                 const newUrl = `${currentUrl.pathname}${currentUrl.search}${window.location.hash}`;
                 history.pushState(null, null, newUrl);
-                
+
                 resetModal();
             });
         }
 
         openModalFromUrl();
-        
+
         if (includeForm) {
             const modalElement = $(`#${modalId}`);
             const submitBtn = modalElement.find('button[type="submit"]');
-            
-            modalElement.find('form').off('submit').on('submit', async function(e) {
-                e.preventDefault();
-                const form = this;
-                
-                if (form.isSubmitting) {
-                    return false;
-                }
-                
-                form.isSubmitting = true;
-                const formData = new FormData(form);
-                formType === 'edit' && formData.append('_method', 'PATCH');
-                const url = $(this).attr('action');
-                
-                setButtonLoading(submitBtn, true);
-                 
-                try {
-                    const result = await fetchRequest(url, 'POST', formData);
-                    if (result) {
-                        setButtonLoading(submitBtn, false);
-                        modalElement.modal('hide');
-                        if (tableToRefresh) tableToRefresh.ajax.reload();
+
+            modalElement
+                .find("form")
+                .off("submit")
+                .on("submit", async function (e) {
+                    e.preventDefault();
+                    const form = this;
+
+                    if (form.isSubmitting) {
+                        return false;
                     }
-                } catch (error) {
-                    console.error('Error submitting form: ', error);
-                } finally {
-                    form.isSubmitting = false;
-                    setButtonLoading(submitBtn, false);
-                    submitBtn.prop('disabled', false);
-                    submitBtn.text(actionButtonName);
-                }
-            });
+
+                    form.isSubmitting = true;
+                    const formData = new FormData(form);
+                    formType === "edit" && formData.append("_method", "PATCH");
+                    const url = $(this).attr("action");
+
+                    setButtonLoading(submitBtn, true);
+
+                    try {
+                        const result = await fetchRequest(
+                            url,
+                            "POST",
+                            formData
+                        );
+                        if (result) {
+                            setButtonLoading(submitBtn, false);
+                            modalElement.modal("hide");
+                            if (tableToRefresh) tableToRefresh.ajax.reload();
+                        }
+                    } catch (error) {
+                        console.error("Error submitting form: ", error);
+                    } finally {
+                        form.isSubmitting = false;
+                        setButtonLoading(submitBtn, false);
+                        submitBtn.prop("disabled", false);
+                        submitBtn.text(actionButtonName);
+                    }
+                });
         }
 
         resolve(modalId);
@@ -1120,16 +1182,17 @@ function formWizardModal({
     onModalLoaded = null,
     onStepShown = null,
     formSubmitted = null,
-    formType = 'create',
+    formType = "create",
     tableToRefresh = null,
 }) {
     return new Promise((resolve) => {
-        const modalType = btnSelector.replace(/^[.#]/, '').split('-')[0];
+        const modalType = btnSelector.replace(/^[.#]/, "").split("-")[0];
         let modalId = `modal-${modalType}`;
         const modalContentClass = `detail-${modalType}`;
-        const heightStyle = modalHeight === "auto" ? 
-            "max-height: 75vh; height: auto;" : 
-            `max-height: 75vh; height: ${modalHeight};`;
+        const heightStyle =
+            modalHeight === "auto"
+                ? "max-height: 75vh; height: auto;"
+                : `max-height: 75vh; height: ${modalHeight};`;
 
         const modalTemplate = `
         <div class="modal fade" id="${modalId}" tabindex="-1" aria-hidden="true">
@@ -1141,18 +1204,32 @@ function formWizardModal({
                     </div>
                     <div class="cw-wizard-navigation">
                         <ul class="nav nav-pills nav-justified cw-wizard-steps">
-                            ${wizardSteps.map((step, index) => `
+                            ${wizardSteps
+                                .map(
+                                    (step, index) => `
                                 <li class="nav-item cw-wizard-step-item">
-                                    <button type="button" class="nav-link ${index === 0 ? 'active' : 'disabled'}" data-step="${index}">
+                                    <button type="button" class="nav-link ${
+                                        index === 0 ? "active" : "disabled"
+                                    }" data-step="${index}">
                                         <div class="cw-wizard-step-circle">
-                                            <span class="cw-wizard-step-number">${index + 1}</span>
+                                            <span class="cw-wizard-step-number">${
+                                                index + 1
+                                            }</span>
                                             <span class="cw-wizard-step-check"><i class="bi bi-check-lg"></i></span>
                                         </div>
-                                        <span class="cw-wizard-step-text">${step.title}</span>
-                                        ${index < wizardSteps.length - 1 ? '<span class="cw-wizard-step-connector"></span>' : ''}
+                                        <span class="cw-wizard-step-text">${
+                                            step.title
+                                        }</span>
+                                        ${
+                                            index < wizardSteps.length - 1
+                                                ? '<span class="cw-wizard-step-connector"></span>'
+                                                : ""
+                                        }
                                     </button>
                                 </li>
-                            `).join('')}
+                            `
+                                )
+                                .join("")}
                         </ul>
                     </div>
                     <div class="cw-wizard-step-indicator">
@@ -1188,7 +1265,9 @@ function formWizardModal({
         const existingModal = $(`#${modalId}`);
         if (existingModal.length) {
             try {
-                const modalInstance = bootstrap.Modal.getInstance(existingModal[0]);
+                const modalInstance = bootstrap.Modal.getInstance(
+                    existingModal[0]
+                );
                 if (modalInstance) {
                     modalInstance.dispose();
                 }
@@ -1198,27 +1277,30 @@ function formWizardModal({
             existingModal.off().removeData().remove();
         }
 
-        $('body').append(modalTemplate);
+        $("body").append(modalTemplate);
 
         async function openModal(recordId) {
             const url = fetchUrl.replace(":id", recordId);
-            $(`#form-${modalType}`).attr('action', formAction.replace(":id", recordId));
-            
+            $(`#form-${modalType}`).attr(
+                "action",
+                formAction.replace(":id", recordId)
+            );
+
             $(`#${modalId}`).modal("show");
             $(`#${modalId} .${loadingSpinner}`).show();
             $(`#${modalId} .${modalContentClass}`).hide();
 
             const response = await fetchRequest(url);
-            const result = response['result'];
+            const result = response["result"];
 
             if (result) {
                 $(`#${modalId} .modal-title`).text(title);
                 $(`#${modalId} .${modalContentClass}`).html(result);
                 initWizard(modalId, wizardSteps);
-                
+
                 adjustModalHeight();
-                
-                if (typeof onModalLoaded === 'function') {
+
+                if (typeof onModalLoaded === "function") {
                     onModalLoaded();
                 }
             } else {
@@ -1231,32 +1313,34 @@ function formWizardModal({
             $(`#${modalId} .${loadingSpinner}`).hide();
             $(`#${modalId} .${modalContentClass}`).show();
         }
-        
+
         function adjustModalHeight() {
             const $modalBody = $(`#${modalId} .modal-body`);
-            
+
             $modalBody.css({
-                'max-height': '50vh',
-                'height': 'auto',
+                "max-height": "50vh",
+                height: "auto",
             });
-            
-            $(`#${modalId} .modal-dialog`).addClass('modal-dialog-centered');
+
+            $(`#${modalId} .modal-dialog`).addClass("modal-dialog-centered");
         }
 
         function clearModal() {
             const $modal = $(`#${modalId}`);
-            
-            $modal.find('.cw-wizard-next, .cw-wizard-prev, .cw-wizard-submit').off();
-            $modal.find('.cw-wizard-steps .nav-link').off();
-            $modal.find('input, select, textarea').off('input change blur');
-            
+
+            $modal
+                .find(".cw-wizard-next, .cw-wizard-prev, .cw-wizard-submit")
+                .off();
+            $modal.find(".cw-wizard-steps .nav-link").off();
+            $modal.find("input, select, textarea").off("input change blur");
+
             $(document).off("click", btnSelector);
-            
+
             $modal.off();
-            $modal.find('form').off();
-            
+            $modal.find("form").off();
+
             $modal.removeData();
-            
+
             try {
                 const modalInstance = bootstrap.Modal.getInstance($modal[0]);
                 if (modalInstance) {
@@ -1265,9 +1349,9 @@ function formWizardModal({
             } catch (e) {
                 console.error("Error disposing modal:", e);
             }
-            
+
             $modal.remove();
-            
+
             modalId = null;
         }
 
@@ -1276,44 +1360,53 @@ function formWizardModal({
             const $content = $modal.find(`.${modalContentClass}`);
             let currentStep = 0;
             let completedSteps = new Set();
-            
+
             organizeWizardSteps($content, steps);
             showWizardStep(currentStep);
-            
+
             function isFieldCompleted(field) {
                 const $field = $(field);
-                
-                if ($field.is('select')) {
-                    return $field.val() !== null && $field.val() !== '';
-                } else if ($field.is('input[type="checkbox"], input[type="radio"]')) {
-                    const name = $field.attr('name');
-                    return $modal.find(`input[name="${name}"]:checked`).length > 0;
+
+                if ($field.is("select")) {
+                    return $field.val() !== null && $field.val() !== "";
+                } else if (
+                    $field.is('input[type="checkbox"], input[type="radio"]')
+                ) {
+                    const name = $field.attr("name");
+                    return (
+                        $modal.find(`input[name="${name}"]:checked`).length > 0
+                    );
                 } else if ($field.is('input[type="file"]')) {
-                    return $field.get(0).files.length > 0 || !$field.prop('required');
+                    return (
+                        $field.get(0).files.length > 0 ||
+                        !$field.prop("required")
+                    );
                 } else {
-                    return $field.val() !== '';
+                    return $field.val() !== "";
                 }
             }
-            
+
             function isStepCompleted(stepIndex) {
-                const $step = $modal.find(`.cw-wizard-step[data-step="${stepIndex}"]`);
-                const $requiredFields = $step.find('[required]');
-                
+                const $step = $modal.find(
+                    `.cw-wizard-step[data-step="${stepIndex}"]`
+                );
+                const $requiredFields = $step.find("[required]");
+
                 if ($requiredFields.length === 0) {
                     return true;
                 }
-                
+
                 let isCompleted = true;
-                $requiredFields.each(function() {
+                $requiredFields.each(function () {
                     if (!isFieldCompleted(this)) {
                         isCompleted = false;
                         return false;
                     }
                 });
-                
+
                 return isCompleted;
             }
-            
+
             function canAccessStep(targetStepIndex) {
                 let allStepsCompleted = true;
                 for (let i = 0; i < steps.length; i++) {
@@ -1322,29 +1415,32 @@ function formWizardModal({
                         break;
                     }
                 }
-                
+
                 if (allStepsCompleted) {
                     return true;
                 }
-                
+
                 if (targetStepIndex === 0) return true;
                 if (targetStepIndex === currentStep) return true;
                 if (targetStepIndex === currentStep - 1) return true;
-                if (targetStepIndex === currentStep + 1 && isStepCompleted(currentStep)) {
+                if (
+                    targetStepIndex === currentStep + 1 &&
+                    isStepCompleted(currentStep)
+                ) {
                     return true;
                 }
                 return false;
             }
-            
+
             function updateWizardState() {
                 const currentStepCompleted = isStepCompleted(currentStep);
-                
+
                 if (currentStepCompleted) {
                     completedSteps.add(currentStep);
                 } else {
                     completedSteps.delete(currentStep);
                 }
-                
+
                 let allStepsCompleted = true;
                 for (let i = 0; i < steps.length; i++) {
                     if (!isStepCompleted(i)) {
@@ -1352,183 +1448,219 @@ function formWizardModal({
                         break;
                     }
                 }
-                
-                $modal.find('.cw-wizard-next').prop('disabled', !currentStepCompleted);
-                $modal.find('.cw-wizard-submit').prop('disabled', !allStepsCompleted);
-                
-                $modal.find('.cw-wizard-steps .nav-link').each(function() {
-                    const stepIndex = parseInt($(this).data('step'));
-                    
-                    $(this).removeClass('active completed disabled cw-tab-alert');
-                    
+
+                $modal
+                    .find(".cw-wizard-next")
+                    .prop("disabled", !currentStepCompleted);
+                $modal
+                    .find(".cw-wizard-submit")
+                    .prop("disabled", !allStepsCompleted);
+
+                $modal.find(".cw-wizard-steps .nav-link").each(function () {
+                    const stepIndex = parseInt($(this).data("step"));
+
+                    $(this).removeClass(
+                        "active completed disabled cw-tab-alert"
+                    );
+
                     if (stepIndex === currentStep) {
-                        $(this).addClass('active');
-                    } 
-                    else if (completedSteps.has(stepIndex)) {
-                        $(this).addClass('completed');
-                        
+                        $(this).addClass("active");
+                    } else if (completedSteps.has(stepIndex)) {
+                        $(this).addClass("completed");
+
                         if (!canAccessStep(stepIndex)) {
-                            $(this).addClass('disabled');
+                            $(this).addClass("disabled");
                         }
-                    }
-                    else {
+                    } else {
                         if (!canAccessStep(stepIndex)) {
-                            $(this).addClass('disabled');
+                            $(this).addClass("disabled");
                         }
                     }
                 });
-                
+
                 updateProgressBar();
                 updateStepConnectors();
             }
-            
-            $modal.find('.cw-wizard-next').on('click', function() {
+
+            $modal.find(".cw-wizard-next").on("click", function () {
                 if (isStepCompleted(currentStep)) {
                     const nextStep = currentStep + 1;
                     if (nextStep < steps.length) {
                         completedSteps.add(currentStep);
-                        
+
                         currentStep = nextStep;
                         showWizardStep(currentStep);
                         updateWizardState();
-                        
-                        $modal.find('.modal-body').scrollTop(0);
-                        
+
+                        $modal.find(".modal-body").scrollTop(0);
+
                         adjustModalHeight();
                     }
                 } else {
                     highlightMissingFields(currentStep);
-                    
-                    $(this).addClass('cw-btn-shake');
-                    setTimeout(() => $(this).removeClass('cw-btn-shake'), 500);
+
+                    $(this).addClass("cw-btn-shake");
+                    setTimeout(() => $(this).removeClass("cw-btn-shake"), 500);
                 }
             });
-            
-            $modal.find('.cw-wizard-prev').on('click', function() {
+
+            $modal.find(".cw-wizard-prev").on("click", function () {
                 if (currentStep > 0) {
                     currentStep--;
                     showWizardStep(currentStep);
                     updateWizardState();
-                    
-                    $modal.find('.modal-body').scrollTop(0);
-                    
+
+                    $modal.find(".modal-body").scrollTop(0);
+
                     adjustModalHeight();
                 }
             });
-            
-            $modal.find('.cw-wizard-submit').on('click', function() {
+
+            $modal.find(".cw-wizard-submit").on("click", function () {
                 let allStepsCompleted = true;
                 let firstIncompleteStep = -1;
-                
+
                 for (let i = 0; i < steps.length; i++) {
                     if (!isStepCompleted(i)) {
                         allStepsCompleted = false;
                         if (firstIncompleteStep === -1) {
                             firstIncompleteStep = i;
                         }
-                        
-                        const $tab = $modal.find(`.cw-wizard-steps .nav-link[data-step="${i}"]`);
-                        $tab.addClass('cw-tab-alert');
-                        setTimeout(() => $tab.removeClass('cw-tab-alert'), 1500);
+
+                        const $tab = $modal.find(
+                            `.cw-wizard-steps .nav-link[data-step="${i}"]`
+                        );
+                        $tab.addClass("cw-tab-alert");
+                        setTimeout(
+                            () => $tab.removeClass("cw-tab-alert"),
+                            1500
+                        );
                     }
                 }
-                
+
                 if (allStepsCompleted) {
                     const $btn = $(this);
-                    $btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...');
-                    $btn.prop('disabled', true);
-                    
-                    $modal.find('form').submit();
+                    $btn.html(
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...'
+                    );
+                    $btn.prop("disabled", true);
+
+                    $modal.find("form").submit();
                 } else {
                     if (firstIncompleteStep !== -1) {
                         currentStep = firstIncompleteStep;
                         showWizardStep(currentStep);
                         updateWizardState();
-                        
+
                         highlightMissingFields(currentStep);
-                        
-                        $modal.find('.modal-body').scrollTop(0);
-                        
+
+                        $modal.find(".modal-body").scrollTop(0);
+
                         adjustModalHeight();
                     }
-                    
-                    $(this).addClass('cw-btn-shake');
-                    setTimeout(() => $(this).removeClass('cw-btn-shake'), 500);
+
+                    $(this).addClass("cw-btn-shake");
+                    setTimeout(() => $(this).removeClass("cw-btn-shake"), 500);
                 }
             });
-            
+
             function highlightMissingFields(stepIndex) {
-                const $step = $modal.find(`.cw-wizard-step[data-step="${stepIndex}"]`);
-                const $requiredFields = $step.find('[required]');
-                
-                $requiredFields.each(function() {
+                const $step = $modal.find(
+                    `.cw-wizard-step[data-step="${stepIndex}"]`
+                );
+                const $requiredFields = $step.find("[required]");
+
+                $requiredFields.each(function () {
                     if (!isFieldCompleted(this)) {
-                        $(this).addClass('is-invalid');
-                        $(this).addClass('cw-field-shake');
-                        setTimeout(() => $(this).removeClass('cw-field-shake'), 600);
+                        $(this).addClass("is-invalid");
+                        $(this).addClass("cw-field-shake");
+                        setTimeout(
+                            () => $(this).removeClass("cw-field-shake"),
+                            600
+                        );
                     } else {
-                        $(this).removeClass('is-invalid');
+                        $(this).removeClass("is-invalid");
                     }
                 });
             }
-            
-            $modal.find('.cw-wizard-steps .nav-link').on('click', function() {
-                const stepIndex = parseInt($(this).data('step'));
-                
+
+            $modal.find(".cw-wizard-steps .nav-link").on("click", function () {
+                const stepIndex = parseInt($(this).data("step"));
+
                 if (canAccessStep(stepIndex)) {
                     currentStep = stepIndex;
                     showWizardStep(currentStep);
                     updateWizardState();
-                    
-                    $modal.find('.modal-body').scrollTop(0);
-                    
+
+                    $modal.find(".modal-body").scrollTop(0);
+
                     adjustModalHeight();
                 } else {
-                    $(this).addClass('cw-nav-link-shake');
-                    setTimeout(() => $(this).removeClass('cw-nav-link-shake'), 500);
+                    $(this).addClass("cw-nav-link-shake");
+                    setTimeout(
+                        () => $(this).removeClass("cw-nav-link-shake"),
+                        500
+                    );
                 }
             });
-            
+
             function updateProgressBar() {
                 const totalSteps = steps.length;
                 const completedCount = completedSteps.size;
-                const progress = Math.max(((currentStep + 1) / totalSteps) * 100, (completedCount / totalSteps) * 100);
-                
-                $modal.find('.progress-bar').css('width', `${progress}%`).attr('aria-valuenow', progress);
+                const progress = Math.max(
+                    ((currentStep + 1) / totalSteps) * 100,
+                    (completedCount / totalSteps) * 100
+                );
+
+                $modal
+                    .find(".progress-bar")
+                    .css("width", `${progress}%`)
+                    .attr("aria-valuenow", progress);
             }
-            
+
             function updateStepConnectors() {
-                $modal.find('.cw-wizard-steps .nav-link').each(function() {
-                    const stepIndex = parseInt($(this).data('step'));
-                    const $connector = $(this).find('.cw-wizard-step-connector');
-                    
+                $modal.find(".cw-wizard-steps .nav-link").each(function () {
+                    const stepIndex = parseInt($(this).data("step"));
+                    const $connector = $(this).find(
+                        ".cw-wizard-step-connector"
+                    );
+
                     if ($connector.length && completedSteps.has(stepIndex)) {
-                        $connector.addClass('completed');
+                        $connector.addClass("completed");
                     } else if ($connector.length) {
-                        $connector.removeClass('completed');
+                        $connector.removeClass("completed");
                     }
                 });
             }
-            
+
             function attachFieldListeners() {
-                $modal.find('input, select, textarea').on('input change blur', function() {
-                    $(this).removeClass('is-invalid');
-                    updateWizardState();
-                });
+                $modal
+                    .find("input, select, textarea")
+                    .on("input change blur", function () {
+                        $(this).removeClass("is-invalid");
+                        updateWizardState();
+                    });
             }
-            
+
             function organizeWizardSteps($content, steps) {
                 steps.forEach((step, index) => {
-                    const $stepContainer = $(`<div class="cw-wizard-step" data-step="${index}" style="display: none;"></div>`);
-                                        
+                    const $stepContainer = $(
+                        `<div class="cw-wizard-step" data-step="${index}" style="display: none;"></div>`
+                    );
+
                     if (step.fields && step.fields.length) {
-                        step.fields.forEach(fieldSelector => {
-                            const $field = $content.find(fieldSelector).closest('.form-group, .col-md-12, .col-md-8, .col-md-6, .col-md-4, .col-md-3, [class*="col-"]');
-                            
+                        step.fields.forEach((fieldSelector) => {
+                            const $field = $content
+                                .find(fieldSelector)
+                                .closest(
+                                    '.form-group, .col-md-12, .col-md-8, .col-md-6, .col-md-4, .col-md-3, [class*="col-"]'
+                                );
+
                             if ($field.length) {
                                 $stepContainer.append($field);
                             } else {
-                                const $directField = $content.find(fieldSelector);
+                                const $directField =
+                                    $content.find(fieldSelector);
                                 if ($directField.length) {
                                     $stepContainer.append($directField);
                                 }
@@ -1538,29 +1670,37 @@ function formWizardModal({
                         const $fields = $content.find(step.selector);
                         $stepContainer.append($fields);
                     }
-                    
+
                     $content.append($stepContainer);
                 });
             }
-            
+
             function showWizardStep(stepIndex) {
-                $modal.find('.cw-wizard-step').hide();
-                $modal.find(`.cw-wizard-step[data-step="${stepIndex}"]`).fadeIn(200);
-                
-                $modal.find('.cw-wizard-prev').toggle(stepIndex > 0);
-                $modal.find('.cw-wizard-next').toggle(stepIndex < steps.length - 1);
-                $modal.find('.cw-wizard-submit').toggle(stepIndex === steps.length - 1);
-                
+                $modal.find(".cw-wizard-step").hide();
+                $modal
+                    .find(`.cw-wizard-step[data-step="${stepIndex}"]`)
+                    .fadeIn(200);
+
+                $modal.find(".cw-wizard-prev").toggle(stepIndex > 0);
+                $modal
+                    .find(".cw-wizard-next")
+                    .toggle(stepIndex < steps.length - 1);
+                $modal
+                    .find(".cw-wizard-submit")
+                    .toggle(stepIndex === steps.length - 1);
+
                 const currentStepTitle = steps[stepIndex].title;
-                $modal.find('.modal-title').text(`${title} - ${currentStepTitle}`);
-                
+                $modal
+                    .find(".modal-title")
+                    .text(`${title} - ${currentStepTitle}`);
+
                 adjustModalHeight();
-                
-                if (typeof onStepShown === 'function') {
+
+                if (typeof onStepShown === "function") {
                     onStepShown(stepIndex, steps[stepIndex]);
                 }
             }
-            
+
             attachFieldListeners();
             updateWizardState();
         }
@@ -1571,54 +1711,59 @@ function formWizardModal({
         });
 
         const modalElement = $(`#${modalId}`);
-        const submitBtn = modalElement.find('.cw-wizard-submit');
+        const submitBtn = modalElement.find(".cw-wizard-submit");
 
-        modalElement.data('form-submitted', false);
-        modalElement.on('hide.bs.modal', async function(e) {
-            if (modalElement.data('confirmed-close') || modalElement.data('form-submitted')) {
-                modalElement.data('confirmed-close', false);
+        modalElement.data("form-submitted", false);
+        modalElement.on("hide.bs.modal", async function (e) {
+            if (
+                modalElement.data("confirmed-close") ||
+                modalElement.data("form-submitted")
+            ) {
+                modalElement.data("confirmed-close", false);
                 return true;
             }
-            
+
             e.preventDefault();
-            const result = await confirmAction("Are you sure you want to exit? Any unsaved changes will be lost.");
+            const result = await confirmAction(
+                "Are you sure you want to exit? Any unsaved changes will be lost."
+            );
             if (result.isConfirmed) {
-                modalElement.data('confirmed-close', true);
-                modalElement.modal('hide');
+                modalElement.data("confirmed-close", true);
+                modalElement.modal("hide");
             }
         });
 
-        modalElement.on('hidden.bs.modal', async function(e) {
+        modalElement.on("hidden.bs.modal", async function (e) {
             clearModal();
         });
-        
-        modalElement.find('form').on('submit', async function(e) {
+
+        modalElement.find("form").on("submit", async function (e) {
             e.preventDefault();
             const form = this;
-            
+
             if (form.isSubmitting) {
                 return false;
             }
-            
+
             form.isSubmitting = true;
             const formData = new FormData(form);
-            formType === 'edit' && formData.append('_method', 'PATCH');
-            const url = $(this).attr('action');
-            
+            formType === "edit" && formData.append("_method", "PATCH");
+            const url = $(this).attr("action");
+
             setButtonLoading(submitBtn, true);
-            
+
             try {
-                const result = await fetchRequest(url, 'POST', formData);
+                const result = await fetchRequest(url, "POST", formData);
                 if (result) {
                     setButtonLoading(submitBtn, false);
-                    modalElement.data('form-submitted', true);
-                    modalElement.modal('hide');
+                    modalElement.data("form-submitted", true);
+                    modalElement.modal("hide");
                     if (tableToRefresh) tableToRefresh.ajax.reload();
-                    if (typeof formSubmitted === 'function') {
+                    if (typeof formSubmitted === "function") {
                         formSubmitted();
                     }
                 } else {
-                    document.querySelector('#error-indicator').innerHTML = `
+                    document.querySelector("#error-indicator").innerHTML = `
                     <div class="alert alert-danger alert-dismissible fade show text-center" role="alert" style="position: relative; max-width: 600px; margin: 7px auto; border-radius: 3px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
                         Oops! Some fields need your attention. Please review and try again.
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="position: absolute; right: 5px;"></button>
@@ -1630,7 +1775,7 @@ function formWizardModal({
             } finally {
                 form.isSubmitting = false;
                 setButtonLoading(submitBtn, false);
-                submitBtn.prop('disabled', false);
+                submitBtn.prop("disabled", false);
                 submitBtn.text(actionButtonName);
             }
         });
@@ -1642,54 +1787,249 @@ function formWizardModal({
 }
 
 function select2Ajax(selector, url, options = {}) {
-    const $select = typeof selector === 'string' ? $(selector) : selector;
+    const $select = typeof selector === "string" ? $(selector) : selector;
     const config = {
         theme: "bootstrap-5",
         placeholder: options.placeholder || "Select an option",
         allowClear: options.allowClear !== false,
         dropdownParent: options.dropdownParent || $select.parent(),
-        width: options.width || '100%',
+        width: options.width || "100%",
         multiple: options.multiple || false,
         ajax: {
             url: url,
-            dataType: 'json',
+            dataType: "json",
             delay: options.delay || 250,
-            data: function(params) {
+            data: function (params) {
                 return {
                     q: params.term,
                     page: params.page || 1,
-                    ...options.params
+                    ...options.params,
                 };
             },
-            processResults: function(data, params) {
+            processResults: function (data, params) {
                 params.page = params.page || 1;
                 return {
                     results: data.results,
                     pagination: {
-                        more: data.pagination.more
-                    }
+                        more: data.pagination.more,
+                    },
                 };
             },
-            cache: true
+            cache: true,
         },
-        templateResult: options.templateResult || function(data) {
-            if (data.loading) return 'Loading...';
-            return data.text;
-        },
-        templateSelection: options.templateSelection || function(data) {
-            return data.text || options.placeholder || "Select an option";
-        }
+        templateResult:
+            options.templateResult ||
+            function (data) {
+                if (data.loading) return "Loading...";
+                return data.text;
+            },
+        templateSelection:
+            options.templateSelection ||
+            function (data) {
+                return data.text || options.placeholder || "Select an option";
+            },
     };
-    
+
     const select2Instance = $select.select2(config);
-        
+
     if (options.onSelect) {
-        select2Instance.on('select2:select', options.onSelect);
+        select2Instance.on("select2:select", options.onSelect);
     }
-    
+
     if (options.onChange) {
-        select2Instance.on('change', options.onChange);
+        select2Instance.on("change", options.onChange);
+    }
+
+    return select2Instance;
+}
+
+function setupPrint(buttonSelector, divSelector, options = {}) {
+    const config = {
+        loadingText: 'Preparing document for printing...',
+        spinnerType: 'border',
+        spinnerColor: 'primary',
+        overrideCtrlP: true,
+        modalId: null,
+        useModal: true,
+        fallbackLoader: '.page-loader',
+        printLibraryUrl: null,
+        customPrintFn: null,
+        useBrowserPrint: false,
+        ...options
+    };
+
+    if (!config.modalId) {
+        config.modalId = 'printModal_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    if (config.useModal) {
+        createModal(config);
+    }
+
+    function triggerPrint() {
+        if (config.useModal) {
+            $(`#${config.modalId}`).modal('show');
+            setTimeout(() => executePrint(), 300);
+        } else {
+            showFallbackLoader();
+            executePrint();
+        }
     }
     
-    return select2Instance;
+    function executePrint() {
+        if (config.customPrintFn) {
+            
+            config.customPrintFn(divSelector, hidePrintLoader);
+        } else if (config.useBrowserPrint) {
+            
+            useBrowserPrint();
+        } else {
+            
+            usePrintThisLibrary();
+        }
+    }
+    
+    function useBrowserPrint() {
+        const originalContent = document.body.innerHTML;
+        const printContent = document.querySelector(divSelector).innerHTML;
+        
+        document.body.innerHTML = printContent;
+        window.print();
+        document.body.innerHTML = originalContent;
+        
+        
+        setTimeout(() => {
+            $(buttonSelector).off('click').on('click', triggerPrint);
+            hidePrintLoader();
+        }, 100);
+    }
+    
+    function usePrintThisLibrary() {
+        
+        if (typeof $.fn.printThis === 'function') {
+            $(divSelector).printThis({
+                afterPrint: hidePrintLoader
+            });
+        } else if (config.printLibraryUrl) {
+            
+            loadPrintLibrary(config.printLibraryUrl).then(() => {
+                
+                setTimeout(() => {
+                    $(divSelector).printThis({
+                        afterPrint: hidePrintLoader
+                    });
+                }, 200);
+            }).catch(() => {
+                
+                setTimeout(() => {
+                    useBrowserPrint();
+                }, 500);
+            });
+        } else {
+            console.warn('printThis library not found, falling back to browser print');
+            setTimeout(() => {
+                useBrowserPrint();
+            }, 500);
+        }
+    }
+    
+    function loadPrintLibrary(url) {
+        return new Promise((resolve, reject) => {
+            
+            if (typeof $.fn.printThis === 'function') {
+                resolve();
+                return;
+            }
+            
+            const existingScript = document.querySelector(`script[src*="printThis"]`);
+            if (existingScript) {
+                const checkInterval = setInterval(() => {
+                    if (typeof $.fn.printThis === 'function') {
+                        clearInterval(checkInterval);
+                        resolve();
+                    }
+                }, 100);
+                
+                setTimeout(() => {
+                    clearInterval(checkInterval);
+                    reject(new Error('Library load timeout'));
+                }, 10000);
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = url;
+            script.onload = () => {
+                
+                setTimeout(() => {
+                    if (typeof $.fn.printThis === 'function') {
+                        resolve();
+                    } else {
+                        reject(new Error('Library loaded but printThis not available'));
+                    }
+                }, 100);
+            };
+            script.onerror = () => {
+                reject(new Error('Failed to load script'));
+            };
+            document.head.appendChild(script);
+        });
+    }
+    
+    function showFallbackLoader() {
+        const loader = document.querySelector(config.fallbackLoader);
+        if (loader) loader.classList.remove('hidden');
+    }
+    
+    function hidePrintLoader() {
+        if (config.useModal) {
+            $(`#${config.modalId}`).modal('hide');
+        } else {
+            const loader = document.querySelector(config.fallbackLoader);
+            if (loader) loader.classList.add('hidden');
+        }
+    }
+    
+    $(buttonSelector).on('click', triggerPrint);
+    
+    if (config.overrideCtrlP) {
+        $(document).off('keydown.printHelper').on('keydown.printHelper', function(e) {
+            if (e.ctrlKey && e.key === 'p') {
+                e.preventDefault();
+                triggerPrint();
+            }
+        });
+    }
+    
+    function createModal(config) {
+        if ($(`#${config.modalId}`).length > 0) return;
+
+        const spinnerHtml = {
+            border: `<div class="spinner-border text-${config.spinnerColor}" role="status" style="width: 3rem; height: 3rem;"><span class="sr-only">Loading...</span></div>`,
+            grow: `<div class="spinner-grow text-${config.spinnerColor}" role="status" style="width: 3rem; height: 3rem;"><span class="sr-only">Loading...</span></div>`,
+            dots: `<div class="d-flex justify-content-center">
+                <div class="spinner-grow text-${config.spinnerColor} me-2" role="status" style="width: 1rem; height: 1rem; animation-delay: 0s;"></div>
+                <div class="spinner-grow text-${config.spinnerColor} me-2" role="status" style="width: 1rem; height: 1rem; animation-delay: 0.2s;"></div>
+                <div class="spinner-grow text-${config.spinnerColor}" role="status" style="width: 1rem; height: 1rem; animation-delay: 0.4s;"></div>
+            </div>`
+        };
+
+        const modalHtml = `
+            <div class="modal fade" id="${config.modalId}" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body text-center py-5">
+                            <div class="mb-3">${spinnerHtml[config.spinnerType]}</div>
+                            <h5 class="modal-title mb-2">${config.loadingText}</h5>
+                            <p class="text-muted mb-0"><small>Please wait while we prepare your document...</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        $('body').append(modalHtml);
+    }
+
+    return config;
 }

@@ -348,7 +348,7 @@
 
     @push('script')
     <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
-    <script src="{{ asset('admin/plugins/printThis/printThis.js') }}"></script>
+    {{-- <script src="{{ asset('admin/plugins/printThis/printThis.js') }}"></script> --}}
     <script>
         const $reportType = $('.report-type-field');
         const $infraField = $('.type-field');
@@ -461,16 +461,11 @@
                 }
             );
 
-            $('#print-report').on('click', () => {
-                $(".generated-report").printThis({
-                    beforePrint() {
-                        document.querySelector('.page-loader').classList.remove('hidden');
-                    }
-                    , afterPrint() {
-                        document.querySelector('.page-loader').classList.add('hidden');
-                    }
-                });
+            setupPrint('#print-report', '.generated-report', {
+                printLibraryUrl: '{{ asset("admin/plugins/printThis/printThis.js") }}',
+                loadingText: 'Preparing report for printing...',
             });
+
         });
 
     </script>
