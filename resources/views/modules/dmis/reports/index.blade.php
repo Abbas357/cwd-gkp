@@ -460,7 +460,7 @@
                     , dropdownParent: $('#load-users').closest('body')
                 }
             );
-
+ 
             setupPrint('#print-report', '.generated-report', {
                 printLibraryUrl: '{{ asset("admin/plugins/printThis/printThis.js") }}',
                 loadingText: 'Preparing report for printing...',

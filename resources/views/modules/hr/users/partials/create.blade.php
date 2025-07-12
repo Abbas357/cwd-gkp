@@ -43,7 +43,7 @@
     <div class="col-md-12 mb-2">
         <label class="label" data-toggle="tooltip" title="Change Profile Picture">
             <img id="image-label-preview" src="{{ asset('admin/images/default-avatar.jpg') }}" alt="avatar" class="change-image img-fluid rounded-circle">
-            <input type="file" id="image" name="image" class="sr-only" accept="image/*">
+            <input type="file" id="image" name="image" class="visually-hidden" accept="image/*">
         </label>
     </div>
 </div>

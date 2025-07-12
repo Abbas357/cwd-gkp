@@ -818,61 +818,76 @@
                         $(this).siblings('.print-image-placeholder').removeClass('d-none');
                     });
 
-                    // Generate PDF
-                    html2canvas(document.getElementById('district-report'), {
-                        scale: 2,
+                    const reportElement = document.getElementById('district-report');
+
+                    html2canvas(reportElement, {
+                        scale: 1.5,
                         useCORS: true,
                         allowTaint: true,
                         backgroundColor: '#ffffff',
-                        width: document.getElementById('district-report').scrollWidth,
-                        height: document.getElementById('district-report').scrollHeight
+                        width: reportElement.scrollWidth,
+                        height: reportElement.scrollHeight,
+                        imageTimeout: 0,
+                        logging: false,
+                        removeContainer: true
                     }).then(function(canvas) {
-                        const {
-                            jsPDF
-                        } = window.jspdf;
+                        const { jsPDF } = window.jspdf;
                         const pdf = new jsPDF('p', 'mm', 'a4');
 
-                        const imgData = canvas.toDataURL('image/png');
-                        const imgWidth = 210;
-                        const pageHeight = 295;
-                        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                        let heightLeft = imgHeight;
+                        const margins = {
+                            top: 15,
+                            right: 15,
+                            bottom: 15,
+                            left: 15
+                        };
+
+                        const pageWidth = 210;
+                        const pageHeight = 297;
+                        const contentWidth = pageWidth - margins.left - margins.right;
+                        const contentHeight = pageHeight - margins.top - margins.bottom;
+
+                        const canvasAspectRatio = canvas.width / canvas.height;
+                        const imgWidth = contentWidth;
+                        const imgHeight = imgWidth / canvasAspectRatio;
+
                         let position = 0;
+                        const totalHeight = canvas.height;
 
-                        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                        heightLeft -= pageHeight;
+                        while (position < totalHeight) {
+                            if (position > 0) {
+                                pdf.addPage();
+                            }
 
-                        while (heightLeft >= 0) {
-                            position = heightLeft - imgHeight;
-                            pdf.addPage();
-                            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                            heightLeft -= pageHeight;
+                            const sliceHeight = Math.min(contentHeight * (canvas.width / contentWidth), totalHeight - position);
+
+                            const tempCanvas = document.createElement('canvas');
+                            tempCanvas.width = canvas.width;
+                            tempCanvas.height = sliceHeight;
+                            const tempContext = tempCanvas.getContext('2d');
+
+                            tempContext.drawImage(canvas, 0, position, canvas.width, sliceHeight, 0, 0, tempCanvas.width, tempCanvas.height);
+
+                            const imgData = tempCanvas.toDataURL('image/jpeg', 0.9); // Increased quality to 90% for better clarity
+                            const currentImgHeight = (contentWidth * sliceHeight) / tempCanvas.width;
+                            pdf.addImage(imgData, 'JPEG', margins.left, margins.top, contentWidth, currentImgHeight);
+                            position += sliceHeight;
                         }
 
-                        const fileName =
-                            `{{ $district->name }}_Damage_Report_${new Date().toISOString().split('T')[0]}.pdf`;
+                        const fileName = `{{ $district->name }}_Damage_Report_${new Date().toISOString().split('T')[0]}.pdf`;
                         pdf.save(fileName);
 
                         button.html(originalText);
                         button.prop('disabled', false);
-
                         $('.action-buttons').show();
-
-                        // Hide print placeholders
                         $('.print-image-placeholder').addClass('d-none');
 
                     }).catch(function(error) {
                         console.error('Error generating PDF:', error);
                         alert('Error generating PDF. Please try again.');
 
-                        // Reset button state
                         button.html(originalText);
                         button.prop('disabled', false);
-
-                        // Show action buttons again
                         $('.action-buttons').show();
-
-                        // Hide print placeholders
                         $('.print-image-placeholder').addClass('d-none');
                     });
                 });

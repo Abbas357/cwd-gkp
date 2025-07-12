@@ -2005,8 +2005,8 @@ function setupPrint(buttonSelector, divSelector, options = {}) {
         if ($(`#${config.modalId}`).length > 0) return;
 
         const spinnerHtml = {
-            border: `<div class="spinner-border text-${config.spinnerColor}" role="status" style="width: 3rem; height: 3rem;"><span class="sr-only">Loading...</span></div>`,
-            grow: `<div class="spinner-grow text-${config.spinnerColor}" role="status" style="width: 3rem; height: 3rem;"><span class="sr-only">Loading...</span></div>`,
+            border: `<div class="spinner-border text-${config.spinnerColor}" role="status" style="width: 3rem; height: 3rem;"><span class="visually-hidden">Loading...</span></div>`,
+            grow: `<div class="spinner-grow text-${config.spinnerColor}" role="status" style="width: 3rem; height: 3rem;"><span class="visually-hidden">Loading...</span></div>`,
             dots: `<div class="d-flex justify-content-center">
                 <div class="spinner-grow text-${config.spinnerColor} me-2" role="status" style="width: 1rem; height: 1rem; animation-delay: 0s;"></div>
                 <div class="spinner-grow text-${config.spinnerColor} me-2" role="status" style="width: 1rem; height: 1rem; animation-delay: 0.2s;"></div>

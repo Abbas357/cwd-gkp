@@ -23,7 +23,7 @@
             <label class="label" data-toggle="tooltip" title="Change Profile Picture">
                 <img id="image-label-preview" src="{{ $ServiceCard->getFirstMediaUrl('service_card_pictures') }}" alt="avatar" class="change-image img-fluid rounded-circle">
                 @if ($canUpload && !in_array($ServiceCard->status, ['Verified', 'Rejected']))
-                    <input type="file" id="image" name="image" class="sr-only" id="input" name="image" accept="image/*">
+                    <input type="file" id="image" name="image" class="visually-hidden" id="input" name="image" accept="image/*">
                 @endif
             </label>
         </div>
