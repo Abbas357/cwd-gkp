@@ -348,7 +348,6 @@
 
     @push('script')
     <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
-    {{-- <script src="{{ asset('admin/plugins/printThis/printThis.js') }}"></script> --}}
     <script>
         const $reportType = $('.report-type-field');
         const $infraField = $('.type-field');
@@ -381,16 +380,16 @@
 
             $('#generate-report').on('click', function(e) {
                 e.preventDefault();
-                loadMainReport();
+                loadMainReport(this);
             });
 
-            async function loadMainReport() {
+            async function loadMainReport(button) {
                 try {
                     $('#main-report').html(`
                         <x-table-skeleton 
                             :rows="6" 
                             :columns="7" 
-                            loading-text="Generating report, please wait..."
+                            loading-text="Generating report ..."
                         />
                     `);
 
@@ -405,7 +404,7 @@
                     const costInfo = $('#cost_info').is(':checked') ? true : false;
 
                     const url = "{{ route('admin.apps.dmis.reports.loadReport') }}";
-
+                    setButtonLoading(button, true);
                     const response = await fetch(url, {
                         method: 'POST'
                         , headers: {
@@ -433,6 +432,7 @@
                     const data = await response.json();
 
                     if (data.success && data.data && data.data.result) {
+                        setButtonLoading(button, false);
                         $('#main-report').html(data.data.result);
                     } else {
                         $('#main-report').html(

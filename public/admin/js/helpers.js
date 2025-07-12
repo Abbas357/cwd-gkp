@@ -417,7 +417,7 @@ function setButtonLoading(
         if (button.is("button")) {
             button.html(`
                 <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                <span role="status">${loadingText}</span>
+                <span role="status"> &nbsp;${loadingText}</span>
             `);
         } else if (button.is("input")) {
             button.val(loadingText);
@@ -1866,6 +1866,13 @@ function setupPrint(buttonSelector, divSelector, options = {}) {
         createModal(config);
     }
 
+    // Helper function to detect mobile devices
+    function isMobileDevice() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+               window.innerWidth <= 768 || 
+               ('ontouchstart' in window);
+    }
+
     function triggerPrint() {
         if (config.useModal) {
             $(`#${config.modalId}`).modal('show');
@@ -1890,18 +1897,93 @@ function setupPrint(buttonSelector, divSelector, options = {}) {
     }
     
     function useBrowserPrint() {
-        const originalContent = document.body.innerHTML;
-        const printContent = document.querySelector(divSelector).innerHTML;
+        // Check if mobile device and use mobile-specific approach
+        if (isMobileDevice()) {
+            useMobilePrint();
+        } else {
+            // Original desktop code - unchanged
+            const originalContent = document.body.innerHTML;
+            const printContent = document.querySelector(divSelector).innerHTML;
+            
+            document.body.innerHTML = printContent;
+            window.print();
+            document.body.innerHTML = originalContent;
+            
+            
+            setTimeout(() => {
+                $(buttonSelector).off('click').on('click', triggerPrint);
+                hidePrintLoader();
+            }, 100);
+        }
+    }
+    
+    function useMobilePrint() {
+        // Create a new window/iframe for mobile printing
+        const printWindow = window.open('', '_blank', 'width=800,height=600');
+        const printContent = document.querySelector(divSelector);
         
-        document.body.innerHTML = printContent;
-        window.print();
-        document.body.innerHTML = originalContent;
-        
-        
-        setTimeout(() => {
-            $(buttonSelector).off('click').on('click', triggerPrint);
-            hidePrintLoader();
-        }, 100);
+        if (printWindow && printContent) {
+            // Get all stylesheets from the current page
+            const styles = Array.from(document.styleSheets)
+                .map(sheet => {
+                    try {
+                        return Array.from(sheet.cssRules)
+                            .map(rule => rule.cssText)
+                            .join('\n');
+                    } catch (e) {
+                        // Handle cross-origin stylesheets
+                        return '';
+                    }
+                })
+                .join('\n');
+            
+            // Get external stylesheets
+            const externalStyles = Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
+                .map(link => `<link rel="stylesheet" href="${link.href}">`)
+                .join('\n');
+            
+            const htmlContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="utf-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1">
+                    <title>Print Document</title>
+                    ${externalStyles}
+                    <style>
+                        ${styles}
+                        @media print {
+                            body { margin: 0; padding: 20px; }
+                            * { -webkit-print-color-adjust: exact; color-adjust: exact; }
+                        }
+                        body { font-family: Arial, sans-serif; line-height: 1.6; }
+                    </style>
+                </head>
+                <body>
+                    ${printContent.outerHTML}
+                </body>
+                </html>
+            `;
+            
+            printWindow.document.write(htmlContent);
+            printWindow.document.close();
+            
+            // Wait for content to load then print
+            printWindow.onload = function() {
+                setTimeout(() => {
+                    printWindow.print();
+                    printWindow.close();
+                    hidePrintLoader();
+                }, 500);
+            };
+        } else {
+            // Fallback if popup is blocked
+            console.warn('Print popup blocked, falling back to standard print');
+            setTimeout(() => {
+                window.print();
+                hidePrintLoader();
+            }, 500);
+        }
     }
     
     function usePrintThisLibrary() {

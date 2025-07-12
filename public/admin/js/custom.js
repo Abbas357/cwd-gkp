@@ -389,3 +389,11 @@ $(document).on('select2:open', function () {
         }
     }, 0);
 });
+
+window.addEventListener('error', function(e) {
+    if (e.message.includes('Extension context invalidated') || 
+        e.message.includes('runtime.lastError')) {
+        e.preventDefault();
+        return true;
+    }
+});
