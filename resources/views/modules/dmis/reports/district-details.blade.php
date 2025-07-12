@@ -518,7 +518,7 @@
         <div class="summary-cards">
             <div class="summary-card">
                 <div class="summary-number">{{ $stats['unique_infrastructures'] }}</div>
-                <div class="summary-label">Affected Infrastructures</div>
+                <div class="summary-label">Affected {{ request()->query('type') ?? 'Road' }}s</div>
             </div>
             <div class="summary-card">
                 <div class="summary-number">{{ $stats['total_damages'] }}</div>
