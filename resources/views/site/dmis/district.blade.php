@@ -53,10 +53,16 @@
             }
 
             .summary-card {
-                background: #ffffff;
+                background: #eefefe;
                 border: 1px solid #ddd;
-                padding: 1.5rem;
+                padding: 1.2rem;
                 text-align: center;
+                border: 3px solid transparent;
+                outline: 1px solid #ddd
+            }
+
+            .summary-card:hover {
+                border: 3px solid rgb(164, 221, 158);
             }
 
             .summary-number {
@@ -78,7 +84,6 @@
                 display: inline-block;
             }
 
-            /* Print Styles */
             @media print {
 
                 .damage-table th,
@@ -110,6 +115,18 @@
                     border: 1px solid #000 !important;
                 }
 
+                .summary-cards {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 1rem;
+                    margin-bottom: 2rem;
+                }
+
+                .summary-cards > * {
+                    flex: 1 1 calc(33.333% - 1rem);
+                    min-width: 160px;
+                }
+
                 .summary-card {
                     border: 1px solid #000 !important;
                     background: white !important;
@@ -138,66 +155,63 @@
                     </div>
                 </div>
                 <div class="no-print">
-                    <button type="button" id="print-report" class="cw-btn bg-dark">
+                    <button type="button" id="print-report" class="cw-btn bg-success">
                         <i class="bi-printer me-1"></i> Print
                     </button>
                 </div>
             </div>
 
-            <!-- Summary Cards -->
-            <div class="summary-cards">
-                <div class="summary-card">
-                    <div class="summary-number">{{ $stats['unique_infrastructures'] }}</div>
-                    <div class="summary-label">Affected Infrastructures</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-number">{{ $stats['total_damages'] }}</div>
-                    <div class="summary-label">Total Damages</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-number">{{ $stats['total_damaged_length'] }}</div>
-                    <div class="summary-label">Damaged Length
-                        {{ request()->query('type') == 'Road' || !request()->has('type') ? '(KM)' : '(Meter)' }}</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-number">{{ $stats['fully_restored'] }}</div>
-                    <div class="summary-label">Fully Restored</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-number">{{ $stats['partially_restored'] }}</div>
-                    <div class="summary-label">Partially Restored</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-number">{{ $stats['not_restored'] }}</div>
-                    <div class="summary-label">Not Restored</div>
-                </div>
-                {{-- <div class="summary-card">
-                    <div class="summary-number">{{ $stats['total_cost'] }} M</div>
-                    <div class="summary-label">Total Cost (PKR)</div>
-                </div> --}}
-            </div>
-
-            <!-- Reporting Officers -->
             @if ($reportingOfficers->count() > 0)
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5 class="mb-0"><i class="bi-people me-2"></i>Reporting Officers</h5>
-                    </div>
-                    <div class="card-body">
-                        @foreach ($reportingOfficers as $officer)
-                            <div class="officer-info">
-                                <div class="text-muted small">{{ $officer['designation']->name ?? 'N/A' }}</div>
-                                <div class="text-muted small">{{ $officer['office']->name ?? 'N/A' }}</div>
-                                <div class="text-primary small">{{ $officer['damage_count'] }} damage(s) reported</div>
-                            </div>
-                        @endforeach
+                <div class="mb-3">
+                    <div class="d-flex align-items-center flex-wrap">
+                        <span class="fs-6 me-2">
+                            <strong>Reported by:</strong>
+                        </span>
+                        <div class="d-flex flex-wrap align-items-center">
+                            @foreach ($reportingOfficers as $index => $officer)
+                                <span class="text-primary fw-semibold me-1">{{ $officer['user']->name }}</span>
+                                <span class="text-muted small me-1">({{ $officer['office']->name ?? 'N/A' }})</span>
+                                @if (!$loop->last)
+                                    <span class="text-muted me-2">,</span>
+                                @endif
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             @endif
 
+            <!-- Summary Cards -->
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="summary-number"><count-up>{{ $stats['unique_infrastructures'] }}</count-up></div>
+                    <div class="summary-label">Affected {{ $type }}s</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-number"><count-up>{{ $stats['total_damages'] }}</count-up></div>
+                    <div class="summary-label">Total Damages</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-number"><count-up>{{ $stats['total_damaged_length'] }}</count-up></div>
+                    <div class="summary-label">Damaged Length
+                        {{ request()->query('type') == 'Road' || !request()->has('type') ? '(KM)' : '(Meter)' }}</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-number"><count-up>{{ $stats['fully_restored'] }}</count-up></div>
+                    <div class="summary-label">Fully Restored</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-number"><count-up>{{ $stats['partially_restored'] }}</count-up></div>
+                    <div class="summary-label">Partially Restored</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-number"><count-up>{{ $stats['not_restored'] }}</count-up></div>
+                    <div class="summary-label">Not Restored</div>
+                </div>
+            </div>
+
             <!-- Main Damage Table -->
             <div class="mb-4">
-                <h5 class="fw-bold mb-3"><i class="bi-list-ul me-2"></i>Infrastructure Damages</h5>
+                <h5 class="fw-bold mb-3"><i class="bi-list-ul me-2"></i>{{ $type }} Damages</h5>
 
                 @if ($damages->count() > 0)
                     <table class="damage-table">
@@ -205,12 +219,9 @@
                             <tr>
                                 <th width="5%">S#</th>
                                 <th width="25%">{{ $type }} Name</th>
-                                <th width="10%">Type</th>
                                 <th width="10%">Total Length</th>
                                 <th width="10%">Status</th>
                                 <th width="10%">Damaged Length</th>
-                                {{-- <th width="10%">Restoration Cost</th>
-                                <th width="10%">Rehabilitation Cost</th> --}}
                                 <th width="10%">Dated</th>
                             </tr>
                         </thead>
@@ -235,16 +246,12 @@
                                     </td>
                                     <td
                                         rowspan="{{ $totalDamages + ($infrastructureDamages->where('remarks', '!=', '')->count() > 0 ? $infrastructureDamages->where('remarks', '!=', '')->count() : 0) }}">
-                                        {{ $infrastructure->type }}
-                                    </td>
-                                    <td
-                                        rowspan="{{ $totalDamages + ($infrastructureDamages->where('remarks', '!=', '')->count() > 0 ? $infrastructureDamages->where('remarks', '!=', '')->count() : 0) }}">
                                         {{ $infrastructure->length ?? 'N/A' }}
                                         {{ request()->query('type') == 'Road' || !request()->has('type') ? '(KM)' : '(Meter)' }}
                                     </td>
 
                                     @php $firstDamage = $infrastructureDamages->first(); @endphp
-                                    <td>
+                                    <td> <span style="position: relative; left: -1.3rem" class="badge rounded-circle bg-light border border-secondary shadow-sm text-dark fw-bold">{{ $infrastructureDamages->count() > 1 ? 1 : '' }}</span>
                                         <span class="status-badge">
                                             {{ $firstDamage->road_status }}
                                         </span>
@@ -252,8 +259,6 @@
                                     <td>{{ $firstDamage->damaged_length ?? 'N/A' }}
                                         {{ request()->query('type') == 'Road' || !request()->has('type') ? '(KM)' : '(Meter)' }}
                                     </td>
-                                    {{-- <td>{{ $firstDamage->approximate_restoration_cost }} M</td>
-                                    <td>{{ $firstDamage->approximate_rehabilitation_cost }} M</td> --}}
                                     <td>{{ $firstDamage->created_at->format('M d, Y') }}</td>
                                 </tr>
 
@@ -270,8 +275,8 @@
 
                                 <!-- Additional Damage Rows -->
                                 @foreach ($infrastructureDamages->skip(1) as $damage)
-                                    <tr class="">
-                                        <td>
+                                    <tr>
+                                        <td> <span style="position: relative; left: -1.25rem" class="badge rounded-circle bg-light border border-secondary shadow-sm text-dark fw-bold"> {{ $loop->iteration + 1 }} </span>
                                             <span class="status-badge">
                                                 {{ $damage->road_status }}
                                             </span>
@@ -279,16 +284,13 @@
                                         <td>{{ $damage->damaged_length ?? 'N/A' }}
                                             {{ request()->query('type') == 'Road' || !request()->has('type') ? '(KM)' : '(Meter)' }}
                                         </td>
-                                        {{-- <td>{{ $damage->approximate_restoration_cost }} M</td>
-                                        <td>{{ $damage->approximate_rehabilitation_cost }} M</td> --}}
                                         <td>{{ $damage->created_at->format('M d, Y') }}</td>
                                     </tr>
 
-                                    <!-- remarks for additional damages -->
                                     @if ($damage->remarks)
                                         <tr class="remarks-row">
                                             <td colspan="5" style="color:#888">
-                                                <div><strong>Remarks:</strong> {{ $damage->remarks }}</div>
+                                                <div><strong>Remarks:</strong> {!! $damage->remarks !!}</div>
                                                 <div><strong>Reported by:</strong>
                                                     {{ $firstDamage->posting->office->name ?? 'N/A' }}</div>
                                             </td>
@@ -310,15 +312,23 @@
     </div>
 
     @push('script')
+        <script src="https://cdn.jsdelivr.net/gh/lekoala/formidable-elements@master/dist/count-up.min.js"></script>
         <script src="{{ asset('admin/plugins/printThis/printThis.js') }}"></script>
         <script>
             $(document).ready(function() {
                 $('#print-report').on('click', function() {
+                    
                     $("#district-report").printThis({
                         header: "<h3 class='text-center mb-4'>{{ $district->name }} District - Damage Details Report</h3>",
                         printContainer: true,
                         loadCSS: true,
-                        pageTitle: "{{ $district->name }} Damage Report"
+                        pageTitle: "{{ $district->name }} Damage Report",
+                        beforePrint: () => {
+                            setButtonLoading(this, true)
+                        },
+                        afterPrint: () => {
+                            setButtonLoading(this, false)
+                        }
                     });
                 });
             });

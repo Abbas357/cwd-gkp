@@ -20,22 +20,18 @@ class DamageController extends Controller
         $startDate = request()->get('start_date');
         $endDate = request()->get('end_date');
         
-        // Initialize date variables as null
         $parsedStartDate = null;
         $parsedEndDate = null;
         
-        // Only process dates if duration is provided
         if (!empty($duration)) {
             if ($duration !== 'Custom') {
                 $parsedEndDate = now()->endOfDay();
                 $parsedStartDate = now()->subDays((int)$duration)->startOfDay();
             } else {
-                // Custom duration - use provided dates or defaults
                 $parsedStartDate = $startDate ? Carbon::parse($startDate)->startOfDay() : now()->subDays(30)->startOfDay();
                 $parsedEndDate = $endDate ? Carbon::parse($endDate)->endOfDay() : now()->endOfDay();
             }
         }
-        // If no duration is provided, dates remain null and no date filtering will be applied
 
         $districts = District::all();
 
@@ -54,10 +50,8 @@ class DamageController extends Controller
                 continue;
             }
             
-            // Build the damage query
             $damageQuery = Damage::whereIn('infrastructure_id', $infrastructureIds);
             
-            // Only apply date filtering if both startDate and endDate are provided
             if ($parsedStartDate && $parsedEndDate) {
                 $damageQuery->whereBetween('report_date', [$parsedStartDate, $parsedEndDate]);
             }
@@ -77,9 +71,6 @@ class DamageController extends Controller
                 'fully_restored' => $damages->where('road_status', 'Fully restored')->count(),
                 'partially_restored' => $damages->where('road_status', 'Partially restored')->count(),
                 'not_restored' => $damages->where('road_status', 'Not restored')->count(),
-                'restoration_cost' => $damages->sum('approximate_restoration_cost'),
-                'rehabilitation_cost' => $damages->sum('approximate_rehabilitation_cost'),
-                'total_cost' => $damages->sum('approximate_restoration_cost') + $damages->sum('approximate_rehabilitation_cost'),
             ];
             $districtStats->push($stats);
         }
@@ -94,9 +85,6 @@ class DamageController extends Controller
             'total_fully_restored' => $districtStats->sum('fully_restored'),
             'total_partially_restored' => $districtStats->sum('partially_restored'),
             'total_not_restored' => $districtStats->sum('not_restored'),
-            'total_restoration_cost' => $districtStats->sum('restoration_cost'),
-            'total_rehabilitation_cost' => $districtStats->sum('rehabilitation_cost'),
-            'total_cost' => $districtStats->sum('total_cost'),
         ];
 
         return view('site.dmis.index', compact(
@@ -117,17 +105,14 @@ class DamageController extends Controller
         $startDate = request()->get('start_date');
         $endDate = request()->get('end_date');
         
-        // Initialize date variables as null
         $parsedStartDate = null;
         $parsedEndDate = null;
         
-        // Only process dates if duration is provided
         if (!empty($duration)) {
             if ($duration !== 'Custom') {
                 $parsedEndDate = now()->endOfDay();
                 $parsedStartDate = now()->subDays((int)$duration)->startOfDay();
             } else {
-                // Custom duration - use provided dates or defaults
                 $parsedStartDate = $startDate ? Carbon::parse($startDate)->startOfDay() : now()->subDays(30)->startOfDay();
                 $parsedEndDate = $endDate ? Carbon::parse($endDate)->endOfDay() : now()->endOfDay();
             }
@@ -142,10 +127,8 @@ class DamageController extends Controller
 
         $infrastructureIds = $infrastructures->pluck('id')->toArray();
 
-        // Build the damage query
         $damageQuery = Damage::whereIn('infrastructure_id', $infrastructureIds);
         
-        // Only apply date filtering if both startDate and endDate are provided
         if ($parsedStartDate && $parsedEndDate) {
             $damageQuery->whereBetween('report_date', [$parsedStartDate, $parsedEndDate]);
         }
@@ -168,9 +151,6 @@ class DamageController extends Controller
             'fully_restored' => $damages->where('road_status', 'Fully restored')->count(),
             'partially_restored' => $damages->where('road_status', 'Partially restored')->count(),
             'not_restored' => $damages->where('road_status', 'Not restored')->count(),
-            'total_restoration_cost' => $damages->sum('approximate_restoration_cost'),
-            'total_rehabilitation_cost' => $damages->sum('approximate_rehabilitation_cost'),
-            'total_cost' => $damages->sum('approximate_restoration_cost') + $damages->sum('approximate_rehabilitation_cost'),
         ];
         
         $reportingOfficers = $damages->map(function ($damage) {

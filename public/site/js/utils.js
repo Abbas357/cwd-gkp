@@ -101,7 +101,7 @@ function setButtonLoading(
         if (button.is("button")) {
             button.html(`
                 <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                <span role="status">${loadingText}</span>
+                <span role="status"> &nbsp; ${loadingText}</span>
             `);
         } else if (button.is("input")) {
             button.val(loadingText);

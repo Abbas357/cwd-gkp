@@ -246,9 +246,6 @@
                             <th scope="col" class="text-center align-middle">Fully Restored</th>
                             <th scope="col" class="text-center align-middle">Partially Restored</th>
                             <th scope="col" class="text-center align-middle">Not Restored</th>
-                            {{-- <th scope="col" class="text-center align-middle">Restoration Cost(M)</th>
-                            <th scope="col" class="text-center align-middle">Rehabilitation Cost(M)</th>
-                            <th scope="col" class="text-center align-middle">Total Cost(M)</th> --}}
                             <th scope="col" class="text-center align-middle no-print px-3">View</th>
                         </tr>
                     </thead>
@@ -261,31 +258,28 @@
                                 </td>
                                 <td class="text-center">
                                     @if ($stats['damaged_infrastructure_count'] > 0)
-                                        {{ $stats['damaged_infrastructure_count'] }}
+                                        <count-up>{{ $stats['damaged_infrastructure_count'] }}</count-up>
                                     @else
                                         <span class="no-damage">-</span>
                                     @endif
                                 </td>
                                 <td class="text-center">
                                     @if ($stats['damage_count'] > 0)
-                                        {{ $stats['damage_count'] }}
+                                        <count-up>{{ $stats['damage_count'] }}</count-up>
                                     @else
                                         <span class="no-damage">-</span>
                                     @endif
                                 </td>
                                 <td class="text-center">
                                     @if ($stats['damaged_length'] > 0)
-                                        {{ number_format($stats['damaged_length'], 2) }}
+                                        <count-up>{{ number_format($stats['damaged_length'], 2) }}</count-up>
                                     @else
                                         <span class="no-damage">0.00</span>
                                     @endif
                                 </td>
-                                <td class="text-center">{{ $stats['fully_restored'] }}</td>
-                                <td class="text-center">{{ $stats['partially_restored'] }}</td>
-                                <td class="text-center">{{ $stats['not_restored'] }}</td>
-                                {{-- <td class="text-center">{{ number_format($stats['restoration_cost'], 2) }}</td>
-                                <td class="text-center">{{ number_format($stats['rehabilitation_cost'], 2) }}</td>
-                                <td class="text-center fw-bold">{{ number_format($stats['total_cost'], 2) }}</td> --}}
+                                <td class="text-center"><count-up>{{ $stats['fully_restored'] }}</count-up></td>
+                                <td class="text-center"><count-up>{{ $stats['partially_restored'] }}</td></td>
+                                <td class="text-center"><count-up>{{ $stats['not_restored'] }}</count-up></td>
                                 <td class="text-center no-print">
                                     <div class="action-buttons d-flex justify-content-center align-items-center">
                                         @php
@@ -307,15 +301,12 @@
 
                         <tr class="fw-bold total-row">
                             <td colspan="2" class="text-end">Total:</td>
-                            <td class="text-center">{{ $total['total_damaged_infrastructure_count'] }}</td>
-                            <td class="text-center">{{ $total['total_damage_count'] }}</td>
-                            <td class="text-center">{{ number_format($total['total_damaged_length'], 2) }}</td>
-                            <td class="text-center">{{ $total['total_fully_restored'] }}</td>
-                            <td class="text-center">{{ $total['total_partially_restored'] }}</td>
-                            <td class="text-center">{{ $total['total_not_restored'] }}</td>
-                            {{-- <td class="text-center">{{ number_format($total['total_restoration_cost'], 2) }}</td>
-                            <td class="text-center">{{ number_format($total['total_rehabilitation_cost'], 2) }}</td>
-                            <td class="text-center">{{ number_format($total['total_cost'], 2) }}</td> --}}
+                            <td class="text-center"><count-up>{{ $total['total_damaged_infrastructure_count'] }}</count-up></td>
+                            <td class="text-center"><count-up>{{ $total['total_damage_count'] }}</count-up></td>
+                            <td class="text-center"><count-up>{{ number_format($total['total_damaged_length'], 2) }}</count-up></td>
+                            <td class="text-center"><count-up>{{ $total['total_fully_restored'] }}</count-up></td>
+                            <td class="text-center"><count-up>{{ $total['total_partially_restored'] }}</count-up></td>
+                            <td class="text-center"><count-up>{{ $total['total_not_restored'] }}</count-up></td>
                             <td class="text-center no-print">-</td>
                         </tr>
                     </tbody>
@@ -347,6 +338,7 @@
     </div>
 
     @push('script')
+        <script src="https://cdn.jsdelivr.net/gh/lekoala/formidable-elements@master/dist/count-up.min.js"></script>
         <script src="{{ asset('admin/plugins/printThis/printThis.js') }}"></script>
         <script>
             function toggleDateFields() {
