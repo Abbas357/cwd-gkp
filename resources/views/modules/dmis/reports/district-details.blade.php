@@ -511,6 +511,12 @@
                     <i class="bi bi-exclamation-triangle me-1"></i>
                     <strong>Total Damages:</strong> {{ $stats['total_damages'] }}
                 </span>
+                @if(request('road_status'))
+                <span class="badge border border-danger text-danger bg-transparent fs-6 px-3 py-2">
+                    <i class="bi bi-exclamation-triangle me-1"></i>
+                    <strong>Road Status:</strong> {{ request('road_status') }}
+                </span>
+                @endif
             </div>
         </div>
 

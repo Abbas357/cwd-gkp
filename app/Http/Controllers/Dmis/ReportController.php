@@ -618,6 +618,7 @@ class ReportController extends Controller
         $this->authorize('viewDistrictWiseReport', \App\Models\Damage::class);
 
         $type = $request->get('type') ?? 'Road';
+        $roadStatus = $request->get('road_status');
 
         $infrastructures = $district->infrastructures()
             ->when($type !== 'All', function ($query) use ($type) {
@@ -638,6 +639,9 @@ class ReportController extends Controller
                 $postingIds = $postingIds->push($user->currentPosting->id);
 
                 $query->whereIn('posting_id', $postingIds->toArray());
+            })
+            ->when($roadStatus, function ($query) use ($roadStatus) {
+                $query->where('road_status', $roadStatus);
             })
             ->with([
                 'infrastructure',

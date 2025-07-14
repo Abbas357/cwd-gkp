@@ -94,12 +94,17 @@
                     <td class="text-center fw-medium"><a
                             href="{{ route('admin.apps.dmis.reports.district-details', ['district' => $district->id, 'type' => $type ?? 'Road', 'user' => $subordinate->id]) }}">{{ $district->damaged_infrastructure_count }}</a>
                     </td>
-                    <td class="text-center fw-medium">{{ $district->damage_count }}</td>
+                    <td class="text-center fw-medium"><a
+                        href="{{ route('admin.apps.dmis.reports.district-details', ['district' => $district->id, 'type' => $type ?? 'Road', 'user' => $subordinate->id]) }}">{{ $district->damage_count }}</a></td>
                     <td class="text-center fw-medium">{{ number_format($district->damaged_infrastructure_total_count, 2) }}</td>
                     <td class="text-center fw-medium">{{ number_format($district->damaged_infrastructure_sum, 2) }}</td>
-                    <td class="text-center fw-medium">{{ $district->fully_restored }}</td>
-                    <td class="text-center fw-medium">{{ $district->partially_restored }}</td>
-                    <td class="text-center fw-medium">{{ $district->not_restored }}</td>
+                    <td class="text-center fw-medium"><a
+                        href="{{ route('admin.apps.dmis.reports.district-details', ['district' => $district->id, 'type' => $type ?? 'Road', 'user' => $subordinate->id, 'road_status' => 'Fully restored']) }}">{{ $district->fully_restored }}</a>
+                        </td>
+                    <td class="text-center fw-medium"><a
+                        href="{{ route('admin.apps.dmis.reports.district-details', ['district' => $district->id, 'type' => $type ?? 'Road', 'user' => $subordinate->id, 'road_status' => 'Partially restored']) }}">{{ $district->partially_restored }}</a></td>
+                    <td class="text-center fw-medium"><a
+                        href="{{ route('admin.apps.dmis.reports.district-details', ['district' => $district->id, 'type' => $type ?? 'Road', 'user' => $subordinate->id, 'road_status' => 'Not restored']) }}">{{ $district->not_restored }}</a></td>
                     @if($costInfo)
                     <td class="text-center fw-medium">{{ number_format($district->restoration, 2) }}</td>
                     <td class="text-center fw-medium">{{ number_format($district->rehabilitation, 2) }}</td>

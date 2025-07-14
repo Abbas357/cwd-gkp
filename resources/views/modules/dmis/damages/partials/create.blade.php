@@ -105,37 +105,38 @@
     <hr>
     <h4>Coordinates</h4>
 
-    <div class="col-md-3 mb-3">
-        <label for="damage_north_start">Damage Start (North)</label>
+    <div class="col-md-4 mb-3">
+        <label for="damage_north_start">Start Northing <span class="fw-bold">(Latitude)</span></label>
         <input type="text" class="form-control" id="damage_north_start" name="damage_north_start" placeholder="eg 34.646253" value="{{ old('damage_north_start') }}">
         @error('damage_north_start')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
-
-    <div class="col-md-3 mb-3">
-        <label for="damage_north_end">Damage End (North)</label>
-        <input type="text" class="form-control" id="damage_north_end" name="damage_north_end" placeholder="eg 34.644727" value="{{ old('damage_north_end') }}">
-        @error('damage_north_end')
-        <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-
-    <div class="col-md-3 mb-3">
-        <label for="damage_east_start">Damage Start (East)</label>
+    
+    <div class="col-md-4 mb-3">
+        <label for="damage_east_start">Start Easting <span class="fw-bold">(Longitude)</span></label>
         <input type="text" class="form-control" id="damage_east_start" name="damage_east_start" placeholder="eg 72.629942" value="{{ old('damage_east_start') }}">
         @error('damage_east_start')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
-
-    <div class="col-md-3 mb-3">
-        <label for="damage_east_end">Damage End (East)</label>
+    
+    <div class="col-md-4 mb-3">
+        <label for="damage_north_end">End Northing <span class="fw-bold">(Latitude)</span></label>
+        <input type="text" class="form-control" id="damage_north_end" name="damage_north_end" placeholder="eg 34.644727" value="{{ old('damage_north_end') }}">
+        @error('damage_north_end')
+        <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
+    
+    <div class="col-md-4 mb-3">
+        <label for="damage_east_end">End Easting <span class="fw-bold">(Longitude)</span></label>
         <input type="text" class="form-control" id="damage_east_end" name="damage_east_end" placeholder="eg 72.952492" value="{{ old('damage_east_end') }}">
         @error('damage_east_end')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
+    
 </div>
 
 <!-- Step 4: Cost and Additional Info -->
