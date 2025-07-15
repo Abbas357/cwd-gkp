@@ -229,5 +229,9 @@ Route::prefix('site')->group(function () {
         Route::get('/create', [TransferRequestController::class, 'create'])->name('create')->can('create', App\Models\TransferRequest::class);
         Route::post('/', [TransferRequestController::class, 'store'])->name('store')->can('create', App\Models\TransferRequest::class);
         Route::delete('/{transfer_request}', [TransferRequestController::class, 'destroy'])->name('destroy')->can('delete', 'transfer_request');
+        Route::patch('/review/{transfer_request}', [TransferRequestController::class, 'review'])->name('review')->can('review', 'transfer_request');
+        Route::patch('/approve/{transfer_request}', [TransferRequestController::class, 'approve'])->name('approve')->can('approve', 'transfer_request');
+        Route::patch('/reject/{transfer_request}', [TransferRequestController::class, 'reject'])->name('reject')->can('reject', 'transfer_request');
     });
+
 });

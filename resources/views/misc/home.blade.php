@@ -292,11 +292,8 @@
             <h4 class="fw-bold text-primary mb-1">Welcome, {{ $user->name }}</h4>
             <div class="mb-1 fs-5">Office: <divan class="text-secondary fw-semibold">
                     {{ $user->currentOffice->name }}</span></div>
-            <div class="text-muted small fst-italic" style="font-size: 12px; font-weight: bold">
-                (If this is not your office, kindly contact
-                <a href="https://wa.me/3130535333" class="text-decoration-none text-success fw-semibold" target="_blank">this
-                    number</a>
-                on WhatsApp for your office transfer.)
+            <div class="fw-bold text-danger">
+                (Note: If you are transferred from above office, kindly place a transfer request) <button class="btn btn-light btn-sm border-secondary" id="place-request">Request</button>
             </div>
         </div>
         <div class="page-header py-4 px-3 bg-light rounded shadow-sm">
@@ -450,6 +447,17 @@
         <script>
             const appTiles = document.querySelectorAll('.app-tile');
             const hoverSound = document.getElementById('hoverSound');
+
+            pushStateModal({
+                fetchUrl: "{{ route('admin.transfer_requests.create') }}",
+                btnSelector: '#place-request',
+                title: 'Submit Transfer Request (Note: This transfer applies only within the app)',
+                actionButtonName: 'Add Transfer Request',   
+                modalSize: 'md',
+                includeForm: true,
+                formAction: "{{ route('admin.transfer_requests.store') }}",
+                hash: false,
+            });
 
             appTiles.forEach(tile => {
                 tile.addEventListener('mouseenter', () => {

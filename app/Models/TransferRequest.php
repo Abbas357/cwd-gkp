@@ -70,6 +70,52 @@ class TransferRequest extends Model implements HasMedia
         return $query->where('user_id', $userId);
     }
 
+    public function scopePending($query)
+    {
+        return $query->where('status', 'Pending');
+    }
+
+    public function scopeApproved($query)
+    {
+        return $query->where('status', 'Approved');
+    }
+
+    public function isPending()
+    {
+        return $this->status === 'Pending';
+    }
+
+    public function isApproved()
+    {
+        return $this->status === 'Approved';
+    }
+
+    public function isRejected()
+    {
+        return $this->status === 'Rejected';
+    }
+
+    public function reject($remarks = null)
+    {
+        $this->update([
+            'status' => 'Rejected',
+            'remarks' => $remarks
+        ]);
+
+        return $this;
+    }
+
+    public function approved()
+    {
+        $this->update([
+            'status' => 'Approved',
+        ]);
+
+        $this->createPosting();
+
+        return $this;
+    }
+
     protected function createPosting()
     {
         $currentPosting = $this->user->currentPosting;

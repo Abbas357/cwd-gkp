@@ -4,11 +4,19 @@
 @endphp
 
 <div class="action-btns">
-    @can('view', $row)
-        <i class="view-btn bi-eye bg-light text-primary" title="View" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
-    @endcan
-    
-    @if($user->can('delete', $row) && $status === 'draft' && is_null($row->published_at))
-        <i class="delete-btn bg-light text-danger bi-trash" title="Delete" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
+    @if($status == 'Pending')
+        @if($user->can('delete', $row))
+            <i class="delete-btn bg-light text-danger bi-trash" title="Delete" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
+        @endif
+        <i class="review-btn text-warning bi-hourglass-split" title="Mark as Under Review" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
+        <i class="approve-btn text-success bi-check-circle" title="Approve" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
+        <i class="reject-btn text-danger bi-x-circle" title="Reject" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
+        
+    @elseif($status == 'Under Review')
+        <i class="approve-btn text-success bi-check-circle" title="Approve" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
+        <i class="reject-btn text-danger bi-x-circle" title="Reject" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
+        
+    @elseif($status == 'Approved' || $status == 'Rejected')
+        -
     @endif
 </div>

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('to_designation_id')->nullable();
             $table->date('posting_date')->nullable();
             $table->text('remarks')->nullable();
+            $table->enum('status', ['Pending', 'Under Review', 'Approved', 'Rejected'])->default('Pending');
             $table->timestamps();
         });
     }

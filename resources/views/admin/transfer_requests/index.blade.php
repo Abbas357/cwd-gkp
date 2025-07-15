@@ -9,12 +9,16 @@
     <div class="inward-tabs mb-3">
         <ul class="nav nav-tabs nav-tabs-table">
             <li class="nav-item">
-                <a id="already-transfered-tab" class="nav-link" data-bs-toggle="tab" href="#already-transfered">Already
-                    Transfered</a>
+                <a id="pending-tab" class="nav-link" data-bs-toggle="tab" href="#pending">Pending</a>
             </li>
             <li class="nav-item">
-                <a id="request-transfer-tab" class="nav-link" data-bs-toggle="tab" href="#request-transfer">Request
-                    Transfer</a>
+                <a id="under-review-tab" class="nav-link" data-bs-toggle="tab" href="#under-review">Under Review</a>
+            </li>
+            <li class="nav-item">
+                <a id="approved-tab" class="nav-link" data-bs-toggle="tab" href="#approved">Approved</a>
+            </li>
+            <li class="nav-item">
+                <a id="rejected-tab" class="nav-link" data-bs-toggle="tab" href="#rejected">Rejected</a>
             </li>
         </ul>
     </div>
@@ -25,12 +29,13 @@
             <thead>
                 <tr>
                     <th scope="col" class="p-3">ID</th>
+                    <th scope="col" class="p-3">Type</th>
                     <th scope="col" class="p-3">User</th>
                     <th scope="col" class="p-3">Current Office</th>
                     <th scope="col" class="p-3">Current Designation</th>
                     <th scope="col" class="p-3">Requested Office</th>
                     <th scope="col" class="p-3">Requested Designation</th>
-                    <th scope="col" class="p-3">Posting_date</th>
+                    <th scope="col" class="p-3">Posting Date</th>
                     <th scope="col" class="p-3">Remarks</th>
                     <th scope="col" class="p-3">Created At</th>
                     <th scope="col" class="p-3">Updated At</th>
@@ -54,6 +59,9 @@
                     columns: [{
                         data: "id",
                         searchBuilderType: "num"
+                    }, {
+                        data: "type",
+                        searchBuilderType: "string"
                     }, {
                         data: "user",
                         searchBuilderType: "string"
@@ -102,16 +110,16 @@
                         text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Transfer</span>`,
                         action: function(e, dt, node, config) {
 
-                            formWizardModal({
-                                title: 'Add Transfer',
+                            pushStateModal({
                                 fetchUrl: "{{ route('admin.transfer_requests.create') }}",
                                 btnSelector: '.create-btn',
-                                actionButtonName: 'Add Transfer',
-                                modalSize: 'lg',
+                                title: 'Add Transfer',
+                                actionButtonName: 'Add Transfer',   
+                                modalSize: 'md',
+                                includeForm: true,
                                 formAction: "{{ route('admin.transfer_requests.store') }}",
-                                formSubmitted() {
-                                    table.ajax.reload();
-                                }
+                                hash: false,
+                                tableToRefresh: table
                             });
 
                         },
@@ -119,12 +127,51 @@
                 });
 
                 $("#transfer_requests-datatable").on('click', '.delete-btn', async function() {
-                    const tenderId = $(this).data("id");
-                    const url = "{{ route('admin.transfer_requests.destroy', ':id') }}".replace(':id', tenderId);
+                    const requestId = $(this).data("id");
+                    const url = "{{ route('admin.transfer_requests.destroy', ':id') }}".replace(':id', requestId);
 
-                    const result = await confirmAction(`Do you want to delete this tender?`);
+                    const result = await confirmAction(`Do you want to delete this request?`);
                     if (result && result.isConfirmed) {
                         const success = await fetchRequest(url, 'DELETE');
+                        if (success) {
+                            $("#transfer_requests-datatable").DataTable().ajax.reload();
+                        }
+                    }
+                });
+
+                $("#transfer_requests-datatable").on('click', '.review-btn', async function() {
+                    const requestId = $(this).data("id");
+                    const url = "{{ route('admin.transfer_requests.review', ':id') }}".replace(':id', requestId);
+
+                    const result = await confirmAction(`Do you want to under review this request?`);
+                    if (result && result.isConfirmed) {
+                        const success = await fetchRequest(url, 'PATCH');
+                        if (success) {
+                            $("#transfer_requests-datatable").DataTable().ajax.reload();
+                        }
+                    }
+                });
+
+                $("#transfer_requests-datatable").on('click', '.approve-btn', async function() {
+                    const requestId = $(this).data("id");
+                    const url = "{{ route('admin.transfer_requests.approve', ':id') }}".replace(':id', requestId);
+
+                    const result = await confirmAction(`Do you want to approve this request?`);
+                    if (result && result.isConfirmed) {
+                        const success = await fetchRequest(url, 'PATCH');
+                        if (success) {
+                            $("#transfer_requests-datatable").DataTable().ajax.reload();
+                        }
+                    }
+                });
+
+                $("#transfer_requests-datatable").on('click', '.reject-btn', async function() {
+                    const requestId = $(this).data("id");
+                    const url = "{{ route('admin.transfer_requests.reject', ':id') }}".replace(':id', requestId);
+
+                    const result = await confirmAction(`Do you want to reject this request?`);
+                    if (result && result.isConfirmed) {
+                        const success = await fetchRequest(url, 'PATCH');
                         if (success) {
                             $("#transfer_requests-datatable").DataTable().ajax.reload();
                         }
@@ -135,18 +182,26 @@
                     table: table,
                     dataTableUrl: "{{ route('admin.transfer_requests.index') }}",
                     tabToHashMap: {
-                        "#already-transfered-tab": '#already-transfered',
-                        "#request-transfer-tab": '#request-transfer',
+                        "#pending-tab": '#pending',
+                        "#under-review-tab": '#under-review',
+                        "#approved-tab": '#approved',
+                        "#rejected-tab": '#rejected',
                     },
                     hashToParamsMap: {
-                        '#already-transfered': {
-                            status: 'Already Transferred'
+                        '#pending': {
+                            status: 'Pending'
                         },
-                        '#request-transfer': {
-                            status: 'Request Transfer'
+                        '#under-review': {
+                            status: 'Under Review'
+                        },
+                        '#approved': {
+                            status: 'Approved'
+                        },
+                        '#rejected': {
+                            status: 'Rejected'
                         },
                     },
-                    defaultHash: '#already-transfered'
+                    defaultHash: '#pending'
                 });
 
                 $('#transfer_requests-datatable').colResizable({

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Office;
 use App\Helpers\Database;
+use App\Models\Designation;
 use Illuminate\Http\Request;
 use App\Helpers\SearchBuilder;
 use App\Models\TransferRequest;
@@ -14,12 +16,12 @@ class TransferRequestController extends Controller
 {
     public function index(Request $request)
     {
-        $type = $request->query('type', null);
+        $status = $request->query('status', null);
 
         $transfer_requests = TransferRequest::query();
 
-        $transfer_requests->when($type !== null, function ($query) use ($type) {
-            $query->where('type', $type);
+        $transfer_requests->when($status !== null, function ($query) use ($status) {
+            $query->where('status', $status);
         });
 
         $relationMappings = [
@@ -79,7 +81,9 @@ class TransferRequestController extends Controller
 
     public function create()
     {
-        $html = view('admin.transfer_requests.partials.create')->render();
+        $designations = Designation::whereNotIn('name', ['Minister', 'Secretary'])->get();
+        $offices = Office::whereNotIn('name', ['Minister C&W', 'Secretary C&W'])->get();
+        $html = view('admin.transfer_requests.partials.create', compact('designations','offices'))->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -90,18 +94,57 @@ class TransferRequestController extends Controller
 
     public function store(StoreTransferRequestRequest $request)
     {
-            $transfer_requests = new TransferRequest();
-            $transfer_requests->title = $request->title;
-            $transfer_requests->description = $request->description;
-            $transfer_requests->date_of_advertisement = $request->date_of_advertisement;
-            $transfer_requests->closing_date = $request->closing_date;
-            $transfer_requests->user_id = $request->user ?? 0;
+            $transfer_request = new TransferRequest();
+            $currentUser = request()->user();
+            $transfer_request->user_id = $currentUser->id;
+            $transfer_request->type = $request->type ?? 'Already Transferred';
+            $transfer_request->from_office_id = $currentUser->currentOffice->id;
+            $transfer_request->from_designation_id = $currentUser->currentDesignation->id;
+            $transfer_request->to_office_id = $request->to_office_id;
+            $transfer_request->to_designation_id = $request->to_designation_id;
+            $transfer_request->posting_date = $request->posting_date;
+            $transfer_request->remarks = $request->remarks;
 
-            if (!$transfer_requests->save()) {
-                return response()->json(['error' => 'Failed to add Transfer Request.'], 500);
+            if($currentUser->transferRequests()->latest()->first()?->status === 'Pending') {
+                return response()->json(['error' => 'You have already posted request. Please wait...']);
             }
 
-            return response()->json(['success' => 'Transfer Request added successfully.']);
+            if($currentUser->transferRequests()->latest()->first()?->status === 'Rejected') {
+                return response()->json(['error' => 'Your previous request is rejected. Kindly contact IT Cell...']);
+            }
+
+            if ($transfer_request->save()) {
+                return response()->json(['success' => 'Transfer Request added successfully.']);
+            }
+
+            return response()->json(['error' => 'Failed to add Transfer Request.'], 500);
+    }
+
+    public function review(Request $request, TransferRequest $transfer_request)
+    {
+        $transfer_request->status = 'Under Review';
+        if ($transfer_request->save()) {
+            return response()->json(['success' => 'Transfer request has been placed Under review.'], 200);
+        }
+        return response()->json(['error' => 'Failed to placed the transfer request under review']);
+    }
+
+    public function approve(Request $request, TransferRequest $transfer_request)
+    {
+        $transfer_request->status = 'Approved';
+        if ($transfer_request->save()) {
+            return response()->json(['success' => 'Transfer request has been approved.'], 200);
+        }
+        return response()->json(['error' => 'Failed to approve the transfer request']);
+    }
+
+    public function reject(Request $request, TransferRequest $transfer_request)
+    {
+        $transfer_request->status = 'Rejected';
+        if ($transfer_request->save()) {
+            return response()->json(['success' => 'Transfer request has been rejected.'], 200);
+        }
+        return response()->json(['error' => 'Failed to reject the transfer request']);
     }
 
     public function show(TransferRequest $transfer_requests)
@@ -109,9 +152,9 @@ class TransferRequestController extends Controller
         return response()->json($transfer_requests);
     }
 
-    public function destroy(TransferRequest $transfer_requests)
+    public function destroy(TransferRequest $transfer_request)
     {
-        if (request()->user()->isAdmin() || $transfer_requests->delete()) {
+        if (request()->user()->isAdmin() && $transfer_request->delete()) {
             return response()->json(['success' => 'TransferRequest has been deleted successfully.']);
         }
 
