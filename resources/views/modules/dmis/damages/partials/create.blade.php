@@ -1,6 +1,7 @@
 <link href="{{ asset('admin/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
 <link href="{{ asset('admin/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet">
 <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
+
 <!-- Step 1: Basic Information -->
 <div class="row" id="step-1">
     <div class="col-md-6 mb-3">

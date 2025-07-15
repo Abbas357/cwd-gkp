@@ -343,17 +343,7 @@
         $('#input-' + field).removeClass('d-none');
         $('#save-btn-' + field).removeClass('d-none');
         $('#edit-btn-' + field).addClass('d-none');
-
-        if (field === 'remarks') {
-            var textarea = $('#input-' + field);
-            if (!textarea.data('summernote-initialized')) {
-                textarea.summernote({
-                    height: 300
-                });
-                textarea.data('summernote-initialized', true);
-            }
-        }
-
+        
         if (field === 'infrastructure_id') {
             select2Ajax(
                 '#input-infrastructure_id', '{{ route('admin.apps.dmis.infrastructures.api') }}', {
@@ -378,9 +368,7 @@
     async function updateField(field, id) {
         let newValue;
 
-        if (field === 'remarks') {
-            newValue = $('#input-' + field).summernote('code');
-        } else if (field === 'damage_nature') {
+        if (field === 'damage_nature') {
             newValue = JSON.stringify($('#input-' + field).val());
         } else {
             newValue = $('#input-' + field).val();
@@ -396,8 +384,6 @@
         if (success) {
             if (field === 'remarks') {
                 $('#text-' + field).html(newValue);
-                $('#input-' + field).summernote('destroy');
-                $('#input-' + field).data('summernote-initialized', false);
             } else if (field === 'damage_nature') {
                 const selectedOptions = $('#input-' + field + ' option:selected').map(function() {
                     return $(this).text();

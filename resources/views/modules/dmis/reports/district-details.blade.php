@@ -460,7 +460,8 @@
                 <div class="no-print action-buttons">
                     <div class="btn-group-custom d-flex align-items-center">
                         <!-- Add Image Toggle Switch -->
-                        <label for="includeImagesSwitch" class="form-check form-switch me-3 border py-2 rounded-3 bg-light shadow-sm cursor-pointer user-select-none">
+                        <label for="includeImagesSwitch"
+                            class="form-check form-switch me-3 border py-2 rounded-3 bg-light shadow-sm cursor-pointer user-select-none">
                             <input class="form-check-input" type="checkbox" role="switch" id="includeImagesSwitch"
                                 {{ request()->query('images', 'false') === 'true' ? 'checked' : '' }}>
                             <span class="form-check-label">
@@ -511,11 +512,11 @@
                     <i class="bi bi-exclamation-triangle me-1"></i>
                     <strong>Total Damages:</strong> {{ $stats['total_damages'] }}
                 </span>
-                @if(request('road_status'))
-                <span class="badge border border-danger text-danger bg-transparent fs-6 px-3 py-2">
-                    <i class="bi bi-exclamation-triangle me-1"></i>
-                    <strong>Road Status:</strong> {{ request('road_status') }}
-                </span>
+                @if (request('road_status'))
+                    <span class="badge border border-warning text-warning bg-transparent fs-6 px-3 py-2">
+                        <i class="bi bi-exclamation-triangle me-1"></i>
+                        <strong>Road Status:</strong> {{ request('road_status') }}
+                    </span>
                 @endif
             </div>
         </div>
@@ -563,7 +564,8 @@
 
         <!-- Damages by Infrastructure -->
         <div class="mb-4">
-            <h5 class="fw-bold mb-5"><i class="bi-list-ul me-2"></i>List of damaged {{ request()->query('type') ?? 'Road' }}s</h5>
+            <h5 class="fw-bold mb-5"><i class="bi-list-ul me-2"></i>List of damaged
+                {{ request()->query('type') ?? 'Road' }}s</h5>
 
             @if ($damages->count() > 0)
                 @foreach ($damagesByInfrastructure as $infrastructureId => $infrastructureDamages)
@@ -591,7 +593,9 @@
                                 <thead>
                                     <tr>
                                         <th>S#</th>
-                                        <th>Status</th>
+                                        @if (!request('road_status'))
+                                            <th>Status</th>
+                                        @endif
                                         <th>Damaged Length</th>
                                         <th>Reported Date</th>
                                         <th>Restoration Cost</th>
@@ -601,15 +605,16 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($infrastructureDamages as $damage)
-                                        <!-- Damage Information Row -->
                                         <tr class="damage-row">
                                             <td><strong>{{ $loop->iteration }}</strong></td>
-                                            <td>
-                                                <span
-                                                    class="status-badge status-{{ str_replace(' ', '-', strtolower($damage->road_status)) }}">
-                                                    {{ $damage->road_status }}
-                                                </span>
-                                            </td>
+                                            @if (!request('road_status'))
+                                                <td>
+                                                    <span
+                                                        class="status-badge status-{{ str_replace(' ', '-', strtolower($damage->road_status)) }}">
+                                                        {{ $damage->road_status }}
+                                                    </span>
+                                                </td>
+                                            @endif
                                             <td>{{ $damage->damaged_length ?? 'N/A' }}
                                                 {{ request()->query('type') == 'Road' || !request()->has('type') ? '(KM)' : '(Meter)' }}
                                             </td>
@@ -626,7 +631,6 @@
                                             </td>
                                         </tr>
 
-                                        <!-- Remarks Row (if exists) -->
                                         @if ($damage->remarks)
                                             <tr>
                                                 <td colspan="7">
@@ -638,7 +642,6 @@
                                             </tr>
                                         @endif
 
-                                        <!-- Images Row -->
                                         <tr class="images-row" id="images-row-{{ $damage->id }}"
                                             style="{{ request()->query('images', 'false') === 'false' ? 'display: none;' : '' }}">
                                             <td colspan="7">
@@ -679,7 +682,6 @@
                                                         </div>
                                                     </div>
 
-                                                    <!-- After Work Pictures -->
                                                     <div class="image-section">
                                                         <div
                                                             class="image-section-header after-header d-flex align-items-center justify-content-center">
@@ -705,7 +707,6 @@
                                                                     <i class="bi-image me-2 fs-1"></i>After pictures
                                                                     not uploaded
                                                                 </div>
-                                                                <!-- Print placeholder -->
                                                                 <div class="print-image-placeholder d-none">
                                                                     No After<br>Image
                                                                 </div>
@@ -760,21 +761,14 @@
 
         <script>
             $(document).ready(function() {
-                // Handle image toggle switch
                 $('#includeImagesSwitch').on('change', function() {
                     const isChecked = $(this).is(':checked');
                     const currentUrl = new URL(window.location.href);
-
-                    // Update URL parameter
                     currentUrl.searchParams.set('images', isChecked ? 'true' : 'false');
-
-                    // Update browser URL without refreshing
                     window.history.pushState({}, '', currentUrl.toString());
 
-                    // Show/hide all image rows
                     $('.images-row').toggle(isChecked);
 
-                    // Optional: Add smooth transition
                     if (isChecked) {
                         $('.images-row').slideDown(300);
                     } else {
@@ -782,14 +776,11 @@
                     }
                 });
 
-                // Initialize images visibility based on URL parameter
                 const showImages = new URLSearchParams(window.location.search).get('images') === 'true';
                 $('.images-row').toggle(showImages);
 
-                // Update switch state if URL parameter exists
                 $('#includeImagesSwitch').prop('checked', showImages);
 
-                // Rest of your existing JavaScript code...
                 $('#print-report').on('click', function() {
                     $('.no-images').each(function() {
                         $(this).siblings('.print-image-placeholder').removeClass('d-none');
@@ -837,7 +828,9 @@
                         logging: false,
                         removeContainer: true
                     }).then(function(canvas) {
-                        const { jsPDF } = window.jspdf;
+                        const {
+                            jsPDF
+                        } = window.jspdf;
                         const pdf = new jsPDF('p', 'mm', 'a4');
 
                         const margins = {
@@ -864,22 +857,27 @@
                                 pdf.addPage();
                             }
 
-                            const sliceHeight = Math.min(contentHeight * (canvas.width / contentWidth), totalHeight - position);
+                            const sliceHeight = Math.min(contentHeight * (canvas.width / contentWidth),
+                                totalHeight - position);
 
                             const tempCanvas = document.createElement('canvas');
                             tempCanvas.width = canvas.width;
                             tempCanvas.height = sliceHeight;
                             const tempContext = tempCanvas.getContext('2d');
 
-                            tempContext.drawImage(canvas, 0, position, canvas.width, sliceHeight, 0, 0, tempCanvas.width, tempCanvas.height);
+                            tempContext.drawImage(canvas, 0, position, canvas.width, sliceHeight, 0, 0,
+                                tempCanvas.width, tempCanvas.height);
 
-                            const imgData = tempCanvas.toDataURL('image/jpeg', 0.9); // Increased quality to 90% for better clarity
+                            const imgData = tempCanvas.toDataURL('image/jpeg',
+                            0.9); // Increased quality to 90% for better clarity
                             const currentImgHeight = (contentWidth * sliceHeight) / tempCanvas.width;
-                            pdf.addImage(imgData, 'JPEG', margins.left, margins.top, contentWidth, currentImgHeight);
+                            pdf.addImage(imgData, 'JPEG', margins.left, margins.top, contentWidth,
+                                currentImgHeight);
                             position += sliceHeight;
                         }
 
-                        const fileName = `{{ $district->name }}_Damage_Report_${new Date().toISOString().split('T')[0]}.pdf`;
+                        const fileName =
+                            `{{ $district->name }}_Damage_Report_${new Date().toISOString().split('T')[0]}.pdf`;
                         pdf.save(fileName);
 
                         button.html(originalText);
@@ -898,7 +896,6 @@
                     });
                 });
 
-                // Image modal functionality
                 const imageModal = document.getElementById('imageModal');
                 const modalImage = document.getElementById('modalImage');
                 const modalLabel = document.getElementById('imageModalLabel');
@@ -922,7 +919,6 @@
                     downloadLink.href = '';
                 });
 
-                // Add smooth scrolling for better user experience
                 $('a[href^="#"]').on('click', function(event) {
                     var target = $(this.getAttribute('href'));
                     if (target.length) {
