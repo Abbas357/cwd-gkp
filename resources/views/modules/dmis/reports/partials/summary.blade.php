@@ -39,7 +39,7 @@
                 Effected {{ $type ?? 'Road' }}s
             </th>
             <th scope="col" class="text-center align-middle">
-                No. of Damages
+                No. of Damage spots
             </th>
             <th scope="col" class="text-center align-middle">
                 Total Length
@@ -48,15 +48,15 @@
                 Damage Length
             </th>
             <th scope="col" class="text-center align-middle">
-                Fully Restored<br>
+                Fully Restored <br>
                 <small class="help-text">(Open to all traffic)</small>
             </th>
             <th scope="col" class="text-center align-middle">
-                Partially Restored<br>
+                Partially Restored <br>
                 <small class="help-text">(Open to light traffic)</small>
             </th>
             <th scope="col" class="text-center align-middle">
-                Not Restored<br>
+                Not Restored <br>
                 <small class="help-text">(Closed for traffic)</small>
             </th>
             @if($costInfo)
