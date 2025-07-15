@@ -22,6 +22,7 @@ class DamageObserver
                 'approximate_restoration_cost' => $originalValues['approximate_restoration_cost'] ?? null,
                 'approximate_rehabilitation_cost' => $originalValues['approximate_rehabilitation_cost'] ?? null,
                 'road_status' => $originalValues['road_status'] ?? null,
+                'remarks' => $originalValues['remarks'] ?? null,
             ]);
         }
     }

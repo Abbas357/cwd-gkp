@@ -1,4 +1,5 @@
 <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
+<link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
 
 <div class="row" id="step-1">
     <div class="col-md-6 mb-4">
@@ -51,12 +52,22 @@
     </div>
 </div>
 <script src="{{ asset('admin/plugins/summernote/summernote-bs5.min.js') }}"></script>
+<script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
 <script>
     $(document).ready(function() {
 
         $('#content').summernote({
             height: 150
         , });
+
+        imageCropper({
+            fileInput: "#achievement_files",
+            aspectRatio: 3 / 2,
+            minFileSizeInKB: 150,
+            maxFileSizeInKB: 300,
+            maxQualityAttempts: 15,
+            quality: 0.7,
+        });
 
     });
 

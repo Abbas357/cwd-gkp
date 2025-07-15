@@ -9,11 +9,9 @@ use App\Helpers\Database;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Helpers\SearchBuilder;
-use App\Models\SiteNotification;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Route;
 use App\Http\Requests\StoreTenderRequest;
 
 class TenderController extends Controller

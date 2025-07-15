@@ -126,16 +126,12 @@
                             formAction: "{{ route('admin.events.store') }}",
                             wizardSteps: [
                                 {
-                                    title: "Basic Info",
+                                    title: "Event Detail",
                                     fields: ["#step-1"]
                                 },
                                 {
-                                    title: "Detail Info",
+                                    title: "Images & Other",
                                     fields: ["#step-2"]
-                                },
-                                {
-                                    title: "Description & Images",
-                                    fields: ["#step-3"]
                                 }
                             ],
                             formSubmitted() {

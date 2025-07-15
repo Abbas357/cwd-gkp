@@ -1,4 +1,5 @@
 <link href="{{ asset('admin/plugins/summernote/summernote-bs5.min.css') }}" rel="stylesheet">
+<link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
 <div class="row mx-1" id="step-1">
     <div class="col-md-6 mb-3">
         <label for="title">Title</label>
@@ -16,7 +17,7 @@
         @enderror
     </div>
 
-    <div class="col-md-6 mb-3">
+    <div class="col-md-4 mb-3">
         <label for="start_datetime">Start Date & Time</label>
         <input type="date" class="form-control" id="start_datetime" value="{{ old('start_datetime') }}" placeholder="Start Date & Time" name="start_datetime" required>
         @error('start_datetime')
@@ -24,17 +25,14 @@
         @enderror
     </div>
 
-    <div class="col-md-6 mb-3">
+    <div class="col-md-4 mb-3">
         <label for="end_datetime">End Date & Time</label>
         <input type="date" class="form-control" id="end_datetime" value="{{ old('end_datetime') }}" placeholder="End Date & Time" name="end_datetime" required>
         @error('end_datetime')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
-</div>
-
-<div class="row mx-1" id="step-2">
-    <div class="col-md-6 mb-3">
+    <div class="col-md-4 mb-3">
         <label for="event_type">Event Type</label>
         <select class="form-select form-select-md" id="event_type" name="event_type">
             <option value="">Select Option</option>
@@ -46,7 +44,6 @@
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
-
     <div class="col-md-6 mb-3">
         <label for="organizer">Organizer</label>
         <input type="text" class="form-control" id="organizer" value="{{ old('organizer') }}" placeholder="eg. SOG" name="organizer">
@@ -55,13 +52,17 @@
         @enderror
     </div>
 
-    <div class="col-md-4 mb-3">
+    <div class="col-md-6 mb-3">
         <label for="chairperson">Chairperson</label>
         <input type="text" class="form-control" id="chairperson" value="{{ old('chairperson') }}" placeholder="eg. Secretary C&W" name="chairperson">
         @error('chairperson')
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
+</div>
+
+<div class="row mx-1" id="step-2">
+    
 
     <div class="col-md-4 mb-3">
         <label for="participants_type">Participants Type</label>
@@ -83,10 +84,7 @@
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
-</div>
-
-<div class="row mx-1" id="step-3">
-    <div class="col-md-12 mb-3">
+    <div class="col-md-4 mb-3">
         <label for="images">Images</label>
         <input type="file" class="form-control" id="images" name="images[]" multiple required>
         @error('images')
@@ -102,12 +100,22 @@
 
 
 <script src="{{ asset('admin/plugins/summernote/summernote-bs5.min.js') }}"></script>
+<script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
 <script>
     $(document).ready(function() {
         
         $('#description').summernote({
-            height: 200
+            height: 150
         , });
+
+        imageCropper({
+            fileInput: "#images",
+            aspectRatio: 3 / 2,
+            minFileSizeInKB: 150,
+            maxFileSizeInKB: 300,
+            maxQualityAttempts: 15,
+            quality: 0.7,
+        });
 
     });
 

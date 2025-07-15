@@ -117,16 +117,12 @@
                             formAction: "{{ route('admin.gallery.store') }}",
                             wizardSteps: [
                                 {
-                                    title: "Basic Info",
+                                    title: "Gallery detail",
                                     fields: ["#step-1"]
                                 },
                                 {
-                                    title: "Detail",
-                                    fields: ["#step-2"]
-                                },
-                                {
                                     title: "Images",
-                                    fields: ["#step-3"]
+                                    fields: ["#step-2"]
                                 }
                             ],
                             formSubmitted() {

@@ -585,4 +585,24 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->districts()->pluck('id')->toArray();
     }
+
+    public function transferRequests()
+    {
+        return $this->hasMany(TransferRequest::class);
+    }
+
+    public function createTransferRequest($data)
+    {
+        $currentPosting = $this->currentPosting;
+        
+        $transferData = array_merge($data, [
+            'user_id' => $this->id,
+            'from_office_id' => $currentPosting?->office_id,
+            'from_designation_id' => $currentPosting?->designation_id,
+            'posting_date' => now(),
+        ]);
+
+        return TransferRequest::create($transferData);
+    }
+
 }

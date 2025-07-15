@@ -22,6 +22,11 @@
         @enderror
     </div>
 
+    <div class="col-md-12 mb-3">
+        <label for="summary">Short Description</label>
+        <textarea name="summary" id="summary" class="form-control" style="height: 70px">{{ old('summary') }}</textarea>
+    </div>
+
 </div>
 <div class="row" id="step-2">
     <div class="col-md-12 mb-3">
@@ -32,12 +37,6 @@
         @enderror
     </div>
 
-    <div class="col-md-12 mb-3">
-        <label for="summary">Short Description</label>
-        <textarea name="summary" id="summary" class="form-control" style="height: 70px">{{ old('summary') }}</textarea>
-    </div>
-</div>
-<div class="row" id="step-3">
     <div class="col-md-12 mb-3">
         <label for="content">Description</label>
         <div class="mb-3">
@@ -53,7 +52,7 @@
     $(document).ready(function() {
 
         $('#content').summernote({
-            height: 200
+            height: 150
         , });
 
         imageCropper({

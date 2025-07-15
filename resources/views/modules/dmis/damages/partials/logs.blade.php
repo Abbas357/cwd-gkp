@@ -275,7 +275,6 @@
             position: static;
         }
     }
-
 </style>
 
 <div class="damage-logs">
@@ -284,90 +283,95 @@
         <span class="logs-count">{{ $damage->logs->count() }} entries</span>
     </div>
 
-    @if($damage->logs->isEmpty())
-    <div class="no-logs">
-        <i class="bi-clipboard"></i>
-        <p>No history available</p>
-    </div>
+    @if ($damage->logs->isEmpty())
+        <div class="no-logs">
+            <i class="bi-clipboard"></i>
+            <p>No history available</p>
+        </div>
     @else
-    <div class="table-wrapper">
-        <table class="logs-table">
-            <thead>
-                <tr>
-                    <th class="timeline-col">#</th>
-                    <th class="date-col">Date & Time</th>
-                    <th class="length-col">Length</th>
-                    <th class="status-col">Status</th>
-                    <th class="nature-col">Nature</th>
-                    <th class="cost-col">Restoration</th>
-                    <th class="cost-col">Rehabilitation</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($damage->logs as $index => $log)
-                <tr class="log-row {{ $index === 0 ? 'latest' : '' }}">
-                    <td class="timeline-cell">
-                        <div class="timeline-wrapper">
-                            <div class="timeline-dot {{ $index === 0 ? 'active' : '' }}">
-                                {{ $index === 0 ? '★' : $damage->logs->count() - $index }}
-                            </div>
-                            @if($index < $damage->logs->count() - 1)
-                                <div class="timeline-line"></div>
+        <div class="table-wrapper">
+            <table class="logs-table">
+                <thead>
+                    <tr>
+                        <th class="timeline-col">#</th>
+                        <th class="date-col">Date & Time</th>
+                        <th class="length-col">Length</th>
+                        <th class="status-col">Status</th>
+                        <th class="nature-col">Nature</th>
+                        <th class="cost-col">Restoration</th>
+                        <th class="cost-col">Rehabilitation</th>
+                        <th class="cost-col">Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($damage->logs as $index => $log)
+                        <tr class="log-row {{ $index === 0 ? 'latest' : '' }}">
+                            <td class="timeline-cell">
+                                <div class="timeline-wrapper">
+                                    <div class="timeline-dot {{ $index === 0 ? 'active' : '' }}">
+                                        {{ $index === 0 ? '★' : $damage->logs->count() - $index }}
+                                    </div>
+                                    @if ($index < $damage->logs->count() - 1)
+                                        <div class="timeline-line"></div>
+                                    @endif
+                                </div>
+                            </td>
+
+                            <td class="date-cell">
+                                <div class="date-info">
+                                    <div class="date">{{ $log->created_at->format('M j, Y') }}</div>
+                                    <div class="time">{{ $log->created_at->format('g:i A') }}</div>
+                                    @if ($index === 0)
+                                        <span class="latest-badge">Latest</span>
+                                    @endif
+                                </div>
+                            </td>
+
+                            <td class="length-cell">
+                                {{ $log->damaged_length ?: '-' }}
+                            </td>
+
+                            <td class="status-cell">
+                                @if ($log->damage_status)
+                                    <span
+                                        class="status-badge {{ str_replace(' ', '-', strtolower($log->damage_status)) }}">
+                                        {{ $log->damage_status }}
+                                    </span>
+                                @else
+                                    -
                                 @endif
-                        </div>
-                    </td>
+                            </td>
 
-                    <td class="date-cell">
-                        <div class="date-info">
-                            <div class="date">{{ $log->created_at->format('M j, Y') }}</div>
-                            <div class="time">{{ $log->created_at->format('g:i A') }}</div>
-                            @if($index === 0)
-                            <span class="latest-badge">Latest</span>
-                            @endif
-                        </div>
-                    </td>
+                            <td class="nature-cell">
+                                @php
+                                    $damageNature = json_decode($log->damage_nature, true);
+                                @endphp
 
-                    <td class="length-cell">
-                        {{ $log->damaged_length ?: '-' }}
-                    </td>
+                                @if (is_array($damageNature))
+                                    <ul class="mb-0 ps-3">
+                                        @foreach ($damageNature as $item)
+                                            <li>{{ Str::limit($item, 35) }}</li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    {{ Str::limit($log->damage_nature, 35) ?: '-' }}
+                                @endif
+                            </td>
 
-                    <td class="status-cell">
-                        @if($log->damage_status)
-                        <span class="status-badge {{ str_replace(' ', '-', strtolower($log->damage_status)) }}">
-                            {{ $log->damage_status }}
-                        </span>
-                        @else
-                        -
-                        @endif
-                    </td>
+                            <td class="cost-cell">
+                                {{ $log->approximate_restoration_cost ? '₨ ' . number_format($log->approximate_restoration_cost, 0) : '-' }}
+                            </td>
 
-                    <td class="nature-cell">
-                        @php
-                            $damageNature = json_decode($log->damage_nature, true);
-                        @endphp
-
-                        @if(is_array($damageNature))
-                            <ul class="mb-0 ps-3">
-                                @foreach($damageNature as $item)
-                                    <li>{{ Str::limit($item, 35) }}</li>
-                                @endforeach
-                            </ul>
-                        @else
-                            {{ Str::limit($log->damage_nature, 35) ?: '-' }}
-                        @endif
-                    </td>
-
-                    <td class="cost-cell">
-                        {{ $log->approximate_restoration_cost ? '₨ ' . number_format($log->approximate_restoration_cost, 0) : '-' }}
-                    </td>
-
-                    <td class="cost-cell">
-                        {{ $log->approximate_rehabilitation_cost ? '₨ ' . number_format($log->approximate_rehabilitation_cost, 0) : '-' }}
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+                            <td class="cost-cell">
+                                {{ $log->approximate_rehabilitation_cost ? '₨ ' . number_format($log->approximate_rehabilitation_cost, 0) : '-' }}
+                            </td>
+                            <td class="cost-cell">
+                                {{ $log->remarks }}
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     @endif
 </div>

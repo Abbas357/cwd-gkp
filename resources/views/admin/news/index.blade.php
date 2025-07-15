@@ -121,12 +121,8 @@
                                     fields: ["#step-1"]
                                 },
                                 {
-                                    title: "Summary & Attachment",
+                                    title: "Description & Attachment",
                                     fields: ["#step-2"]
-                                },
-                                {
-                                    title: "Description",
-                                    fields: ["#step-3"]
                                 }
                             ],
                             formSubmitted() {

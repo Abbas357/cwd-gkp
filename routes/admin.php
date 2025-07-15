@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\DownloadController;
 use App\Http\Controllers\Admin\SeniorityController;
+use App\Http\Controllers\Admin\TransferRequestController;
 use App\Http\Controllers\Admin\NewsLetterController;
 use App\Http\Controllers\Admin\AchievementController;
 use App\Http\Controllers\Admin\ProjectFileController;
@@ -220,5 +221,13 @@ Route::prefix('site')->group(function () {
         Route::patch('/relief-grant/{PublicContact}', [PublicContactController::class, 'reliefGrant'])->name('grant')->can('reliefGrant', 'PublicContact');
         Route::patch('/relief-not-grant/{PublicContact}', [PublicContactController::class, 'reliefNotGrant'])->name('notgrant')->can('reliefNotGrant', 'PublicContact');
         Route::patch('/drop/{PublicContact}', [PublicContactController::class, 'drop'])->name('drop')->can('drop', 'PublicContact');
+    });
+
+    // Implement Roles here
+    Route::prefix('transfer_requests')->as('transfer_requests.')->group(function () {
+        Route::get('/', [TransferRequestController::class, 'index'])->name('index')->can('viewAny', App\Models\TransferRequest::class);
+        Route::get('/create', [TransferRequestController::class, 'create'])->name('create')->can('create', App\Models\TransferRequest::class);
+        Route::post('/', [TransferRequestController::class, 'store'])->name('store')->can('create', App\Models\TransferRequest::class);
+        Route::delete('/{transfer_request}', [TransferRequestController::class, 'destroy'])->name('destroy')->can('delete', 'transfer_request');
     });
 });

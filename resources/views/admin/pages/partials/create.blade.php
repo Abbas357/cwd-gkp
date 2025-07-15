@@ -48,6 +48,15 @@
         $('#content').summernote({
             height: 200
         , });
+
+        imageCropper({
+            fileInput: "#attachments",
+            aspectRatio: 3 / 2,
+            minFileSizeInKB: 150,
+            maxFileSizeInKB: 300,
+            maxQualityAttempts: 15,
+            quality: 0.7,
+        });
         
     })
 

@@ -21,6 +21,12 @@
         <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
+    <div class="col-md-12 mb-4">
+        <label for="description">Description</label>
+        <div class="mb-3">
+            <textarea name="description" id="description" class="form-control" style="height:120px">{{ old('description') }}</textarea>
+        </div>
+    </div>
 </div>
 <div class="row" id="step-2">
     <div class="col-md-6 mb-4">
@@ -40,21 +46,13 @@
         @enderror
     </div>
 </div>
-<div class="row" id="step-3">
-    <div class="col-md-12 mb-4">
-        <label for="description">Description</label>
-        <div class="mb-3">
-            <textarea name="description" id="description" class="form-control" style="height:120px">{{ old('description') }}</textarea>
-        </div>
-    </div>
-</div>
 
 <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
 <script src="{{ asset('admin/plugins/summernote/summernote-bs5.min.js') }}"></script>
 <script>
     $(document).ready(function() {
         $('#description').summernote({
-            height: 200
+            height: 150
         , });
 
         imageCropper({
@@ -64,6 +62,15 @@
             , onComplete() {
                 $("#previewCover").show();
             }
+        });
+
+        imageCropper({
+            fileInput: "#images",
+            aspectRatio: 3 / 2,
+            minFileSizeInKB: 150,
+            maxFileSizeInKB: 300,
+            maxQualityAttempts: 15,
+            quality: 0.7,
         });
 
         var forms = document.querySelectorAll('.needs-validation')

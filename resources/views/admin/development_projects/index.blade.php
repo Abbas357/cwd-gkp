@@ -130,21 +130,14 @@
                             formAction: "{{ route('admin.development_projects.store') }}",
                             wizardSteps: [
                                 {
-                                    title: "Basic Info",
+                                    title: "Project Info",
                                     fields: ["#step-1"]
                                 },
                                 {
-                                    title: "Project Details",
+                                    title: "Attachments & Details",
                                     fields: ["#step-2"]
                                 },
-                                {
-                                    title: "Validity",
-                                    fields: ["#step-3"]
-                                },
-                                {
-                                    title: "Progress & Files",
-                                    fields: ["#step-4"]
-                                }
+
                             ],
                             formSubmitted() {
                                 table.ajax.reload();
@@ -236,7 +229,7 @@
                 title: 'Projects Details', 
                 modalSize: 'lg',
                 tableToRefresh: table,
-            , });
+            });
 
             if (new URLSearchParams(window.location.search).get("create") === "true") {
                 document.querySelector(".create-btn")?.click();

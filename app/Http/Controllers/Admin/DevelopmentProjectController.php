@@ -117,7 +117,6 @@ class DevelopmentProjectController extends Controller
         $dev_project->district_id = $request->district_id;
         $dev_project->work_location = $request->work_location;
         $dev_project->ce_id = $request->chiefEnginner;
-        $dev_project->se_id = $request->superintendentEngineer;
         $dev_project->progress_percentage = $request->progress_percentage;
         $dev_project->year_of_completion = $request->year_of_completion;
         $dev_project->status = 'Draft';
