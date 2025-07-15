@@ -136,7 +136,9 @@ class SyncPermissionsCommand extends Command
             'view card service-card',
             'view any story',
             'view story',
-            'create story'
+            'create story',
+
+            'create transfer-request'
         ];
         
         $storyManagerRole = Role::where('name', 'Basic Access')->first();
@@ -1089,6 +1091,16 @@ class SyncPermissionsCommand extends Command
             'upload file secure-document',
             'delete secure-document',
             /* ----------- Secure Documents Permissions End -------------*/
+
+            /* ----------- Transfer Requests Permissions Start -----------*/
+            // Transfer Requests
+            'view any transfer-request',
+            'create transfer-request',
+            'review transfer-request',
+            'approve file transfer-request',
+            'reject transfer-request',
+            'delete transfer-request',
+            /* ----------- Transfer Requests Permissions End -------------*/
         ];
     }
 }

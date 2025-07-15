@@ -8,59 +8,33 @@ use Illuminate\Auth\Access\Response;
 
 class TransferRequestPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
     public function viewAny(User $user): bool
     {
-        //
+        return $user->can('view any transfer-request');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, TransferRequest $transferRequest): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can create models.
-     */
     public function create(User $user): bool
     {
-        //
+        return $user->can('create transfer-request');
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, TransferRequest $transferRequest): bool
+    public function delete(User $user, TransferRequest $transfer_request): bool
     {
-        //
+        return $user->can('delete transfer-request');
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, TransferRequest $transferRequest): bool
+    public function review(User $user, TransferRequest $transfer_request): bool
     {
-        //
+        return $user->can('review transfer-request');
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, TransferRequest $transferRequest): bool
+    public function approve(User $user, TransferRequest $transfer_request): bool
     {
-        //
+        return $user->can('approve transfer-request');
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, TransferRequest $transferRequest): bool
+    public function reject(User $user, TransferRequest $transfer_request): bool
     {
-        //
+        return $user->can('reject transfer-request');
     }
 }
