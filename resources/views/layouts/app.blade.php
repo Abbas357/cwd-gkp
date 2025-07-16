@@ -10,7 +10,7 @@
 @php
     $user = auth()->user();
 @endphp
-<x-sidebar app-name="WEBSITE" app-url="{{ route('admin.home') }}">
+<x-sidebar app-name="WEB PORTAL" app-url="{{ route('admin.home') }}">
     @if(
         $user->can('viewAny', App\Models\News::class) ||
         $user->can('viewAny', App\Models\Event::class) ||

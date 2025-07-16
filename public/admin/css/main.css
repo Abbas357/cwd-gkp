@@ -1602,3 +1602,8 @@ form select.error, form textarea.error, form input.error, form input.error:focus
     border-bottom: none;
     transform: translateY(0px);
 }
+
+.form-text {
+    color: #999;
+    font-size: 10px;
+}

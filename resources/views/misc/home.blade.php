@@ -13,10 +13,10 @@
 
             #searchBar {
                 width: 80%;
-                padding: .7rem 2.5rem;
-                margin-bottom: 3rem;
+                padding: .5rem 1.5rem;
+                margin-bottom: 2rem;
                 border-radius: 50px;
-                font-size: 2em;
+                font-size: 1.5em;
                 transition: all 0.3s ease;
                 position: relative;
                 z-index: 10;
@@ -291,18 +291,18 @@
         <div class="mb-2">
             <h4 class="fw-bold text-primary mb-1">Welcome, {{ $user->name }}, <span class="text-secondary fw-semibold">
                     {{ $user?->currentOffice?->name ?? 'Currently no posting' }}</span> </h4>
-            <div class="fw-bold d-flex align-items-center justify-content-center">
+            <div class="fw-bold d-flex flex-wrap align-items-center justify-content-center">
                <span class="badge bg-danger fs-6">Important Notice:</span> &nbsp; If you have no posting or office is incorrect, kindly place a transfer/posting request &nbsp;<span class="badge bg-primary cursor-pointer" id="place-request">here.</span> 
             </div>
         </div>
-        <div class="page-header py-4 px-3 bg-light rounded shadow-sm">
+        <div class="page-header py-2 px-2 rounded shadow-sm border-top">
             <div>
-                <h1 class="display-5 fw-bold text-dark mb-2">Application Dashboard</h1>
-                <p class="fs-6 text-secondary">Access all your applications in one place</p>
+                <h1 class="display-3 fw-bold text-dark mb-1">App Center</h1>
+                <p class="fs-5 fw-bold text-secondary">At your fingertips; every app you need in one place.</p>
             </div>
         </div>
 
-        <input type="text" id="searchBar" placeholder="Search..." oninput="filterApps()">
+        <input type="text" id="searchBar" placeholder="Search apps..." oninput="filterApps()">
 
         <div class="app-grid" id="appGrid">
             @if (
@@ -450,7 +450,7 @@
             pushStateModal({
                 fetchUrl: "{{ route('admin.transfer_requests.create') }}",
                 btnSelector: '#place-request',
-                title: 'Submit Transfer Request (Note: This transfer applies only within the app)',
+                title: 'Submit Transfer Request',
                 actionButtonName: 'Add Transfer Request',   
                 modalSize: 'md',
                 includeForm: true,

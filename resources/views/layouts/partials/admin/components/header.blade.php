@@ -1,16 +1,12 @@
 <style>
     .user-info {
         background: #F5F5F5;
-        padding: 8px 16px;
-        border-radius: 25px;
+        padding: .2rem 1rem;
+        border-radius: 50px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
-        border: 1px solid #fff;
-    }
-
-    .user-info:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        border: 3px solid #ddd;
+        box-sizing: border-box;
     }
 
     .user-name-office {
@@ -47,10 +43,7 @@
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
         padding: 3px;
-    }
-
-    .profile-oval:hover {
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        border: 2px solid #0b7240;
     }
 
     .profile-image {
@@ -62,15 +55,14 @@
     }
 
     .small-screen-info {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 8px 16px;
+        background: #E5E5E5;
+        padding: .5rem 2rem;
         border-radius: 20px;
         display: inline-block;
-        margin-top: 8px;
     }
 
     .user-name-small {
-        color: white;
+        color: #333;
         font-weight: 600;
         font-size: 13px;
         display: block;
@@ -78,14 +70,13 @@
     }
 
     .office-name-small {
-        color: rgba(255, 255, 255, 0.85);
+        color: #333;
         font-size: 11px;
         font-weight: 400;
         display: block;
         line-height: 1.2;
         margin-top: 2px;
     }
-
 
     /* Responsive adjustments */
     @media (max-width: 991.98px) {
