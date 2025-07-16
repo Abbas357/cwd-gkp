@@ -118,11 +118,27 @@ class TransferRequest extends Model implements HasMedia
 
     protected function createPosting()
     {
+        // Vacating existing user on target post
+        $previousPosting = Office::findOrFail($this->to_office_id)
+            ->currentPostings()
+            ->where('designation_id', $this->to_designation_id)
+            ->where('is_current', true)
+            ->first();
+            
+        if ($previousPosting) {
+            $previousPosting->update([
+                'is_current' => false,
+                'end_date' => $this->posting_date
+            ]);
+        }
+
+        // Vacating the current user from the current post
         $currentPosting = $this->user->currentPosting;
         if ($currentPosting) {
             $currentPosting->endPosting($this->posting_date);
         }
 
+        // Give them a new posting
         $posting = Posting::create([
             'user_id' => $this->user_id,
             'office_id' => $this->to_office_id,

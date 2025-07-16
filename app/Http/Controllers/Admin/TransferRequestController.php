@@ -38,10 +38,10 @@ class TransferRequestController extends Controller
                     return $row->user->name;
                 })
                 ->addColumn('current_office', function ($row) {
-                    return $row->user->currentOffice->name;
+                    return $row->user?->currentOffice?->name ?? null;
                 })
                 ->addColumn('current_designation', function ($row) {
-                    return $row->user->currentDesignation->name;
+                    return $row->user?->currentDesignation?->name ?? null;
                 })
                 ->addColumn('requested_office', function ($row) {
                     return $row->toOffice->name;
@@ -98,8 +98,8 @@ class TransferRequestController extends Controller
             $currentUser = request()->user();
             $transfer_request->user_id = $currentUser->id;
             $transfer_request->type = $request->type ?? 'Already Transferred';
-            $transfer_request->from_office_id = $currentUser->currentOffice->id;
-            $transfer_request->from_designation_id = $currentUser->currentDesignation->id;
+            $transfer_request->from_office_id = $currentUser?->currentOffice?->id ?? null;
+            $transfer_request->from_designation_id = $currentUser?->currentDesignation?->id ?? null;
             $transfer_request->to_office_id = $request->to_office_id;
             $transfer_request->to_designation_id = $request->to_designation_id;
             $transfer_request->posting_date = $request->posting_date;
@@ -133,6 +133,7 @@ class TransferRequestController extends Controller
     {
         $transfer_request->status = 'Approved';
         if ($transfer_request->save()) {
+            $transfer_request->approved();
             return response()->json(['success' => 'Transfer request has been approved.'], 200);
         }
         return response()->json(['error' => 'Failed to approve the transfer request']);

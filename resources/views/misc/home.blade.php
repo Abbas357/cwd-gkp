@@ -289,11 +289,10 @@
             $user = auth()->user();
         @endphp
         <div class="mb-2">
-            <h4 class="fw-bold text-primary mb-1">Welcome, {{ $user->name }}</h4>
-            <div class="mb-1 fs-5">Office: <divan class="text-secondary fw-semibold">
-                    {{ $user->currentOffice->name }}</span></div>
-            <div class="fw-bold text-danger">
-                (Note: If you are transferred from above office, kindly place a transfer request) <button class="btn btn-light btn-sm border-secondary" id="place-request">Request</button>
+            <h4 class="fw-bold text-primary mb-1">Welcome, {{ $user->name }}, <span class="text-secondary fw-semibold">
+                    {{ $user?->currentOffice?->name ?? 'Currently no posting' }}</span> </h4>
+            <div class="fw-bold d-flex align-items-center justify-content-center">
+               <span class="badge bg-danger fs-6">Important Notice:</span> &nbsp; If you have no posting or office is incorrect, kindly place a transfer/posting request &nbsp;<span class="badge bg-primary cursor-pointer" id="place-request">here.</span> 
             </div>
         </div>
         <div class="page-header py-4 px-3 bg-light rounded shadow-sm">
