@@ -18,14 +18,14 @@ class StoryController extends Controller
         $published = $request->query('published');
 
         $stories = Story::query();
+        $user = request()->user();
 
-        $stories->when($published !== null, function ($query) use ($published) {
-            if ($published === '1') {
-                $query->whereNotNull('published_at');
-            } else {
-                $query->whereNull('published_at');
-            }
-        });
+        $stories->when($published !== null, fn($q) => $published === '1'
+            ? $q->whereNotNull('published_at')
+            : $q->whereNull('published_at')
+        );
+
+        $stories->when(!$user->isAdmin(), fn($q) => $q->where('user_id', $user->id));
 
         $relationMappings = [
             'user' => 'user.currentPosting.designation.name'

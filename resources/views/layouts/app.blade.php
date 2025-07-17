@@ -148,6 +148,16 @@
     </li>
     @endcan
 
+    @can('viewAny', App\Models\TransferRequest::class)
+    <li>
+        <a href="{{ route('admin.transfer_requests.index') }}">
+            <div class="parent-icon"><i class="bi-arrows-collapse-vertical"></i>
+            </div>
+            <div class="menu-title">Transfer Requests</div>
+        </a>
+    </li>
+    @endcan
+
     @if(
         $user->can('viewAny', App\Models\Comment::class) ||
         $user->can('viewAny', App\Models\PublicContact::class) ||

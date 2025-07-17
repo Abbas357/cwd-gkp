@@ -4,7 +4,7 @@
         padding: .2rem 1rem;
         border-radius: 50px;
         transition: all 0.3s ease;
-        border: 3px solid #ccc;
+        border: 2px solid #0b7240;
         box-sizing: border-box;
     }
 
@@ -331,6 +331,7 @@
                 <div class="text-center mb-3">
                     <img src="{{ getProfilePic(auth()->user()) }}" class="rounded-circle p-1 shadow mb-2"
                         width="80" height="80" alt="">
+                    <h6 class="user-name mb-0">{{ auth()->user()->name }}</h6>
                     <h6 class="user-name mb-0 fw-bold">{{ auth()->user()?->currentDesignation?->name ?? 'No Designation' }}</h6>
                 </div>
             </div>

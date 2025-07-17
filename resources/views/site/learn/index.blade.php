@@ -174,7 +174,7 @@
                                 <div class="list-group list-group-flush mb-4">
                                     @foreach($categoryVideos as $video)
                                         <div class="list-group-item">
-                                            <a href="{{ $video['url'] }}">
+                                            <a href="{{ $video['url'] }}" target="_blank">
                                                 <i class="{{ getTutorialIcon($video) }}"></i>
                                                 {{ $video['title'] }}
                                             </a>
