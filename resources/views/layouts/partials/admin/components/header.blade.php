@@ -1,11 +1,10 @@
 <style>
     .user-info {
-        background: #F5F5F5;
+        background: #fff;
         padding: .2rem 1rem;
         border-radius: 50px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
-        border: 3px solid #ddd;
+        border: 3px solid #ccc;
         box-sizing: border-box;
     }
 
@@ -34,13 +33,12 @@
     .profile-oval {
         width: 50px;
         height: 50px;
-        background: #F5F5F5;
+        background: #fff;
         color: #000;
         border-radius: 50%;
         display: flex;
         align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        justify-content: center;;
         transition: all 0.3s ease;
         padding: 3px;
         border: 2px solid #0b7240;
@@ -54,42 +52,6 @@
         border: 2px solid white;
     }
 
-    .small-screen-info {
-        background: #E5E5E5;
-        padding: .5rem 2rem;
-        border-radius: 20px;
-        display: inline-block;
-    }
-
-    .user-name-small {
-        color: #333;
-        font-weight: 600;
-        font-size: 13px;
-        display: block;
-        line-height: 1.2;
-    }
-
-    .office-name-small {
-        color: #333;
-        font-size: 11px;
-        font-weight: 400;
-        display: block;
-        line-height: 1.2;
-        margin-top: 2px;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 991.98px) {
-        .profile-oval {
-            width: 45px;
-            height: 45px;
-        }
-
-        .profile-image {
-            width: 39px;
-            height: 39px;
-        }
-    }
 </style>
 <header {{ $attributes->merge(['class' => 'top-header']) }}>
     <nav class="navbar navbar-expand align-items-center gap-2" style="{{ !$showAside ? 'left: 0;' : '' }}">
@@ -354,11 +316,9 @@
             <div class="user-info d-none d-lg-block">
                 <div class="user-name-office">
                     <span class="user-name">{{ auth()->user()->name }}</span>
-                    <span class="office-name">{{ auth()->user()->currentOffice->name }}</span>
+                    <span class="office-name">{{ auth()->user()?->currentOffice?->name ?? 'No Posting' }}</span>
                 </div>
             </div>
-
-            <!-- Profile picture -->
             <div class="profile-oval">
                 <img src="{{ getProfilePic(auth()->user()) }}" class="profile-image" alt="Profile">
             </div>
@@ -371,14 +331,7 @@
                 <div class="text-center mb-3">
                     <img src="{{ getProfilePic(auth()->user()) }}" class="rounded-circle p-1 shadow mb-2"
                         width="80" height="80" alt="">
-                    <h6 class="user-name mb-0 fw-bold">{{ auth()->user()->designation }}</h6>
-                    <!-- User info for small screens -->
-                    <div class="d-lg-none mt-2">
-                        <div class="small-screen-info">
-                            <span class="user-name-small">{{ auth()->user()->name }}</span>
-                            <span class="office-name-small">{{ auth()->user()->currentOffice->name }}</span>
-                        </div>
-                    </div>
+                    <h6 class="user-name mb-0 fw-bold">{{ auth()->user()?->currentDesignation?->name ?? 'No Designation' }}</h6>
                 </div>
             </div>
 
