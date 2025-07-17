@@ -114,4 +114,9 @@ abstract class Controller
     {
         return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December',];
     }
+
+    protected function getBpsRange($start = 1, $end = 22)
+    {
+        return range($start, $end);
+    }
 }

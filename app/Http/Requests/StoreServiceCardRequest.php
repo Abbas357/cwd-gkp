@@ -65,7 +65,7 @@ class StoreServiceCardRequest extends FormRequest
             'permanent_address' => 'required|string|max:255',
             'present_address' => 'required|string|max:255',
             'designation_id' => 'required|exists:designations,id',
-            'bps' => 'required|string|max:100',
+            'bps' => 'required',
             'office_id' => 'required|exists:offices,id',
         ];
     }

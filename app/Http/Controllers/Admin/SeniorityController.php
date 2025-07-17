@@ -79,13 +79,9 @@ class SeniorityController extends Controller
 
     public function create()
     {
-        $bps = [];
-        for ($i = 1; $i <= 22; $i++) {
-            $bps[] = sprintf("BPS-%02d", $i);
-        }
         $cat = [
             'designations' => Designation::where('status', 'Active')->get(),
-            'bps' => $bps,
+            'bps' => $this->getBpsRange(1, 20),
         ];
         
         $html = view('admin.seniority.partials.create', compact('cat'))->render();
@@ -160,14 +156,9 @@ class SeniorityController extends Controller
             ]);
         }
 
-        $bps = [];
-        for ($i = 1; $i <= 22; $i++) {
-            $bps[] = sprintf("BPS-%02d", $i);
-        }
-
         $cat = [
             'designations' => Designation::where('status', 'Active')->get(),
-            'bps' => $bps,
+            'bps' => $this->getBpsRange(1, 20),
         ];
 
         $html = view('admin.seniority.partials.detail', compact('seniority', 'cat'))->render();

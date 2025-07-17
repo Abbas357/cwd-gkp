@@ -17,7 +17,6 @@ class ReportController extends Controller
 {
     public function vacancyReport(Request $request)
     {
-        // Get filter parameters
         $filters = [
             'office_id' => $request->query('office_id'),
             'designation_id' => $request->query('designation_id'),
@@ -25,7 +24,7 @@ class ReportController extends Controller
             'level' => $request->query('level'),
             'district_id' => $request->query('district_id'),
             'bps' => $request->query('bps'),
-            'vacancy_status' => $request->query('vacancy_status', 'all') // all, filled, vacant
+            'vacancy_status' => $request->query('vacancy_status', 'all')
         ];
 
         $perPage = $request->query('per_page', 10);
@@ -102,11 +101,7 @@ class ReportController extends Controller
         $designations = Designation::where('status', 'Active')->get();
         $districts = District::all();
         
-        // Get BPS values for filtering
-        $bpsValues = [];
-        for ($i = 1; $i <= 22; $i++) {
-            $bpsValues[] = sprintf("BPS-%02d", $i);
-        }
+        $bpsValues = $this->getBpsRange(1, 20),
         
         // Get office hierarchy levels for filtering
         $officeLevels = ['Provincial', 'Regional', 'Divisional', 'District', 'SubDivisional'];
@@ -214,10 +209,7 @@ class ReportController extends Controller
         $districts = District::all();
         
         // Get BPS values for filtering
-        $bpsValues = [];
-        for ($i = 1; $i <= 22; $i++) {
-            $bpsValues[] = sprintf("BPS-%02d", $i);
-        }
+        $bpsValues = $this->getBpsRange(1, 22);
         
         // Get posting types for filtering
         $postingTypes = ['Appointment', 'Transfer', 'Promotion', 'Deputation', 'Additional-Charge', 'OSD'];
@@ -226,7 +218,7 @@ class ReportController extends Controller
             'users', 
             'filters', 
             'offices', 
-            'allOffices', // Now included in the compact array
+            'allOffices',
             'designations', 
             'districts',
             'bpsValues',
@@ -299,14 +291,11 @@ class ReportController extends Controller
                 ->with(['currentPosting.designation'])
                 ->get()
                 ->sortByDesc(function($user) {
-                    // Sort by BPS (higher first)
-                    if (!$user->currentPosting || !$user->currentPosting->designation) {
+                    if (!$user->currentPosting || !$user->currentPosting->designation || !$user->currentPosting->designation->bps) {
                         return 0;
                     }
-                    
-                    $bps = $user->currentPosting->designation->bps;
-                    preg_match('/(\d+)/', $bps, $matches);
-                    return isset($matches[1]) ? (int)$matches[1] : 0;
+
+                    return (int) $user->currentPosting->designation->bps;
                 })
                 ->values();
             }
@@ -671,10 +660,7 @@ class ReportController extends Controller
         $designations = Designation::where('status', 'Active')->get();
         
         // Get BPS values for filtering
-        $bpsValues = [];
-        for ($i = 1; $i <= 22; $i++) {
-            $bpsValues[] = sprintf("BPS-%02d", $i);
-        }
+        $bpsValues = $this->getBpsRange();
         
         // Group by retirement year for chart
         $retirementsByYear = [];
@@ -735,18 +721,17 @@ class ReportController extends Controller
             ->with(['currentPosting.designation', 'profile'])
             ->get()
             ->sortByDesc(function($user) {
-                // Sort by BPS (higher first)
-                if (!$user->currentPosting || !$user->currentPosting->designation) {
+                if (
+                    !$user->currentPosting ||
+                    !$user->currentPosting->designation ||
+                    !$user->currentPosting->designation->bps
+                ) {
                     return 0;
                 }
-                
-                $bps = $user->currentPosting->designation->bps;
-                preg_match('/(\d+)/', $bps, $matches);
-                return isset($matches[1]) ? (int)$matches[1] : 0;
-            })
-            ->values();
+
+                return (int) $user->currentPosting->designation->bps;
+            })->values();
         
-        // Return the view for the modal content
         return view('modules.hr.reports.partials.office-staff-list', compact('staff', 'office'));
     }
 }

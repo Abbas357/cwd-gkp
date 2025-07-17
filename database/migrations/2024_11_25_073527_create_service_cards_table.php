@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('parmanent_address')->nullable();
             $table->string('present_address')->nullable();
             $table->string('designation')->nullable();
-            $table->string('bps')->nullable();
+            $table->integer('bps')->nullable();
             $table->string('office')->nullable();
             $table->enum('status', ['draft', 'verified', 'rejected'])->nullable();
             $table->text('remarks')->nullable();

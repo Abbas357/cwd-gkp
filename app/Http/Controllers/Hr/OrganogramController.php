@@ -57,13 +57,10 @@ class OrganogramController extends Controller
         ->with(['currentDesignation', 'currentOffice'])
         ->get();
         
-        $sortedUsers = $officeHead->sortByDesc(function($user) {
-            if (!$user->currentDesignation || !$user->currentDesignation->bps) {
-                return 0;
-            }
-            
-            preg_match('/(\d+)/', $user->currentDesignation->bps, $matches);
-            return isset($matches[1]) ? (int)$matches[1] : 0;
+        $sortedUsers = $officeHead->sortByDesc(function ($user) {
+            return $user->currentDesignation && $user->currentDesignation->bps
+                ? (int) $user->currentDesignation->bps
+                : 0;
         });
         
         $officeHead = $sortedUsers->first();

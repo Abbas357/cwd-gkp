@@ -16,17 +16,12 @@ class ServiceCardController extends Controller
 {
     public function create()
     {
-        $bps = [];
-        for ($i = 1; $i <= 20; $i++) {
-            $bps[] = sprintf("BPS-%02d", $i);
-        }
-
         $cat = [
             'designations' => Designation::select('id', 'name')
                 ->whereNotIn('name', ['Secretary', 'Minister'])
                 ->get(),
             'offices' => Office::select('id', 'name')->get(),
-            'bps' => $bps,
+            'bps' => $this->getBpsRange(1, 20),
             'blood_groups' => ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
         ];
         

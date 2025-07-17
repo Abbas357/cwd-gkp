@@ -28,8 +28,8 @@ class UserController extends Controller
                 ->whereHas('designation')
                 ->get()
                 ->sortByDesc(function($posting) {
-                    $bps = $posting->designation->bps;
-                    return is_numeric($bps) ? $bps : 0;
+                    $bps = $posting->designation->bps ?? null;
+                    return is_numeric($bps) ? (int) $bps : 0;
                 })
                 ->first();
                 
@@ -70,11 +70,8 @@ class UserController extends Controller
                         $user = $posting->user;
                         $bpsValue = 0;
                         
-                        if ($posting->designation) {
-                            $bpsRaw = $posting->designation->bps;
-                            if (preg_match('/(\d+)/', $bpsRaw, $matches)) {
-                                $bpsValue = (int)$matches[1];
-                            }
+                        if ($posting->designation && is_numeric($posting->designation->bps)) {
+                            $bpsValue = (int) $posting->designation->bps;
                         }
                         
                         return [
@@ -182,8 +179,8 @@ class UserController extends Controller
                             ->orWhere('name', 'LIKE', '%(GIS)%');
                     })
                         ->whereHas('currentDesignation', function ($q) {
-                            $q->where('bps', 'BPS-17')
-                                ->orWhere('bps', 'BPS-18');
+                            $q->where('bps', '17')
+                                ->orWhere('bps', '18');
                         });
                 }
             ],

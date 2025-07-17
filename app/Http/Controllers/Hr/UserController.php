@@ -166,12 +166,7 @@ class UserController extends Controller
 
     public function create()
     {
-        $data = [
-            'designations' => Designation::where('status', 'Active')->get(),
-            'offices' => Office::where('status', 'Active')->get(),
-        ];
-
-        $html = view('modules.hr.users.partials.create', compact('data'))->render();
+        $html = view('modules.hr.users.partials.create')->render();
         return response()->json([
             'success' => true,
             'data' => [
@@ -236,11 +231,6 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        $bps = [];
-        for ($i = 1; $i <= 22; $i++) {
-            $bps[] = sprintf("BPS-%02d", $i);
-        }
-
         if (!$user) {
             return response()->json([
                 'success' => false,
@@ -254,7 +244,7 @@ class UserController extends Controller
             'user' => $user->load(['profile', 'currentPosting.designation', 'currentPosting.office']),
             'allDesignations' => Designation::where('status', 'Active')->get(),
             'allOffices' => Office::where('status', 'Active')->get(),
-            'bps' => $bps,
+            'bps' => $this->getBpsRange(1, 20),
             'posting_types' => category('posting_type', 'hr')
         ];
 
@@ -640,11 +630,6 @@ class UserController extends Controller
     public function employee($uuid)
     {
         $user = User::where('uuid', $uuid)->first();
-        $bps = [];
-        for ($i = 1; $i <= 22; $i++) {
-            $bps[] = sprintf("BPS-%02d", $i);
-        }
-
         $posting_types = ['Appointment', 'Deputation', 'Transfer', 'Mutual', 'Additional-Charge', 'Promotion', 'Suspension', 'OSD', 'Out-Transfer', 'Retirement', 'Termination'];
         if (!$user) {
             return redirect()->route('admin.apps.hr.users.index')->with('error', 'The user does not exist in Database');
@@ -658,7 +643,7 @@ class UserController extends Controller
             'allPermissions' => Permission::all(),
             'allDesignations' => Designation::where('status', 'Active')->get(),
             'allOffices' => Office::where('status', 'Active')->get(),
-            'bps' => $bps,
+            'bps' => $this->getBpsRange(1, 20),
             'posting_types' => $posting_types
         ];
 
@@ -772,18 +757,26 @@ class UserController extends Controller
             return response()->json(['error' => 'Failed to create user: ' . $e->getMessage()], 422);
         }
     }
-
+    
     public function destroy(User $user)
     {
         if (request()->user()->isAdmin()) {
-            if ($user->delete()) {
-                $user->postings()->delete();
-                $user->profile()->delete();
-                $user->removeMediaFromCollection('profile_pictures');
-                $user->removeMediaFromCollection('posting_orders');
-                Cache::forget('message_partial');
-                Cache::forget('team_partial');
+            try {
+                DB::transaction(function () use ($user) {
+                    $user->postings()->delete();
+                    $user->profile()->delete();
+                    $user->clearMediaCollection('profile_pictures');
+                    $user->clearMediaCollection('posting_orders');
+                    
+                    Cache::forget('message_partial');
+                    Cache::forget('team_partial');
+                    
+                    $user->delete();
+                });
+                
                 return response()->json(['success' => 'User has been deleted successfully.']);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Failed to delete user: ' . $e->getMessage()]);
             }
         }
 

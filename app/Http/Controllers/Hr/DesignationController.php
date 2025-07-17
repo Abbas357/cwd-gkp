@@ -45,10 +45,7 @@ class DesignationController extends Controller
 
     public function create()
     {
-        $bps = [];
-        for ($i = 1; $i <= 22; $i++) {
-            $bps[] = sprintf("BPS-%02d", $i);
-        }
+        $bps = $this->getBpsRange(1, 20);
         
         $statuses = ['Active', 'Inactive', 'Archived'];
         
@@ -99,10 +96,7 @@ class DesignationController extends Controller
 
     public function showDetail(Designation $designation)
     {
-        $allBPS = [];
-        for ($i = 1; $i <= 22; $i++) {
-            $allBPS[] = sprintf("BPS-%02d", $i);
-        }        
+        $allBPS = $this->getBpsRange();   
         
         $html = view('modules.hr.designations.partials.detail', compact('designation', 'allBPS'))->render();
 

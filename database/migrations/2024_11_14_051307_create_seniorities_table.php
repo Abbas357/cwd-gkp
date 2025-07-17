@@ -16,7 +16,7 @@ return new class extends Migration
             $table->text('title');
             $table->string('slug')->nullable();
             $table->string('designation', 191)->nullable();
-            $table->string('bps', 191)->nullable();
+            $table->integer('bps')->nullable();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
             $table->timestamp('seniority_date')->nullable();

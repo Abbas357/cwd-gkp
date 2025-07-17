@@ -159,15 +159,10 @@ class ServiceCardController extends Controller
             ]);
         }
 
-        $bps = [];
-        for ($i = 1; $i <= 22; $i++) {
-            $bps[] = sprintf("BPS-%02d", $i);
-        }
-
         $cat = [
             'designations' => Designation::where('status', 'Active')->get(),
             'offices' => Office::where('status', 'Active')->get(),
-            'bps' => $bps,
+            'bps' => $this->getBpsRange(1, 20),
             'blood_groups' => ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
         ];
 

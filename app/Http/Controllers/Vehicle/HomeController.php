@@ -36,11 +36,9 @@ class HomeController extends Controller
             ->with(['currentDesignation', 'currentOffice'])
             ->get()
             ->sortByDesc(function($user) {
-                if (!$user->currentDesignation || !$user->currentDesignation->bps) {
-                    return 0;
-                }
-                preg_match('/(\d+)/', $user->currentDesignation->bps, $matches);
-                return isset($matches[1]) ? (int)$matches[1] : 0;
+                return isset($user->currentDesignation->bps) && is_numeric($user->currentDesignation->bps)
+                    ? (int) $user->currentDesignation->bps
+                    : 0;
             })
             ->take(10); // Limit to top 10 officers
 

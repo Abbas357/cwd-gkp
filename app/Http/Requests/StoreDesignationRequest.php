@@ -15,7 +15,7 @@ class StoreDesignationRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255', 'unique:designations,name'],
-            'bps' => ['nullable', 'string', 'max:255'],
+            'bps' => ['nullable'],
             'status' => ['nullable', 'string', 'in:Active,Inactive,Archived'],
         ];
     }

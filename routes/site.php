@@ -8,6 +8,7 @@ use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\NewsController;
 use App\Http\Controllers\Site\PageController;
 use App\Http\Controllers\Site\UserController;
+use App\Http\Controllers\Site\OrganogramController;
 use App\Http\Controllers\Site\LearnController;
 use App\Http\Controllers\Site\StoryController;
 use App\Http\Controllers\Site\DamageController;
@@ -287,6 +288,11 @@ Route::prefix('schemes')->as('schemes.')->group(function () {
 Route::prefix('learn')->as('learn.')->group(function () {
     Route::get('/epads', [LearnController::class, 'epads'])->name('epads');
     Route::get('/kpdws', [LearnController::class, 'kpdws'])->name('kpdws');
+});
+
+Route::prefix('organogram')->as('organogram.')->group(function () {
+    Route::get('/', [OrganogramController::class, 'index'])->name('index');
+    Route::get('/data', [OrganogramController::class, 'data'])->name('data');
 });
 
 $activity = setting('activity', 'dmis');
