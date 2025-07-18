@@ -6,40 +6,30 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('service_cards', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->string('ddo_code');
-            $table->string('name');
-            $table->string('father_name')->nullable();
-            $table->string('cnic')->nullable();
-            $table->timestamp('date_of_birth')->nullable();
-            $table->string('email', 191)->unique();
-            $table->string('mobile_number')->nullable();
-            $table->string('landline_number')->nullable();
-            $table->string('personnel_number')->nullable();
-            $table->string('mark_of_identification')->nullable();
-            $table->string('blood_group')->nullable();
-            $table->string('emergency_contact')->nullable();
-            $table->string('parmanent_address')->nullable();
-            $table->string('present_address')->nullable();
-            $table->string('designation')->nullable();
-            $table->integer('bps')->nullable();
-            $table->string('office')->nullable();
-            $table->enum('status', ['draft', 'verified', 'rejected'])->nullable();
+
+            $table->enum('approval_status', ['draft', 'verified', 'rejected'])->nullable();
+            $table->enum('card_status', ['active', 'expired', 'revoked', 'lost', 'reprinted'])->default('active');
+
+            $table->dateTime('status_updated_by')->nullable();
+            $table->dateTime('issued_at')->nullable();
+            $table->dateTime('expired_at')->nullable();
+            $table->dateTime('printed_at')->nullable();
+
+            $table->boolean('is_duplicate')->default(0);
             $table->text('remarks')->nullable();
+
+            $table->unsignedBigInteger('status_updated_by')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
+
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('service_cards');
