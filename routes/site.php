@@ -173,8 +173,6 @@ Route::prefix('consultants')->as('consultants.')->middleware('route_lock')->grou
 });
 
 Route::prefix('service_cards')->as('service_cards.')->middleware('route_lock')->group(function () {
-    Route::get('/apply', [ServiceCardController::class, 'create'])->name('create');
-    Route::post('/', [ServiceCardController::class, 'store'])->name('store');
     Route::get('/verified/{uuid}', [ServiceCardController::class, 'verified'])->name('verified');
 });
 

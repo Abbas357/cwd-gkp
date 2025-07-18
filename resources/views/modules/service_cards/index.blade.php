@@ -138,6 +138,13 @@
                         targets: -1,
                         className: 'action-column'
                     }
+                ], customButtons: [
+                    {
+                        text: `<span class="symbol-container" ><i class="bi-plus-circle"></i>&nbsp; Add Service Card</span>`
+                        , action: function(e, dt, node, config) {
+
+                        },
+                    },
                 ]
             });
 

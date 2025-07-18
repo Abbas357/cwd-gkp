@@ -15,10 +15,10 @@ return new class extends Migration
             $table->enum('approval_status', ['draft', 'verified', 'rejected'])->nullable();
             $table->enum('card_status', ['active', 'expired', 'revoked', 'lost', 'reprinted'])->default('active');
 
-            $table->dateTime('status_updated_by')->nullable();
             $table->dateTime('issued_at')->nullable();
             $table->dateTime('expired_at')->nullable();
             $table->dateTime('printed_at')->nullable();
+            $table->dateTime('status_updated_at')->nullable();
 
             $table->boolean('is_duplicate')->default(0);
             $table->text('remarks')->nullable();

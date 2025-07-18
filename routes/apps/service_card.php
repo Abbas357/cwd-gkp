@@ -5,6 +5,8 @@ use App\Http\Controllers\ServiceCard\ServiceCardController;
 
 Route::prefix('service_cards')->as('service_cards.')->group(function () {
     Route::get('/', [ServiceCardController::class, 'index'])->name('index')->can('viewAny', App\Models\ServiceCard::class);
+    Route::get('/create', [ServiceCardController::class, 'create'])->name('create')->can('create', App\Models\ServiceCard::class);
+    Route::post('/', [ServiceCardController::class, 'store'])->name('store')->can('store', App\Models\ServiceCard::class);
     Route::get('/{service_card}', [ServiceCardController::class, 'show'])->name('show')->can('view', App\Models\ServiceCard::class);
     Route::get('/get/{service_card}', [ServiceCardController::class, 'showDetail'])->name('detail')->can('view', 'service_card');
     Route::get('/card/{service_card}', [ServiceCardController::class, 'showCard'])->name('showCard')->can('viewCard', 'service_card');
