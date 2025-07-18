@@ -308,15 +308,12 @@
                                 <li role="menuitem" class="cw-hide-mob-links cw-plateTitle">
                                     MORE
                                 </li>
-                                <li role="none" data-tier-id="8">
-                                    <a href="{{ route('achievements.index') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="8" tabindex="0">ACHIEVEMENTS</a>
+                                <li role="none" data-tier-id="9">
+                                    <a href="{{ route('achievements.index') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="9" tabindex="0">ACHIEVEMENTS</a>
                                 </li>
                             </ul>
                         </li>
                         <li role="menuitem" aria-hidden="true" class="divider cw-onlyMobileTab"></li>
-                        <button class="cw-top-nav-button" style="margin-top: 3px;padding: 7px; border: none; border-radius: 50px">
-                            <a href="https://old.cwd.gkp.pk" target="_blank"><span class="animated-gradient-text">LEGACY</span></a>
-                        </button>
                     </ul>
                 </nav>
             </div>
