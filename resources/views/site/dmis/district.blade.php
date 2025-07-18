@@ -1,5 +1,5 @@
-<x-main-layout title="District Damage Details - {{ $district->name }}">
-    <x-slot name="breadcrumbTitle">{{ $district->name }} Detail {{ setting('activity', 'dmis') }}
+<x-main-layout title="{{ $district->name }} - Damages Report">
+    <x-slot name="breadcrumbTitle">{{ $district->name }} Damages Detail - {{ setting('activity', 'dmis') }}
         ({{ setting('session', 'dmis') }})</x-slot>
     <x-slot name="breadcrumbItems"></x-slot>
     @push('style')
@@ -134,12 +134,6 @@
             }
         </style>
     @endpush
-
-    <x-slot name="header">
-        <li class="breadcrumb-item"><a href="{{ route('admin.apps.dmis.dashboard') }}">DMIS</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('admin.apps.dmis.reports.index') }}">Reports</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{{ $district->name }} Details</li>
-    </x-slot>
 
     <div class="container">
         <div id="district-report" class="py-2 px-1">
@@ -319,7 +313,7 @@
                 $('#print-report').on('click', function() {
                     
                     $("#district-report").printThis({
-                        header: "<h3 class='text-center mb-4'>{{ $district->name }} District - Damage Details Report</h3>",
+                        header: "<h3 class='text-center mb-4'>District {{ $district->name }} - Damages Detail Report</h3>",
                         printContainer: true,
                         loadCSS: true,
                         pageTitle: "{{ $district->name }} Damage Report",

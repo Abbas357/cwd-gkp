@@ -3,7 +3,7 @@
         <link href="{{ asset('site/lib/orgchart/jquery.orgchart.min.css') }}" rel="stylesheet">
         <style>
             #chart-container {
-                height: 600px;
+                height: auto;
                 overflow: auto;
                 background-color: #f8f9fa;
                 border: 1px solid #ddd;
@@ -238,13 +238,74 @@
                 display: none;
             }
 
-            .office-type-filter {
-                margin-bottom: 15px;
+            /* Beautiful tab styling */
+            .office-type-tabs {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                padding: 15px;
+                border-radius: 10px;
+                margin-bottom: 20px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             }
 
-            .office-type-filter .btn-check:checked+.btn-outline-primary {
-                background-color: #0d6efd;
-                color: white;
+            .office-type-tabs .nav-pills {
+                background: rgba(255, 255, 255, 0.1);
+                padding: 5px;
+                border-radius: 8px;
+                backdrop-filter: blur(10px);
+            }
+
+            .office-type-tabs .nav-link {
+                color: #fff;
+                font-weight: 500;
+                padding: 10px 25px;
+                border-radius: 6px;
+                transition: all 0.3s ease;
+                margin: 0 5px;
+                background: transparent;
+                border: 2px solid transparent;
+            }
+
+            .office-type-tabs .nav-link:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: translateY(-2px);
+            }
+
+            .office-type-tabs .nav-link.active {
+                background: white;
+                color: #667eea;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                border: 2px solid white;
+            }
+
+            .office-type-tabs .nav-link i {
+                margin-right: 8px;
+                font-size: 1.1rem;
+            }
+
+            /* Better filter controls */
+            .filter-controls {
+                background: #f8f9fa;
+                padding: 20px;
+                border-radius: 10px;
+                margin-bottom: 20px;
+            }
+
+            .form-label {
+                font-weight: 600;
+                color: #495057;
+                margin-bottom: 8px;
+            }
+
+            .form-select {
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+                padding: 10px 15px;
+                transition: all 0.3s;
+            }
+
+            .form-select:focus {
+                border-color: #667eea;
+                box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
             }
 
             @media print {
@@ -288,7 +349,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Organogram of C&W Department</h5>
+                    <div></div>
                     <div>
                         <button id="btn-export-chart" class="cw-btn bg-primary">
                             <i class="bi bi-download"></i> Export PNG
@@ -296,27 +357,36 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="filter-controls mb-3">
-                        <div class="office-type-filter mb-3">
-                            <div class="btn-group" role="group" aria-label="Office Type">
-                                <input type="radio" class="btn-check" name="office-type" id="both-type" value="both"
-                                    checked>
-                                <label class="btn btn-outline-success" for="both-type">Both</label>
+                    <div class="office-type-tabs">
+                        <ul class="nav nav-pills justify-content-center" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="both-tab" data-bs-toggle="pill" 
+                                    data-office-type="both" type="button" role="tab">
+                                    <i class="bi bi-building"></i> Both
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="secretariat-tab" data-bs-toggle="pill" 
+                                    data-office-type="secretariat" type="button" role="tab">
+                                    <i class="bi bi-briefcase"></i> Secretariat
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="field-tab" data-bs-toggle="pill" 
+                                    data-office-type="field" type="button" role="tab">
+                                    <i class="bi bi-geo-alt"></i> Field Formations
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
 
-                                <input type="radio" class="btn-check" name="office-type" id="secretariat-type"
-                                    value="secretariat">
-                                <label class="btn btn-outline-success" for="secretariat-type">Secretariat</label>
-
-                                <input type="radio" class="btn-check" name="office-type" id="field-type"
-                                    value="field">
-                                <label class="btn btn-outline-success" for="field-type">Field Formations</label>
-                            </div>
-                        </div>
-
+                    <div class="filter-controls">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="root-office" class="form-label">Office</label>
+                                    <label for="root-office" class="form-label">
+                                        <i class="bi bi-building-fill"></i> Select Office
+                                    </label>
                                     <select id="root-office" class="form-select">
                                         @foreach ($topOffices as $office)
                                             <option value="{{ $office->id }}">{{ $office->name }}</option>
@@ -326,7 +396,9 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="chart-depth" class="form-label">Chart Depth</label>
+                                    <label for="chart-depth" class="form-label">
+                                        <i class="bi bi-diagram-3"></i> Chart Depth
+                                    </label>
                                     <select id="chart-depth" class="form-select">
                                         <option value="1">1 Level</option>
                                         <option value="2">2 Levels</option>
@@ -335,7 +407,6 @@
                                     </select>
                                 </div>
                             </div>
-
                         </div>
                     </div>
 
@@ -370,6 +441,42 @@
                 let zoomLevel = 1;
                 const zoomStep = 0.03;
                 let currentOfficeType = 'both';
+                let allOffices = @json($topOffices);
+
+                function filterOfficeOptions(officeType) {
+                    const $select = $('#root-office');
+                    const currentValue = $select.val();
+                    $select.empty();
+
+                    let filteredOffices = allOffices;
+                    
+                    if (officeType === 'secretariat') {
+                        filteredOffices = allOffices.filter(office => 
+                            office.type && office.type.toLowerCase() === 'secretariat'
+                        );
+                    } else if (officeType === 'field') {
+                        filteredOffices = allOffices.filter(office => 
+                            office.type && office.type.toLowerCase() !== 'secretariat'
+                        );
+                    }
+
+                    if (filteredOffices.length === 0) {
+                        filteredOffices = allOffices;
+                    }
+
+                    filteredOffices.forEach(office => {
+                        $select.append(`<option value="${office.id}">
+                            ${office.name}
+                        </option>`);
+                    });
+
+                    // Try to maintain the previous selection if it exists in the filtered list
+                    if ($select.find(`option[value="${currentValue}"]`).length > 0) {
+                        $select.val(currentValue);
+                    } else {
+                        $select.val($select.find('option:first').val());
+                    }
+                }
 
                 function setDefaultDepth(officeType) {
                     const $depthSelect = $('#chart-depth');
@@ -492,11 +599,17 @@
                     });
                 }
 
+                filterOfficeOptions(currentOfficeType);
                 setDefaultDepth(currentOfficeType);
                 initOrganogram($('#root-office').val(), $('#chart-depth').val(), currentOfficeType);
 
-                $('input[name="office-type"]').on('change', function() {
-                    currentOfficeType = $(this).val();
+                // Tab click handler
+                $('.nav-link[data-office-type]').on('click', function() {
+                    $('.nav-link').removeClass('active');
+                    $(this).addClass('active');
+                    
+                    currentOfficeType = $(this).data('office-type');
+                    filterOfficeOptions(currentOfficeType);
                     setDefaultDepth(currentOfficeType);
                     initOrganogram($('#root-office').val(), $('#chart-depth').val(), currentOfficeType);
                 });

@@ -39,7 +39,7 @@ class OrganogramController extends Controller
             if ($officeType == 'secretariat') {
                 $depth = 0;
             } else {
-                $depth = 1;
+                $depth = 2;
             }
         } else {
             $depth = (int) $depth;

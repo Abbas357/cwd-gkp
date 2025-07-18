@@ -1,30 +1,3 @@
-<style>
-    .new-label-bounce {
-        position: absolute;
-        top: -1.2rem;
-        right: 0;
-        z-index: 9999;
-        background: red;
-        color: white;
-        font-size: 9px;
-        padding: 0px 5px;
-        border-radius: 5px;
-        animation: bounce 1s infinite;
-        font-weight: bold;
-        border: 1px solid #aaa;
-    }
-
-    @keyframes bounce {
-        0%, 100% {
-            transform: translateY(0);
-            scale: .85
-        }
-        50% {
-            transform: translateY(-5px);
-            scale: 1;
-        }
-    }
-</style>
 <header id="integrated-plate" class="CWD">
     <div class="cw-top">
         <div class="cw-top-wrapper">
@@ -294,20 +267,38 @@
                                 <span>CONTACTS</span>
                             </a>
                         </li>
-                        <li role="none" style="position:relative" class="cw-top-menu {{ request()->routeIs('contacts.index') ? 'uActived' : '' }}" data-tier-id="71">
-                            <a href="{{ route(setting('activity', 'dmis') . '.index') }}" data-tier-id="71" role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
-                                <span style="white-space: nowrap; position:relative;">
-                                    {{ strtoupper(setting('activity', 'dmis')) . ' ' . setting('session','dmis') }}
-                                    <span class="new-label-bounce">NEW</span>
+                        <li role="none" class="cw-top-menu child-nav" data-tier-id="8" style="white-space: nowrap; position:relative;">
+                            <button role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
+                                <span> {{ strtoupper(setting('activity', 'dmis')) . ' ' . setting('session','dmis') }}</span>
+                            </button>
+
+                            <ul class="sub-nav" aria-label="Support" role="menu" data-tier-id="8" aria-orientation="vertical">
+                                <li role="none" class="cw-back-list-item">
+                                    <button role="menuitem" class="cw-back-button" tabindex="0">
+                                        <span class="cw-menu-chevron left chevron-right"></span>
+                                        <span class="cw-back-button-label">Back </span>
+                                    </button>
+                                </li>
+                                <li role="menuitem" class="cw-hide-mob-links cw-plateTitle">
+                                    <span>
+                                        {{ strtoupper(setting('activity', 'dmis')) . ' ' . setting('session','dmis') }}
+                                    </span>
                                 </span>
-                            </a>
+                                </li>
+                                <li role="none" data-tier-id="8">
+                                    <a href="{{ route(setting('activity', 'dmis') . '.index') }}" role="menuitem" class="cw-menuItem" data-tier-id="8" tabindex="0">DISTRICT WISE DATA</a>
+                                </li>
+                                <li role="none" data-tier-id="8">
+                                    <a href="{{ route('pages.show', 'contingency_plan') }}" role="menuitem" class="cw-menuItem" data-tier-id="8" tabindex="0">CONTIGENCY PLAN</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li role="none" class="cw-top-menu child-nav" data-tier-id="8">
+                        <li role="none" class="cw-top-menu child-nav" data-tier-id="9">
                             <button role="menuitem" class="cw-top-nav-button first-level" aria-expanded="false" aria-haspopup="true">
                                 <span>MORE</span>
                             </button>
 
-                            <ul class="sub-nav" aria-label="Support" role="menu" data-tier-id="8" aria-orientation="vertical">
+                            <ul class="sub-nav" aria-label="Support" role="menu" data-tier-id="9" aria-orientation="vertical">
                                 <li role="none" class="cw-back-list-item">
                                     <button role="menuitem" class="cw-back-button" tabindex="0">
                                         <span class="cw-menu-chevron left chevron-right"></span>
@@ -319,9 +310,6 @@
                                 </li>
                                 <li role="none" data-tier-id="8">
                                     <a href="{{ route('achievements.index') }}" role="menuitem" class="cw-menuItem" href="#" data-tier-id="8" tabindex="0">ACHIEVEMENTS</a>
-                                </li>
-                                <li role="none" data-tier-id="8">
-                                    <a href="{{ route('pages.show', 'contingency_plan') }}" role="menuitem" class="cw-menuItem" data-tier-id="8" tabindex="0">CONTIGENCY PLAN</a>
                                 </li>
                             </ul>
                         </li>
