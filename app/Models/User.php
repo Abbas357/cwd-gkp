@@ -165,6 +165,40 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(Slider::class);
     }
 
+    public function serviceCards()
+    {
+        return $this->hasMany(ServiceCard::class);
+    }
+
+    public function activeServiceCard()
+    {
+        return $this->hasOne(ServiceCard::class)
+            ->where('approval_status', 'verified')
+            ->where('card_status', 'active')
+            ->where(function ($query) {
+                $query->whereNull('expired_at')
+                    ->orWhere('expired_at', '>', now());
+            })
+            ->latest();
+    }
+
+    public function hasActiveServiceCard()
+    {
+        return $this->activeServiceCard()->exists();
+    }
+
+    public function canApplyServiceCardFor(User $targetUser)
+    {
+        // Can apply for self
+        if ($this->id === $targetUser->id) {
+            return true;
+        }
+
+        // Can apply for subordinates
+        $subordinates = $this->getSubordinates();
+        return $subordinates->contains('id', $targetUser->id);
+    }
+
     public function achievements()
     {
         return $this->hasMany(Achievement::class);

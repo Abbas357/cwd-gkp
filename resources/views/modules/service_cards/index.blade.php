@@ -20,30 +20,29 @@
             <li class="nav-item">
                 <a id="rejected-tab" class="nav-link" data-bs-toggle="tab" href="#rejected">Rejected</a>
             </li>
+            <li class="nav-item">
+                <a id="active-tab" class="nav-link" data-bs-toggle="tab" href="#active">Active Cards</a>
+            </li>
+            <li class="nav-item">
+                <a id="expired-tab" class="nav-link" data-bs-toggle="tab" href="#expired">Expired Cards</a>
+            </li>
         </ul>
     </div>
 
     <div class="table-responsive">
-        <table id="cards-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+        <table id="service-card-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
             <thead>
                 <tr>
                     <th scope="col" class="p-3">ID</th>
                     <th scope="col" class="p-3">Name</th>
-                    <th scope="col" class="p-3">Father Name</th>
-                    <th scope="col" class="p-3">Date of Birth</th>
                     <th scope="col" class="p-3">CNIC</th>
                     <th scope="col" class="p-3">Email</th>
-                    <th scope="col" class="p-3">Personnel Number</th>
                     <th scope="col" class="p-3">Mobile Number</th>
-                    <th scope="col" class="p-3">Landline Number</th>
                     <th scope="col" class="p-3">Designation</th>
-                    <th scope="col" class="p-3">BPS</th>
                     <th scope="col" class="p-3">Office</th>
-                    <th scope="col" class="p-3">Mark Of Identification</th>
-                    <th scope="col" class="p-3">Blood Group</th>
-                    <th scope="col" class="p-3">Emergency Contact</th>
-                    <th scope="col" class="p-3">Parmanent Address</th>
-                    <th scope="col" class="p-3">Present Address</th>
+                    <th scope="col" class="p-3">Approval Status</th>
+                    <th scope="col" class="p-3">Card Status</th>
+                    <th scope="col" class="p-3">Card Validity</th>
                     <th scope="col" class="p-3">Created At</th>
                     <th scope="col" class="p-3">Updated At</th>
                     <th scope="col" class="p-3">Actions</th>
@@ -53,7 +52,6 @@
             </tbody>
         </table>
     </div>
-    <form action=""></form>
     <!--end row-->
     @push('script')
     <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
@@ -64,7 +62,7 @@
     <script src="{{ asset('admin/plugins/html2canvas/html2canvas.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            var table = initDataTable('#cards-datatable', {
+            var table = initDataTable('#service-card-datatable', {
                 ajaxUrl: "{{ route('admin.apps.service_cards.index') }}"
                 , columns: [
                 {
@@ -74,47 +72,28 @@
                     data: "name"
                     , searchBuilderType: "string"
                 }, {
-                    data: "father_name"
-                    , searchBuilderType: "string"
-                }, {
-                    data: "date_of_birth"
-                    , searchBuilderType: "string"
-                }, {
                     data: "cnic"
                     , searchBuilderType: "string"
                 }, {
                     data: "email"
                     , searchBuilderType: "string"
                 }, {
-                    data: "personnel_number"
-                    , searchBuilderType: "string"
-                }, {
                     data: "mobile_number"
                     , searchBuilderType: "string"
                 }, {
-                    data: "landline_number"
-                    , searchBuilderType: "date"
-                }, {
                     data: "designation"
-                },  {
-                    data: "bps"
+                    , searchBuilderType: "string"
                 }, {
                     data: "office"
                     , searchBuilderType: "string"
                 }, {
-                    data: "mark_of_identification"
+                    data: "approval_status"
                     , searchBuilderType: "string"
                 }, {
-                    data: "blood_group"
+                    data: "card_status"
                     , searchBuilderType: "string"
                 }, {
-                    data: "emergency_contact"
-                    , searchBuilderType: "string"
-                }, {
-                    data: "permanent_address"
-                    , searchBuilderType: "string"
-                }, {
-                    data: "present_address"
+                    data: "card_validity"
                     , searchBuilderType: "string"
                 }, {
                     data: "created_at"
@@ -129,10 +108,10 @@
                     , type: "html"
                 }]
                 , pageLength: 25
-                , defaultOrderColumn: 17
+                , defaultOrderColumn: 11
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
-                    targets: [0, 2, 3, 5, 6, 8, 11, 12, 14, 15]
+                    targets: [0, 2, 8]
                     , visible: false
                     }, {
                         targets: -1,
@@ -142,7 +121,7 @@
                     {
                         text: `<span class="symbol-container" ><i class="bi-plus-circle"></i>&nbsp; Add Service Card</span>`
                         , action: function(e, dt, node, config) {
-
+                            window.location.href = "{{ route('admin.apps.service_cards.create') }}";
                         },
                     },
                 ]
@@ -155,22 +134,31 @@
                     "#draft-tab": '#draft'
                     , "#verified-tab": '#verified'
                     , "#rejected-tab": '#rejected'
+                    , "#active-tab": '#active'
+                    , "#expired-tab": '#expired'
                 , }
                 , hashToParamsMap: {
                     '#draft': {
-                        status: 'draft'
+                        approval_status: 'draft'
                     }
                     , '#verified': {
-                        status: 'verified'
+                        approval_status: 'verified'
                     }
                     , '#rejected': {
-                        status: 'rejected'
+                        approval_status: 'rejected'
+                    }
+                    , '#active': {
+                        card_status: 'active',
+                        approval_status: 'verified'
+                    }
+                    , '#expired': {
+                        card_status: 'expired'
                     }
                 , }
                 , defaultHash: '#draft'
             });
 
-            $("#cards-datatable").on('click', '.verify-btn', async function() {
+            $("#service-card-datatable").on('click', '.verify-btn', async function() {
                 const cardId = $(this).data("id");
                 const url = "{{ route('admin.apps.service_cards.verify', ':id') }}".replace(':id', cardId);
 
@@ -178,12 +166,12 @@
                 if (result && result.isConfirmed) {
                     const success = await fetchRequest(url, 'PATCH');
                     if (success) {
-                        $("#cards-datatable").DataTable().ajax.reload();
+                        $("#service-card-datatable").DataTable().ajax.reload();
                     }
                 }
             });
 
-            $("#cards-datatable").on('click', '.reject-btn', async function() {
+            $("#service-card-datatable").on('click', '.reject-btn', async function() {
                 const cardId = $(this).data("id");
                 const url = "{{ route('admin.apps.service_cards.reject', ':id') }}".replace(':id', cardId);
 
@@ -207,55 +195,163 @@
                         reason
                     });
                     if (success) {
-                        $("#cards-datatable").DataTable().ajax.reload();
+                        $("#service-card-datatable").DataTable().ajax.reload();
                     }
                 }
             });
 
-            $("#cards-datatable").on('click', '.renew-btn', async function() {
+            $("#service-card-datatable").on('click', '.renew-btn', async function() {
                 const cardId = $(this).data("id");
                 const url = "{{ route('admin.apps.service_cards.renew', ':id') }}".replace(':id', cardId);
 
-                const {
-                    value: issue_date
-                } = await confirmWithInput({
-                    inputType: "date"
-                    , text: 'Renew! (Issue Date is Optional)'
-                    , inputValidator: (value) => {}
-                    , inputPlaceholder: 'Enter the issue date (optional)'
-                    , confirmButtonText: 'Renew'
-                    , cancelButtonText: 'Cancel'
-                });
-
-                if (issue_date === '' || issue_date) {
-                    const success = await fetchRequest(url, 'PATCH', {
-                        issue_date
-                    });
-                    if (success) {
-                        $("#cards-datatable").DataTable().ajax.reload();
+                const result = await confirmAction('Do you want to renew this service card? This will create a new card with a 1-year validity.');
+                if (result && result.isConfirmed) {
+                    const response = await fetchRequest(url, 'PATCH');
+                    if (response && response.new_card_id) {
+                        await Swal.fire({
+                            icon: 'success',
+                            title: 'Card Renewed',
+                            text: 'Service card has been renewed successfully. A new card has been created.',
+                            confirmButtonText: 'View New Card'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Optionally redirect to the new card or show it
+                                window.location.href = "{{ route('admin.apps.service_cards.show', ':id') }}".replace(':id', response.new_card_id);
+                            }
+                        });
+                        $("#service-card-datatable").DataTable().ajax.reload();
                     }
                 }
             });
 
-            $("#cards-datatable").on('click', '.restore-btn', async function() {
+            $("#service-card-datatable").on('click', '.restore-btn', async function() {
                 const cardId = $(this).data("id");
                 const url = "{{ route('admin.apps.service_cards.restore', ':id') }}".replace(':id', cardId);
 
-                const result = await confirmAction('Would you like to reconsider this service card\'s status?');
+                const result = await confirmAction('Would you like to restore this service card to draft status?');
                 if (result && result.isConfirmed) {
                     const success = await fetchRequest(url, 'PATCH');
                     if (success) {
-                        $("#cards-datatable").DataTable().ajax.reload();
+                        $("#service-card-datatable").DataTable().ajax.reload();
                     }
                 }
             });
 
-            resizableTable('#cards-datatable');
+            // Additional card status actions
+            $("#service-card-datatable").on('click', '.revoke-btn', async function() {
+                const cardId = $(this).data("id");
+                const url = "{{ route('admin.apps.service_cards.updateStatus', ':id') }}".replace(':id', cardId);
+
+                const {
+                    value: reason
+                } = await confirmWithInput({
+                    inputType: "textarea"
+                    , text: 'Do you want to revoke this service card?'
+                    , inputValidator: (value) => {
+                        if (!value) {
+                            return 'You need to provide a reason!';
+                        }
+                    }
+                    , inputPlaceholder: 'Enter the reason for revocation'
+                    , confirmButtonText: 'Revoke'
+                    , cancelButtonText: 'Cancel'
+                });
+
+                if (reason) {
+                    const success = await fetchRequest(url, 'PATCH', {
+                        card_status: 'revoked',
+                        remarks: reason
+                    });
+                    if (success) {
+                        $("#service-card-datatable").DataTable().ajax.reload();
+                    }
+                }
+            });
+
+            $("#service-card-datatable").on('click', '.mark-lost-btn', async function() {
+                const cardId = $(this).data("id");
+                const url = "{{ route('admin.apps.service_cards.updateStatus', ':id') }}".replace(':id', cardId);
+
+                const result = await confirmAction('Do you want to mark this service card as lost?');
+                if (result && result.isConfirmed) {
+                    const success = await fetchRequest(url, 'PATCH', {
+                        card_status: 'lost'
+                    });
+                    if (success) {
+                        $("#service-card-datatable").DataTable().ajax.reload();
+                    }
+                }
+            });
+
+            $("#service-card-datatable").on('click', '.revoke-btn', async function() {
+                const cardId = $(this).data("id");
+                const url = "{{ route('admin.apps.service_cards.revoke', ':id') }}".replace(':id', cardId);
+
+                const {
+                    value: reason
+                } = await confirmWithInput({
+                    inputType: "textarea",
+                    text: 'Why are you revoking this service card?',
+                    inputValidator: (value) => {
+                        if (!value) {
+                            return 'You need to provide a reason!';
+                        }
+                    },
+                    inputPlaceholder: 'Enter the reason for revocation',
+                    confirmButtonText: 'Revoke',
+                    cancelButtonText: 'Cancel'
+                });
+
+                if (reason) {
+                    const success = await fetchRequest(url, 'PATCH', { reason });
+                    if (success) {
+                        $("#service-card-datatable").DataTable().ajax.reload();
+                    }
+                }
+            });
+
+            $("#service-card-datatable").on('click', '.mark-lost-btn', async function() {
+                const cardId = $(this).data("id");
+                const url = "{{ route('admin.apps.service_cards.markLost', ':id') }}".replace(':id', cardId);
+
+                const result = await confirmAction('Mark this service card as lost?');
+                if (result && result.isConfirmed) {
+                    const success = await fetchRequest(url, 'PATCH');
+                    if (success) {
+                        $("#service-card-datatable").DataTable().ajax.reload();
+                    }
+                }
+            });
+
+            $("#service-card-datatable").on('click', '.reprint-btn', async function() {
+                const cardId = $(this).data("id");
+                const url = "{{ route('admin.apps.service_cards.reprint', ':id') }}".replace(':id', cardId);
+
+                const result = await confirmAction('Create a replacement card for this lost card?');
+                if (result && result.isConfirmed) {
+                    const response = await fetchRequest(url, 'PATCH');
+                    if (response && response.new_card_id) {
+                        await Swal.fire({
+                            icon: 'success',
+                            title: 'Card Reprinted',
+                            text: 'A replacement card has been created.',
+                            confirmButtonText: 'View New Card'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = "{{ route('admin.apps.service_cards.show', ':id') }}".replace(':id', response.new_card_id);
+                            }
+                        });
+                        $("#service-card-datatable").DataTable().ajax.reload();
+                    }
+                }
+            });
+
+            resizableTable('#service-card-datatable');
 
             pushStateModal({
                 fetchUrl: "{{ route('admin.apps.service_cards.detail', ':id') }}",
                 btnSelector: '.view-btn',
-                title: 'User Details',
+                title: 'Service Card Details',
                 modalSize: 'lg',
                 tableToRefresh: table
              });

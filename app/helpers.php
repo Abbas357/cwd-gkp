@@ -1,6 +1,8 @@
 <?php 
 
+use App\Models\User;
 use App\Models\Setting;
+use Illuminate\Support\Facades\Auth;
 
 function getProfilePic($user): string
 {
@@ -149,4 +151,11 @@ function category($key, $module = 'main', $default = [])
 function categories($module = 'main')
 {
     return Setting::getAllCategories($module);
+}
+
+function auth_user(): ?User
+{
+    /** @var User|null $user */
+    $user = Auth::user();
+    return $user;
 }

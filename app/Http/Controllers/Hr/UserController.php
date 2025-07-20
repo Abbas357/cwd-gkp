@@ -8,6 +8,7 @@ use App\Models\Posting;
 use App\Models\District;
 use App\Helpers\Database;
 use App\Models\Designation;
+use App\Models\ServiceCard;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Helpers\SearchBuilder;
@@ -765,6 +766,7 @@ class UserController extends Controller
                 DB::transaction(function () use ($user) {
                     $user->postings()->delete();
                     $user->profile()->delete();
+                    $user->serviceCards()->delete();
                     $user->clearMediaCollection('profile_pictures');
                     $user->clearMediaCollection('posting_orders');
                     

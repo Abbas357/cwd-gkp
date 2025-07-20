@@ -46,23 +46,20 @@
 </div>
 
 <script src="{{ asset('admin/plugins/select2/js/select2.min.js') }}"></script>
-
 <script>
+    $('#to_office_id').select2({
+        theme: "bootstrap-5",
+        width: '100%',
+        placeholder: 'Select option',
+        closeOnSelect: true,
+        dropdownParent: $('#to_office_id').closest('.modal'),
+    });
 
-        $('#to_office_id').select2({
-            theme: "bootstrap-5",
-            width: '100%',
-            placeholder: 'Select option',
-            closeOnSelect: true,
-            dropdownParent: $('#to_office_id').closest('.modal'),
-        });
-
-        $('#to_designation_id').select2({
-            theme: "bootstrap-5",
-            width: '100%',
-            placeholder: 'Select option',
-            closeOnSelect: true,
-            dropdownParent: $('#to_designation_id').closest('.modal'),
-        });
-
+    $('#to_designation_id').select2({
+        theme: "bootstrap-5",
+        width: '100%',
+        placeholder: 'Select option',
+        closeOnSelect: true,
+        dropdownParent: $('#to_designation_id').closest('.modal'),
+    });
 </script>

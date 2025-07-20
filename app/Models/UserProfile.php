@@ -12,6 +12,13 @@ class UserProfile extends Model
 {
     use HasFactory, LogsActivity;
 
+    protected function casts(): array
+    {
+        return [
+            'date_of_birth' => 'datetime',
+        ];
+    }
+    
     protected $guarded = [];
 
     public function getActivitylogOptions(): LogOptions

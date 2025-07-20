@@ -19,15 +19,6 @@
                     </div>
                 </a>
             </div>
-            <div class="col action-container">
-                <a href="{{ route('service_cards.create') }}" class="action-link">
-                    <div class="action-button">
-                        <img src="{{ asset('site/images/icons/home-links/service-card.png') }}" alt="Service Cards">
-                        <div class="action-label">Service Cards</div>
-                        <small class="explanation-text">(Employ Service Cards)</small>
-                    </div>
-                </a>
-            </div>
             {{-- <div class="col action-container">
                 <a href="http://eprocurement.cwd.gkp.pk" class="action-link">
                     <div class="action-button">

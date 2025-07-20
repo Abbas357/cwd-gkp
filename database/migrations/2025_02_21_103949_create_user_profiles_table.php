@@ -15,15 +15,18 @@ return new class extends Migration
             $table->string('personnel_number')->nullable();
             $table->timestamp('date_of_birth')->nullable();
             $table->string('mobile_number')->nullable();
+            $table->string('emergency_contact')->nullable();
             $table->string('whatsapp')->nullable();
+            $table->string('blood_group')->nullable();
             $table->string('permanent_address')->nullable();
             $table->string('present_address')->nullable();
-            $table->string('blood_group')->nullable();
-            $table->string('emergency_contact')->nullable();
             $table->string('mark_of_identification')->nullable();
+            $table->string('facebook')->nullable();
+            $table->string('twitter')->nullable();
             $table->string('featured_on')->nullable();
             $table->text('message')->nullable();
             $table->unsignedBigInteger('views_count')->default(0);
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps(); 
         });
     }

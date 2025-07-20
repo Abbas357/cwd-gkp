@@ -1,3 +1,8 @@
+@php
+    $user = $ServiceCard->user;
+    $profile = $user->profile;
+@endphp
+
 <style>
     .service-card {
         border: 2px solid #ddd;
@@ -198,8 +203,6 @@
     .ml-auto {
         margin-left: auto
     }
-
-
 </style>
 
 <div id="capture">
@@ -215,17 +218,17 @@
         </div>
 
         <div class="header-right">
-            <span class="expires">EXPIRES: {{ $ServiceCard->getLatestCard()->expiry_date->format('j, M Y'); }}</span>
+            <span class="expires">EXPIRES: {{ $ServiceCard->expired_at ? $ServiceCard->expired_at->format('j, M Y') : 'N/A' }}</span>
         </div>
 
         <div class="image">
-            <img src="{{ $ServiceCard->getFirstMediaUrl('service_card_pictures') ?? '' }}" alt="{{ $ServiceCard->name }}">
+            <img src="{{ $user->getFirstMediaUrl('profile_pictures') ?: asset('admin/images/default-avatar.png') }}" alt="{{ $user->name }}">
         </div>
 
         <div class="main">
-            <h1>{{ $ServiceCard->name }}</h1>
-            <h2> {{ $ServiceCard->designation->name }}</h2>
-            <h3> OFFICE: {{ $ServiceCard->office->name }}</h3>
+            <h1>{{ $user->name }}</h1>
+            <h2>{{ $user->currentDesignation ? $user->currentDesignation->name : 'N/A' }}</h2>
+            <h3>OFFICE: {{ $user->currentOffice ? $user->currentOffice->name : 'N/A' }}</h3>
         </div>
 
         <div class="footer">
@@ -257,47 +260,47 @@
                 <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="fw-bold">Personnel No: &emsp;</div>
-                        <div>{{ $ServiceCard->personnel_number }}</div>
+                        <div>{{ $profile->personnel_number ?? 'N/A' }}</div>
                     </div>
                     <div class="d-flex justify-content-between align-items-center ml-auto">
                         <div class="fw-bold">Issue Date: &emsp;</div>
-                        <div>{{ $ServiceCard->getLatestCard()->issue_date->format('d/m/Y') }}</div>
+                        <div>{{ $ServiceCard->issued_at ? $ServiceCard->issued_at->format('d/m/Y') : 'N/A' }}</div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
                     <div class="d-flex justify-content-around align-items-center">
                         <div class="fw-bold">Father Name: &emsp;</div>
-                        <div>{{ $ServiceCard->father_name }}</div>
+                        <div>{{ $profile->father_name ?? 'N/A' }}</div>
                     </div>
                     <div class="d-flex justify-content-around align-items-center ml-auto">
                         <div class="fw-bold">Blood Group: &emsp;</div>
-                        <div>{{ $ServiceCard->blood_group }}</div>
+                        <div>{{ $profile->blood_group ?? 'N/A' }}</div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
                     <div class="d-flex justify-content-around align-items-center">
                         <div class="fw-bold">Date of Birth: &emsp;</div>
-                        <div>{{ $ServiceCard->date_of_birth->format('d/m/Y') }}</div>
+                        <div>{{ $profile->date_of_birth ? $profile->date_of_birth->format('d/m/Y') : 'N/A' }}</div>
                     </div>
                     <div class="d-flex justify-content-around align-items-center ml-auto">
                         <div class="fw-bold">Identification Mark: &emsp;</div>
-                        <div style="overflow: hidden; text-overflow: ellipsis;">{{ $ServiceCard->mark_of_identification }}</div>
+                        <div style="overflow: hidden; text-overflow: ellipsis;">{{ $profile->mark_of_identification ?? 'N/A' }}</div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
                     <div class="d-flex justify-content-around align-items-center">
                         <div class="fw-bold">CNIC: &emsp;</div>
-                        <div style="overflow: hidden; text-overflow: ellipsis;">{{ $ServiceCard->cnic }}</div>
+                        <div style="overflow: hidden; text-overflow: ellipsis;">{{ $profile->cnic ?? 'N/A' }}</div>
                     </div>
                     <div class="d-flex justify-content-around align-items-center ml-auto">
                         <div class="fw-bold">Emergency #: &emsp;</div>
-                        <div style="overflow: hidden; text-overflow: ellipsis;">{{ $ServiceCard->emergency_contact }}</div>
+                        <div style="overflow: hidden; text-overflow: ellipsis;">{{ $profile->emergency_contact ?? 'N/A' }}</div>
                     </div>
                 </div>
                 
                 <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
                     <div class="fw-bold">Present Address: &emsp;</div>
-                    <div style="overflow: hidden; text-overflow: ellipsis;">{{ $ServiceCard->present_address }}</div>
+                    <div style="overflow: hidden; text-overflow: ellipsis;">{{ $profile->present_address ?? 'N/A' }}</div>
                 </div>
             </div>
             

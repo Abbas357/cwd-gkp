@@ -94,30 +94,31 @@ class TransferRequestController extends Controller
 
     public function store(StoreTransferRequestRequest $request)
     {
-            $transfer_request = new TransferRequest();
-            $currentUser = request()->user();
-            $transfer_request->user_id = $currentUser->id;
-            $transfer_request->type = $request->type ?? 'Already Transferred';
-            $transfer_request->from_office_id = $currentUser?->currentOffice?->id ?? null;
-            $transfer_request->from_designation_id = $currentUser?->currentDesignation?->id ?? null;
-            $transfer_request->to_office_id = $request->to_office_id;
-            $transfer_request->to_designation_id = $request->to_designation_id;
-            $transfer_request->posting_date = $request->posting_date;
-            $transfer_request->remarks = $request->remarks;
+        dd($request);
+        $transfer_request = new TransferRequest();
+        $currentUser = request()->user();
+        $transfer_request->user_id = $currentUser->id;
+        $transfer_request->type = $request->type ?? 'Already Transferred';
+        $transfer_request->from_office_id = $currentUser?->currentOffice?->id ?? null;
+        $transfer_request->from_designation_id = $currentUser?->currentDesignation?->id ?? null;
+        $transfer_request->to_office_id = $request->to_office_id;
+        $transfer_request->to_designation_id = $request->to_designation_id;
+        $transfer_request->posting_date = $request->posting_date;
+        $transfer_request->remarks = $request->remarks;
 
-            if($currentUser->transferRequests()->latest()->first()?->status === 'Pending') {
-                return response()->json(['error' => 'You have already posted request. Please wait...']);
-            }
+        if($currentUser->transferRequests()->latest()->first()?->status === 'Pending') {
+            return response()->json(['error' => 'You have already posted request. Please wait...']);
+        }
 
-            if($currentUser->transferRequests()->latest()->first()?->status === 'Rejected') {
-                return response()->json(['error' => 'Your previous request is rejected. Kindly contact IT Cell...']);
-            }
+        if($currentUser->transferRequests()->latest()->first()?->status === 'Rejected') {
+            return response()->json(['error' => 'Your previous request is rejected. Kindly contact IT Cell...']);
+        }
 
-            if ($transfer_request->save()) {
-                return response()->json(['success' => 'Transfer Request added successfully.']);
-            }
+        if ($transfer_request->save()) {
+            return response()->json(['success' => 'Transfer Request added successfully.']);
+        }
 
-            return response()->json(['error' => 'Failed to add Transfer Request.'], 500);
+        return response()->json(['error' => 'Failed to add Transfer Request.'], 500);
     }
 
     public function review(Request $request, TransferRequest $transfer_request)

@@ -422,9 +422,7 @@
                 $user->can('viewAny', App\Models\Damage::class) ||
                     $user->can('viewAny', App\Models\Infrastructure::class) ||
                     $user->can('viewMainReport', App\Models\Damage::class) ||
-                    $user->can('viewOfficerWiseReport', App\Models\Damage::class) ||
-                    $user->can('viewDistrictWiseReport', App\Models\Damage::class) ||
-                    $user->can('viewActiveOfficerReport', App\Models\Damage::class))
+                    $user->can('viewDistrictWiseReport', App\Models\Damage::class))
                 <a href="{{ route('admin.apps.dmis.index') }}" class="app-tile accent-red">
                     <i class="bi-cloud-drizzle" style="color: #ff0000"></i>
                     <p>{{ setting('appName', 'dmis') }}</p>

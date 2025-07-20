@@ -26,6 +26,10 @@ return new class extends Migration
             $table->unsignedBigInteger('status_updated_by')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
 
+            $table->index('approval_status');
+            $table->index('card_status');
+            $table->index(['approval_status', 'card_status']);
+
             $table->timestamps();
         });
     }
