@@ -111,12 +111,29 @@ $(function () {
 });
 
 document.querySelectorAll("form").forEach((form) => {
-    form.addEventListener("submit", function (event) {
+    form.addEventListener("submit", async function (event) {
         const button = form.querySelector(".cw-btn");
-        if (button) {
+
+        if (button && button.hasAttribute('confirm')) {
+            event.preventDefault();
+            
+            const message = button.getAttribute('confirm');
+            
+            try {
+                const result = await confirmAction(message);
+                if (result && result.isConfirmed) {
+                    button.setAttribute("data-loading", "true");
+                    button.disabled = true;
+                    
+                    setTimeout(() => form.submit(), 10);
+                }
+            } catch (error) {
+                console.error("Confirmation error:", error);
+            }
+            return;
+        } else {
             button.setAttribute("data-loading", "true");
             button.disabled = true;
-
             setTimeout(() => form.submit(), 10);
         }
     });

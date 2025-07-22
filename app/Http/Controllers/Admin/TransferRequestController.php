@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
 use App\Models\Office;
 use App\Helpers\Database;
 use App\Models\Designation;
@@ -94,23 +95,22 @@ class TransferRequestController extends Controller
 
     public function store(StoreTransferRequestRequest $request)
     {
-        dd($request);
         $transfer_request = new TransferRequest();
-        $currentUser = request()->user();
-        $transfer_request->user_id = $currentUser->id;
+        $userToTransfered = $request->has('user_id') ? User::find($request->user_id) : auth_user();
+        $transfer_request->user_id = $userToTransfered->id;
         $transfer_request->type = $request->type ?? 'Already Transferred';
-        $transfer_request->from_office_id = $currentUser?->currentOffice?->id ?? null;
-        $transfer_request->from_designation_id = $currentUser?->currentDesignation?->id ?? null;
-        $transfer_request->to_office_id = $request->to_office_id;
-        $transfer_request->to_designation_id = $request->to_designation_id;
+        $transfer_request->from_office_id = $request->from_office_id ?? $userToTransfered?->currentOffice?->id;
+        $transfer_request->from_designation_id = $request->from_designation_id ?? $userToTransfered?->currentDesignation?->id;
+        $transfer_request->to_office_id = $request->to_office_id ?? auth_user()->currentOffice->id;
+        $transfer_request->to_designation_id = $request->to_designation_id ?? auth_user()->currentDesignation->id;
         $transfer_request->posting_date = $request->posting_date;
         $transfer_request->remarks = $request->remarks;
 
-        if($currentUser->transferRequests()->latest()->first()?->status === 'Pending') {
+        if($userToTransfered->transferRequests()->latest()->first()?->status === 'Pending') {
             return response()->json(['error' => 'You have already posted request. Please wait...']);
         }
 
-        if($currentUser->transferRequests()->latest()->first()?->status === 'Rejected') {
+        if($userToTransfered->transferRequests()->latest()->first()?->status === 'Rejected') {
             return response()->json(['error' => 'Your previous request is rejected. Kindly contact IT Cell...']);
         }
 
