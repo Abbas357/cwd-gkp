@@ -64,11 +64,6 @@
                 font-style: italic;
             }
 
-            .modal-header {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
-            }
-
             .required-field::after {
                 content: " *";
                 color: #dc3545;
@@ -431,12 +426,12 @@
                         <input type="hidden" id="profile_user_id" name="user_id">
 
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-2">
                                 <label for="profile_father_name" class="required-field">Father Name</label>
                                 <input type="text" class="form-control" id="profile_father_name"
                                     name="father_name" required>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-2">
                                 <label for="profile_cnic" class="required-field">CNIC Number</label>
                                 <input type="text" class="form-control" id="profile_cnic" name="cnic"
                                     required>
@@ -444,12 +439,12 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-2">
                                 <label for="profile_date_of_birth" class="required-field">Date of Birth</label>
                                 <input type="date" class="form-control" id="profile_date_of_birth"
                                     name="date_of_birth" required>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-2">
                                 <label for="profile_mobile_number" class="required-field">Mobile Number</label>
                                 <input type="text" class="form-control" id="profile_mobile_number"
                                     name="mobile_number" required>
@@ -457,12 +452,12 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-2">
                                 <label for="profile_personnel_number" class="required-field">Personnel Number</label>
                                 <input type="text" class="form-control" id="profile_personnel_number"
                                     name="personnel_number" required>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-2">
                                 <label for="profile_blood_group">Blood Group</label>
                                 <select class="form-select" id="profile_blood_group" name="blood_group">
                                     <option value="">Choose...</option>
@@ -473,23 +468,23 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-2">
                             <label for="profile_permanent_address" class="required-field">Permanent Address</label>
                             <textarea class="form-control" id="profile_permanent_address" name="permanent_address" rows="2" required></textarea>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-2">
                             <label for="profile_present_address" class="required-field">Present Address</label>
                             <textarea class="form-control" id="profile_present_address" name="present_address" rows="2" required></textarea>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-2">
                                 <label for="profile_emergency_contact">Emergency Contact</label>
                                 <input type="text" class="form-control" id="profile_emergency_contact"
                                     name="emergency_contact">
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-2">
                                 <label for="profile_mark_of_identification">Mark of Identification</label>
                                 <input type="text" class="form-control" id="profile_mark_of_identification"
                                     name="mark_of_identification">
@@ -636,7 +631,7 @@
                     subordinates.forEach(user => {
                         const hasServiceCard = user.has_service_card;
                         html += `
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <div class="card user-card" onclick="selectUser(${JSON.stringify(user).replace(/"/g, '&quot;')})">
                                     <div class="card-body">
                                         <div class="d-flex align-items-center">
@@ -681,7 +676,7 @@
                     nonSubordinates.forEach(user => {
                         const hasServiceCard = user.has_service_card;
                         html += `
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <div class="card user-card" onclick="selectUser(${JSON.stringify(user).replace(/"/g, '&quot;')})">
                                     <div class="card-body">
                                         <div class="d-flex align-items-center">

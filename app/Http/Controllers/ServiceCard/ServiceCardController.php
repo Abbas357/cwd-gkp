@@ -129,8 +129,10 @@ class ServiceCardController extends Controller
 
     public function create()
     {        
-        $designations = Designation::whereNotIn('name', ['Minister', 'Secretary'])->get();
-        $offices = Office::whereNotIn('name', ['Minister C&W', 'Secretary C&W'])->get();
+        $currentBPS = auth_user()->currentDesignation->bps;
+        
+        $designations = Designation::where('bps', '<=', $currentBPS)->get();
+        $offices = Office::all();
 
         return view('modules.service_cards.create', compact('designations', 'offices'));
     }

@@ -102,7 +102,7 @@ class TransferRequestController extends Controller
         $transfer_request->from_office_id = $request->from_office_id ?? $userToTransfered?->currentOffice?->id;
         $transfer_request->from_designation_id = $request->from_designation_id ?? $userToTransfered?->currentDesignation?->id;
         $transfer_request->to_office_id = $request->to_office_id ?? auth_user()->currentOffice->id;
-        $transfer_request->to_designation_id = $request->to_designation_id ?? auth_user()->currentDesignation->id;
+        $transfer_request->to_designation_id = $request->to_designation_id ?? $userToTransfered?->currentDesignation?->id;
         $transfer_request->posting_date = $request->posting_date;
         $transfer_request->remarks = $request->remarks;
 

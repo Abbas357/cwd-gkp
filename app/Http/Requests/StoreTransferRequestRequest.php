@@ -14,7 +14,6 @@ class StoreTransferRequestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'to_designation_id' => 'required',
             'posting_date' => 'required'
         ];
     }
