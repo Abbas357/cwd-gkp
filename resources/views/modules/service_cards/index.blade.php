@@ -60,6 +60,7 @@
     <script src="{{ asset('admin/plugins/jquery-mask/jquery.mask.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/cropper/js/cropper.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/html2canvas/html2canvas.min.js') }}"></script>
+    <script src="{{ asset('admin/plugins/jspdf/jspdf.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             var table = initDataTable('#service-card-datatable', {
@@ -357,19 +358,62 @@
              });
 
             pushStateModal({
-                fetchUrl: "{{ route('admin.apps.service_cards.showCard', ':id') }}"
-                , btnSelector: '.card-btn'
-                , title: 'Service Card'
-                , modalSize: 'md'
-                , actionButtonName: 'Download Card'
-            , }).then((modal) => {
-                const actionBtn = $('#' + modal).find('button[type="submit"]');
-                actionBtn.on('click', function() {
-                    var div = $('#capture')[0];
-                    html2canvas(div, {
-                        scale: 3
-                        , useCORS: true
-                        , logging: false
+                fetchUrl: "{{ route('admin.apps.service_cards.showCard', ':id') }}",
+                btnSelector: '.card-btn',
+                title: 'Service Card',
+                modalSize: 'lg',
+                actionButtonName: 'PDF'
+            }).then((modal) => {
+                const actionBtn = $('#' + modal).find('button[type="submit"]').addClass('cw-btn bg-danger me-2');
+                const frontBtn = $('<button type="button" class="cw-btn bg-primary me-2">FRONT</button>');
+                const backBtn = $('<button type="button" class="cw-btn bg-secondary me-2">BACK</button>');
+                actionBtn.before(frontBtn);
+                frontBtn.before(backBtn);
+
+                actionBtn.on('click', function () {
+                    const front = $('#capture .service-card_front')[0];
+                    const back = $('#capture .service-card_back')[0];
+
+                    html2canvas(front, {
+                        scale: 3,
+                        useCORS: true,
+                        logging: false
+                    }).then(function (frontCanvas) {
+                        const frontImgData = frontCanvas.toDataURL('image/png');
+                        
+                        const cardWidth = frontCanvas.width / 3;
+                        const cardHeight = frontCanvas.height / 3;
+                        
+                        const pdf = new window.jspdf.jsPDF({
+                            orientation: cardHeight > cardWidth ? 'portrait' : 'landscape',
+                            unit: 'px',
+                            format: [cardWidth, cardHeight]
+                        });
+
+                        pdf.addImage(frontImgData, 'PNG', 0, 0, cardWidth, cardHeight);
+
+                        html2canvas(back, {
+                            scale: 3,
+                            useCORS: true,
+                            logging: false
+                        }).then(function (backCanvas) {
+                            const backImgData = backCanvas.toDataURL('image/png');
+                            
+                            const backWidth = backCanvas.width / 3;
+                            const backHeight = backCanvas.height / 3;
+                            pdf.addPage([backWidth, backHeight]);
+                            pdf.addImage(backImgData, 'PNG', 0, 0, backWidth, backHeight);
+                            pdf.save(`service-card-${uniqId(6)}.pdf`);
+                        });
+                    });
+                });
+
+                frontBtn.on('click', function() {
+                    var front = $('#capture .service-card_front')[0];
+                    html2canvas(front, {
+                        scale: 3,
+                        useCORS: true,
+                        logging: false
                     }).then(function(canvas) {
                         canvas.toBlob(function(blob) {
                             var link = $('<a></a>')[0];
@@ -378,7 +422,23 @@
                             link.click();
                         });
                     });
-                })
+                });
+
+                backBtn.on('click', function() {
+                    var back = $('#capture .service-card_back')[0];
+                    html2canvas(back, {
+                        scale: 3,
+                        useCORS: true,
+                        logging: false
+                    }).then(function(canvas) {
+                        canvas.toBlob(function(blob) {
+                            var link = $('<a></a>')[0];
+                            link.href = URL.createObjectURL(blob);
+                            link.download = `service-card-${uniqId(6)}.png`;
+                            link.click();
+                        });
+                    });
+                });
             });
 
         });

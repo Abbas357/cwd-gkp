@@ -4,14 +4,14 @@
 @endphp
 
 <style>
+
     .service-card {
-        border: 2px solid #ddd;
         border-radius: 10px;
         padding: .5rem;
-        width: 380px;
-        height: 240px;
+        /* width: 380px;
+        height: 240px; */
+        aspect-ratio: 380 / 240;
         margin: auto;
-        margin-bottom: .3rem
     }
 
     .service-card_front {
@@ -22,28 +22,30 @@
 
         .header-left {
             position: absolute;
-            top: .3rem;
-            left: .3rem;
+            top: 1%;
+            left: 1%;
+            width: 40%;
             
             img {
                 position: absolute;
                 top:0;
                 left:0;
-                width: 50px;
+                width: 40%;
             }
 
             .tagline {
                 position: absolute;
-                top:-4px;
-                left:-4px;
+                top:2%;
+                left:2%;
                 font-weight: bold;
+                width: 60%;
                 span {
                     white-space: nowrap;
                     display: block;
                     margin-bottom: -6px;
                     font-weight: bolder;
                     transform: scale(.7, 1);
-                    font-size: 13px;
+                    font-size: 150%;
                     letter-spacing: 1px;
                     text-shadow: 1px 1px 3px #fff, -1px -1px 3px #fff;
                 }
@@ -127,8 +129,15 @@
 
         .qr-code {
             position: absolute;
-            bottom: 1.5rem;
-            right: .3rem;
+            bottom: 10%;
+            right: 1%;
+            width: 20%;
+
+            img {
+                width: 100%;
+                border:3px solid transparent;
+                outline: 2px solid #aaa
+            }
         }
 
         .sign {
@@ -239,7 +248,7 @@
                 ISSUING AUTHORITY
             </div>
             <div class="qr-code">
-                <img src="{!! $qrCodeUri !!}" style="width: 75px;border:3px solid transparent; outline: 2px solid #aaa" alt="QR Code for verification">
+                <img src="{!! $qrCodeUri !!}" alt="QR Code for verification">
             </div>
         </div>
 
