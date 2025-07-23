@@ -119,7 +119,7 @@
                     }
                 ], customButtons: [
                     {
-                        text: `<span class="symbol-container" ><i class="bi-plus-circle"></i>&nbsp; Add Service Card</span>`
+                        text: `<span class="symbol-container cw-btn bg-primary text-light"><i class="bi-plus-circle"></i>Create Card</span>`
                         , action: function(e, dt, node, config) {
                             window.location.href = "{{ route('admin.apps.service_cards.create') }}";
                         },

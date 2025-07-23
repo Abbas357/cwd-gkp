@@ -5,7 +5,7 @@
         <link href="{{ asset('admin/plugins/cropper/css/cropper.min.css') }}" rel="stylesheet">
         <style>
             .user-search-results {
-                padding: 1rem;
+                padding: .2rem;
                 max-height: 400px;
                 overflow-y: auto;
             }
@@ -83,20 +83,17 @@
         <!-- Step 1: User Selection -->
         <div class="card shadow-md mb-4">
             <div class="card-header bg-primary-subtle text-white">
-                <h4 class="mb-0"><i class="bi bi-person-search"></i> Step 1: Select User</h4>
+                <h4 class="mb-0"><i class="bi bi-person-search"></i> Step 1: Search & Select User</h4>
             </div>
             <div class="card-body">
                 <div class="mx-auto">
-                    <div class="input-group mb-3 p-3">
-                        <span class="input-group-text"><i class="bi bi-search"></i></span>
-                        <input type="text" class="form-control shadow-sm py-2 px-1" id="userSearch"
+                    <div class="input-group p-3">
+                        <input type="text" class="form-control fs-5 shadow-sm py-3 px-4 rounded-pill" id="userSearch"
                             placeholder="Search by name, CNIC, email, personnel number, Office or Designation...">
                     </div>
 
-                    <!-- Search Results -->
                     <div id="searchResults" class="user-search-results"></div>
 
-                    <!-- Selected User Display -->
                     <div id="selectedUserDisplay" class="alert alert-info d-none">
                         <h6>Selected User:</h6>
                         <div id="selectedUserInfo"></div>
@@ -174,8 +171,8 @@
                     <h4 class="mb-0"><i class="bi bi-arrow-left-right"></i> Transfer Request Required</h4>
                 </div>
                 <div class="card-body">
-                    <div class="alert alert-info">
-                        This user is not in your office domain. You need to send a transfer request first.
+                    <div class="alert alert-danger">
+                        This user is currently not part of your office. Please submit a transfer request to the IT Cell below and wait for approval. Once the user has been transferred to this office, you will be able to create a service card for them.
                     </div>
 
                     <form id="transferForm" class="row" method="POST"

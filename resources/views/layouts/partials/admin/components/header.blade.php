@@ -274,7 +274,7 @@
                                 $user->can('viewAny', App\Models\Infrastructure::class) ||
                                 $user->can('viewMainReport', App\Models\Damage::class) ||
                                 $user->can('viewDistrictWiseReport', App\Models\Damage::class))
-                            <a href="{{ route('admin.apps.dmis.dashboard') }}"
+                            <a href="{{ route('admin.apps.dmis.index') }}"
                                 class="custom-app-tile custom-cyan-theme">
                                 <div class="custom-app-icon-container">
                                     <i class="bi-exclamation-triangle custom-app-icon"></i>
