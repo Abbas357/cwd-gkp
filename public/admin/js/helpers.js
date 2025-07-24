@@ -964,6 +964,8 @@ function pushStateModal({
     hash = true,
     tableToRefresh = null,
     formType = "create",
+    cancelButton = true,
+    actionButtonClass = "btn btn-primary px-3",
 }) {
     return new Promise((resolve) => {
         const calcModalType =
@@ -1012,10 +1014,14 @@ function pushStateModal({
                         <div class="${modalContentClass} p-1"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                        ${
+                            cancelButton
+                                ? `<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>`
+                                : ""
+                        }
                         ${
                             actionButtonName
-                                ? `<button type="submit" id="${actionBtnId}" class="btn btn-primary px-3">${actionButtonName}</button>`
+                                ? `<button type="submit" id="${actionBtnId}" class="${actionButtonClass}">${actionButtonName}</button>`
                                 : ""
                         }    
                     </div>

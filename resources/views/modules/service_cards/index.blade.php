@@ -361,16 +361,19 @@
                 fetchUrl: "{{ route('admin.apps.service_cards.showCard', ':id') }}",
                 btnSelector: '.card-btn',
                 title: 'Service Card',
-                modalSize: 'lg',
-                actionButtonName: 'PDF'
+                modalSize: 'md',
+                actionButtonName: 'PDF',
+                actionButtonClass: 'cw-btn bg-danger px-3',
+                cancelButton: false,
             }).then((modal) => {
-                const actionBtn = $('#' + modal).find('button[type="submit"]').addClass('cw-btn bg-danger me-2');
+                const actionBtn = $('#' + modal).find('button[type="submit"]');
                 const frontBtn = $('<button type="button" class="cw-btn bg-primary me-2">FRONT</button>');
                 const backBtn = $('<button type="button" class="cw-btn bg-secondary me-2">BACK</button>');
                 actionBtn.before(frontBtn);
                 frontBtn.before(backBtn);
 
                 actionBtn.on('click', function () {
+                    setButtonLoading(actionBtn, true);
                     const front = $('#capture .service-card_front')[0];
                     const back = $('#capture .service-card_back')[0];
 
@@ -404,11 +407,13 @@
                             pdf.addPage([backWidth, backHeight]);
                             pdf.addImage(backImgData, 'PNG', 0, 0, backWidth, backHeight);
                             pdf.save(`service-card-${uniqId(6)}.pdf`);
+                            setButtonLoading(actionBtn, false);
                         });
                     });
                 });
 
                 frontBtn.on('click', function() {
+                    setButtonLoading(frontBtn, true);
                     var front = $('#capture .service-card_front')[0];
                     html2canvas(front, {
                         scale: 3,
@@ -420,11 +425,13 @@
                             link.href = URL.createObjectURL(blob);
                             link.download = `service-card-${uniqId(6)}.png`;
                             link.click();
+                            setButtonLoading(frontBtn, false);
                         });
                     });
                 });
 
                 backBtn.on('click', function() {
+                    setButtonLoading(backBtn, true);
                     var back = $('#capture .service-card_back')[0];
                     html2canvas(back, {
                         scale: 3,
@@ -436,6 +443,7 @@
                             link.href = URL.createObjectURL(blob);
                             link.download = `service-card-${uniqId(6)}.png`;
                             link.click();
+                            setButtonLoading(backBtn, false);
                         });
                     });
                 });

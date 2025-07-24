@@ -4,13 +4,9 @@
 @endphp
 
 <style>
-
     .service-card {
-        border-radius: 10px;
-        padding: .5rem;
-        /* width: 380px;
-        height: 240px; */
-        aspect-ratio: 380 / 240;
+        width: 380px;
+        height: 240px;
         margin: auto;
     }
 
@@ -22,30 +18,28 @@
 
         .header-left {
             position: absolute;
-            top: 1%;
-            left: 1%;
-            width: 40%;
+            top: .3rem;
+            left: .3rem;
             
             img {
                 position: absolute;
                 top:0;
                 left:0;
-                width: 40%;
+                width: 50px;
             }
 
             .tagline {
                 position: absolute;
-                top:2%;
-                left:2%;
+                top:-4px;
+                left:-4px;
                 font-weight: bold;
-                width: 60%;
                 span {
                     white-space: nowrap;
                     display: block;
                     margin-bottom: -6px;
                     font-weight: bolder;
                     transform: scale(.7, 1);
-                    font-size: 150%;
+                    font-size: 13px;
                     letter-spacing: 1px;
                     text-shadow: 1px 1px 3px #fff, -1px -1px 3px #fff;
                 }
@@ -83,7 +77,7 @@
             h1 {
                 font-weight: bold;
                 font-size: 1rem;
-                margin-bottom: 2px;
+                margin-bottom: 3px;
             }
 
             h2 {
@@ -93,7 +87,7 @@
             }
 
             h3 {
-                font-size: .7rem;
+                font-size: .6rem;
                 font-weight: bold;
             }
         }
@@ -129,15 +123,8 @@
 
         .qr-code {
             position: absolute;
-            bottom: 10%;
-            right: 1%;
-            width: 20%;
-
-            img {
-                width: 100%;
-                border:3px solid transparent;
-                outline: 2px solid #aaa
-            }
+            bottom: 1.5rem;
+            right: .3rem;
         }
 
         .sign {
@@ -148,7 +135,7 @@
             rotate: -30deg;
 
             img {
-                width: 100px;
+                width: 70px;
             }
         }
 
@@ -176,30 +163,18 @@
         position: relative;
         font-size: 11px;
 
-        .back-heading {
-            position: absolute;
-            top: .7rem;
-            left: 20%;
-
-            h1 {
-                text-transform: uppercase;
-                font-size: 1.2rem;
-                color: #555;
-                letter-spacing: 1px;
-                border-bottom: 2px solid #555;
-                font-weight: bold;
-                transform: scale(.7, 1);
-            }
-        }
         .back-main {
             position: absolute;
-            top: 3rem;
-            width:94%;
+            top: 1rem;
+            left: .7rem;
+            width: 94%;
         }
         .back-footer {
             position: absolute;
-            bottom: 0;
+            bottom: .5rem;
+            left: .7rem;
             p {
+                border-top: 3px solid #ddd;
                 margin: 0px;
                 color: #575757;
                 text-align: center;
@@ -248,7 +223,7 @@
                 ISSUING AUTHORITY
             </div>
             <div class="qr-code">
-                <img src="{!! $qrCodeUri !!}" alt="QR Code for verification">
+                <img src="{!! $qrCodeUri !!}" style="width: 75px;border:3px solid transparent; outline: 2px solid #aaa" alt="QR Code for verification">
             </div>
         </div>
 
@@ -260,10 +235,7 @@
 
     <!-- Back Side -->
     <div class="card service-card service-card_back">
-        <div class="mx-1 mt-5">
-            <div class="back-heading">
-                <h1>Employee Detail</h1>
-            </div>
+        <div class="mx-1 mt-1">
 
             <div class="back-main">
                 <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
