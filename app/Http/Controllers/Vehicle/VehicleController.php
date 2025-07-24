@@ -252,7 +252,7 @@ class VehicleController extends Controller
     public function destroy($id)
     {
         $vehicle = Vehicle::find($id);
-        if (request()->user()->isAdmin() && $vehicle->delete()) {
+        if (auth_user()->isAdmin() && $vehicle->delete()) {
             $vehicle->allotments()->delete();
             return response()->json(['success' => 'Vehicle has been deleted successfully.']);
         }

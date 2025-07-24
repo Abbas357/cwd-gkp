@@ -180,7 +180,7 @@ class PageController extends Controller
 
     public function destroy(Page $page)
     {
-        if ((request()->user()->isAdmin() || $page->is_active === 0) && $page->delete()) {
+        if ((auth_user()->isAdmin() || $page->is_active === 0) && $page->delete()) {
             Cache::forget('about_partial');
             return response()->json(['success' => 'Page has been deleted successfully.']);
         }

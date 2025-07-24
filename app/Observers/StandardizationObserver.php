@@ -16,7 +16,7 @@ class StandardizationObserver
     {
         if ($Standardization->isDirty('status')) {
             $Standardization->status_updated_at = now();
-            $Standardization->status_updated_by = request()->user()->id ?? null;
+            $Standardization->status_updated_by = auth_user()->id ?? null;
         }
         if ($Standardization->isDirty('password')) {
             $Standardization->password_updated_at = now();

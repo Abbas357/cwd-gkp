@@ -219,7 +219,7 @@ class ProjectFileController extends Controller
 
     public function destroy(ProjectFile $project_file)
     {
-        if ((request()->user()->isAdmin() || ($project_file->status === 'draft' && is_null($project_file->published_at))) && $project_file->delete()) {
+        if ((auth_user()->isAdmin() || ($project_file->status === 'draft' && is_null($project_file->published_at))) && $project_file->delete()) {
             return response()->json(['success' => 'File has been deleted successfully.']);
         }
 

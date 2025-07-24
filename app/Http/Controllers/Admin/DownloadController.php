@@ -206,7 +206,7 @@ class DownloadController extends Controller
 
     public function destroy(Download $download)
     {
-        if (request()->user()->isAdmin() || ($download->status === 'draft' && is_null($download->published_at))) {
+        if (auth_user()->isAdmin() || ($download->status === 'draft' && is_null($download->published_at))) {
             if ($download->delete()) {
                 return response()->json(['success' => 'File has been deleted successfully.']);
             }

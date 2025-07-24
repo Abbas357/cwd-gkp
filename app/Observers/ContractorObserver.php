@@ -8,7 +8,7 @@ class ContractorObserver
     {
         if ($model->isDirty('status')) {
             $model->status_updated_at = now();
-            $model->status_updated_by = request()->user()->id ?? null;
+            $model->status_updated_by = auth_user()->id ?? null;
         }
         if ($model->isDirty('password')) {
             $model->password_updated_at = now();

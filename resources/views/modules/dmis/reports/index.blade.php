@@ -295,18 +295,19 @@
                         <label class="form-label" for="end_date">End Date</label>
                         <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request()->query('end_date') ?? now()->format('Y-m-d') }}">
                     </div>
-
-                    <div class="col-md-3 load-users-field">
-                        <label class="form-label" for="load-users">Officer</label>
-                        <select name="user_id" id="load-users" class="form-select" data-placeholder="Select Officer">
-                            <option value="">Select Officer</option>
-                            @foreach(App\Models\User::all() as $user)
-                            <option value="{{ $user->id }}" @selected((request()->query('user_id') ?? null) == $user->id)>
-                                {{ $user->name }} ({{ $user->currentDesignation?->name ?? 'No Designation' }} - {{ $user->currentOffice?->name ?? 'Office Not Assigned' }})
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
+                    @can(auth_user()->currentOffice->type != 'Authority')
+                        <div class="col-md-3 load-users-field">
+                            <label class="form-label" for="load-users">Officer</label>
+                            <select name="user_id" id="load-users" class="form-select" data-placeholder="Select Officer">
+                                <option value="">Select Officer</option>
+                                @foreach(App\Models\User::all() as $user)
+                                <option value="{{ $user->id }}" @selected((request()->query('user_id') ?? null) == $user->id)>
+                                    {{ $user->name }} ({{ $user->currentDesignation?->name ?? 'No Designation' }} - {{ $user->currentOffice?->name ?? 'Office Not Assigned' }})
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
                     <div class="col">
                         <span>More</span>
                         <span class="form-check form-switch">

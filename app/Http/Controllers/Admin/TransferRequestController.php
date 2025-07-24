@@ -156,7 +156,7 @@ class TransferRequestController extends Controller
 
     public function destroy(TransferRequest $transfer_request)
     {
-        if (request()->user()->isAdmin() && $transfer_request->delete()) {
+        if (auth_user()->isAdmin() && $transfer_request->delete()) {
             return response()->json(['success' => 'TransferRequest has been deleted successfully.']);
         }
 

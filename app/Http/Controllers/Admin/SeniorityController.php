@@ -214,7 +214,7 @@ class SeniorityController extends Controller
     public function destroy(Seniority $seniority)
     {
         $canDelete = $seniority->status === 'draft' && is_null($seniority->published_at);
-        if (request()->user()->isAdmin() || $canDelete) {
+        if (auth_user()->isAdmin() || $canDelete) {
             if ($seniority->delete()) {
                 return response()->json(['success' => 'File has been deleted successfully.']);
             }

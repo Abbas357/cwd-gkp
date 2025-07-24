@@ -1,5 +1,5 @@
 <div class="row" id="step-1">
-    <div class="col-md-{{ request()->user()->districts()->count() > 1 ? '6' : '12' }} mb-3">
+    <div class="col-md-{{ auth_user()->districts()->count() > 1 ? '6' : '12' }} mb-3">
         <label for="type">Infrastructure Type</label>
         <select class="form-control" id="type" name="type" required>
             <option value="">Select Type</option>
@@ -12,7 +12,7 @@
         @enderror
     </div>
 
-    @if(request()->user()->districts()->count() > 1)
+    @if(auth_user()->districts()->count() > 1)
         <div class="col-md-6 mb-3">
             <label for="district_id">Districts</label>
             <select class="form-control" id="district_id" name="district_id" required>

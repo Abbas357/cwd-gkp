@@ -123,7 +123,7 @@ class CommentController extends Controller
 
     public function destroy(Comment $comment)
     {
-        if (request()->user()->isAdmin() || ($comment->status === 'new' && is_null($comment->published_at))) {
+        if (auth_user()->isAdmin() || ($comment->status === 'new' && is_null($comment->published_at))) {
             if ($comment->delete()) {
                 return response()->json(['success' => 'File has been deleted successfully.']);
             }

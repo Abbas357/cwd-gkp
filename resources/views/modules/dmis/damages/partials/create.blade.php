@@ -24,7 +24,7 @@
         @enderror
     </div>
 
-    @if(request()->user()->districts()->count() > 1)
+    @if(auth_user()->districts()->count() > 1)
         <div class="col-md-6 mb-3">
             <label for="district_id">Districts</label>
             <select class="form-control" id="district_id" name="district_id" required>
@@ -39,7 +39,7 @@
         </div>
     @endif
     
-    <div class="col-md-{{ request()->user()->districts()->count() > 1 ? '6' : '12' }} mb-3">
+    <div class="col-md-{{ auth_user()->districts()->count() > 1 ? '6' : '12' }} mb-3">
         <label for="load-infrastructures">Infrastructures</label>
         <select class="form-select form-select-md" id="load-infrastructures" name="infrastructure_id" required></select>
         <p class="form-text text-muted m-2">

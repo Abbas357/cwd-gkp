@@ -41,10 +41,8 @@ class ReportController extends Controller
     {
         $this->authorize('viewMainReport', \App\Models\Damage::class);
 
-        if (in_array(request()->user()->currentOffice->type, ['Regional', 'Divisional'])) {
-            $selectedUser = request()->user();
-        } elseif (request()->user()->currentOffice->type == 'District') {
-            $selectedUser = request()->user()->getDirectSupervisor();
+        if (in_array(auth_user()->currentOffice->type, ['Regional', 'Divisional', 'District', 'Authority'])) {
+            $selectedUser = auth_user();
         } else {
             $selectedUser = User::findOrFail($userId);
         }
@@ -72,7 +70,7 @@ class ReportController extends Controller
         }
         // If no duration is provided, dates remain null and no date filtering will be applied
 
-        $officerDistricts = request()->user()->districts();
+        $officerDistricts = auth_user()->districts();
 
         if ($officerDistricts->isEmpty()) {
             return view('modules.dmis.reports.main', [
@@ -152,6 +150,14 @@ class ReportController extends Controller
     private function generateReportForType($type, $selectedUser, $startDate, $endDate, $officerDistricts, $dateType)
     {
         $directSubordinates = $selectedUser->getDirectSubordinates();
+
+        if (in_array(auth_user()->currentOffice->type, ['District', 'Authority'])) {
+            $directSubordinates = collect([$selectedUser]);
+        }
+
+        if(in_array(auth_user()->currentOffice->type, ['District', 'Authority'])) {
+            $directSubordinates->push($selectedUser);
+        }
 
         $totalDamagedInfrastructureCount = 0;
         $totalDamageCount = 0;
@@ -272,10 +278,10 @@ class ReportController extends Controller
     {
         $this->authorize('viewSituationReport', \App\Models\Damage::class);
 
-        if (in_array(request()->user()->currentOffice->type, ['Regional', 'Divisional'])) {
-            $selectedUser = request()->user();
-        } elseif (request()->user()->currentOffice->type == 'District') {
-            $selectedUser = request()->user()->getDirectSupervisor();
+        if (in_array(auth_user()->currentOffice->type, ['Regional', 'Divisional'])) {
+            $selectedUser = auth_user();
+        } elseif (auth_user()->currentOffice->type == 'District') {
+            $selectedUser = auth_user()->getDirectSupervisor();
         } else {
             $selectedUser = User::findOrFail($userId);
         }
@@ -497,7 +503,7 @@ class ReportController extends Controller
         }
         // If no duration is provided, dates remain null and no date filtering will be applied
 
-        $districts = request()->user()->districts();
+        $districts = auth_user()->districts();
 
         // Handle "All" type by generating reports for each infrastructure type
         if ($type === 'All') {

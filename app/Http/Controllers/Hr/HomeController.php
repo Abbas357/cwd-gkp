@@ -18,7 +18,7 @@ class HomeController extends Controller
 
     public function index()
     {
-        $currentUser = request()->user();
+        $currentUser = auth_user();
 
         // Team data
         $directSubordinates = $currentUser->getSubordinates();

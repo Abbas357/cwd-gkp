@@ -246,7 +246,7 @@ class MachineryController extends Controller
     public function destroy($id)
     {
         $machinery = Machinery::find($id);
-        if (request()->user()->isAdmin() && $machinery->delete()) {
+        if (auth_user()->isAdmin() && $machinery->delete()) {
             $machinery->allocations()->delete();
             return response()->json(['success' => 'Machinery has been deleted successfully.']);
         }

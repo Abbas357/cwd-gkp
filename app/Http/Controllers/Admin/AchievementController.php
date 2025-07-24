@@ -205,7 +205,7 @@ class AchievementController extends Controller
 
     public function destroy(Achievement $achievement)
     {
-        if ((request()->user()->isAdmin() || ($achievement->status === 'draft' && is_null($achievement->published_at))) && $achievement->delete()) {
+        if ((auth_user()->isAdmin() || ($achievement->status === 'draft' && is_null($achievement->published_at))) && $achievement->delete()) {
             return response()->json(['success' => 'Achievement has been deleted successfully.']);
         }
 

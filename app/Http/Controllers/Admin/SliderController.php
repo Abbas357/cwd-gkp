@@ -210,7 +210,7 @@ class SliderController extends Controller
 
     public function destroy(Slider $slider)
     {
-        if ((request()->user()->isAdmin() || ($slider->status === 'draft' && is_null($slider->published_at))) && $slider->delete()) {
+        if ((auth_user()->isAdmin() || ($slider->status === 'draft' && is_null($slider->published_at))) && $slider->delete()) {
             Cache::forget('sliders');
             return response()->json(['success' => 'Slider has been deleted successfully.']);
         }

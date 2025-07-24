@@ -20,7 +20,7 @@ class InfrastructureController extends Controller
             $query->where('type', $type);
         });
         
-        $userDistricts = request()->user()->districts();
+        $userDistricts = auth_user()->districts();
     
         if ($userDistricts->isNotEmpty()) {
             $districtIds = $userDistricts->pluck('id')->toArray();
@@ -60,7 +60,7 @@ class InfrastructureController extends Controller
     public function infrastructures(Request $request)
     {
         $conditions = [];
-        $userDistricts = request()->user()->districts();
+        $userDistricts = auth_user()->districts();
         
         if ($request->has('type') && !empty($request->type)) {
             $conditions['type'] = $request->type;
@@ -142,10 +142,10 @@ class InfrastructureController extends Controller
 
     public function create()
     {
-        $userDistricts = request()->user()->districts();
+        $userDistricts = auth_user()->districts();
         $cat = [
-            'districts' => request()->user()->districts()->count() > 0
-            ? request()->user()->districts()
+            'districts' => auth_user()->districts()->count() > 0
+            ? auth_user()->districts()
             : \App\Models\District::all(),
         ];
 
@@ -169,7 +169,7 @@ class InfrastructureController extends Controller
         foreach ($inputs as $input) {
             $infrastructure->$input = $request->$input;
         }
-        $userDistricts = request()->user()->districts();
+        $userDistricts = auth_user()->districts();
     
         if ($request->filled('district_id')) {
             $infrastructure->district_id = $request->district_id;

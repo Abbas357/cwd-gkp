@@ -10,7 +10,7 @@ class ProductObserver
     {
         if ($product->isDirty('status')) {
             $product->status_updated_at = now();
-            $product->status_updated_by = request()->user()->id ?? null;
+            $product->status_updated_by = auth_user()->id ?? null;
         }
     }
 }

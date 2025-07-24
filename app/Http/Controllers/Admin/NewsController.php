@@ -201,7 +201,7 @@ class NewsController extends Controller
 
     public function destroy(News $news)
     {
-        if ((request()->user()->isAdmin() || ($news->status === 'draft' && is_null($news->published_at))) && $news->delete()) {
+        if ((auth_user()->isAdmin() || ($news->status === 'draft' && is_null($news->published_at))) && $news->delete()) {
             return response()->json(['success' => 'File has been deleted successfully.']);
         }
 

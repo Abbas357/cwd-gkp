@@ -310,7 +310,7 @@ class ProvincialOwnReceiptController extends Controller
     public function destroy(ProvincialOwnReceipt $ProvincialOwnReceipt)
     {
 
-        if (request()->user()->isAdmin() && $ProvincialOwnReceipt->delete()) {
+        if (auth_user()->isAdmin() && $ProvincialOwnReceipt->delete()) {
             return response()->json(['success' => 'Receipt has been deleted successfully.']);
         }
 

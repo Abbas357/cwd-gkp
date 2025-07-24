@@ -111,7 +111,7 @@ class UserController extends Controller
 
     public function users(Request $request)
     {
-        $currentUser = request()->user();
+        $currentUser = auth_user();
 
         $query = User::query();
 
@@ -761,7 +761,7 @@ class UserController extends Controller
     
     public function destroy(User $user)
     {
-        if (request()->user()->isAdmin()) {
+        if (auth_user()->isAdmin()) {
             try {
                 DB::transaction(function () use ($user) {
                     $user->postings()->delete();

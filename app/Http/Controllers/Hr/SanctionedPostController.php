@@ -267,7 +267,7 @@ class SanctionedPostController extends Controller
 
     public function destroy(SanctionedPost $sanctionedPost)
     {
-        if (request()->user()->isAdmin()) {
+        if (auth_user()->isAdmin()) {
             // Check if there are current postings using this sanctioned post
             $hasFilled = $sanctionedPost->filledPositions > 0;
             

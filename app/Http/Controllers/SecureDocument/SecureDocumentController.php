@@ -21,7 +21,7 @@ class SecureDocumentController extends Controller
 
     public function index(Request $request)
     {
-        $user = request()->user();
+        $user = auth_user();
         $documents = SecureDocument::query()
         ->when(!$user->isAdmin(), function ($query) use ($user) {
             return $query->where('posting_id', $user->currentPosting->id);

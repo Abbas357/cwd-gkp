@@ -77,8 +77,8 @@ class DamageController extends Controller
     public function create()
     {
         $cat = [
-            'districts' => request()->user()->districts()->count() > 0
-                ? request()->user()->districts()
+            'districts' => auth_user()->districts()->count() > 0
+                ? auth_user()->districts()
                 : \App\Models\District::all(),
             'infrastructure_type' => ['Road', 'Bridge', 'Culvert'],
             'road_status' => ['Partially restored', 'Fully restored', 'Not restored'],
@@ -122,7 +122,7 @@ class DamageController extends Controller
         $damage->damage_nature = json_encode($request->damage_nature);
         $damage->posting_id = Auth::user()->currentPosting->id;
 
-        $userDistricts = request()->user()->districts();
+        $userDistricts = auth_user()->districts();
 
         if ($request->filled('district_id')) {
             $damage->district_id = $request->district_id;

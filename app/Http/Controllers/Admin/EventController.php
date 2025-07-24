@@ -201,7 +201,7 @@ class EventController extends Controller
     
     public function destroy(Event $event)
     {
-        if (request()->user()->isAdmin() || ($event->status === 'draft' && is_null($event->published_at))) {
+        if (auth_user()->isAdmin() || ($event->status === 'draft' && is_null($event->published_at))) {
             if ($event->delete()) {
                 return response()->json(['success' => 'Event has been deleted successfully.']);
             }

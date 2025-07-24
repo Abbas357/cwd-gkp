@@ -18,7 +18,7 @@ class StoryController extends Controller
         $published = $request->query('published');
 
         $stories = Story::query();
-        $user = request()->user();
+        $user = auth_user();
 
         $stories->when($published !== null, fn($q) => $published === '1'
             ? $q->whereNotNull('published_at')
