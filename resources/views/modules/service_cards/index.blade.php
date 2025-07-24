@@ -205,7 +205,7 @@
                 const cardId = $(this).data("id");
                 const url = "{{ route('admin.apps.service_cards.renew', ':id') }}".replace(':id', cardId);
 
-                const result = await confirmAction('Do you want to renew this service card? This will create a new card with a 1-year validity.');
+                const result = await confirmAction('Do you want to renew this service card? This will create a new card with a 3-year validity.');
                 if (result && result.isConfirmed) {
                     const response = await fetchRequest(url, 'PATCH');
                     if (response && response.new_card_id) {
@@ -418,7 +418,7 @@
                     html2canvas(front, {
                         scale: 3,
                         useCORS: true,
-                        logging: false
+                        logging: false,
                     }).then(function(canvas) {
                         canvas.toBlob(function(blob) {
                             var link = $('<a></a>')[0];

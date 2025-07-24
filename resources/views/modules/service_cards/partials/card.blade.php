@@ -11,7 +11,7 @@
     }
 
     .service-card_front {
-        background-image: url('{{ asset('admin/images/cards/service-card-front.png') }}?cw=68');
+        background-image: url('{{ asset('admin/images/cards/service-card-front.png') }}?cw=70');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;
@@ -47,21 +47,16 @@
 
         }
 
-        .header-right {
+        .expired-at {
             position: absolute;
-            top: 2.5rem;
+            bottom: 6rem;
             right: .2rem;
             text-transform: uppercase;
-            font-weight: bold;
-            font-size: 50%;
 
             span {
                 text-align: right;
                 display: block;
-            }
-
-            .expires {
-                font-size: 120%;
+                font-size: 6px;
                 font-weight: bolder;
                 color: #ff0000;
             }
@@ -69,8 +64,8 @@
 
         .main {
             position: absolute;
-            top: 4.5rem;
-            left: 8.2rem;
+            top: 5rem;
+            left: 7.5rem;
             text-transform: uppercase;
             text-align: left;
 
@@ -83,7 +78,7 @@
             h2 {
                 font-size: .7rem;
                 font-weight: bold;
-                margin-bottom: 1rem;
+                margin-bottom: .5rem;
             }
 
             h3 {
@@ -94,7 +89,7 @@
 
         .image {
             position: absolute;
-            top: 4.5rem;
+            top: 5rem;
             left: 1.1rem;
             text-transform: uppercase;
             font-weight: bold;
@@ -102,10 +97,10 @@
 
             img {
                 display: inline-block;
-                height: 115px;
-                width: 100px;
+                height: 100px;
+                width: 90px;
                 border: 5px solid transparent;
-                border: 2px solid #ccc;
+                border: 1px solid #000;
                 border-radius: 5px;
             }
         }
@@ -113,8 +108,7 @@
         .authority-sign {
             position: absolute;
             bottom: 1.3rem;
-            left: 7rem;
-            border-top: 1px solid black;
+            left: 1rem;
             width: 130px;
             text-align: center;
             margin-right: 3rem;
@@ -123,16 +117,15 @@
 
         .qr-code {
             position: absolute;
-            bottom: 1.5rem;
+            bottom: 1.3rem;
             right: .3rem;
         }
 
         .sign {
             position: absolute;
-            bottom: 1.5rem;
-            left: 8.5rem;
+            bottom: .8rem;
+            left: 1rem;
             width: 30px;
-            rotate: -30deg;
 
             img {
                 width: 70px;
@@ -157,7 +150,7 @@
     }
 
     .service-card_back {
-        background-image: url('{{ asset('admin/images/cards/service-card-back.png') }}?cw=68');
+        background-image: url('{{ asset('admin/images/cards/service-card-back.png') }}?cw=70');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;
@@ -171,7 +164,7 @@
         }
         .back-footer {
             position: absolute;
-            bottom: .5rem;
+            bottom: 1.7rem;
             left: .7rem;
             p {
                 border-top: 3px solid #ddd;
@@ -192,19 +185,6 @@
 <div id="capture">
     <div class="service-card service-card_front text-center">
 
-        <div class="header-left">
-            <img src="{{ asset('admin/images/logo-square.png') }}" alt="">
-            <div class="tagline">
-                <span>GOVERNMENT OF KHYBER PAKHTUNKHWA</span>
-                <span>COMMUNICATION AND WORKS</span>
-                <span>DEPARTMENT</span>
-            </div>
-        </div>
-
-        <div class="header-right">
-            <span class="expires">EXPIRES: {{ $ServiceCard->expired_at ? $ServiceCard->expired_at->format('j, M Y') : 'N/A' }}</span>
-        </div>
-
         <div class="image">
             <img src="{{ $user->getFirstMediaUrl('profile_pictures') ?: asset('admin/images/default-avatar.png') }}" alt="{{ $user->name }}">
         </div>
@@ -217,10 +197,14 @@
 
         <div class="footer">
             <div class="sign">
-                <img src="{{ asset('admin/images/cards/service-card-sign.png') }}" alt="Sign">
+                <img src="{{ asset('admin/images/cards/service-card-sign.png') }}?cw=70" alt="Sign">
             </div>
+
             <div class="authority-sign">
-                ISSUING AUTHORITY
+            </div>
+
+            <div class="expired-at">
+                <span>EXPIRES: {{ $ServiceCard->expired_at ? $ServiceCard->expired_at->format('j, M Y') : 'N/A' }}</span>
             </div>
             <div class="qr-code">
                 <img src="{!! $qrCodeUri !!}" style="width: 75px;border:3px solid transparent; outline: 2px solid #aaa" alt="QR Code for verification">
@@ -228,7 +212,6 @@
         </div>
 
         <div class="bottom-text">
-            <h1>Service Identity Card</h1>
         </div>
 
     </div>
@@ -238,7 +221,7 @@
         <div class="mx-1 mt-1">
 
             <div class="back-main">
-                <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
+                <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-2 border-secondary">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="fw-bold">Personnel No: &emsp;</div>
                         <div>{{ $profile->personnel_number ?? 'N/A' }}</div>
@@ -248,7 +231,7 @@
                         <div>{{ $ServiceCard->issued_at ? $ServiceCard->issued_at->format('d/m/Y') : 'N/A' }}</div>
                     </div>
                 </div>
-                <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
+                <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-2 border-secondary">
                     <div class="d-flex justify-content-around align-items-center">
                         <div class="fw-bold">Father Name: &emsp;</div>
                         <div>{{ $profile->father_name ?? 'N/A' }}</div>
@@ -258,7 +241,7 @@
                         <div>{{ $profile->blood_group ?? 'N/A' }}</div>
                     </div>
                 </div>
-                <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
+                <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-2 border-secondary">
                     <div class="d-flex justify-content-around align-items-center">
                         <div class="fw-bold">Date of Birth: &emsp;</div>
                         <div>{{ $profile->date_of_birth ? $profile->date_of_birth->format('d/m/Y') : 'N/A' }}</div>
@@ -268,7 +251,7 @@
                         <div style="overflow: hidden; text-overflow: ellipsis;">{{ $profile->mark_of_identification ?? 'N/A' }}</div>
                     </div>
                 </div>
-                <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
+                <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-2 border-secondary">
                     <div class="d-flex justify-content-around align-items-center">
                         <div class="fw-bold">CNIC: &emsp;</div>
                         <div style="overflow: hidden; text-overflow: ellipsis;">{{ $profile->cnic ?? 'N/A' }}</div>
@@ -279,7 +262,7 @@
                     </div>
                 </div>
                 
-                <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-secondary">
+                <div class="d-flex justify-content-start align-items-center pt-1 mb-1 border-bottom border-2 border-secondary">
                     <div class="fw-bold">Present Address: &emsp;</div>
                     <div style="overflow: hidden; text-overflow: ellipsis;">{{ $profile->present_address ?? 'N/A' }}</div>
                 </div>

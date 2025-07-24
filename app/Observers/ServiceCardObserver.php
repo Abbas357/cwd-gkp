@@ -2,9 +2,7 @@
 
 namespace App\Observers;
 
-use App\Models\Card;
 use App\Models\ServiceCard;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ServiceCard\RejectedMail;
 use App\Mail\ServiceCard\VerifiedMail;
@@ -13,10 +11,11 @@ class ServiceCardObserver
 {
     public function updated(ServiceCard $ServiceCard): void
     {
-        if ($ServiceCard->wasChanged('status')) {
-            if ($ServiceCard->status === 'verified') {
+        // Check for approval_status changes
+        if ($ServiceCard->wasChanged('approval_status')) {
+            if ($ServiceCard->approval_status === 'verified') {
                 $this->handleApproval($ServiceCard);
-            } elseif ($ServiceCard->status === 'rejected') {
+            } elseif ($ServiceCard->approval_status === 'rejected') {
                 $this->handleRejection($ServiceCard);
             }
         }
@@ -24,29 +23,17 @@ class ServiceCardObserver
 
     protected function handleApproval(ServiceCard $ServiceCard): void
     {
-        $ServiceCard->cards()->update([
-            'status' => 'expired',
-            'expiry_date' => now(),
-        ]);
-
-        if ($ServiceCard->email) {
-            Mail::to($ServiceCard->email)->queue(new VerifiedMail($ServiceCard));
+        // Only handle email sending - let the controller handle the rest
+        if ($ServiceCard->user && $ServiceCard->user->email) {
+            Mail::to($ServiceCard->user->email)->queue(new VerifiedMail($ServiceCard));
         }
-
-        Card::create([
-            'uuid' => Str::uuid(),
-            'cardable_type' => get_class($ServiceCard),
-            'cardable_id' => $ServiceCard->id,
-            'issue_date' => now(),
-            'expiry_date' => now()->addYear(),
-            'status' => 'active',
-        ]);
     }
 
     protected function handleRejection(ServiceCard $ServiceCard): void
     {
-        if ($ServiceCard->email) {
-            Mail::to($ServiceCard->email)->queue(new RejectedMail($ServiceCard, $ServiceCard->remarks));
+        // Send rejection email to the user
+        if ($ServiceCard->user && $ServiceCard->user->email) {
+            Mail::to($ServiceCard->user->email)->queue(new RejectedMail($ServiceCard, $ServiceCard->remarks));
         }
     }
 }

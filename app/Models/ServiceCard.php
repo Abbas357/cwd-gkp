@@ -103,8 +103,7 @@ class ServiceCard extends Model
     
     public function canBeRenewed()
     {
-        return $this->approval_status === 'verified' && 
-               ($this->isExpired() || ($this->expired_at && $this->expired_at->diffInDays(now()) <= 30));
+        return $this->approval_status === 'verified' && $this->isExpired();
     }
     
     public function canBeEdited()

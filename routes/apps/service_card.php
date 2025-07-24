@@ -7,13 +7,6 @@ use App\Http\Controllers\ServiceCard\ServiceCardUserController;
 use App\Http\Controllers\ServiceCard\ServiceCardActionController;
 
 Route::prefix('service_cards')->as('service_cards.')->group(function () {
-
-    Route::prefix('settings')->as('settings.')->group(function () {
-        Route::get('/', [HomeController::class, 'settings'])->name('index')->can('viewSettings', App\Models\ServiceCard::class);
-        Route::post('/update', [HomeController::class, 'update'])->name('update')->can('updateSettings', App\Models\ServiceCard::class);
-        Route::post('/init', [HomeController::class, 'init'])->name('init')->can('initSettings', App\Models\ServiceCard::class);
-    });
-    
     Route::get('/', [ServiceCardController::class, 'index'])->name('index');
     Route::get('/create', [ServiceCardController::class, 'create'])->name('create');
     Route::post('/', [ServiceCardController::class, 'store'])->name('store');

@@ -24,7 +24,7 @@ class ServiceCardActionController extends Controller
                 $ServiceCard->issued_at = now();
             }
             if (!$ServiceCard->expired_at) {
-                $ServiceCard->expired_at = now()->addYear();
+                $ServiceCard->expired_at = now()->addYears(3); // Changed from 1 year to 3 years
             }
             
             if ($ServiceCard->save()) {
@@ -65,6 +65,11 @@ class ServiceCardActionController extends Controller
 
     public function renew(Request $request, ServiceCard $ServiceCard)
     {
+        // Check if card is not expired yet
+        if (!$ServiceCard->isExpired()) {
+            return response()->json(['error' => 'Service Card cannot be renewed as it is not expired yet.']);
+        }
+
         if (!$ServiceCard->canBeRenewed()) {
             return response()->json(['error' => 'Service Card cannot be renewed at this time.']);
         }
@@ -82,7 +87,7 @@ class ServiceCardActionController extends Controller
             'approval_status' => 'verified',
             'card_status' => 'active',
             'issued_at' => now(),
-            'expired_at' => now()->addYear(),
+            'expired_at' => now()->addYears(3), // Changed from 1 year to 3 years
             'status_updated_at' => now(),
             'status_updated_by' => auth_user()->id,
             'remarks' => 'Renewed from card #' . $ServiceCard->id,
