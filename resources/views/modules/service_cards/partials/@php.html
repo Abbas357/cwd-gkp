@@ -4,6 +4,7 @@
 @endphp
 
 <style>
+    /* Ensure high-quality rendering */
     .service-card {
         width: 380px;
         height: 240px;
@@ -12,33 +13,43 @@
         -moz-osx-font-smoothing: grayscale;
         image-rendering: -webkit-optimize-contrast;
         image-rendering: crisp-edges;
+    }
+
+    /* Use img tags instead of background-image for better quality */
+    .service-card_front, .service-card_back {
         position: relative;
+        overflow: hidden;
+    }
+
+    .card-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    /* Ensure all content is above background */
+    .service-card_front > div:not(.card-background),
+    .service-card_back > div:not(.card-background) {
+        position: relative;
+        z-index: 1;
     }
 
     .service-card_front {
-        position: relative;
-
-        .background-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            object-fit: cover;
-        }
-
         .header-left {
             position: absolute;
             top: .3rem;
             left: .3rem;
-            z-index: 10;
             
             img {
                 position: absolute;
                 top:0;
                 left:0;
                 width: 50px;
+                image-rendering: -webkit-optimize-contrast;
             }
 
             .tagline {
@@ -64,7 +75,6 @@
             bottom: 6rem;
             right: .2rem;
             text-transform: uppercase;
-            z-index: 10;
 
             span {
                 text-align: right;
@@ -77,12 +87,10 @@
 
         .main {
             position: absolute;
-            top: 6rem;
+            top: 5rem;
             left: 7.5rem;
             text-transform: uppercase;
             text-align: left;
-            z-index: 10;
-            
 
             h1 {
                 font-weight: bold;
@@ -99,26 +107,25 @@
             h3 {
                 font-size: .6rem;
                 font-weight: bold;
-                width: 175px;
             }
         }
 
         .image {
             position: absolute;
-            top: 6rem;
+            top: 5rem;
             left: 1.1rem;
             text-transform: uppercase;
             font-weight: bold;
             font-size: 50%;
-            z-index: 10;
 
             img {
                 display: inline-block;
                 height: 100px;
                 width: 90px;
-                border: 5px solid transparent;
                 border: 1px solid #000;
                 border-radius: 5px;
+                object-fit: cover;
+                image-rendering: -webkit-optimize-contrast;
             }
         }
 
@@ -130,14 +137,16 @@
             text-align: center;
             margin-right: 3rem;
             font-size: 75%;
-            z-index: 10;
         }
 
         .qr-code {
             position: absolute;
             bottom: 1.3rem;
             right: .3rem;
-            z-index: 10;
+
+            img {
+                image-rendering: pixelated; /* Keep QR codes sharp */
+            }
         }
 
         .sign {
@@ -145,10 +154,10 @@
             bottom: .8rem;
             left: 1rem;
             width: 30px;
-            z-index: 10;
 
             img {
                 width: 70px;
+                image-rendering: -webkit-optimize-contrast;
             }
         }
 
@@ -156,7 +165,6 @@
             position: absolute;
             bottom: -1px;
             left: 17%;
-            z-index: 10;
             h1 {
                 text-transform: uppercase;
                 font-size: 1.1rem;
@@ -173,29 +181,16 @@
         position: relative;
         font-size: 11px;
 
-        .background-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            object-fit: cover;
-        }
-
         .back-main {
             position: absolute;
             top: 1rem;
             left: .7rem;
             width: 94%;
-            z-index: 10;
         }
-        
         .back-footer {
             position: absolute;
             bottom: 1.7rem;
             left: .7rem;
-            z-index: 10;
             p {
                 border-top: 3px solid #ddd;
                 margin: 0px;
@@ -210,15 +205,25 @@
     .ml-auto {
         margin-left: auto
     }
+
+    /* High DPI support */
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        .service-card {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+    }
 </style>
 
 <div id="capture">
     <div class="service-card service-card_front text-center">
-        <!-- Background Image as HTML element -->
-        <img src="{{ asset('admin/images/cards/service-card-front.png') }}?cw=70" alt="Service Card Front" class="background-image">
+        <!-- Use img tag instead of background-image for better quality -->
+        <img class="card-background" src="{{ asset('admin/images/cards/service-card-front.png') }}?cw=33" alt="Service Card Front">
 
         <div class="image">
-            <img src="{{ getProfilePic($user) }}" alt="{{ $user->name }}">
+            <img src="{{ $user->getFirstMediaUrl('profile_pictures') ?: asset('admin/images/default-avatar.png') }}" 
+                 alt="{{ $user->name }}"
+                 crossorigin="anonymous">
         </div>
 
         <div class="main">
@@ -229,7 +234,9 @@
 
         <div class="footer">
             <div class="sign">
-                <img src="{{ asset('admin/images/cards/service-card-sign.png') }}?cw=70" alt="Sign">
+                <img src="{{ asset('admin/images/cards/service-card-sign.png') }}" 
+                     alt="Sign"
+                     crossorigin="anonymous">
             </div>
 
             <div class="authority-sign">
@@ -239,7 +246,10 @@
                 <span>EXPIRES: {{ $ServiceCard->expired_at ? $ServiceCard->expired_at->format('j, M Y') : 'N/A' }}</span>
             </div>
             <div class="qr-code">
-                <img src="{!! $qrCodeUri !!}" style="width: 75px;border:3px solid transparent; outline: 2px solid #aaa" alt="QR Code for verification">
+                <img src="{!! $qrCodeUri !!}" 
+                     style="width: 75px;border:3px solid transparent; outline: 2px solid #aaa" 
+                     alt="QR Code for verification"
+                     crossorigin="anonymous">
             </div>
         </div>
 
@@ -249,8 +259,7 @@
 
     <!-- Back Side -->
     <div class="card service-card service-card_back">
-        <!-- Background Image as HTML element -->
-        <img src="{{ asset('admin/images/cards/service-card-back.png') }}?cw=70" alt="Service Card Back" class="background-image">
+        <img class="card-background" src="{{ asset('admin/images/cards/service-card-back.png') }}?cw=4" alt="Service Card Back">
         
         <div class="mx-1 mt-1">
             <div class="back-main">
@@ -304,7 +313,7 @@
             <div class="back-footer">
                 <p>
                     Issued by Communication and Works Department Govt. of Khyber Pakhtunkhwa.<br />
-                    For Verification, scan QR code or contact IT Cell (091-9214039). <br />
+                    For Verification, scan QR code or contact IT Cell (9214039), C&W Department. <br />
                     If found please drop into the nearest letter box.
                 </p>
             </div>
