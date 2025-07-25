@@ -63,8 +63,8 @@
 
     .service-card_front .expired-at {
         position: absolute;
-        bottom: 6rem;
-        right: .2rem;
+        top: 3rem;
+        right: .8rem;
         text-transform: uppercase;
         z-index: 10;
     }
@@ -72,14 +72,15 @@
     .service-card_front .expired-at span {
         text-align: right;
         display: block;
-        font-size: 6px;
+        font-weight: bold;
+        font-size: 8px;
         font-weight: bolder;
         color: #ff0000;
     }
 
     .service-card_front .main {
         position: absolute;
-        top: 6rem;
+        top: 7rem;
         left: 7.5rem;
         text-transform: uppercase;
         text-align: left;
@@ -95,7 +96,7 @@
     .service-card_front .main h2 {
         font-size: .7rem;
         font-weight: bold;
-        margin-bottom: .5rem;
+        margin-bottom: .9rem;
     }
 
     .service-card_front .main h3 {
@@ -106,8 +107,8 @@
 
     .service-card_front .image {
         position: absolute;
-        top: 6rem;
-        left: 1.1rem;
+        top: 6.2rem;
+        left: 1rem;
         text-transform: uppercase;
         font-weight: bold;
         font-size: 50%;
@@ -116,8 +117,8 @@
 
     .service-card_front .image img {
         display: inline-block;
-        height: 95px;
-        width: 85px;
+        height: 90px;
+        width: 82px;
         border: 5px solid transparent;
         border: 1px solid #000;
         border-radius: 5px;
@@ -136,19 +137,19 @@
 
     .service-card_front .qr-code {
         position: absolute;
-        bottom: 1.3rem;
-        right: .3rem;
+        top: 3.9rem;
+        right: .8rem;
         z-index: 10;
     }
 
     .service-card_front .qr-code img {
-        width: 75px;
+        width: 65px;
         border: 1px solid #333;
     }
 
     .service-card_front .sign {
         position: absolute;
-        bottom: .8rem;
+        bottom: 1.5rem;
         left: 1rem;
         width: 30px;
         z-index: 10;
@@ -194,7 +195,7 @@
 
     .service-card_back .back-main {
         position: absolute;
-        top: 1rem;
+        top: .3rem;
         left: .7rem;
         width: 94%;
         z-index: 10;
@@ -204,7 +205,7 @@
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        padding-top: 0.25rem;
+        padding-top: 0.15rem;
         margin-bottom: 0.25rem;
         border-bottom: 2px solid #333;
     }
@@ -217,7 +218,7 @@
     }
 
     .service-card_back .back-footer p {
-        border-top: 3px solid #ddd;
+        border-bottom: 2px solid #333;
         margin: 0px;
         color: #575757;
         text-align: center;
@@ -233,7 +234,7 @@
 <div id="capture">
     <div class="service-card service-card_front text-center">
         <!-- Background Image as HTML element -->
-        <img src="{{ asset('admin/images/cards/service-card-front.png') }}?cw=70" alt="Service Card Front"
+        <img src="{{ asset('admin/images/cards/service-card-front.png') }}?cw=74" alt="Service Card Front"
             class="background-image">
 
         <div class="image">
@@ -248,15 +249,14 @@
 
         <div class="footer">
             <div class="sign">
-                <img src="{{ asset('admin/images/cards/service-card-sign.png') }}?cw=70" alt="Sign">
+                <img src="{{ asset('admin/images/cards/service-card-sign.png') }}?cw=74" alt="Sign">
             </div>
 
             <div class="authority-sign">
             </div>
 
             <div class="expired-at">
-                <span>EXPIRES:
-                    {{ $ServiceCard->expired_at ? $ServiceCard->expired_at->format('j, M Y') : 'N/A' }}</span>
+                <span>EXPIRES: {{ $ServiceCard->expired_at ? $ServiceCard->expired_at->format('j, M Y') : 'N/A' }}</span>
             </div>
             <div class="qr-code">
                 <img src="{!! $qrCodeUri !!}" alt="QR Code for verification">
@@ -270,7 +270,7 @@
     <!-- Back Side -->
     <div class="card service-card service-card_back">
         <!-- Background Image as HTML element -->
-        <img src="{{ asset('admin/images/cards/service-card-back.png') }}?cw=70" alt="Service Card Back"
+        <img src="{{ asset('admin/images/cards/service-card-back.png') }}?cw=74" alt="Service Card Back"
             class="background-image">
 
         <div class="mx-1 mt-1">
@@ -279,7 +279,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="fw-bold">Personnel No: &emsp;</div>
                         <div>{{ $profile->personnel_number ?? 'N/A' }}</div>
-                    </div>
+                    </div> 
                     <div class="d-flex justify-content-between align-items-center ml-auto">
                         <div class="fw-bold">Issue Date: &emsp;</div>
                         <div>{{ $ServiceCard->issued_at ? $ServiceCard->issued_at->format('d/m/Y') : 'N/A' }}</div>
@@ -291,8 +291,8 @@
                         <div>{{ $profile->father_name ?? 'N/A' }}</div>
                     </div>
                     <div class="d-flex justify-content-between align-items-center ml-auto">
-                        <div class="fw-bold">Blood Group: &emsp;</div>
-                        <div>{{ $profile->blood_group ?? 'N/A' }}</div>
+                        <div class="fw-bold">Card #: &emsp;</div>
+                        <div>000{{ $ServiceCard->id  }}</div>
                     </div>
                 </div>
                 <div class="info-row">
@@ -301,9 +301,8 @@
                         <div>{{ $profile->date_of_birth ? $profile->date_of_birth->format('d/m/Y') : 'N/A' }}</div>
                     </div>
                     <div class="d-flex justify-content-between align-items-center ml-auto">
-                        <div class="fw-bold">Identification Mark: &emsp;</div>
-                        <div style="overflow: hidden; text-overflow: ellipsis;">
-                            {{ $profile->mark_of_identification ?? 'N/A' }}</div>
+                        <div class="fw-bold">Blood Group: &emsp;</div>
+                        <div>{{ $profile->blood_group ?? 'N/A' }}</div>
                     </div>
                 </div>
                 <div class="info-row">
@@ -315,6 +314,13 @@
                         <div class="fw-bold">Emergency #: &emsp;</div>
                         <div style="overflow: hidden; text-overflow: ellipsis;">
                             {{ $profile->emergency_contact ?? 'N/A' }}</div>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="d-flex justify-content-start align-items-center">
+                        <div class="fw-bold">Identification Mark: &emsp;</div>
+                        <div style="overflow: hidden; text-overflow: ellipsis;">
+                            {{ $profile->mark_of_identification ?? 'Nil' }}</div>
                     </div>
                 </div>
 
