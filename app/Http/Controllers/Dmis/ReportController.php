@@ -155,8 +155,8 @@ class ReportController extends Controller
             $directSubordinates = collect([$selectedUser]);
         }
 
-        if(in_array(auth_user()->currentOffice->type, ['District', 'Authority'])) {
-            $directSubordinates->push($selectedUser);
+        if (in_array($selectedUser->currentOffice->type, ['District', 'Authority'])) {
+            $directSubordinates = collect([$selectedUser]);
         }
 
         $totalDamagedInfrastructureCount = 0;
