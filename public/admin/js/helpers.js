@@ -2039,3 +2039,63 @@ function setupPrint(buttonSelector, divSelector, options = {}) {
 
     return config;
 }
+
+function initTabCounters(config) {
+    const {
+        countUrl,
+        tabCounterMap,
+        table = null,
+        initialDelay = 500
+    } = config;
+
+    async function updateAllTabCounters() {
+        try {
+            const response = await fetch(countUrl, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            
+            const data = await response.json();
+            
+            if (data && data.counts) {
+                Object.entries(tabCounterMap).forEach(([tabId, countKey]) => {
+                    updateTabCounter(tabId, data.counts[countKey]);
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching tab counts:', error);
+        }
+    }
+
+    function updateTabCounter(tabId, count) {
+        const tab = $(`#${tabId}`);
+        tab.find('.tab-counter').remove();
+        
+        if (count > 0) {
+            tab.append(`<span class="tab-counter badge rounded-pill">${count}</span>`);
+        }
+    }
+
+    setTimeout(() => {
+        updateAllTabCounters();
+    }, initialDelay);
+
+    if (table) {
+        table.on('draw', function() {
+            updateAllTabCounters();
+        });
+    }
+
+    return {
+        updateAllTabCounters,
+        updateTabCounter
+    };
+}

@@ -13,7 +13,7 @@ return new class extends Migration
             $table->uuid('uuid')->unique();
 
             $table->enum('approval_status', ['draft', 'verified', 'rejected'])->nullable();
-            $table->enum('card_status', ['active', 'expired', 'revoked', 'lost', 'reprinted'])->default('active');
+            $table->enum('card_status', ['active', 'expired', 'lost', 'duplicate'])->default('active');
 
             $table->dateTime('issued_at')->nullable();
             $table->dateTime('expired_at')->nullable();
@@ -25,6 +25,7 @@ return new class extends Migration
 
             $table->unsignedBigInteger('status_updated_by')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('posting_id')->nullable(); 
 
             $table->index('approval_status');
             $table->index('card_status');

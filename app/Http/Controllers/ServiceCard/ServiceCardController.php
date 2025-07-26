@@ -19,18 +19,55 @@ class ServiceCardController extends Controller
     {
         $approval_status = $request->query('approval_status', null);
         $card_status = $request->query('card_status', null);
+        $needs_renewal = $request->query('needs_renewal', null);
+        $printed = $request->query('printed', null);
+
+        if ($response = $this->getTabCounts($request, fn() => [
+            'draft' => ServiceCard::where('approval_status', 'draft')->count(),
+                'verified' => ServiceCard::where('approval_status', 'verified')
+                    ->where('card_status', 'active')->count(),
+                'rejected' => ServiceCard::where('approval_status', 'rejected')
+                    ->where('card_status', 'active')->count(),
+                'printed' => ServiceCard::where('approval_status', 'verified')
+                    ->whereNotNull('printed_at')->count(),
+                'expired' => ServiceCard::where('approval_status', 'verified')
+                    ->where('card_status', 'expired')->count(),
+                'needs_renewal' => ServiceCard::where('approval_status', 'verified')
+                    ->where(function($q) {
+                        $q->where('card_status', 'expired')
+                        ->orWhere('expired_at', '<', now());
+                    })->count(),
+                'lost' => ServiceCard::where('approval_status', 'verified')
+                    ->where('card_status', 'lost')->count(),
+                'duplicate' => ServiceCard::where('approval_status', 'verified')
+                    ->where('card_status', 'duplicate')->count(),
+        ])) {
+            return $response;
+        }
 
         $service_cards = ServiceCard::with(['user.profile', 'user.currentDesignation', 'user.currentOffice']);
 
-        // Filter by approval status
         $service_cards->when($approval_status !== null, function ($query) use ($approval_status) {
             $query->where('approval_status', $approval_status);
         });
 
-        // Filter by card status
         $service_cards->when($card_status !== null, function ($query) use ($card_status) {
             $query->where('card_status', $card_status);
         });
+
+        $service_cards->when($needs_renewal === 'true', function ($query) {
+            $query->where('approval_status', 'verified')
+                ->where(function($q) {
+                    $q->where('card_status', 'expired')
+                        ->orWhere('expired_at', '<', now());
+                });
+        });
+
+        $service_cards->when($printed === 'true', function ($query) {
+            $query->where('approval_status', 'verified')
+                ->whereNotNull('printed_at')
+                ->orderBy('printed_at', 'desc');
+         });
 
         $relationMappings = [
             'designation_id' => 'user.currentDesignation.name',
@@ -50,7 +87,7 @@ class ServiceCardController extends Controller
                 ->addColumn('name', function ($row) {
                     return '<div style="display: flex; align-items: center;">
                         <img style="width: 30px; height: 30px; border-radius: 50%;" 
-                             src="' . getProfilePic($row->user) . '" /> 
+                            src="' . getProfilePic($row->user) . '" /> 
                         <span> &nbsp; ' . $row->user->name . '</span>
                     </div>';
                 })
@@ -89,10 +126,10 @@ class ServiceCardController extends Controller
                 ->editColumn('card_status', function ($row) {
                     $badges = [
                         'active' => 'bg-success',
+                        'printed' => 'bg-primary',
                         'expired' => 'bg-warning',
-                        'revoked' => 'bg-danger',
-                        'lost' => 'bg-dark',
-                        'reprinted' => 'bg-info'
+                        'lost' => 'bg-danger',
+                        'duplicate' => 'bg-dark'
                     ];
                     $badge = $badges[$row->card_status] ?? 'bg-secondary';
                     return '<span class="badge ' . $badge . '">' . ucfirst($row->card_status) . '</span>';
@@ -143,16 +180,6 @@ class ServiceCardController extends Controller
             'remarks' => 'nullable|string|max:500'
         ]);
         
-        // // Check for existing card again
-        // $existingCard = ServiceCard::where('user_id', auth_user()->id)
-        //     ->whereIn('approval_status', ['draft', 'verified'])
-        //     ->first();
-            
-        // if ($existingCard) {
-        //     return redirect()->route('admin.apps.service_cards.show', $existingCard)
-        //         ->with('error', 'You already have a service card.');
-        // }
-
         $serviceCard = ServiceCard::create([
             'uuid' => Str::uuid(),
             'user_id' => auth_user()->id,

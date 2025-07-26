@@ -13,7 +13,25 @@
         image-rendering: -webkit-optimize-contrast;
         image-rendering: crisp-edges;
         position: relative;
+        color: #000;
     }
+
+    .expired-card,
+    .lost-card {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 50%;
+        height: 50%;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        transform: translate(-50%, -50%) rotate(-30deg);
+        z-index: 999;
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
 
     .service-card_front {
         position: relative;
@@ -29,7 +47,7 @@
         object-fit: cover;
     }
 
-    .service-card_front .header-left {
+    /* .service-card_front .header-left {
         position: absolute;
         top: .3rem;
         left: .3rem;
@@ -59,11 +77,11 @@
         font-size: 13px;
         letter-spacing: 1px;
         text-shadow: 1px 1px 3px #fff, -1px -1px 3px #fff;
-    }
+    } */
 
     .service-card_front .expired-at {
         position: absolute;
-        top: 3rem;
+        top: 2.8rem;
         right: .8rem;
         text-transform: uppercase;
         z-index: 10;
@@ -74,14 +92,17 @@
         display: block;
         font-weight: bold;
         font-size: 8px;
-        font-weight: bolder;
         color: #ff0000;
+        border-bottom: 1px solid #ff0000;
+        line-height: 1;
+        padding-bottom: 0;
+        margin-bottom: 0;
     }
 
     .service-card_front .main {
         position: absolute;
-        top: 7rem;
-        left: 7.5rem;
+        top: 6.2rem;
+        left: 7.2rem;
         text-transform: uppercase;
         text-align: left;
         z-index: 10;
@@ -91,18 +112,20 @@
         font-weight: bold;
         font-size: 1rem;
         margin-bottom: 3px;
+        width: 183px;
     }
 
     .service-card_front .main h2 {
         font-size: .7rem;
         font-weight: bold;
         margin-bottom: .9rem;
+        width: 250px;
     }
 
     .service-card_front .main h3 {
         font-size: .6rem;
         font-weight: bold;
-        width: 175px;
+        width: 250px;
     }
 
     .service-card_front .image {
@@ -137,14 +160,15 @@
 
     .service-card_front .qr-code {
         position: absolute;
-        top: 3.9rem;
-        right: .8rem;
+        top: 3.7rem;
+        right: .78rem;
         z-index: 10;
     }
 
     .service-card_front .qr-code img {
-        width: 65px;
-        border: 1px solid #333;
+        width: 67px;
+        padding: 2px;
+        border: 1px solid #000;
     }
 
     .service-card_front .sign {
@@ -207,7 +231,7 @@
         align-items: center;
         padding-top: 0.15rem;
         margin-bottom: 0.25rem;
-        border-bottom: 2px solid #333;
+        border-bottom: 2px solid #000;
     }
 
     .service-card_back .back-footer {
@@ -218,9 +242,9 @@
     }
 
     .service-card_back .back-footer p {
-        border-bottom: 2px solid #333;
+        border-bottom: 2px solid #000;
         margin: 0px;
-        color: #575757;
+        color: #444;
         text-align: center;
         font-size: 9px;
         font-weight: normal;
@@ -233,13 +257,29 @@
 
 <div id="capture">
     <div class="service-card service-card_front text-center">
-        <!-- Background Image as HTML element -->
-        <img src="{{ asset('admin/images/cards/service-card-front.png') }}?cw=74" alt="Service Card Front"
+
+        @if($ServiceCard->card_status === 'lost')
+            <div class="lost-card" style="background-image: url('{{ asset('admin/images/cards/lost.png') }}');"></div>
+        @endif
+        @if($ServiceCard->card_status === 'expired')
+            <div class="expired-card" style="background-image: url('{{ asset('admin/images/cards/expired.png') }}');"></div>
+        @endif
+
+        <img src="{{ asset('admin/images/cards/service-card-front.png') }}?cw=75" alt="Service Card Front"
             class="background-image">
 
         <div class="image">
             <img src="{{ getProfilePic($user) }}" alt="{{ $user->name }}">
         </div>
+
+        {{-- <div class="header-left">
+            <img src="{{ asset('admin/images/logo-square.png') }}" alt="">
+            <div class="tagline">
+                <span>GOVERNMENT OF KHYBER PAKHTUNKHWA</span>
+                <span>COMMUNICATION AND WORKS</span>
+                <span>DEPARTMENT</span>
+            </div>
+        </div> --}}
 
         <div class="main">
             <h1>{{ $user->name }}</h1>
@@ -249,7 +289,7 @@
 
         <div class="footer">
             <div class="sign">
-                <img src="{{ asset('admin/images/cards/service-card-sign.png') }}?cw=74" alt="Sign">
+                <img src="{{ asset('admin/images/cards/service-card-sign.png') }}?cw=75" alt="Sign">
             </div>
 
             <div class="authority-sign">
@@ -269,8 +309,15 @@
 
     <!-- Back Side -->
     <div class="card service-card service-card_back">
-        <!-- Background Image as HTML element -->
-        <img src="{{ asset('admin/images/cards/service-card-back.png') }}?cw=74" alt="Service Card Back"
+
+        @if($ServiceCard->card_status === 'lost')
+            <div class="lost-card" style="background-image: url('{{ asset('admin/images/cards/lost.png') }}');"></div>
+        @endif
+        @if($ServiceCard->card_status === 'expired')
+            <div class="expired-card" style="background-image: url('{{ asset('admin/images/cards/expired.png') }}');"></div>
+        @endif
+        
+        <img src="{{ asset('admin/images/cards/service-card-back.png') }}?cw=75" alt="Service Card Back"
             class="background-image">
 
         <div class="mx-1 mt-1">

@@ -44,17 +44,9 @@ class ServiceCard extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function cards() 
-    { 
-        return $this->morphMany(Card::class, 'cardable'); 
-    }
-
-    public function getLatestCard()
+    public function posting() 
     {
-        return $this->cards()
-            ->where('status', 'active')
-            ->latest('created_at')
-            ->first();
+        return $this->belongsTo(Posting::class);
     }
 
     public function statusUpdatedBy()

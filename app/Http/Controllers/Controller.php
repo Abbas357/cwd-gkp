@@ -8,6 +8,15 @@ use Illuminate\Support\Facades\Auth;
 
 abstract class Controller
 {
+    protected function getTabCounts(Request $request, callable $countCallback)
+    {
+        if ($request->query('get_counts') === 'true') {
+            $counts = $countCallback();
+            return response()->json(['counts' => $counts]);
+        }
+        return null;
+    }
+
     public function slug(string $title): string {
         $new_title = implode(' ', array_slice(explode(' ', $title), 0, 5));
         return Str::slug($new_title) . '-' . substr(uniqid('', true), -6) . '-' . date('Y-m-d');

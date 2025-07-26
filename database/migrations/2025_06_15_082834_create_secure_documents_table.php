@@ -16,7 +16,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('document_number')->nullable();
             $table->date('issue_date')->nullable();
-            $table->string('posting_id')->nullable();      
+            $table->unsignedBigInteger('posting_id')->nullable();      
             $table->unsignedBigInteger('published_by')->nullable();       
             $table->timestamps();
         });
