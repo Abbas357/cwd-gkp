@@ -382,38 +382,13 @@
                 }).then((modalId) => {
                     const modal = $(`#${modalId}`);
                     const actionBtn = modal.find('button[type="submit"]');
-                    
-                    const backBtn = $('<button type="button" class="cw-btn back-btn bg-secondary me-2">BACK</button>');
-                    const frontBtn = $('<button type="button" class="cw-btn front-btn bg-primary me-2">FRONT</button>');
-                    
-                    let buttonsAdded = false;
+                    const frontBtn = $(
+                        '<button type="button" class="cw-btn bg-primary me-2">FRONT</button>');
+                    const backBtn = $(
+                        '<button type="button" class="cw-btn bg-secondary me-2">BACK</button>');
 
-                    $(window).on('hashchange', () => {
-                        const currentHash = window.location.hash;
-                        
-                        if (currentHash === '#printed' || currentHash === '#verified' || currentHash === '#duplicate') {
-                            actionBtn.show();
-                            
-                            if (!buttonsAdded) {
-                                actionBtn.before(frontBtn);
-                                actionBtn.before(backBtn);
-                                buttonsAdded = true;
-                            }
-                            
-                            backBtn.show();
-                            frontBtn.show();
-                        } else {
-                            actionBtn.hide();
-                            
-                            // Hide buttons instead of removing them
-                            if (buttonsAdded) {
-                                backBtn.hide();
-                                frontBtn.hide();
-                            }
-                        }
-                    });
-
-                    updateModalButtons();
+                    actionBtn.before(frontBtn);
+                    frontBtn.before(backBtn);
 
                     function getCardId() {
                         const urlParams = new URLSearchParams(window.location.search);
