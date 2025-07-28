@@ -247,7 +247,7 @@
                 </div>
                 <div class="card-body">
                     <form id="createUserForm" method="POST"
-                        action="{{ route('admin.apps.service_cards.store.user') }}" enctype="multipart/form-data">
+                        action="{{ route('admin.apps.service_cards.users.store') }}" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="apply_service_card" value="1">
 
@@ -571,7 +571,7 @@
             async function searchUsers(query) {
                 $('#searchResults').html('<div class="text-center"><div class="spinner-border" role="status"></div></div>');
 
-                const url = new URL('{{ route('admin.apps.service_cards.search.users') }}');
+                const url = new URL('{{ route('admin.apps.service_cards.users.search') }}');
                 url.searchParams.append('q', query);
                 url.searchParams.append('for_service_card', 'true');
 
@@ -865,7 +865,7 @@
                 const originalBtnHtml = updateBtn.html();
                 updateBtn.prop('disabled', true).html(
                     '<span class="spinner-border spinner-border-sm me-2"></span>Updating...');
-                const url = "{{ route('admin.apps.service_cards.update.user', ':user') }}".replace(':user', userId);
+                const url = "{{ route('admin.apps.service_cards.users.update', ':user') }}".replace(':user', userId);
                 try {
                     const response = await fetch(url, {
                         method: 'POST',

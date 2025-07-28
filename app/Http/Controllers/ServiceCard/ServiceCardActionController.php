@@ -9,10 +9,24 @@ use App\Http\Controllers\Controller;
 
 class ServiceCardActionController extends Controller
 {
+    public function pending(Request $request, ServiceCard $ServiceCard)
+    {
+        if ($ServiceCard->status === 'draft') {
+            $ServiceCard->status = 'pending';
+            $ServiceCard->status_updated_at = now();
+            $ServiceCard->status_updated_by = auth_user()->id;
+            
+            if ($ServiceCard->save()) {
+                return response()->json(['success' => 'Service Card has been rejected.']);
+            }
+        }
+        return response()->json(['error' => 'Service Card can\'t be rejected.']);
+    }
+
     public function verify(Request $request, ServiceCard $ServiceCard)
     {
-        if ($ServiceCard->approval_status !== 'verified') {
-            $ServiceCard->approval_status = 'verified';
+        if ($ServiceCard->status !== 'active') {
+            $ServiceCard->status = 'active';
             $ServiceCard->status_updated_at = now();
             $ServiceCard->status_updated_by = auth_user()->id;
             
@@ -30,24 +44,20 @@ class ServiceCardActionController extends Controller
         return response()->json(['error' => 'Service Card can\'t be verified.']);
     }
 
-    public function restore(Request $request, ServiceCard $ServiceCard)
-    {
-        if ($ServiceCard->approval_status === 'rejected') {
-            $ServiceCard->approval_status = 'draft';
-            $ServiceCard->status_updated_at = now();
-            $ServiceCard->status_updated_by = auth_user()->id;
-            
-            if ($ServiceCard->save()) {
-                return response()->json(['success' => 'Service Card has been restored successfully.']);
-            }
-        }
-        return response()->json(['error' => 'Service Card can\'t be restored.']);
-    }
-
     public function reject(Request $request, ServiceCard $ServiceCard)
     {
-        if (!in_array($ServiceCard->approval_status, ['verified', 'rejected'])) {
-            $ServiceCard->approval_status = 'rejected';
+        if ($ServiceCard->status === 'draft' || $ServiceCard->status === 'pending') {
+            $existingRemarks = $ServiceCard->remarks ?? '';
+            
+            $newRemark = $this->formatRemark('Rejection', $request->remarks, auth_user());
+            
+            if (!empty($existingRemarks)) {
+                $ServiceCard->remarks = $existingRemarks . "\n" . $this->getNextRemarkNumber($existingRemarks) . ". " . $newRemark;
+            } else {
+                $ServiceCard->remarks = "1. " . $newRemark;
+            }
+            
+            $ServiceCard->status = 'rejected';
             $ServiceCard->status_updated_at = now();
             $ServiceCard->status_updated_by = auth_user()->id;
             
@@ -55,16 +65,64 @@ class ServiceCardActionController extends Controller
                 return response()->json(['success' => 'Service Card has been rejected.']);
             }
         }
+        
         return response()->json(['error' => 'Service Card can\'t be rejected.']);
+    }
+
+    public function restore(Request $request, ServiceCard $ServiceCard)
+    {
+        if ($ServiceCard->status === 'rejected') {
+            $existingRemarks = $ServiceCard->remarks ?? '';
+            
+            $newRemark = $this->formatRemark('Restoration', $request->remarks, auth_user());
+            
+            if (!empty($existingRemarks)) {
+                $ServiceCard->remarks = $existingRemarks . "\n" . $this->getNextRemarkNumber($existingRemarks) . ". " . $newRemark;
+            } else {
+                $ServiceCard->remarks = "1. " . $newRemark;
+            }
+            
+            $ServiceCard->status = 'pending'; 
+            $ServiceCard->status_updated_at = now();
+            $ServiceCard->status_updated_by = auth_user()->id;
+            
+            if ($ServiceCard->save()) {
+                return response()->json(['success' => 'Service Card has been restored successfully.']);
+            }
+        }
+        
+        return response()->json(['error' => 'Service Card can\'t be restored.']);
+    }
+
+    private function getNextRemarkNumber($existingRemarks)
+    {
+        $lines = explode("\n", $existingRemarks);
+        $maxNumber = 0;
+        
+        foreach ($lines as $line) {
+            if (preg_match('/^(\d+)\./', trim($line), $matches)) {
+                $maxNumber = max($maxNumber, (int)$matches[1]);
+            }
+        }
+        
+        return $maxNumber + 1;
+    }
+
+    private function formatRemark($type, $remarks, $user = null)
+    {
+        $timestamp = now()->format('j, F Y') . ' at ' . now()->format('H:i');
+        $userInfo = $user ? " by {$user->name}" : "";
+        
+        return "{$type} Remarks: {$remarks} [{$timestamp}{$userInfo}]";
     }
 
     public function markPrinted(Request $request, ServiceCard $ServiceCard)
     {
-        if (in_array($ServiceCard->card_status, ['lost', 'expired'])) {
+        if (in_array($ServiceCard->status, ['lost', 'expired'])) {
             return response()->json(['error' => 'These cards cannot be mark as printed, please']);
         }
 
-        if ($ServiceCard->approval_status !== 'verified') {
+        if (!in_array($ServiceCard->status, ['active', 'duplicate'])) {
             return response()->json(['error' => 'Only verified cards can be marked as printed']);
         }
 
@@ -89,7 +147,6 @@ class ServiceCardActionController extends Controller
 
     public function renew(Request $request, ServiceCard $ServiceCard)
     {
-        // Check if card is not expired yet
         if (!$ServiceCard->isExpired()) {
             return response()->json(['error' => 'Service Card cannot be renewed as it is not expired yet.']);
         }
@@ -98,20 +155,18 @@ class ServiceCardActionController extends Controller
             return response()->json(['error' => 'Service Card cannot be renewed at this time.']);
         }
 
-        // Mark current card as expired
-        $ServiceCard->card_status = 'expired';
+        $ServiceCard->status = 'expired';
         $ServiceCard->status_updated_at = now();
         $ServiceCard->status_updated_by = auth_user()->id;
         $ServiceCard->save();
 
-        // Create new card
         $newCard = ServiceCard::create([
             'uuid' => Str::uuid(),
             'user_id' => $ServiceCard->user_id,
-            'approval_status' => 'verified',
-            'card_status' => 'active',
+            'posting_id' => auth_user()->currentPosting->id,
+            'status' => 'active',
             'issued_at' => now(),
-            'expired_at' => now()->addYears(3), // Changed from 1 year to 3 years
+            'expired_at' => now()->addYears(3),
             'status_updated_at' => now(),
             'status_updated_by' => auth_user()->id,
             'remarks' => 'Renewed from card #' . $ServiceCard->id,
@@ -122,12 +177,11 @@ class ServiceCardActionController extends Controller
 
     public function markLost(Request $request, ServiceCard $ServiceCard)
     {
-        if ($ServiceCard->approval_status !== 'verified' || $ServiceCard->card_status !== 'active') {
-            return response()->json(['error' => 'Only active verified cards can be marked as lost']);
+        if ($ServiceCard->status !== 'active') {
+            return response()->json(['error' => 'Only active cards can be marked as lost']);
         }
 
-        $ServiceCard->card_status = 'lost';
-        $ServiceCard->printed_at = null;
+        $ServiceCard->status = 'lost';
         $ServiceCard->status_updated_at = now();
         $ServiceCard->status_updated_by = auth_user()->id;
         
@@ -141,23 +195,22 @@ class ServiceCardActionController extends Controller
         return response()->json(['error' => 'Failed to mark card as lost']);
     }
 
-    public function reprint(Request $request, ServiceCard $ServiceCard)
+    public function duplicate(Request $request, ServiceCard $ServiceCard)
     {
-        if ($ServiceCard->approval_status !== 'verified' || $ServiceCard->card_status !== 'lost') {
+        if ($ServiceCard->status !== 'lost') {
             return response()->json(['error' => 'Only lost cards can be reprinted']);
         }
 
         $newCard = ServiceCard::create([
             'uuid' => Str::uuid(),
             'user_id' => $ServiceCard->user_id,
-            'approval_status' => 'verified',
-            'card_status' => 'duplicate',
+            'posting_id' => auth_user()->currentPosting->id,
+            'status' => 'duplicate',
             'issued_at' => now(),
-            'expired_at' => $ServiceCard->expired_at, // Keep same expiry
+            'expired_at' => $ServiceCard->expired_at,
             'status_updated_at' => now(),
             'status_updated_by' => auth_user()->id,
-            'is_duplicate' => true,
-            'remarks' => 'Reprinted replacement for lost card #' . $ServiceCard->id,
+            'remarks' => 'Replacement (Duplicate) for lost card #' . $ServiceCard->id,
         ]);
 
         $ServiceCard->status_updated_at = now();

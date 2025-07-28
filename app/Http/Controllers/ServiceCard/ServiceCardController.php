@@ -17,57 +17,31 @@ class ServiceCardController extends Controller
 {
     public function index(Request $request)
     {
-        $approval_status = $request->query('approval_status', null);
-        $card_status = $request->query('card_status', null);
+        $status = $request->query('status', null);
         $needs_renewal = $request->query('needs_renewal', null);
         $printed = $request->query('printed', null);
-
-        if ($response = $this->getTabCounts($request, fn() => [
-            'draft' => ServiceCard::where('approval_status', 'draft')->count(),
-                'verified' => ServiceCard::where('approval_status', 'verified')
-                    ->where('card_status', 'active')->count(),
-                'rejected' => ServiceCard::where('approval_status', 'rejected')
-                    ->where('card_status', 'active')->count(),
-                'printed' => ServiceCard::where('approval_status', 'verified')
-                    ->whereNotNull('printed_at')->count(),
-                'expired' => ServiceCard::where('approval_status', 'verified')
-                    ->where('card_status', 'expired')->count(),
-                'needs_renewal' => ServiceCard::where('approval_status', 'verified')
-                    ->where(function($q) {
-                        $q->where('card_status', 'expired')
-                        ->orWhere('expired_at', '<', now());
-                    })->count(),
-                'lost' => ServiceCard::where('approval_status', 'verified')
-                    ->where('card_status', 'lost')->count(),
-                'duplicate' => ServiceCard::where('approval_status', 'verified')
-                    ->where('card_status', 'duplicate')->count(),
-        ])) {
-            return $response;
-        }
+        $user = auth_user();
 
         $service_cards = ServiceCard::with(['user.profile', 'user.currentDesignation', 'user.currentOffice']);
 
-        $service_cards->when($approval_status !== null, function ($query) use ($approval_status) {
-            $query->where('approval_status', $approval_status);
+        $service_cards->when(!$user->isAdmin(), function ($query) use ($user) {
+            return $query->where('posting_id', $user->currentPosting->id);
         });
 
-        $service_cards->when($card_status !== null, function ($query) use ($card_status) {
-            $query->where('card_status', $card_status);
+        $service_cards->when($status !== null, function ($query) use ($status) {
+            $query->where('status', $status);
         });
 
         $service_cards->when($needs_renewal === 'true', function ($query) {
-            $query->where('approval_status', 'verified')
-                ->where(function($q) {
-                    $q->where('card_status', 'expired')
-                        ->orWhere('expired_at', '<', now());
-                });
+            $query->where(function($q) {
+                $q->where('status', 'expired')
+                  ->orWhere('expired_at', '<', now());
+            });
         });
 
         $service_cards->when($printed === 'true', function ($query) {
-            $query->where('approval_status', 'verified')
-                ->whereNotNull('printed_at')
-                ->orderBy('printed_at', 'desc');
-         });
+            $query->whereNotNull('printed_at');
+        });
 
         $relationMappings = [
             'designation_id' => 'user.currentDesignation.name',
@@ -77,6 +51,23 @@ class ServiceCardController extends Controller
             'cnic' => 'user.profile.cnic',
             'mobile_number' => 'user.profile.mobile_number',
         ];
+
+        if ($response = $this->getTabCounts($request, fn() => [
+            'draft' => (clone $service_cards)->where('status', 'draft')->count(),
+            'pending' => (clone $service_cards)->where('status', 'pending')->count(),
+            'active' => (clone $service_cards)->where('status', 'active')->count(),
+            'rejected' => (clone $service_cards)->where('status', 'rejected')->count(),
+            'printed' => (clone $service_cards)->whereNotNull('printed_at')->count(),
+            'expired' => (clone $service_cards)->where('status', 'expired')->count(),
+            'needs_renewal' => (clone $service_cards)->where(function($q) {
+                $q->where('status', 'expired')
+                ->orWhere('expired_at', '<', now());
+            })->count(),
+            'lost' => (clone $service_cards)->where('status', 'lost')->count(),
+            'duplicate' => (clone $service_cards)->where('status', 'duplicate')->count(),
+        ])) {
+            return $response;
+        }
 
         if ($request->ajax()) {
             $dataTable = Datatables::of($service_cards)
@@ -114,25 +105,19 @@ class ServiceCardController extends Controller
                     }
                     return '<span class="badge bg-warning">No expiry set</span>';
                 })
-                ->editColumn('approval_status', function ($row) {
+                ->editColumn('status', function ($row) {
                     $badges = [
                         'draft' => 'bg-secondary',
-                        'verified' => 'bg-success',
-                        'rejected' => 'bg-danger'
-                    ];
-                    $badge = $badges[$row->approval_status] ?? 'bg-secondary';
-                    return '<span class="badge ' . $badge . '">' . ucfirst($row->approval_status) . '</span>';
-                })
-                ->editColumn('card_status', function ($row) {
-                    $badges = [
+                        'pending' => 'bg-info',
+                        'rejected' => 'bg-danger',
                         'active' => 'bg-success',
                         'printed' => 'bg-primary',
                         'expired' => 'bg-warning',
                         'lost' => 'bg-danger',
                         'duplicate' => 'bg-dark'
                     ];
-                    $badge = $badges[$row->card_status] ?? 'bg-secondary';
-                    return '<span class="badge ' . $badge . '">' . ucfirst($row->card_status) . '</span>';
+                    $badge = $badges[$row->status] ?? 'bg-secondary';
+                    return '<span class="badge ' . $badge . '">' . ucfirst($row->status) . '</span>';
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');
@@ -140,7 +125,7 @@ class ServiceCardController extends Controller
                 ->editColumn('updated_at', function ($row) {
                     return $row->updated_at->diffForHumans();
                 })
-                ->rawColumns(['action', 'name', 'approval_status', 'card_status', 'card_validity']);
+                ->rawColumns(['action', 'name', 'status', 'status', 'card_validity']);
 
             if ($request->input('search.value')) {
                 Database::applyRelationalSearch($dataTable, $relationMappings);
@@ -182,9 +167,8 @@ class ServiceCardController extends Controller
         
         $serviceCard = ServiceCard::create([
             'uuid' => Str::uuid(),
-            'user_id' => auth_user()->id,
-            'approval_status' => 'draft',
-            'card_status' => 'active',
+            'user_id' => $request->user_id,
+            'posting_id' => auth_user()->currentPosting->id,
             'remarks' => $request->remarks,
         ]);
 
@@ -228,13 +212,13 @@ class ServiceCardController extends Controller
         ]);
     }
 
-    public function showCard(ServiceCard $ServiceCard)
+    public function viewCard(ServiceCard $ServiceCard)
     {
-        if ($ServiceCard->approval_status !== 'verified') {
+        if (!in_array($ServiceCard->status, ['active', 'duplicate'])) {
             return response()->json([
                 'success' => false,
                 'data' => [
-                    'result' => 'Service Card is not verified',
+                    'result' => 'Service Card is not active',
                 ],
             ]);
         }
@@ -260,5 +244,14 @@ class ServiceCardController extends Controller
                 'result' => $html,
             ],
         ]);
+    }
+
+    public function destroy(ServiceCard $ServiceCard)
+    {
+        if ($ServiceCard->delete()) {
+            return response()->json(['success' => 'Card has been deleted successfully.']);
+        }
+
+        return response()->json(['error' => 'Card cannot be deleted.']);
     }
 }

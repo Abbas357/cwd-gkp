@@ -10,7 +10,11 @@
                 background-color: #6c757d !important;
             }
 
-            #verified-tab .tab-counter {
+            #pending-tab .tab-counter {
+                background-color: #28a745 !important;
+            }
+
+            #active-tab .tab-counter {
                 background-color: #28a745 !important;
             }
 
@@ -51,7 +55,10 @@
                     <a id="draft-tab" class="nav-link" data-bs-toggle="tab" href="#draft">Draft</a>
                 </li>
                 <li class="nav-item">
-                    <a id="verified-tab" class="nav-link" data-bs-toggle="tab" href="#verified">Verified</a>
+                    <a id="pending-tab" class="nav-link" data-bs-toggle="tab" href="#pending">Pending</a>
+                </li>
+                <li class="nav-item">
+                    <a id="active-tab" class="nav-link" data-bs-toggle="tab" href="#active">Active</a>
                 </li>
                 <li class="nav-item">
                     <a id="rejected-tab" class="nav-link" data-bs-toggle="tab" href="#rejected">Rejected</a>
@@ -88,8 +95,7 @@
                     <th scope="col" class="p-3">Mobile Number</th>
                     <th scope="col" class="p-3">Designation</th>
                     <th scope="col" class="p-3">Office</th>
-                    <th scope="col" class="p-3">Approval Status</th>
-                    <th scope="col" class="p-3">Card Status</th>
+                    <th scope="col" class="p-3">Status</th>
                     <th scope="col" class="p-3">Card Validity</th>
                     <th scope="col" class="p-3">Created At</th>
                     <th scope="col" class="p-3">Updated At</th>
@@ -135,10 +141,7 @@
                         data: "office",
                         searchBuilderType: "string"
                     }, {
-                        data: "approval_status",
-                        searchBuilderType: "string"
-                    }, {
-                        data: "card_status",
+                        data: "status",
                         searchBuilderType: "string"
                     }, {
                         data: "card_validity",
@@ -156,7 +159,7 @@
                         type: "html"
                     }],
                     pageLength: 25,
-                    defaultOrderColumn: 11,
+                    defaultOrderColumn: 9,
                     defaultOrderDirection: 'desc',
                     columnDefs: [{
                         targets: [0, 2, 8],
@@ -178,7 +181,8 @@
                     countUrl: "{{ route('admin.apps.service_cards.index') }}?get_counts=true",
                     tabCounterMap: {
                         'draft-tab': 'draft',
-                        'verified-tab': 'verified',
+                        'pending-tab': 'pending',
+                        'active-tab': 'active',
                         'rejected-tab': 'rejected',
                         'printed-tab': 'printed',
                         'expired-tab': 'expired',
@@ -195,7 +199,8 @@
                     dataTableUrl: "{{ route('admin.apps.service_cards.index') }}",
                     tabToHashMap: {
                         "#draft-tab": '#draft',
-                        "#verified-tab": '#verified',
+                        "#pending-tab": '#pending',
+                        "#active-tab": '#active',
                         "#rejected-tab": '#rejected',
                         "#printed-tab": '#printed',
                         "#expired-tab": '#expired',
@@ -205,38 +210,45 @@
                     },
                     hashToParamsMap: {
                         '#draft': {
-                            approval_status: 'draft'
+                            status: 'draft'
                         },
-                        '#verified': {
-                            approval_status: 'verified',
-                            card_status: 'active'
+                        '#pending': {
+                            status: 'pending'
+                        },
+                        '#active': {
+                            status: 'active'
                         },
                         '#rejected': {
-                            approval_status: 'rejected',
-                            card_status: 'active'
+                            status: 'rejected'
                         },
                         '#printed': {
-                            approval_status: 'verified',
                             printed: true
                         },
                         '#expired': {
-                            approval_status: 'verified',
-                            card_status: 'expired'
+                            status: 'expired'
                         },
                         '#needs-renewal': {
-                            approval_status: 'verified',
                             needs_renewal: true
                         },
                         '#lost': {
-                            approval_status: 'verified',
-                            card_status: 'lost'
+                            status: 'lost'
                         },
                         '#duplicate': {
-                            approval_status: 'verified',
-                            card_status: 'duplicate'
+                            status: 'duplicate'
                         }
                     },
                     defaultHash: '#draft'
+                });
+
+                table.on('click', '.pending-btn', async function() {
+                    const cardId = $(this).data("id");
+                    const url = "{{ route('admin.apps.service_cards.pending', ':id') }}".replace(':id',
+                        cardId);
+                    const success = await fetchRequest(url, 'PATCH');
+                    if (success) {
+                        table.ajax.reload();
+                        tabCounters.updateAllTabCounters();
+                    }
                 });
 
                 table.on('click', '.verify-btn', async function() {
@@ -269,11 +281,10 @@
 
                 table.on('click', '.reject-btn', async function() {
                     const cardId = $(this).data("id");
-                    const url = "{{ route('admin.apps.service_cards.reject', ':id') }}".replace(':id',
-                        cardId);
+                    const url = "{{ route('admin.apps.service_cards.reject', ':id') }}".replace(':id', cardId);
 
                     const {
-                        value: reason
+                        value: remarks
                     } = await confirmWithInput({
                         inputType: "textarea",
                         text: 'Do you want to reject this service card?',
@@ -282,14 +293,44 @@
                                 return 'You need to provide a reason!';
                             }
                         },
-                        inputPlaceholder: 'Enter the reason for rejection',
+                        inputPlaceholder: 'Remarks for rejection',
                         confirmButtonText: 'Reject',
                         cancelButtonText: 'Cancel'
                     });
 
-                    if (reason) {
+                    if (remarks) {
                         const success = await fetchRequest(url, 'PATCH', {
-                            reason
+                            remarks
+                        });
+                        if (success) {
+                            table.ajax.reload();
+                            tabCounters.updateAllTabCounters();
+                        }
+                    }
+                });
+
+                table.on('click', '.restore-btn', async function() {
+                    const cardId = $(this).data("id");
+                    const url = "{{ route('admin.apps.service_cards.restore', ':id') }}".replace(':id', cardId);
+
+                    const {
+                        value: remarks
+                    } = await confirmWithInput({
+                        inputType: "textarea",
+                        text: 'Do you want to restore this service card?',
+                        inputValidator: (value) => {
+                            if (!value) {
+                                return 'Provide remarks before restoration';
+                            }
+                        },
+                        inputPlaceholder: 'Remarks for restoration',
+                        confirmButtonText: 'Restore',
+                        cancelButtonText: 'Cancel'
+                    });
+
+                    if (remarks) {
+                        const success = await fetchRequest(url, 'PATCH', {
+                            remarks
                         });
                         if (success) {
                             table.ajax.reload();
@@ -315,22 +356,6 @@
                     }
                 });
 
-                table.on('click', '.restore-btn', async function() {
-                    const cardId = $(this).data("id");
-                    const url = "{{ route('admin.apps.service_cards.restore', ':id') }}".replace(':id',
-                        cardId);
-
-                    const result = await confirmAction(
-                        'Would you like to restore this service card to draft status?');
-                    if (result && result.isConfirmed) {
-                        const success = await fetchRequest(url, 'PATCH');
-                        if (success) {
-                            table.ajax.reload();
-                            tabCounters.updateAllTabCounters();
-                        }
-                    }
-                });
-
                 table.on('click', '.mark-lost-btn', async function() {
                     const cardId = $(this).data("id");
                     const url = "{{ route('admin.apps.service_cards.markLost', ':id') }}".replace(':id',
@@ -346,14 +371,28 @@
                     }
                 });
 
-                table.on('click', '.reprint-btn', async function() {
+                table.on('click', '.duplicate-btn', async function() {
                     const cardId = $(this).data("id");
-                    const url = "{{ route('admin.apps.service_cards.reprint', ':id') }}".replace(':id',
+                    const url = "{{ route('admin.apps.service_cards.duplicate', ':id') }}".replace(':id',
                         cardId);
 
-                    const result = await confirmAction('Create a replacement card for this lost card?');
+                    const result = await confirmAction('Create a replacement (duplicate) card for this lost card?');
                     if (result && result.isConfirmed) {
                         const success = await fetchRequest(url, 'PATCH');
+                        if (success) {
+                            table.ajax.reload();
+                            tabCounters.updateAllTabCounters();
+                        }
+                    }
+                });
+
+                table.on('click', '.delete-btn', async function() {
+                    const cardId = $(this).data("id");
+                    const url = "{{ route('admin.apps.service_cards.destroy', ':id') }}".replace(':id', cardId);
+
+                    const result = await confirmAction(`Do you want to delete this Card?`);
+                    if (result && result.isConfirmed) {
+                        const success = await fetchRequest(url, 'DELETE');
                         if (success) {
                             table.ajax.reload();
                             tabCounters.updateAllTabCounters();
@@ -372,7 +411,7 @@
                 });
 
                 pushStateModal({
-                    fetchUrl: "{{ route('admin.apps.service_cards.showCard', ':id') }}",
+                    fetchUrl: "{{ route('admin.apps.service_cards.viewCard', ':id') }}",
                     btnSelector: '.card-btn',
                     title: 'Service Card',
                     modalSize: 'md',
@@ -390,47 +429,12 @@
                     actionBtn.before(frontBtn);
                     frontBtn.before(backBtn);
 
-                    function getCardId() {
-                        const urlParams = new URLSearchParams(window.location.search);
-                        return urlParams.get('id');
-                    }
-
-                    async function checkAndMarkCardAsPrinted() {
-                        const cardId = getCardId();
-
-                        const currentHash = window.location.hash;
-                        const isPrintedTab = currentHash === '#printed';
-
-                        const cardStatusBadge = modal.find('.badge:contains("Printed")');
-                        const isAlreadyPrinted = cardStatusBadge.length > 0;
-
-                        if (isPrintedTab || isAlreadyPrinted) {
-                            return true;
-                        }
-
-                        const result = await confirmAction(
-                            'This will mark the card as printed. Continue?', 'warning');
-                        if (result && result.isConfirmed) {
-                            const url =
-                                "{{ route('admin.apps.service_cards.markPrinted', ':id') }}"
-                                .replace(':id', cardId);
-                            const response = await fetchRequest(url, 'PATCH');
-                            if (response) {
-                                table.ajax.reload();
-                                tabCounters.updateAllTabCounters();
-                                return true;
-                            }
-                        }
-                        return false;
-                    }
+                    // function getCardId() {
+                    //     const urlParams = new URLSearchParams(window.location.search);
+                    //     return urlParams.get('id');
+                    // }
 
                     actionBtn.off('click').on('click', async function() {
-                        const shouldProceed = await checkAndMarkCardAsPrinted();
-
-                        if (!shouldProceed) {
-                            return;
-                        }
-
                         setButtonLoading(actionBtn, true);
                         const front = $('#capture .service-card_front')[0];
                         const back = $('#capture .service-card_back')[0];
@@ -482,12 +486,6 @@
                     });
 
                     frontBtn.off('click').on('click', async function() {
-                        const shouldProceed = await checkAndMarkCardAsPrinted();
-
-                        if (!shouldProceed) {
-                            return;
-                        }
-
                         setButtonLoading(frontBtn, true);
                         var front = $('#capture .service-card_front')[0];
                         html2canvas(front, {
@@ -510,12 +508,6 @@
                     });
 
                     backBtn.off('click').on('click', async function() {
-                        const shouldProceed = await checkAndMarkCardAsPrinted();
-
-                        if (!shouldProceed) {
-                            return;
-                        }
-
                         setButtonLoading(backBtn, true);
                         var back = $('#capture .service-card_back')[0];
                         html2canvas(back, {

@@ -130,10 +130,6 @@ class SyncPermissionsCommand extends Command
         ];
 
         $basicRole = [
-            'view any service-card',
-            'create service-card',
-            'view service-card',
-            'view card service-card',
             'view any story',
             'view story',
             'create story',
@@ -205,11 +201,6 @@ class SyncPermissionsCommand extends Command
             'view district-wise report damage',
             'view situation report damage',
 
-            'view any service-card',
-            'create service-card',
-            'view service-card',
-            'view card service-card',
-
             'view vacancy report user',
             'view employee directory report user',
             'view office strength report user',
@@ -277,8 +268,6 @@ class SyncPermissionsCommand extends Command
             'view district-wise report damage',
 
             'view vacancy report user',
-            'view employee directory report user',
-            'view office strength report user',
             'view posting history report user',
             'view service length report user',
             'view retirement forecast report user',

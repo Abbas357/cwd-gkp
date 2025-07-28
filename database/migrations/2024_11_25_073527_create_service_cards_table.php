@@ -12,15 +12,13 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
 
-            $table->enum('approval_status', ['draft', 'verified', 'rejected'])->nullable();
-            $table->enum('card_status', ['active', 'expired', 'lost', 'duplicate'])->default('active');
+            $table->enum('status', ['draft', 'pending', 'rejected', 'active', 'expired', 'lost', 'duplicate'])->default('draft');
 
             $table->dateTime('issued_at')->nullable();
             $table->dateTime('expired_at')->nullable();
             $table->dateTime('printed_at')->nullable();
             $table->dateTime('status_updated_at')->nullable();
 
-            $table->boolean('is_duplicate')->default(0);
             $table->text('remarks')->nullable();
 
             $table->unsignedBigInteger('status_updated_by')->nullable();

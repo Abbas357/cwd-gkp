@@ -258,10 +258,10 @@
 <div id="capture">
     <div class="service-card service-card_front text-center">
 
-        @if($ServiceCard->card_status === 'lost')
+        @if($ServiceCard->status === 'lost')
             <div class="lost-card" style="background-image: url('{{ asset('admin/images/cards/lost.png') }}');"></div>
         @endif
-        @if($ServiceCard->card_status === 'expired')
+        @if($ServiceCard->status === 'expired')
             <div class="expired-card" style="background-image: url('{{ asset('admin/images/cards/expired.png') }}');"></div>
         @endif
 
@@ -310,10 +310,10 @@
     <!-- Back Side -->
     <div class="card service-card service-card_back">
 
-        @if($ServiceCard->card_status === 'lost')
+        @if($ServiceCard->status === 'lost')
             <div class="lost-card" style="background-image: url('{{ asset('admin/images/cards/lost.png') }}');"></div>
         @endif
-        @if($ServiceCard->card_status === 'expired')
+        @if($ServiceCard->status === 'expired')
             <div class="expired-card" style="background-image: url('{{ asset('admin/images/cards/expired.png') }}');"></div>
         @endif
         

@@ -66,30 +66,35 @@ class ServiceCard extends Model
     
     public function scopeActive($query)
     {
-        return $query->where('card_status', 'active');
+        return $query->where('status', 'active');
     }
     
-    public function scopeVerified($query)
+    public function scopePending($query)
     {
-        return $query->where('approval_status', 'verified');
+        return $query->where('approval_status', 'pending');
     }
     
     public function scopeExpired($query)
     {
-        return $query->where('card_status', 'expired')
+        return $query->where('status', 'expired')
                      ->orWhere('expired_at', '<', now());
+    }
+
+    public function scopePrinted($query)
+    {
+        return $query->whereNotNull('printed_at');
     }
     
     public function isActive()
     {
-        return $this->card_status === 'active' && 
+        return $this->status === 'active' && 
                $this->approval_status === 'verified' &&
                ($this->expired_at === null || $this->expired_at->isFuture());
     }
     
     public function isExpired()
     {
-        return $this->card_status === 'expired' || 
+        return $this->status === 'expired' || 
                ($this->expired_at && $this->expired_at->isPast());
     }
     

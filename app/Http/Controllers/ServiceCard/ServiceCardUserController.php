@@ -21,7 +21,7 @@ class ServiceCardUserController extends Controller
         ]);
 
         if (!$ServiceCard->canBeEdited()) {
-            return response()->json(['error' => 'Verified or rejected cards cannot be updated'], 403);
+            return response()->json(['error' => 'Verified or rejected cards cannot be updated']);
         }
 
         // Check if field belongs to service card or user profile
@@ -35,14 +35,14 @@ class ServiceCardUserController extends Controller
             $ServiceCard->{$request->field} = $request->value;
             if ($ServiceCard->isDirty($request->field)) {
                 $ServiceCard->save();
-                return response()->json(['success' => 'Field updated successfully'], 200);
+                return response()->json(['success' => 'Field updated successfully']);
             }
         } elseif (in_array($request->field, $userFields)) {
             $user = $ServiceCard->user;
             $user->{$request->field} = $request->value;
             if ($user->isDirty($request->field)) {
                 $user->save();
-                return response()->json(['success' => 'Field updated successfully'], 200);
+                return response()->json(['success' => 'Field updated successfully']);
             }
         } elseif (in_array($request->field, $profileFields)) {
             $profile = $ServiceCard->user->profile;
@@ -52,13 +52,13 @@ class ServiceCardUserController extends Controller
             $profile->{$request->field} = $request->value;
             if ($profile->isDirty($request->field)) {
                 $profile->save();
-                return response()->json(['success' => 'Field updated successfully'], 200);
+                return response()->json(['success' => 'Field updated successfully']);
             }
         } else {
             return response()->json(['error' => 'Invalid field'], 400);
         }
 
-        return response()->json(['error' => 'No changes were made to the field'], 200);
+        return response()->json(['error' => 'No changes were made to the field']);
     }
 
     public function uploadFile(Request $request, ServiceCard $ServiceCard)
@@ -68,16 +68,16 @@ class ServiceCardUserController extends Controller
         ]);
 
         if (!$ServiceCard->canBeEdited()) {
-            return response()->json(['error' => 'Verified or rejected cards cannot be updated'], 403);
+            return response()->json(['error' => 'Verified or rejected cards cannot be updated']);
         }
 
         try {
             $ServiceCard->addMedia($request->file('image'))
                 ->toMediaCollection('service_card_pictures');
 
-            return response()->json(['success' => 'Image uploaded successfully'], 200);
+            return response()->json(['success' => 'Image uploaded successfully']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error uploading file: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Error uploading file: ' . $e->getMessage()]);
         }
     }
 
@@ -220,12 +220,10 @@ class ServiceCardUserController extends Controller
 
             $user->postings()->create($postingData);
 
-            // Create service card application
-            $serviceCard = ServiceCard::create([
+            ServiceCard::create([
                 'uuid' => Str::uuid(),
                 'user_id' => $user->id,
-                'approval_status' => 'draft',
-                'card_status' => 'active',
+                'posting_id' => auth_user()->currentPosting->id,
                 'remarks' => 'Applied by ' . $currentUser->name . ' (Focal Person)',
                 'status_updated_by' => $currentUser->id,
                 'status_updated_at' => now()
@@ -273,7 +271,6 @@ class ServiceCardUserController extends Controller
 
         $currentUser = auth_user();
         
-        // Verify the user is in current user's domain
         $userOffices = collect([$currentUser->currentOffice]);
         if ($currentUser->currentOffice) {
             $childOffices = $currentUser->currentOffice->getAllDescendants();
@@ -284,13 +281,12 @@ class ServiceCardUserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'You can only update profiles of users in your office domain.'
-            ], 403);
+            ]);
         }
 
         try {
             DB::beginTransaction();
             
-            // Create or update profile
             if (!$user->profile) {
                 $user->profile()->create($request->only([
                     'father_name', 'cnic', 'date_of_birth', 'mobile_number',
@@ -318,7 +314,7 @@ class ServiceCardUserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to update profile: ' . $e->getMessage()
-            ], 500);
+            ]);
         }
     }
 
@@ -333,7 +329,6 @@ class ServiceCardUserController extends Controller
         
         $currentUser = auth_user();
         
-        // Get user's office hierarchy for domain filtering
         $userOffices = collect([$currentUser->currentOffice]);
         if ($currentUser->currentOffice) {
             $childOffices = $currentUser->currentOffice->getAllDescendants();
@@ -346,8 +341,7 @@ class ServiceCardUserController extends Controller
             'currentDesignation', 
             'currentOffice',
             'serviceCards' => function($q) {
-                $q->whereIn('approval_status', ['draft', 'verified'])
-                ->orderBy('created_at', 'desc');
+                $q->orderBy('created_at', 'desc');
             }
         ])
         ->where(function ($q) use ($query) {
@@ -385,7 +379,6 @@ class ServiceCardUserController extends Controller
                 'can_renew' => $hasServiceCard && $user->serviceCards->first()?->canBeRenewed(),
             ];
             
-            // Add profile data for service card applications
             if ($forServiceCard) {
                 $data['profile'] = $user->profile ? [
                     'father_name' => $user->profile->father_name,
