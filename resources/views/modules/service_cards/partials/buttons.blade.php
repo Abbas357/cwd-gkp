@@ -12,9 +12,16 @@
         <i class="verify-btn bg-light text-success bi-check-circle" title="Verify" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
         <i class="reject-btn bg-light text-danger bi-x-circle" title="Reject" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
     @endif
-    
+
     @if ($approvalStatus === 'verified')
-        @if($row->printed_at != null)
+        
+        {{-- Print button: only for verified status and when printed_at is null --}}
+        @if ($row->printed_at === null && $cardStatus !== 'lost' && !$isExpired)
+            <i class="print-btn bi-printer bg-light text-info" title="View Card" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
+        @endif
+
+        {{-- Card button: only when printed_at is not null, card_status is active, and approval_status is verified --}}
+        @if ($row->printed_at !== null && $cardStatus === 'active' || !$cardStatus === 'duplicate')
             <i class="card-btn bi-credit-card bg-light text-info" title="View Card" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
         @endif
         

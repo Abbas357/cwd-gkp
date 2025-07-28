@@ -51,7 +51,8 @@ class DamageController extends Controller
                     return $row->report_date->format('j, F Y');
                 })
                 ->editColumn('damage_nature', function ($row) {
-                    return implode(', ', json_decode($row->damage_nature)) ?? 'No Damage Nature';
+                    $decoded = json_decode($row->damage_nature, true);
+                    return is_array($decoded) ? implode(', ', $decoded) : 'No Damage Nature';
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');

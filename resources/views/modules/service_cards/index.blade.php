@@ -254,6 +254,19 @@
                     }
                 });
 
+                table.on('click', '.print-btn', async function() {
+                    const cardId = $(this).data("id");
+                    const url = "{{ route('admin.apps.service_cards.markPrinted', ':id') }}".replace(':id', cardId);
+                    const result = await confirmAction('This will mark the card as printed. Continue?');
+                    if (result && result.isConfirmed) {
+                        const success = await fetchRequest(url, 'PATCH');
+                        if (success) {
+                            table.ajax.reload();
+                            tabCounters.updateAllTabCounters();
+                        }
+                    }
+                });
+
                 table.on('click', '.reject-btn', async function() {
                     const cardId = $(this).data("id");
                     const url = "{{ route('admin.apps.service_cards.reject', ':id') }}".replace(':id',
@@ -294,21 +307,8 @@
                         'Do you want to renew this service card? This will create a new card with a 3-year validity.'
                     );
                     if (result && result.isConfirmed) {
-                        const response = await fetchRequest(url, 'PATCH');
-                        if (response && response.new_card_id) {
-                            await Swal.fire({
-                                icon: 'success',
-                                title: 'Card Renewed',
-                                text: 'Service card has been renewed successfully. A new card has been created.',
-                                confirmButtonText: 'View New Card'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    // Optionally redirect to the new card or show it
-                                    window.location.href =
-                                        "{{ route('admin.apps.service_cards.show', ':id') }}"
-                                        .replace(':id', response.new_card_id);
-                                }
-                            });
+                        const success = await fetchRequest(url, 'PATCH');
+                        if (success) {
                             table.ajax.reload();
                             tabCounters.updateAllTabCounters();
                         }

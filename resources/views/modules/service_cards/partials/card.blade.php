@@ -130,7 +130,7 @@
 
     .service-card_front .image {
         position: absolute;
-        top: 6.2rem;
+        top: 6rem;
         left: 1rem;
         text-transform: uppercase;
         font-weight: bold;
@@ -173,7 +173,7 @@
 
     .service-card_front .sign {
         position: absolute;
-        bottom: 1.5rem;
+        bottom: 1.6rem;
         left: 1rem;
         width: 30px;
         z-index: 10;

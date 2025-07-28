@@ -127,6 +127,7 @@ class ServiceCardActionController extends Controller
         }
 
         $ServiceCard->card_status = 'lost';
+        $ServiceCard->printed_at = null;
         $ServiceCard->status_updated_at = now();
         $ServiceCard->status_updated_by = auth_user()->id;
         
