@@ -1582,11 +1582,13 @@ form select.error, form textarea.error, form input.error, form input.error:focus
     position: relative;
     text-transform: uppercase;
     letter-spacing: 1px;
+    background-color: #F5F5F5;
+    transition: all .1s ease;
 }
 
 .inward-tabs .nav-link:hover {
-    background: #e8eaed;
-    color: #495057;
+    background: #EEEEEE;
+    border-top: 3px solid #000;
     transform: translateY(-1px);
 }
 

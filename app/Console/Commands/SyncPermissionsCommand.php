@@ -291,11 +291,22 @@ class SyncPermissionsCommand extends Command
             'view any service-card',
             'create service-card',
             'view service-card',
-            'view card service-card',
+            'detail service-card',
+            'delete service-card',
+            'pending service-card',
             'verify service-card',
             'reject service-card',
             'restore service-card',
             'renew service-card',
+            'mark lost service-card',
+            'duplicate service-card',
+            'mark printed service-card',
+            'search users service-card',
+            'create users service-card',
+            'update user service-card',
+            'update field service-card',
+            'upload file service-card',
+            'view card service-card'
         ];
     }
 
@@ -1002,14 +1013,22 @@ class SyncPermissionsCommand extends Command
             'view any service-card',
             'create service-card',
             'view service-card',
-            'view card service-card',
+            'detail service-card',
+            'delete service-card',
+            'pending service-card',
             'verify service-card',
             'reject service-card',
             'restore service-card',
             'renew service-card',
+            'mark lost service-card',
+            'duplicate service-card',
+            'mark printed service-card',
+            'search users service-card',
+            'create users service-card',
+            'update user service-card',
             'update field service-card',
             'upload file service-card',
-            'delete service-card',
+            'view card service-card',
             /* ----------- ServiceCard Permissions End -------------*/
 
             /* ----------- Settings Permissions Start -----------*/

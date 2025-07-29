@@ -24,7 +24,7 @@ class ServiceCardPolicy
 
     public function detail(User $user, ServiceCard $serviceCard)
     {
-        return $user->id === $serviceCard->posting->user->id || $user->can('view service-card');
+        return $user->id === $serviceCard->posting->user->id || $user->can('detail service-card');
     }
 
     public function viewCard(User $user, ServiceCard $serviceCard)
@@ -81,7 +81,7 @@ class ServiceCardPolicy
 
     // User related actions
 
-    public function searchUsers(User $user, ServiceCard $serviceCard)
+    public function searchUsers(User $user)
     {
         return $user->can('search users service-card');
     }

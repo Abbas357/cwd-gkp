@@ -168,13 +168,21 @@
                         targets: -1,
                         className: 'action-column'
                     }],
-                    customButtons: [{
-                        text: `<span class="symbol-container cw-btn bg-primary text-light"><i class="bi-plus-circle"></i>Create Card</span>`,
-                        action: function(e, dt, node, config) {
-                            window.location.href =
-                                "{{ route('admin.apps.service_cards.create') }}";
-                        },
-                    }, ]
+                    customButtons: (() => {
+                        const buttons = [];
+                        
+                        if (@json(auth()->user()->can('create', App\Models\ServiceCard::class))) {
+                            buttons.push({
+                                text: `<span class="symbol-container cw-btn bg-primary text-light"><i class="bi-plus-circle"></i>Create Card</span>`,
+                                action: function(e, dt, node, config) {
+                                    window.location.href = "{{ route('admin.apps.service_cards.create') }}";
+                                },
+                            });
+                        }
+                        
+                        return buttons;
+                    })(),
+
                 });
 
                 const tabCounters = initTabCounters({

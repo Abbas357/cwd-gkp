@@ -24,9 +24,12 @@ class ServiceCardController extends Controller
 
         $service_cards = ServiceCard::with(['user.profile', 'user.currentDesignation', 'user.currentOffice']);
 
-        $service_cards->when(!$user->isAdmin(), function ($query) use ($user) {
-            return $query->where('posting_id', $user->currentPosting->id);
-        });
+        $service_cards->when(
+            !$user->isAdmin() && !$user->can('viewAny', ServiceCard::class),
+            function ($query) use ($user) {
+                return $query->where('posting_id', $user->currentPosting->id);
+            }
+        );
 
         $service_cards->when($status !== null, function ($query) use ($status) {
             $query->where('status', $status);
