@@ -27,7 +27,7 @@ class ServiceCardPolicy
         return $user->id === $serviceCard->posting->user->id || $user->can('detail service-card');
     }
 
-    public function viewCard(User $user, ServiceCard $serviceCard)
+    public function viewCard(User $user)
     {
         return $user->can('view card service-card');
     }
@@ -39,17 +39,17 @@ class ServiceCardPolicy
 
     // Actions that can be performed on ServiceCard
 
-    public function pending(User $user, ServiceCard $serviceCard)
+    public function pending(User $user)
     {
         return $user->can('pending service-card');
     }
 
-    public function verify(User $user, ServiceCard $serviceCard)
+    public function verify(User $user)
     {
         return $user->can('verify service-card');
     }
 
-    public function reject(User $user, ServiceCard $serviceCard)
+    public function reject(User $user)
     {
         return $user->can('reject service-card');
     }
@@ -59,22 +59,22 @@ class ServiceCardPolicy
         return $user->id === $serviceCard->posting->user->id || $user->can('restore service-card');
     }
 
-    public function renew(User $user, ServiceCard $serviceCard)
+    public function renew(User $user)
     {
         return $user->can('renew service-card');
     }
 
-    public function markLost(User $user, ServiceCard $serviceCard)
+    public function markLost(User $user)
     {
         return $user->can('mark lost service-card');
     }
 
-    public function duplicate(User $user, ServiceCard $serviceCard)
+    public function duplicate(User $user)
     {
         return $user->can('duplicate service-card');
     }
 
-    public function markPrinted(User $user, ServiceCard $serviceCard)
+    public function markPrinted(User $user)
     {
         return $user->can('mark printed service-card');
     }
@@ -86,12 +86,12 @@ class ServiceCardPolicy
         return $user->can('search users service-card');
     }
 
-    public function createUser(User $user, ServiceCard $serviceCard)
+    public function createUser(User $user)
     {
         return $user->can('create users service-card');
     }
 
-    public function updateUser(User $user, User $targetUser)
+    public function updateUser(User $user)
     {
         return $user->can('update user service-card');
     }

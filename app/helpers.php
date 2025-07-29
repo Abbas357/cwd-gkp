@@ -159,3 +159,8 @@ function auth_user(): ?User
     $user = Auth::user();
     return $user;
 }
+
+function format_card_id($id)
+{
+    return str_pad($id, 4, '0', STR_PAD_LEFT);
+}

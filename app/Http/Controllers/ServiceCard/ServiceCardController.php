@@ -167,15 +167,16 @@ class ServiceCardController extends Controller
         $request->validate([
             'remarks' => 'nullable|string|max:500'
         ]);
-        
+        $timestamp = now()->format('j, F Y') . ' at ' . now()->format('h:i A');
+        $userInfo = auth_user() ? " by " . auth_user()->name : "";
         $serviceCard = ServiceCard::create([
             'uuid' => Str::uuid(),
             'user_id' => $request->user_id,
             'posting_id' => auth_user()->currentPosting->id,
-            'remarks' => $request->remarks,
+            'remarks' => "1. General Remarks: <strong>Card is created. It will be placed under review very soon. Thanks</strong> - <span style='color: #aaa; font-size: 12px'>{$timestamp}{$userInfo}</span>",
         ]);
 
-        return redirect()->route('admin.apps.service_cards.show', $serviceCard)
+        return redirect()->route('admin.apps.service_cards.index', $serviceCard)
             ->with('success', 'Service card application created successfully.');
     }
 
@@ -207,6 +208,26 @@ class ServiceCardController extends Controller
         ];
 
         $html = view('modules.service_cards.partials.details', compact('ServiceCard', 'cat'))->render();
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'result' => $html,
+            ],
+        ]);
+    }
+
+    public function showRemarks(ServiceCard $ServiceCard)
+    {
+        if (!$ServiceCard) {
+            return response()->json([
+                'success' => false,
+                'data' => [
+                    'result' => 'Unable to Card Remarks',
+                ],
+            ]);
+        }
+
+        $html = view('modules.service_cards.partials.info', ['remarks' => $ServiceCard->remarks])->render();
         return response()->json([
             'success' => true,
             'data' => [

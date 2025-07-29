@@ -2,17 +2,19 @@
 
 namespace App\Models;
 
+use Spatie\MediaLibrary\HasMedia;
 use Spatie\Activitylog\LogOptions;
 use App\Observers\ServiceCardObserver;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
 #[ObservedBy([ServiceCardObserver::class])]
-class ServiceCard extends Model
+class ServiceCard extends Model implements HasMedia
 {
-    use HasFactory, LogsActivity;
+    use HasFactory, LogsActivity, InteractsWithMedia;
 
     protected $guarded = [];
 
@@ -37,6 +39,14 @@ class ServiceCard extends Model
             ->setDescriptionForEvent(function (string $eventName) {
                 return "Card {$eventName}";
             });
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('covering_letters')
+        ->singleFile();
+        $this->addMediaCollection('payslips')
+        ->singleFile();
     }
 
     public function user()
@@ -71,7 +81,7 @@ class ServiceCard extends Model
     
     public function scopePending($query)
     {
-        return $query->where('approval_status', 'pending');
+        return $query->where('status', 'pending');
     }
     
     public function scopeExpired($query)
@@ -87,9 +97,7 @@ class ServiceCard extends Model
     
     public function isActive()
     {
-        return $this->status === 'active' && 
-               $this->approval_status === 'verified' &&
-               ($this->expired_at === null || $this->expired_at->isFuture());
+        return $this->status === 'active' && ($this->expired_at === null || $this->expired_at->isFuture());
     }
     
     public function isExpired()
@@ -100,11 +108,11 @@ class ServiceCard extends Model
     
     public function canBeRenewed()
     {
-        return $this->approval_status === 'verified' && $this->isExpired();
+        return $this->status === 'active' && $this->isExpired();
     }
     
     public function canBeEdited()
     {
-        return !in_array($this->approval_status, ['verified', 'rejected']);
+        return !in_array($this->approval_status, ['active', 'rejected']);
     }
 }

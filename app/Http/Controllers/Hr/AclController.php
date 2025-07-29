@@ -144,6 +144,18 @@ class AclController extends Controller
         ]);
     }
 
+    public function removePermissionFromUser($userId, $permissionId)
+    {
+        $user = User::findOrFail($userId);
+        $permission = Permission::findOrFail($permissionId);
+        
+        $user->revokePermissionTo($permission);
+        
+        return response()->json([
+            'success' => "Permission '{$permission->name}' removed from user successfully"
+        ]);
+    }
+
     public function filterUsers(Request $request)
     {
         $query = User::with(['currentPosting', 'currentPosting.designation', 'currentPosting.office']);

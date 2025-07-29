@@ -246,7 +246,7 @@
         $statusClass = 'status-not-found';
 
         if ($serviceCard ?? null) {
-            if ($serviceCard->approval_status !== 'verified') {
+            if ($serviceCard->status !== 'active') {
                 $status = 'invalid';
                 $statusText = 'Card Not Verified';
                 $statusClass = 'status-invalid';
@@ -254,10 +254,6 @@
                 $status = 'expired';
                 $statusText = 'Card Expired';
                 $statusClass = 'status-expired';
-            } elseif ($serviceCard->card_status !== 'active') {
-                $status = 'invalid';
-                $statusText = 'Card ' . ucfirst($serviceCard->card_status);
-                $statusClass = 'status-invalid';
             } else {
                 $isValid = true;
                 $status = 'verified';
@@ -385,7 +381,7 @@
                     <div class="qr-verification">
                         <i class="bi bi-shield-check" style="font-size: 48px; color: #28a745;"></i>
                         <h5 class="mt-3">Verification Complete</h5>
-                        <p class="text-muted mb-0">Card ID: {{ $serviceCard->uuid }}</p>
+                        <p class="text-muted mb-0">Card ID: {{format_card_id($serviceCard->id) }}</p>
                         <small class="text-muted">Verified on {{ now()->format('d M, Y \a\t h:i A') }}</small>
                     </div>
                 @else
@@ -395,7 +391,7 @@
                         <p class="text-muted">
                             @if ($status == 'invalid')
                                 This service card is not in active status.
-                            @elseif($serviceCard->approval_status !== 'verified')
+                            @elseif($serviceCard->status !== 'verified')
                                 This service card has not been verified by the issuing authority.
                             @else
                                 This service card cannot be verified at this time.

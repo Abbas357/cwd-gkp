@@ -59,6 +59,12 @@ class User extends Authenticatable implements HasMedia
             // ->onlyKeepLatest(3)
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif']);
 
+        $this->addMediaCollection('users_cnic_front')
+            ->singleFile();
+        
+        $this->addMediaCollection('users_cnic_back')
+            ->singleFile();
+
         $this->addMediaCollection('posting_orders')
             ->singleFile()
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'application/pdf']);

@@ -340,13 +340,6 @@
                     $user->can('assignRole', App\Models\Role::class) ||
                     $user->can('assignPermission', App\Models\Role::class) ||
                     $user->can('viewAny', App\Models\Permission::class) ||
-                    $user->can('viewVacancyReport', App\Models\User::class) ||
-                    $user->can('viewEmployeeDirectoryReport', App\Models\User::class) ||
-                    $user->can('viewOfficeStrengthReport', App\Models\User::class) ||
-                    $user->can('viewPostingHistoryReport', App\Models\User::class) ||
-                    $user->can('viewServiceLengthReport', App\Models\User::class) ||
-                    $user->can('viewRetirementForecastReport', App\Models\User::class) ||
-                    $user->can('viewOfficeStaffReport', App\Models\User::class) ||
                     $user->can('viewOrganogram', App\Models\office::class))
                 <a href="{{ route('admin.apps.hr.index') }}" class="app-tile accent-green">
                     <i class="bi-people" style="color: #00db87"></i>
@@ -395,7 +388,20 @@
                 </a>
             @endif
 
-            @if ($user->can('viewAny', App\Models\ServiceCard::class) || $user->can('create', App\Models\ServiceCard::class))
+            @if (
+                $user->can('viewAny', App\Models\ServiceCard::class) || 
+                $user->can('create', App\Models\ServiceCard::class) ||
+                $user->can('viewCard', App\Models\ServiceCard::class) ||
+                $user->can('pending', App\Models\ServiceCard::class) ||
+                $user->can('verify', App\Models\ServiceCard::class) ||
+                $user->can('reject', App\Models\ServiceCard::class) ||
+                $user->can('renew', App\Models\ServiceCard::class) ||
+                $user->can('markLost', App\Models\ServiceCard::class) ||
+                $user->can('duplicate', App\Models\ServiceCard::class) ||
+                $user->can('markPrinted', App\Models\ServiceCard::class) ||
+                $user->can('searchUsers', App\Models\ServiceCard::class) ||
+                $user->can('createUser', App\Models\ServiceCard::class) ||
+                $user->can('updateUser', App\Models\ServiceCard::class))
                 <a href="{{ route('admin.apps.service_cards.index') }}" class="app-tile accent-orange">
                     <i class="bi-credit-card" style="color: #f47721"></i>
                     <p>Service Card</p>

@@ -16,6 +16,8 @@ class ServiceCardActionController extends Controller
             $ServiceCard->status_updated_at = now();
             $ServiceCard->status_updated_by = auth_user()->id;
             
+            $this->addRemark($ServiceCard, 'Under Review', 'Service card is now under review', auth_user());
+
             if ($ServiceCard->save()) {
                 return response()->json(['success' => 'Service Card has been rejected.']);
             }
@@ -36,6 +38,8 @@ class ServiceCardActionController extends Controller
             if (!$ServiceCard->expired_at) {
                 $ServiceCard->expired_at = now()->addYears(3);
             }
+
+            $this->addRemark($ServiceCard, 'Verification', 'Service card verified successfully', auth_user());
             
             if ($ServiceCard->save()) {
                 return response()->json(['success' => 'Service Card has been verified successfully.']);
@@ -47,15 +51,7 @@ class ServiceCardActionController extends Controller
     public function reject(Request $request, ServiceCard $ServiceCard)
     {
         if ($ServiceCard->status === 'draft' || $ServiceCard->status === 'pending') {
-            $existingRemarks = $ServiceCard->remarks ?? '';
-            
-            $newRemark = $this->formatRemark('Rejection', $request->remarks, auth_user());
-            
-            if (!empty($existingRemarks)) {
-                $ServiceCard->remarks = $existingRemarks . "\n" . $this->getNextRemarkNumber($existingRemarks) . ". " . $newRemark;
-            } else {
-                $ServiceCard->remarks = "1. " . $newRemark;
-            }
+            $this->addRemark($ServiceCard, 'Rejection', $request->remarks, auth_user());
             
             $ServiceCard->status = 'rejected';
             $ServiceCard->status_updated_at = now();
@@ -72,15 +68,7 @@ class ServiceCardActionController extends Controller
     public function restore(Request $request, ServiceCard $ServiceCard)
     {
         if ($ServiceCard->status === 'rejected') {
-            $existingRemarks = $ServiceCard->remarks ?? '';
-            
-            $newRemark = $this->formatRemark('Restoration', $request->remarks, auth_user());
-            
-            if (!empty($existingRemarks)) {
-                $ServiceCard->remarks = $existingRemarks . "\n" . $this->getNextRemarkNumber($existingRemarks) . ". " . $newRemark;
-            } else {
-                $ServiceCard->remarks = "1. " . $newRemark;
-            }
+            $this->addRemark($ServiceCard, 'Restoration', $request->remarks, auth_user());
             
             $ServiceCard->status = 'pending'; 
             $ServiceCard->status_updated_at = now();
@@ -92,28 +80,6 @@ class ServiceCardActionController extends Controller
         }
         
         return response()->json(['error' => 'Service Card can\'t be restored.']);
-    }
-
-    private function getNextRemarkNumber($existingRemarks)
-    {
-        $lines = explode("\n", $existingRemarks);
-        $maxNumber = 0;
-        
-        foreach ($lines as $line) {
-            if (preg_match('/^(\d+)\./', trim($line), $matches)) {
-                $maxNumber = max($maxNumber, (int)$matches[1]);
-            }
-        }
-        
-        return $maxNumber + 1;
-    }
-
-    private function formatRemark($type, $remarks, $user = null)
-    {
-        $timestamp = now()->format('j, F Y') . ' at ' . now()->format('H:i');
-        $userInfo = $user ? " by {$user->name}" : "";
-        
-        return "{$type} Remarks: {$remarks} [{$timestamp}{$userInfo}]";
     }
 
     public function markPrinted(Request $request, ServiceCard $ServiceCard)
@@ -134,9 +100,7 @@ class ServiceCardActionController extends Controller
         $ServiceCard->status_updated_at = now();
         $ServiceCard->status_updated_by = auth_user()->id;
         
-        // Add remarks
-        $existingRemarks = $ServiceCard->remarks ? $ServiceCard->remarks . "\n" : '';
-        $ServiceCard->remarks = $existingRemarks . "[" . now()->format('Y-m-d H:i') . "] Card printed by " . auth_user()->name;
+        $this->addRemark($ServiceCard, 'Printing', 'Card is printed, Please collect your card from C&W IT Cell, please', auth_user());
         
         if ($ServiceCard->save()) {
             return response()->json(['success' => 'Service Card has been marked as printed']);
@@ -155,6 +119,8 @@ class ServiceCardActionController extends Controller
             return response()->json(['error' => 'Service Card cannot be renewed at this time.']);
         }
 
+        $this->addRemark($ServiceCard, 'Renewal', 'Service card renewal initiated', auth_user());
+
         $ServiceCard->status = 'expired';
         $ServiceCard->status_updated_at = now();
         $ServiceCard->status_updated_by = auth_user()->id;
@@ -169,7 +135,7 @@ class ServiceCardActionController extends Controller
             'expired_at' => now()->addYears(3),
             'status_updated_at' => now(),
             'status_updated_by' => auth_user()->id,
-            'remarks' => 'Renewed from card #' . $ServiceCard->id,
+            'remarks' => $this->formatRemark('Creation', 'Renewed from card #' . $ServiceCard->id, auth_user(), true),
         ]);
         
         return response()->json(['success' => 'Service Card has been renewed successfully. Card #: ' . $newCard->id]);
@@ -180,6 +146,8 @@ class ServiceCardActionController extends Controller
         if ($ServiceCard->status !== 'active') {
             return response()->json(['error' => 'Only active cards can be marked as lost']);
         }
+
+        $this->addRemark($ServiceCard, 'Status Update', 'Card marked as lost', auth_user());
 
         $ServiceCard->status = 'lost';
         $ServiceCard->status_updated_at = now();
@@ -210,19 +178,55 @@ class ServiceCardActionController extends Controller
             'expired_at' => $ServiceCard->expired_at,
             'status_updated_at' => now(),
             'status_updated_by' => auth_user()->id,
-            'remarks' => 'Replacement (Duplicate) for lost card #' . $ServiceCard->id,
+            'remarks' => $this->formatRemark('Creation', 'Replacement (Duplicate) for lost card #' . $ServiceCard->id, auth_user(), true),
         ]);
+
+        $this->addRemark($ServiceCard, 'Duplication', 'Reprinted as card #' . $newCard->id, auth_user());
 
         $ServiceCard->status_updated_at = now();
         $ServiceCard->status_updated_by = auth_user()->id;
-        $ServiceCard->remarks = sprintf(
-            "%s[%s] Reprinted as card #%d",
-            $ServiceCard->remarks ? "$ServiceCard->remarks\n" : '',
-            now()->format('Y-m-d H:i'),
-            $newCard->id
-        );
         $ServiceCard->save();
 
         return response()->json(['success' => 'Duplicate Service Card has been generated. Card #: ' . $newCard->id]);
+    }
+
+    private function addRemark(ServiceCard $serviceCard, $type, $remarks, $user = null)
+    {
+        $existingRemarks = $serviceCard->remarks ?? '';
+        $newRemark = $this->formatRemark($type, $remarks, $user);
+        
+        if (!empty($existingRemarks)) {
+            $serviceCard->remarks = $existingRemarks . "\n" . $this->getNextRemarkNumber($existingRemarks) . ". " . $newRemark;
+        } else {
+            $serviceCard->remarks = "1. " . $newRemark;
+        }
+    }
+
+    private function getNextRemarkNumber($existingRemarks)
+    {
+        $lines = explode("\n", $existingRemarks);
+        $maxNumber = 0;
+        
+        foreach ($lines as $line) {
+            if (preg_match('/^(\d+)\./', trim($line), $matches)) {
+                $maxNumber = max($maxNumber, (int)$matches[1]);
+            }
+        }
+        
+        return $maxNumber + 1;
+    }
+
+    private function formatRemark($type, $remarks, $user = null, $isFirstRemark = false)
+    {
+        $timestamp = now()->format('j, F Y') . ' at ' . now()->format('h:i A');
+        $userInfo = $user ? " by {$user->name}" : "";
+        
+        $formatted = "{$type} Remarks: <strong>{$remarks}</strong> - <span style='color: #aaa; font-size: 12px'>{$timestamp}{$userInfo}</span>";
+        
+        if ($isFirstRemark) {
+            return "1. " . $formatted;
+        }
+        
+        return $formatted;
     }
 }

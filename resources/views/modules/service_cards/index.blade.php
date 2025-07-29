@@ -419,6 +419,14 @@
                 });
 
                 pushStateModal({
+                    fetchUrl: "{{ route('admin.apps.service_cards.remarks', ':id') }}",
+                    btnSelector: '.info-btn',
+                    title: 'Remarks | Service Card',
+                    modalSize: 'lg',
+                    tableToRefresh: table
+                });
+
+                pushStateModal({
                     fetchUrl: "{{ route('admin.apps.service_cards.viewCard', ':id') }}",
                     btnSelector: '.card-btn',
                     title: 'Service Card',

@@ -8,7 +8,6 @@ use App\Models\Posting;
 use App\Models\District;
 use App\Helpers\Database;
 use App\Models\Designation;
-use App\Models\ServiceCard;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Helpers\SearchBuilder;

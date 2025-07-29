@@ -29,7 +29,7 @@
     <div class="col-md-12">
         <div class="d-flex justify-content-center align-items-center">
             <label class="label" data-toggle="tooltip" title="Change Profile Picture">
-                <img id="image-label-preview" src="{{ $user->getFirstMediaUrl('profile_pictures') }}" alt="avatar" class="change-image img-fluid rounded-circle">
+                <img id="image-label-preview" src="{{ $user->getFirstMediaUrl('profile_pictures') }}" alt="avatar" class="change-image" style="width:150px; height:150px; border-radius: 50%">
                 @if ($canUpload)
                     <input type="file" id="image" name="image" class="visually-hidden" accept="image/*">
                 @endif
@@ -197,6 +197,126 @@
             </tr>
 
             <tr>
+                <th class="table-cell">CNIC Front</th>
+                <td class="d-flex justify-content-between align-items-center gap-2">
+                    @php
+                    $hasAttachments = $user->hasMedia('users_cnic_front');
+                    $fileUrl = $hasAttachments ? $user->getFirstMediaUrl('users_cnic_front') : null;
+                    @endphp
+
+                    @if($hasAttachments)
+                    <a href="{{ $fileUrl }}" target="_blank" title="File" class="d-flex align-items-center gap-2">
+                        View
+                    </a>
+                    @else
+                    <span>Not Uploaded</span>
+                    @endif
+
+                    @if ($canUpload)
+                    <div class="no-print">
+                        <label for="cnic-front" class="btn btn-sm btn-light">
+                            <span class="d-flex align-items-center">
+                                <i class="bi-{{ $hasAttachments ? 'pencil-square' : 'plus-circle' }}"></i>&nbsp;
+                                {{ $hasAttachments ? 'Update' : 'Add' }}
+                            </span>
+                        </label>
+                        <input type="file" id="cnic-front" name="cnic-front" class="d-none file-input">
+                    </div>
+                    @endif
+                </td>
+            </tr>
+
+            <tr>
+                <th class="table-cell">CNIC Back</th>
+                <td class="d-flex justify-content-between align-items-center gap-2">
+                    @php
+                    $hasAttachments = $user->hasMedia('users_cnic_back');
+                    $fileUrl = $hasAttachments ? $user->getFirstMediaUrl('users_cnic_back') : null;
+                    @endphp
+
+                    @if($hasAttachments)
+                    <a href="{{ $fileUrl }}" target="_blank" title="File" class="d-flex align-items-center gap-2">
+                        View
+                    </a>
+                    @else
+                    <span>Not Uploaded</span>
+                    @endif
+
+                    @if ($canUpload)
+                    <div class="no-print">
+                        <label for="cnic-back" class="btn btn-sm btn-light">
+                            <span class="d-flex align-items-center">
+                                <i class="bi-{{ $hasAttachments ? 'pencil-square' : 'plus-circle' }}"></i>&nbsp;
+                                {{ $hasAttachments ? 'Update' : 'Add' }}
+                            </span>
+                        </label>
+                        <input type="file" id="cnic-back" name="cnic-back " class="d-none file-input">
+                    </div>
+                    @endif
+                </td>
+            </tr>
+
+            <tr>
+                <th class="table-cell">Covering Letter</th>
+                <td class="d-flex justify-content-between align-items-center gap-2">
+                    @php
+                    $hasAttachments = $ServiceCard->hasMedia('covering_letters');
+                    $fileUrl = $hasAttachments ? $ServiceCard->getFirstMediaUrl('covering_letters') : null;
+                    @endphp
+
+                    @if($hasAttachments)
+                    <a href="{{ $fileUrl }}" target="_blank" title="File" class="d-flex align-items-center gap-2">
+                        View
+                    </a>
+                    @else
+                    <span>Not Uploaded</span>
+                    @endif
+
+                    @if ($canUpload)
+                    <div class="no-print">
+                        <label for="covering-letter" class="btn btn-sm btn-light">
+                            <span class="d-flex align-items-center">
+                                <i class="bi-{{ $hasAttachments ? 'pencil-square' : 'plus-circle' }}"></i>&nbsp;
+                                {{ $hasAttachments ? 'Update' : 'Add' }}
+                            </span>
+                        </label>
+                        <input type="file" id="covering-letter" name="covering-letter " class="d-none file-input">
+                    </div>
+                    @endif
+                </td>
+            </tr>
+
+            <tr>
+                <th class="table-cell">Pay Slip (Preferably last month)</th>
+                <td class="d-flex justify-content-between align-items-center gap-2">
+                    @php
+                    $hasAttachments = $ServiceCard->hasMedia('payslips');
+                    $fileUrl = $hasAttachments ? $ServiceCard->getFirstMediaUrl('payslips') : null;
+                    @endphp
+
+                    @if($hasAttachments)
+                    <a href="{{ $fileUrl }}" target="_blank" title="File" class="d-flex align-items-center gap-2">
+                        View
+                    </a>
+                    @else
+                    <span>Not Uploaded</span>
+                    @endif
+
+                    @if ($canUpload)
+                    <div class="no-print">
+                        <label for="payslip" class="btn btn-sm btn-light">
+                            <span class="d-flex align-items-center">
+                                <i class="bi-{{ $hasAttachments ? 'pencil-square' : 'plus-circle' }}"></i>&nbsp;
+                                {{ $hasAttachments ? 'Update' : 'Add' }}
+                            </span>
+                        </label>
+                        <input type="file" id="payslip" name="payslip" class="d-none file-input">
+                    </div>
+                    @endif
+                </td>
+            </tr>
+
+            <tr>
                 <th class="table-cell">Status</th>
                 <td>
                     <span class="badge bg-{{ $ServiceCard->status == 'active' ? 'success' : ($ServiceCard->status == 'rejected' ? 'danger' : 'secondary') }}">
@@ -218,13 +338,6 @@
                 <td>{{ $ServiceCard->expired_at->format('d M, Y') }}</td>
             </tr>
             @endif
-
-            @if($ServiceCard->remarks)
-            <tr>
-                <th class="table-cell">Remarks</th>
-                <td>{{ $ServiceCard->remarks }}</td>
-            </tr>
-            @endif
         </table>
     </div>
 </div>
@@ -243,14 +356,15 @@
             placeholder: "____-_______"
         });
 
-        // Image cropper
         imageCropper({
             fileInput: '#image',
             inputLabelPreview: '#image-label-preview',
             aspectRatio: 5 / 6,
             onComplete: async function(file, input) {
                 var formData = new FormData();
-                formData.append('image', file);
+                const realFile = file[0] instanceof File ? file[0] : file;
+                formData.append('attachment', realFile);
+                formData.append('collection_name', 'profile_pictures');
                 formData.append('_method', "POST");
 
                 const url = "{{ route('admin.apps.service_cards.users.uploadFile', ':id') }}".replace(':id', '{{ $ServiceCard->id }}');
@@ -266,6 +380,40 @@
                 }
             }
         });
+
+        const fileUploaders = [
+            { selector: '#cnic-front', collection: 'users_cnic_front', ratio: 1.59 / 1 },
+            { selector: '#cnic-back', collection: 'users_cnic_back', ratio: 1.59 / 1 },
+            { selector: '#covering-letter', collection: 'covering_letters', ratio: 1 / 1.41 },
+            { selector: '#payslip', collection: 'payslips', ratio: 1 / 1.41 }
+        ];
+
+        fileUploaders.forEach(function(uploader) {
+            imageCropper({
+                fileInput: uploader.selector,
+                aspectRatio: uploader.ratio,
+                onComplete: async function(files, input) {
+                    var formData = new FormData();
+                    const realFile = files[0] instanceof File ? files[0] : files;
+                    formData.append('attachment', realFile);
+                    formData.append('collection_name', uploader.collection);
+                    formData.append('_method', "POST");
+
+                    const url = "{{ route('admin.apps.service_cards.users.uploadFile', ':id') }}".replace(':id', '{{ $ServiceCard->id }}');
+                    try {
+                        const result = await fetchRequest(url, 'POST', formData);
+                        if (result) {
+                            showNotification('Image uploaded successfully', 'success');
+                            location.reload();
+                        }
+                    } catch (error) {
+                        console.error('Error during form submission:', error);
+                        showNotification('Error uploading image', 'error');
+                    }
+                }
+            });
+        });
+        
     });
 
     $('#print-service_card-details').on('click', () => {

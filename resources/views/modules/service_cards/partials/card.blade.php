@@ -339,7 +339,7 @@
                     </div>
                     <div class="d-flex justify-content-between align-items-center ml-auto">
                         <div class="fw-bold">Card #: &emsp;</div>
-                        <div>000{{ $ServiceCard->id  }}</div>
+                        <div>{{ format_card_id($ServiceCard->id) }}</div>
                     </div>
                 </div>
                 <div class="info-row">

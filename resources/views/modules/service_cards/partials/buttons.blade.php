@@ -6,8 +6,9 @@
 @endphp
 
 <div class="action-btns">
-    @if ($user->can('view', $row))
+    @if ($user->can('detail', $row))
         <i class="view-btn bi-eye bg-light text-primary" title="View Details" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
+        <i class="info-btn bi-info-circle bg-light text-info" title="View Remarks" data-bs-toggle="tooltip" data-id="{{ $row->id }}"></i>
     @endif
     
     @if ($status === 'draft' && $user->can('pending', $row))

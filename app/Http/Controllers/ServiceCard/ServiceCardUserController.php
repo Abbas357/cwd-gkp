@@ -64,16 +64,23 @@ class ServiceCardUserController extends Controller
     public function uploadFile(Request $request, ServiceCard $ServiceCard)
     {
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,jpg,png,gif|max:5000',
+            'attachment' => 'required',
+            'collection_name' => 'required|string|in:profile_pictures,users_cnic_front,users_cnic_back,covering_letters,payslips',
         ]);
-
         if (!$ServiceCard->canBeEdited()) {
             return response()->json(['error' => 'Verified or rejected cards cannot be updated']);
         }
 
+        $file = $request->file('attachment');
+        $collection = $request->input('collection_name');
+
+        $modalToUpdate = in_array($collection, ['profile_pictures', 'users_cnic_front', 'users_cnic_back']) 
+            ? $ServiceCard->user 
+            : $ServiceCard;
+
         try {
-            $ServiceCard->addMedia($request->file('image'))
-                ->toMediaCollection('service_card_pictures');
+            $modalToUpdate->addMedia($file)
+                ->toMediaCollection($collection);
 
             return response()->json(['success' => 'Image uploaded successfully']);
         } catch (\Exception $e) {
