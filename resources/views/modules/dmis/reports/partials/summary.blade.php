@@ -103,8 +103,9 @@
                         </td>
                     <td class="text-center fw-medium"><a
                         href="{{ route('admin.apps.dmis.reports.district-details', ['district' => $district->id, 'type' => $type ?? 'Road', 'user' => $subordinate->id, 'road_status' => 'Partially restored']) }}">{{ $district->partially_restored }}</a></td>
-                    <td class="text-center fw-medium"><a
-                        href="{{ route('admin.apps.dmis.reports.district-details', ['district' => $district->id, 'type' => $type ?? 'Road', 'user' => $subordinate->id, 'road_status' => 'Not restored']) }}">{{ $district->not_restored }}</a></td>
+                    <td class="text-center fw-medium">
+                        <a class="print-link" href="{{ route('admin.apps.dmis.reports.district-details', ['district' => $district->id, 'type' => $type ?? 'Road', 'user' => $subordinate->id, 'road_status' => 'Not restored']) }}">{{ $district->not_restored }}</a>
+                    </td>
                     @if($costInfo)
                     <td class="text-center fw-medium">{{ number_format($district->restoration, 2) }}</td>
                     <td class="text-center fw-medium">{{ number_format($district->rehabilitation, 2) }}</td>

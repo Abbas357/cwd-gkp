@@ -179,6 +179,127 @@ class Office extends Model
         })->get();
     }
 
+    public function getSubordinateOfficesWithHighestRankingUsers()
+    {
+        $childOffices = $this->getAllDescendants();
+        
+        $result = collect();
+        
+        foreach ($childOffices as $office) {
+            $highestRankingUser = $office->getHighestRankingUser();
+            
+            if ($highestRankingUser) {
+                $result->push([
+                    'office' => $office,
+                    'highest_ranking_user' => $highestRankingUser
+                ]);
+            }
+        }
+        
+        return $result;
+    }
+
+    public function getDirectSubordinateOfficesWithHighestRankingUsers()
+    {
+        $childOffices = $this->children;
+        
+        $result = collect();
+        
+        foreach ($childOffices as $office) {
+            $highestRankingUser = $office->getHighestRankingUser();
+            
+            if ($highestRankingUser) {
+                $result->push([
+                    'office' => $office,
+                    'highest_ranking_user' => $highestRankingUser
+                ]);
+            } else {
+                // If no user in direct child office, check deeper
+                $deeperResult = $this->getDeepestSubordinateOfficesWithHighestRankingUsers($office);
+                $result = $result->merge($deeperResult);
+            }
+        }
+        
+        return $result;
+    }
+
+    protected function getDeepestSubordinateOfficesWithHighestRankingUsers($office)
+    {
+        $result = collect();
+        
+        $highestRankingUser = $office->getHighestRankingUser();
+        
+        if ($highestRankingUser) {
+            $result->push([
+                'office' => $office,
+                'highest_ranking_user' => $highestRankingUser
+            ]);
+            return $result;
+        }
+        
+        $childOffices = $office->children;
+        
+        foreach ($childOffices as $childOffice) {
+            $deeperResult = $this->getDeepestSubordinateOfficesWithHighestRankingUsers($childOffice);
+            $result = $result->merge($deeperResult);
+        }
+        
+        return $result;
+    }
+
+    public function getHighestRankingUser()
+    {
+        return User::select('users.*')
+            ->join('postings', 'users.id', '=', 'postings.user_id')
+            ->join('designations', 'postings.designation_id', '=', 'designations.id')
+            ->where('postings.office_id', $this->id)
+            ->where('postings.is_current', true)
+            ->orderBy('designations.bps', 'desc')
+            ->first();
+    }
+
+    public function getUsersByRank()
+    {
+        return User::select('users.*', 'designations.bps')
+            ->join('postings', 'users.id', '=', 'postings.user_id')
+            ->join('designations', 'postings.designation_id', '=', 'designations.id')
+            ->where('postings.office_id', $this->id)
+            ->where('postings.is_current', true)
+            ->orderBy('designations.bps', 'desc')
+            ->get();
+    }
+
+    public function getSubordinateUsersHighestRanking()
+    {
+        $childOffices = $this->getAllDescendants();
+        
+        if ($childOffices->isEmpty()) {
+            return collect();
+        }
+        
+        $childOfficeIds = $childOffices->pluck('id')->toArray();
+        
+        // Use a subquery to get max BPS per office, then join to get users
+        $subordinates = User::select('users.*')
+            ->join('postings', 'users.id', '=', 'postings.user_id')
+            ->join('designations', 'postings.designation_id', '=', 'designations.id')
+            ->join(DB::raw('(
+                SELECT postings.office_id, MAX(designations.bps) as max_bps
+                FROM postings
+                JOIN designations ON postings.designation_id = designations.id
+                WHERE postings.is_current = 1
+                GROUP BY postings.office_id
+            ) as max_bps_per_office'), function($join) {
+                $join->on('postings.office_id', '=', 'max_bps_per_office.office_id')
+                    ->on('designations.bps', '=', 'max_bps_per_office.max_bps');
+            })
+            ->whereIn('postings.office_id', $childOfficeIds)
+            ->where('postings.is_current', true)
+            ->get();
+        
+        return $subordinates;
+    }
+
     public function district()
     {
         return $this->belongsTo(District::class);
