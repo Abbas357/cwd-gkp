@@ -77,7 +77,7 @@ class DownloadController extends Controller
     public function create()
     {
         $cat = [
-            'file_type' => ['pdf', 'Image', 'docs', 'pptx', 'xlsx'],
+            'file_type' => ['pdf', 'Image', 'docs', 'pptx', 'xlsx', 'zip', 'rar', 'txt', 'csv', 'mp4', 'mp3','exe', 'apk','jar'],
         ];
         $html = view('admin.downloads.partials.create', compact('cat'))->render();
         return response()->json([
