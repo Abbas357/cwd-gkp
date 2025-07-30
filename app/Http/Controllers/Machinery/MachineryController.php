@@ -22,6 +22,8 @@ class MachineryController extends Controller
         $relationMappings = [
             'added_by' => 'user.currentDesignation.name',
             'office_name' => 'allocation.office.name',
+            'assigned_to' => 'allocation.office.name',
+            'district' => 'allocation.office.district.name',
         ];
 
         if ($request->ajax()) {
@@ -37,6 +39,9 @@ class MachineryController extends Controller
                 })
                 ->addColumn('assigned_to', function ($row) {
                     return view('modules.machinery.partials.assignment', compact('row'))->render();
+                })
+                ->addColumn('district', function ($row) {
+                    return $row->allocation?->office?->district?->name ?? 'N/A';
                 })
                 ->editColumn('created_at', function ($row) {
                     return $row->created_at->format('j, F Y');

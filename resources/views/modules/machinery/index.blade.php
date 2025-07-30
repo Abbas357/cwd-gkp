@@ -23,6 +23,7 @@
                     <th scope="col" class="p-3">Registration Number</th>
                     <th scope="col" class="p-3">Chassis Number</th>
                     <th scope="col" class="p-3">Engine Number</th>
+                    <th scope="col" class="p-3">District</th>
                     <th scope="col" class="p-3">Assigned To</th>
                     <th scope="col" class="p-3">Added By</th>
                     <th scope="col" class="p-3">Remarks</th>
@@ -85,6 +86,10 @@
                         , searchBuilderType: "string"
                     }
                     , {
+                        data: "district"
+                        , searchBuilderType: "string"
+                    }
+                    , {
                         data: "assigned_to"
                         , searchBuilderType: "string"
                     }
@@ -114,7 +119,7 @@
                 , defaultOrderColumn: 20
                 , defaultOrderDirection: 'desc'
                 , columnDefs: [{
-                    targets: [0, 7, 8, 9, 11, 13]
+                    targets: [0, 7, 8, 9, 12, 13]
                     , visible: false
                     }, {
                         targets: -1,

@@ -338,7 +338,7 @@ class ServiceCardUserController extends Controller
         
         $userOffices = collect([$currentUser->currentOffice]);
         if ($currentUser->currentOffice) {
-            $childOffices = $currentUser->currentOffice->getAllDescendants();
+            $childOffices = $currentUser->getUsersFromSameOffice();
             $userOffices = $userOffices->merge($childOffices);
         }
         $officeIds = $userOffices->pluck('id')->toArray();

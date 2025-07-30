@@ -1,9 +1,4 @@
 <style>
-    .remarks-timeline-container {
-        max-height: 600px;
-        overflow-y: auto;
-    }
-
     .remarks-timeline-container::-webkit-scrollbar {
         width: 6px;
     }
@@ -170,7 +165,7 @@
                     <div class="d-flex align-items-start">
                         <div class="timeline-marker position-relative flex-shrink-0 me-3">
                             <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm border border-2 border-white {{ $colors['dot'] }}"
-                                style="width: 48px; height: 48px;">
+                                style="width: 38px; height: 38px;">
                                 <i class="{{ getRemarkIcon($remark['type']) }} text-white"></i>
                             </div>
                             <div class="position-absolute bg-white border {{ $colors['border'] }} rounded-circle d-flex align-items-center justify-content-center"
@@ -181,12 +176,11 @@
 
                         <div class="flex-fill">
                             <div
-                                class="card border-start border-4 {{ $colors['border'] }} {{ $colors['bg'] }} shadow-sm">
-                                <div class="card-body p-3">
+                                class="card mb-0 border-start border-2 {{ $colors['border'] }} {{ $colors['bg'] }} shadow-sm">
+                                <div class="card-body p-2">
                                     <div class="d-flex align-items-center justify-content-between mb-2">
                                         <span
                                             class="badge {{ $colors['bg'] }} {{ $colors['text'] }} border {{ $colors['border'] }}">
-                                            <i class="{{ getRemarkIcon($remark['type']) }} me-1"></i>
                                             {{ $remark['type'] }}
                                         </span>
                                     </div>
