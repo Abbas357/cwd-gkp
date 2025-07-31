@@ -128,22 +128,28 @@ class ServiceCardUserController extends Controller
             'sanctioned_positions' => 'nullable|integer|min:1',
             'exceed_sanctioned' => 'nullable|boolean',
             'override_sanctioned_post' => 'nullable|boolean',
-            'excess_justification' => 'nullable|string'
+            'excess_justification' => 'nullable|string',
+            'posting_id' => 'nullable|exists:postings,id', // For admin/viewAny users
         ]);
 
         $currentUser = auth_user();
         
-        // Verify the office is in user's domain
-        $userOffices = collect([$currentUser->currentOffice]);
-        if ($currentUser->currentOffice) {
-            $childOffices = $currentUser->currentOffice->getAllDescendants();
-            $userOffices = $userOffices->merge($childOffices);
-        }
+        // Check if user is admin or has viewAny permission
+        $isAdminOrCanViewAny = $currentUser->isAdmin() || $currentUser->can('viewAny', ServiceCard::class);
         
-        if (!$userOffices->pluck('id')->contains($request->office_id)) {
-            return response()->json([
-                'type' => 'error',
-                'message' => 'You can only create users in your office domain.']);
+        // Verify the office is in user's domain (only if not admin/viewAny)
+        if (!$isAdminOrCanViewAny) {
+            $userOffices = collect([$currentUser->currentOffice]);
+            if ($currentUser->currentOffice) {
+                $childOffices = $currentUser->currentOffice->getAllDescendants();
+                $userOffices = $userOffices->merge($childOffices);
+            }
+            
+            if (!$userOffices->pluck('id')->contains($request->office_id)) {
+                return response()->json([
+                    'type' => 'error',
+                    'message' => 'You can only create users in your office domain.']);
+            }
         }
 
         DB::beginTransaction();
@@ -227,11 +233,20 @@ class ServiceCardUserController extends Controller
 
             $user->postings()->create($postingData);
 
+            // Determine posting_id for service card
+            $postingId = $currentUser->currentPosting->id;
+            
+            // If admin/viewAny user provided a specific posting_id, use that
+            if ($isAdminOrCanViewAny && $request->filled('posting_id')) {
+                $postingId = $request->posting_id;
+            }
+
             ServiceCard::create([
                 'uuid' => Str::uuid(),
                 'user_id' => $user->id,
-                'posting_id' => auth_user()->currentPosting->id,
-                'remarks' => 'Applied by ' . $currentUser->name . ' (Focal Person)',
+                'posting_id' => $postingId,
+                'remarks' => 'Applied by ' . $currentUser->name . 
+                    ($isAdminOrCanViewAny ? ' (Admin/Authorized User)' : ' (Focal Person)'),
                 'status_updated_by' => $currentUser->id,
                 'status_updated_at' => now()
             ]);
@@ -278,17 +293,23 @@ class ServiceCardUserController extends Controller
 
         $currentUser = auth_user();
         
-        $userOffices = collect([$currentUser->currentOffice]);
-        if ($currentUser->currentOffice) {
-            $childOffices = $currentUser->currentOffice->getAllDescendants();
-            $userOffices = $userOffices->merge($childOffices);
-        }
+        // Check if user is admin or has viewAny permission
+        $isAdminOrCanViewAny = $currentUser->isAdmin() || $currentUser->can('viewAny', ServiceCard::class);
         
-        if (!$userOffices->pluck('id')->contains($user->currentOffice?->id)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'You can only update profiles of users in your office domain.'
-            ]);
+        // Skip office domain check for admin/viewAny users
+        if (!$isAdminOrCanViewAny) {
+            $userOffices = collect([$currentUser->currentOffice]);
+            if ($currentUser->currentOffice) {
+                $childOffices = $currentUser->currentOffice->getAllDescendants();
+                $userOffices = $userOffices->merge($childOffices);
+            }
+            
+            if (!$userOffices->pluck('id')->contains($user->currentOffice?->id)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You can only update profiles of users in your office domain.'
+                ]);
+            }
         }
 
         try {
@@ -336,6 +357,8 @@ class ServiceCardUserController extends Controller
         
         $currentUser = auth_user();
         
+        $isAdminOrCanViewAny = $currentUser->isAdmin() || $currentUser->can('viewAny', ServiceCard::class);
+        
         $userOffices = collect([$currentUser->currentOffice]);
         if ($currentUser->currentOffice) {
             $childOffices = $currentUser->getUsersFromSameOffice();
@@ -368,8 +391,8 @@ class ServiceCardUserController extends Controller
         ->limit(10)
         ->get();
         
-        $result = $users->map(function ($user) use ($officeIds, $forServiceCard) {
-            $isSubordinate = in_array($user->currentOffice?->id, $officeIds);
+        $result = $users->map(function ($user) use ($officeIds, $forServiceCard, $isAdminOrCanViewAny) {
+            $isSubordinate = in_array($user->currentOffice?->id, $officeIds) || $isAdminOrCanViewAny;
             $hasServiceCard = $user->serviceCards->isNotEmpty();
             
             $data = [
@@ -384,6 +407,7 @@ class ServiceCardUserController extends Controller
                 'is_subordinate' => $isSubordinate,
                 'has_service_card' => $hasServiceCard,
                 'can_renew' => $hasServiceCard && $user->serviceCards->first()?->canBeRenewed(),
+                'is_admin_override' => $isAdminOrCanViewAny && !in_array($user->currentOffice?->id, $officeIds),
             ];
             
             if ($forServiceCard) {

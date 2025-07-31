@@ -70,10 +70,6 @@
                     <a id="expired-tab" class="nav-link" data-bs-toggle="tab" href="#expired">Expired</a>
                 </li>
                 <li class="nav-item">
-                    <a id="needs-renewal-tab" class="nav-link" data-bs-toggle="tab" href="#needs-renewal">Needs
-                        Renewal</a>
-                </li>
-                <li class="nav-item">
                     <a id="lost-tab" class="nav-link" data-bs-toggle="tab" href="#lost">Lost</a>
                 </li>
                 <li class="nav-item">
@@ -212,7 +208,6 @@
                         "#rejected-tab": '#rejected',
                         "#printed-tab": '#printed',
                         "#expired-tab": '#expired',
-                        "#needs-renewal-tab": '#needs-renewal',
                         "#lost-tab": '#lost',
                         "#duplicate-tab": '#duplicate',
                     },
@@ -234,9 +229,6 @@
                         },
                         '#expired': {
                             status: 'expired'
-                        },
-                        '#needs-renewal': {
-                            needs_renewal: true
                         },
                         '#lost': {
                             status: 'lost'

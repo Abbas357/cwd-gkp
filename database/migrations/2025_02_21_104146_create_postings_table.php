@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date')->nullable();
             $table->boolean('is_current')->default(false);
+            $table->boolean('is_head')->default(false);
             $table->string('order_number')->nullable();
             $table->text('remarks')->nullable();
             $table->timestamps();

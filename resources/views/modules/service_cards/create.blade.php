@@ -68,6 +68,13 @@
                 content: " *";
                 color: #dc3545;
             }
+            
+            .admin-notice {
+                background-color: #f0f8ff;
+                border-left: 4px solid #0066cc;
+                padding: 15px;
+                margin-bottom: 20px;
+            }
         </style>
     @endpush
 
@@ -80,6 +87,12 @@
     </x-slot>
 
     <div class="mt-3">
+        @if(isset($isAdminOrCanViewAny) && $isAdminOrCanViewAny)
+        <div class="admin-notice">
+            <i class="bi bi-shield-check"></i> <strong>Administrator Mode:</strong> You can create service cards for any user across all offices.
+        </div>
+        @endif
+        
         <!-- Step 1: User Selection -->
         <div class="card shadow-md mb-4">
             <div class="card-header bg-primary-subtle text-white">
@@ -139,6 +152,7 @@
                     <form id="applyForm" method="POST" action="{{ route('admin.apps.service_cards.store') }}">
                         @csrf
                         <input type="hidden" name="user_id" id="apply_user_id">
+                        <input type="hidden" name="posting_id" id="apply_posting_id">
 
                         <div class="row mb-3">
                             <div class="col-md-12">
@@ -250,6 +264,7 @@
                         action="{{ route('admin.apps.service_cards.users.store') }}" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="apply_service_card" value="1">
+                        <input type="hidden" name="posting_id" id="create_posting_id">
 
                         <div class="row">
                             <div class="col-md-8">
@@ -508,6 +523,7 @@
         <script>
             let selectedUser = null;
             let searchTimeout = null;
+            const isAdminOrCanViewAny = {{ isset($isAdminOrCanViewAny) && $isAdminOrCanViewAny ? 'true' : 'false' }};
 
             const requiredFields = {
                 'father_name': 'Father Name',
@@ -614,18 +630,20 @@
                     return;
                 }
 
-                const subordinates = results.filter(user => user.is_subordinate);
-                const nonSubordinates = results.filter(user => !user.is_subordinate);
+                const subordinates = results.filter(user => user.is_subordinate && !user.is_admin_override);
+                const nonSubordinates = results.filter(user => !user.is_subordinate && !user.is_admin_override);
+                const adminOverride = results.filter(user => user.is_admin_override);
 
                 let html = '';
 
-                html += `
-                    <div class="mb-4 border border-success"><h5 class="text-secondary bg-success-subtle p-1 mb-3">Users in Your Office</h5>
-                `;
-
-                if (subordinates.length > 0) {
+                // Show Admin Override section if applicable
+                if (isAdminOrCanViewAny && adminOverride.length > 0) {
+                    html += `
+                        <div class="mb-4 border border-info">
+                            <h5 class="text-secondary bg-info-subtle p-1 mb-3">All Users (Administrator Access)</h5>
+                    `;
                     html += '<div class="row">';
-                    subordinates.forEach(user => {
+                    adminOverride.forEach(user => {
                         const hasServiceCard = user.has_service_card;
                         html += `
                             <div class="col-md-4 mb-3">
@@ -645,7 +663,7 @@
                                         </div>
                                         <div class="mt-2">
                                             ${hasServiceCard ? '<span class="badge bg-success">Has Service Card</span>' : ''}
-                                            <span class="badge bg-primary">In Your Office</span>
+                                            <span class="badge bg-info">Admin Access</span>
                                         </div>
                                     </div>
                                 </div>
@@ -653,60 +671,97 @@
                         `;
                     });
                     html += '</div>';
+                    html += '</div>';
                 } else {
                     html += `
-                        <div class="alert alert-info">
-                            <i class="bi bi-info-circle"></i> No users in this list by default
-                        </div>
+                        <div class="mb-4 border border-success"><h5 class="text-secondary bg-success-subtle p-1 mb-3">Users in Your Office</h5>
                     `;
-                }
 
-                html += '</div>';
-
-                html += `
-                    <div class="mb-4 border border-warning">
-                        <h5 class="text-secondary bg-warning-subtle p-1 mb-3">Users Not in Your Office</h5>
-                `;
-
-                if (nonSubordinates.length > 0) {
-                    html += '<div class="row">';
-                    nonSubordinates.forEach(user => {
-                        const hasServiceCard = user.has_service_card;
+                    if (subordinates.length > 0) {
+                        html += '<div class="row">';
+                        subordinates.forEach(user => {
+                            const hasServiceCard = user.has_service_card;
+                            html += `
+                                <div class="col-md-4 mb-3">
+                                    <div class="card user-card" onclick="selectUser(${JSON.stringify(user).replace(/"/g, '&quot;')})">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <img src="${user.profile_picture}" 
+                                                        class="rounded-circle" width="50" height="50">
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <h6 class="mb-0">${user.name}</h6>
+                                                    <small class="text-muted">${user.designation || 'N/A'} - ${user.office || 'N/A'}</small>
+                                                    <br>
+                                                    <small>CNIC: ${user.cnic || 'N/A'} | Personnel: ${user.personnel_number || 'N/A'}</small>
+                                                </div>
+                                            </div>
+                                            <div class="mt-2">
+                                                ${hasServiceCard ? '<span class="badge bg-success">Has Service Card</span>' : ''}
+                                                <span class="badge bg-primary">In Your Office</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        html += '</div>';
+                    } else {
                         html += `
-                            <div class="col-md-4 mb-3">
-                                <div class="card user-card" onclick="selectUser(${JSON.stringify(user).replace(/"/g, '&quot;')})">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <img src="${user.profile_picture}" 
-                                                    class="rounded-circle" width="50" height="50">
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i> No users in this list by default
+                            </div>
+                        `;
+                    }
+
+                    html += '</div>';
+
+                    html += `
+                        <div class="mb-4 border border-warning">
+                            <h5 class="text-secondary bg-warning-subtle p-1 mb-3">Users Not in Your Office</h5>
+                    `;
+
+                    if (nonSubordinates.length > 0) {
+                        html += '<div class="row">';
+                        nonSubordinates.forEach(user => {
+                            const hasServiceCard = user.has_service_card;
+                            html += `
+                                <div class="col-md-4 mb-3">
+                                    <div class="card user-card" onclick="selectUser(${JSON.stringify(user).replace(/"/g, '&quot;')})">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <img src="${user.profile_picture}" 
+                                                        class="rounded-circle" width="50" height="50">
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <h6 class="mb-0">${user.name}</h6>
+                                                    <small class="text-muted">${user.designation || 'N/A'} - ${user.office || 'N/A'}</small>
+                                                    <br>
+                                                    <small>CNIC: ${user.cnic || 'N/A'} | Personnel: ${user.personnel_number || 'N/A'}</small>
+                                                </div>
                                             </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                <h6 class="mb-0">${user.name}</h6>
-                                                <small class="text-muted">${user.designation || 'N/A'} - ${user.office || 'N/A'}</small>
-                                                <br>
-                                                <small>CNIC: ${user.cnic || 'N/A'} | Personnel: ${user.personnel_number || 'N/A'}</small>
+                                            <div class="mt-2">
+                                                ${hasServiceCard ? '<span class="badge bg-success">Has Service Card</span>' : ''}
+                                                <span class="badge bg-warning">Transfer Required</span>
                                             </div>
-                                        </div>
-                                        <div class="mt-2">
-                                            ${hasServiceCard ? '<span class="badge bg-success">Has Service Card</span>' : ''}
-                                            <span class="badge bg-warning">Transfer Required</span>
                                         </div>
                                     </div>
                                 </div>
+                            `;
+                        });
+                        html += '</div>';
+                    } else {
+                        html += `
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i> No users in this list by default
                             </div>
                         `;
-                    });
-                    html += '</div>';
-                } else {
-                    html += `
-                        <div class="alert alert-info">
-                            <i class="bi bi-info-circle"></i> No users in this list by default
-                        </div>
-                    `;
-                }
+                    }
 
-                html += '</div>';
+                    html += '</div>';
+                }
 
                 $('#searchResults').html(html);
             }
@@ -735,7 +790,7 @@
                         ${user.can_renew ? '<br>The card can be renewed.' : ''}
                     </div>
                 `);
-                } else if (user.is_subordinate) {
+                } else if (user.is_subordinate || (isAdminOrCanViewAny && user.is_admin_override)) {
                     checkProfileCompletion(user);
                 } else {
                     $('#transfer_user_id').val(user.id);
@@ -770,6 +825,11 @@
                     showProfileValidation(user, missingFields, completedFields);
                 } else {
                     $('#apply_user_id').val(user.id);
+                    // For admin users, they might want to specify a different posting_id
+                    if (isAdminOrCanViewAny) {
+                        // You can add a field in the apply form for posting_id selection if needed
+                        // For now, it will use the current user's posting_id
+                    }
                     $('#applySection').addClass('active');
                 }
             }
@@ -915,6 +975,12 @@
                 $('#actionSection').removeClass('d-none');
                 $('.action-section').removeClass('active');
                 $('#createUserSection').addClass('active');
+                
+                // Set posting_id for admin users if needed
+                if (isAdminOrCanViewAny) {
+                    // For now, use current user's posting_id
+                    // You can modify this to allow selection of posting_id
+                }
             }
 
             function resetSelection() {

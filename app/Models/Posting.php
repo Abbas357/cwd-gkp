@@ -21,6 +21,7 @@ class Posting extends Model implements HasMedia
 
     protected $casts = [
         'is_current' => 'boolean',
+        'is_head' => 'boolean',
         'start_date' => 'date',
         'end_date' => 'date'
     ];
@@ -200,7 +201,8 @@ class Posting extends Model implements HasMedia
     {
         $this->update([
             'end_date' => $endDate,
-            'is_current' => false
+            'is_current' => false,
+            'is_head' => false
         ]);
     }
     
@@ -221,4 +223,174 @@ class Posting extends Model implements HasMedia
             
         return $currentPostingsCount < $sanctionedPost->total_positions;
     }
+
+    public function scopeHeads($query)
+    {
+        return $query->where('is_head', true);
+    }
+
+    public function scopeCurrentHeads($query)
+    {
+        return $query->where('is_current', true)->where('is_head', true);
+    }
+
+    public function makeHead()
+    {
+        static::where('office_id', $this->office_id)
+            ->where('is_current', true)
+            ->where('is_head', true)
+            ->update(['is_head' => false]);
+        
+        $this->update(['is_head' => true]);
+    }
+
+    public function removeAsHead()
+    {
+        $this->update(['is_head' => false]);
+    }    
 }
+
+// Example: PostingController or PostingService methods
+
+// class PostingService
+// {
+//     /**
+//      * Create a new posting and optionally mark as head
+//      */
+//     public function createPosting(array $data)
+//     {
+//         // Check if this should be marked as head
+//         $isHead = $this->shouldBeHead($data);
+        
+//         // If marking as head, remove current head
+//         if ($isHead) {
+//             Posting::where('office_id', $data['office_id'])
+//                 ->where('is_current', true)
+//                 ->where('is_head', true)
+//                 ->update(['is_head' => false]);
+//         }
+        
+//         return Posting::create([
+//             'user_id' => $data['user_id'],
+//             'office_id' => $data['office_id'],
+//             'designation_id' => $data['designation_id'],
+//             'type' => $data['type'] ?? 'Appointment',
+//             'start_date' => $data['start_date'],
+//             'is_current' => true,
+//             'is_head' => $isHead,
+//             'order_number' => $data['order_number'] ?? null,
+//             'remarks' => $data['remarks'] ?? null,
+//         ]);
+//     }
+
+//     /**
+//      * Determine if a posting should be marked as head
+//      */
+//     protected function shouldBeHead(array $data): bool
+//     {
+//         // Explicit head assignment
+//         if (isset($data['is_head'])) {
+//             return (bool) $data['is_head'];
+//         }
+        
+//         // Auto-determine based on designation BPS
+//         $designation = Designation::find($data['designation_id']);
+//         if (!$designation) {
+//             return false;
+//         }
+        
+//         // Common leadership designations (customize based on your org)
+//         $leadershipDesignations = [
+//             'Secretary', 'Additional Secretary', 'Deputy Secretary',
+//             'Director General', 'Director', 'Deputy Director',
+//             'Commissioner', 'Deputy Commissioner', 'Assistant Commissioner',
+//             'Chief Engineer', 'Superintending Engineer', 'Executive Engineer',
+//             // Add more as needed
+//         ];
+        
+//         foreach ($leadershipDesignations as $leadership) {
+//             if (stripos($designation->name, $leadership) !== false) {
+//                 return true;
+//             }
+//         }
+        
+//         // BPS-based logic (adjust thresholds as needed)
+//         if ($designation->bps >= 17) {
+//             // Check if office already has a head at similar or higher BPS
+//             $existingHead = Posting::where('office_id', $data['office_id'])
+//                 ->where('is_current', true)
+//                 ->where('is_head', true)
+//                 ->whereHas('designation', function ($query) use ($designation) {
+//                     $query->where('bps', '>=', $designation->bps);
+//                 })
+//                 ->exists();
+            
+//             return !$existingHead;
+//         }
+        
+//         return false;
+//     }
+
+//     /**
+//      * Transfer head status to another user in the same office
+//      */
+//     public function transferHeadship($fromUserId, $toUserId, $officeId)
+//     {
+//         DB::transaction(function () use ($fromUserId, $toUserId, $officeId) {
+//             // Remove head status from current head
+//             Posting::where('user_id', $fromUserId)
+//                 ->where('office_id', $officeId)
+//                 ->where('is_current', true)
+//                 ->update(['is_head' => false]);
+            
+//             // Assign head status to new user
+//             Posting::where('user_id', $toUserId)
+//                 ->where('office_id', $officeId)
+//                 ->where('is_current', true)
+//                 ->update(['is_head' => true]);
+//         });
+//     }
+
+//     /**
+//      * Get offices without heads (for dashboard/reports)
+//      */
+//     public function getOfficesWithoutHeads()
+//     {
+//         return Office::whereDoesntHave('postings', function ($query) {
+//             $query->where('is_current', true)
+//                 ->where('is_head', true);
+//         })
+//         ->whereHas('postings', function ($query) {
+//             $query->where('is_current', true);
+//         })
+//         ->with(['currentPostings.user', 'currentPostings.designation'])
+//         ->get();
+//     }
+// }
+
+// // Example usage in a controller
+// class PostingController extends Controller
+// {
+//     public function store(Request $request)
+//     {
+//         $validated = $request->validate([
+//             'user_id' => 'required|exists:users,id',
+//             'office_id' => 'required|exists:offices,id',
+//             'designation_id' => 'required|exists:designations,id',
+//             'start_date' => 'required|date',
+//             'is_head' => 'boolean',
+//             // other fields...
+//         ]);
+        
+//         $posting = app(PostingService::class)->createPosting($validated);
+        
+//         return redirect()->route('postings.show', $posting);
+//     }
+    
+//     public function makeHead(Posting $posting)
+//     {
+//         $posting->makeHead();
+        
+//         return back()->with('success', 'User has been made head of the office');
+//     }
+// }

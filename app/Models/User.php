@@ -5,9 +5,7 @@ namespace App\Models;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\Activitylog\LogOptions;
-
 use Spatie\Permission\Traits\HasRoles;
-
 use Spatie\Activitylog\Models\Activity;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Builder;
@@ -96,7 +94,7 @@ class User extends Authenticatable implements HasMedia
     protected static function booted()
     {
         static::addGlobalScope('active', function (Builder $builder) {
-            $builder->where('status', 'Active');
+            $builder->where('users.status', 'Active');
         });
     }
 
@@ -303,96 +301,96 @@ class User extends Authenticatable implements HasMedia
             ->where('postings.is_current', true);
     }
 
-    public function getPotentialSupervisors()
-    {
-        if (!$this->currentPosting || !$this->currentOffice) {
-            return collect();
-        }
+    // public function getPotentialSupervisors()
+    // {
+    //     if (!$this->currentPosting || !$this->currentOffice) {
+    //         return collect();
+    //     }
 
-        $office = $this->currentOffice;
-        $currentDesignation = $this->currentDesignation;
+    //     $office = $this->currentOffice;
+    //     $currentDesignation = $this->currentDesignation;
 
-        $parentOffices = $office->getAncestors();
+    //     $parentOffices = $office->getAncestors();
 
-        if ($parentOffices->isEmpty()) {
-            return collect();
-        }
+    //     if ($parentOffices->isEmpty()) {
+    //         return collect();
+    //     }
 
-        $potentialSupervisors = collect();
+    //     $potentialSupervisors = collect();
 
-        foreach ($parentOffices as $parentOffice) {
-            $supervisors = User::whereHas('currentPosting', function ($query) use ($parentOffice) {
-                $query->where('office_id', $parentOffice->id)
-                    ->where('is_current', true);
-            })->get();
+    //     foreach ($parentOffices as $parentOffice) {
+    //         $supervisors = User::whereHas('currentPosting', function ($query) use ($parentOffice) {
+    //             $query->where('office_id', $parentOffice->id)
+    //                 ->where('is_current', true);
+    //         })->get();
 
-            $potentialSupervisors = $potentialSupervisors->merge($supervisors);
-        }
+    //         $potentialSupervisors = $potentialSupervisors->merge($supervisors);
+    //     }
 
-        return $potentialSupervisors;
-    }
+    //     return $potentialSupervisors;
+    // }
 
-    public function getDirectSupervisor()
-    {
-        if (!$this->currentPosting || !$this->currentOffice) {
-            return null;
-        }
+    // public function getDirectSupervisor()
+    // {
+    //     if (!$this->currentPosting || !$this->currentOffice) {
+    //         return null;
+    //     }
 
-        $office = $this->currentOffice;
+    //     $office = $this->currentOffice;
 
-        if (!$office->parent_id) {
-            return null;
-        }
+    //     if (!$office->parent_id) {
+    //         return null;
+    //     }
 
-        $parentOffice = Office::find($office->parent_id);
+    //     $parentOffice = Office::find($office->parent_id);
 
-        $supervisor = User::whereHas('currentPosting', function ($query) use ($parentOffice) {
-            $query->where('office_id', $parentOffice->id)
-                ->where('is_current', true);
-        })
-            ->whereHas('currentDesignation', function ($query) {
-                $query->orderByDesc('bps');
-            })
-            ->first();
+    //     $supervisor = User::whereHas('currentPosting', function ($query) use ($parentOffice) {
+    //         $query->where('office_id', $parentOffice->id)
+    //             ->where('is_current', true);
+    //     })
+    //         ->whereHas('currentDesignation', function ($query) {
+    //             $query->orderByDesc('bps');
+    //         })
+    //         ->first();
 
-        return $supervisor;
-    }
+    //     return $supervisor;
+    // }
 
-    public function getSubordinates()
-    {
-        if (!$this->currentPosting || !$this->currentOffice) {
-            return collect();
-        }
+    // public function getSubordinates()
+    // {
+    //     if (!$this->currentPosting || !$this->currentOffice) {
+    //         return collect();
+    //     }
 
-        $office = $this->currentOffice;
+    //     $office = $this->currentOffice;
 
-        $childOffices = $office->getAllDescendants();
+    //     $childOffices = $office->getAllDescendants();
 
-        if ($childOffices->isEmpty()) {
-            $currentDesignation = $this->currentDesignation;
+    //     if ($childOffices->isEmpty()) {
+    //         $currentDesignation = $this->currentDesignation;
 
-            if (!$currentDesignation) {
-                return collect();
-            }
+    //         if (!$currentDesignation) {
+    //             return collect();
+    //         }
 
-            return User::whereHas('currentPosting', function ($query) use ($office) {
-                $query->where('office_id', $office->id)
-                    ->where('is_current', true);
-            })
-                ->whereHas('currentDesignation', function ($query) use ($currentDesignation) {
-                    $query->where('bps', '<', $currentDesignation->bps);
-                })
-                ->where('id', '!=', $this->id)
-                ->get();
-        }
+    //         return User::whereHas('currentPosting', function ($query) use ($office) {
+    //             $query->where('office_id', $office->id)
+    //                 ->where('is_current', true);
+    //         })
+    //             ->whereHas('currentDesignation', function ($query) use ($currentDesignation) {
+    //                 $query->where('bps', '<', $currentDesignation->bps);
+    //             })
+    //             ->where('id', '!=', $this->id)
+    //             ->get();
+    //     }
 
-        $childOfficeIds = $childOffices->pluck('id')->toArray();
+    //     $childOfficeIds = $childOffices->pluck('id')->toArray();
 
-        return User::whereHas('currentPosting', function ($query) use ($childOfficeIds) {
-            $query->whereIn('office_id', $childOfficeIds)
-                ->where('is_current', true);
-        })->get();
-    }
+    //     return User::whereHas('currentPosting', function ($query) use ($childOfficeIds) {
+    //         $query->whereIn('office_id', $childOfficeIds)
+    //             ->where('is_current', true);
+    //     })->get();
+    // }
 
 
     public function getUsers()
@@ -408,33 +406,33 @@ class User extends Authenticatable implements HasMedia
         return $this->getDirectSubordinates();
     }
 
-    public function getDirectSubordinates()
-    {
-        if (!$this->currentPosting || !$this->currentOffice) {
-            return collect();
-        }
+    // public function getDirectSubordinates()
+    // {
+    //     if (!$this->currentPosting || !$this->currentOffice) {
+    //         return collect();
+    //     }
 
-        $office = $this->currentOffice;
-        $directSubordinates = collect();
+    //     $office = $this->currentOffice;
+    //     $directSubordinates = collect();
 
-        $childOffices = $office->children;
+    //     $childOffices = $office->children;
 
-        foreach ($childOffices as $childOffice) {
-            $usersInChildOffice = User::whereHas('currentPosting', function ($query) use ($childOffice) {
-                $query->where('office_id', $childOffice->id)
-                    ->where('is_current', true);
-            })->get();
+    //     foreach ($childOffices as $childOffice) {
+    //         $usersInChildOffice = User::whereHas('currentPosting', function ($query) use ($childOffice) {
+    //             $query->where('office_id', $childOffice->id)
+    //                 ->where('is_current', true);
+    //         })->get();
 
-            if ($usersInChildOffice->isNotEmpty()) {
-                $directSubordinates = $directSubordinates->merge($usersInChildOffice);
-            } else {
-                $deeperSubordinates = $this->getDeepestDirectSubordinates($childOffice);
-                $directSubordinates = $directSubordinates->merge($deeperSubordinates);
-            }
-        }
+    //         if ($usersInChildOffice->isNotEmpty()) {
+    //             $directSubordinates = $directSubordinates->merge($usersInChildOffice);
+    //         } else {
+    //             $deeperSubordinates = $this->getDeepestDirectSubordinates($childOffice);
+    //             $directSubordinates = $directSubordinates->merge($deeperSubordinates);
+    //         }
+    //     }
 
-        return $directSubordinates->unique('id');
-    }
+    //     return $directSubordinates->unique('id');
+    // }
 
     protected function getDeepestDirectSubordinates($office)
     {
@@ -509,6 +507,197 @@ class User extends Authenticatable implements HasMedia
             ->orderBy('designations.bps', 'desc')
             ->get();
     }
+
+
+
+    public function isCurrentOfficeHead()
+    {
+        if (!$this->currentPosting) {
+            return false;
+        }
+        
+        return $this->currentPosting->is_head;
+    }
+
+    // Get the office where this user is the head (if any)
+    public function headOfOffice()
+    {
+        return $this->hasOne(Posting::class)
+            ->where('is_current', true)
+            ->where('is_head', true)
+            ->with('office');
+    }
+
+    // Replace the existing getDirectSupervisor method
+    public function getDirectSupervisor()
+    {
+        if (!$this->currentPosting || !$this->currentOffice) {
+            return null;
+        }
+
+        $office = $this->currentOffice;
+
+        if (!$office->parent_id) {
+            return null;
+        }
+
+        $parentOffice = Office::find($office->parent_id);
+
+        // Get the head of the parent office
+        $supervisor = User::whereHas('currentPosting', function ($query) use ($parentOffice) {
+            $query->where('office_id', $parentOffice->id)
+                ->where('is_current', true)
+                ->where('is_head', true);  // Only consider heads
+        })->first();
+
+        // If no head found, look up the hierarchy
+        if (!$supervisor && $parentOffice->parent_id) {
+            $this->currentOffice = $parentOffice;
+            return $this->getDirectSupervisor();
+        }
+
+        return $supervisor;
+    }
+
+    // Replace the existing getSubordinates method
+    public function getSubordinates()
+    {
+        if (!$this->currentPosting || !$this->currentOffice) {
+            return collect();
+        }
+
+        // Only office heads can have subordinates from other offices
+        if (!$this->isCurrentOfficeHead()) {
+            // Non-heads can only supervise within their own office based on BPS
+            return $this->getSubordinatesFromSameOffice();
+        }
+
+        $office = $this->currentOffice;
+        $childOffices = $office->getAllDescendants();
+
+        if ($childOffices->isEmpty()) {
+            // If no child offices, return subordinates from same office
+            return $this->getSubordinatesFromSameOffice();
+        }
+
+        $childOfficeIds = $childOffices->pluck('id')->toArray();
+
+        // Get all users in subordinate offices
+        $subordinatesInChildOffices = User::whereHas('currentPosting', function ($query) use ($childOfficeIds) {
+            $query->whereIn('office_id', $childOfficeIds)
+                ->where('is_current', true);
+        })->get();
+
+        // Also include subordinates from the same office
+        $subordinatesInSameOffice = $this->getSubordinatesFromSameOffice();
+
+        return $subordinatesInChildOffices->merge($subordinatesInSameOffice)->unique('id');
+    }
+
+    // Replace the existing getDirectSubordinates method
+    public function getDirectSubordinates()
+    {
+        if (!$this->currentPosting || !$this->currentOffice || !$this->isCurrentOfficeHead()) {
+            return collect();
+        }
+
+        $office = $this->currentOffice;
+        $directSubordinates = collect();
+
+        // Get subordinates from same office first
+        $sameOfficeSubordinates = $this->getSubordinatesFromSameOffice();
+        $directSubordinates = $directSubordinates->merge($sameOfficeSubordinates);
+
+        // Then get heads of child offices
+        $childOffices = $office->children;
+
+        foreach ($childOffices as $childOffice) {
+            $head = $childOffice->getCurrentHead();
+            if ($head) {
+                $directSubordinates->push($head);
+            } else {
+                // If no head in child office, get the highest ranking user
+                $highestRanking = $childOffice->getHighestRankingUser();
+                if ($highestRanking) {
+                    $directSubordinates->push($highestRanking);
+                }
+            }
+        }
+
+        return $directSubordinates->unique('id');
+    }
+
+    // Update getPotentialSupervisors to only consider heads
+    public function getPotentialSupervisors()
+    {
+        if (!$this->currentPosting || !$this->currentOffice) {
+            return collect();
+        }
+
+        $office = $this->currentOffice;
+        $parentOffices = $office->getAncestors();
+
+        if ($parentOffices->isEmpty()) {
+            return collect();
+        }
+
+        $potentialSupervisors = collect();
+
+        foreach ($parentOffices as $parentOffice) {
+            // Only get heads of parent offices
+            $heads = User::whereHas('currentPosting', function ($query) use ($parentOffice) {
+                $query->where('office_id', $parentOffice->id)
+                    ->where('is_current', true)
+                    ->where('is_head', true);
+            })->get();
+
+            $potentialSupervisors = $potentialSupervisors->merge($heads);
+        }
+
+        // Also check for higher BPS users in the same office
+        if ($this->currentDesignation) {
+            $sameOfficeSuperiors = User::whereHas('currentPosting', function ($query) {
+                $query->where('office_id', $this->currentOffice->id)
+                    ->where('is_current', true);
+            })
+            ->whereHas('currentDesignation', function ($query) {
+                $query->where('bps', '>', $this->currentDesignation->bps);
+            })
+            ->where('id', '!=', $this->id)
+            ->get();
+
+            $potentialSupervisors = $potentialSupervisors->merge($sameOfficeSuperiors);
+        }
+
+        return $potentialSupervisors->unique('id');
+    }
+
+    // Add a helper method to check if user can act as office head
+    public function canActAsOfficeHead()
+    {
+        if (!$this->currentPosting || !$this->currentDesignation) {
+            return false;
+        }
+
+        // If already marked as head, they can act as head
+        if ($this->isCurrentOfficeHead()) {
+            return true;
+        }
+
+        // Check if user is the highest ranking in their office
+        $highestInOffice = User::select('users.*')
+            ->join('postings', 'users.id', '=', 'postings.user_id')
+            ->join('designations', 'postings.designation_id', '=', 'designations.id')
+            ->where('postings.office_id', $this->currentPosting->office_id)
+            ->where('postings.is_current', true)
+            ->orderBy('designations.bps', 'desc')
+            ->first();
+
+        return $highestInOffice && $highestInOffice->id === $this->id;
+    }
+
+
+
 
     public function reportsTo(User $user)
     {

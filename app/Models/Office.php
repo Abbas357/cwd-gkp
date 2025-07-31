@@ -247,17 +247,6 @@ class Office extends Model
         return $result;
     }
 
-    public function getHighestRankingUser()
-    {
-        return User::select('users.*')
-            ->join('postings', 'users.id', '=', 'postings.user_id')
-            ->join('designations', 'postings.designation_id', '=', 'designations.id')
-            ->where('postings.office_id', $this->id)
-            ->where('postings.is_current', true)
-            ->orderBy('designations.bps', 'desc')
-            ->first();
-    }
-
     public function getUsersByRank()
     {
         return User::select('users.*', 'designations.bps')
@@ -427,5 +416,53 @@ class Office extends Model
             SELECT * FROM office_tree
         ) as descendants"))
             ->get();
+    }
+
+    public function currentHead()
+    {
+        return $this->hasOne(Posting::class)
+            ->where('is_current', true)
+            ->where('is_head', true)
+            ->with('user');
+    }
+
+    public function getCurrentHead()
+    {
+        $posting = $this->currentHead()->first();
+        return $posting ? $posting->user : null;
+    }
+
+    public function hasHead()
+    {
+        return $this->currentHead()->exists();
+    }
+
+    public function getSubordinateOfficeHeads()
+    {
+        $childOffices = $this->getAllDescendants();
+        
+        return User::select('users.*')
+            ->join('postings', 'users.id', '=', 'postings.user_id')
+            ->whereIn('postings.office_id', $childOffices->pluck('id'))
+            ->where('postings.is_current', true)
+            ->where('postings.is_head', true)
+            ->distinct()
+            ->get();
+    }
+
+    public function getHighestRankingUser()
+    {
+        $head = $this->getCurrentHead();
+        if ($head) {
+            return $head;
+        }
+        
+        return User::select('users.*')
+            ->join('postings', 'users.id', '=', 'postings.user_id')
+            ->join('designations', 'postings.designation_id', '=', 'designations.id')
+            ->where('postings.office_id', $this->id)
+            ->where('postings.is_current', true)
+            ->orderBy('designations.bps', 'desc')
+            ->first();
     }
 }

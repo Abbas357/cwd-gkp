@@ -62,10 +62,6 @@ class ServiceCardController extends Controller
             'rejected' => (clone $service_cards)->where('status', 'rejected')->count(),
             'printed' => (clone $service_cards)->whereNotNull('printed_at')->count(),
             'expired' => (clone $service_cards)->where('status', 'expired')->count(),
-            'needs_renewal' => (clone $service_cards)->where(function($q) {
-                $q->where('status', 'expired')
-                ->orWhere('expired_at', '<', now());
-            })->count(),
             'lost' => (clone $service_cards)->where('status', 'lost')->count(),
             'duplicate' => (clone $service_cards)->where('status', 'duplicate')->count(),
         ])) {
@@ -154,25 +150,50 @@ class ServiceCardController extends Controller
 
     public function create()
     {        
-        $currentBPS = auth_user()->currentDesignation->bps;
+        $currentUser = auth_user();
         
-        $designations = Designation::where('bps', '<=', $currentBPS)->get();
-        $offices = Office::all();
+        $isAdminOrCanViewAny = $currentUser->isAdmin() || $currentUser->can('viewAny', ServiceCard::class);
+        
+        if ($isAdminOrCanViewAny) {
+            $designations = Designation::where('status', 'Active')->get();
+            $offices = Office::where('status', 'Active')->get();
+        } else {
+            $currentBPS = $currentUser->currentDesignation->bps;
+            $designations = Designation::where('bps', '<=', $currentBPS)->get();
+            
+            $offices = collect([$currentUser->currentOffice]);
+            if ($currentUser->currentOffice) {
+                $childOffices = $currentUser->currentOffice->getAllDescendants();
+                $offices = $offices->merge($childOffices);
+            }
+        }
 
-        return view('modules.service_cards.create', compact('designations', 'offices'));
+        return view('modules.service_cards.create', compact('designations', 'offices', 'isAdminOrCanViewAny'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'remarks' => 'nullable|string|max:500'
+            'remarks' => 'nullable|string|max:500',
+            'posting_id' => 'nullable|exists:postings,id', 
         ]);
+        
+        $currentUser = auth_user();
+        $isAdminOrCanViewAny = $currentUser->isAdmin() || $currentUser->can('viewAny', ServiceCard::class);
+        
         $timestamp = now()->format('j, F Y') . ' at ' . now()->format('h:i A');
-        $userInfo = auth_user() ? " by " . auth_user()->name : "";
+        $userInfo = $currentUser ? " by " . $currentUser->name : "";
+        
+        $postingId = $currentUser->currentPosting->id;
+        
+        if ($isAdminOrCanViewAny && $request->filled('posting_id')) {
+            $postingId = $request->posting_id;
+        }
+        
         $serviceCard = ServiceCard::create([
             'uuid' => Str::uuid(),
             'user_id' => $request->user_id,
-            'posting_id' => auth_user()->currentPosting->id,
+            'posting_id' => $postingId,
             'remarks' => "1. General Remarks: <strong>Card is created. It will be placed under review very soon. Thanks</strong> - <span style='color: #aaa; font-size: 12px'>{$timestamp}{$userInfo}</span>",
         ]);
 

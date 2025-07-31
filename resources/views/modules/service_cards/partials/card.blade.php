@@ -110,7 +110,7 @@
 
     .service-card_front .main h1 {
         font-weight: bold;
-        font-size: 1rem;
+        font-size: .9rem;
         margin-bottom: 3px;
         width: 183px;
     }
