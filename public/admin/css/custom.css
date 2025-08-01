@@ -444,6 +444,31 @@ div.dt-container div.dtsb-searchBuilder select, div.dtsb-searchBuilder input {
     padding-left: 10px !important;
 }
 
+div.dt-container .form-switch {
+    padding-left: 2.5em !important;
+    width: 15px !important;
+}
+
+div.dt-container .form-switch .form-check-input {
+    width: 15px !important;
+    margin-left: -2.5em !important;
+    background-image: var(--bs-form-switch-bg);
+    border-radius: 50px !important;
+    transition: background-position .15s ease-in-out;
+}
+
+div.dt-container .form-check .form-check-input {
+    float: left;
+    margin-left: -1.5em !important;
+}
+
+div.dt-container .form-check {
+    display: block !important;
+    min-height: 1.5rem;
+    padding-left: 1.5em !important;
+    margin-bottom: .125rem;
+}
+
 html[data-bs-theme="dark"] div.dt-container div.dtsb-searchBuilder select,
 html[data-bs-theme="dark"] div.dtsb-searchBuilder input {
     border: 1px solid #575757 !important;

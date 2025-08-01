@@ -438,6 +438,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
     
+    const manageBodyScroll = (disable = false) => {
+        if (disable) {
+            // Disable body scroll
+            const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+            document.body.style.overflow = 'hidden';
+            document.body.style.paddingRight = scrollBarWidth + 'px';
+        } else {
+            // Enable body scroll only if no maximized modals exist
+            const hasMaximizedModals = document.querySelector('.modal-fullscreen');
+            if (!hasMaximizedModals) {
+                document.body.style.overflow = '';
+                document.body.style.paddingRight = '';
+            }
+        }
+    };
+    
     const initializeModal = (modal) => {
         if (!modal.hasAttribute('draggable-modal')) return;
         
@@ -527,10 +543,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let originalTransform = '';
             let originalBodyStyle = '';
 
-            maximizeBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
+            const toggleMaximize = () => {
                 const modalDialog = modal.querySelector('.modal-dialog');
                 const modalBody = modal.querySelector('.modal-body');
                 
@@ -552,6 +565,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     modalHeader.style.cursor = 'default';
                     
+                    // Disable body scroll when maximized
+                    manageBodyScroll(true);
+                    
                     isMaximized = true;
                 } else {
                     modalDialog.classList.remove('modal-fullscreen');
@@ -564,7 +580,42 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     makeModalDraggable(modal, modalHeader, modalDialog);
                     
+                    // Re-enable body scroll when restored
+                    manageBodyScroll(false);
+                    
                     isMaximized = false;
+                }
+            };
+
+            maximizeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleMaximize();
+            });
+            
+            // Add double-click functionality to modal header
+            let clickTimeout;
+            modalHeader.addEventListener('click', function(e) {
+                // Ignore clicks on buttons
+                if (e.target.classList.contains('btn-close') || 
+                    e.target.classList.contains('btn-minimize') ||
+                    e.target.classList.contains('btn-maximize') ||
+                    e.target.closest('.btn-close') ||
+                    e.target.closest('.btn-minimize') ||
+                    e.target.closest('.btn-maximize')) {
+                    return;
+                }
+                
+                if (clickTimeout) {
+                    // Double click detected
+                    clearTimeout(clickTimeout);
+                    clickTimeout = null;
+                    toggleMaximize();
+                } else {
+                    // Single click - set timeout to detect if it's a double click
+                    clickTimeout = setTimeout(() => {
+                        clickTimeout = null;
+                    }, 300); // 300ms window for double click detection
                 }
             });
             
@@ -601,8 +652,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const dragStart = (e) => {
             if (e.target.classList.contains('btn-close') || 
                 e.target.classList.contains('btn-minimize') ||
+                e.target.classList.contains('btn-maximize') ||
                 e.target.closest('.btn-close') ||
-                e.target.closest('.btn-minimize')) {
+                e.target.closest('.btn-minimize') ||
+                e.target.closest('.btn-maximize')) {
                 return;
             }
             
@@ -708,13 +761,9 @@ document.addEventListener('DOMContentLoaded', function() {
             modalInstance._backdrop._element.style.display = 'none';
         }
         
-        // Remove modal-open class from body but keep the modal technically "shown"
+        // Remove modal-open class from body and enable scrolling when minimized
         document.body.classList.remove('modal-open');
-        const paddingRight = document.body.style.paddingRight;
-        if (paddingRight) {
-            modal.dataset.bodyPaddingRight = paddingRight;
-        }
-        document.body.style.removeProperty('padding-right');
+        manageBodyScroll(false); // Enable body scroll when minimized
         
         // Create minimized panel
         const minimizedPanel = document.createElement('div');
@@ -877,12 +926,10 @@ document.addEventListener('DOMContentLoaded', function() {
             instance._backdrop._element.style.display = 'block';
         }
         
-        // Restore body classes and padding
+        // Restore body classes and manage scroll based on modal state
         document.body.classList.add('modal-open');
-        if (modal.dataset.bodyPaddingRight) {
-            document.body.style.paddingRight = modal.dataset.bodyPaddingRight;
-            delete modal.dataset.bodyPaddingRight;
-        }
+        const isMaximized = modal.querySelector('.modal-fullscreen');
+        manageBodyScroll(isMaximized ? true : false);
         
         // Ensure modal has proper display classes
         modal.classList.add('show');
@@ -921,6 +968,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             // Reset the initialization flag so it can be re-initialized
             this.dataset.draggableInitialized = 'false';
+            
+            // Re-enable body scroll when modal is closed
+            manageBodyScroll(false);
         });
     });
     
@@ -944,6 +994,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             }
                             // Reset the initialization flag
                             this.dataset.draggableInitialized = 'false';
+                            
+                            // Re-enable body scroll when modal is closed
+                            manageBodyScroll(false);
                         });
                     } else if (node.querySelector) {
                         const modals = node.querySelectorAll('.modal[draggable-modal]');
@@ -962,6 +1015,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                 }
                                 // Reset the initialization flag
                                 this.dataset.draggableInitialized = 'false';
+                                
+                                // Re-enable body scroll when modal is closed
+                                manageBodyScroll(false);
                             });
                         });
                     }
