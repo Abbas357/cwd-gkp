@@ -414,3 +414,564 @@ window.addEventListener('error', function(e) {
         return true;
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const minimizedModals = new Map();
+    let minimizedCount = 0;
+    
+    const createMinimizeContainer = () => {
+        if (!document.getElementById('minimized-modals-container')) {
+            const container = document.createElement('div');
+            container.id = 'minimized-modals-container';
+            container.style.cssText = `
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                display: flex;
+                gap: 10px;
+                padding: 10px;
+                z-index: 1055;
+                flex-wrap: wrap;
+                max-width: 100%;
+            `;
+            document.body.appendChild(container);
+        }
+    };
+    
+    const initializeModal = (modal) => {
+        if (!modal.hasAttribute('draggable-modal')) return;
+        
+        const modalDialog = modal.querySelector('.modal-dialog');
+        const modalHeader = modal.querySelector('.modal-header');
+        const modalTitle = modal.querySelector('.modal-title');
+        
+        if (!modalHeader || modal.dataset.draggableInitialized === 'true') return;
+        
+        modal.dataset.draggableInitialized = 'true';
+
+        if (!modal.querySelector('.btn-minimize')) {
+            const windowControls = document.createElement('div');
+            windowControls.style.cssText = `
+                display: flex;
+                align-items: center;
+                gap: 2px;
+            `;
+            
+            const maximizeBtn = document.createElement('button');
+            maximizeBtn.className = 'btn-maximize';
+            maximizeBtn.type = 'button';
+            maximizeBtn.setAttribute('aria-label', 'Maximize');
+            maximizeBtn.style.cssText = `
+                box-sizing: content-box;
+                width: 1em;
+                height: 1em;
+                padding: 0.25em 0.25em;
+                color: #000;
+                background: transparent;
+                border: 0;
+                border-radius: 0.375rem;
+                opacity: 0.5;
+                cursor: pointer;
+                font-size: 1.5rem;
+                line-height: 1;
+                transition: opacity 0.15s;
+                font-family: Arial, sans-serif;
+            `;
+            maximizeBtn.innerHTML = '□';
+            maximizeBtn.title = 'Maximize';
+            
+            const minimizeBtn = document.createElement('button');
+            minimizeBtn.className = 'btn-minimize';
+            minimizeBtn.type = 'button';
+            minimizeBtn.setAttribute('aria-label', 'Minimize');
+            minimizeBtn.style.cssText = `
+                box-sizing: content-box;
+                width: 1em;
+                height: .5em;
+                padding: 0.25em 0.25em;
+                color: #000;
+                background: transparent;
+                border: 0;
+                border-radius: 0.375rem;
+                opacity: 0.5;
+                cursor: pointer;
+                font-size: 1.2rem;
+                font-weight: 700;
+                line-height: 1;
+                transition: opacity 0.15s;
+            `;
+            minimizeBtn.innerHTML = '−';
+            minimizeBtn.title = 'Minimize';
+            
+            [minimizeBtn, maximizeBtn].forEach(btn => {
+                btn.addEventListener('mouseenter', function() {
+                    this.style.opacity = '0.75';
+                });
+                btn.addEventListener('mouseleave', function() {
+                    this.style.opacity = '0.5';
+                });
+            });
+            
+            const closeBtn = modalHeader.querySelector('.btn-close');
+            if (closeBtn) {
+                const parent = closeBtn.parentNode;
+                
+                windowControls.appendChild(minimizeBtn);
+                windowControls.appendChild(maximizeBtn);
+                windowControls.appendChild(closeBtn);
+                
+                parent.appendChild(windowControls);
+            }
+            
+            let isMaximized = false;
+            let originalTransform = '';
+            let originalBodyStyle = '';
+
+            maximizeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const modalDialog = modal.querySelector('.modal-dialog');
+                const modalBody = modal.querySelector('.modal-body');
+                
+                if (!isMaximized) {
+                    originalTransform = modalDialog.style.transform || 'translate(0, 0)';
+                    originalBodyStyle = modalBody.style.cssText;
+                    
+                    modalDialog.classList.add('modal-fullscreen');
+                    modalDialog.style.transform = 'none';
+                    
+                    modalBody.style.height = '';
+                    modalBody.style.maxHeight = '';
+                    
+                    maximizeBtn.innerHTML = '◱';
+                    maximizeBtn.title = 'Restore';
+                    
+                    if (modal.dragCleanup) {
+                        modal.dragCleanup();
+                    }
+                    modalHeader.style.cursor = 'default';
+                    
+                    isMaximized = true;
+                } else {
+                    modalDialog.classList.remove('modal-fullscreen');
+                    modalDialog.style.transform = originalTransform;
+                    
+                    modalBody.style.cssText = originalBodyStyle;
+                    
+                    maximizeBtn.innerHTML = '□';
+                    maximizeBtn.title = 'Maximize';
+                    
+                    makeModalDraggable(modal, modalHeader, modalDialog);
+                    
+                    isMaximized = false;
+                }
+            });
+            
+            minimizeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                minimizeModal(modal);
+            });
+        }
+        
+        makeModalDraggable(modal, modalHeader, modalDialog);
+    };
+    
+    const makeModalDraggable = (modal, modalHeader, modalDialog) => {
+        let isDragging = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+        let xOffset = 0;
+        let yOffset = 0;
+        
+        modalHeader.style.cssText += `
+            cursor: move;
+            user-select: none;
+        `;
+        
+        if (!modalDialog.style.transform) {
+            modalDialog.style.transform = 'translate(0, 0)';
+        }
+        
+        modalDialog.style.transition = 'none';
+        
+        const dragStart = (e) => {
+            if (e.target.classList.contains('btn-close') || 
+                e.target.classList.contains('btn-minimize') ||
+                e.target.closest('.btn-close') ||
+                e.target.closest('.btn-minimize')) {
+                return;
+            }
+            
+            e.preventDefault();
+            
+            if (e.type === "touchstart") {
+                initialX = e.touches[0].clientX - xOffset;
+                initialY = e.touches[0].clientY - yOffset;
+            } else {
+                initialX = e.clientX - xOffset;
+                initialY = e.clientY - yOffset;
+            }
+            
+            if (e.target === modalHeader || modalHeader.contains(e.target)) {
+                isDragging = true;
+                document.body.style.userSelect = 'none';
+            }
+        };
+        
+        const dragEnd = (e) => {
+            initialX = currentX;
+            initialY = currentY;
+            isDragging = false;
+            
+            document.body.style.userSelect = '';
+        };
+        
+        const drag = (e) => {
+            if (isDragging) {
+                e.preventDefault();
+                
+                if (e.type === "touchmove") {
+                    currentX = e.touches[0].clientX - initialX;
+                    currentY = e.touches[0].clientY - initialY;
+                } else {
+                    currentX = e.clientX - initialX;
+                    currentY = e.clientY - initialY;
+                }
+                
+                xOffset = currentX;
+                yOffset = currentY;
+                
+                modalDialog.style.transform = `translate(${currentX}px, ${currentY}px)`;
+            }
+        };
+        
+        // Remove old event listeners if they exist
+        if (modal.dragHandlers) {
+            modalHeader.removeEventListener('mousedown', modal.dragHandlers.dragStart);
+            document.removeEventListener('mousemove', modal.dragHandlers.drag);
+            document.removeEventListener('mouseup', modal.dragHandlers.dragEnd);
+            modalHeader.removeEventListener('touchstart', modal.dragHandlers.dragStart);
+            document.removeEventListener('touchmove', modal.dragHandlers.drag);
+            document.removeEventListener('touchend', modal.dragHandlers.dragEnd);
+        }
+        
+        modal.dragHandlers = {
+            dragStart,
+            drag,
+            dragEnd
+        };
+        
+        modalHeader.addEventListener('mousedown', dragStart);
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('mouseup', dragEnd);
+        
+        // Touch events
+        modalHeader.addEventListener('touchstart', dragStart, { passive: false });
+        document.addEventListener('touchmove', drag, { passive: false });
+        document.addEventListener('touchend', dragEnd);
+        
+        // Store cleanup function
+        modal.dragCleanup = () => {
+            modalHeader.removeEventListener('mousedown', dragStart);
+            document.removeEventListener('mousemove', drag);
+            document.removeEventListener('mouseup', dragEnd);
+            modalHeader.removeEventListener('touchstart', dragStart);
+            document.removeEventListener('touchmove', drag);
+            document.removeEventListener('touchend', dragEnd);
+            delete modal.dragHandlers;
+        };
+    };
+    
+    const minimizeModal = (modal) => {
+        const modalInstance = bootstrap.Modal.getInstance(modal);
+        const modalTitle = modal.querySelector('.modal-title');
+        const title = modalTitle ? modalTitle.textContent : 'Modal';
+        
+        createMinimizeContainer();
+        
+        minimizedModals.set(modal.id, {
+            modal: modal,
+            instance: modalInstance,
+            wasShown: modal.classList.contains('show'),
+            backdrop: modalInstance?._backdrop
+        });
+        
+        // Instead of hiding the modal, just hide it visually. This keeps the modal state and URL intact
+        modal.style.display = 'none';
+        
+        // Hide backdrop if exists
+        if (modalInstance && modalInstance._backdrop) {
+            modalInstance._backdrop._element.style.display = 'none';
+        }
+        
+        // Remove modal-open class from body but keep the modal technically "shown"
+        document.body.classList.remove('modal-open');
+        const paddingRight = document.body.style.paddingRight;
+        if (paddingRight) {
+            modal.dataset.bodyPaddingRight = paddingRight;
+        }
+        document.body.style.removeProperty('padding-right');
+        
+        // Create minimized panel
+        const minimizedPanel = document.createElement('div');
+        minimizedPanel.className = 'minimized-modal-panel';
+        minimizedPanel.dataset.modalId = modal.id;
+        minimizedPanel.style.cssText = `
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 8px 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 200px;
+            max-width: 300px;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        `;
+        
+        // Title
+        const titleSpan = document.createElement('span');
+        titleSpan.style.cssText = `
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 14px;
+            font-weight: 500;
+        `;
+        titleSpan.textContent = title;
+        
+        // Maximize button
+        const maximizeBtn = document.createElement('button');
+        maximizeBtn.type = 'button';
+        maximizeBtn.style.cssText = `
+            background: none;
+            border: none;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+            color: #6c757d;
+            transition: color 0.15s;
+        `;
+        maximizeBtn.innerHTML = '□';
+        maximizeBtn.title = 'Maximize';
+        
+        maximizeBtn.addEventListener('mouseenter', function() {
+            this.style.color = '#000';
+        });
+        
+        maximizeBtn.addEventListener('mouseleave', function() {
+            this.style.color = '#6c757d';
+        });
+        
+        maximizeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            restoreModal(modal.id);
+        });
+        
+        // Close button
+        const closeBtn = document.createElement('button');
+        closeBtn.type = 'button';
+        closeBtn.style.cssText = `
+            background: none;
+            border: none;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+            color: #6c757d;
+            transition: color 0.15s;
+        `;
+        closeBtn.innerHTML = '×';
+        closeBtn.title = 'Close';
+        
+        closeBtn.addEventListener('mouseenter', function() {
+            this.style.color = '#000';
+        });
+        
+        closeBtn.addEventListener('mouseleave', function() {
+            this.style.color = '#6c757d';
+        });
+        
+        closeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            // Restore modal visibility temporarily to properly close it
+            modal.style.display = '';
+            if (modalInstance && modalInstance._backdrop) {
+                modalInstance._backdrop._element.style.display = '';
+            }
+            
+            // Properly close the modal using Bootstrap's method
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+            
+            // Remove from minimized modals
+            minimizedModals.delete(modal.id);
+            minimizedPanel.remove();
+            minimizedCount--;
+            
+            // Reset draggable state
+            modal.dataset.draggableInitialized = 'false';
+            
+            // Remove container if empty
+            if (minimizedCount === 0) {
+                const container = document.getElementById('minimized-modals-container');
+                if (container && container.children.length === 0) {
+                    container.remove();
+                }
+            }
+        });
+        
+        // Assemble panel
+        minimizedPanel.appendChild(titleSpan);
+        minimizedPanel.appendChild(maximizeBtn);
+        minimizedPanel.appendChild(closeBtn);
+        
+        // Add click to restore
+        minimizedPanel.addEventListener('click', function(e) {
+            if (e.target === maximizeBtn || e.target === closeBtn) return;
+            restoreModal(modal.id);
+        });
+        
+        // Add hover effect
+        minimizedPanel.addEventListener('mouseenter', function() {
+            this.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+        });
+        
+        minimizedPanel.addEventListener('mouseleave', function() {
+            this.style.boxShadow = '0 2px 5px rgba(0,0,0,0.15)';
+        });
+        
+        document.getElementById('minimized-modals-container').appendChild(minimizedPanel);
+        minimizedCount++;
+    };
+    
+    // Restore modal
+    const restoreModal = (modalId) => {
+        const modalData = minimizedModals.get(modalId);
+        if (!modalData) return;
+        
+        const { modal, instance, backdrop } = modalData;
+        
+        // Remove minimized panel
+        const panel = document.querySelector(`[data-modal-id="${modalId}"]`);
+        if (panel) panel.remove();
+        
+        // Restore modal visibility
+        modal.style.display = 'block';
+        
+        // Restore backdrop
+        if (instance && instance._backdrop && instance._backdrop._element) {
+            instance._backdrop._element.style.display = 'block';
+        }
+        
+        // Restore body classes and padding
+        document.body.classList.add('modal-open');
+        if (modal.dataset.bodyPaddingRight) {
+            document.body.style.paddingRight = modal.dataset.bodyPaddingRight;
+            delete modal.dataset.bodyPaddingRight;
+        }
+        
+        // Ensure modal has proper display classes
+        modal.classList.add('show');
+        modal.setAttribute('aria-hidden', 'false');
+        modal.setAttribute('aria-modal', 'true');
+        modal.style.paddingRight = '';
+        
+        minimizedModals.delete(modalId);
+        minimizedCount--;
+        
+        // Remove container if empty
+        if (minimizedCount === 0) {
+            const container = document.getElementById('minimized-modals-container');
+            if (container && container.children.length === 0) {
+                container.remove();
+            }
+        }
+    };
+    
+    // Initialize existing modals with draggable-modal attribute
+    document.querySelectorAll('.modal[draggable-modal]').forEach(modal => {
+        // Ensure modal has an ID
+        if (!modal.id) {
+            modal.id = 'modal-' + Math.random().toString(36).substr(2, 9);
+        }
+        
+        // Initialize when modal is shown
+        modal.addEventListener('shown.bs.modal', function() {
+            initializeModal(this);
+        });
+        
+        // Cleanup when modal is hidden but reset initialization flag
+        modal.addEventListener('hidden.bs.modal', function() {
+            if (this.dragCleanup) {
+                this.dragCleanup();
+            }
+            // Reset the initialization flag so it can be re-initialized
+            this.dataset.draggableInitialized = 'false';
+        });
+    });
+    
+    // Watch for dynamically added modals
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            mutation.addedNodes.forEach(function(node) {
+                if (node.nodeType === 1) {
+                    if (node.classList && node.classList.contains('modal') && node.hasAttribute('draggable-modal')) {
+                        if (!node.id) {
+                            node.id = 'modal-' + Math.random().toString(36).substr(2, 9);
+                        }
+                        
+                        node.addEventListener('shown.bs.modal', function() {
+                            initializeModal(this);
+                        });
+                        
+                        node.addEventListener('hidden.bs.modal', function() {
+                            if (this.dragCleanup) {
+                                this.dragCleanup();
+                            }
+                            // Reset the initialization flag
+                            this.dataset.draggableInitialized = 'false';
+                        });
+                    } else if (node.querySelector) {
+                        const modals = node.querySelectorAll('.modal[draggable-modal]');
+                        modals.forEach(modal => {
+                            if (!modal.id) {
+                                modal.id = 'modal-' + Math.random().toString(36).substr(2, 9);
+                            }
+                            
+                            modal.addEventListener('shown.bs.modal', function() {
+                                initializeModal(this);
+                            });
+                            
+                            modal.addEventListener('hidden.bs.modal', function() {
+                                if (this.dragCleanup) {
+                                    this.dragCleanup();
+                                }
+                                // Reset the initialization flag
+                                this.dataset.draggableInitialized = 'false';
+                            });
+                        });
+                    }
+                }
+            });
+        });
+    });
+    
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+});

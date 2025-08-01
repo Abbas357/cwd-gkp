@@ -265,7 +265,7 @@
             <div class="expired-card" style="background-image: url('{{ asset('admin/images/cards/expired.png') }}');"></div>
         @endif
 
-        <img src="{{ asset('admin/images/cards/service-card-front.png') }}?cw=75" alt="Service Card Front"
+        <img src="{{ asset('admin/images/cards/service-card-front.png') }}?cw=76" alt="Service Card Front"
             class="background-image">
 
         <div class="image">
@@ -289,7 +289,7 @@
 
         <div class="footer">
             <div class="sign">
-                <img src="{{ asset('admin/images/cards/service-card-sign.png') }}?cw=75" alt="Sign">
+                <img src="{{ asset('admin/images/cards/service-card-sign.png') }}?cw=76" alt="Sign">
             </div>
 
             <div class="authority-sign">
@@ -317,7 +317,7 @@
             <div class="expired-card" style="background-image: url('{{ asset('admin/images/cards/expired.png') }}');"></div>
         @endif
         
-        <img src="{{ asset('admin/images/cards/service-card-back.png') }}?cw=75" alt="Service Card Back"
+        <img src="{{ asset('admin/images/cards/service-card-back.png') }}?cw=76" alt="Service Card Back"
             class="background-image">
 
         <div class="mx-1 mt-1">

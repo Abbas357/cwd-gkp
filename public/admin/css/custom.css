@@ -38,7 +38,7 @@
 }
 
 .modal-header {
-    padding: .6rem 1rem !important;
+    padding: .3rem 1rem !important;
     border-bottom: 1px solid #ccc;
     background-color: #E5E5E5;
     box-shadow: 0 2px 5px #00000040;
@@ -50,7 +50,7 @@
 }
 
 .modal-footer {
-    padding: .4rem .8rem !important;
+    padding: .2rem .8rem !important;
     border-top: 1px solid #ccc;
     background-color: #E5E5E5;
     box-shadow: 0 -2px 5px #00000040;
