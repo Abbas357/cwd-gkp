@@ -90,6 +90,7 @@ Route::prefix('hr')->as('hr.')->group(function () {
         Route::get('/{posting}/edit', [PostingController::class, 'edit'])->name('edit')->can('update', 'posting');
         Route::put('/{posting}', [PostingController::class, 'update'])->name('update')->can('update', 'posting');
         Route::delete('/{posting}', [PostingController::class, 'destroy'])->name('destroy')->can('delete', 'posting');
+        Route::patch('/{posting}/update-head', [PostingController::class, 'updateHead'])->name('update-head')->can('update', 'posting');
     });
 
     Route::prefix('organogram')->as('organogram.')->group(function () {

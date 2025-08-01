@@ -28,6 +28,7 @@
                     <th scope="col">Type</th>
                     <th scope="col">Start Date</th>
                     <th scope="col">End Date</th>
+                    <th scope="col">Is Head</th>
                     <th scope="col">Actions</th>
                 </tr>
             </thead>
@@ -50,6 +51,7 @@
                     { data: "type", searchBuilderType: "string" },
                     { data: "start_date", searchBuilderType: "date" },
                     { data: "end_date", searchBuilderType: "date" },
+                    { data: "is_head", searchBuilderType: "string" },
                     { data: 'action', orderable: false, searchable: false, type: "html" }
                 ],
                 defaultOrderColumn: 6,
@@ -147,6 +149,25 @@
                     }
                 }
             });
+
+            $("#postings-datatable").on('change', '.is-head-switch', async function() {
+                const postingId = $(this).data("id");
+                const isHead = $(this).prop('checked') ? 1 : 0;
+                const $switch = $(this);
+                $switch.prop('disabled', true);
+
+                const url = "{{ route('admin.apps.hr.postings.update-head', ':id') }}".replace(':id', postingId);
+                
+                const success = await fetchRequest(url, 'PATCH', { is_head: isHead });
+                if (success) {
+                    $switch.prop('disabled', false);
+                    $("#postings-datatable").DataTable().ajax.reload();
+                } else {
+                    $switch.prop('checked', !isHead);
+                    $switch.prop('disabled', false);
+                }
+            });
+
         });
     </script>
     @endpush

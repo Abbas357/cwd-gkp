@@ -36,6 +36,9 @@ class PostingController extends Controller
                 ->addColumn('action', function ($row) {
                     return view('modules.hr.postings.partials.buttons', compact('row'))->render();
                 })
+                ->addColumn('is_head', function ($row) {
+                    return view('modules.hr.postings.partials.is_head', compact('row'))->render();
+                })
                 ->addColumn('user', function ($row) {
                     return $row?->user?->name;
                 })
@@ -51,7 +54,7 @@ class PostingController extends Controller
                 ->editColumn('end_date', function ($row) {
                     return $row?->end_date?->format('j, F Y') ?? 'Current';
                 })
-                ->rawColumns(['action']);
+                ->rawColumns(['action', 'is_head']);
                 
             return $dataTable->toJson();
         }
@@ -159,6 +162,34 @@ class PostingController extends Controller
             DB::rollBack();
             return back()->with('error', 'Error updating posting: ' . $e->getMessage())
                 ->withInput();
+        }
+    }
+
+    public function updateHead(Request $request, Posting $posting)
+    {
+        $validated = $request->validate([
+            'is_head' => 'required|boolean'
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            if ($validated['is_head']) {
+                Posting::where('office_id', $posting->office_id)
+                    ->where('is_current', true)
+                    ->where('id', '!=', $posting->id)
+                    ->update(['is_head' => false]);
+            }
+
+            $posting->update(['is_head' => $validated['is_head']]);
+
+            DB::commit();
+
+            return response()->json(['success' => 'Head status updated successfully']);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => 'Failed to update head status']);
         }
     }
 
