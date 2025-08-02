@@ -81,8 +81,8 @@
     @push('script')
         <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
         <script src="{{ asset('admin/plugins/datatable/js/pdfmake.min.js') }}"></script>
-        <script src="{{ asset('admin/plugins/datatable/js/vfs_fonts.js') }}"></script>
-        <script src="{{ asset('admin/plugins/col-resizable.js') }}"></script>
+        {{-- <script src="{{ asset('admin/plugins/datatable/js/vfs_fonts.js') }}"></script>
+        <script src="{{ asset('admin/plugins/col-resizable.js') }}"></script> --}}
 
         <script>
             $(document).ready(function() {
@@ -179,8 +179,6 @@
                         targets: -1,
                         className: 'action-column'
                     }],
-                    pdfOrientation: 'landscape',
-                    pdfPageSize: 'legal',
                     pageLength: 10,
                     customButton: [{
                             text: `<span class="symbol-container fw-bold create-btn"><i class="bi-plus-circle-fill text-secondary"></i>&nbsp; Add Damage</span>`,

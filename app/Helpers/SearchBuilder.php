@@ -7,7 +7,6 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Schema;
 
 class SearchBuilder
 {
@@ -16,9 +15,9 @@ class SearchBuilder
     protected $allowedColumns;
     protected $mapColumns;
     protected $debug = false;
-    protected $numericColumns = []; // Add this property
-    protected $dateColumns = []; // Add date columns property
-    protected $jsonColumns = []; // Add JSON columns property
+    protected $numericColumns = [];
+    protected $dateColumns = [];
+    protected $jsonColumns = [];
 
     protected $sbRules = [
         '=' => '=',
@@ -47,59 +46,31 @@ class SearchBuilder
         $this->mapColumns = $mapColumns;
         $this->debug = $debug;
         
-        // Detect numeric columns
-        $this->detectNumericColumns();
+        $this->detectColumnTypes();
     }
 
-    /**
-     * Detect which columns are numeric in the database
-     */
-    protected function detectNumericColumns(): void
+    protected function detectColumnTypes(): void
     {
         $table = $this->query->getModel()->getTable();
-        $columns = Schema::getColumnListing($table);
+        $columnTypes = Database::detectColumnTypes($table);
         
-        foreach ($columns as $column) {
-            $type = Schema::getColumnType($table, $column);
-            
-            // Check if column is numeric type
-            if (in_array($type, ['integer', 'bigint', 'decimal', 'float', 'double', 'numeric', 'real'])) {
-                $this->numericColumns[] = $column;
-            }
-            
-            // Check if column is date/datetime type
-            if (in_array($type, ['date', 'datetime', 'timestamp', 'time', 'year'])) {
-                $this->dateColumns[] = $column;
-            }
-            
-            // Check if column is JSON type
-            if (in_array($type, ['json', 'jsonb'])) {
-                $this->jsonColumns[] = $column;
-            }
-        }
+        $this->numericColumns = $columnTypes['numeric'];
+        $this->dateColumns = $columnTypes['date'];
+        $this->jsonColumns = $columnTypes['json'];
     }
 
-    /**
-     * Set numeric columns manually if needed
-     */
     public function setNumericColumns(array $columns): self
     {
         $this->numericColumns = $columns;
         return $this;
     }
 
-    /**
-     * Set date columns manually if needed
-     */
     public function setDateColumns(array $columns): self
     {
         $this->dateColumns = $columns;
         return $this;
     }
 
-    /**
-     * Set JSON columns manually if needed
-     */
     public function setJsonColumns(array $columns): self
     {
         $this->jsonColumns = $columns;
