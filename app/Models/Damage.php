@@ -23,6 +23,7 @@ class Damage extends Model implements HasMedia
     {
         return [
             'report_date' => 'datetime',
+            'damaged_length' => 'float',
         ];
     }
 

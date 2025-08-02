@@ -1,6 +1,6 @@
 <x-dmis-layout title="Damages">
     @push('style')
-    <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
     @endpush
     <x-slot name="header">
         <li class="breadcrumb-item active" aria-current="page">Damages</li>
@@ -21,7 +21,8 @@
     </div>
 
     <div class="table-responsive">
-        <table id="damages-datatable" width="100%" class="table table-striped table-hover table-bordered align-center">
+        <table id="damages-datatable" width="100%"
+            class="table table-striped table-hover table-bordered align-center">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -62,11 +63,9 @@
                 </div>
                 <div class="modal-body p-0">
                     <div class="ratio ratio-16x9">
-                        <iframe id="tutorial-iframe" 
-                                src="" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowfullscreen>
+                        <iframe id="tutorial-iframe" src="" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
                         </iframe>
                     </div>
                 </div>
@@ -80,218 +79,219 @@
     </div>
     <!--end row-->
     @push('script')
-    <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
-    <script src="{{ asset('admin/plugins/col-resizable.js') }}"></script>   
+        <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
+        <script src="{{ asset('admin/plugins/datatable/js/pdfmake.min.js') }}"></script>
+        <script src="{{ asset('admin/plugins/datatable/js/vfs_fonts.js') }}"></script>
+        <script src="{{ asset('admin/plugins/col-resizable.js') }}"></script>
 
-    <script>
-        $(document).ready(function() {
-            var table = initDataTable('#damages-datatable', {
-                ajaxUrl: "{{ route('admin.apps.dmis.damages.index') }}"
-                , columns: [
-                    {
-                        data: "id",
-                        searchBuilderType: "num"
-                    },
-                    {
-                        data: 'report_date',
-                        searchBuilderType: "date"
-                    },
-                    {
-                        data: 'type',
-                        searchBuilderType: "string"
-                    },
-                    {
-                        data: 'name',
-                        searchBuilderType: "string"
-                    },
-                    {
-                        data: 'office',
-                        searchBuilderType: "string"
-                    },
-                    {
-                        data: 'district',
-                        searchBuilderType: "string"
-                    },
-                    {
-                        data: 'damaged_length',
-                        searchBuilderType: "num"
-                    },
-                    {
-                        data: 'damage_north_start',
-                        searchBuilderType: "num"
-                    },
-                    {
-                        data: 'damage_north_end',
-                        searchBuilderType: "num"
-                    },
-                    {
-                        data: 'damage_east_start',
-                        searchBuilderType: "num"
-                    },
-                    {
-                        data: 'damage_east_end',
-                        searchBuilderType: "num"
-                    },
-                    {
-                        data: 'damage_status',
-                        searchBuilderType: "string"
-                    },
-                    {
-                        data: 'damage_nature',
-                        searchBuilderType: "string"
-                    },
-                    {
-                        data: 'approximate_restoration_cost',
-                        searchBuilderType: "num"
-                    },
-                    {
-                        data: 'approximate_rehabilitation_cost',
-                        searchBuilderType: "num"
-                    },
-                    {
-                        data: 'road_status',
-                        searchBuilderType: "string"
-                    },
-                    {
-                        data: 'remarks',
-                        searchBuilderType: "string"
-                    },
-                    {
-                        data: 'created_at',
-                        searchBuilderType: "date"
-                    },
-                    {
-                        data: 'updated_at',
-                        searchBuilderType: "date"
-                    },
-                    {
-                        data: 'action',
-                        orderable: false,
-                        searchable: false
-                    }   
-                ]
-                , defaultOrderColumn: 17
-                , defaultOrderDirection: 'desc'
-                , columnDefs: [{
-                    targets: [0, 2, 4, 5, 7, 8, 9, 10, 16]
-                    , visible: false
+        <script>
+            $(document).ready(function() {
+                var table = initDataTable('#damages-datatable', {
+                    ajaxUrl: "{{ route('admin.apps.dmis.damages.index') }}",
+                    columns: [{
+                            data: "id",
+                            searchBuilderType: "num"
+                        },
+                        {
+                            data: 'report_date',
+                            searchBuilderType: "date"
+                        },
+                        {
+                            data: 'type',
+                            searchBuilderType: "string"
+                        },
+                        {
+                            data: 'name',
+                            searchBuilderType: "string"
+                        },
+                        {
+                            data: 'office',
+                            searchBuilderType: "string"
+                        },
+                        {
+                            data: 'district',
+                            searchBuilderType: "string"
+                        },
+                        {
+                            data: 'damaged_length',
+                            searchBuilderType: "num"
+                        },
+                        {
+                            data: 'damage_north_start',
+                            searchBuilderType: "num"
+                        },
+                        {
+                            data: 'damage_north_end',
+                            searchBuilderType: "num"
+                        },
+                        {
+                            data: 'damage_east_start',
+                            searchBuilderType: "num"
+                        },
+                        {
+                            data: 'damage_east_end',
+                            searchBuilderType: "num"
+                        },
+                        {
+                            data: 'damage_status',
+                            searchBuilderType: "string"
+                        },
+                        {
+                            data: 'damage_nature',
+                            searchBuilderType: "string"
+                        },
+                        {
+                            data: 'approximate_restoration_cost',
+                            searchBuilderType: "num"
+                        },
+                        {
+                            data: 'approximate_rehabilitation_cost',
+                            searchBuilderType: "num"
+                        },
+                        {
+                            data: 'road_status',
+                            searchBuilderType: "string"
+                        },
+                        {
+                            data: 'remarks',
+                            searchBuilderType: "string"
+                        },
+                        {
+                            data: 'created_at',
+                            searchBuilderType: "date"
+                        },
+                        {
+                            data: 'updated_at',
+                            searchBuilderType: "date"
+                        },
+                        {
+                            data: 'action',
+                            orderable: false,
+                            searchable: false
+                        }
+                    ],
+                    defaultOrderColumn: 17,
+                    defaultOrderDirection: 'desc',
+                    columnDefs: [{
+                        targets: [0, 2, 4, 5, 7, 8, 9, 10, 16],
+                        visible: false
                     }, {
                         targets: -1,
                         className: 'action-column'
-                    }
-                ]
-                , pageLength: 10
-                , customButton: [
-                        {
-                        text: `<span class="symbol-container fw-bold create-btn"><i class="bi-plus-circle"></i>&nbsp; Add Damage</span>`
-                        , action: function(e, dt, node, config) {
+                    }],
+                    pdfOrientation: 'landscape',
+                    pdfPageSize: 'legal',
+                    pageLength: 10,
+                    customButton: [{
+                            text: `<span class="symbol-container fw-bold create-btn"><i class="bi-plus-circle-fill text-secondary"></i>&nbsp; Add Damage</span>`,
+                            action: function(e, dt, node, config) {
 
-                        formWizardModal({
-                                title: 'Add Damage',
-                                fetchUrl: "{{ route('admin.apps.dmis.damages.create') }}",
-                                btnSelector: '.create-btn',
-                                actionButtonName: 'Add Damage',
-                                modalSize: 'lg',
-                                formAction: "{{ route('admin.apps.dmis.damages.store') }}",
-                                wizardSteps: [
-                                    {
-                                        title: "Basic Info",
-                                        fields: ["#step-1"]
-                                    },
-                                    {
-                                        title: "Detail & Coordinates",
-                                        fields: ["#step-2"]
-                                    },
-                                    {
-                                        title: "Cost Info & Images",
-                                        fields: ["#step-3"]
+                                formWizardModal({
+                                    title: 'Add Damage',
+                                    fetchUrl: "{{ route('admin.apps.dmis.damages.create') }}",
+                                    btnSelector: '.create-btn',
+                                    actionButtonName: 'Add Damage',
+                                    modalSize: 'lg',
+                                    formAction: "{{ route('admin.apps.dmis.damages.store') }}",
+                                    wizardSteps: [{
+                                            title: "Basic Info",
+                                            fields: ["#step-1"]
+                                        },
+                                        {
+                                            title: "Detail & Coordinates",
+                                            fields: ["#step-2"]
+                                        },
+                                        {
+                                            title: "Cost Info & Images",
+                                            fields: ["#step-3"]
+                                        }
+                                    ],
+                                    formSubmitted() {
+                                        table.ajax.reload();
                                     }
-                                ],
-                                formSubmitted() {
-                                    table.ajax.reload();
-                                }
-                            });
+                                });
 
+                            },
                         },
-                    },
-                    {
-                        text: `<span class="symbol-container position-relative">
-                                    <i class="bi-question-circle"></i>&nbsp; Help / Tutorial
+                        {
+                            text: `<span class="symbol-container position-relative">
+                                    <i class="bi-question-circle-fill text-secondary"></i>&nbsp; Help / Tutorial
                                     <span class="badge bg-danger position-absolute top-0 start-100 translate-middle">New</span>
-                                </span>`
-                        , action: function(e, dt, node, config) {
-                            $('#tutorial-iframe').attr('src', 'https://www.youtube.com/embed/IPM2IeswWvk');
-                            $('#tutorialModal').modal('show');
+                                </span>`,
+                            action: function(e, dt, node, config) {
+                                $('#tutorial-iframe').attr('src',
+                                    'https://www.youtube.com/embed/IPM2IeswWvk');
+                                $('#tutorialModal').modal('show');
+                            }
+                        }
+                    ]
+                });
+
+                $("#damages-datatable").on('click', '.delete-btn', async function() {
+                    const damageId = $(this).data("id");
+                    const url = "{{ route('admin.apps.dmis.damages.destroy', ':id') }}".replace(':id',
+                        damageId);
+
+                    const result = await confirmAction(`Do you want to delete this damage?`);
+                    if (result && result.isConfirmed) {
+                        const success = await fetchRequest(url, 'DELETE');
+                        if (success) {
+                            $("#damages-datatable").DataTable().ajax.reload();
                         }
                     }
-                ]
+                });
+
+                hashTabsNavigator({
+                    table: table,
+                    dataTableUrl: "{{ route('admin.apps.dmis.damages.index') }}",
+                    tabToHashMap: {
+                        "#road-tab": '#road',
+                        "#bridge-tab": '#bridge',
+                        '#culvert-tab': '#culvert'
+                    },
+                    hashToParamsMap: {
+                        '#road': {
+                            type: 'Road'
+                        },
+                        '#bridge': {
+                            type: 'Bridge'
+                        },
+                        '#culvert': {
+                            type: 'Culvert'
+                        }
+                    },
+                    defaultHash: '#road'
+                });
+
+                $('#damages-datatable').colResizable({
+                    liveDrag: true,
+                    resizeMode: 'overflow',
+                    postbackSafe: true,
+                    useLocalStorage: true,
+                    gripInnerHtml: "<div class='grip'></div>",
+                    draggingClass: "dragging",
+                });
+
+                pushStateModal({
+                    fetchUrl: "{{ route('admin.apps.dmis.damages.detail', ':id') }}",
+                    btnSelector: '.view-btn',
+                    modalType: 'edit',
+                    title: 'Damage Details',
+                    modalSize: 'lg',
+                    tableToRefresh: table,
+                });
+
+                pushStateModal({
+                    fetchUrl: "{{ route('admin.apps.dmis.damages.logs', ':id') }}",
+                    btnSelector: '.view-logs-btn',
+                    modalType: 'logs',
+                    title: 'Damage Logs',
+                    modalSize: 'xl',
+                    tableToRefresh: table,
+                });
+
+
             });
-
-            $("#damages-datatable").on('click', '.delete-btn', async function() {
-                const damageId = $(this).data("id");
-                const url = "{{ route('admin.apps.dmis.damages.destroy', ':id') }}".replace(':id', damageId);
-
-                const result = await confirmAction(`Do you want to delete this damage?`);
-                if (result && result.isConfirmed) {
-                    const success = await fetchRequest(url, 'DELETE');
-                    if (success) {
-                        $("#damages-datatable").DataTable().ajax.reload();
-                    }
-                }
-            });
-
-            hashTabsNavigator({
-                table: table
-                , dataTableUrl: "{{ route('admin.apps.dmis.damages.index') }}"
-                , tabToHashMap: {
-                    "#road-tab": '#road'
-                    , "#bridge-tab": '#bridge'
-                    , '#culvert-tab': '#culvert'
-                }
-                , hashToParamsMap: {
-                    '#road': {
-                        type: 'Road'
-                    }
-                    , '#bridge': {
-                        type: 'Bridge'
-                    }
-                    , '#culvert': {
-                        type: 'Culvert'
-                    }
-                }
-                , defaultHash: '#road'
-            });
-
-            $('#damages-datatable').colResizable({
-                liveDrag: true
-                , resizeMode: 'overflow'
-                , postbackSafe: true
-                , useLocalStorage: true
-                , gripInnerHtml: "<div class='grip'></div>"
-                , draggingClass: "dragging"
-            , });
-
-            pushStateModal({
-                fetchUrl: "{{ route('admin.apps.dmis.damages.detail', ':id') }}",
-                btnSelector: '.view-btn',
-                modalType: 'edit',
-                title: 'Damage Details',
-                modalSize: 'lg',
-                tableToRefresh: table,
-            });
-
-            pushStateModal({
-                fetchUrl: "{{ route('admin.apps.dmis.damages.logs', ':id') }}",
-                btnSelector: '.view-logs-btn',
-                modalType: 'logs',
-                title: 'Damage Logs',
-                modalSize: 'xl',
-                tableToRefresh: table,
-            });
-
-            
-        });
-
-    </script>
+        </script>
     @endpush
 </x-dmis-layout>

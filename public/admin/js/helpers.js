@@ -148,16 +148,24 @@ function debounce(func, wait) {
 function initDataTable(selector, options = {}) {
     const $table = $(selector);
     if (!$table.hasClass("datatable-loading-container")) {
-        $table.wrap('<div class="datatable-loading-container"></div>');
+        $table.wrap(
+            '<div class="datatable-loading-container position-relative"></div>'
+        );
 
-        $table.append(`
-            <div class="datatable-loading-progress"></div>
-            <div class="datatable-content-dimmer"></div>
+        $table.parent().append(`
+            <div class="datatable-loading-bar"></div>
+            <div class="datatable-loading-overlay d-none">
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
         `);
     }
 
-    const $loadingProgress = $table.find(".datatable-loading-progress");
-    const $contentDimmer = $table.find(".datatable-content-dimmer");
+    const $loadingBar = $table.parent().find(".datatable-loading-bar");
+    const $loadingOverlay = $table.parent().find(".datatable-loading-overlay");
 
     const exportButtons = [
         {
@@ -191,6 +199,18 @@ function initDataTable(selector, options = {}) {
             },
         },
         {
+            extend: "pdf",
+            text: `<span class="symbol-container">
+                    <i class="bi-file-pdf"></i>
+                    &nbsp; PDF
+                </span>`,
+            exportOptions: {
+                columns: ":visible:not(.action-column)",
+            },
+            orientation: options.pdfOrientation || 'landscape',
+            pageSize: options.pdfPageSize || 'A4'
+        },
+        {
             extend: "print",
             text: `<span class="symbol-container">
                     <i class="bi-printer"></i>
@@ -214,7 +234,7 @@ function initDataTable(selector, options = {}) {
     }
 
     const defaultOptions = {
-        processing: true,
+        processing: false,
         stateSave: true,
         autoWidth: true,
         serverSide: true,
@@ -223,8 +243,26 @@ function initDataTable(selector, options = {}) {
         },
         ajax: {
             url: options.ajaxUrl || "",
+            beforeSend: function () {
+                $loadingBar.addClass("loading");
+                $loadingOverlay.removeClass("d-none");
+            },
+            complete: function () {
+                $loadingBar.removeClass("loading").addClass("complete");
+                $loadingOverlay.addClass("d-none");
+
+                setTimeout(() => {
+                    $loadingBar.removeClass("complete");
+                }, 400);
+            },
             error(jqXHR, textStatus, errorThrown) {
-                $(selector).removeClass("card-loading");
+                $loadingBar.removeClass("loading").addClass("error");
+                $loadingOverlay.addClass("d-none");
+
+                setTimeout(() => {
+                    $loadingBar.removeClass("error");
+                }, 400);
+
                 if (textStatus === "timeout" || textStatus === "abort") {
                     $(selector).DataTable().ajax.reload();
                 }
@@ -238,6 +276,7 @@ function initDataTable(selector, options = {}) {
         ],
         columns: options.columns || [],
         language: {
+            processing: "",
             searchBuilder: {
                 title: {
                     0: "Conditions",
@@ -245,7 +284,7 @@ function initDataTable(selector, options = {}) {
                 },
                 clearAll: "Clear All Filters",
                 button: `<span class="symbol-container">
-                            <i class="bi-funnel"></i>
+                            <i class="bi-funnel-fill text-secondary"></i>
                             &nbsp; Filter
                         </span>`,
             },
@@ -256,7 +295,7 @@ function initDataTable(selector, options = {}) {
                     {
                         extend: "collection",
                         text: `<span class="symbol-container">
-                                <i class="bi-share"></i>
+                                <i class="bi-share-fill text-secondary"></i>
                                 &nbsp; Export
                             </span>`,
                         autoClose: true,
@@ -266,7 +305,7 @@ function initDataTable(selector, options = {}) {
                         extend: "colvis",
                         collectionLayout: "two-column",
                         text: `<span class="symbol-container">
-                                <i class="bi-eye"></i>
+                                <i class="bi-eye-fill text-secondary"></i>
                                 &nbsp; Columns
                             </span>`,
                     },
@@ -323,14 +362,18 @@ function initDataTable(selector, options = {}) {
         },
         columnDefs: options.columnDefs || [],
         preDrawCallback() {
-            $table.addClass("loading");
-            $loadingProgress.addClass("active");
-            $contentDimmer.addClass("active");
+            if (!$loadingBar.hasClass("loading")) {
+                $loadingBar.addClass("loading");
+                $loadingOverlay.removeClass("d-none");
+            }
         },
         drawCallback() {
-            $table.removeClass("loading");
-            $loadingProgress.removeClass("active");
-            $contentDimmer.removeClass("active");
+            $loadingBar.removeClass("loading").addClass("complete");
+            $loadingOverlay.addClass("d-none");
+
+            setTimeout(() => {
+                $loadingBar.removeClass("complete");
+            }, 400);
         },
     };
 
@@ -1851,21 +1894,22 @@ function select2Ajax(selector, url, options = {}) {
 
 function setupPrint(buttonSelector, divSelector, options = {}) {
     const config = {
-        loadingText: 'Preparing document for printing...',
-        spinnerType: 'border',
-        spinnerColor: 'primary',
+        loadingText: "Preparing document for printing...",
+        spinnerType: "border",
+        spinnerColor: "primary",
         overrideCtrlP: true,
         modalId: null,
         useModal: true,
-        fallbackLoader: '.page-loader',
+        fallbackLoader: ".page-loader",
         printLibraryUrl: null,
         customPrintFn: null,
         useBrowserPrint: false,
-        ...options
+        ...options,
     };
 
     if (!config.modalId) {
-        config.modalId = 'printModal_' + Math.random().toString(36).substr(2, 9);
+        config.modalId =
+            "printModal_" + Math.random().toString(36).substr(2, 9);
     }
 
     if (config.useModal) {
@@ -1874,139 +1918,141 @@ function setupPrint(buttonSelector, divSelector, options = {}) {
 
     function triggerPrint() {
         if (config.useModal) {
-            $(`#${config.modalId}`).modal('show');
+            $(`#${config.modalId}`).modal("show");
             setTimeout(() => executePrint(), 300);
         } else {
             showFallbackLoader();
             executePrint();
         }
     }
-    
+
     function executePrint() {
         if (config.customPrintFn) {
-            
             config.customPrintFn(divSelector, hidePrintLoader);
         } else if (config.useBrowserPrint) {
-            
             useBrowserPrint();
         } else {
-            
             usePrintThisLibrary();
         }
     }
-    
+
     function useBrowserPrint() {
         const originalContent = document.body.innerHTML;
         const printContent = document.querySelector(divSelector).innerHTML;
-        
+
         document.body.innerHTML = printContent;
         window.print();
         document.body.innerHTML = originalContent;
-        
-        
+
         setTimeout(() => {
-            $(buttonSelector).off('click').on('click', triggerPrint);
+            $(buttonSelector).off("click").on("click", triggerPrint);
             hidePrintLoader();
         }, 100);
     }
-    
+
     function usePrintThisLibrary() {
-        
-        if (typeof $.fn.printThis === 'function') {
+        if (typeof $.fn.printThis === "function") {
             $(divSelector).printThis({
-                afterPrint: hidePrintLoader
+                afterPrint: hidePrintLoader,
             });
         } else if (config.printLibraryUrl) {
-            
-            loadPrintLibrary(config.printLibraryUrl).then(() => {
-                
-                setTimeout(() => {
-                    $(divSelector).printThis({
-                        afterPrint: hidePrintLoader
-                    });
-                }, 200);
-            }).catch(() => {
-                
-                setTimeout(() => {
-                    useBrowserPrint();
-                }, 500);
-            });
+            loadPrintLibrary(config.printLibraryUrl)
+                .then(() => {
+                    setTimeout(() => {
+                        $(divSelector).printThis({
+                            afterPrint: hidePrintLoader,
+                        });
+                    }, 200);
+                })
+                .catch(() => {
+                    setTimeout(() => {
+                        useBrowserPrint();
+                    }, 500);
+                });
         } else {
-            console.warn('printThis library not found, falling back to browser print');
+            console.warn(
+                "printThis library not found, falling back to browser print"
+            );
             setTimeout(() => {
                 useBrowserPrint();
             }, 500);
         }
     }
-    
+
     function loadPrintLibrary(url) {
         return new Promise((resolve, reject) => {
-            
-            if (typeof $.fn.printThis === 'function') {
+            if (typeof $.fn.printThis === "function") {
                 resolve();
                 return;
             }
-            
-            const existingScript = document.querySelector(`script[src*="printThis"]`);
+
+            const existingScript = document.querySelector(
+                `script[src*="printThis"]`
+            );
             if (existingScript) {
                 const checkInterval = setInterval(() => {
-                    if (typeof $.fn.printThis === 'function') {
+                    if (typeof $.fn.printThis === "function") {
                         clearInterval(checkInterval);
                         resolve();
                     }
                 }, 100);
-                
+
                 setTimeout(() => {
                     clearInterval(checkInterval);
-                    reject(new Error('Library load timeout'));
+                    reject(new Error("Library load timeout"));
                 }, 10000);
                 return;
             }
 
-            const script = document.createElement('script');
+            const script = document.createElement("script");
             script.src = url;
             script.onload = () => {
-                
                 setTimeout(() => {
-                    if (typeof $.fn.printThis === 'function') {
+                    if (typeof $.fn.printThis === "function") {
                         resolve();
                     } else {
-                        reject(new Error('Library loaded but printThis not available'));
+                        reject(
+                            new Error(
+                                "Library loaded but printThis not available"
+                            )
+                        );
                     }
                 }, 100);
             };
             script.onerror = () => {
-                reject(new Error('Failed to load script'));
+                reject(new Error("Failed to load script"));
             };
             document.head.appendChild(script);
         });
     }
-    
+
     function showFallbackLoader() {
         const loader = document.querySelector(config.fallbackLoader);
-        if (loader) loader.classList.remove('hidden');
+        if (loader) loader.classList.remove("hidden");
     }
-    
+
     function hidePrintLoader() {
         if (config.useModal) {
-            $(`#${config.modalId}`).modal('hide');
+            $(`#${config.modalId}`).modal("hide");
         } else {
             const loader = document.querySelector(config.fallbackLoader);
-            if (loader) loader.classList.add('hidden');
+            if (loader) loader.classList.add("hidden");
         }
     }
-    
-    $(buttonSelector).on('click', triggerPrint);
-    
+
+    $(buttonSelector).on("click", triggerPrint);
+
     if (config.overrideCtrlP) {
-        $(document).off('keydown.printHelper').on('keydown.printHelper', function(e) {
-            if (e.ctrlKey && e.key === 'p') {
-                e.preventDefault();
-                triggerPrint();
-            }
-        });
+        $(document)
+            .off("keydown.printHelper")
+            .on("keydown.printHelper", function (e) {
+                if (e.ctrlKey && e.key === "p") {
+                    e.preventDefault();
+                    triggerPrint();
+                }
+            });
     }
-    
+
     function createModal(config) {
         if ($(`#${config.modalId}`).length > 0) return;
 
@@ -2017,16 +2063,22 @@ function setupPrint(buttonSelector, divSelector, options = {}) {
                 <div class="spinner-grow text-${config.spinnerColor} me-2" role="status" style="width: 1rem; height: 1rem; animation-delay: 0s;"></div>
                 <div class="spinner-grow text-${config.spinnerColor} me-2" role="status" style="width: 1rem; height: 1rem; animation-delay: 0.2s;"></div>
                 <div class="spinner-grow text-${config.spinnerColor}" role="status" style="width: 1rem; height: 1rem; animation-delay: 0.4s;"></div>
-            </div>`
+            </div>`,
         };
 
         const modalHtml = `
-            <div class="modal fade" id="${config.modalId}" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal fade" id="${
+                config.modalId
+            }" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-body text-center py-5">
-                            <div class="mb-3">${spinnerHtml[config.spinnerType]}</div>
-                            <h5 class="modal-title mb-2">${config.loadingText}</h5>
+                            <div class="mb-3">${
+                                spinnerHtml[config.spinnerType]
+                            }</div>
+                            <h5 class="modal-title mb-2">${
+                                config.loadingText
+                            }</h5>
                             <p class="text-muted mb-0"><small>Please wait while we prepare your document...</small></p>
                         </div>
                     </div>
@@ -2034,7 +2086,7 @@ function setupPrint(buttonSelector, divSelector, options = {}) {
             </div>
         `;
 
-        $('body').append(modalHtml);
+        $("body").append(modalHtml);
     }
 
     return config;
@@ -2045,42 +2097,46 @@ function initTabCounters(config) {
         countUrl,
         tabCounterMap,
         table = null,
-        initialDelay = 500
+        initialDelay = 500,
     } = config;
 
     async function updateAllTabCounters() {
         try {
             const response = await fetch(countUrl, {
-                method: 'GET',
+                method: "GET",
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRF-TOKEN": document
+                        .querySelector('meta[name="csrf-token"]')
+                        .getAttribute("content"),
+                },
             });
-            
+
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                throw new Error("Network response was not ok");
             }
-            
+
             const data = await response.json();
-            
+
             if (data && data.counts) {
                 Object.entries(tabCounterMap).forEach(([tabId, countKey]) => {
                     updateTabCounter(tabId, data.counts[countKey]);
                 });
             }
         } catch (error) {
-            console.error('Error fetching tab counts:', error);
+            console.error("Error fetching tab counts:", error);
         }
     }
 
     function updateTabCounter(tabId, count) {
         const tab = $(`#${tabId}`);
-        tab.find('.tab-counter').remove();
-        
+        tab.find(".tab-counter").remove();
+
         if (count > 0) {
-            tab.append(`<span class="tab-counter badge rounded-pill">${count}</span>`);
+            tab.append(
+                `<span class="tab-counter badge rounded-pill">${count}</span>`
+            );
         }
     }
 
@@ -2089,13 +2145,13 @@ function initTabCounters(config) {
     }, initialDelay);
 
     if (table) {
-        table.on('draw', function() {
+        table.on("draw", function () {
             updateAllTabCounters();
         });
     }
 
     return {
         updateAllTabCounters,
-        updateTabCounter
+        updateTabCounter,
     };
 }

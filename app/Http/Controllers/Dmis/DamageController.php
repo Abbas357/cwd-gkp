@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\dmis;
 
 use App\Models\Damage;
+use App\Helpers\Database;
 use Illuminate\Http\Request;
+use App\Helpers\SearchBuilder;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -15,22 +17,26 @@ class DamageController extends Controller
     public function index(Request $request)
     {
         $type = $request->query('type', 'Road');
-        $damage = Damage::query();
+        $user = auth_user();
 
-        $damage->when($type !== null, function ($query) use ($type) {
-            $query->where('type', $type);
-        });
+        $damage = Damage::query()
+            ->when($type !== null, function ($query) use ($type) {
+                return $query->where('type', $type);
+            })
+            ->when(!$user->isAdmin(), function ($query) use ($user) {
+                $userIds = $user->getSubordinates()->pluck('id')->toArray();
+                $userIds[] = $user->id;
 
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
-        if (!$user->isAdmin()) {
-            $userIds = $user->getSubordinates()->pluck('id')->toArray();
-            $userIds[] = Auth::id();
-
-            $damage->whereHas('posting.user', function ($query) use ($userIds) {
-                $query->whereIn('id', $userIds);
+                return $query->whereHas('posting.user', function ($subQuery) use ($userIds) {
+                    $subQuery->whereIn('id', $userIds);
+                });
             });
-        }
+
+        $relationMappings = [
+            'name' => 'infrastructure.name',
+            'office' => 'office.name',
+            'district' => 'district.name',
+        ];
 
         if ($request->ajax()) {
             $dataTable = Datatables::of($damage)
@@ -62,9 +68,22 @@ class DamageController extends Controller
                 })
                 ->rawColumns(['action']);
 
+            if ($request->input('search.value')) {
+                Database::applyRelationalSearch($dataTable, $relationMappings);
+            }
+
             if (!$request->input('search.value') && $request->has('searchBuilder')) {
-                $dataTable->filter(function ($query) use ($request) {
-                    $sb = new \App\Helpers\SearchBuilder($request, $query);
+                $dataTable->filter(function ($query) use ($request, $relationMappings) {
+                    $sb = new SearchBuilder(
+                        $request,
+                        $query,
+                        [],
+                        $relationMappings,
+                    );
+                    $sb->setNumericColumns(['damaged_length', 'approximate_restoration_cost', 'approximate_rehabilitation_cost'])
+                        ->setDateColumns(['report_date', 'created_at', 'updated_at'])
+                        ->setJsonColumns(['damage_nature'])
+                        ->build();
                     $sb->build();
                 });
             }
@@ -242,7 +261,7 @@ class DamageController extends Controller
             'attachment.*' => 'file|mimes:jpeg,jpg,png,gif|max:10240',
             'collection_name' => 'required|string',
         ]);
-        
+
         try {
             $damage->clearMediaCollection($request->input('collection_name'));
 
