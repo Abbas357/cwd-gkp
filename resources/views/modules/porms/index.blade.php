@@ -83,7 +83,7 @@
                         className: 'action-column'
                     }
                 ]
-                , pageLength: 25
+                , pageLength: 10
                 , customButton: {
                     text: `<span class="symbol-container fw-bold create-btn"><i class="bi-plus-circle"></i>&nbsp; Add Receipt</span>`
                     , action: function(e, dt, node, config) {

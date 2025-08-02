@@ -19,18 +19,28 @@ class DamageController extends Controller
         $type = $request->query('type', 'Road');
         $user = auth_user();
 
-        $damage = Damage::query()
-            ->when($type !== null, function ($query) use ($type) {
-                return $query->where('type', $type);
-            })
-            ->when(!$user->isAdmin(), function ($query) use ($user) {
-                $userIds = $user->getSubordinates()->pluck('id')->toArray();
-                $userIds[] = $user->id;
+        $damage = Damage::query();
 
-                return $query->whereHas('posting.user', function ($subQuery) use ($userIds) {
-                    $subQuery->whereIn('id', $userIds);
-                });
+        $damage->when(!$user->isAdmin(), function ($query) use ($user) {
+            $userIds = $user->getSubordinates()->pluck('id')->toArray();
+            $userIds[] = $user->id;
+
+            return $query->whereHas('posting.user', function ($subQuery) use ($userIds) {
+                $subQuery->whereIn('id', $userIds);
             });
+        });
+
+        if ($response = $this->getTabCounts($request, fn() => [
+            'road' => (clone $damage)->where('type', 'Road')->count(),
+            'bridge' => (clone $damage)->where('type', 'Bridge')->count(),
+            'culvert' => (clone $damage)->where('type', 'Culvert')->count(),
+        ])) {
+            return $response;
+        }
+        
+        $damage->when($type !== null, function ($query) use ($type) {
+            return $query->where('type', $type);
+        });
 
         $relationMappings = [
             'name' => 'infrastructure.name',

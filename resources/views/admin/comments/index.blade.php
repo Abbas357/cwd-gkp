@@ -98,7 +98,7 @@
                         className: 'action-column'
                     }
                 ]
-                , pageLength: 25
+                , pageLength: 10
             });
 
             $("#comments-datatable").on('click', '.publish-btn', async function() {

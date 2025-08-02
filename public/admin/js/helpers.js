@@ -170,7 +170,7 @@ function initDataTable(selector, options = {}) {
     const exportButtons = [
         {
             extend: "copy",
-            text: `<span class="symbol-container">
+            text: `<span class="symbol-container fw-bold">
                     <i class="bi-copy"></i>
                     &nbsp; Copy
                 </span>`,
@@ -180,7 +180,7 @@ function initDataTable(selector, options = {}) {
         },
         {
             extend: "csv",
-            text: `<span class="symbol-container">
+            text: `<span class="symbol-container fw-bold">
                     <i class="bi-filetype-csv"></i>
                     &nbsp; CSV
                 </span>`,
@@ -190,7 +190,7 @@ function initDataTable(selector, options = {}) {
         },
         {
             extend: "excel",
-            text: `<span class="symbol-container">
+            text: `<span class="symbol-container fw-bold">
                     <i class="bi-file-spreadsheet"></i>
                     &nbsp; Excel
                 </span>`,
@@ -200,7 +200,7 @@ function initDataTable(selector, options = {}) {
         },
         {
             extend: "pdf",
-            text: `<span class="symbol-container">
+            text: `<span class="symbol-container fw-bold">
                     <i class="bi-file-pdf"></i>
                     &nbsp; PDF
                 </span>`,
@@ -212,7 +212,7 @@ function initDataTable(selector, options = {}) {
         },
         {
             extend: "print",
-            text: `<span class="symbol-container">
+            text: `<span class="symbol-container fw-bold">
                     <i class="bi-printer"></i>
                     &nbsp; Print
                 </span>`,
@@ -283,7 +283,7 @@ function initDataTable(selector, options = {}) {
                     _: "Conditions (%d)",
                 },
                 clearAll: "Clear All Filters",
-                button: `<span class="symbol-container">
+                button: `<span class="symbol-container fw-bold">
                             <i class="bi-funnel-fill text-secondary"></i>
                             &nbsp; Filter
                         </span>`,
@@ -294,7 +294,7 @@ function initDataTable(selector, options = {}) {
                 buttons: [
                     {
                         extend: "collection",
-                        text: `<span class="symbol-container">
+                        text: `<span class="symbol-container fw-bold">
                                 <i class="bi-share-fill text-secondary"></i>
                                 &nbsp; Export
                             </span>`,
@@ -304,7 +304,7 @@ function initDataTable(selector, options = {}) {
                     {
                         extend: "colvis",
                         collectionLayout: "two-column",
-                        text: `<span class="symbol-container">
+                        text: `<span class="symbol-container fw-bold">
                                 <i class="bi-eye-fill text-secondary"></i>
                                 &nbsp; Columns
                             </span>`,
@@ -324,7 +324,7 @@ function initDataTable(selector, options = {}) {
                         },
                     },
                     {
-                        text: `<span class="symbol-container">
+                        text: `<span class="symbol-container fw-bold">
                                 <i class="bi-arrow-clockwise"></i>
                                 &nbsp; Reset
                             </span>`,

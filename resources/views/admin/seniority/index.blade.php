@@ -103,7 +103,7 @@
                         className: 'action-column'
                     }
                 ]
-                , pageLength: 25
+                , pageLength: 10
                 , customButton: {
                     text: `<span class="symbol-container create-btn fw-bold"><i class="bi-plus-circle"></i>&nbsp; Add Seniority</span>`
                     , action: function(e, dt, node, config) {

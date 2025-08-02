@@ -47,7 +47,7 @@
                     targets: [0]
                     , visible: false
                 }]
-                , pageLength: 25
+                , pageLength: 10
             });
             
         });

@@ -138,7 +138,7 @@
                         className: 'action-column'
                     }
                 ]
-                , pageLength: 25
+                , pageLength: 10
             });
 
             $("#contractors-registration").on('click', '.defer-btn', async function() {

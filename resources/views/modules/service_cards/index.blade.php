@@ -154,7 +154,7 @@
                         searchable: false,
                         type: "html"
                     }],
-                    pageLength: 25,
+                    pageLength: 10,
                     defaultOrderColumn: 9,
                     defaultOrderDirection: 'desc',
                     columnDefs: [{

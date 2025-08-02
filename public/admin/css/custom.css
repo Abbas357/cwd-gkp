@@ -434,6 +434,8 @@ div.dt-container div.dropdown-menu {
     border-radius: 7px !important;
     border: 1px solid #ccc;
     box-shadow: var(--shadow-6);
+    height: auto !important;
+    overflow: scroll
 }
 
 div.dt-container .dataTables_length select, .dataTables_filter select, .dt-buttons .dropdown-menu {

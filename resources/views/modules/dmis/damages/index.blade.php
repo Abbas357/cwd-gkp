@@ -1,6 +1,19 @@
 <x-dmis-layout title="Damages">
     @push('style')
         <link href="{{ asset('admin/plugins/datatable/css/datatables.min.css') }}" rel="stylesheet">
+        <style>
+            #road-tab .tab-counter {
+                background-color: black !important;
+            }
+
+            #bridge-tab .tab-counter {
+                background-color: blue !important;
+            }
+
+            #culvert-tab .tab-counter {
+                background-color: brown !important;
+            }
+        </style>
     @endpush
     <x-slot name="header">
         <li class="breadcrumb-item active" aria-current="page">Damages</li>
@@ -80,9 +93,7 @@
     <!--end row-->
     @push('script')
         <script src="{{ asset('admin/plugins/datatable/js/datatables.min.js') }}"></script>
-        <script src="{{ asset('admin/plugins/datatable/js/pdfmake.min.js') }}"></script>
-        {{-- <script src="{{ asset('admin/plugins/datatable/js/vfs_fonts.js') }}"></script>
-        <script src="{{ asset('admin/plugins/col-resizable.js') }}"></script> --}}
+        <script src="{{ asset('admin/plugins/col-resizable.js') }}"></script>
 
         <script>
             $(document).ready(function() {
@@ -223,6 +234,17 @@
                             }
                         }
                     ]
+                });
+
+                const tabCounters = initTabCounters({
+                    countUrl: "{{ route('admin.apps.dmis.damages.index') }}?get_counts=true",
+                    tabCounterMap: {
+                        'road-tab': 'road',
+                        'bridge-tab': 'bridge',
+                        'culvert-tab': 'culvert',
+                    },
+                    table: table,
+                    initialDelay: 500
                 });
 
                 $("#damages-datatable").on('click', '.delete-btn', async function() {

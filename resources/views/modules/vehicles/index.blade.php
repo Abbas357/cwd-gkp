@@ -138,7 +138,7 @@
                         className: 'action-column'
                     }
                 ]
-                , pageLength: 25
+                , pageLength: 10
                 , customButtons: [
                     {
                         text: `<span class="symbol-container create-btn"><i class="bi-plus-circle"></i>&nbsp; Add Vehicle</span>`

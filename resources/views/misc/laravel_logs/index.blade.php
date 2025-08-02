@@ -401,7 +401,7 @@
                     targets: [0],
                     visible: false
                 }],
-                pageLength: 25,
+                pageLength: 10,
                 createdRow: function(row, data, dataIndex) {
                     $(row).addClass('log-entry-row');
                     

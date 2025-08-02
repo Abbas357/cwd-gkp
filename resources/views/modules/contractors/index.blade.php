@@ -113,7 +113,7 @@
                         className: 'action-column'
                     }
                 ]
-                , pageLength: 25
+                , pageLength: 10
             });
 
             hashTabsNavigator({
